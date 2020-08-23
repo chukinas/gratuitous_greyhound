@@ -21,7 +21,7 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 
 ## TODOs
 
-  * Game Name via url
+  * Game Name via url - e.g. "/just-one/green-eyes"
   * register user (unique: game name, uuid; nonunique: socket pid)
   * Game Name via text box
   * Game Name text box lookup
