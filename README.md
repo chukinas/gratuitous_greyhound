@@ -18,3 +18,11 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   * Docs: https://hexdocs.pm/phoenix
   * Forum: https://elixirforum.com/c/phoenix-forum
   * Source: https://github.com/phoenixframework/phoenix
+
+## TODOs
+
+  * Game Name via url
+  * register user (unique: game name, uuid; nonunique: socket pid)
+  * Game Name via text box
+  * Game Name text box lookup
+  * Player Name

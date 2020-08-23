@@ -1,9 +1,22 @@
 defmodule ChukinasWeb.JustOneLive do
   use ChukinasWeb, :live_view
 
+  #############################################################################
+  # HELPERS
+  #############################################################################
+
+  defp assign_tentative_uuid(socket) do
+    # saved to localstorage if one doesn't already exist
+    assign(socket, :uuid, UUID.uuid4())
+  end
+
+  #############################################################################
+  # CALLBACKS
+  #############################################################################
+
   @impl true
   def mount(_params, _session, socket) do
-    socket = assign(socket, :uuid, "awaiting uuid...")
+    socket = assign_tentative_uuid(socket)
     {:ok, assign(socket, query: "", results: %{})}
   end
 

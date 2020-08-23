@@ -21,8 +21,16 @@ import { LiveSocket } from "phoenix_live_view";
 let Hooks = {};
 Hooks.uuid = {
   mounted() {
-      console.log('Mounting!')
-    this.pushEvent("uuid", "abc123");
+    const tentativeUuid = document.getElementById("uuid").value;
+    const existingUuid = localStorage.getItem("uuid");
+    let finalUuid;
+    if (existingUuid == null) {
+      finalUuid = tentativeUuid;
+      localStorage.setItem("uuid", finalUuid);
+    } else {
+      finalUuid = existingUuid;
+    }
+    this.pushEvent("uuid", finalUuid);
   },
 };
 
