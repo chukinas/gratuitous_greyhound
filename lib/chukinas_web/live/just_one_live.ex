@@ -1,4 +1,4 @@
-defmodule ChukinasWeb.PageLive do
+defmodule ChukinasWeb.JustOneLive do
   use ChukinasWeb, :live_view
 
   @impl true

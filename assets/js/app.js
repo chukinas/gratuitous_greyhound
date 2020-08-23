@@ -22,10 +22,7 @@ let Hooks = {};
 Hooks.uuid = {
   mounted() {
       console.log('Mounting!')
-    this.pushEvent("uuid", {
-      // uuid: localStorage.getItem("username")
-      uuid: "abc123",
-    });
+    this.pushEvent("uuid", "abc123");
   },
 };
 
