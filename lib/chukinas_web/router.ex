@@ -18,8 +18,8 @@ defmodule ChukinasWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
-    get "/just-one", JustOneController, :index
-    live "/just-one/:room", JustOneLive, :index
+    live "/just-one", JustOneLive, :index
+    live "/just-one/:room", JustOneLive, :show
   end
 
   # Other scopes may use custom stacks.

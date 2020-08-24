@@ -10,3 +10,11 @@
     </label>
     <submit>Go</submit>
 </form>
+
+<%= if @live_action == :index do %>
+  Index!
+<% end %>
+
+<%= if @live_action == :show do %>
+  Room!
+<% end %>

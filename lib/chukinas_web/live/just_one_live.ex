@@ -17,11 +17,25 @@ defmodule ChukinasWeb.JustOneLive do
   @impl true
   # def mount(%{path_params: %{"room" => room}}, _session, socket) do
   def mount(%{"room" => room}, _session, socket) do
-    socket = socket
-    |> assign_tentative_uuid
-    |> assign(:room, room)
-    socket |> inspect |> IO.puts
-    {:ok, assign(socket, query: "", results: %{})}
+    socket =
+      socket
+      |> assign_tentative_uuid
+      |> assign(:room, room)
+
+    socket |> inspect |> IO.puts()
+    {:ok, socket}
+  end
+
+  @impl true
+  # def mount(%{path_params: %{"room" => room}}, _session, socket) do
+  def mount(_params, _session, socket) do
+    socket =
+      socket
+      |> assign_tentative_uuid
+      |> assign(:room, "")
+
+    socket |> inspect |> IO.puts()
+    {:ok, socket}
   end
 
   @impl true
