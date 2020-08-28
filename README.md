@@ -21,13 +21,12 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 
 ## TODOs
 
-  * /just-one as liveview component
-      single just one live page
-      routing
+  * Game Name via text box
+    * how to redirect?
+    * replace standalone button with form
   * read
     https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html
     https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.Router.html#content
-  * Game Name via text box
   * Game Name text box lookup
   * register user (unique: game name, uuid; nonunique: socket pid)
   * Player Name

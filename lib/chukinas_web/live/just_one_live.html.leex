@@ -8,7 +8,7 @@
         Room Name:
         <input value="<%= @room %>">
     </label>
-    <submit>Go</submit>
+    <submit phx-click="go_to_room" phx-value-room_name="yellow">Go</submit>
 </form>
 
 <%= if @live_action == :index do %>
