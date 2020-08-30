@@ -8,6 +8,7 @@ defmodule ChukinasWeb.Router do
     plug :put_root_layout, {ChukinasWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug ChukinasWeb.Plugs.SanitizeRoomName
   end
 
   pipeline :api do

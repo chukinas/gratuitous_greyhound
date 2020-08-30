@@ -3,3 +3,9 @@
   <input type="text" name="room_name" placeholder="<%= @room_name %>" autofocus>
   <button type="submit">Go To Room!</button>
 </form>
+
+<%= if @live_action != :index do %>
+  <form phx-submit="go_to_lobby">
+    <button type="submit">Go Back To Lobby!</button>
+  </form>
+<% end %>
