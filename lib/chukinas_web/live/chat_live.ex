@@ -14,20 +14,18 @@ defmodule ChukinasWeb.ChatLive do
 
   @impl true
   def handle_event("go_to_room", %{"room_name" => room_name}, socket) do
-    {:noreply, redirect(socket, to: "/chat/"<>room_name)}
+    path = Routes.chat_path(socket, :show, room_name)
+    {:noreply, redirect(socket, to: path)}
   end
 
   @impl true
   def handle_event("go_to_lobby", _params, socket) do
-    {:noreply, redirect(socket, to: "/chat")}
+    path = Routes.chat_path(socket, :index)
+    {:noreply, redirect(socket, to: path)}
   end
-
 end
 
 # TODO JJC
-# use helpers instead of hard coding the links
-#   lookup docs on live_path
-# ensure links aren't establishing new socket
 # formatter for templates
 # remove the vscode scroll thumbnail
 # remove keyboard layout shortcut
@@ -37,4 +35,4 @@ end
 # Where's the right place to put the plug?
 # scope the plug to just one and chat
 # should room_name be temp assigns?
-# events: go to room or lobby: use helpers
+# check for todos
