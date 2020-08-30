@@ -40,7 +40,7 @@ defmodule Chukinas.Rooms do
     # names = %{}
     # refs = %{}
     # {:ok, {names, refs}}
-    :timer.send_interval(1000, :tick)
+    # :timer.send_interval(1000, :tick)
     {:ok, 0}
   end
 
@@ -81,3 +81,19 @@ defmodule Chukinas.Rooms do
   #   {:noreply, state}
   # end
 end
+
+# TODO
+# Dynamic Room Supervisor
+# handle call: add room
+# handle call: remove room
+# handle call: show rooms
+
+# TODO
+# remove the auto counter
+# going to a liveview page should call a method on the Rooms context
+# the genserver then adds that room to its state and prints its state
+
+# TODO
+# put a timestamp on the room name
+# emit timed event
+#

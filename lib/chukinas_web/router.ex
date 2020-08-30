@@ -18,6 +18,8 @@ defmodule ChukinasWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    live "/chat", ChatLive, :index
+    live "/chat/:room_name", ChatLive, :show
     live "/just-one", JustOneLive, :index
     live "/just-one/:room", JustOneLive, :show
   end
