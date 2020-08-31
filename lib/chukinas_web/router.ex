@@ -19,6 +19,7 @@ defmodule ChukinasWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/about", AboutController, :index
     live "/chat", ChatLive, :index
     live "/chat/:room_name", ChatLive, :show
     live "/just-one", JustOneLive, :index

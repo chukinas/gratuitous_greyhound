@@ -1,6 +1,5 @@
-defmodule ChukinasWeb.PageController do
+defmodule ChukinasWeb.AboutController do
   use ChukinasWeb, :controller
-  alias Phoenix.HTML.Link
 
   def index(conn, _params) do
     render(conn, "index.html")
