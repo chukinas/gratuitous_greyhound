@@ -1,5 +1,4 @@
 defmodule ChukinasWeb.Plugs.SanitizeRoomName do
-  # TODO how to add documentation?
   alias Phoenix.Controller
   alias Plug.Conn
 

@@ -1,9 +1,6 @@
 defmodule Chukinas.Rooms do
   use GenServer
 
-  # TODO have supervisor start up the server
-  # TODO server calls itself to print a message to console every _ seconds
-
   #############################################################################
   # CLIENT API
   #############################################################################
@@ -81,19 +78,3 @@ defmodule Chukinas.Rooms do
   #   {:noreply, state}
   # end
 end
-
-# TODO
-# Dynamic Room Supervisor
-# handle call: add room
-# handle call: remove room
-# handle call: show rooms
-
-# TODO
-# remove the auto counter
-# going to a liveview page should call a method on the Rooms context
-# the genserver then adds that room to its state and prints its state
-
-# TODO
-# put a timestamp on the room name
-# emit timed event
-#

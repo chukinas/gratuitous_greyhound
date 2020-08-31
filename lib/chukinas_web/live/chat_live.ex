@@ -25,14 +25,17 @@ defmodule ChukinasWeb.ChatLive do
   end
 end
 
-# TODO JJC
-# formatter for templates
-# remove the vscode scroll thumbnail
-# remove keyboard layout shortcut
-# formatting for vscode ~L sigil
-# TODO aren't showing up highlighted
-# TODO room name as value, not placeholder
-# Where's the right place to put the plug?
-# scope the plug to just one and chat
-# should room_name be temp assigns?
-# check for todos
+# TODO
+# Dynamic Room Supervisor
+# handle call: add room
+# handle call: remove room
+# handle call: show rooms
+
+# TODO
+# remove the auto counter
+# going to a liveview page should call a method on the Rooms context
+# the genserver then adds that room to its state and prints its state
+
+# TODO
+# put a timestamp on the room name
+# emit timed event
