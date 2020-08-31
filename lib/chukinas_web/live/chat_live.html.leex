@@ -14,3 +14,16 @@
   <button type="submit">Go Back To Lobby!</button>
 </form>
 <% end %>
+
+<form phx-submit="new_msg">
+  <label>New Message:&nbsp;&nbsp;</label>
+  <input type="text" name="msg" />
+  <button type="submit">Submit</button>
+</form>
+
+<h2>Messages</h2>
+<ul>
+  <%= for msg <- @messages do %>
+  <li><%= msg %></li>
+  <% end %>
+</ul>

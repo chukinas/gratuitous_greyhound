@@ -8,7 +8,10 @@ defmodule ChukinasWeb.ChatLive do
   @impl true
   def mount(params, _session, socket) do
     room_name = Map.get(params, "room_name", "")
-    socket = assign(socket, :room_name, room_name)
+    socket =
+      socket
+      |> assign(:room_name, room_name)
+      |> assign(:messages, [])
     {:ok, socket}
   end
 
@@ -23,7 +26,30 @@ defmodule ChukinasWeb.ChatLive do
     path = Routes.chat_path(socket, :index)
     {:noreply, redirect(socket, to: path)}
   end
+
+  @impl true
+  def handle_event("new_msg", %{"msg" => msg}, socket) do
+    socket = update(socket, :messages, &(&1 ++ [msg]))
+    {:noreply, socket}
+  end
 end
+
+# TODO
+# GENSERVER THAT REFLECTS MESSAGES BACK TO LIVEVIEW PROCESS
+# Part 1: synchronous
+# Genserver
+#   add as child to _____ supervisor
+# LiveView:
+#   handle_info
+
+# TODO
+# GENSERVER THAT REFLECTS MESSAGES BACK TO LIVEVIEW PROCESS
+# Part 2: asynchronous
+# Genserver
+#   handle_cast? Or handle_call that returns just a confirmation :ok?
+#     either way, it doesn't send the value back. That's done with messaging.
+# LiveView:
+#   handle_info
 
 # TODO
 # Dynamic Room Supervisor
