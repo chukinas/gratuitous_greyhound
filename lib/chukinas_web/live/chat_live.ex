@@ -12,6 +12,7 @@ defmodule ChukinasWeb.ChatLive do
       socket
       |> assign(:room_name, room_name)
       |> assign(:messages, [])
+      |> assign(:new_msg, "")
     {:ok, socket}
   end
 
@@ -29,7 +30,16 @@ defmodule ChukinasWeb.ChatLive do
 
   @impl true
   def handle_event("new_msg", %{"msg" => msg}, socket) do
-    socket = update(socket, :messages, &(&1 ++ [msg]))
+    send(self(), {:new_msg, msg})
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_info({:new_msg, msg}, socket) do
+    socket =
+      socket
+      |> assign(:new_msg, "")
+      |> update(:messages, &(&1 ++ [msg]))
     {:noreply, socket}
   end
 end
