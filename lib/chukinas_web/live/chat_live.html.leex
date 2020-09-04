@@ -1,11 +1,26 @@
-<form phx-submit="go_to_room">
-  <label for="room_name">Room:&nbsp;&nbsp;</label>
+<form phx-submit="change_user_name">
+  <label for="user_name"
+    >User Name for <%= inspect self() %>:&nbsp;&nbsp;</label
+  >
   <input
     type="text"
-    name="room_name"
-    placeholder="<%= @room_name %>"
+    name="user_name"
+    placeholder="<%= @user_name %>"
     autofocus
   />
+  <button type="submit">Update</button>
+</form>
+
+<h2>User List</h2>
+<ul>
+  <%= for { pid, user_name } <- @user_list do %>
+  <li><%= inspect pid %>: <%= user_name %></li>
+  <% end %>
+</ul>
+
+<form phx-submit="go_to_room">
+  <label for="room_name">Room:&nbsp;&nbsp;</label>
+  <input type="text" name="room_name" placeholder="<%= @room_name %>" />
   <button type="submit">Go To Room!</button>
 </form>
 

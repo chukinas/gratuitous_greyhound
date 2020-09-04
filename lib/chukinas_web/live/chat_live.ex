@@ -2,6 +2,17 @@ defmodule ChukinasWeb.ChatLive do
   use ChukinasWeb, :live_view
 
   #############################################################################
+  # HELPERS
+  #############################################################################
+
+  def upsert_user(user_list, { new_pid, _user_name } = new_user) do
+    user_list
+    |> Enum.filter(fn {pid, _user_name} -> pid != new_pid end)
+    |> (fn users -> [new_user | users] end).()
+    # |> (&[new_user | &1]) TODO try to make this work
+  end
+
+  #############################################################################
   # CALLBACKS
   #############################################################################
 
@@ -11,9 +22,23 @@ defmodule ChukinasWeb.ChatLive do
     socket =
       socket
       |> assign(:room_name, room_name)
+      |> assign(:user_name, "<unknown>")
+      |> assign(:user_list, [])
       |> assign(:messages, [])
       |> assign(:new_msg, "")
     {:ok, socket}
+  end
+
+  @impl true
+  def handle_event("change_user_name", %{"user_name" => user_name}, socket) do
+    socket =
+      socket
+      |> assign(:user_name, user_name)
+
+    new_user = {self(), user_name}
+    user_list = upsert_user(socket.assigns.user_list, new_user)
+    send(self(), {:update_user_list, user_list})
+    {:noreply, socket}
   end
 
   @impl true
@@ -42,13 +67,32 @@ defmodule ChukinasWeb.ChatLive do
       |> update(:messages, &(&1 ++ [msg]))
     {:noreply, socket}
   end
+
+  @impl true
+  def handle_info({:update_user_list, user_list}, socket) do
+    socket =
+      socket
+      |> assign(:user_list, user_list)
+    {:noreply, socket}
+  end
 end
+
+# TODO
+# LiveView
+#   show pid
+#   name text box
+#   default user name, user pid to assigns
+#   handle_info: update_user_list
+#   handle_event: change_name
+# Chat room supervisor
+# GenServer API:
+#   upsert_user (pid, name), updates the
 
 # TODO
 # GENSERVER THAT REFLECTS MESSAGES BACK TO LIVEVIEW PROCESS
 # Part 1: synchronous
 # Genserver
-#   add as child to _____ supervisor
+#   add as child to top supervisor
 # LiveView:
 #   handle_info
 
@@ -75,3 +119,8 @@ end
 # TODO
 # put a timestamp on the room name
 # emit timed event
+
+# TODO
+# superv tree: add supervisor for chat app
+#   superv's a superv (a registry) for all the chat rooms
+#   superv for chat room users

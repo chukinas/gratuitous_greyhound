@@ -33,6 +33,3 @@ defmodule ChukinasWeb.AboutView do
 
   end
 end
-
-# TODO
-# sidebar assigns
