@@ -8,6 +8,7 @@ defmodule ChukinasWeb.Router do
     plug :put_root_layout, {ChukinasWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug ChukinasWeb.Plugs.SanitizeRoomName
   end
 
   pipeline :api do
@@ -18,8 +19,11 @@ defmodule ChukinasWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
-    get "/just-one", JustOneController, :index
-    live "/just-one/:room", JustOneLive, :index
+    get "/about", AboutController, :index
+    live "/chat", ChatLive, :index
+    live "/chat/:room_name", ChatLive, :show
+    live "/just-one", JustOneLive, :index
+    live "/just-one/:room", JustOneLive, :show
   end
 
   # Other scopes may use custom stacks.

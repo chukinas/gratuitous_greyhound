@@ -1,12 +1,19 @@
 <label phx-hook="uuid">
     Your UUID:
     <input id="uuid" value="<%= @uuid %>" disabled>
-    <%# TODO make hidden %>
 </label>
 <form>
     <label>
         Room Name:
         <input value="<%= @room %>">
     </label>
-    <submit>Go</submit>
+    <submit phx-click="go_to_room" phx-value-room_name="yellow">Go</submit>
 </form>
+
+<%= if @live_action == :index do %>
+  Index!
+<% end %>
+
+<%= if @live_action == :show do %>
+  Room!
+<% end %>

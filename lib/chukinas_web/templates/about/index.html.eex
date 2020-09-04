@@ -1,0 +1,16 @@
+<p>Jonathan Chukinas</p>
+<p>chukinas@gmail.com</p>
+<p>814 812 0289</p>
+
+<ul>
+  <%= for section <- Map.keys(sidebar()) do%>
+  <li><%= section %></li>
+
+  <ul>
+    <%= for link <- Map.get(sidebar(), section) do%>
+    <li><%= link %></li>
+    <% end %>
+  </ul>
+
+  <% end %>
+</ul>
