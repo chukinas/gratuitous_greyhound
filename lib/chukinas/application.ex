@@ -11,6 +11,7 @@ defmodule Chukinas.Application do
       # Start a worker by calling: Chukinas.Worker.start_link(arg)
       # {Chukinas.Worker, arg}
       Chukinas.Rooms,
+      Chukinas.Chat.UserRegistry
     ]
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options

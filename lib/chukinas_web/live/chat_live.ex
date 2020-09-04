@@ -1,15 +1,14 @@
 defmodule ChukinasWeb.ChatLive do
   use ChukinasWeb, :live_view
+  alias Chukinas.Chat.UserRegistry
 
   #############################################################################
   # HELPERS
   #############################################################################
 
-  def upsert_user(user_list, { new_pid, _user_name } = new_user) do
-    user_list
-    |> Enum.filter(fn {pid, _user_name} -> pid != new_pid end)
-    |> (fn users -> [new_user | users] end).()
-    # |> (&[new_user | &1]) TODO try to make this work
+  defp assign_and_register_user_name(socket, user_name) do
+    UserRegistry.upsert_user({self(), user_name})
+    assign(socket, :user_name, user_name)
   end
 
   #############################################################################
@@ -21,8 +20,8 @@ defmodule ChukinasWeb.ChatLive do
     room_name = Map.get(params, "room_name", "")
     socket =
       socket
+      |> assign_and_register_user_name("<unknown>")
       |> assign(:room_name, room_name)
-      |> assign(:user_name, "<unknown>")
       |> assign(:user_list, [])
       |> assign(:messages, [])
       |> assign(:new_msg, "")
@@ -31,13 +30,7 @@ defmodule ChukinasWeb.ChatLive do
 
   @impl true
   def handle_event("change_user_name", %{"user_name" => user_name}, socket) do
-    socket =
-      socket
-      |> assign(:user_name, user_name)
-
-    new_user = {self(), user_name}
-    user_list = upsert_user(socket.assigns.user_list, new_user)
-    send(self(), {:update_user_list, user_list})
+    socket = assign_and_register_user_name(socket, user_name)
     {:noreply, socket}
   end
 
@@ -78,15 +71,7 @@ defmodule ChukinasWeb.ChatLive do
 end
 
 # TODO
-# LiveView
-#   show pid
-#   name text box
-#   default user name, user pid to assigns
-#   handle_info: update_user_list
-#   handle_event: change_name
-# Chat room supervisor
-# GenServer API:
-#   upsert_user (pid, name), updates the
+# remove dead processes
 
 # TODO
 # GENSERVER THAT REFLECTS MESSAGES BACK TO LIVEVIEW PROCESS
