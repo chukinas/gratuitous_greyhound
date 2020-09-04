@@ -1,14 +1,16 @@
 defmodule ChukinasWeb.ChatLive do
   use ChukinasWeb, :live_view
   alias Chukinas.Chat.UserRegistry
+  alias Chukinas.User
 
   #############################################################################
   # HELPERS
   #############################################################################
 
   defp assign_and_register_user_name(socket, user_name) do
-    UserRegistry.upsert_user({self(), user_name})
-    assign(socket, :user_name, user_name)
+    user = %User{name: user_name, pid: self()}
+    UserRegistry.upsert_user(user)
+    assign(socket, :user, user)
   end
 
   #############################################################################

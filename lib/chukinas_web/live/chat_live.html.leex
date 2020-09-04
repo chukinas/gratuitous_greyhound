@@ -1,11 +1,11 @@
 <form phx-submit="change_user_name">
   <label for="user_name"
-    >User Name for <%= inspect self() %>:&nbsp;&nbsp;</label
+    >User Name for <%= inspect @user.pid %>:&nbsp;&nbsp;</label
   >
   <input
     type="text"
     name="user_name"
-    placeholder="<%= @user_name %>"
+    placeholder="<%= @user.name %>"
     autofocus
   />
   <button type="submit">Update</button>
@@ -13,8 +13,8 @@
 
 <h2>User List</h2>
 <ul>
-  <%= for { pid, user_name } <- @user_list do %>
-  <li><%= inspect pid %>: <%= user_name %></li>
+  <%= for user <- @user_list do %>
+  <li><%= inspect user.pid %>: <%= user.name %></li>
   <% end %>
 </ul>
 
