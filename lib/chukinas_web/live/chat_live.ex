@@ -73,6 +73,10 @@ defmodule ChukinasWeb.ChatLive do
 end
 
 # TODO
+# Room supervisor
+# move user supervisor to chat supervisor
+
+# TODO
 # GENSERVER THAT REFLECTS MESSAGES BACK TO LIVEVIEW PROCESS
 # Part 1: synchronous
 # Genserver
