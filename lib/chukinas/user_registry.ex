@@ -10,11 +10,10 @@ defmodule Chukinas.Chat.UserRegistry do
     GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
   end
 
-  def upsert_user(%User{} = user) do
-    new_user_list = GenServer.call(__MODULE__, {:upsert_user, user})
-    Enum.each(new_user_list, fn %User{pid: pid} ->
-      send(pid, {:update_user_list, new_user_list})
-    end)
+  def upsert(%User{} = user) do
+    __MODULE__
+    |> GenServer.call({:upsert, user})
+    |> notify()
     :ok
   end
 
@@ -24,12 +23,40 @@ defmodule Chukinas.Chat.UserRegistry do
 
   @impl true
   def init(_opts) do
-    {:ok, []}
+    users = Map.new()
+    {:ok, users}
   end
 
   @impl true
-  def handle_call({:upsert_user, %User{} = user}, _from, user_list) do
-    new_user_list = User.upsert(user_list, user)
-    {:reply, new_user_list, new_user_list}
+  def handle_call({:upsert, %User{} = user}, _from, users) do
+    if not Map.has_key?(users, user.pid), do: Process.monitor(user.pid)
+    users = Map.put users, user.pid, user
+    {:reply, Map.values(users), users}
   end
+
+  @impl true
+  def handle_info({:DOWN, _ref, :process, object, _reason}, users) do
+    users =
+      users
+      |> Map.delete(object)
+      |> notify()
+    {:noreply, users}
+  end
+
+  #############################################################################
+  # HELPERS
+  #############################################################################
+
+  defp notify(users) when is_map(users) do
+    notify Map.values(users)
+    users
+  end
+
+  defp notify(users) when is_list(users) do
+    Enum.each(users, fn user ->
+      send(user.pid, {:update_user_list, users})
+    end)
+    users
+  end
+
 end

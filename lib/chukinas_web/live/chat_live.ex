@@ -9,7 +9,7 @@ defmodule ChukinasWeb.ChatLive do
 
   defp assign_and_register_user_name(socket, user_name) do
     user = %User{name: user_name, pid: self()}
-    UserRegistry.upsert_user(user)
+    UserRegistry.upsert(user)
     assign(socket, :user, user)
   end
 
@@ -71,9 +71,6 @@ defmodule ChukinasWeb.ChatLive do
     {:noreply, socket}
   end
 end
-
-# TODO
-# remove dead processes
 
 # TODO
 # GENSERVER THAT REFLECTS MESSAGES BACK TO LIVEVIEW PROCESS
