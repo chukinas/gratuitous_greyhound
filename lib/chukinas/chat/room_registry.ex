@@ -1,20 +1,15 @@
-defmodule Chukinas.Chat.Room.Registry.Record do
-  defstruct [:name, :pid]
-end
-
 defmodule Chukinas.Chat.Room.Registry do
   use GenServer
   alias Chukinas.Chat.Room
-  alias Chukinas.Chat.Room.Registry.Record
   # alias Chukinas.Chat.Room.Supervisor, as: RoomSupervisor
 
   #############################################################################
-  # STATE
+  # TYPES
   #############################################################################
 
-  # Map
-  # key: room_name
-  # value: Record
+  @type room_name :: String.t
+  @type room_pid :: pid
+  @type registry_state :: %{optional(room_name) => room_pid}
 
   #############################################################################
   # CLIENT API
@@ -25,6 +20,7 @@ defmodule Chukinas.Chat.Room.Registry do
     GenServer.start_link(__MODULE__, state,  name: __MODULE__)
   end
 
+  @spec get_room(room_name) :: room_pid
   def get_room(room_name) do
     GenServer.call(__MODULE__, {:get_room, room_name})
   end
@@ -33,21 +29,24 @@ defmodule Chukinas.Chat.Room.Registry do
   # SERVER CALLBACKS
   #############################################################################
 
-  @impl true
+  @impl GenServer
   def init(state) do
     {:ok, state}
   end
 
-  @impl true
+  @impl GenServer
   def handle_call({:get_room, room_name}, _from, state) do
-    {%Record{} = room_record, state} = case Map.get(state, room_name) do
-      %Record{} = record -> {record, state}
-      nil -> create_room(room_name, state)
+    {room_pid, state} = case Map.get(state, room_name) do
+      nil ->
+        room_pid = create_room(room_name)
+        new_state = Map.put(state, room_name, room_pid)
+        {room_pid, new_state}
+      pid -> {pid, state}
     end
-    {:reply, room_record.pid, state}
+    {:reply, room_pid, state}
   end
 
-  @impl true
+  @impl GenServer
   def handle_info({:DOWN, _ref, :process, object, _reason}, state) do
     downed_room_record =
       state
@@ -61,13 +60,12 @@ defmodule Chukinas.Chat.Room.Registry do
   # HELPERS
   #############################################################################
 
-  def create_room(room_name, state) do
+  @spec create_room(room_name) :: room_pid
+  def create_room(room_name) do
     # {:ok, pid} = RoomSupervisor.start_room(room_name)
     {:ok, pid} = GenServer.start_link(Room, room_name)
     Process.monitor(pid)
-    new_record = %Record{name: room_name, pid: pid}
-    new_state = Map.put(state, room_name, new_record)
-    {new_record, new_state}
+    pid
   end
 
 end
