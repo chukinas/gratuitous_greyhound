@@ -1,7 +1,6 @@
 defmodule Chukinas.Chat.Room.Registry do
   use GenServer
   alias Chukinas.Chat.Room
-  # alias Chukinas.Chat.Room.Supervisor, as: RoomSupervisor
 
   #############################################################################
   # TYPES
@@ -9,7 +8,9 @@ defmodule Chukinas.Chat.Room.Registry do
 
   @type room_name :: String.t
   @type room_pid :: pid
-  @type registry_state :: %{optional(room_name) => room_pid}
+  # I use this instead of just the pid to make it easier to handle :DOWN events
+  @type room_record :: {room_name, room_pid}
+  @type registry_state :: %{optional(room_name) => room_record}
 
   #############################################################################
   # CLIENT API
@@ -36,23 +37,24 @@ defmodule Chukinas.Chat.Room.Registry do
 
   @impl GenServer
   def handle_call({:get_room, room_name}, _from, state) do
-    {room_pid, state} = case Map.get(state, room_name) do
+    {room_record, state} = case Map.get(state, room_name) do
       nil ->
-        room_pid = create_room(room_name)
-        new_state = Map.put(state, room_name, room_pid)
-        {room_pid, new_state}
-      pid -> {pid, state}
+        room_record = create_room(room_name)
+        new_state = Map.put(state, room_name, room_record)
+        {room_record, new_state}
+      room_record -> {room_record, state}
     end
+    {_room_name, room_pid} = room_record
     {:reply, room_pid, state}
   end
 
   @impl GenServer
   def handle_info({:DOWN, _ref, :process, object, _reason}, state) do
-    downed_room_record =
+    {room_name, _room_pid} =
       state
       |> Map.values()
-      |> Enum.find(fn r -> r.pid == object end)
-    new_state = Map.delete(state, downed_room_record.name)
+      |> Enum.find(fn {room_name, _room_pid} -> room_name == object end)
+    new_state = Map.delete(state, room_name)
     {:noreply, new_state}
   end
 
@@ -60,12 +62,11 @@ defmodule Chukinas.Chat.Room.Registry do
   # HELPERS
   #############################################################################
 
-  @spec create_room(room_name) :: room_pid
+  @spec create_room(room_name) :: room_record
   def create_room(room_name) do
-    # {:ok, pid} = RoomSupervisor.start_room(room_name)
-    {:ok, pid} = GenServer.start_link(Room, room_name)
+    {:ok, pid} = Room.Supervisor.start_room(room_name)
     Process.monitor(pid)
-    pid
+    {room_name, pid}
   end
 
 end

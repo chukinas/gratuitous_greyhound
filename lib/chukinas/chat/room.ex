@@ -1,10 +1,11 @@
 require IEx
 
 defmodule Chukinas.Chat.Room do
-  use GenServer
+  use GenServer, restart: :temporary
   alias Chukinas.User
   alias Chukinas.Users
   alias Chukinas.Chat.Room
+  # TODO replace
   alias Chukinas.Chat.Room.Registry, as: RoomRegistry
 
   #############################################################################
@@ -18,18 +19,14 @@ defmodule Chukinas.Chat.Room do
   # CLIENT API
   #############################################################################
 
-  def child_spec(room_name) do
-    %{
-      id: room_name,
-      start: {__MODULE__, :start_link, room_name},
-      # TODO is this the right restart?
-      restart: :transient
-      # TODO :shutdown?
-    }
-  end
+  # @spec build_child_spec(String.t()) :: Supervisor.child_spec()
+  # def build_child_spec(room_name) do
+  #   __MODULE__.child_spec(room_name)
+  #   |> Supervisor.child_spec(id: room_name, restart: :transient)
+  # end
 
-  def start_link(init_arg) do
-    GenServer.start_link(__MODULE__, init_arg, [])
+  def start_link(room_name) do
+    GenServer.start_link(__MODULE__, room_name, [])
   end
 
   def upsert_user(room_name, user) do
@@ -69,6 +66,7 @@ defmodule Chukinas.Chat.Room do
     state.users
     |> Users.as_list()
     |> Enum.each(fn u -> notify(u, state) end)
+
     {:noreply, state}
   end
 
@@ -93,5 +91,4 @@ defmodule Chukinas.Chat.Room do
     msg = {:state_update, user, state}
     User.send(user, msg)
   end
-
 end
