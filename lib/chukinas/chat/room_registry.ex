@@ -64,7 +64,8 @@ defmodule Chukinas.Chat.Room.Registry do
 
   @spec create_room(room_name) :: room_record
   def create_room(room_name) do
-    {:ok, pid} = Room.Supervisor.start_room(room_name)
+    child_spec = Room.child_spec(room_name)
+    {:ok, pid} = DynamicSupervisor.start_child(Room.Supervisor, child_spec)
     Process.monitor(pid)
     {room_name, pid}
   end
