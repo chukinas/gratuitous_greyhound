@@ -62,7 +62,6 @@ defmodule Chukinas.Rooms do
 
   @impl true
   def handle_info(:tick, count) do
-    IO.inspect count
     {:noreply, count + 1}
   end
 

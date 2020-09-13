@@ -28,7 +28,6 @@ defmodule ChukinasWeb.PageLive do
 
   @impl true
   def handle_event("uuid", uuid, socket) do
-    IO.puts(uuid)
     {:noreply, assign(socket, uuid: uuid)}
   end
 
