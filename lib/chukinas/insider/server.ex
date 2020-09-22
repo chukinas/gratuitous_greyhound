@@ -6,11 +6,7 @@ defmodule Chukinas.Insider.Server do
   # *** API
 
   def start_link(room_name) do
-    GenServer.start_link(__MODULE__, room_name, name: __MODULE__)
-  end
-
-  def handle_event(event) do
-    GenServer.call(__MODULE__, {:handle_event, event})
+    GenServer.start_link(__MODULE__, room_name, [])
   end
 
   # *** *******************************
