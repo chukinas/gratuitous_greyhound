@@ -8,9 +8,7 @@ defmodule Chukinas.Application do
       ChukinasWeb.Telemetry,
       {Phoenix.PubSub, name: Chukinas.PubSub},
       ChukinasWeb.Endpoint,
-      # Start a worker by calling: Chukinas.Worker.start_link(arg)
-      # {Chukinas.Worker, arg}
-      Chukinas.Rooms,
+      Chukinas.Chat.Supervisor,
     ]
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options

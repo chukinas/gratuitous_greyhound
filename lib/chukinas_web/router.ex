@@ -21,7 +21,7 @@ defmodule ChukinasWeb.Router do
     get "/", PageController, :index
     get "/about", AboutController, :index
     live "/chat", ChatLive, :index
-    live "/chat/:room_name", ChatLive, :show
+    live "/chat/:room_name", ChatRoomLive, :show
     live "/just-one", JustOneLive, :index
     live "/just-one/:room", JustOneLive, :show
   end

@@ -20,7 +20,6 @@ defmodule ChukinasWeb.JustOneLive do
       socket
       |> assign_tentative_uuid
       |> assign(:room, room)
-    socket |> inspect |> IO.puts()
     {:ok, socket}
   end
 
@@ -31,21 +30,17 @@ defmodule ChukinasWeb.JustOneLive do
 
   @impl true
   def handle_event("uuid", uuid, socket) do
-    IO.puts(uuid)
     {:noreply, assign(socket, uuid: uuid)}
   end
 
   # @impl true
   # def handle_event("go_to_room", %{"room_name" => room_name}, socket) do
   # # def handle_event("go_to_room", _, socket) do
-  #   IO.puts("Go to room #{room_name}!")
-  #   IO.puts(just_one_index_path(@socket, :index))
   #   {:noreply, socket}
   # end
 
   @impl true
   def handle_event("go_to_room", _, socket) do
-    IO.puts("Go to room! But which?")
     {:noreply, socket}
   end
 end

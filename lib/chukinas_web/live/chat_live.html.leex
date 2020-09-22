@@ -1,29 +1,5 @@
 <form phx-submit="go_to_room">
   <label for="room_name">Room:&nbsp;&nbsp;</label>
-  <input
-    type="text"
-    name="room_name"
-    placeholder="<%= @room_name %>"
-    autofocus
-  />
+  <input type="text" name="room_name"/>
   <button type="submit">Go To Room!</button>
 </form>
-
-<%= if @live_action != :index do %>
-<form phx-submit="go_to_lobby">
-  <button type="submit">Go Back To Lobby!</button>
-</form>
-<% end %>
-
-<form phx-submit="new_msg">
-  <label>New Message:&nbsp;&nbsp;</label>
-  <input type="text" name="msg" value="<%= @new_msg %>" />
-  <button type="submit">Submit</button>
-</form>
-
-<h2>Messages</h2>
-<ul>
-  <%= for msg <- @messages do %>
-  <li><%= msg %></li>
-  <% end %>
-</ul>
