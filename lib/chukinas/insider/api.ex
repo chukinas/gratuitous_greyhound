@@ -1,10 +1,5 @@
 defmodule Chukinas.Insider.API do
-  # alias Chukinas.Insider.Server
   alias Chukinas.Insider.Registry
-
-  # def start_link(room_name) do
-  #   Server.start_link(room_name)
-  # end
 
   def flip(room_name, user_uuid) do
     user = %{uuid: user_uuid}

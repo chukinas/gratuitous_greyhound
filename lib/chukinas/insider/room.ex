@@ -1,4 +1,4 @@
-defmodule Chukinas.Insider.Server do
+defmodule Chukinas.Insider.Room do
   use GenServer
   alias Chukinas.Insider.FSM
 
