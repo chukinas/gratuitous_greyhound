@@ -20,7 +20,7 @@ defmodule Chukinas.MixProject do
   def application do
     [
       mod: {Chukinas.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :gen_state_machine]
     ]
   end
 
@@ -48,6 +48,7 @@ defmodule Chukinas.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:uuid, "~> 1.1" },
+      {:gen_state_machine, "~> 2.0"},
     ]
   end
 

@@ -12,8 +12,8 @@ defmodule Chukinas.Chat.Room do
   # STATE
   #############################################################################
 
-  @enforce_keys k = [:name]
-  defstruct k ++ [msgs: [], users: Users.new()]
+    @enforce_keys k = [:name]
+    defstruct k ++ [msgs: [], users: Users.new()]
 
   #############################################################################
   # CLIENT API
