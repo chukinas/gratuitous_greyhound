@@ -10,7 +10,9 @@ defmodule Chukinas.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      # https://github.com/jeremyjh/dialyxir/wiki/Phoenix-Dialyxir-Quickstart
+      dialyzer: [plt_add_deps: :transitive],
     ]
   end
 
@@ -49,6 +51,8 @@ defmodule Chukinas.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:uuid, "~> 1.1" },
       {:gen_state_machine, "~> 2.0"},
+      # https://github.com/jeremyjh/dialyxir/wiki/Phoenix-Dialyxir-Quickstart
+      {:dialyxir, "~> 0.5.0", only: [:dev], runtime: false},
     ]
   end
 

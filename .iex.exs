@@ -7,7 +7,11 @@ alias Chukinas.Chat.Room
 alias Chukinas.Chat.Room.Registry, as: RoomRegistry
 alias Chukinas.Insider.API, as: I
 
-# {:ok, pid} = FSM.start_link()
+# {:ok, pid} = StateMachine.start_link()
+
+room_name = "yellow"
+user = %User{name: "Jonathan", pids: [self()], uuid: self()}
+I.flip(room_name, user)
 
 # alias C, as: C
 # C.start_link

@@ -1,6 +1,20 @@
 defmodule Chukinas.User do
+  alias Chukinas.User
+
+  # *** *******************************
+  # *** TYPES
+
   @enforce_keys k = [:uuid, :pids]
-  defstruct k ++ [:id, name: :undefined]
+  defstruct k ++ [:id, name: ""]
+  @type t :: %__MODULE__{uuid: any(), pids: [pid()], id: integer() | nil, name: String.t()}
+
+  @spec new(any()) :: t()
+  def new(uuid) do
+    %User{uuid: uuid, pids: [self()]}
+  end
+
+  # *** *******************************
+  # *** OTHER
 
   def remove_pid(user, pid) do
     pids = Enum.filter(user.pids, fn p -> p != pid end)

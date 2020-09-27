@@ -1,23 +1,14 @@
-defmodule Chukinas.Insider.FSM do
+defmodule Chukinas.Insider.StateMachine do
+  alias Chukinas.Insider.{State, Event, Phase}
+  # alias Chukinas.User
 
-  def handle_event({:flip, _user}, state) do
-    new_fsm_state =
-      case state.fsm_state do
-        :off -> :on
-        _ -> :off
-      end
-    new_count = state.count + 1
-    state = state
-    |> Map.put(:fsm_state, new_fsm_state)
-    |> Map.put(:count, new_count)
-    {state, state}
+  @spec handle_event(Event.t(), State.t()) :: State.t()
+  def handle_event(%{name: :flip}, state) do
+    state
+    |> State.set_phase(&Phase.flip/1)
+    |> State.increment_count()
   end
 end
-
-
-#   def handle_event({:call, _from}, :change_name, _state, data) do
-#     {:keep_state, data}
-#   end
 
 #   # *** *******************************
 #   # *** LOBBY

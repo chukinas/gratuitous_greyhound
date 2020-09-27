@@ -19,8 +19,8 @@ defmodule Chukinas.Insider.Registry do
     GenServer.start_link(__MODULE__, state,  name: __MODULE__)
   end
 
-  # @spec get_room(room_name) :: room_pid
-  def get_room(room_name) do
+  @spec get_room_pid(String.t()) :: pid()
+  def get_room_pid(room_name) do
     GenServer.call(__MODULE__, {:get_room, room_name})
   end
 

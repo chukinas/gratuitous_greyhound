@@ -1,14 +1,19 @@
 defmodule Chukinas.Insider.API do
-  alias Chukinas.Insider.Registry
+  alias Chukinas.Insider.{Registry, Room, Event, State}
+  alias Chukinas.User
 
+  @spec flip(String.t(), any()) :: State.t()
   def flip(room_name, user_uuid) do
-    user = %{uuid: user_uuid}
-    event = {:flip, user}
-    find_room_and_send_event(room_name, event)
+    user = User.new(user_uuid)
+    Event.new(:flip, user)
+    |> find_room(room_name)
+    |> Room.handle_event()
   end
 
-  def find_room_and_send_event(room_name, event) do
-    Registry.get_room(room_name)
-    |> GenServer.call({:handle_event, event})
+  @spec find_room(Event.t(), String.t()) :: Event.t()
+  def find_room(event, room_name) do
+    room_pid = Registry.get_room_pid(room_name)
+    Event.set_room(event, room_pid)
   end
+
 end
