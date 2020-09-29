@@ -5,9 +5,10 @@ defmodule Chukinas.Insider.API do
   @spec flip(String.t(), any()) :: State.t()
   def flip(room_name, user_uuid) do
     user = User.new(user_uuid)
-    Event.new(:flip, user)
-    |> find_room(room_name)
-    |> Room.handle_event()
+    event =
+      Event.new(:flip)
+      |> find_room(room_name)
+    Room.handle_event(event, user)
   end
 
   @spec find_room(Event.t(), String.t()) :: Event.t()

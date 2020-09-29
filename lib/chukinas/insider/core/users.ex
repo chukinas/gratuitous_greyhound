@@ -7,14 +7,14 @@ defmodule Chukinas.Insider.Users do
   def new(), do: []
 
   # get_id(%{:uuid => user_uuid, :pid => user_pid} = user, users) do
-  def set_id(user, users) do
-    # TODO implement
-    # user =
-    #   user
-    #   |> Map.put(new?: true)
-    #   |> Map.put(id: 1)
-    {user, users}
-  end
+  # def set_id(user, users) do
+  #   # TODO implement
+  #   # user =
+  #   #   user
+  #   #   |> Map.put(new?: true)
+  #   #   |> Map.put(id: 1)
+  #   {user, users}
+  # end
 
   @spec populate_id(t(), User.t()) :: User.t()
   def populate_id(users, user) do
