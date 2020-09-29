@@ -1,4 +1,4 @@
-defmodule Chukinas.Users do
+defmodule Chukinas.Chat.Users do
   alias Chukinas.User
 
   def new(), do: Map.new()

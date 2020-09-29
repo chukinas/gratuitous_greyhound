@@ -26,6 +26,11 @@ defmodule Chukinas.Insider.State do
   end
 
   # *** *******************************
+  # *** USERS
+
+  # def add_user(state, user)
+
+  # *** *******************************
   # *** PHASE
 
   @spec get_phase(%State{}) :: Phase.t()
@@ -39,6 +44,5 @@ defmodule Chukinas.Insider.State do
 
   def set_phase(state, phase) do
     %{state | phase: phase}
-    # Map.update!(state, :phase, phase)
   end
 end

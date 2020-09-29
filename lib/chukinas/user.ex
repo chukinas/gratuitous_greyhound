@@ -4,14 +4,54 @@ defmodule Chukinas.User do
   # *** *******************************
   # *** TYPES
 
-  @enforce_keys k = [:uuid, :pids]
-  defstruct k ++ [:id, name: ""]
-  @type t :: %__MODULE__{uuid: any(), pids: [pid()], id: integer() | nil, name: String.t()}
+  @enforce_keys k = [:uuid, :pids, :id]
+  defstruct k ++ [name: ""]
+  @type user_id :: integer() | :unk | :new
+  @type t :: %__MODULE__{uuid: any(), pids: [pid()], id: user_id(), name: String.t()}
 
-  @spec new(any()) :: t()
+  @spec new(uuid :: any()) :: t()
   def new(uuid) do
-    %User{uuid: uuid, pids: [self()]}
+    %User{uuid: uuid, pids: [self()], id: :unk}
+    # %{user | }
   end
+
+  # *** *******************************
+  # *** PIDS
+
+  @spec have_matching_pid([t()]) :: boolean()
+  def have_matching_pid(users) do
+    pid_intersection_count =
+      users
+      |> Enum.map(&get_pid_mapset/1)
+      |> Enum.reduce(nil, &reduce/2)
+      |> MapSet.size()
+     pid_intersection_count > 0
+  end
+
+  defp get_pid_mapset(user) do
+    MapSet.new(user.pids)
+  end
+
+  defp reduce(mapset, nil), do: mapset
+  defp reduce(mapset, acc_mapset) do
+    MapSet.intersection(mapset, acc_mapset)
+  end
+
+  # *** *******************************
+  # *** ID
+
+  @spec get_id(t()) :: user_id()
+  def get_id(user), do: user.id
+
+  @spec set_id(t(), user_id()) :: t()
+  def set_id(user, id), do: %{user | id: id}
+
+  @spec new?(t()) :: boolean() | {:error, String.t()}
+  def new?(%{id: :new}), do: true
+  def new?(%{id: id}) when is_integer(id), do: false
+  def new?(%{id: :unk}), do: {:error, "Populate user id first!"}
+
+  def mark_new(user), do: %{user | id: :new}
 
   # *** *******************************
   # *** OTHER

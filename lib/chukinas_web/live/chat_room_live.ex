@@ -3,7 +3,7 @@ require IEx
 defmodule ChukinasWeb.ChatRoomLive do
   use ChukinasWeb, :live_view
   alias Chukinas.User
-  alias Chukinas.Users
+  alias Chukinas.Chat.Users
   alias Chukinas.Chat.Room
 
   #############################################################################
@@ -24,7 +24,7 @@ defmodule ChukinasWeb.ChatRoomLive do
   def mount(params, _session, socket) do
     room_name = Map.get(params, "room_name", "")
     room = %Room{name: room_name}
-    user = %User{uuid: self(), pids: [self()]}
+    user = User.new(self())
     Room.upsert_user(room_name, user)
     socket =
       socket
@@ -63,7 +63,7 @@ defmodule ChukinasWeb.ChatRoomLive do
   @impl true
   def handle_info({:state_update, user, room}, socket) do
     socket = assign_user_and_room(socket, user, room)
-    
+
     {:noreply, socket}
   end
 end

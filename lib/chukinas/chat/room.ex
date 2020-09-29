@@ -3,7 +3,7 @@ require IEx
 defmodule Chukinas.Chat.Room do
   use GenServer, restart: :temporary
   alias Chukinas.User
-  alias Chukinas.Users
+  alias Chukinas.Chat.Users
   alias Chukinas.Chat.Room
   # TODO replace
   alias Chukinas.Chat.Room.Registry, as: RoomRegistry

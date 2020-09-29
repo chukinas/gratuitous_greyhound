@@ -26,18 +26,6 @@ defmodule Chukinas.Insider.Room do
   # @spec handle_call({:handle_event, Event.t()}, any(), State.t()) :: any()
   def handle_call({:handle_event, event}, _from, state) do
     state = StateMachine.handle_event(event, state)
-    # {user, users} =
-    #   event
-    #   |> User.from_event()
-    #   |> Users.set_id(state.users)
-    # state =
-    #   state
-    #   |> Map.put(users: users)
-    # # TODO put user back in event
-    # state = case user.new? do
-    #   true -> StateMachine.handle_event(event, state)
-    # end
-    # {reply, state} = StateMachine.handle_event(event, state)
     reply = state
     {:reply, reply, state}
   end
