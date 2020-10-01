@@ -25,19 +25,27 @@ defmodule Chukinas.Insider.StateMachine do
     handle_event(event, new_user, new_state)
   end
 
-  # *** *******************************
-  # *** NAMED EVENTS
-
   def handle_event(%{name: :get_state}, _user, state) do
     IO.puts("getting state")
     state
   end
 
+  # *** *******************************
+  # *** STATE-ALTERING EVENTS
+
+  def handle_event(%{version_incremented?: false} = event, user, state) do
+    handle_event(
+      Event.version_is_incremented(event),
+      user,
+      State.increment_count(state)
+    )
+  end
+
   def handle_event(%{name: :flip}, _user, state) do
     IO.puts("flipping")
+
     state
     |> State.set_phase(&Phase.flip/1)
-    |> State.increment_count()
   end
 
   # def handle_event(%{name: :add_user} = event, state) do
@@ -46,8 +54,6 @@ defmodule Chukinas.Insider.StateMachine do
   #   |> State.set_phase(&Phase.flip/1)
   #   |> State.increment_count()
   # end
-
-
 end
 
 #   # *** *******************************
