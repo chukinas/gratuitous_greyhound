@@ -38,6 +38,14 @@ defmodule Chukinas.User do
   end
 
   # *** *******************************
+  # *** UUID
+
+  @spec are_same_user?(t(), t()) :: boolean
+  def are_same_user?(left, right) do
+    left.uuid === right.uuid
+  end
+
+  # *** *******************************
   # *** ID
 
   @spec get_id(t()) :: user_id()

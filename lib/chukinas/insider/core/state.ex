@@ -1,8 +1,5 @@
-# TODO rename Token?
-
 defmodule Chukinas.Insider.State do
   alias Chukinas.Insider.{State, Users, Phase}
-  alias Chukinas.User
 
   # *** *******************************
   # *** TYPES
@@ -12,7 +9,7 @@ defmodule Chukinas.Insider.State do
             count: 0,
             name: ""
 
-  @type t :: %__MODULE__{phase: Phase.t(), users: [User.t()], count: integer()}
+  @type t :: %__MODULE__{phase: Phase.t(), users: Users.t(), count: integer()}
 
   @spec new(String.t()) :: t()
   def new(room_name), do: %__MODULE__{name: room_name}
@@ -28,7 +25,10 @@ defmodule Chukinas.Insider.State do
   # *** *******************************
   # *** USERS
 
-  # def add_user(state, user)
+  @spec set_users(t(), Users.t()) :: t()
+  def set_users(state, users) do
+    %{state | users: users}
+  end
 
   # *** *******************************
   # *** PHASE

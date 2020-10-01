@@ -1,22 +1,40 @@
 defmodule Chukinas.Insider.StateMachine do
-  alias Chukinas.Insider.{State, Event, Phase}
+  alias Chukinas.Insider.{State, Event, Phase, Users}
   alias Chukinas.User
 
   @spec handle_event(Event.t(), User.t(), State.t()) :: State.t()
   def handle_event(event, user, state)
 
   # *** *******************************
-  # *** USER ID
+  # *** PRE-EVENT PIPELINE
 
-  # *** Is user already registered?
+  # *** Look up user's ID
   def handle_event(event, %{id: :unk} = user, state) do
-    IO.inspect({event, user, state}, label: "user id unknown!")
-    # TODO need to do actual check
-    user = User.mark_new(user)
-    handle_event(event, user, state)
+    IO.puts("id unk")
+    user_id = Users.lookup_user_id(state.users, user)
+    new_user = User.set_id(user, user_id)
+    handle_event(event, new_user, state)
+  end
+
+  # *** If user is new, add her
+  def handle_event(event, %{id: :new} = user, state) do
+    IO.puts("id new")
+    users = Users.add(state.users, user)
+    new_state = State.set_users(state, users)
+    new_user = User.set_id(user, :unk)
+    handle_event(event, new_user, new_state)
+  end
+
+  # *** *******************************
+  # *** NAMED EVENTS
+
+  def handle_event(%{name: :get_state}, _user, state) do
+    IO.puts("getting state")
+    state
   end
 
   def handle_event(%{name: :flip}, _user, state) do
+    IO.puts("flipping")
     state
     |> State.set_phase(&Phase.flip/1)
     |> State.increment_count()

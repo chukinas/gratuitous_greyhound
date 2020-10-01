@@ -1,12 +1,11 @@
 defmodule Chukinas.Insider.Event do
-  alias Chukinas.User
 
   # *** *******************************
   # *** TYPES
 
   defstruct [:payload, :name, :room]
 
-  @type event_name :: :flip
+  @type event_name :: :flip | :get_state
   @type t :: %__MODULE__{name: event_name(), payload: any(), room: nil | pid()}
 
   @spec new(event_name(), any()) :: t()

@@ -1,28 +1,35 @@
 defmodule Chukinas.Insider.Users do
   alias Chukinas.User
 
-  @type t :: list(User.t())
+  # *** *******************************
+  # *** TYPES
+
+  defstruct list: [],
+            next_id: 1
+
+  @type t :: %__MODULE__{list: list(User.t()), next_id: integer()}
 
   @spec new() :: t()
-  def new(), do: []
+  def new(), do: %__MODULE__{list: [], next_id: 1}
 
-  # get_id(%{:uuid => user_uuid, :pid => user_pid} = user, users) do
-  # def set_id(user, users) do
-  #   # TODO implement
-  #   # user =
-  #   #   user
-  #   #   |> Map.put(new?: true)
-  #   #   |> Map.put(id: 1)
-  #   {user, users}
-  # end
+  # *** *******************************
+  # *** PID
 
-  @spec populate_id(t(), User.t()) :: User.t()
-  def populate_id(users, user) do
-    user_id = case Enum.find(users, fn u -> User.have_matching_pid([u, user]) end) do
-      nil -> :new
-      existing_user -> User.get_id(existing_user)
+  @spec lookup_user_id(t(), User.t()) :: integer() | :new
+  def lookup_user_id(users, user) do
+    case Enum.find(users.list, fn u -> User.are_same_user?(u, user) end) do
+      %User{id: id} -> id
+      _ -> :new
     end
-    User.set_id(user, user_id)
   end
 
+  # *** *******************************
+  # *** USER
+
+  @spec add(Users.t(), User.t()) :: Users.t()
+  def add(users, user) do
+    user = User.set_id(user, users.next_id)
+    list = [user | users.list]
+    %{users | list: list, next_id: users.next_id + 1}
+  end
 end
