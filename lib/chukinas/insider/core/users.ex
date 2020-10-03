@@ -23,6 +23,12 @@ defmodule Chukinas.Insider.Users do
     end
   end
 
+  @spec unregister_pid(t(), pid()) :: t()
+  def unregister_pid(users, pid) do
+    list = Enum.map(users.list, &User.remove_pid(&1, pid))
+    %{users | list: list}
+  end
+
   # *** *******************************
   # *** USER
 

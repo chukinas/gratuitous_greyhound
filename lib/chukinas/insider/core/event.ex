@@ -5,8 +5,13 @@ defmodule Chukinas.Insider.Event do
 
   defstruct [:payload, :name, :room, version_incremented?: false]
 
-  @type event_name :: :flip | :get_state
-  @type t :: %__MODULE__{name: event_name(), payload: any(), room: nil | pid(), version_incremented?: boolean()}
+  @type event_name :: :flip | :get_state | :unregister_pid
+  @type t :: %__MODULE__{
+    name: event_name(),
+    payload: any(),
+    room: nil | pid(),
+    version_incremented?: boolean()
+  }
 
   @spec new(event_name(), any()) :: t()
   def new(name, payload \\ nil) do

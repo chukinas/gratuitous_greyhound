@@ -37,6 +37,12 @@ defmodule Chukinas.User do
     MapSet.intersection(mapset, acc_mapset)
   end
 
+  @spec remove_pid(t(), pid()) :: t()
+  def remove_pid(user, pid) do
+    pids = List.delete(user.pids, pid)
+    %{user | pids: pids}
+  end
+
   # *** *******************************
   # *** UUID
 
@@ -63,11 +69,6 @@ defmodule Chukinas.User do
 
   # *** *******************************
   # *** OTHER
-
-  def remove_pid(user, pid) do
-    pids = Enum.filter(user.pids, fn p -> p != pid end)
-    Map.put(user, :pids, pids)
-  end
 
   def update(nil, user_update), do: user_update
   # TODO guard against uuids being different

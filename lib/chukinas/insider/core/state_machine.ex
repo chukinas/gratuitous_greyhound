@@ -48,16 +48,38 @@ defmodule Chukinas.Insider.StateMachine do
     |> State.set_phase(&Phase.flip/1)
   end
 
-  # def handle_event(%{name: :add_user} = event, state) do
-  #   new_users = Users.add(state.users, event.user)
-  #   state
-  #   |> State.set_phase(&Phase.flip/1)
-  #   |> State.increment_count()
-  # end
+  # *** *******************************
+  # *** AUTOMATIC EVENTS
+  # *** handle_event/2
+
+  @spec handle_event(Event.t(), State.t()) :: State.t()
+  def handle_event(event, state)
+
+  def handle_event(%{name: :unregister_pid, payload: pid}, state) do
+    users = Users.unregister_pid(state.users, pid)
+    State.set_users(state, users)
+  end
+
+  def handle_event(%{version_incremented?: false} = event, state) do
+    handle_event(
+      Event.version_is_incremented(event),
+      State.increment_count(state)
+    )
+  end
+
 end
 
-#   # *** *******************************
-#   # *** LOBBY
+
+
+
+
+
+
+
+
+
+
+
 
 #   def handle_event({:call, from}, :start_game, :lobby, data) do
 #     # GUARD: min player count

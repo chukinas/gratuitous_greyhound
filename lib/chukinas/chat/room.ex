@@ -41,27 +41,27 @@ defmodule Chukinas.Chat.Room do
   # SERVER CALLBACKS
   #############################################################################
 
-  @impl true
+  @impl GenServer
   def init(room_name) do
     state = %Room{name: room_name}
     {:ok, state, {:continue, :notify}}
   end
 
-  @impl true
+  @impl GenServer
   def handle_call({:add_msg, msg}, _from, %Room{} = state) do
     msgs = [msg | state.msgs]
     state = Map.put(state, :msgs, msgs)
     {:reply, state, state, {:continue, :notify}}
   end
 
-  @impl true
+  @impl GenServer
   def handle_call({:upsert_user, user}, _from, state) do
     users = Users.upsert(state.users, user)
     state = Map.put(state, :users, users)
     {:reply, state, state, {:continue, :notify}}
   end
 
-  @impl true
+  @impl GenServer
   def handle_continue(:notify, state) do
     state.users
     |> Users.as_list()
@@ -70,7 +70,7 @@ defmodule Chukinas.Chat.Room do
     {:noreply, state}
   end
 
-  @impl true
+  @impl GenServer
   def handle_info({:DOWN, _ref, :process, object, _reason}, state) do
     users = Users.remove_pid(state.users, object)
     state = Map.put(state, :users, users)

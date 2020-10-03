@@ -19,13 +19,22 @@ defmodule Chukinas.Insider.Room do
   # *** *******************************
   # *** CALLBACKS
 
+  @impl GenServer
   def init(room_name) do
     {:ok, State.new(room_name)}
   end
 
-  # @spec handle_call({:handle_event, Event.t()}, any(), State.t()) :: any()
-  def handle_call({:handle_event, event, user}, _from, state) do
+  @impl GenServer
+  def handle_call({:handle_event, event, user}, {pid, _tag}, state) do
+    Process.monitor(pid)
     state = StateMachine.handle_event(event, user, state)
     {:reply, state, state}
+  end
+
+  @impl GenServer
+  def handle_info({:DOWN, _ref, :process, object, _reason}, state) do
+    event = Event.new(:unregister_pid, object)
+    state = StateMachine.handle_event(event, state)
+    {:noreply, state, {:continue, :notify}}
   end
 end
