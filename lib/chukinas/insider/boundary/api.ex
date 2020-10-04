@@ -1,5 +1,6 @@
-defmodule Chukinas.Insider.API do
-  alias Chukinas.Insider.{Registry, Room, Event, State}
+defmodule Chukinas.Insider.Boundary.API do
+  alias Chukinas.Insider.Core.{Event, State}
+  alias Chukinas.Insider.Boundary.{Registry, Room}
   alias Chukinas.User
 
   @spec flip(String.t(), any()) :: State.t()

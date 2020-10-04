@@ -1,5 +1,5 @@
-defmodule Chukinas.Insider.StateMachine do
-  alias Chukinas.Insider.{State, Event, Phase, Users}
+defmodule Chukinas.Insider.Core.StateMachine do
+  alias Chukinas.Insider.Core.{State, Event, Phase, Users}
   alias Chukinas.User
 
   @spec handle_event(Event.t(), User.t(), State.t()) :: State.t()

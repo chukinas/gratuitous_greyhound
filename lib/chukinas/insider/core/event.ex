@@ -1,4 +1,4 @@
-defmodule Chukinas.Insider.Event do
+defmodule Chukinas.Insider.Core.Event do
 
   # *** *******************************
   # *** TYPES

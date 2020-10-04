@@ -1,7 +1,6 @@
-defmodule Chukinas.Insider.Supervisor do
+defmodule Chukinas.Insider.Boundary.Supervisor do
   use Supervisor
-  alias Chukinas.Insider
-  alias Chukinas.Insider.Room
+  alias Chukinas.Insider.Boundary.{Room, Registry}
 
   def start_link(_opts) do
     Supervisor.start_link(__MODULE__, :ok, name: __MODULE__)
@@ -10,7 +9,7 @@ defmodule Chukinas.Insider.Supervisor do
   @impl true
   def init(:ok) do
     children = [
-      Insider.Registry,
+      Registry,
       {DynamicSupervisor, strategy: :one_for_one, name: Room.Supervisor}
     ]
     Supervisor.init(children, strategy: :one_for_one)

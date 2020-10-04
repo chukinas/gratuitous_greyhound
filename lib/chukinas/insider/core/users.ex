@@ -1,5 +1,6 @@
-defmodule Chukinas.Insider.Users do
+defmodule Chukinas.Insider.Core.Users do
   alias Chukinas.User
+  alias Chukinas.Insider.Core.Users
 
   # *** *******************************
   # *** TYPES

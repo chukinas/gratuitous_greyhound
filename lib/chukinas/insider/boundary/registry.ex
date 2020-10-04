@@ -1,6 +1,6 @@
-defmodule Chukinas.Insider.Registry do
+defmodule Chukinas.Insider.Boundary.Registry do
   use GenServer
-  alias Chukinas.Insider.Room
+  alias Chukinas.Insider.Boundary.Room
 
   # *** *******************************
   # *** TYPES

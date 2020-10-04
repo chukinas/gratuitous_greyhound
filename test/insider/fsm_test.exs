@@ -1,12 +1,12 @@
-defmodule Chukinas.Insider.StateMachineTest do
+defmodule Chukinas.Insider.Core.StateMachineTest do
   use ExUnit.Case
-  alias Chukinas.Insider.StateMachine
+  alias Chukinas.Insider.Core.StateMachine
+  alias Chukinas.User
 
+  # *** *******************************
+  # *** USER
 
-  test "insider state transitions" do
-    assert {:ok, _} = StateMachine.start_link()
-    assert {:introduction, _} = StateMachine.start_game()
-    assert {:play, _} = StateMachine.end_intro()
-    assert {:}
+  test "" do
+
   end
 end

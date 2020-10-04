@@ -1,6 +1,6 @@
-defmodule Chukinas.Insider.Room do
+defmodule Chukinas.Insider.Boundary.Room do
   use GenServer
-  alias Chukinas.Insider.{Event, State, StateMachine}
+  alias Chukinas.Insider.Core.{Event, State, StateMachine}
   alias Chukinas.User
 
   # *** *******************************

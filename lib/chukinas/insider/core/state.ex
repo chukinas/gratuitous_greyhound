@@ -1,5 +1,5 @@
-defmodule Chukinas.Insider.State do
-  alias Chukinas.Insider.{State, Users, Phase}
+defmodule Chukinas.Insider.Core.State do
+  alias Chukinas.Insider.Core.{State, Users, Phase}
 
   # *** *******************************
   # *** TYPES

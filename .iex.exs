@@ -4,7 +4,7 @@ import_file_if_available("~/.iex.exs")
 alias Chukinas.User
 alias Chukinas.Chat.{Users, Room}
 alias Chukinas.Chat.Room.Registry, as: RoomRegistry
-alias Chukinas.Insider.API, as: I
+alias Chukinas.Insider.Boundary.API, as: I
 
 # {:ok, pid} = StateMachine.start_link()
 
