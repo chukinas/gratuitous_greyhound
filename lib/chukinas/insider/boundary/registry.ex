@@ -21,6 +21,7 @@ defmodule Chukinas.Insider.Boundary.Registry do
 
   @spec get_room_pid(String.t()) :: pid()
   def get_room_pid(room_name) do
+    
     GenServer.call(__MODULE__, {:get_room, room_name})
   end
 

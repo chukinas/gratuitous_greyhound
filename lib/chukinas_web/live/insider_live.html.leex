@@ -1,0 +1,28 @@
+<form phx-submit="change_user_name">
+  <label for="user_name"
+    >User Name for <%= inspect self() %>:&nbsp;&nbsp;</label
+  >
+  <input type="text" name="user_name" autofocus />
+  <button type="submit">Update</button>
+</form>
+
+<form phx-submit="go_to_room">
+  <label for="room_name">Room:&nbsp;&nbsp;</label>
+  <input type="text" name="room_name" placeholder="<%= @state.name %>" />
+  <button type="submit">Go To Room!</button>
+</form>
+
+<form phx-submit="go_to_lobby">
+  <button type="submit">Go Back To Lobby!</button>
+</form>
+
+<form phx-submit="add_msg">
+  <label>New Message:&nbsp;&nbsp;</label>
+  <input type="text" name="msg" value="<%= @msg_input_val %>" />
+  <button type="submit">Submit</button>
+</form>
+
+<h1>Light bulb state:</h1>
+<p><%= @state.phase %></p>
+<p><%= @state.name %></p>
+<button phx-click="flip">Flip!</button>

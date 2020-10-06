@@ -1,6 +1,6 @@
 require IEx
 
-defmodule ChukinasWeb.ChatRoomLive do
+defmodule ChukinasWeb.JustOneLive do
   use ChukinasWeb, :live_view
   alias Chukinas.User
   alias Chukinas.Chat.Users

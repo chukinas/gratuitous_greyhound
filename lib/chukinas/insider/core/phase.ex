@@ -1,4 +1,5 @@
 defmodule Chukinas.Insider.Core.Phase do
+  
   @type t :: :on | :off
 
   # defguard is_valid(phase) when phase in [:on, :off]

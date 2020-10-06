@@ -1,4 +1,5 @@
-defmodule ChukinasWeb.ChatLive do
+defmodule ChukinasWeb.
+Live do
   use ChukinasWeb, :live_view
 
   #############################################################################
