@@ -33,7 +33,9 @@ defmodule Chukinas.Insider.Boundary.Room do
 
   @impl GenServer
   def handle_info({:DOWN, _ref, :process, object, _reason}, state) do
-    event = Event.new(:unregister_pid, object)
+    event =
+      [name: :unregister_pid, payload: object]
+      |> Event.new()
     state = StateMachine.handle_event(event, state)
     {:noreply, state, {:continue, :notify}}
   end

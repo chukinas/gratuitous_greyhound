@@ -44,6 +44,12 @@ defmodule ChukinasWeb.InsiderLive do
     {:noreply, socket}
   end
 
+  @impl true
+  def handle_event("change_user_name", %{"user_name" => user_name}, socket) do
+    user = Map.put(socket.assigns.user, :name, user_name)
+    Room.upsert_user(socket.assigns.room.name, user)
+    {:noreply, socket}
+  end
 
   @impl true
   def handle_info({:state_update, user, room}, socket) do
