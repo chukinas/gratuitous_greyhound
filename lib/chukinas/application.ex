@@ -9,6 +9,7 @@ defmodule Chukinas.Application do
       {Phoenix.PubSub, name: Chukinas.PubSub},
       ChukinasWeb.Endpoint,
       Chukinas.Chat.Supervisor,
+      Chukinas.Insider.Boundary.Supervisor,
     ]
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options

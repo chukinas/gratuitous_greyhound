@@ -22,8 +22,8 @@ defmodule ChukinasWeb.Router do
     get "/about", AboutController, :index
     live "/chat", ChatLive, :index
     live "/chat/:room_name", ChatRoomLive, :show
-    live "/just-one", JustOneLive, :index
-    live "/just-one/:room", JustOneLive, :show
+    # live "/insider", InsiderLive, :index
+    live "/insider/:room", InsiderLive, :show
   end
 
   # Other scopes may use custom stacks.

@@ -1,0 +1,12 @@
+<h1>Light bulb state:</h1>
+<p><%= @state.phase %></p>
+<p><%= @state.name %></p>
+<button phx-click="flip">Flip!</button>
+
+<form phx-submit="change_user_name">
+  <label for="user_name"
+    >User Name for <%= inspect self() %>:&nbsp;&nbsp;</label
+  >
+  <input type="text" name="user_name" autofocus />
+  <button type="submit">Update</button>
+</form>
