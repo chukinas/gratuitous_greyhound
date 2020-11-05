@@ -21,15 +21,11 @@ defmodule ChukinasWeb.SkiesLive do
     {:ok, socket}
   end
 
-  # @impl y, socket}
-  # endtrue
-  # def handle_event("flip", _params, socket) do
-  #   IO.inspect(socket, label: "flipping!")
-  #   # TODO uuid
-  #   state = API.flip(socket.assigns.state.name, 1)
-  #   socket = assign(socket, :state, state)
-  #   {:noreply, socket}
-  # end
+  @impl true
+  def handle_event("select_space", %{"x" => x, "y" => y}, socket) do
+    IO.puts("selected a space: {#{x}, #{y}}")
+    {:noreply, socket}
+  end
 
   # @impl true
   # def handle_event("change_user_name", %{"user_name" => user_name}, socket) do

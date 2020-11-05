@@ -22,6 +22,12 @@ defmodule Chukinas.Skies.Maps do
     ]
   end
 
+  def get_x(space) do
+    elem(space, 0)
+  end
+  def get_y(space) do
+    elem(space, 1)
+  end
   def get_number(space) do
     elem(space, 2)
   end
