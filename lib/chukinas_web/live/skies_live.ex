@@ -19,7 +19,7 @@ defmodule ChukinasWeb.SkiesLive do
   #############################################################################
 
   @impl true
-  def mount(params, _session, socket) do
+  def mount(_params, _session, socket) do
     socket =
       socket
       |> assign(:map, Spaces.render_spaces())

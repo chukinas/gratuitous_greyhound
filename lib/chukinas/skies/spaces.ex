@@ -10,7 +10,11 @@ defmodule Chukinas.Skies.Spaces do
   end
 
   def render_spaces() do
-    [build_map_spec()]
+    for y <- 0..5, do: render_row(:nothing, y, 3)
+  end
+
+  def render_row(_spaces, y, max_x) do
+    for x <- 0..max_x, do: {{x, y}, "bye"}
   end
 
   def get_size(spaces) do
