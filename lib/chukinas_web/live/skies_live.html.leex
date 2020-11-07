@@ -13,11 +13,14 @@
     <%= for cell <- row do %>
       <button
         phx-click="select_space"
-        phx-value-x="<%= Maps.get_x(cell) %>"
-        phx-value-y="<%= Maps.get_y(cell) %>"
+        phx-value-x="<%= Spaces.get_x(cell) %>"
+        phx-value-y="<%= Spaces.get_y(cell) %>"
       >
-        <%= Maps.get_number(cell) %>
+        <%= Spaces.get_number(cell) %>
       </button>
     <% end %>
   </p>
 <% end %>
+<p>
+  <%= render_size() %>
+</p>

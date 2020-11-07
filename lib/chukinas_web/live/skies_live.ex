@@ -2,12 +2,17 @@ require IEx
 
 defmodule ChukinasWeb.SkiesLive do
   use ChukinasWeb, :live_view
-  alias Chukinas.Skies.Maps
+  alias Chukinas.Skies.Spaces
 
   #############################################################################
   # HELPERS
   #############################################################################
 
+  def render_size() do
+    {x, y} = Spaces.build_map_spec()
+    |> Spaces.get_size()
+    "{#{x}, #{y}}"
+  end
 
   #############################################################################
   # CALLBACKS
@@ -17,7 +22,7 @@ defmodule ChukinasWeb.SkiesLive do
   def mount(params, _session, socket) do
     socket =
       socket
-      |> assign(:map, Maps.map_grouped_by_rows())
+      |> assign(:map, Spaces.render_spaces())
     {:ok, socket}
   end
 
