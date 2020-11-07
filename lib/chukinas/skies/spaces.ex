@@ -1,41 +1,5 @@
 defmodule Chukinas.Skies.Spaces do
 
-  def get_formation({1, "a"}) do
-    spaces = %{
-                   {1, 0} => 1, {2, 0} => 1, {3, 0} => 1,
-      {0, 1} => 1, {1, 1} => 1, {2, 1} => 2, {3, 1} => 1,
-      {0, 2} => 1, {1, 2} => 2, {2, 2} => 3, {3, 2} => 1,
-      {0, 3} => 1, {1, 3} => 2, {2, 3} => 2, {3, 3} => 1,
-      {0, 4} => 1, {1, 4} => 1, {2, 4} => 1, {3, 4} => 1,
-    }
-    %{spaces: spaces}
-  end
-
-  def get_formation({1, "b"}) do
-    spaces = %{
-      {0, 0} => 1, {1, 0} => 1, {2, 0} => 1, {3, 0} => 1,
-      {0, 1} => 1, {1, 1} => 2, {2, 1} => 2, {3, 1} => 1,
-      {0, 2} => 1, {1, 2} => 2, {2, 2} => 2, {3, 2} => 1,
-      {0, 3} => 1, {1, 3} => 2, {2, 3} => 2, {3, 3} => 1,
-      {0, 4} => 1, {1, 4} => 2, {2, 4} => 2, {3, 4} => 1,
-      {0, 5} => 1, {1, 5} => 1, {2, 5} => 1, {3, 5} => 1,
-    }
-    %{spaces: spaces}
-  end
-
-  def render_spaces(spaces) do
-    {x_size, y_size} = get_size(spaces)
-    for y <- 0..y_size, do: render_row(spaces, y, x_size)
-  end
-
-  def render_row(spaces, y, max_x) do
-    for x <- 0..max_x, do: {{x, y}, render_space(spaces, {x, y})}
-  end
-
-  def render_space(spaces, coordinates) do
-    Map.get(spaces, coordinates, ".")
-  end
-
   def get_size(spaces) do
     {
       get_single_dimension(spaces, &get_x/1),
