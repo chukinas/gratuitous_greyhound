@@ -8,7 +8,7 @@ defmodule ChukinasWeb.SkiesLive do
   # HELPERS
   #############################################################################
 
-  def render_spaces() do
+  def build_view_model() do
     Map.build({1, "a"})
     |> ViewModel.build()
   end
@@ -21,7 +21,7 @@ defmodule ChukinasWeb.SkiesLive do
   def mount(_params, _session, socket) do
     socket =
       socket
-      |> assign(:map, render_spaces())
+      |> assign(:vm, build_view_model())
     {:ok, socket}
   end
 
