@@ -8,9 +8,9 @@ defmodule ChukinasWeb.SkiesLive do
   # HELPERS
   #############################################################################
 
-  def render_grid() do
-    Spaces.get_formation({1, "a"})
-    |> Spaces.render_grid()
+  def render_spaces() do
+    Spaces.get_formation({1, "a"}).spaces
+    |> Spaces.render_spaces()
   end
 
   #############################################################################
@@ -21,7 +21,7 @@ defmodule ChukinasWeb.SkiesLive do
   def mount(_params, _session, socket) do
     socket =
       socket
-      |> assign(:map, render_grid())
+      |> assign(:map, render_spaces())
     {:ok, socket}
   end
 
