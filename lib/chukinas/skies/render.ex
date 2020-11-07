@@ -1,7 +1,7 @@
-defmodule Chukinas.Skies.Render do
+defmodule Chukinas.Skies.ViewModel do
   alias Chukinas.Skies.Spaces
 
-  def render(state) do
+  def build(state) do
     render_spaces(state.spaces)
   end
 

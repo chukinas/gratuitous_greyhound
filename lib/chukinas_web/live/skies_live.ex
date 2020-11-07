@@ -2,15 +2,15 @@ require IEx
 
 defmodule ChukinasWeb.SkiesLive do
   use ChukinasWeb, :live_view
-  alias Chukinas.Skies.{Spaces, MapBuilder, Render}
+  alias Chukinas.Skies.{Spaces, Map, ViewModel}
 
   #############################################################################
   # HELPERS
   #############################################################################
 
   def render_spaces() do
-    MapBuilder.get({1, "a"})
-    |> Render.render()
+    Map.build({1, "a"})
+    |> ViewModel.build()
   end
 
   #############################################################################

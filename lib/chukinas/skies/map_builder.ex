@@ -1,6 +1,6 @@
-defmodule Chukinas.Skies.MapBuilder do
+defmodule Chukinas.Skies.Map do
 
-  def get({1, "a"}) do
+  def build({1, "a"}) do
     spaces = %{
                    {1, 0} => 1, {2, 0} => 1, {3, 0} => 1,
       {0, 1} => 1, {1, 1} => 1, {2, 1} => 2, {3, 1} => 1,
@@ -18,7 +18,7 @@ defmodule Chukinas.Skies.MapBuilder do
     %{spaces: spaces, elements: elements}
   end
 
-  def get({1, "b"}) do
+  def build({1, "b"}) do
     spaces = %{
       {0, 0} => 1, {1, 0} => 1, {2, 0} => 1, {3, 0} => 1,
       {0, 1} => 1, {1, 1} => 2, {2, 1} => 2, {3, 1} => 1,
