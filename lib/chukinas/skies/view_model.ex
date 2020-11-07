@@ -1,5 +1,4 @@
 defmodule Chukinas.Skies.ViewModel do
-  alias Chukinas.Skies.Spaces
 
   def build(state) do
     %{
@@ -9,20 +8,17 @@ defmodule Chukinas.Skies.ViewModel do
   end
 
   defp render_spaces(spaces) do
-    {x_size, y_size} = Spaces.get_size(spaces)
-    for y <- 0..y_size, do: render_row(spaces, y, x_size)
+    spaces
+    |> Map.to_list()
+    |> Enum.map(&render_space/1)
   end
 
   defp render_bombers(elements) do
     Enum.concat(elements)
   end
 
-  defp render_row(spaces, y, max_x) do
-    for x <- 0..max_x, do: {{x, y}, render_space(spaces, {x, y})}
-  end
-
-  defp render_space(spaces, coordinates) do
-    Map.get(spaces, coordinates, ".")
+  defp render_space({{x, y}, content}) do
+    %{x: x, y: y, lethal_level: content}
   end
 
 end
