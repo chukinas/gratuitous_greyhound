@@ -1,21 +1,25 @@
 defmodule Chukinas.Skies.Spaces do
 
   def build_map_spec() do
-    [
-      {{0, 0}, 5}, {{1, 0}, 4}, {{2, 0}, 1}, {{3, 0}, 10},
-      {{0, 1}, 5}, {{1, 1}, 4}, {{2, 1}, 1}, {{3, 1}, 10},
-      {{0, 2}, 5}, {{1, 2}, 4}, {{2, 2}, 1}, {{3, 2}, 10},
-      {{0, 3}, 5}, {{1, 3}, 4}, {{2, 3}, 1}, {{3, 3}, 10},
-    ]
+    %{
+      {0, 0} => 5, {1, 0} => 4, {2, 0} => 3, {3, 0} => 3,
+      {0, 1} => 2, {1, 1} => 8, {2, 1} => 1, {3, 1} => 0,
+      {0, 2} => 5, {1, 2} => 1, {2, 2} => 0, {3, 2} => 1,
+      {0, 3} => 5, {1, 3} => 3, {2, 3} => 4, {3, 3} => 7,
+    }
   end
 
-  def render_spaces(spaces) do
+  def render_grid(spaces) do
     {x_size, y_size} = get_size(spaces)
     for y <- 0..y_size, do: render_row(spaces, y, x_size)
   end
 
-  def render_row(_spaces, y, max_x) do
-    for x <- 0..max_x, do: {{x, y}, "bye"}
+  def render_row(spaces, y, max_x) do
+    for x <- 0..max_x, do: {{x, y}, render_space(spaces, {x, y})}
+  end
+
+  def render_space(spaces, coordinates) do
+    Map.get(spaces, coordinates, :empty)
   end
 
   def get_size(spaces) do
