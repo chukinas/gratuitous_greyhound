@@ -103,7 +103,6 @@ header nav a {
 .grid {
   display: grid;
   /* grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); */
-  grid-gap: 1rem;
-  grid-template-columns: 40px 40px 40px 40px 40px 40px;
-  grid-template-rows: 40px 40px 40px 40px 40px 40px;
+  grid-template-columns: 40px 20px 40px 20px 40px 20px 40px 20px 40px 20px 40px 20px;
+  grid-template-rows: 40px 20px 40px 20px 40px 20px 40px 20px 40px 20px 40px 20px;
 }
