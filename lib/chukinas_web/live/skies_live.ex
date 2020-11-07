@@ -8,14 +8,8 @@ defmodule ChukinasWeb.SkiesLive do
   # HELPERS
   #############################################################################
 
-  def render_size() do
-    {x, y} = Spaces.build_map_spec()
-    |> Spaces.get_size()
-    "{#{x}, #{y}}"
-  end
-
   def render_grid() do
-    Spaces.build_map_spec()
+    Spaces.get_formation({1, "a"})
     |> Spaces.render_grid()
   end
 
