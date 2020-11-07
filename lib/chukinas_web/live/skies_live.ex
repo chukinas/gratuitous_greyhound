@@ -14,6 +14,11 @@ defmodule ChukinasWeb.SkiesLive do
     "{#{x}, #{y}}"
   end
 
+  def render_spaces() do
+    Spaces.build_map_spec()
+    |> Spaces.render_spaces()
+  end
+
   #############################################################################
   # CALLBACKS
   #############################################################################
@@ -22,7 +27,7 @@ defmodule ChukinasWeb.SkiesLive do
   def mount(_params, _session, socket) do
     socket =
       socket
-      |> assign(:map, Spaces.render_spaces())
+      |> assign(:map, render_spaces())
     {:ok, socket}
   end
 

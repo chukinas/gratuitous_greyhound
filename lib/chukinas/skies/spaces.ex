@@ -9,8 +9,9 @@ defmodule Chukinas.Skies.Spaces do
     ]
   end
 
-  def render_spaces() do
-    for y <- 0..5, do: render_row(:nothing, y, 3)
+  def render_spaces(spaces) do
+    {x_size, y_size} = get_size(spaces)
+    for y <- 0..y_size, do: render_row(spaces, y, x_size)
   end
 
   def render_row(_spaces, y, max_x) do
