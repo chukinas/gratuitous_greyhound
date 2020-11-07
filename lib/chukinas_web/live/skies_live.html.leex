@@ -8,16 +8,17 @@
   <input type="text" name="user_name" autofocus />
   <button type="submit">Update</button>
 </form> -->
-<%= for row <- @map do %>
-  <p>
+<div class="grid">
+  <%= for row <- @map do %>
     <%= for cell <- row do %>
-      <button
-        phx-click="select_space"
-        phx-value-x="<%= Spaces.get_x(cell) %>"
-        phx-value-y="<%= Spaces.get_y(cell) %>"
-      >
+      <div style="
+        grid-column-start:<%= Spaces.get_x(cell)+1 %>;
+        grid-column-end:<%= Spaces.get_x(cell)+2 %>;
+        grid-row-start:<%= Spaces.get_y(cell)+1 %>;
+        grid-row-end:<%= Spaces.get_y(cell)+2 %>;
+      ">
         <%= Spaces.get_number(cell) %>
-      </button>
+      </div>
     <% end %>
-  </p>
-<% end %>
+  <% end %>
+</div>

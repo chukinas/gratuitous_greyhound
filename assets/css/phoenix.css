@@ -99,3 +99,11 @@ header nav a {
     margin: 2rem 1rem;
   }
 }
+
+.grid {
+  display: grid;
+  /* grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); */
+  grid-gap: 1rem;
+  grid-template-columns: 40px 40px 40px 40px 40px 40px;
+  grid-template-rows: 40px 40px 40px 40px 40px 40px;
+}
