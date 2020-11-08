@@ -1,4 +1,4 @@
-<h1>Skies Above the Reich</h1>
+<h1 class="text-orange-500 text-5xl font-bold text-center">Skies Above the Reich</h1>
 <div class="grid" style="background-color:lightblue">
   <%= for space <- @vm.spaces do %>
   <div style="
@@ -27,7 +27,9 @@
   <div></div>
   <div>High</div>
   <div>High Approach</div>
-  <div>Level</div>
+  <div>
+    Level
+  </div>
   <div>Level Approach</div>
   <div>Low</div>
   <div>Low Approach</div>
@@ -36,3 +38,7 @@
   <div>Evasive Return</div>
   <div></div>
 </div>
+
+<%= Escort.render() %>
+
+<div class=""></div>

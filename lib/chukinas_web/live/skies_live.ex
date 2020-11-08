@@ -1,8 +1,6 @@
-require IEx
-
 defmodule ChukinasWeb.SkiesLive do
   use ChukinasWeb, :live_view
-  alias Chukinas.Skies.{Spaces, Map, ViewModel}
+  alias Chukinas.Skies.{Map, ViewModel, Escort}
 
   #############################################################################
   # HELPERS
