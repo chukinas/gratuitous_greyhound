@@ -1,26 +1,33 @@
-<h1 class="text-orange-500 text-5xl font-bold text-center">Skies Above the Reich</h1>
+<!-- *** HEADER -->
+<h1 class="text-orange-500 text-5xl font-bold text-center">
+  Skies Above the Reich
+</h1>
 
-<h3>
-  Turn <%= @vm.turn.current %> of <%= @vm.turn.max %>
-</h3>
+<!-- *** TURN -->
+<h3>Turn <%= @vm.turn.current %> of <%= @vm.turn.max %></h3>
 
-<div class="grid" style="background-color:lightblue">
+<!-- *** MAP -->
+<div class="grid" style="background-color: lightblue">
   <%= for space <- @vm.spaces do %>
-  <div style="
-    grid-area:<%= space.y * 2 + 1 %> / <%= space.x * 2 + 1 %>;
-    background-color:deepskyblue;
-    color:white;
-  ">
+  <div
+    style="
+      grid-area: <%= space.y * 2 + 1 %> / <%= space.x * 2 + 1 %>;
+      background-color: deepskyblue;
+      color: white;
+    "
+  >
     <%= space.lethal_level %>
   </div>
-  <% end %>
-
-  <%= for {x, y} <- @vm.bombers do %>
-  <div style="
-    grid-area:<%= y * 2 %> / <%= x * 2 %>;
-    background-color:black;
-    color:white;
-  ">↖</div>
+  <% end %> <%= for {x, y} <- @vm.bombers do %>
+  <div
+    style="
+      grid-area: <%= y * 2 %> / <%= x * 2 %>;
+      background-color: black;
+      color: white;
+    "
+  >
+    ↖
+  </div>
   <% end %>
 </div>
 
@@ -28,17 +35,15 @@
 <div><%= box %></div>
 <% end %>
 
-<h3>NOSE</h3>
-<div class="vert-boxes">
+<!-- *** POSITION -->
+<div >
   <div>Evasive Return</div>
   <div></div>
   <div>Return</div>
   <div></div>
   <div>High</div>
   <div>High Approach</div>
-  <div>
-    Level
-  </div>
+  <div>Level</div>
   <div>Level Approach</div>
   <div>Low</div>
   <div>Low Approach</div>
@@ -47,7 +52,5 @@
   <div>Evasive Return</div>
   <div></div>
 </div>
-
-<%= Escort.render() %>
 
 <div class=""></div>

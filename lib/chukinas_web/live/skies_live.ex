@@ -1,15 +1,10 @@
 defmodule ChukinasWeb.SkiesLive do
   use ChukinasWeb, :live_view
-  alias Chukinas.Skies.{Spec, ViewModel, Escort}
+  alias Chukinas.Skies.{Game, ViewModel}
 
   #############################################################################
   # HELPERS
   #############################################################################
-
-  def build_view_model() do
-    Spec.build({1, "a"})
-    |> ViewModel.build()
-  end
 
   #############################################################################
   # CALLBACKS
@@ -17,9 +12,11 @@ defmodule ChukinasWeb.SkiesLive do
 
   @impl true
   def mount(_params, _session, socket) do
+    game = Game.init({1, "a"})
     socket =
       socket
-      |> assign(:vm, build_view_model())
+      |> assign(:game, game)
+      |> assign(:vm, ViewModel.build(game))
     {:ok, socket}
   end
 

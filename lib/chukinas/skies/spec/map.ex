@@ -1,6 +1,15 @@
 defmodule Chukinas.Skies.Spec.Map do
-
   alias Chukinas.Skies.Spec.Boxes
+
+  # *** TYPES
+
+  # @type map_id :: {1, "a" | "b"} | 2 | 3 | 4
+  # @spec spaces(map_id()) :: any()
+  # def spaces()
+  # @spec elements(map_id()) :: any()
+  # def elements()
+
+  # *** SPACES AND SPECS
 
   def spaces({1, "a"}) do
     %{
