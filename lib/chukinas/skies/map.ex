@@ -1,5 +1,7 @@
 defmodule Chukinas.Skies.Map do
 
+  alias Chukinas.Skies.Boxes
+
   def build({1, "a"}) do
     spaces = %{
                    {1, 0} => 1, {2, 0} => 1, {3, 0} => 1,
@@ -15,8 +17,11 @@ defmodule Chukinas.Skies.Map do
         {2, 4},
       ]
     ]
-    %{spaces: spaces, elements: elements}
+    boxes = Boxes.build()
+    %{spaces: spaces, elements: elements, boxes: boxes}
   end
+
+
 
   def build({1, "b"}) do
     spaces = %{
@@ -36,6 +41,7 @@ defmodule Chukinas.Skies.Map do
         {2, 6},
       ]
     ]
-    %{spaces: spaces, elements: elements}
+    boxes = Boxes.build()
+    %{spaces: spaces, elements: elements, boxes: boxes}
   end
 end

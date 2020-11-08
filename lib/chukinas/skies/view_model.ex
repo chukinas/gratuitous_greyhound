@@ -3,7 +3,8 @@ defmodule Chukinas.Skies.ViewModel do
   def build(state) do
     %{
       spaces: render_spaces(state.spaces),
-      bombers: render_bombers(state.elements)
+      bombers: render_bombers(state.elements),
+      boxes: render_boxes(state.boxes),
     }
   end
 
@@ -21,4 +22,7 @@ defmodule Chukinas.Skies.ViewModel do
     %{x: x, y: y, lethal_level: content}
   end
 
+  defp render_boxes(boxes) do
+    Map.keys(boxes)
+  end
 end
