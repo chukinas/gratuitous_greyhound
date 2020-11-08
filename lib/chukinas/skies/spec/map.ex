@@ -1,30 +1,29 @@
-defmodule Chukinas.Skies.Map do
+defmodule Chukinas.Skies.Spec.Map do
 
-  alias Chukinas.Skies.Boxes
+  alias Chukinas.Skies.Spec.Boxes
 
-  def build({1, "a"}) do
-    spaces = %{
+  def spaces({1, "a"}) do
+    %{
                    {1, 0} => 1, {2, 0} => 1, {3, 0} => 1,
       {0, 1} => 1, {1, 1} => 1, {2, 1} => 2, {3, 1} => 1,
       {0, 2} => 1, {1, 2} => 2, {2, 2} => 3, {3, 2} => 1,
       {0, 3} => 1, {1, 3} => 2, {2, 3} => 2, {3, 3} => 1,
       {0, 4} => 1, {1, 4} => 1, {2, 4} => 1, {3, 4} => 1,
     }
-    elements = [
+  end
+
+  def elements({1, "a"}) do
+    [
       [
         {2, 2}, {3, 2},
         {2, 3},
         {2, 4},
       ]
     ]
-    boxes = Boxes.build()
-    %{spaces: spaces, elements: elements, boxes: boxes}
   end
 
-
-
-  def build({1, "b"}) do
-    spaces = %{
+  def spaces({1, "b"}) do
+    %{
       {0, 0} => 1, {1, 0} => 1, {2, 0} => 1, {3, 0} => 1,
       {0, 1} => 1, {1, 1} => 2, {2, 1} => 2, {3, 1} => 1,
       {0, 2} => 1, {1, 2} => 2, {2, 2} => 2, {3, 2} => 1,
@@ -32,7 +31,10 @@ defmodule Chukinas.Skies.Map do
       {0, 4} => 1, {1, 4} => 2, {2, 4} => 2, {3, 4} => 1,
       {0, 5} => 1, {1, 5} => 1, {2, 5} => 1, {3, 5} => 1,
     }
-    elements = [
+  end
+
+  def elements({1, "b"}) do
+    [
       [
         {2, 2},
         {2, 3},
@@ -41,7 +43,6 @@ defmodule Chukinas.Skies.Map do
         {2, 6},
       ]
     ]
-    boxes = Boxes.build()
-    %{spaces: spaces, elements: elements, boxes: boxes}
   end
+
 end

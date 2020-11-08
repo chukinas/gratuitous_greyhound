@@ -1,13 +1,13 @@
 defmodule ChukinasWeb.SkiesLive do
   use ChukinasWeb, :live_view
-  alias Chukinas.Skies.{Map, ViewModel, Escort}
+  alias Chukinas.Skies.{Spec, ViewModel, Escort}
 
   #############################################################################
   # HELPERS
   #############################################################################
 
   def build_view_model() do
-    Map.build({1, "a"})
+    Spec.build({1, "a"})
     |> ViewModel.build()
   end
 

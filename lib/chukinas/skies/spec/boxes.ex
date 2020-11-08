@@ -1,4 +1,4 @@
-defmodule Chukinas.Skies.Boxes do
+defmodule Chukinas.Skies.Spec.Boxes do
   alias Chukinas.Skies.Terms
 
   def build() do
