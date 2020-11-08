@@ -3,9 +3,7 @@
   <%= for space <- @vm.spaces do %>
   <div style="
     grid-column-start:<%= space.x * 2 + 1 %>;
-    grid-column-end:<%= space.x * 2 + 2 %>;
     grid-row-start:<%= space.y * 2 + 1 %>;
-    grid-row-end:<%= space.y * 2 + 2 %>;
     background-color:deepskyblue;
     color:white;
   ">
@@ -16,9 +14,7 @@
   <%= for {x, y} <- @vm.bombers do %>
   <div style="
     grid-column-start:<%= x * 2 %>;
-    grid-column-end:<%= x * 2 + 1 %>;
     grid-row-start:<%= y * 2 %>;
-    grid-row-end:<%= y * 2 + 1 %>;
     background-color:black;
     color:white;
   ">↖</div>
