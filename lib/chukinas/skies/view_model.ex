@@ -5,6 +5,10 @@ defmodule Chukinas.Skies.ViewModel do
       spaces: render_spaces(state.spaces),
       bombers: render_bombers(state.elements),
       boxes: render_boxes(state.boxes),
+      turn: %{
+        current: 2,
+        max: 8
+      },
     }
   end
 
