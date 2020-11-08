@@ -1,4 +1,4 @@
-defmodule Chukinas.Skies.Escort do
+defmodule Chukinas.Skies.ViewModel.Escort do
 
   import Phoenix.HTML
 
