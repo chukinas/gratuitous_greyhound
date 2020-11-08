@@ -106,3 +106,14 @@ header nav a {
   grid-template-columns: 40px 20px 40px 20px 40px 20px 40px 20px 40px 20px 40px 20px;
   grid-template-rows: 40px 20px 40px 20px 40px 20px 40px 20px 40px 20px 40px 20px;
 }
+
+.vert-boxes {
+  display: grid;
+  gap: 15px;
+  grid-template-columns: 100px 100px;
+  grid-template-rows: 100px 100px 100px 100px 100px 100px 100px;
+}
+
+.vert-boxes div {
+  background-color: yellow;
+}
