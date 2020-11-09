@@ -8,7 +8,7 @@ defmodule ChukinasWeb.SkiesLive do
     socket =
       socket
       |> assign(:game, game)
-      |> assign(:vm, ViewModel.build(game))
+      |> assign(:vm, ViewModel.render(game))
     {:ok, socket}
   end
 

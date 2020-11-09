@@ -1,7 +1,8 @@
 defmodule Chukinas.Skies.Game.Fighter do
 
-  def new() do
+  def new(id) do
     %{
+      id: id,
       current_location: :not_entered,
       current_command: nil,
       type: :bf109,
