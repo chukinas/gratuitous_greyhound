@@ -1,7 +1,7 @@
 defmodule ChukinasWeb.SkiesLive do
   use ChukinasWeb, :live_view
   alias Chukinas.Skies.{Game, ViewModel}
-  alias ChukinasWeb.SkiesView
+  import ChukinasWeb.SkiesView
 
   @impl true
   def mount(_params, _session, socket) do
@@ -25,7 +25,4 @@ defmodule ChukinasWeb.SkiesLive do
     {:noreply, socket}
   end
 
-  def render_space() do
-    Phoenix.View.render(ChukinasWeb.SkiesView, "space.html", name: "bill")
-  end
 end

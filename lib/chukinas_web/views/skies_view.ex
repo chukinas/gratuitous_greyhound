@@ -1,8 +1,21 @@
 defmodule ChukinasWeb.SkiesView do
   use ChukinasWeb, :view
+  # use ChukinasWeb, :live_view
 
-  def space() do
-    Phoenix.View.render(__MODULE__, "space.html", name: "harry")
+  def escort_stations() do
+    ~E"""
+    Here are escort stations
+    """
+  end
+
+  def space(name \\ nil) do
+    # Phoenix.View.render(__MODULE__, "space.html", name: "name")
+    component("space", %{name: name})
+  end
+
+  defp component(name, assigns) do
+    template = [name, ".html"] |> Enum.join("")
+    Phoenix.View.render(__MODULE__, template, assigns)
   end
 end
 
