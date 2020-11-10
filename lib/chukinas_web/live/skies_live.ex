@@ -17,4 +17,10 @@ defmodule ChukinasWeb.SkiesLive do
   #   IO.puts("selected a space: {#{x}, #{y}}")
   #   {:noreply, socket}
   # end
+
+  @impl true
+  def handle_event("click", _, socket) do
+    IO.puts("My component works")
+    {:noreply, socket}
+  end
 end
