@@ -10,6 +10,7 @@ defmodule ChukinasWeb.SkiesLive do
       socket
       |> assign(:game, game)
       |> assign(:vm, ViewModel.render(game))
+      |> assign(page_title: "Skies Above the Reich")
     {:ok, socket}
   end
 
