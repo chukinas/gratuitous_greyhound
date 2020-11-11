@@ -1,13 +1,15 @@
+<% component = build_component_renderer(@vm) %>
+
 <!-- *** HEADER -->
 <h1 class="text-orange-500 text-5xl font-bold text-center">
   Skies Above the Reich
 </h1>
 
 <!-- *** TURN MANAGER -->
-<%= render_component @vm, :turn_manager  %>
+<%= component.(:turn_manager) %>
 
 <!-- *** ESCORT STATIONS -->
-<%= render_component @vm, :escort_stations  %>
+<%= component.(:escort_stations)  %>
 
 <!-- *** MAP -->
 <div class="grid" style="background-color: lightblue">

@@ -1,6 +1,10 @@
 defmodule ChukinasWeb.SkiesView do
   use ChukinasWeb, :view
   # use ChukinasWeb, :live_view
+  
+  def build_component_renderer(vm) do
+    fn view_model_key -> render_component(vm, view_model_key) end
+  end
 
   def render_component(view_model, key) do
     build Atom.to_string(key), Map.fetch!(view_model, key)
