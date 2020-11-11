@@ -11,6 +11,9 @@
 <!-- *** ESCORT STATIONS -->
 <%= component.(:escort_stations)  %>
 
+<!-- *** POSITION -->
+<%= render_component(:position) %>
+
 <!-- *** MAP -->
 <div class="grid" style="background-color: lightblue">
   <%= for space <- @vm.spaces do %>
@@ -40,20 +43,3 @@
 <div><%= box %></div>
 <% end %>
 
-<!-- *** POSITION -->
-<div >
-  <div>Evasive Return</div>
-  <div></div>
-  <div>Return</div>
-  <div></div>
-  <div>High</div>
-  <div>High Approach</div>
-  <div>Level</div>
-  <div>Level Approach</div>
-  <div>Low</div>
-  <div>Low Approach</div>
-  <div>Return</div>
-  <div></div>
-  <div>Evasive Return</div>
-  <div></div>
-</div>
