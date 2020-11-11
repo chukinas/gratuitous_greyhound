@@ -6,6 +6,9 @@
 <!-- *** TURN MANAGER -->
 <%= render_component @vm, :turn_manager  %>
 
+<!-- *** ESCORT STATIONS -->
+<%= render_component @vm, :escort_stations  %>
+
 <!-- *** MAP -->
 <div class="grid" style="background-color: lightblue">
   <%= for space <- @vm.spaces do %>

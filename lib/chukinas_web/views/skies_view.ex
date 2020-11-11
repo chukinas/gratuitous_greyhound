@@ -2,12 +2,6 @@ defmodule ChukinasWeb.SkiesView do
   use ChukinasWeb, :view
   # use ChukinasWeb, :live_view
 
-  def escort_stations() do
-    ~E"""
-    Here are escort stations
-    """
-  end
-
   def render_component(view_model, key) do
     build Atom.to_string(key), Map.fetch!(view_model, key)
   end
