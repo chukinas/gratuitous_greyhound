@@ -8,6 +8,10 @@ defmodule ChukinasWeb.SkiesView do
     """
   end
 
+  def turn_manager(turn_mgr) do
+    build "turn_manager", turn_mgr
+  end
+
   def space(name \\ nil) do
     # Phoenix.View.render(__MODULE__, "space.html", name: "name")
     build "space", %{name: name}

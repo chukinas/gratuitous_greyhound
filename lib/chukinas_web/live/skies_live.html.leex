@@ -7,8 +7,8 @@
   Skies Above the Reich
 </h1>
 
-<!-- *** TURN -->
-<h3>Turn <%= @vm.turn.current %> of <%= @vm.turn.max %></h3>
+<!-- *** TURN MANAGER -->
+<%= turn_manager(@vm.turn_manager) %>
 
 <!-- *** MAP -->
 <div class="grid" style="background-color: lightblue">

@@ -1,15 +1,12 @@
 defmodule Chukinas.Skies.ViewModel do
-  alias Chukinas.Skies.ViewModel.{Boxes, Spaces}
+  alias Chukinas.Skies.ViewModel.{Boxes, Spaces, TurnManager}
 
-  def render(state) do
+  def render(game) do
     %{
-      spaces: Spaces.render(state.spaces),
-      bombers: render_bombers(state.elements),
-      boxes: Boxes.render(state.boxes),
-      turn: %{
-        current: 2,
-        max: 8
-      },
+      spaces: Spaces.render(game.spaces),
+      bombers: render_bombers(game.elements),
+      boxes: Boxes.render(game.boxes),
+      turn_manager: TurnManager.render(game.turn_manager)
     }
   end
 
