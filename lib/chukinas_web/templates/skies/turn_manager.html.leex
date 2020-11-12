@@ -1,5 +1,21 @@
-<h2>
-  Turn Manager
-</h2>
+<h2>Turn Manager</h2>
 <p>Turn <%= @turn %> of <%= @max_turn %></p>
+
+<!-- *** PHASE PROGRESS -->
+<%# get_color = fn _ -> "text-indigo-500" end %>
+<ul>
+  <%= for phase <- @phases do %>
+  <li class="<%= phase_class(phase.status)  %>">
+    <%= phase.name %>
+    <ul>
+      <%= for subphase <- phase.subphases do %>
+      <li class="<%= phase_class(subphase.status) %>">
+        <%= subphase.name %>
+      </li>
+      <% end %>
+    </ul>
+  </li>
+  <% end %>
+</ul>
+
 <button phx-click="next_phase">Next Phase!</button>

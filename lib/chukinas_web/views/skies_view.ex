@@ -18,6 +18,10 @@ defmodule ChukinasWeb.SkiesView do
     template = [name, ".html"] |> Enum.join("")
     Phoenix.View.render(__MODULE__, template, assigns)
   end
+
+  defp phase_class(:complete), do: "text-indigo-500"
+  defp phase_class(:in_progress), do: "text-red-500 font-bold"
+  defp phase_class(:future), do: "text-black-500"
 end
 
 # https://bernheisel.com/blog/phoenix-liveview-and-views

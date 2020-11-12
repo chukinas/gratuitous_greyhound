@@ -9,8 +9,6 @@ defmodule Chukinas.Skies.ViewModel.TurnManager do
   @type t :: %{
     turn: integer(),
     max_turn: integer(),
-    # TODO remove
-    phase: String.t(),
     phases: [phase()]
   }
 
@@ -19,7 +17,6 @@ defmodule Chukinas.Skies.ViewModel.TurnManager do
     %{
       turn: turn_mgr.turn,
       max_turn: turn_mgr.max_turn,
-      phase: phase_to_string(turn_mgr.phase),
       phases: dummy_phases(),
     }
   end
@@ -38,12 +35,12 @@ defmodule Chukinas.Skies.ViewModel.TurnManager do
     ]
   end
 
-  @spec phase_to_string(TurnManager.phase_name()) :: String.t
-  defp phase_to_string(phase) when is_atom(phase) do
-    phase
-    |> Atom.to_string()
-    |> String.capitalize()
-  end
+  # @spec phase_to_string(TurnManager.phase_name()) :: String.t
+  # defp phase_to_string(phase) when is_atom(phase) do
+  #   phase
+  #   |> Atom.to_string()
+  #   |> String.capitalize()
+  # end
 
   # defp phase_to_string(phase) do
   #   [main_phase, sub_phase] = phase
