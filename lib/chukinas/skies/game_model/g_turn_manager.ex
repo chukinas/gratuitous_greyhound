@@ -24,7 +24,8 @@ defmodule Chukinas.Skies.Game.TurnManager do
     %{
       turn: 1,
       max_turn: 7,
-      phase: List.first(get_phases()),
+      phase: :burst,
+      # phase: List.first(get_phases()),
     }
   end
 
@@ -65,7 +66,7 @@ defmodule Chukinas.Skies.Game.TurnManager do
   end
 
   @spec get_phases() :: phases()
-  defp get_phases() do
+  def get_phases() do
     [
       :move,
       :return,

@@ -3,12 +3,12 @@
   <p>Turn <%= @turn %> of <%= @max_turn %></p>
 
   <!-- *** PHASE PROGRESS -->
-  <div class="w-24 bg-indigo-200  rounded-xl ">
+  <div class="w-32 bg-indigo-200  rounded-xl border border-gray-900">
     <ul class="divide-y divide-indigo-300">
       <%= for phase <- @phases do %>
       <li class="<%= phase_class(phase.status) %> p-2 px-3">
         <%= phase.name %>
-        <ul class="">
+        <ul>
           <%= for subphase <- phase.subphases do %>
           <li class="<%= phase_class(subphase.status) %> pl-2 text-xs">
             <%= subphase.name %>
