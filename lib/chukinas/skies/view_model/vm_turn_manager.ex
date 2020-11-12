@@ -1,10 +1,17 @@
 defmodule Chukinas.Skies.ViewModel.TurnManager do
   alias Chukinas.Skies.Game.TurnManager
 
+  @type phase :: %{
+    name: String.t(),
+    status: :complete | :in_progress | :future,
+    subphases: [phase()]
+  }
   @type t :: %{
     turn: integer(),
     max_turn: integer(),
+    # TODO remove
     phase: String.t(),
+    phases: [phase()]
   }
 
   @spec build(TurnManager.t()) :: t()
@@ -12,8 +19,23 @@ defmodule Chukinas.Skies.ViewModel.TurnManager do
     %{
       turn: turn_mgr.turn,
       max_turn: turn_mgr.max_turn,
-      phase: phase_to_string(turn_mgr.phase)
+      phase: phase_to_string(turn_mgr.phase),
+      phases: dummy_phases(),
     }
+  end
+
+  @spec dummy_phases() :: [phase()]
+  defp dummy_phases() do
+    [
+      %{name: "First", status: :complete, subphases: []},
+      %{name: "Second", status: :complete, subphases: []},
+      %{name: "THird", status: :in_progress, subphases: [
+        %{name: "Stuss", status: :complete, subphases: []},
+        %{name: "And", status: :in_progress, subphases: []},
+        %{name: "Nonsense", status: :future, subphases: []},
+      ]},
+      %{name: "Fourth", status: :future, subphases: []},
+    ]
   end
 
   @spec phase_to_string(TurnManager.phase_name()) :: String.t
