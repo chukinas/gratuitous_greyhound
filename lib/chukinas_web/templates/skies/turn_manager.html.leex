@@ -1,21 +1,24 @@
-<h2>Turn Manager</h2>
-<p>Turn <%= @turn %> of <%= @max_turn %></p>
+<div class="p-3 border border-gray-400 w-48 rounded m-2">
+  <h2 class="text-lg font-bold">Turn Manager</h2>
+  <p>Turn <%= @turn %> of <%= @max_turn %></p>
 
-<!-- *** PHASE PROGRESS -->
-<%# get_color = fn _ -> "text-indigo-500" end %>
-<ul>
-  <%= for phase <- @phases do %>
-  <li class="<%= phase_class(phase.status)  %>">
-    <%= phase.name %>
-    <ul>
-      <%= for subphase <- phase.subphases do %>
-      <li class="<%= phase_class(subphase.status) %>">
-        <%= subphase.name %>
+  <!-- *** PHASE PROGRESS -->
+  <div class="w-24 bg-indigo-200  rounded-xl ">
+    <ul class="divide-y divide-indigo-300">
+      <%= for phase <- @phases do %>
+      <li class="<%= phase_class(phase.status) %> p-2 px-3">
+        <%= phase.name %>
+        <ul class="">
+          <%= for subphase <- phase.subphases do %>
+          <li class="<%= phase_class(subphase.status) %> pl-2 text-xs">
+            <%= subphase.name %>
+          </li>
+          <% end %>
+        </ul>
       </li>
       <% end %>
     </ul>
-  </li>
-  <% end %>
-</ul>
+  </div>
 
-<button phx-click="next_phase">Next Phase!</button>
+  <button phx-click="next_phase">Next Phase!</button>
+</div>

@@ -3,7 +3,7 @@ defmodule Chukinas.Skies.ViewModel.TurnManager do
 
   @type phase :: %{
     name: String.t(),
-    status: :complete | :in_progress | :future,
+    status: (:other | :in_progress | :sub_in_progress),
     subphases: [phase()]
   }
   @type t :: %{
@@ -24,14 +24,15 @@ defmodule Chukinas.Skies.ViewModel.TurnManager do
   @spec dummy_phases() :: [phase()]
   defp dummy_phases() do
     [
-      %{name: "First", status: :complete, subphases: []},
-      %{name: "Second", status: :complete, subphases: []},
-      %{name: "THird", status: :in_progress, subphases: [
-        %{name: "Stuss", status: :complete, subphases: []},
+      %{name: "First", status: :other, subphases: []},
+      %{name: "Second", status: :other, subphases: []},
+      %{name: "Second", status: :other, subphases: []},
+      %{name: "Third", status: :sub_in_progress, subphases: [
+        %{name: "Stuss", status: :other, subphases: []},
         %{name: "And", status: :in_progress, subphases: []},
-        %{name: "Nonsense", status: :future, subphases: []},
+        %{name: "Nonsense", status: :other, subphases: []},
       ]},
-      %{name: "Fourth", status: :future, subphases: []},
+      %{name: "Fourth", status: :other, subphases: []},
     ]
   end
 
