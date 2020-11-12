@@ -19,7 +19,7 @@ defmodule ChukinasWeb.SkiesView do
     Phoenix.View.render(__MODULE__, template, assigns)
   end
 
-  defp phase_class(:in_progress), do: "bg-indigo-100  font-extrabold"
+  defp phase_class(:in_progress), do: "bg-indigo-100  font-bold"
   defp phase_class(:sub_in_progress), do: "bg-indigo-100 font-normal"
   defp phase_class(:other), do: "font-normal"
 end

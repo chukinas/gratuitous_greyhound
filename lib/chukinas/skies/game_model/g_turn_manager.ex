@@ -24,7 +24,7 @@ defmodule Chukinas.Skies.Game.TurnManager do
     %{
       turn: 1,
       max_turn: 7,
-      phase: :burst,
+      phase: :escort_stations,
       # phase: List.first(get_phases()),
     }
   end
@@ -70,15 +70,26 @@ defmodule Chukinas.Skies.Game.TurnManager do
     [
       :move,
       :return,
-      :escort,
+      {:escort, [
+        :enter_exit,
+        :move_escorts,
+        :escort_stations,
+        :aerial_combat,
+        :peel_off,
+      ]},
       :recovery,
-      :blast_flak,
+      {:blast_flak, [
+        :rockets_and_bombs,
+        :flak,
+      ]},
       :cohesion,
-      {:approach, [
+      {:attack, [
+        :approach,
         :engage,
         :burst,
         :break_away,
-      ]}
+      ]},
+      # :escort,
     ]
   end
 

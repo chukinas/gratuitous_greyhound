@@ -19,17 +19,11 @@ defmodule ChukinasWeb.SkiesLive do
   #   {:noreply, socket}
   # end
 
-  # @impl true
-  # def handle_event("next_phase", _, socket) do
-  #   game = socket.assigns.game
-  #   |> Map.get_and_update!(:turn_manager, &TurnManager.advance_to_next_phase/1)
-  #   socket = assign_game_and_vm(socket, game)
-  #   {:noreply, socket}
-  # end
-
   @impl true
-  def handle_event("click", _, socket) do
-    IO.puts("My component works")
+  def handle_event("next_phase", _, socket) do
+    game = socket.assigns.game
+    |> Map.update!(:turn_manager, &Game.TurnManager.advance_to_next_phase/1)
+    socket = assign_game_and_vm(socket, game)
     {:noreply, socket}
   end
 
@@ -39,5 +33,6 @@ defmodule ChukinasWeb.SkiesLive do
     |> assign(:game, game)
     |> assign(:vm, ViewModel.render(game))
   end
+
 
 end

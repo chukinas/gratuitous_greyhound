@@ -71,6 +71,7 @@ defmodule Chukinas.Skies.ViewModel.TurnManager do
   defp phase_to_string(phase) when is_atom(phase) do
     case phase do
       :blast_flak -> "Blast & Flak"
+      :break_away -> "Break Away"
       _ -> phase
         |> Atom.to_string()
         |> String.capitalize()
