@@ -3,6 +3,7 @@ defmodule Chukinas.Skies.ViewModel do
 
   def render(game) do
     %{
+      pilots: %{},
       spaces: Spaces.render(game.spaces),
       bombers: render_bombers(game.elements),
       boxes: Boxes.render(game.boxes),
