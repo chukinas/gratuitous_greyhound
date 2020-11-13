@@ -4,7 +4,7 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
   # @type vm_fighter :: %{
   #   name: String.t(),
   #   hits: String.t(),
-  #   aircraft: Squadron.type(),
+  #   airframe: Squadron.airframe(),
   # }
   # @type vm_group :: %{
   #   pilots: [vm_fighter()],
@@ -55,7 +55,7 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
   #   %{
   #     name: fighter.pilot_name,
   #     hits: rand_hits(),
-  #     aircraft: fighter.type
+  #     airframe: fighter.airframe
   #   }
   # end
 
