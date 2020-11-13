@@ -1,6 +1,8 @@
 defmodule Chukinas.Skies.Game.Fighter do
+  # TODO rename Fighters?
   alias Chukinas.Skies.Game.Hit
 
+  # TODO rename from type to... model? aircraft?
   @type type :: :bf109 | :bf110 | :fw190
   @type fighter :: %{
     id: integer(),
@@ -12,6 +14,8 @@ defmodule Chukinas.Skies.Game.Fighter do
     start_turn_location: any(),
     end_turn_location: any()
   }
+  @type group :: [fighter()]
+  @type t :: group()
 
   @spec new(integer()) :: fighter()
   def new(id) do
@@ -26,8 +30,16 @@ defmodule Chukinas.Skies.Game.Fighter do
     }
   end
 
+  # TODO where is this used?
+  @spec group(fighter()) :: fighter()
   def move(fighter, location) do
     %{fighter | location: location}
+  end
+
+  @spec group(t()) :: [group()]
+  def group(fighters) do
+    fighters
+    |> Enum.chunk_every(2)
   end
 
 end

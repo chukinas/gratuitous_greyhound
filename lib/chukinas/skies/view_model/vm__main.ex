@@ -1,9 +1,9 @@
 defmodule Chukinas.Skies.ViewModel do
-  alias Chukinas.Skies.ViewModel.{Boxes, Spaces, TurnManager}
+  alias Chukinas.Skies.ViewModel.{Boxes, Pilots, Spaces, TurnManager}
 
   def render(game) do
     %{
-      pilots: %{},
+      pilots: Pilots.build(game.fighters),
       spaces: Spaces.render(game.spaces),
       bombers: render_bombers(game.elements),
       boxes: Boxes.render(game.boxes),
