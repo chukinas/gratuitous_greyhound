@@ -1,5 +1,4 @@
-defmodule Chukinas.Skies.Game.Fighter do
-  # TODO rename Fighters?
+defmodule Chukinas.Skies.Game.Squadron do
   alias Chukinas.Skies.Game.Hit
 
   # TODO rename from type to... model? aircraft?

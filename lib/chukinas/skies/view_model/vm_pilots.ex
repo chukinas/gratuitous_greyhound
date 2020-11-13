@@ -1,11 +1,11 @@
 defmodule Chukinas.Skies.ViewModel.Squadron do
-  alias Chukinas.Skies.Game.Fighter
+  alias Chukinas.Skies.Game.Squadron
 
   # @type vm_fighter :: %{
   #   name: String.t(),
   #   hits: String.t(),
   #   # TODO selected?
-  #   aircraft: Fighter.type(),
+  #   aircraft: Squadron.type(),
   # }
   # @type vm_group :: %{
   #   pilots: [vm_fighter()],
@@ -22,10 +22,10 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
     # complete: boolean()
   }
 
-  @spec build(Fighter.t()) :: t()
+  @spec build(Squadron.t()) :: t()
   def build(_fighters) do
     # vm_groups = fighters
-    # |> Fighter.group()
+    # |> Squadron.group()
     # |> Enum.map(&build_group/1)
     %{
       groups: [
@@ -38,7 +38,7 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
     }
   end
 
-  # @spec build_group(Fighter.group()) :: vm_group()
+  # @spec build_group(Squadron.group()) :: vm_group()
   # defp build_group(group) do
   #   %{
   #     pilots: Enum.map(group, &build_fighter/1),
@@ -51,7 +51,7 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
   # end
 
 
-  # @spec build_fighter(Fighter.fighter()) :: vm_fighter()
+  # @spec build_fighter(Squadron.fighter()) :: vm_fighter()
   # def build_fighter(fighter) do
   #   %{
   #     name: fighter.pilot_name,
