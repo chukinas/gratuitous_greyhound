@@ -1,5 +1,5 @@
 defmodule Chukinas.Skies.Game.Squadron do
-  alias Chukinas.Skies.Game.Hit
+  alias Chukinas.Skies.Game.{Hit, Location}
 
   @type airframe :: :bf109 | :bf110 | :fw190
   @type fighter :: %{
@@ -7,9 +7,8 @@ defmodule Chukinas.Skies.Game.Squadron do
     airframe: airframe(),
     pilot_name: String.t(),
     hits: [Hit.t()],
-    # TODO define a new Location module with types
-    start_turn_location: any(),
-    end_turn_location: any()
+    start_turn_location: Location.t(),
+    end_turn_location: Location.t()
   }
   @type group :: [fighter()]
   @type t :: group()
@@ -25,12 +24,6 @@ defmodule Chukinas.Skies.Game.Squadron do
       start_turn_location: :not_entered,
       end_turn_location: nil,
     }
-  end
-
-  # TODO where is this used?
-  @spec group(fighter()) :: fighter()
-  def move(fighter, location) do
-    %{fighter | location: location}
   end
 
   @spec group(t()) :: [group()]
