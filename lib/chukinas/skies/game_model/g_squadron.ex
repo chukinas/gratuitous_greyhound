@@ -1,13 +1,11 @@
 defmodule Chukinas.Skies.Game.Squadron do
   alias Chukinas.Skies.Game.Hit
 
-  # TODO rename from type to... model? aircraft?
   @type airframe :: :bf109 | :bf110 | :fw190
   @type fighter :: %{
     id: integer(),
     airframe: airframe(),
     pilot_name: String.t(),
-    # TODO define:
     hits: [Hit.t()],
     # TODO define a new Location module with types
     start_turn_location: any(),
