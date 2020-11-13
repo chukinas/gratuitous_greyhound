@@ -3,7 +3,6 @@ defmodule Chukinas.Insider.Core.Event do
   # *** *******************************
   # *** TYPES
 
-  # TODO name is req'd
   defstruct [:payload, :name, :room, version_incremented?: false]
 
   @type event_name :: :flip | :get_state | :unregister_pid | :change_user_name
@@ -14,7 +13,6 @@ defmodule Chukinas.Insider.Core.Event do
     version_incremented?: boolean()
   }
 
-  # TODO remove map?
   # @spec new(event_name() | keyword()) :: t()
   # @spec new(event_name() | [name: event_name(), optional(any()): any()]) :: t()
   def new(name) when is_atom(name) do

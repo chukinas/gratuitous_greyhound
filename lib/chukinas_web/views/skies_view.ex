@@ -5,7 +5,6 @@ defmodule ChukinasWeb.SkiesView do
     fn view_model_key -> render_component(vm, view_model_key) end
   end
 
-  # TODO some day, this should be private
   def render_component(key) do
     build Atom.to_string(key)
   end

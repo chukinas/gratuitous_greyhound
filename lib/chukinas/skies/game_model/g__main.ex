@@ -11,7 +11,6 @@ defmodule Chukinas.Skies.Game do
   }
 
   def init(map_id) do
-    # TODO rename do be something like Spec.Map.build...
     state = Spec.build(map_id)
     %{
       spaces: state.spaces,

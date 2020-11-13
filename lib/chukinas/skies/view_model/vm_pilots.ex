@@ -4,7 +4,6 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
   # @type vm_fighter :: %{
   #   name: String.t(),
   #   hits: String.t(),
-  #   # TODO selected?
   #   aircraft: Squadron.type(),
   # }
   # @type vm_group :: %{

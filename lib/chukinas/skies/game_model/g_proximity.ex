@@ -1,5 +1,6 @@
 defmodule Chukinas.Skies.Game.Proximity do
-# TODO rename Collision?
+
+  # FIX rename Collision?
 
   def rand() do
     Enum.random([
