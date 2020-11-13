@@ -3,7 +3,7 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
 
   @type vm_fighter :: %{
     name: String.t(),
-    # hits: String.t(),
+    hits: String.t(),
     airframe: Squadron.airframe(),
   }
   @type vm_group :: %{
@@ -66,19 +66,19 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
   def build_fighter(pilot_name) do
     %{
       name: pilot_name,
-      # hits: rand_hits(),
+      hits: rand_hits(),
       airframe: :bf109,
     }
   end
 
-  # @spec rand_hits() :: String.t()
-  # defp rand_hits() do
-  #   [
-  #     "Fuselage",
-  #     "Rudder",
-  #     "Engine"
-  #   ]
-  #   |> Enum.random()
-  # end
+  @spec rand_hits() :: String.t()
+  defp rand_hits() do
+    [
+      "Fuselage",
+      "Rudder",
+      "Engine"
+    ]
+    |> Enum.random()
+  end
 
 end
