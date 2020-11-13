@@ -2,10 +2,10 @@ defmodule Chukinas.Skies.Game.Squadron do
   alias Chukinas.Skies.Game.Hit
 
   # TODO rename from type to... model? aircraft?
-  @type type :: :bf109 | :bf110 | :fw190
+  @type airframe :: :bf109 | :bf110 | :fw190
   @type fighter :: %{
     id: integer(),
-    type: type(),
+    airframe: airframe(),
     pilot_name: String.t(),
     # TODO define:
     hits: [Hit.t()],
@@ -20,7 +20,7 @@ defmodule Chukinas.Skies.Game.Squadron do
   def new(id) do
     %{
       id: id,
-      type: :bf109,
+      airframe: :bf109,
       # TODO
       pilot_name: "Bill",
       hits: [],
