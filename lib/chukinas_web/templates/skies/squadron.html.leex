@@ -1,9 +1,14 @@
 <p>Pilots!</p>
+<!-- *** SQUADRON -->
 <%= for group <- @groups do %>
+
+<!-- *** GROUP -->
 <h3 class="font-bold">A Group</h3>
 <%= for fighter <- group.fighters do %>
+
+<!-- *** FIGHTER -->
 <p>
-  <%= fighter %>
+  <%= fighter.name %>
 </p>
 <% end %>
 <% end %>
