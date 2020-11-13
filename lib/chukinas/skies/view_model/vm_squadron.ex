@@ -6,16 +6,16 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
   #   hits: String.t(),
   #   airframe: Squadron.airframe(),
   # }
-  # @type vm_group :: %{
-  #   pilots: [vm_fighter()],
-  #   start_turn_location: String.t(),
-  #   # attack_space: String.t(),
-  #   end_turn_location: String.t(),
-  #   # action_required: boolean(),
-  #   # complete: boolean()
-  # }
+  @type vm_group :: %{
+    fighters: [String.t()],
+    # start_turn_location: String.t(),
+    # attack_space: String.t(),
+    # end_turn_location: String.t(),
+    # action_required: boolean(),
+    # complete: boolean()
+  }
   @type t :: %{
-    groups: [String.t()],
+    groups: [vm_group()],
     # groups: [vm_group()],
     # action_required: boolean(),
     # complete: boolean()
@@ -28,8 +28,18 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
     # |> Enum.map(&build_group/1)
     %{
       groups: [
-        "john and steve",
-        "bill and ted"
+        %{
+          fighters: [
+            "john",
+            "steve",
+          ]
+        },
+        %{
+          fighters: [
+            "bill",
+            "ted",
+          ]
+        },
       ]
       # groups: vm_groups,
       # action_required: false,

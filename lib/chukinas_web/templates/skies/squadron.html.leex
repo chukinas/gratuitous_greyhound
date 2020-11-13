@@ -1,6 +1,10 @@
 <p>Pilots!</p>
 <%= for group <- @groups do %>
+<h3 class="font-bold">A Group</h3>
+<%= for fighter <- group.fighters do %>
 <p>
-  <%= group %>
+  <%= fighter %>
 </p>
 <% end %>
+<% end %>
+
