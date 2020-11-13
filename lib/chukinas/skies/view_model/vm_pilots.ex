@@ -1,6 +1,5 @@
-defmodule Chukinas.Skies.ViewModel.Pilots do
+defmodule Chukinas.Skies.ViewModel.Squadron do
   alias Chukinas.Skies.Game.Fighter
-  # TODO rename to Squadron?
 
   # @type vm_fighter :: %{
   #   name: String.t(),
