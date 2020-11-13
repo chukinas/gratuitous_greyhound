@@ -7,8 +7,8 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
     airframe: Squadron.airframe(),
   }
   @type vm_group :: %{
-    fighters: [String.t()],
-    # start_turn_location: String.t(),
+    fighters: [vm_fighter()],
+    starting_location: String.t(),
     # attack_space: String.t(),
     # end_turn_location: String.t(),
     # action_required: boolean(),
@@ -29,12 +29,14 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
     %{
       groups: [
         %{
+          starting_location: "nose: high",
           fighters: [
             build_fighter("john"),
             build_fighter("steve"),
           ]
         },
         %{
+          starting_location: "tail: level",
           fighters: [
             build_fighter("bill"),
             build_fighter("ted"),
@@ -65,7 +67,7 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
     %{
       name: pilot_name,
       # hits: rand_hits(),
-      airframe: :bf109
+      airframe: :bf109,
     }
   end
 
