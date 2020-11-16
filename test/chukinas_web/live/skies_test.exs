@@ -12,8 +12,18 @@ defmodule ChukinasWeb.PageLiveTest do
   # TODO tag with something like 'intermediary'?
   test "Next Turn", %{conn: conn} do
     {:ok, view, html} = live(conn, "/skies")
-    assert html =~ "Move"
-    assert view |> element("#current_phase") |> has_element?()
+    assert view
+    |> element("#current_phase")
+    |> render() =~ "Move"
+    refute view
+    |> element("#current_phase")
+    |> render() =~ "Return"
+    view
+    |> element("#next_phase")
+    |> render_click()
+    assert view
+    |> element("#current_phase")
+    |> render() =~ "Return"
   end
 
   # test "Select pilots 1 and 3", %{conn: conn} do
