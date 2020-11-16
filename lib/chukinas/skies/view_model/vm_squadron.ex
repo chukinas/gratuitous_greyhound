@@ -73,12 +73,11 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
 
   @spec rand_hits() :: String.t()
   defp rand_hits() do
-    [
+    Enum.random([
       "Fuselage",
       "Rudder",
       "Engine"
-    ]
-    |> Enum.random()
+    ])
   end
 
 end
