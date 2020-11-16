@@ -1,4 +1,4 @@
-defmodule ChukinasWeb.PageLiveTest do
+defmodule ChukinasWeb.SkiesLiveTest do
   use ChukinasWeb.ConnCase
 
   import Phoenix.LiveViewTest
@@ -11,7 +11,7 @@ defmodule ChukinasWeb.PageLiveTest do
 
   # TODO tag with something like 'intermediary'?
   test "Next Turn", %{conn: conn} do
-    {:ok, view, html} = live(conn, "/skies")
+    {:ok, view, _html} = live(conn, "/skies")
     assert view
     |> element("#current_phase")
     |> render() =~ "Move"
@@ -24,10 +24,24 @@ defmodule ChukinasWeb.PageLiveTest do
     assert view
     |> element("#current_phase")
     |> render() =~ "Return"
+    IO.inspect(view)
   end
 
-  # test "Select pilots 1 and 3", %{conn: conn} do
-  #   {:ok, skies, _} = live(conn, "/skies")
-  #   assert render(skies) =~ "Skies"
-  # end
+  test "Select Fighter Group", %{conn: conn} do
+    {:ok, view, html} = live(conn, "/skies")
+    view
+    |> element("#fighter_group_1_2_3_4_5_6")
+    |> render_submit() =~ "Move"
+    refute view
+    |> element("#current_phase")
+    |> render() =~ "Return"
+    view
+    |> element("#next_phase")
+    |> render_click()
+    assert view
+    |> element("#current_phase")
+    |> render() =~ "Return"
+  end
+
+
 end

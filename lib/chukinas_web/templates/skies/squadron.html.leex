@@ -1,16 +1,38 @@
 <p>Pilots!</p>
 <!-- *** SQUADRON -->
-<%= for group <- @groups do %>
 
 <!-- *** GROUP -->
+<%= for group <- @groups do %>
+
+<!-- *** SELECTED GROUP -->
+<%= if group.selected do %>
+<form phx-submit="select_group">
+  <h3 class="font-bold">A Group</h3>
+  <p class="font-bold"><%= group.starting_location %></p>
+
+  <!-- *** FIGHTER -->
+  <%= for fighter <- group.fighters do %>
+  <label class="block">
+    <input type="checkbox" name="<%= fighter.id %>" value="selected" checked />
+    <%= fighter.name %> (<%= fighter.airframe %> w/ damage to <%= fighter.hits
+    %>)
+  </label>
+  <% end %>
+  <button type="submit">Commit Action</button>
+</form>
+
+<!-- *** UNSELECTED GROUP -->
+<%= else %>
+<button>Select Group</button>
 <h3 class="font-bold">A Group</h3>
 <p class="font-bold"><%= group.starting_location %></p>
-<%= for fighter <- group.fighters do %>
 
 <!-- *** FIGHTER -->
-<p>
+<%= for fighter <- group.fighters do %>
+<label class="block">
+  <input type="checkbox" checked disabled />
   <%= fighter.name %> (<%= fighter.airframe %> w/ damage to <%= fighter.hits %>)
-</p>
-<% end %>
+</label>
 <% end %>
 
+<% end %> <% end %>

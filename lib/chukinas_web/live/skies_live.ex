@@ -27,6 +27,15 @@ defmodule ChukinasWeb.SkiesLive do
     {:noreply, socket}
   end
 
+  @impl true
+  def handle_event("select_group", stuff, socket) do
+    IO.inspect(stuff)
+    # game = socket.assigns.game
+    # |> Map.update!(:turn_manager, &Game.TurnManager.advance_to_next_phase/1)
+    # socket = assign_game_and_vm(socket, game)
+    {:noreply, socket}
+  end
+
   @spec assign_game_and_vm(any(), any()) :: any()
   defp assign_game_and_vm(socket, game) do
     socket
