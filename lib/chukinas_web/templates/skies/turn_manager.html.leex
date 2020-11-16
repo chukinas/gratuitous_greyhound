@@ -5,11 +5,12 @@
   <div class="w-32 bg-indigo-200 rounded-xl border border-indigo-900 ">
     <ul class="divide-y divide-indigo-300 text-center ">
       <%= for phase <- @phases do %>
-      <li class="<%= phase_class(phase.status) %> p-2 px-3">
+      <li class="<%= phase_class(phase.status) %> p-2 px-3"  <%= current_phase_id(phase) %> >
         <%= phase.name %>
+        <!-- TODO This ul shouldn't show up if there are no subphases -->
         <ul>
           <%= for subphase <- phase.subphases do %>
-          <li class="<%= phase_class(subphase.status) %> italic text-xs">
+          <li class="<%= phase_class(subphase.status) %> italic text-xs" <%= current_phase_id(phase) %> >
             <%= subphase.name %>
           </li>
           <% end %>

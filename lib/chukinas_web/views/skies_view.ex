@@ -18,9 +18,20 @@ defmodule ChukinasWeb.SkiesView do
     Phoenix.View.render(__MODULE__, template, assigns)
   end
 
+  # *** *******************************
+  # *** TURN MANAGER
+
   defp phase_class(:in_progress), do: "bg-indigo-100  font-bold"
   defp phase_class(:sub_in_progress), do: "bg-indigo-100 font-normal"
   defp phase_class(:other), do: "font-normal"
+
+  # TODO can phase be a struct?
+  defp current_phase_id(phase) do
+    case phase.status do
+      :in_progress -> "id=current_phase"
+      _ -> nil
+    end
+  end
 end
 
 # https://bernheisel.com/blog/phoenix-liveview-and-views
