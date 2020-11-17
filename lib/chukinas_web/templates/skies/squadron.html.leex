@@ -1,38 +1,83 @@
-<p>Pilots!</p>
-<!-- *** SQUADRON -->
+<div class="p-3 border border-gray-400 w-1/3 rounded m-2 space-y-4">
+  <p>Fighter Groups</p>
+  <!-- *** SQUADRON -->
 
-<!-- *** GROUP -->
-<%= for group <- @groups do %>
+  <!-- *** GROUP -->
+  <%= for group <- @groups do %>
+  <div class="bg-indigo-200 rounded-xl border border-indigo-900 p-3">
+    <!-- *** SELECTED GROUP -->
+    <%= case group.state do %>
+    <%= :selected -> %>
+    <form phx-submit="select_group">
+      <p class="font-bold"><%= group.starting_location %></p>
+      <%= for fighter <- group.fighters do %>
+      <label class="block">
+        <input
+          type="checkbox"
+          name="<%= fighter.id %>"
+          value="selected"
+          checked
+        />
+        <%= fighter.name %> (<%= fighter.airframe %> w/ damage to <%=
+        fighter.hits %>)
+      </label>
+      <% end %>
+      <button
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded mt-1"
+        type="submit"
+      >
+        Commit Orders
+      </button>
+    </form>
 
-<!-- *** SELECTED GROUP -->
-<%= if group.selected do %>
-<form phx-submit="select_group">
-  <h3 class="font-bold">A Group</h3>
-  <p class="font-bold"><%= group.starting_location %></p>
+    <!-- *** NOT AVAILABLE GROUP -->
+    <%= :not_avail -> %>
+    <p class="font-bold"><%= group.starting_location %></p>
+    <%= for fighter <- group.fighters do %>
+    <label class="block">
+      <input type="checkbox" checked disabled />
+      <%= fighter.name %> (<%= fighter.airframe %> w/ damage to <%= fighter.hits
+      %>)
+    </label>
+    <% end %>
+    <button
+      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded mt-1"
+    >
+      Select
+    </button>
 
-  <!-- *** FIGHTER -->
-  <%= for fighter <- group.fighters do %>
-  <label class="block">
-    <input type="checkbox" name="<%= fighter.id %>" value="selected" checked />
-    <%= fighter.name %> (<%= fighter.airframe %> w/ damage to <%= fighter.hits
-    %>)
-  </label>
+    <!-- *** PENDING GROUP -->
+    <%= :pending -> %>
+    <p class="font-bold"><%= group.starting_location %></p>
+    <%= for fighter <- group.fighters do %>
+    <label class="block">
+      <input type="checkbox" checked disabled />
+      <%= fighter.name %> (<%= fighter.airframe %> w/ damage to <%= fighter.hits
+      %>)
+    </label>
+    <% end %>
+    <button
+      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded mt-1"
+    >
+      Select
+    </button>
+
+    <!-- *** COMPLETE GROUP -->
+    <%= :complete -> %>
+    <p class="font-bold"><%= group.starting_location %></p>
+    <%= for fighter <- group.fighters do %>
+    <label class="block">
+      <input type="checkbox" checked disabled />
+      <%= fighter.name %> (<%= fighter.airframe %> w/ damage to <%= fighter.hits
+      %>)
+    </label>
+    <% end %>
+    <button
+      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded mt-1"
+    >
+      Select
+    </button>
+    <% end %>
+  </div>
   <% end %>
-  <button type="submit">Commit Action</button>
-</form>
-
-<!-- *** UNSELECTED GROUP -->
-<%= else %>
-<button>Select Group</button>
-<h3 class="font-bold">A Group</h3>
-<p class="font-bold"><%= group.starting_location %></p>
-
-<!-- *** FIGHTER -->
-<%= for fighter <- group.fighters do %>
-<label class="block">
-  <input type="checkbox" checked disabled />
-  <%= fighter.name %> (<%= fighter.airframe %> w/ damage to <%= fighter.hits %>)
-</label>
-<% end %>
-
-<% end %> <% end %>
+</div>

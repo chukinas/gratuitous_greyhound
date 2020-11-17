@@ -14,7 +14,7 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
   @type vm_group :: %{
     fighters: [vm_fighter()],
     starting_location: String.t(),
-    selected: boolean(),
+    state: :not_avail | :pending | :selected | :complete,
     # attack_space: String.t(),
     # end_turn_location: String.t(),
     # action_required: boolean(),
@@ -39,12 +39,19 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
     %{
       groups: [
         %{
+          starting_location: "dogfight",
+          fighters: [
+            build_fighter("red baron"),
+          ],
+          state: :not_avail
+        },
+        %{
           starting_location: "nose: high",
           fighters: [
             build_fighter("john"),
             build_fighter("steve"),
           ],
-          selected: true,
+          state: :pending,
         },
         %{
           starting_location: "tail: level",
@@ -52,7 +59,15 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
             build_fighter("bill"),
             build_fighter("ted"),
           ],
-          selected: false,
+          state: :selected
+        },
+        %{
+          starting_location: "tail: level",
+          fighters: [
+            build_fighter("the rock"),
+            build_fighter("the hulk"),
+          ],
+          state: :complete
         },
       ]
       # groups: vm_groups,
