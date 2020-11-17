@@ -32,71 +32,34 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
   # *** BUILDERS
 
   @spec build(Squadron.t()) :: t()
-  def build(_fighters) do
+  def build(squadron) do
     # vm_groups = fighters
     # |> Squadron.group()
     # |> Enum.map(&build_group/1)
     %{
-      groups: [
-        %{
-          starting_location: "dogfight",
-          fighters: [
-            build_fighter("red baron"),
-          ],
-          state: :not_avail
-        },
-        %{
-          starting_location: "nose: high",
-          fighters: [
-            build_fighter("john"),
-            build_fighter("steve"),
-          ],
-          state: :pending,
-        },
-        %{
-          starting_location: "tail: level",
-          fighters: [
-            build_fighter("bill"),
-            build_fighter("ted"),
-          ],
-          state: :selected
-        },
-        %{
-          starting_location: "tail: level",
-          fighters: [
-            build_fighter("the rock"),
-            build_fighter("the hulk"),
-          ],
-          state: :complete
-        },
-      ]
+      groups: squadron |> Squadron.group() |> Enum.map(&build_group/1),
       # groups: vm_groups,
       # action_required: false,
       # complete: false
     }
   end
 
-  # @spec build_group(Squadron.group()) :: vm_group()
-  # defp build_group(group) do
-  #   %{
-  #     pilots: Enum.map(group, &build_fighter/1),
-  #     start_turn_location: "Not Yet Entered",
-  #     # attack_space: "1, 1",
-  #     end_turn_location: "Nose/High",
-  #     # action_required: true,
-  #     # complete: true
-  #   }
-  # end
-
-
-  # @spec build_fighter(Squadron.fighter()) :: vm_fighter()
-  def build_fighter(pilot_name) do
+  @spec build_group(Squadron.group()) :: vm_group()
+  defp build_group([f | _] = group) do
     %{
-      # TODO temp
-      id: Enum.random(1..999),
-      name: pilot_name,
+      starting_location: f.start_turn_location,
+      fighters: Enum.map(group, &build_fighter/1),
+      state: f.state
+    }
+  end
+
+  @spec build_fighter(Squadron.fighter()) :: vm_fighter()
+  def build_fighter(fighter) do
+    %{
+      id: fighter.id,
+      name: fighter.pilot_name,
       hits: rand_hits(),
-      airframe: :bf109,
+      airframe: fighter.airframe,
     }
   end
 

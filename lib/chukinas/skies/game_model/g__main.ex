@@ -16,7 +16,7 @@ defmodule Chukinas.Skies.Game do
       spaces: state.spaces,
       elements: state.elements,
       boxes: state.boxes,
-      squadron: Enum.map(0..2, &Squadron.new/1),
+      squadron: Squadron.new(),
       turn_manager: TurnManager.init()
     }
   end
