@@ -24,8 +24,7 @@ defmodule Chukinas.Skies.Game.TurnManager do
     %{
       turn: 1,
       max_turn: 7,
-      phase: :escort_stations,
-      # phase: List.first(get_phases()),
+      phase: List.first(get_phases()),
     }
   end
 

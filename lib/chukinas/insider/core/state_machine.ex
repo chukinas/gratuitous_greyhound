@@ -98,8 +98,8 @@ end
 #   # *** PLAY
 
 #   # def handle_event(:enter, :play, data) do
-#   #   # TODO how to handle the enter state? I want to set a timer when we enter
-#   #   # TODO set timer
+#   #   #  how to handle the enter state? I want to set a timer when we enter
+#   #   #  set timer
 #   #   play_duration = Game.get_play_duration(data)
 #   #   {:keep_state, data, [{:timeout, :play}, play_duration, :]}
 #   # end
@@ -119,12 +119,12 @@ end
 #     {:next_state, :voting_guesser, data}
 #   end
 
-#   # TODO if time runs out, all lose!
+#   #  if time runs out, all lose!
 
 #   # *** *******************************
 #   # *** VOTE_GUESSER
 #   #     Is the Guesser guilty?
-#   # TODO there needs to be a timer on this phase as well
+#   #  there needs to be a timer on this phase as well
 
 #   def handle_event({:call, from}, {:vote_guesser, vote}, :voting_guesser, data) do
 #     {result, data} = Game.handle_guesser_vote(data, vote, from)
@@ -164,12 +164,12 @@ end
 #   # *** GAME_END
 
 #   # def handle_event(:enter, _event, {:game_end, winner}, data) do
-#   #   # TODO do anything here?
+#   #   #  do anything here?
 #   # end
 # end
 
-# TODO  handle the last person leaving room
-# :add_chat_msg | # all # TODO this should be a later feature
+#   handle the last person leaving room
+# :add_chat_msg | # all #  this should be a later feature
 
 # user
 #   tags

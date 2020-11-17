@@ -1,6 +1,9 @@
 defmodule Chukinas.Skies.ViewModel.TurnManager do
   alias Chukinas.Skies.Game.TurnManager, as: TM
 
+  # *** *******************************
+  # *** TYPES
+
   @type phase :: %{
     name: String.t(),
     status: (:other | :in_progress | :sub_in_progress),
@@ -11,6 +14,9 @@ defmodule Chukinas.Skies.ViewModel.TurnManager do
     max_turn: integer(),
     phases: [phase()]
   }
+
+  # *** *******************************
+  # *** BUILDERS
 
   @spec build(TurnManager.t()) :: t()
   def build(turn_mgr) do

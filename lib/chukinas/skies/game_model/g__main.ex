@@ -1,23 +1,22 @@
 defmodule Chukinas.Skies.Game do
   alias Chukinas.Skies.Spec
-  alias Chukinas.Skies.Game.{Fighter, TurnManager}
+  alias Chukinas.Skies.Game.{Squadron, TurnManager}
 
   @type t :: %{
     spaces: any(),
     elements: any(),
     boxes: any(),
-    fighters: any(),
+    squadron: any(),
     turn_manager: TurnManager.t()
   }
 
   def init(map_id) do
-    # TODO rename do be something like Spec.Map.build...
     state = Spec.build(map_id)
     %{
       spaces: state.spaces,
       elements: state.elements,
       boxes: state.boxes,
-      fighters: Enum.map(0..2, &Fighter.new/1),
+      squadron: Squadron.new(),
       turn_manager: TurnManager.init()
     }
   end

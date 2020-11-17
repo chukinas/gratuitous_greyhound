@@ -21,7 +21,7 @@ defmodule Chukinas.Insider.Boundary.Registry do
 
   @spec get_room_pid(String.t()) :: pid()
   def get_room_pid(room_name) do
-    
+
     GenServer.call(__MODULE__, {:get_room, room_name})
   end
 
@@ -33,7 +33,7 @@ defmodule Chukinas.Insider.Boundary.Registry do
     {:ok, state}
   end
 
-  # TODO apply these in other files
+  # apply these in other files
   @impl GenServer
   def handle_call({:get_room, room_name}, _from, state) do
     {room_record, state} = case Map.get(state, room_name) do
@@ -44,7 +44,7 @@ defmodule Chukinas.Insider.Boundary.Registry do
       room_record -> {room_record, state}
     end
     {_room_name, room_pid} = room_record
-    # TODO temp
+    # temp
     IO.inspect(Process.info(room_pid))
     {:reply, room_pid, state}
   end

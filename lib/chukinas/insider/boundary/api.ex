@@ -39,8 +39,8 @@ defmodule Chukinas.Insider.Boundary.API do
     |> find_room(room_name)
   end
 
-  # TODO should this take an event?
-  # TODO should it be private?
+  # should this take an event?
+  # should it be private?
   @spec find_room(Event.t(), String.t()) :: Event.t()
   defp find_room(event, room_name) do
     room_pid = Registry.get_room_pid(room_name)
