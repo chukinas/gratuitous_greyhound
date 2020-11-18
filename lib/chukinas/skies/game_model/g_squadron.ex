@@ -43,7 +43,7 @@ defmodule Chukinas.Skies.Game.Squadron do
       start_turn_location: :not_entered,
       move_location: nil,
       end_turn_location: nil,
-      state: :selected,
+      state: :pending,
     }
   end
 

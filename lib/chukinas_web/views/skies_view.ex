@@ -32,6 +32,12 @@ defmodule ChukinasWeb.SkiesView do
       _ -> nil
     end
   end
+
+  # def select_group_button(assigns) do
+  #   ~L"""
+
+  #   """
+  # end
 end
 
 # https://bernheisel.com/blog/phoenix-liveview-and-views

@@ -5,10 +5,11 @@
 
   <!-- *** GROUP -->
   <%= for group <- @groups do %>
-  <div class="bg-indigo-200 rounded-xl border border-indigo-900 p-3">
+  <div id="group_1" class="bg-indigo-200 rounded-xl border border-indigo-900 p-3">
     <!-- *** SELECTED GROUP -->
     <%= case group.state do %>
     <% :selected -> %>
+    <p>This group is selected</p>
     <form phx-submit="select_group">
       <p class="font-bold"><%= group.starting_location %></p>
       <%= for fighter <- group.fighters do %>
@@ -33,6 +34,7 @@
 
     <!-- *** NOT AVAILABLE GROUP -->
     <% :not_avail -> %>
+    <p>This group not available</p>
     <p class="font-bold"><%= group.starting_location %></p>
     <%= for fighter <- group.fighters do %>
     <label class="block">
@@ -41,11 +43,6 @@
       %>)
     </label>
     <% end %>
-    <button
-      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded mt-1"
-    >
-      Select
-    </button>
 
     <!-- *** PENDING GROUP -->
     <% :pending -> %>
@@ -59,13 +56,15 @@
     </label>
     <% end %>
     <button
-      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded mt-1"
+      class="select_group bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded mt-1"
+      phx-click="select_group"
     >
       Select
     </button>
 
     <!-- *** COMPLETE GROUP -->
     <% :complete -> %>
+    <p>this is a complete group</p>
     <p class="font-bold"><%= group.starting_location %></p>
     <%= for fighter <- group.fighters do %>
     <label class="block">
@@ -74,11 +73,6 @@
       %>)
     </label>
     <% end %>
-    <button
-      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded mt-1"
-    >
-      Select
-    </button>
     <% end %>
   </div>
   <% end %>
