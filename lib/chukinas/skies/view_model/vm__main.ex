@@ -17,7 +17,7 @@ defmodule Chukinas.Skies.ViewModel do
     vm_tp = TacticalPoints.build(game.tactical_points)
     %__MODULE__{
       squadron: Squadron.build(game.squadron, vm_tp),
-      spaces: Spaces.render(game.spaces),
+      spaces: Spaces.build(game.spaces),
       bombers: render_bombers(game.elements),
       boxes: Boxes.render(game.boxes),
       turn_manager: TurnManager.build(game.turn_manager),

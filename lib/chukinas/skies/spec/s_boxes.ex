@@ -14,7 +14,6 @@ defmodule Chukinas.Skies.Spec.Boxes do
     {direction, boxes}
   end
 
-  # TODO combine these two functions?
   @spec build_boxes(Position.generic_direction()) :: any()
   defp build_boxes(direction) do
     boxes = [

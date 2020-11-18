@@ -3,8 +3,7 @@ defmodule Chukinas.Skies.ViewModel.Spaces do
 
   @type t :: [Space.t()]
 
-  # TODO rename 'build'
-  def render(spaces) do
+  def build(spaces) do
     spaces
     |> Map.to_list()
     |> Enum.map(&Space.build/1)
