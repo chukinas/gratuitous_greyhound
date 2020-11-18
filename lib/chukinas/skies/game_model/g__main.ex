@@ -41,6 +41,10 @@ defmodule Chukinas.Skies.Game do
     %{game | squadron: squadron}
   end
 
+  def toggle_fighter_select(%__MODULE__{squadron: s} = game, fighter_id) do
+    %{game | squadron: Squadron.toggle_fighter_select(s, fighter_id)}
+  end
+
   def delay_entry(%__MODULE__{squadron: s, turn_manager: tm, tactical_points: tp} = game) do
     s = Squadron.delay_entry(s)
     tm = cond do

@@ -64,6 +64,13 @@ defmodule Chukinas.Skies.Game.Fighter do
   # *** *******************************
   # *** API
 
+  def toggle_select(%__MODULE__{state: state} = f) do
+    %{f | state: case state do
+      :selected -> :pending
+      _ -> :selected
+    end}
+  end
+
   def selected?(%__MODULE__{state: :selected}), do: true
   def selected?(_), do: false
   def delay_entry(%__MODULE__{} = f), do: %{f | move_location: :not_entered}

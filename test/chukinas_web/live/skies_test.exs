@@ -41,11 +41,14 @@ defmodule ChukinasWeb.SkiesLiveTest do
   defp click_next_phase(view) do
     element(view, "#next_phase") |> render_click()
   end
+  defp click_fighter(view, fighter_id) do
+    element(view, "#fighter_#{fighter_id}") |> render_click()
+  end
 
   test "(un)select", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/skies")
-    # TODO assert group 1 starts selected (or maybe fighter 1?)
-    # TODO unselect fighter 1
+    element(view, "#fighter_1") |> render_click()
+    # TODO check that fighter 1 is unchecked
     # TODO delay entry
     # TODO check that group 2 has moved
     # TODO select group 1

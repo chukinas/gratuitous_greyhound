@@ -15,13 +15,13 @@
       <%= for fighter <- group.fighters do %>
       <label class="block">
         <input
+          id="fighter_<%= fighter.id %>"
           type="checkbox"
-          name="<%= fighter.id %>"
-          value="selected"
+          phx-click="toggle_fighter_select"
+          phx-value-id="<%= fighter.id %>"
           checked
         />
-        <%= fighter.name %> (<%= fighter.airframe %> w/ damage to <%=
-        fighter.hits %>)
+        <%= fighter.name %> (<%= fighter.airframe %> w/ damage to <%= fighter.hits %>)
       </label>
       <% end %>
       <button

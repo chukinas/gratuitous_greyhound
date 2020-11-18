@@ -18,12 +18,19 @@ defmodule Chukinas.Skies.Game.Squadron do
   # *** *******************************
   # *** API
 
-
-
   @spec select_group(t(), integer()) :: t()
   def select_group(squadron, group_id) do
     squadron
     |> Enum.map(&(maybe_select(&1, group_id)))
+  end
+
+  @spec toggle_fighter_select(t(), integer()) :: t()
+  def toggle_fighter_select(squadron, fighter_id) do
+    do_to_fighter(
+      squadron,
+      fighter_id,
+      &Fighter.toggle_select/1
+    )
   end
 
   defp maybe_select(fighter, group_id) do
@@ -52,7 +59,7 @@ defmodule Chukinas.Skies.Game.Squadron do
   # *** *******************************
   # *** HELPERS
 
-  def if_selected_do(squadron, fun) do
+  defp if_selected_do(squadron, fun) do
     Enum.map(squadron, fn f ->
       if Fighter.selected?(f) do
         fun.(f)
@@ -60,8 +67,17 @@ defmodule Chukinas.Skies.Game.Squadron do
         f
       end
     end)
-    # squadron
-    # |> Enum.map(&Fighter.if_selected_do(&1, fun))
+  end
+
+  # TODO rename
+  defp do_to_fighter(squadron, fighter_id, fun) do
+    Enum.map(squadron, fn fighter ->
+      if fighter.id == fighter_id do
+        fun.(fighter)
+      else
+        fighter
+      end
+    end)
   end
 
 end
