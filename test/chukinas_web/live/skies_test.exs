@@ -31,8 +31,7 @@ defmodule ChukinasWeb.SkiesLiveTest do
     assert view |> element("#current_turn") |> render() =~ "1"
     assert view |> element("#current_tp") |> render() =~ "1"
     element(view, "#group_1 .select_group") |> render_click()
-    # TODO select group
-    # TODO delay_entry(view)
+    delay_entry(view)
     # TODO assert current TP = 1
     # TODO click complete phase
     # TODO assert current TP = 0
