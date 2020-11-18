@@ -36,6 +36,11 @@ defmodule Chukinas.Skies.Game do
   # *** *******************************
   # *** API
 
+  def select_group(%__MODULE__{squadron: s} = game, group_id) do
+    squadron = s |> Squadron.select_group(group_id)
+    %{game | squadron: squadron}
+  end
+
   def delay_entry(%__MODULE__{squadron: s, turn_manager: tm, tactical_points: tp} = game) do
     s = Squadron.delay_entry(s)
     tm = cond do

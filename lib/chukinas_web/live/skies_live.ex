@@ -4,13 +4,11 @@ defmodule ChukinasWeb.SkiesLive do
   alias Chukinas.Skies.Game.{Squadron}
   import ChukinasWeb.SkiesView
 
-  # TODO Why does this keep underlining?
   @impl true
   def mount(_params, _session, socket) do
     socket = socket
     |> assign(page_title: "Skies Above the Reich")
     |> assign_game_and_vm(Game.init({1, "a"}))
-
     {:ok, socket}
   end
 
@@ -30,11 +28,10 @@ defmodule ChukinasWeb.SkiesLive do
 
   @impl true
   def handle_event("select_group", %{"group_id" => id}, socket) do
-    # TODO should this move to Game module?
-    game = socket.assigns.game
-    id = String.to_integer(id)
-    squadron = game.squadron |> Squadron.select_group(id)
-    game = %{game | squadron: squadron}
+    game = Game.select_group(
+      socket.assigns.game,
+      String.to_integer(id)
+    )
     socket = assign_game_and_vm(socket, game)
     {:noreply, socket}
   end
