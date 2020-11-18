@@ -3,16 +3,20 @@ defmodule Chukinas.Skies.Spec.Boxes do
 
   def build() do
     [:nose, :left, :right, :tail]
-    |> Enum.map(&build_location/1)
+    |> Enum.map(&build_position/1)
     |> Map.new()
   end
 
-  defp build_location(direction) when direction in [:right, :left] do
-    {_, boxes} = build_location(:flank)
+  @spec build_position(Terms.specific_direction()) :: any()
+  defp build_position(direction) do
+    generic_location = Terms.to_generic(direction)
+    boxes = build_boxes(generic_location)
     {direction, boxes}
   end
 
-  defp build_location(direction) do
+  # TODO combine these two functions?
+  @spec build_boxes(Terms.generic_direction()) :: any()
+  defp build_boxes(direction) do
     boxes = [
       high_position_spec(direction),
       level_position_spec(direction),
@@ -20,7 +24,7 @@ defmodule Chukinas.Skies.Spec.Boxes do
     ]
     ++ return_box_specs()
     ++ approach_box_specs(direction)
-    {direction, boxes}
+    boxes
   end
 
   @spec high_position_spec(Terms.generic_direction) :: any()
@@ -114,7 +118,7 @@ defmodule Chukinas.Skies.Spec.Boxes do
     ]
   end
 
-  @spec high_position_spec(Terms.generic_direction) :: any()
+  @spec approach_box_specs(Terms.generic_direction) :: any()
   defp approach_box_specs(direction) do
     common_boxes = [
       {:this, :approach, :low},
