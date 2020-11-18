@@ -24,24 +24,23 @@ defmodule ChukinasWeb.SkiesLiveTest do
     assert view
     |> element("#current_phase")
     |> render() =~ "Return"
-    IO.inspect(view)
   end
 
-  test "Select Fighter Group", %{conn: conn} do
-    {:ok, view, html} = live(conn, "/skies")
-    view
-    |> element("#fighter_group_1_2_3_4_5_6")
-    |> render_submit() =~ "Move"
-    refute view
-    |> element("#current_phase")
-    |> render() =~ "Return"
-    view
-    |> element("#next_phase")
-    |> render_click()
-    assert view
-    |> element("#current_phase")
-    |> render() =~ "Return"
-  end
+  # test "Select Fighter Group", %{conn: conn} do
+  #   {:ok, view, html} = live(conn, "/skies")
+  #   view
+  #   |> element("#fighter_group_1_2_3_4_5_6")
+  #   |> render_submit() =~ "Move"
+  #   refute view
+  #   |> element("#current_phase")
+  #   |> render() =~ "Return"
+  #   view
+  #   |> element("#next_phase")
+  #   |> render_click()
+  #   assert view
+  #   |> element("#current_phase")
+  #   |> render() =~ "Return"
+  # end
 
 
 end
