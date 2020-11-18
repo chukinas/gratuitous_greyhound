@@ -1,7 +1,6 @@
 defmodule ChukinasWeb.SkiesLive do
   use ChukinasWeb, :live_view
   alias Chukinas.Skies.{Game, ViewModel}
-  alias Chukinas.Skies.Game.{Squadron}
   import ChukinasWeb.SkiesView
 
   @impl true

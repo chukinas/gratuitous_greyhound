@@ -25,7 +25,7 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> render() =~ "Return"
   end
 
-  test "Delay entry", %{conn: conn} do
+  test "delay entry", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/skies")
     assert element(view, "#current_turn") |> render() =~ "1"
     assert element(view, "#avail_tp") |> render() =~ "1"
@@ -40,6 +40,19 @@ defmodule ChukinasWeb.SkiesLiveTest do
   defp delay_entry(view), do: view |> element("#delay_entry") |> render_click()
   defp click_next_phase(view) do
     element(view, "#next_phase") |> render_click()
+  end
+
+  test "(un)select", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/skies")
+    # TODO assert group 1 starts selected (or maybe fighter 1?)
+    # TODO unselect fighter 1
+    # TODO delay entry
+    # TODO check that group 2 has moved
+    # TODO select group 1
+    # TODO delay entry
+    # TODO click next phase
+    # TODO check turn 2
+    # TODO check tp 0
   end
 
 end
