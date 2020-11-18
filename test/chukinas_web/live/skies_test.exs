@@ -9,7 +9,6 @@ defmodule ChukinasWeb.SkiesLiveTest do
     assert render(skies_live) =~ "Skies"
   end
 
-  # TODO tag with something like 'intermediary'?
   test "Next Turn", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/skies")
     assert view
@@ -24,24 +23,23 @@ defmodule ChukinasWeb.SkiesLiveTest do
     assert view
     |> element("#current_phase")
     |> render() =~ "Return"
-    IO.inspect(view)
   end
 
-  test "Select Fighter Group", %{conn: conn} do
-    {:ok, view, html} = live(conn, "/skies")
-    view
-    |> element("#fighter_group_1_2_3_4_5_6")
-    |> render_submit() =~ "Move"
-    refute view
-    |> element("#current_phase")
-    |> render() =~ "Return"
-    view
-    |> element("#next_phase")
-    |> render_click()
-    assert view
-    |> element("#current_phase")
-    |> render() =~ "Return"
+  test "Delay entry", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/skies")
+    assert element(view, "#current_turn") |> render() =~ "1"
+    assert element(view, "#avail_tp") |> render() =~ "1"
+    delay_entry(view)
+    assert element(view, "#avail_tp") |> render() =~ "0"
+    click_next_phase(view)
+    assert element(view, "#avail_tp") |> render() =~ "0"
+    assert element(view, "#current_turn") |> render() =~ "2"
+    refute has_element?(view, "#delay_entry")
   end
 
+  defp delay_entry(view), do: view |> element("#delay_entry") |> render_click()
+  defp click_next_phase(view) do
+    element(view, "#next_phase") |> render_click()
+  end
 
 end

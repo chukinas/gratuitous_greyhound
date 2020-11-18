@@ -2,7 +2,7 @@ defmodule Chukinas.Skies.Game.Collision do
   alias Chukinas.Skies.Util.WeightedRandom
 
   def draw_rand_token do
-    randomizer = WeightedRandom.new(spec)
+    randomizer = WeightedRandom.new(spec())
     randomizer.()
   end
 
