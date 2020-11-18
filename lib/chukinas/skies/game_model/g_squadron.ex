@@ -6,15 +6,18 @@ defmodule Chukinas.Skies.Game.Squadron do
 
   @type airframe :: :bf109 | :bf110 | :fw190
 
+  @type state :: :not_avail | :pending | :selected | :complete
+
   @type fighter :: %{
     id: integer(),
+    group_id: integer(),
     airframe: airframe(),
     pilot_name: String.t(),
     hits: [Hit.t()],
     start_turn_location: Location.t(),
     move_location: Location.t(),
     end_turn_location: Location.t(),
-    state: :not_avail | :pending | :selected | :complete,
+    state: state(),
   }
 
   @type group :: [fighter()]
@@ -36,6 +39,7 @@ defmodule Chukinas.Skies.Game.Squadron do
     names = ~w(Bill Ted RedBaron John Steve TheRock TheHulk)
     %{
       id: id,
+      group_id: 1,
       airframe: :bf109,
       # TODO
       pilot_name: Enum.at(names, id),
@@ -50,7 +54,18 @@ defmodule Chukinas.Skies.Game.Squadron do
   # *** *******************************
   # *** HELPERS
 
-  # def can_delay_entry()
+  @spec select_group(t(), integer()) :: t()
+  def select_group(squadron, group_id) do
+    squadron
+    |> Enum.map(&(maybe_select(&1, group_id)))
+  end
+
+  defp maybe_select(fighter, group_id) do
+    cond do
+      fighter.group_id == group_id -> %{fighter | state: :selected}
+      fighter.state == :selected -> %{fighter | state: :pending}
+    end
+  end
 
   @spec group(t()) :: [group()]
   def group(fighters) do

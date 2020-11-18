@@ -1,7 +1,7 @@
 defmodule ChukinasWeb.SkiesLive do
   use ChukinasWeb, :live_view
   alias Chukinas.Skies.{Game, ViewModel}
-  # alias Chukinas.Skies.Game.{TurnManager}
+  alias Chukinas.Skies.Game.{Squadron}
   import ChukinasWeb.SkiesView
 
   @impl true
@@ -28,11 +28,13 @@ defmodule ChukinasWeb.SkiesLive do
   end
 
   @impl true
-  def handle_event("select_group", stuff, socket) do
-    IO.inspect(stuff)
-    # game = socket.assigns.game
-    # |> Map.update!(:turn_manager, &Game.TurnManager.advance_to_next_phase/1)
-    # socket = assign_game_and_vm(socket, game)
+  def handle_event("select_group", %{"group_id" => id}, socket) do
+    # TODO should this move to Game module?
+    game = socket.assigns.game
+    id = String.to_integer(id)
+    squadron = game.squadron |> Squadron.select_group(id)
+    game = game |> Map.update!(:squadron, squadron)
+    socket = assign_game_and_vm(socket, game)
     {:noreply, socket}
   end
 

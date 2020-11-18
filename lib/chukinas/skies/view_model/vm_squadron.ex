@@ -5,6 +5,8 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
   # *** *******************************
   # *** TYPES
 
+  @type g_fighters :: Squadron.fighters()
+
   @type vm_fighter :: %{
     id: integer(),
     name: String.t(),
@@ -15,6 +17,7 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
   @type vm_tags :: [:delay_entry] | []
 
   @type vm_group :: %{
+    id: integer(),
     fighters: [vm_fighter()],
     starting_location: String.t(),
     state: :not_avail | :pending | :selected | :complete,
@@ -46,7 +49,7 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
       # TODO rename available tp?
       current_tp: avail_tp,
       groups: squadron
-        |> Squadron.group()
+        |> Enum.group_by(&(&1.group_id))
         |> Enum.map(&(build_group(&1, avail_tp))),
       # groups: vm_groups,
       # action_required: false,
@@ -54,9 +57,10 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
     }
   end
 
-  @spec build_group(Squadron.group(), integer()) :: vm_group()
-  defp build_group([f | _] = group, avail_tp) do
+  @spec build_group({integer(), g_fighters()}, integer()) :: vm_group()
+  defp build_group({group_id, [f | _] = group}, avail_tp) do
     %{
+      id: group_id,
       starting_location: f.start_turn_location,
       fighters: Enum.map(group, &build_fighter/1),
       state: f.state,
@@ -73,6 +77,14 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
       airframe: fighter.airframe,
     }
   end
+
+  # *** *******************************
+  # *** HELPERS
+
+  # @spec group_by_group_id(g_fighters()) :: %{integer() => g_fighters()}
+  # def group_by_group_id(fighters) do
+  #   Enum.group_by(fighters, &(&1.group_id))
+  # end
 
   @spec rand_hits() :: String.t()
   defp rand_hits() do
