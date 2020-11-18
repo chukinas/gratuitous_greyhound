@@ -29,7 +29,7 @@ defmodule ChukinasWeb.SkiesLiveTest do
   test "Delay entry", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/skies")
     assert view |> element("#current_turn") |> render() =~ "1"
-    # TODO assert current TP = 1
+    assert view |> element("#current_tp") |> render() =~ "1"
     # TODO select group
     # TODO click delay entry btn
     # TODO assert current TP = 1

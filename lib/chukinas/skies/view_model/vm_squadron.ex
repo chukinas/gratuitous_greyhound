@@ -22,6 +22,7 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
   }
 
   @type t :: %{
+    current_tp: integer(),
     groups: [vm_group()],
     # groups: [vm_group()],
     # action_required: boolean(),
@@ -37,6 +38,7 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
     # |> Squadron.group()
     # |> Enum.map(&build_group/1)
     %{
+      current_tp: 1,
       groups: squadron |> Squadron.group() |> Enum.map(&build_group/1),
       # groups: vm_groups,
       # action_required: false,
