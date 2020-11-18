@@ -5,7 +5,7 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
   alias Chukinas.Skies.ViewModel.FighterGroup, as: VM_FighterGroup
 
   defstruct [
-    :current_tp,
+    :avail_tp,
     :groups,
   ]
 
@@ -14,7 +14,7 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
   @type vm_fighter :: VM_Fighter.t()
 
   @type t :: %__MODULE__{
-    current_tp: integer(),
+    avail_tp: integer(),
     groups: [VM_FighterGroup.t()],
     # groups: [vm_group()],
     # action_required: boolean(),
@@ -29,7 +29,7 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
     avail_tp = tactical_points.avail
     %__MODULE__{
       # TODO rename available tp?
-      current_tp: avail_tp,
+      avail_tp: avail_tp,
       groups: squadron
         |> Enum.group_by(&(&1.group_id))
         |> Enum.map(&(VM_FighterGroup.build(&1, avail_tp))),
