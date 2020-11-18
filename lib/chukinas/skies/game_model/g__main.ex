@@ -2,7 +2,6 @@ defmodule Chukinas.Skies.Game do
   alias Chukinas.Skies.Spec
   alias Chukinas.Skies.Game.{Squadron, TacticalPoints, TurnManager}
 
-  # TODO add defaults
   defstruct [
     :spaces,
     :elements,

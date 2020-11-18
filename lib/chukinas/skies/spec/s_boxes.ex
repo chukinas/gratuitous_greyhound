@@ -1,5 +1,5 @@
 defmodule Chukinas.Skies.Spec.Boxes do
-  alias Chukinas.Skies.Terms
+  alias Chukinas.Skies.Position
 
   def build() do
     [:nose, :left, :right, :tail]
@@ -7,15 +7,15 @@ defmodule Chukinas.Skies.Spec.Boxes do
     |> Map.new()
   end
 
-  @spec build_position(Terms.specific_direction()) :: any()
+  @spec build_position(Position.specific_direction()) :: any()
   defp build_position(direction) do
-    generic_location = Terms.to_generic(direction)
+    generic_location = Position.to_generic(direction)
     boxes = build_boxes(generic_location)
     {direction, boxes}
   end
 
   # TODO combine these two functions?
-  @spec build_boxes(Terms.generic_direction()) :: any()
+  @spec build_boxes(Position.generic_direction()) :: any()
   defp build_boxes(direction) do
     boxes = [
       high_position_spec(direction),
@@ -27,7 +27,7 @@ defmodule Chukinas.Skies.Spec.Boxes do
     boxes
   end
 
-  @spec high_position_spec(Terms.generic_direction) :: any()
+  @spec high_position_spec(Position.generic_direction) :: any()
   defp high_position_spec(location) do
     common_moves = [
       {:this, :approach, :high, 0},
@@ -51,7 +51,7 @@ defmodule Chukinas.Skies.Spec.Boxes do
     {:this, :position, :high, common_moves ++ specific_moves}
   end
 
-  @spec level_position_spec(Terms.generic_direction) :: any()
+  @spec level_position_spec(Position.generic_direction) :: any()
   defp level_position_spec(location) do
     common_moves = [
       {:this, :approach, :level, 0},
@@ -76,7 +76,7 @@ defmodule Chukinas.Skies.Spec.Boxes do
     {:this, :position, :level, common_moves ++ specific_moves}
   end
 
-  @spec low_position_spec(Terms.generic_direction) :: any()
+  @spec low_position_spec(Position.generic_direction) :: any()
   defp low_position_spec(location) do
     common_moves = [
       {:this, :approach, :low, 0},
@@ -118,7 +118,7 @@ defmodule Chukinas.Skies.Spec.Boxes do
     ]
   end
 
-  @spec approach_box_specs(Terms.generic_direction) :: any()
+  @spec approach_box_specs(Position.generic_direction) :: any()
   defp approach_box_specs(direction) do
     common_boxes = [
       {:this, :approach, :low},

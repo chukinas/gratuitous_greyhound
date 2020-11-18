@@ -1,5 +1,5 @@
-defmodule Chukinas.Skies.Terms do
-  # TODO rename Chukinas.Skies.Positions? Or combine into that module?
+defmodule Chukinas.Skies.Position do
+
   @type generic_direction :: :nose | :tail | :flank
   @type specific_direction :: :nose | :tail | :left | :right
 
