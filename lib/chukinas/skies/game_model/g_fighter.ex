@@ -42,7 +42,6 @@ defmodule Chukinas.Skies.Game.Fighter do
       id: id,
       group_id: 1,
       airframe: :bf109,
-      # TODO
       pilot_name: Enum.at(names, id, "no name"),
       hits: [],
       start_turn_location: :not_entered,
@@ -55,7 +54,6 @@ defmodule Chukinas.Skies.Game.Fighter do
   # *** *******************************
   # *** HELPERS
 
-  # TODO replace group_id with opts of group id or select id or unselect id
   def maybe_select(fighter, group_id) do
     cond do
       fighter.group_id == group_id -> %{fighter | state: :selected}
@@ -66,9 +64,6 @@ defmodule Chukinas.Skies.Game.Fighter do
   # *** *******************************
   # *** API
 
-  # TODO delete?
-  # def if_selected_do(%__MODULE__{state: :selected} = f, fun), do: fun.(f)
-  # def if_selected_do(f, _), do: f
   def selected?(%__MODULE__{state: :selected}), do: true
   def selected?(_), do: false
   def delay_entry(%__MODULE__{} = f), do: %{f | move_location: :not_entered}
