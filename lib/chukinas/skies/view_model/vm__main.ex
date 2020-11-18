@@ -11,9 +11,8 @@ defmodule Chukinas.Skies.ViewModel do
     :escort_stations,
   ]
 
-  @spec render(Game.t()) :: any()
-  # TODO rename build?
-  def render(game) do
+  @spec build(Game.t()) :: any()
+  def build(game) do
     vm_tp = TacticalPoints.build(game.tactical_points)
     %__MODULE__{
       squadron: Squadron.build(game.squadron, vm_tp),

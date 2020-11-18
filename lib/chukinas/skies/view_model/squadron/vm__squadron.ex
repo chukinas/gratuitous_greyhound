@@ -28,7 +28,6 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
     # |> Enum.map(&build_group/1)
     avail_tp = tactical_points.avail
     %__MODULE__{
-      # TODO rename available tp?
       avail_tp: avail_tp,
       groups: squadron
         |> Enum.group_by(&(&1.group_id))

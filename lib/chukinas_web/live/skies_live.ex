@@ -56,7 +56,7 @@ defmodule ChukinasWeb.SkiesLive do
   defp assign_game_and_vm(socket, game) do
     socket
     |> assign(:game, game)
-    |> assign(:vm, ViewModel.render(game))
+    |> assign(:vm, ViewModel.build(game))
   end
 
 
