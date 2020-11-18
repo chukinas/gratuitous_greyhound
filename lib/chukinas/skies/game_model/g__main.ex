@@ -34,4 +34,17 @@ defmodule Chukinas.Skies.Game do
     }
   end
 
+  # *** *******************************
+  # *** API
+
+  def delay_entry(%__MODULE__{squadron: s, turn_manager: tm, tactical_points: tp} = game) do
+    s = Squadron.delay_entry(s)
+    tm = cond do
+      Squadron.all_fighters_delayed_entry?(s) -> TurnManager.next_turn(tm)
+      true -> tm
+    end
+    tp = TacticalPoints.calculate(tp, s)
+    %{game | squadron: s, turn_manager: tm, tactical_points: tp}
+  end
+
 end

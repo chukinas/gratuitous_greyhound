@@ -21,7 +21,7 @@ defmodule Chukinas.Skies.Game.TurnManager do
   }
 
   def init() do
-    %{
+    %__MODULE__{
       turn: 1,
       max_turn: 7,
       phase: List.first(get_phases()),
@@ -90,6 +90,13 @@ defmodule Chukinas.Skies.Game.TurnManager do
       ]},
       # :escort,
     ]
+  end
+
+  # *** *******************************
+  # *** API
+
+  def next_turn(%__MODULE__{turn: turn} = tm) do
+    %{tm | turn: turn + 1, phase: get_first_phase()}
   end
 
 end

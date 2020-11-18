@@ -10,7 +10,7 @@
     <%= case group.state do %>
     <% :selected -> %>
     <p>This group is selected</p>
-    <form phx-submit="select_group">
+    <form phx-submit="commit_order">
       <p class="font-bold"><%= group.starting_location %></p>
       <%= for fighter <- group.fighters do %>
       <label class="block">
@@ -33,6 +33,7 @@
     </form>
     <%= if group.tags |> Enum.member?(:delay_entry) do %>
     <button
+      id="delay_entry"
       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded mt-1"
       phx-click="delay_entry"
     >

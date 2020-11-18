@@ -39,6 +39,19 @@ defmodule ChukinasWeb.SkiesLive do
     {:noreply, socket}
   end
 
+  @impl true
+  def handle_event("delay_entry", _, socket) do
+    game = socket.assigns.game |> Game.delay_entry()
+    socket = assign_game_and_vm(socket, game)
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("commit_order", params, socket) do
+    IO.inspect(params)
+    {:noreply, socket}
+  end
+
   @spec assign_game_and_vm(any(), any()) :: any()
   defp assign_game_and_vm(socket, game) do
     socket

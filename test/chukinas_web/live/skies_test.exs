@@ -30,7 +30,7 @@ defmodule ChukinasWeb.SkiesLiveTest do
     {:ok, view, _html} = live(conn, "/skies")
     assert view |> element("#current_turn") |> render() =~ "1"
     assert view |> element("#current_tp") |> render() =~ "1"
-    element(view, "#group_1 .select_group") |> render_click()
+    # element(view, "#group_1 .select_group") |> render_click()
     delay_entry(view)
     # TODO assert current TP = 1
     # TODO click complete phase

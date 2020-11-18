@@ -13,7 +13,11 @@ defmodule ChukinasWeb.SkiesView do
     build Atom.to_string(key), Map.fetch!(view_model, key)
   end
 
-  defp build(name, assigns \\ []) do
+  defp build(name, assigns \\ [])
+  defp build(name, assigns) when is_struct(assigns) do
+    build(name, Map.from_struct(assigns))
+  end
+  defp build(name, assigns) do
     template = [name, ".html"] |> Enum.join("")
     Phoenix.View.render(__MODULE__, template, assigns)
   end
