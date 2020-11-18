@@ -9,7 +9,6 @@ defmodule ChukinasWeb.SkiesLiveTest do
     assert render(skies_live) =~ "Skies"
   end
 
-  # TODO tag with something like 'intermediary'?
   test "Next Turn", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/skies")
     assert view

@@ -9,7 +9,7 @@
         class="<%= phase_class(phase.status) %> p-2 px-3"
         <%= current_phase_id(phase) %>
         > <%= phase.name %>
-        <!-- TODO This ul shouldn't show up if there are no subphases -->
+        <%= if !Enum.empty?(phase.subphases) do %>
         <ul>
           <%= for subphase <- phase.subphases do %>
           <li
@@ -19,6 +19,7 @@
           </li>
           <% end %>
         </ul>
+        <% end %>
       </li>
       <% end %>
     </ul>
