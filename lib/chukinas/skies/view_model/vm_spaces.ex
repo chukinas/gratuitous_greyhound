@@ -13,7 +13,11 @@ end
 
 defmodule Chukinas.Skies.ViewModel.Space do
   defstruct [:x, :y, :lethal_level]
-  @type t :: %__MODULE__{}
+  @type t :: %__MODULE__{
+    x: integer(),
+    y: integer(),
+    lethal_level: any()
+  }
   @type coordinates :: {integer(), integer()}
 
   @spec build({coordinates(), any()}) :: t()
