@@ -31,11 +31,12 @@ defmodule ChukinasWeb.SkiesLiveTest do
     assert view |> element("#current_turn") |> render() =~ "1"
     assert view |> element("#current_tp") |> render() =~ "1"
     # TODO select group
-    # TODO click delay entry btn
+    # TODO click delay entry btn (should show TP cost)
     # TODO assert current TP = 1
     # TODO click complete phase
     # TODO assert current TP = 0
     # TODO assert current turn 2
+    # TODO assert there is no delay entry button
   end
 
   # test "Select Fighter Group", %{conn: conn} do

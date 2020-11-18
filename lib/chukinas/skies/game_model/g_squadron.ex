@@ -22,7 +22,7 @@ defmodule Chukinas.Skies.Game.Squadron do
   @type t :: group()
 
   # *** *******************************
-  # *** FUNCTIONS
+  # *** NEW
 
   # TODO JJC new or init?
   @spec new() :: t()
@@ -46,6 +46,11 @@ defmodule Chukinas.Skies.Game.Squadron do
       state: :selected,
     }
   end
+
+  # *** *******************************
+  # *** HELPERS
+
+  # def can_delay_entry()
 
   @spec group(t()) :: [group()]
   def group(fighters) do
