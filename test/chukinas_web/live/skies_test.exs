@@ -34,10 +34,9 @@ defmodule ChukinasWeb.SkiesLiveTest do
     delay_entry(view)
     assert view |> element("#current_tp") |> render() =~ "0"
     click_next_phase(view)
-    # TODO click complete phase
-    # TODO assert current TP = 0
-    # TODO assert current turn 2
-    # TODO assert there is no delay entry button
+    assert view |> element("#current_tp") |> render() =~ "0"
+    assert view |> element("#current_turn") |> render() =~ "2"
+    refute has_element?(view, "#delay_entry")
   end
 
   defp delay_entry(view), do: view |> element("#delay_entry") |> render_click()
