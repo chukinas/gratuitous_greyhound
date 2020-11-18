@@ -2,7 +2,17 @@ defmodule Chukinas.Skies.Game do
   alias Chukinas.Skies.Spec
   alias Chukinas.Skies.Game.{Squadron, TacticalPoints, TurnManager}
 
-  @type t :: %{
+  # TODO add defaults
+  defstruct [
+    :spaces,
+    :elements,
+    :boxes,
+    :squadron,
+    :turn_manager,
+    :tactical_points,
+  ]
+
+  @type t :: %__MODULE__{
     spaces: any(),
     elements: any(),
     boxes: any(),
@@ -14,7 +24,7 @@ defmodule Chukinas.Skies.Game do
   @spec init(any()) :: t()
   def init(map_id) do
     state = Spec.build(map_id)
-    %{
+    %__MODULE__{
       spaces: state.spaces,
       elements: state.elements,
       boxes: state.boxes,

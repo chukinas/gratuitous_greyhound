@@ -4,6 +4,7 @@ defmodule ChukinasWeb.SkiesLive do
   alias Chukinas.Skies.Game.{Squadron}
   import ChukinasWeb.SkiesView
 
+  # TODO Why does this keep underlining?
   @impl true
   def mount(_params, _session, socket) do
     socket = socket
@@ -33,7 +34,7 @@ defmodule ChukinasWeb.SkiesLive do
     game = socket.assigns.game
     id = String.to_integer(id)
     squadron = game.squadron |> Squadron.select_group(id)
-    game = game |> Map.update!(:squadron, squadron)
+    game = %{game | squadron: squadron}
     socket = assign_game_and_vm(socket, game)
     {:noreply, socket}
   end
