@@ -9,6 +9,7 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
     :starting_location,
     :state,
     :tags,
+    :selectable,
   ]
 
   @type vm_fighter :: VM_Fighter.t()
@@ -19,8 +20,10 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
     id: integer(),
     fighters: [vm_fighter()],
     starting_location: String.t(),
+    # TODO ref id and state util
     state: :not_avail | :pending | :selected | :complete,
     tags: vm_tags(),
+    selectable: boolean(),
     # attack_space: String.t(),
     # end_turn_location: String.t(),
     # action_required: boolean(),
@@ -36,7 +39,8 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
       starting_location: f.start_turn_location,
       fighters: Enum.map(fighters, &VM_Fighter.build/1),
       state: group.state,
-      tags: [] |> maybe_delay_entry(f, avail_tp)
+      tags: [] |> maybe_delay_entry(f, avail_tp),
+      selectable: Enum.member?([:pending, :complete], group.state),
     }
   end
 

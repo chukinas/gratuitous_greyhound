@@ -27,6 +27,7 @@
     </label>
     <% end %>
 
+    <%= if group.selectable do %>
     <!-- *** SELECT GROUP -->
     <button
       class="select_group <%= button_styling() %>"
@@ -35,9 +36,10 @@
     >
       Select
     </button>
+    <% end %>
 
-    <!-- *** DELAY ENTRY -->
     <%= if group.tags |> Enum.member?(:delay_entry) do %>
+    <!-- *** DELAY ENTRY -->
     <button
       id="delay_entry"
       class="<%= button_styling() %>"
