@@ -1,40 +1,33 @@
 defmodule Chukinas.Skies.ViewModel.Squadron do
   alias Chukinas.Skies.Game.{Squadron}
-  alias Chukinas.Skies.ViewModel.TacticalPoints
-  alias Chukinas.Skies.ViewModel.Fighter, as: VM_Fighter
+  alias Chukinas.Skies.ViewModel.TacticalPoints, as: VM_TacticalPoints
   alias Chukinas.Skies.ViewModel.FighterGroup, as: VM_FighterGroup
+
+  # *** *******************************
+  # *** TYPES
 
   defstruct [
     :avail_tp,
     :groups,
   ]
 
-  @type g_fighters :: Squadron.fighters()
-
-  @type vm_fighter :: VM_Fighter.t()
-
   @type t :: %__MODULE__{
     avail_tp: integer(),
     groups: [VM_FighterGroup.t()],
-    # groups: [vm_group()],
-    # action_required: boolean(),
-    # complete: boolean()
   }
 
-  @spec build(Squadron.t(), TacticalPoints.t()) :: t()
-  def build(squadron, tactical_points) do
-    # vm_groups = fighters
-    # |> Squadron.group()
-    # |> Enum.map(&build_group/1)
-    avail_tp = tactical_points.avail
+  # *** *******************************
+  # *** NEW
+
+  @spec build(Squadron.t(), VM_TacticalPoints.t()) :: t()
+  def build(g_squadron, vm_tactical_points) do
+    avail_tp = vm_tactical_points.avail
+    groups = g_squadron
+    |> Squadron.to_group_list()
+    |> Enum.map(&(VM_FighterGroup.build(&1, avail_tp)))
     %__MODULE__{
       avail_tp: avail_tp,
-      groups: squadron
-        |> Enum.group_by(&(&1.group_id))
-        |> Enum.map(&(VM_FighterGroup.build(&1, avail_tp))),
-      # groups: vm_groups,
-      # action_required: false,
-      # complete: false
+      groups: groups,
     }
   end
 

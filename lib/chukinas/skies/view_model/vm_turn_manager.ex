@@ -18,7 +18,7 @@ defmodule Chukinas.Skies.ViewModel.TurnManager do
   # *** *******************************
   # *** BUILDERS
 
-  @spec build(TurnManager.t()) :: t()
+  @spec build(TM.t()) :: t()
   def build(turn_mgr) do
     %{
       turn: turn_mgr.turn,

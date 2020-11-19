@@ -1,5 +1,8 @@
 defmodule Chukinas.Skies.Game.TurnManager do
 
+  # *** *******************************
+  # *** TYPES
+
   defstruct [:turn, :max_turn, :phase]
 
   @type phase_name :: :move
@@ -20,6 +23,10 @@ defmodule Chukinas.Skies.Game.TurnManager do
     phase: phase_name(),
   }
 
+  # *** *******************************
+  # *** NEW
+
+  #  TODO 'new'
   def init() do
     %__MODULE__{
       turn: 1,
@@ -27,6 +34,9 @@ defmodule Chukinas.Skies.Game.TurnManager do
       phase: List.first(get_phases()),
     }
   end
+
+  # *** *******************************
+  # *** API
 
   @spec advance_to_next_phase(t()) :: t()
   def advance_to_next_phase(turn_mgr) do
@@ -91,9 +101,6 @@ defmodule Chukinas.Skies.Game.TurnManager do
       # :escort,
     ]
   end
-
-  # *** *******************************
-  # *** API
 
   def next_turn(%__MODULE__{turn: turn} = tm) do
     %{tm | turn: turn + 1, phase: get_first_phase()}

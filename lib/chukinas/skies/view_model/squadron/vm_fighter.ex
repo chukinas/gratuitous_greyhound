@@ -13,11 +13,11 @@ defmodule Chukinas.Skies.ViewModel.Fighter do
     id: integer(),
     name: String.t(),
     hits: String.t(),
-    airframe: Squadron.airframe(),
+    airframe: Fighter.airframe(),
     selected: boolean(),
   }
 
-  @spec build(Squadron.fighter()) :: t()
+  @spec build(Fighter.t()) :: t()
   def build(fighter) do
     %__MODULE__{
       id: fighter.id,

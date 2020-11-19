@@ -52,17 +52,17 @@ defmodule Chukinas.Skies.Game.Fighter do
   end
 
   # *** *******************************
-  # *** HELPERS
+  # *** API
 
-  def maybe_select(fighter, group_id) do
-    cond do
-      fighter.group_id == group_id -> %{fighter | state: :selected}
-      fighter.state == :selected -> %{fighter | state: :pending}
-    end
+  @spec select(t()) :: t()
+  def select(fighter) do
+    %{fighter | state: :selected}
   end
 
-  # *** *******************************
-  # *** API
+  @spec unselect(t()) :: t()
+  def unselect(fighter) do
+    %{fighter | state: :pending}
+  end
 
   def toggle_select(%__MODULE__{state: state} = f) do
     %{f | state: case state do

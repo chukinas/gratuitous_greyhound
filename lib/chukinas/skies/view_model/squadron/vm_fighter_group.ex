@@ -1,5 +1,5 @@
 defmodule Chukinas.Skies.ViewModel.FighterGroup do
-  alias Chukinas.Skies.Game.{Squadron}
+  alias Chukinas.Skies.Game.{Fighter, FighterGroup}
   alias Chukinas.Skies.ViewModel.Fighter, as: VM_Fighter
 
   defstruct [
@@ -9,8 +9,6 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
     :state,
     :tags,
   ]
-
-  @type g_fighters :: Squadron.fighters()
 
   @type vm_fighter :: VM_Fighter.t()
 
@@ -28,18 +26,19 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
     # complete: boolean()
   }
 
-  @spec build({integer(), g_fighters()}, integer()) :: t()
-  def build({group_id, [f | _] = group}, avail_tp) do
+  @spec build(FighterGroup.t(), integer()) :: t()
+  def build(group, avail_tp) do
+    [f | _] = fighters = group.fighters
     %__MODULE__{
-      id: group_id,
+      id: group.id,
       starting_location: f.start_turn_location,
-      fighters: Enum.map(group, &VM_Fighter.build/1),
-      state: f.state,
+      fighters: Enum.map(fighters, &VM_Fighter.build/1),
+      state: group.state,
       tags: [] |> maybe_delay_entry(f, avail_tp)
     }
   end
 
-  @spec maybe_delay_entry(vm_tags(), Squadron.fighter(), integer()) :: vm_tags()
+  @spec maybe_delay_entry(vm_tags(), Fighter.t(), integer()) :: vm_tags()
   def maybe_delay_entry(current_tags, fighter, avail_tp) do
     if fighter.start_turn_location == :not_entered && avail_tp > 0 do
       [:delay_entry | current_tags]
