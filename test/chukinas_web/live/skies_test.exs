@@ -48,7 +48,8 @@ defmodule ChukinasWeb.SkiesLiveTest do
   test "(un)select", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/skies")
     element(view, "#fighter_1") |> render_click()
-    # TODO check that fighter 1 is unchecked
+    IO.inspect(render(view))
+    # refute element(view, "#fighter_1") |> render() =~ "checked"
     # TODO delay entry
     # TODO check that group 2 has moved
     # TODO select group 1

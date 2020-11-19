@@ -1,11 +1,12 @@
 defmodule Chukinas.Skies.ViewModel.Fighter do
-  alias Chukinas.Skies.Game.{Squadron}
+  alias Chukinas.Skies.Game.{Fighter, Squadron}
 
   defstruct [
     :id,
     :name,
     :hits,
     :airframe,
+    :selected,
   ]
 
   @type t :: %__MODULE__{
@@ -13,6 +14,7 @@ defmodule Chukinas.Skies.ViewModel.Fighter do
     name: String.t(),
     hits: String.t(),
     airframe: Squadron.airframe(),
+    selected: boolean(),
   }
 
   @spec build(Squadron.fighter()) :: t()
@@ -22,6 +24,7 @@ defmodule Chukinas.Skies.ViewModel.Fighter do
       name: fighter.pilot_name,
       hits: rand_hits(),
       airframe: fighter.airframe,
+      selected: Fighter.selected?(fighter)
     }
   end
 

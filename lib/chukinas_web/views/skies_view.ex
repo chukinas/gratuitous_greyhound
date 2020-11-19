@@ -1,5 +1,6 @@
 defmodule ChukinasWeb.SkiesView do
   use ChukinasWeb, :view
+  # alias Chukinas.Skies.
 
   def build_component_renderer(vm) do
     fn view_model_key -> render_component(vm, view_model_key) end
