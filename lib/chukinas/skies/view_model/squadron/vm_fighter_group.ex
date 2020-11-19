@@ -1,6 +1,7 @@
 defmodule Chukinas.Skies.ViewModel.FighterGroup do
   alias Chukinas.Skies.Game.{Fighter, FighterGroup}
   alias Chukinas.Skies.ViewModel.Fighter, as: VM_Fighter
+  import Chukinas.Skies.Game.IdAndState
 
   defstruct [
     :id,
@@ -26,9 +27,10 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
     # complete: boolean()
   }
 
-  @spec build(FighterGroup.t(), integer()) :: t()
-  def build(group, avail_tp) do
-    [f | _] = fighters = group.fighters
+  @spec build(FighterGroup.t(), [Fighter.t()], integer()) :: t()
+  def build(group, all_fighters, avail_tp) do
+    [f | _] = fighters = group.fighter_ids
+    |> get_items(all_fighters)
     %__MODULE__{
       id: group.id,
       starting_location: f.start_turn_location,

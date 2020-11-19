@@ -1,12 +1,13 @@
 defmodule Chukinas.Skies.Game.FighterGroup do
   alias Chukinas.Skies.Game.{Fighter}
+  alias Chukinas.Skies.Game.IdAndState
 
   # *** *******************************
   # *** TYPES
 
   defstruct [
     :id,
-    :fighters,
+    :fighter_ids,
     :state,
   ]
 
@@ -15,10 +16,9 @@ defmodule Chukinas.Skies.Game.FighterGroup do
 
   @type t :: %__MODULE__{
     id: integer(),
-    fighters: fighters(),
-    state: Fighter.state()
+    fighter_ids: fighters(),
+    state: IdAndState.state()
   }
-
 
   # *** *******************************
   # *** NEW
@@ -38,7 +38,7 @@ defmodule Chukinas.Skies.Game.FighterGroup do
     |> Enum.min()
     %__MODULE__{
       id: id,
-      fighters: fighters,
+      fighter_ids: IdAndState.get_list_of_ids(fighters),
       state: f.state
     }
   end
@@ -46,17 +46,13 @@ defmodule Chukinas.Skies.Game.FighterGroup do
   # *** *******************************
   # *** API
 
-  @spec selected?(t()) :: boolean()
-  def selected?(group), do: group.state == :selected
-
   @spec select(t()) :: t()
   def select(group) do
     state = case group.state do
       :not_avail -> :not_avail
       _ -> :selected
     end
-    fighters = update_all_in_place(group.fighters, &Fighter.select/1)
-    %{group | state: state, fighters: fighters}
+    %{group | state: state}
   end
 
   @spec unselect(t()) :: t()
@@ -65,61 +61,7 @@ defmodule Chukinas.Skies.Game.FighterGroup do
       :selected -> :pending
       _ -> group.state
     end
-    fighters = update_all_in_place(group.fighters, &Fighter.unselect/1)
-    %{group | state: state, fighters: fighters}
-  end
-
-  @spec get_fighters(t()) :: fighters()
-  def get_fighters(group) do
-    group.fighters
-  end
-
-  @spec toggle_fighter_select(t(), integer()) :: t()
-  def toggle_fighter_select(group, fighter_id) do
-    group.fighters
-    |> update_in_place(fighter_id, &Fighter.toggle_select/1)
-    |> update_group(group)
-  end
-
-  @spec delay_entry(t()) :: t()
-  def delay_entry(group) do
-    group.fighters
-    |> update_selected_in_place(&Fighter.delay_entry/1)
-    |> update_group(group)
-  end
-
-  # *** *******************************
-  # *** HELPERS
-
-  @spec update_group(fighters(), t()) :: t()
-  def update_group(fighters, group) do
-    %{group | fighters: fighters}
-  end
-
-  defp update_selected_in_place(fighters, fun) do
-    Enum.map(fighters, fn f ->
-      if Fighter.selected?(f) do
-        fun.(f)
-      else
-        f
-      end
-    end)
-  end
-
-  @spec update_all_in_place(fighters(), fighter_func()) :: fighters()
-  defp update_all_in_place(fighters, fun) do
-    update_in_place(fighters, 0, fun)
-  end
-
-  @spec update_in_place(fighters(), integer(), fighter_func()) :: fighters()
-  defp update_in_place(fighters, fighter_id, fun) do
-    Enum.map(fighters, fn fighter ->
-      if fighter.id == fighter_id do
-        fun.(fighter)
-      else
-        fighter
-      end
-    end)
+    %{group | state: state}
   end
 
 end

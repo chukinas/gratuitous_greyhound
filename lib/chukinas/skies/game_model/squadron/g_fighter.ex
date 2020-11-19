@@ -1,5 +1,6 @@
 defmodule Chukinas.Skies.Game.Fighter do
   alias Chukinas.Skies.Game.{Hit, Location}
+  alias Chukinas.Skies.Game.IdAndState
 
   # *** *******************************
   # *** TYPES
@@ -18,7 +19,6 @@ defmodule Chukinas.Skies.Game.Fighter do
 
   @type airframe :: :bf109 | :bf110 | :fw190
 
-  @type state :: :not_avail | :pending | :selected | :complete
 
   @type t :: %__MODULE__{
     id: integer(),
@@ -29,7 +29,7 @@ defmodule Chukinas.Skies.Game.Fighter do
     start_turn_location: Location.t(),
     move_location: Location.t(),
     end_turn_location: Location.t(),
-    state: state(),
+    state: IdAndState.state(),
   }
 
   # *** *******************************

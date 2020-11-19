@@ -1,5 +1,5 @@
 defmodule Chukinas.Skies.ViewModel.Fighter do
-  alias Chukinas.Skies.Game.{Fighter, Squadron}
+  alias Chukinas.Skies.Game.{Fighter}
 
   defstruct [
     :id,

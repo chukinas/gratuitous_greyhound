@@ -1,22 +1,38 @@
 defmodule Chukinas.Skies.Game.Squadron do
   alias Chukinas.Skies.Game.{Fighter, FighterGroup}
+  import Chukinas.Skies.Game.IdAndState
 
   # *** *******************************
   # *** TYPES
 
-  @type group_id :: integer()
+  defstruct [
+    :groups,
+    :fighters,
+  ]
 
-  @type t :: %{group_id() => FighterGroup.t()}
+  @type t :: %__MODULE__{
+    groups: [FighterGroup.t()],
+    fighters: [Fighter.t()],
+  }
 
   # *** *******************************
   # *** NEW
 
   @spec new() :: t()
   def new() do
-    new_groups = 1..3
+    1..3
     |> Enum.map(&Fighter.new/1)
-    |> FighterGroup.build_groups()
-    group_list_to_map(new_groups)
+    |> rebuild()
+  end
+
+  @spec build([Fighter.t()], [FighterGroup.t()]) :: t()
+  def build(fighters, groups) do
+    %__MODULE__{fighters: fighters, groups: groups}
+  end
+
+  def rebuild(fighters) do
+    groups = FighterGroup.build_groups(fighters)
+    build(fighters, groups)
   end
 
   # *** *******************************
@@ -24,80 +40,51 @@ defmodule Chukinas.Skies.Game.Squadron do
 
   @spec select_group(t(), integer()) :: t()
   def select_group(squadron, group_id) do
-    squadron
-    |> to_group_list()
+    groups = squadron.groups
     |> Enum.map(&FighterGroup.unselect/1)
-    |> group_list_to_map()
-    |> Map.update!(group_id, &FighterGroup.select/1)
+    |> apply_if_matching_id(group_id, &FighterGroup.select/1)
+    fighter_ids = groups
+    |> get_item(group_id)
+    |> Map.fetch!(:fighter_ids)
+    fighters = squadron.fighters
+    |> apply_if_matching_id(fighter_ids, &Fighter.select/1)
+    build(fighters, groups)
   end
 
   @spec toggle_fighter_select(t(), integer()) :: t()
   def toggle_fighter_select(squadron, fighter_id) do
-    squadron
-    |> get_selected_group()
-    |> FighterGroup.toggle_fighter_select(fighter_id)
-    |> update_squadron(squadron)
+    squadron.fighters
+    |> apply_if_matching_id(fighter_id, &Fighter.toggle_select/1)
+    |> update_fighters(squadron)
   end
 
   @spec delay_entry(t()) :: t()
   def delay_entry(squadron) do
-    squadron
-    |> get_selected_group()
-    |> FighterGroup.delay_entry()
-    |> update_squadron(squadron)
+    fighter_ids = squadron.groups
+    |> get_single_selected()
+    |> Map.fetch!(:fighter_ids)
+    squadron.fighters
+    |> apply_if_matching_id(fighter_ids, &Fighter.delay_entry/1)
+    |> rebuild()
   end
 
   @spec all_fighters_delayed_entry?(t()) :: boolean()
   def all_fighters_delayed_entry?(squadron) do
-    squadron
-    |> get_all_fighters()
+    squadron.fighters
     |> Enum.all?(&Fighter.delayed_entry?/1)
   end
 
   def any_fighters?(squadron, fun) do
-    squadron
-    |> get_all_fighters()
+    squadron.fighters
     |> Enum.any?(fun)
-  end
-
-  @spec group_list_to_map(t()) :: [FighterGroup.t()]
-  def to_group_list(squadron) do
-    Map.values(squadron)
   end
 
   # *** *******************************
   # *** HELPERS
 
-  @spec group_list_to_map([FighterGroup.t()]) :: t()
-  defp group_list_to_map(groups) do
-    groups
-    |> Enum.map(&build_tuple/1)
-    |> Map.new()
-  end
-
-  @spec build_tuple(FighterGroup.t()) :: {integer(), FighterGroup.t()}
-  defp build_tuple(group) do
-    {group.id, group}
-  end
-
-  @spec get_selected_group(t()) :: FighterGroup.t()
-  defp get_selected_group(squadron) do
-    squadron
-    |> to_group_list()
-    |> Enum.find(&FighterGroup.selected?/1)
-  end
-
-  @spec update_squadron(FighterGroup.t(), t()) :: t()
-  defp update_squadron(group, squadron) do
-    %{squadron | group.id => group}
-  end
-
-  @spec get_all_fighters(t()) :: [Fighter.t()]
-  defp get_all_fighters(squadron) do
-    squadron
-    |> to_group_list()
-    |> Enum.map(&FighterGroup.get_fighters/1)
-    |> Enum.concat()
+  @spec update_fighters([Fighter.t()], t()) :: t()
+  defp update_fighters(fighters, squadron) do
+    %{squadron | fighters: fighters}
   end
 
 end

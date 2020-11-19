@@ -22,9 +22,8 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
   @spec build(Squadron.t(), VM_TacticalPoints.t()) :: t()
   def build(g_squadron, vm_tactical_points) do
     avail_tp = vm_tactical_points.avail
-    groups = g_squadron
-    |> Squadron.to_group_list()
-    |> Enum.map(&(VM_FighterGroup.build(&1, avail_tp)))
+    groups = g_squadron.groups
+    |> Enum.map(&(VM_FighterGroup.build(&1, g_squadron.fighters, avail_tp)))
     %__MODULE__{
       avail_tp: avail_tp,
       groups: groups,
