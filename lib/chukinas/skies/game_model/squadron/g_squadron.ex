@@ -20,7 +20,7 @@ defmodule Chukinas.Skies.Game.Squadron do
 
   @spec new() :: t()
   def new() do
-    1..3
+    1..2
     |> Enum.map(&Fighter.new/1)
     |> rebuild()
   end
@@ -60,24 +60,14 @@ defmodule Chukinas.Skies.Game.Squadron do
 
   @spec delay_entry(t()) :: t()
   def delay_entry(squadron) do
-    fighter_ids = squadron.groups
-    |> get_single_selected()
-    |> Map.fetch!(:fighter_ids)
+    fighter_ids = get_selected_fighter_ids(squadron)
     squadron.fighters
     |> apply_if_matching_id(fighter_ids, &Fighter.delay_entry/1)
     |> rebuild()
   end
 
-  @spec all_fighters_delayed_entry?(t()) :: boolean()
-  def all_fighters_delayed_entry?(squadron) do
-    squadron.fighters
-    |> Enum.all?(&Fighter.delayed_entry?/1)
-  end
-
-  def any_fighters?(squadron, fun) do
-    squadron.fighters
-    |> Enum.any?(fun)
-  end
+  def any_fighters?(squadron, fun), do: squadron.fighters |> Enum.any?(fun)
+  def all_fighters?(squadron, fun), do: squadron.fighters |> Enum.all?(fun)
 
   # *** *******************************
   # *** HELPERS
@@ -85,6 +75,15 @@ defmodule Chukinas.Skies.Game.Squadron do
   @spec update_fighters([Fighter.t()], t()) :: t()
   defp update_fighters(fighters, squadron) do
     %{squadron | fighters: fighters}
+  end
+
+  defp get_selected_fighter_ids(squadron) do
+    squadron.groups
+    |> get_single_selected()
+    |> Map.fetch!(:fighter_ids)
+    |> get_items(squadron.fighters)
+    |> get_selected()
+    |> get_list_of_ids()
   end
 
 end

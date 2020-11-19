@@ -1,6 +1,6 @@
 defmodule Chukinas.Skies.Game do
   alias Chukinas.Skies.Spec
-  alias Chukinas.Skies.Game.{Squadron, TacticalPoints, TurnManager}
+  alias Chukinas.Skies.Game.{Fighter, Squadron, TacticalPoints, TurnManager}
 
   defstruct [
     :spaces,
@@ -51,9 +51,10 @@ defmodule Chukinas.Skies.Game do
     tactical_points: tp
   } = game) do
     s = Squadron.delay_entry(s)
-    tm = cond do
-      # Squadron.all_fighters_delayed_entry?(s) -> TurnManager.next_turn(tm)
-      true -> tm
+    tm = if Squadron.all_fighters?(s, &Fighter.delayed_entry?/1) do
+      TurnManager.next_turn(tm)
+    else
+      tm
     end
     tp = TacticalPoints.calculate(tp, s)
     %{game | squadron: s, turn_manager: tm, tactical_points: tp}

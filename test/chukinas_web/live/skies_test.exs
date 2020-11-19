@@ -45,6 +45,7 @@ defmodule ChukinasWeb.SkiesLiveTest do
   end
   defp select_group(view, group_id) do
     element(view, "#group_#{group_id} .select_group") |> render_click()
+    view
   end
   defp assert_turn(view, turn_number) do
     assert element(view, "#current_turn") |> render() =~ "#{turn_number}"
@@ -60,9 +61,10 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> delay_entry()
     |> assert_turn(1)
     assert has_element?(view, "#group_2")
-    select_group(view, 1)
-    delay_entry(view)
-    # TODO assert turn 2
+    view
+    |> select_group(1)
+    |> delay_entry()
+    |> assert_turn(2)
     # TODO check tp 0
   end
 
