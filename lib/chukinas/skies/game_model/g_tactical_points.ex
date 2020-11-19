@@ -14,7 +14,10 @@ defmodule Chukinas.Skies.Game.TacticalPoints do
   end
 
   def calculate(%{spent: spent} = tp, squadron) do
-    spent = spent + case Squadron.any?(squadron, &Fighter.delayed_entry?/1) do
+    spent = spent + case Squadron.any_fighters?(
+      squadron,
+      &Fighter.delayed_entry?/1
+    ) do
       true -> 1
       false -> 0
     end

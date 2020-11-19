@@ -16,7 +16,6 @@ defmodule Chukinas.Skies.Game.Squadron do
     new_groups = 1..3
     |> Enum.map(&Fighter.new/1)
     |> FighterGroup.build_groups()
-    IO.inspect(new_groups)
     group_list_to_map(new_groups)
   end
 
@@ -55,7 +54,11 @@ defmodule Chukinas.Skies.Game.Squadron do
     |> Enum.all?(&Fighter.delayed_entry?/1)
   end
 
-  def any?(squadron, fun), do: Enum.any?(squadron, fun)
+  def any_fighters?(squadron, fun) do
+    squadron
+    |> get_all_fighters()
+    |> Enum.any?(fun)
+  end
 
   @spec group_list_to_map(t()) :: [FighterGroup.t()]
   def to_group_list(squadron) do

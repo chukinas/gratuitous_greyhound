@@ -55,7 +55,6 @@ defmodule ChukinasWeb.SkiesLive do
 
   @impl true
   def handle_event("commit_order", params, socket) do
-    IO.inspect(params)
     {:noreply, socket}
   end
 
