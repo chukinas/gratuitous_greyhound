@@ -27,10 +27,11 @@ defmodule ChukinasWeb.SkiesLiveTest do
 
   test "delay entry", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/skies")
-    view |> assert_turn(1)
-    assert element(view, "#avail_tp") |> render() =~ "1"
-    view |> delay_entry()
-    assert element(view, "#avail_tp") |> render() =~ "0"
+    view
+    |> assert_turn(1)
+    |> assert_tp(1)
+    |> delay_entry()
+    |> assert_tp(0)
   end
 
   defp delay_entry(view) do
@@ -51,21 +52,23 @@ defmodule ChukinasWeb.SkiesLiveTest do
     assert element(view, "#current_turn") |> render() =~ "#{turn_number}"
     view
   end
+  defp assert_tp(view, tp) do
+    assert element(view, "#avail_tp") |> render() =~ "#{tp}"
+    view
+  end
 
   test "(un)select", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/skies")
     refute has_element?(view, "#group_1 .select_group")
-    toggle_fighter(view, 1)
-    refute element(view, "#fighter_1") |> render() =~ "checked"
+    toggle_fighter(view, 2)
+    refute element(view, "#fighter_2") |> render() =~ "checked"
     view
     |> delay_entry()
     |> assert_turn(1)
-    assert has_element?(view, "#group_2")
-    view
-    |> select_group(1)
+    |> select_group(2)
     |> delay_entry()
     |> assert_turn(2)
-    # TODO check tp 0
+    |> assert_tp(0)
   end
 
 end
