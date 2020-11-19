@@ -47,10 +47,11 @@ defmodule ChukinasWeb.SkiesLiveTest do
 
   test "(un)select", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/skies")
+    # TODO assert group 1 select is not rendered
     element(view, "#fighter_1") |> render_click()
     refute element(view, "#fighter_1") |> render() =~ "checked"
     delay_entry(view)
-    # TODO check that group 2 has moved
+    assert has_element?(view, "#group_2")
     # TODO select group 1
     # TODO delay entry
     # TODO click next phase

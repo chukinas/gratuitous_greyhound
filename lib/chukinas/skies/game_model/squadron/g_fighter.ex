@@ -7,7 +7,6 @@ defmodule Chukinas.Skies.Game.Fighter do
 
   defstruct [
     :id,
-    :group_id,
     :airframe,
     :pilot_name,
     :hits,
@@ -22,7 +21,6 @@ defmodule Chukinas.Skies.Game.Fighter do
 
   @type t :: %__MODULE__{
     id: integer(),
-    group_id: integer(),
     airframe: airframe(),
     pilot_name: String.t(),
     hits: [Hit.t()],
@@ -40,7 +38,6 @@ defmodule Chukinas.Skies.Game.Fighter do
     names = ~w(Bill Ted RedBaron John Steve TheRock TheHulk)
     %__MODULE__{
       id: id,
-      group_id: 1,
       airframe: :bf109,
       pilot_name: Enum.at(names, id, "no name"),
       hits: [],
@@ -74,6 +71,8 @@ defmodule Chukinas.Skies.Game.Fighter do
   def selected?(%__MODULE__{state: :selected}), do: true
   def selected?(_), do: false
   def delay_entry(%__MODULE__{} = f), do: %{f | move_location: :not_entered}
-  def delayed_entry?(%__MODULE__{move_location: loc}), do: loc == :not_entered
+  def delayed_entry?(%__MODULE__{} = fighter) do
+    fighter.move_location == :not_entered
+  end
 
 end
