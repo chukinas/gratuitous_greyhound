@@ -52,7 +52,7 @@ defmodule Chukinas.Skies.Game do
   } = game) do
     s = Squadron.delay_entry(s)
     tm = cond do
-      Squadron.all_fighters_delayed_entry?(s) -> TurnManager.next_turn(tm)
+      # Squadron.all_fighters_delayed_entry?(s) -> TurnManager.next_turn(tm)
       true -> tm
     end
     tp = TacticalPoints.calculate(tp, s)

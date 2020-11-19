@@ -27,38 +27,42 @@ defmodule ChukinasWeb.SkiesLiveTest do
 
   test "delay entry", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/skies")
-    assert element(view, "#current_turn") |> render() =~ "1"
+    view |> assert_turn(1)
     assert element(view, "#avail_tp") |> render() =~ "1"
-    delay_entry(view)
+    view |> delay_entry()
     assert element(view, "#avail_tp") |> render() =~ "0"
-    click_next_phase(view)
-    assert element(view, "#avail_tp") |> render() =~ "0"
-    assert element(view, "#current_turn") |> render() =~ "2"
-    refute has_element?(view, "#delay_entry")
   end
 
-  defp delay_entry(view), do: view |> element("#delay_entry") |> render_click()
+  defp delay_entry(view) do
+    view |> element("#delay_entry") |> render_click()
+    view
+  end
   defp click_next_phase(view) do
     element(view, "#next_phase") |> render_click()
   end
-  defp click_fighter(view, fighter_id) do
+  defp toggle_fighter(view, fighter_id) do
     element(view, "#fighter_#{fighter_id}") |> render_click()
   end
   defp select_group(view, group_id) do
     element(view, "#group_#{group_id} .select_group") |> render_click()
   end
+  defp assert_turn(view, turn_number) do
+    assert element(view, "#current_turn") |> render() =~ "#{turn_number}"
+    view
+  end
 
   test "(un)select", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/skies")
     refute has_element?(view, "#group_1 .select_group")
-    element(view, "#fighter_1") |> render_click()
+    toggle_fighter(view, 1)
     refute element(view, "#fighter_1") |> render() =~ "checked"
-    delay_entry(view)
+    view
+    |> delay_entry()
+    |> assert_turn(1)
     assert has_element?(view, "#group_2")
     select_group(view, 1)
-    # TODO delay entry
-    # TODO click next phase
-    # TODO check turn 2
+    delay_entry(view)
+    # TODO assert turn 2
     # TODO check tp 0
   end
 
