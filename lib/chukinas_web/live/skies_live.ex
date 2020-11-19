@@ -49,12 +49,13 @@ defmodule ChukinasWeb.SkiesLive do
   @impl true
   def handle_event("delay_entry", _, socket) do
     game = socket.assigns.game |> Game.delay_entry()
+    # TODO i keep getting warnings here
     socket = assign_game_and_vm(socket, game)
     {:noreply, socket}
   end
 
   @impl true
-  def handle_event("commit_order", params, socket) do
+  def handle_event("commit_order", _params, socket) do
     {:noreply, socket}
   end
 

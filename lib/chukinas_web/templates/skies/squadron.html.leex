@@ -5,12 +5,11 @@
 
   <!-- *** GROUP -->
   <%= for group <- @groups do %>
-  <p><%= group.state %></p>
-  <p>group <%= group.id %></p>
   <div
-    id="group_<%= group.id %>"
-    class="bg-indigo-200 rounded-xl border border-indigo-900 p-3"
+  id="group_<%= group.id %>"
+  class="bg-indigo-200 rounded-xl border border-indigo-900 p-3"
   >
+    <p>group <%= group.id %>: <%= group.state %></p>
     <p class="font-bold"><%= group.starting_location %></p>
     <%= for fighter <- group.fighters do %>
 

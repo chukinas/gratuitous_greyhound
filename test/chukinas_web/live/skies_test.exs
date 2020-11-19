@@ -44,6 +44,9 @@ defmodule ChukinasWeb.SkiesLiveTest do
   defp click_fighter(view, fighter_id) do
     element(view, "#fighter_#{fighter_id}") |> render_click()
   end
+  defp select_group(view, group_id) do
+    element(view, "#group_#{group_id} .select_group") |> render_click()
+  end
 
   test "(un)select", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/skies")
@@ -52,7 +55,7 @@ defmodule ChukinasWeb.SkiesLiveTest do
     refute element(view, "#fighter_1") |> render() =~ "checked"
     delay_entry(view)
     assert has_element?(view, "#group_2")
-    # TODO select group 1
+    select_group(view, 1)
     # TODO delay entry
     # TODO click next phase
     # TODO check turn 2
