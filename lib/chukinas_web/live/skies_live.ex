@@ -1,7 +1,6 @@
 defmodule ChukinasWeb.SkiesLive do
   use ChukinasWeb, :live_view
   alias Chukinas.Skies.{Game, ViewModel}
-  alias Chukinas.Skies.Game.{Squadron}
   import ChukinasWeb.SkiesView
 
   @impl true
@@ -37,15 +36,26 @@ defmodule ChukinasWeb.SkiesLive do
   end
 
   @impl true
+  def handle_event("toggle_fighter_select", %{"id" => id}, socket) do
+    game = Game.toggle_fighter_select(
+      socket.assigns.game,
+      String.to_integer(id)
+    )
+    socket = assign_game_and_vm(socket, game)
+    # TODO have the above function return this
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_event("delay_entry", _, socket) do
     game = socket.assigns.game |> Game.delay_entry()
+    # TODO i keep getting warnings here
     socket = assign_game_and_vm(socket, game)
     {:noreply, socket}
   end
 
   @impl true
-  def handle_event("commit_order", params, socket) do
-    IO.inspect(params)
+  def handle_event("commit_order", _params, socket) do
     {:noreply, socket}
   end
 

@@ -15,8 +15,9 @@ Grenze Gotisc
 <!-- *** TURN MANAGER -->
 <%= component.(:turn_manager) %>
 
+<%= if false do %>
 <!-- *** ESCORT STATIONS -->
-<%= component.(:escort_stations)  %>
+<%= component.(:escort_stations) %>
 
 <!-- *** POSITION -->
 <%= render_component(:position) %>
@@ -45,6 +46,7 @@ Grenze Gotisc
   </div>
   <% end %>
 </div>
+<% end %>
 
 <%= for box <- @vm.boxes do %>
 <div><%= box %></div>

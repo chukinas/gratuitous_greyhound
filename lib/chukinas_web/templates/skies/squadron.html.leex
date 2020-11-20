@@ -1,89 +1,60 @@
 <div class="p-3 border border-gray-400 w-1/3 rounded m-2 space-y-4">
-  <p>Fighter Groups</p>
   <!-- *** SQUADRON -->
+  <p>Your Squadron</p>
   <p><span id="avail_tp"><%= @avail_tp %></span> TP remaining</p>
 
   <!-- *** GROUP -->
   <%= for group <- @groups do %>
-  <div id="group_1" class="bg-indigo-200 rounded-xl border border-indigo-900 p-3">
-    <!-- *** SELECTED GROUP -->
-    <%= case group.state do %>
-    <% :selected -> %>
-    <p>This group is selected</p>
-    <form phx-submit="commit_order">
-      <p class="font-bold"><%= group.starting_location %></p>
-      <%= for fighter <- group.fighters do %>
-      <label class="block">
-        <input
-          type="checkbox"
-          name="<%= fighter.id %>"
-          value="selected"
-          checked
-        />
-        <%= fighter.name %> (<%= fighter.airframe %> w/ damage to <%=
-        fighter.hits %>)
-      </label>
-      <% end %>
-      <button
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded mt-1"
-        type="submit"
+  <div
+  id="group_<%= group.id %>"
+  class="bg-indigo-200 rounded-xl border border-indigo-900 p-3"
+  >
+    <p>group <%= group.id %>: <%= group.state %></p>
+    <p class="font-bold"><%= group.starting_location %></p>
+    <%= for fighter <- group.fighters do %>
+
+    <!-- *** CHECKBOX AND LABEL -->
+    <label class="block">
+      <input
+        id="fighter_<%= fighter.id %>"
+        type="checkbox"
+        phx-click="toggle_fighter_select"
+        phx-value-id="<%= fighter.id %>"
+        <%= if fighter.selected, do: "checked" %>        
       >
-        Commit Orders
-      </button>
-    </form>
-    <%= if group.tags |> Enum.member?(:delay_entry) do %>
-    <button
-      id="delay_entry"
-      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded mt-1"
-      phx-click="delay_entry"
-    >
-      Delay Entry (costs 1 TP)
-    </button>
-    <% end %>
-
-    <!-- *** NOT AVAILABLE GROUP -->
-    <% :not_avail -> %>
-    <p>This group not available</p>
-    <p class="font-bold"><%= group.starting_location %></p>
-    <%= for fighter <- group.fighters do %>
-    <label class="block">
-      <input type="checkbox" checked disabled />
-      <%= fighter.name %> (<%= fighter.airframe %> w/ damage to <%= fighter.hits
-      %>)
+        <%= fighter.name %>
     </label>
     <% end %>
 
-    <!-- *** PENDING GROUP -->
-    <% :pending -> %>
-    <p>this is a pending group</p>
-    <p class="font-bold"><%= group.starting_location %></p>
-    <%= for fighter <- group.fighters do %>
-    <label class="block">
-      <input type="checkbox" checked disabled />
-      <%= fighter.name %> (<%= fighter.airframe %> w/ damage to <%= fighter.hits
-      %>)
-    </label>
-    <% end %>
+    <%= if group.selectable do %>
+    <!-- *** SELECT GROUP -->
     <button
-      class="select_group bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded mt-1"
+      class="select_group <%= button_styling() %>"
       phx-click="select_group"
       phx-value-group_id="<%= group.id %>"
     >
       Select
     </button>
+    <% end %>
 
-    <!-- *** COMPLETE GROUP -->
-    <% :complete -> %>
-    <p>this is a complete group</p>
-    <p class="font-bold"><%= group.starting_location %></p>
-    <%= for fighter <- group.fighters do %>
-    <label class="block">
-      <input type="checkbox" checked disabled />
-      <%= fighter.name %> (<%= fighter.airframe %> w/ damage to <%= fighter.hits
-      %>)
-    </label>
+    <%= if group.can_delay_entry do %>
+    <!-- *** DELAY ENTRY -->
+    <button
+      id="delay_entry"
+      class="<%= button_styling() %>"
+      phx-click="delay_entry"
+    >
+      Delay Entry
+    </button>
     <% end %>
-    <% end %>
+
+    <!-- *** COMMIT -->
+    <button
+      class="<%= button_styling() %>"
+    >
+      Commit Orders
+    </button>
+
   </div>
   <% end %>
 </div>

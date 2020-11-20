@@ -1,5 +1,6 @@
 defmodule ChukinasWeb.SkiesView do
   use ChukinasWeb, :view
+  # alias Chukinas.Skies.
 
   def build_component_renderer(vm) do
     fn view_model_key -> render_component(vm, view_model_key) end
@@ -36,11 +37,18 @@ defmodule ChukinasWeb.SkiesView do
     end
   end
 
-  # def select_group_button(assigns) do
-  #   ~L"""
+  # *** *******************************
+  # *** COMPONENTS
 
-  #   """
-  # end
+  def button_styling() do
+    """
+    bg-blue-500 hover:bg-blue-700
+    text-white font-bold
+    py-2 px-4 mt-1
+    border border-blue-700 rounded
+    """
+  end
+
 end
 
 # https://bernheisel.com/blog/phoenix-liveview-and-views
