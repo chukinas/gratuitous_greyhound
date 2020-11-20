@@ -19,11 +19,11 @@ defmodule Chukinas.Skies.Game.TacticalPoints do
   end
 
   # @spec calculate(t(), Squadron.t()) :: t()
-  def calculate(%__MODULE__{spent: spent} = tp, %Squadron{} = squadron) do
-    
+  def calculate(%__MODULE__{} = tp, %Squadron{} = squadron) do
+
     any_delayed_entries? = squadron.fighters
     |> Enum.any?(&Fighter.delayed_entry?/1)
-    spent = spent + if any_delayed_entries?, do: 1, else: 0
+    spent = if any_delayed_entries?, do: 1, else: 0
 
     # spent = spent + case Squadron.any_fighters?(
     #   squadron,
