@@ -3,7 +3,7 @@ require IEx
 defmodule ChukinasWeb.InsiderLive do
   use ChukinasWeb, :live_view
   alias Chukinas.User
-  # TODO remove
+  # remove
   alias Chukinas.Chat.Users
   alias Chukinas.Chat.Room
   alias Chukinas.Insider.Boundary.API
@@ -26,7 +26,7 @@ defmodule ChukinasWeb.InsiderLive do
   def mount(params, _session, socket) do
     room_name = Map.get(params, "room")
     IO.inspect(room_name, label: "Room Name")
-    # TODO replace placeholder uuid
+    #  replace placeholder uuid
     game_state = API.get_state(room_name, 1)
     socket =
       socket
@@ -38,7 +38,7 @@ defmodule ChukinasWeb.InsiderLive do
   @impl true
   def handle_event("flip", _params, socket) do
     IO.inspect(socket, label: "flipping!")
-    # TODO uuid
+    #  uuid
     state = API.flip(socket.assigns.state.name, 1)
     socket = assign(socket, :state, state)
     {:noreply, socket}

@@ -71,7 +71,7 @@ defmodule Chukinas.User do
   # *** OTHER
 
   def update(nil, user_update), do: user_update
-  # TODO guard against uuids being different
+  #  guard against uuids being different
   def update(user, user_update) do
     user
     |> Map.put(:name, user_update.name)

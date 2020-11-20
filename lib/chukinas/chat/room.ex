@@ -5,7 +5,6 @@ defmodule Chukinas.Chat.Room do
   alias Chukinas.User
   alias Chukinas.Chat.Users
   alias Chukinas.Chat.Room
-  # TODO replace
   alias Chukinas.Chat.Room.Registry, as: RoomRegistry
 
   #############################################################################

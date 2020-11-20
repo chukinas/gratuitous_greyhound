@@ -1,0 +1,60 @@
+<div class="p-3 border border-gray-400 w-1/3 rounded m-2 space-y-4">
+  <!-- *** SQUADRON -->
+  <p>Your Squadron</p>
+  <p><span id="avail_tp"><%= @avail_tp %></span> TP remaining</p>
+
+  <!-- *** GROUP -->
+  <%= for group <- @groups do %>
+  <div
+  id="group_<%= group.id %>"
+  class="bg-indigo-200 rounded-xl border border-indigo-900 p-3"
+  >
+    <p>group <%= group.id %>: <%= group.state %></p>
+    <p class="font-bold"><%= group.starting_location %></p>
+    <%= for fighter <- group.fighters do %>
+
+    <!-- *** CHECKBOX AND LABEL -->
+    <label class="block">
+      <input
+        id="fighter_<%= fighter.id %>"
+        type="checkbox"
+        phx-click="toggle_fighter_select"
+        phx-value-id="<%= fighter.id %>"
+        <%= if fighter.selected, do: "checked" %>        
+      >
+        <%= fighter.name %>
+    </label>
+    <% end %>
+
+    <%= if group.selectable do %>
+    <!-- *** SELECT GROUP -->
+    <button
+      class="select_group <%= button_styling() %>"
+      phx-click="select_group"
+      phx-value-group_id="<%= group.id %>"
+    >
+      Select
+    </button>
+    <% end %>
+
+    <%= if group.can_delay_entry do %>
+    <!-- *** DELAY ENTRY -->
+    <button
+      id="delay_entry"
+      class="<%= button_styling() %>"
+      phx-click="delay_entry"
+    >
+      Delay Entry
+    </button>
+    <% end %>
+
+    <!-- *** COMMIT -->
+    <button
+      class="<%= button_styling() %>"
+    >
+      Commit Orders
+    </button>
+
+  </div>
+  <% end %>
+</div>

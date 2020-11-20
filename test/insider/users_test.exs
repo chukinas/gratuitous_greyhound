@@ -18,9 +18,9 @@ defmodule Chukinas.Insider.Core.UsersTest do
   end
 
   test "new user, then register" do
-    assert :new = Users.lookup_user_id(build_users, build_user)
-    users = Users.add(build_users, build_user)
-    assert 1 = Users.lookup_user_id(users, build_user)
+    assert :new = Users.lookup_user_id(build_users(), build_user())
+    users = Users.add(build_users(), build_user())
+    assert 1 = Users.lookup_user_id(users, build_user())
 
   end
 

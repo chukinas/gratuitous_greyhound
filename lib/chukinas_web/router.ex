@@ -22,7 +22,7 @@ defmodule ChukinasWeb.Router do
     get "/about", AboutController, :index
     live "/chat", ChatLive, :index
     live "/chat/:room_name", ChatRoomLive, :show
-    # live "/insider", InsiderLive, :index
+    live "/skies", SkiesLive
     live "/insider/:room", InsiderLive, :show
   end
 

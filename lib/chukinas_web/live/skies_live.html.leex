@@ -1,0 +1,54 @@
+<% component = build_component_renderer(@vm) %>
+<!-- font Germania One? Pirata One - UnifrakturCook UnifrakturMaguntia Vampiro One NewRocker stencil... Rakkas Ceviche One 
+Grenze Gotisc
+...typewriterh
+-->
+
+<!-- *** HEADER -->
+<h1 class="text-orange-500 text-5xl font-bold text-center">
+  Skies Above the Reich
+</h1>
+
+<!-- *** SQUADRON -->
+<%= component.(:squadron) %>
+
+<!-- *** TURN MANAGER -->
+<%= component.(:turn_manager) %>
+
+<%= if false do %>
+<!-- *** ESCORT STATIONS -->
+<%= component.(:escort_stations) %>
+
+<!-- *** POSITION -->
+<%= render_component(:position) %>
+
+<!-- *** MAP -->
+<div class="grid" style="background-color: lightblue">
+  <%= for space <- @vm.spaces do %>
+  <div
+    style="
+      grid-area: <%= space.y * 2 + 1 %> / <%= space.x * 2 + 1 %>;
+      background-color: deepskyblue;
+      color: white;
+    "
+  >
+    <%= space.lethal_level %>
+  </div>
+  <% end %> <%= for {x, y} <- @vm.bombers do %>
+  <div
+    style="
+      grid-area: <%= y * 2 %> / <%= x * 2 %>;
+      background-color: black;
+      color: white;
+    "
+  >
+    ↖
+  </div>
+  <% end %>
+</div>
+<% end %>
+
+<%= for box <- @vm.boxes do %>
+<div><%= box %></div>
+<% end %>
+
