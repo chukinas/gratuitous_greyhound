@@ -71,4 +71,13 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> assert_tp(0)
   end
 
+  test "squadron buttons and checkboxes works", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/skies")
+    # TODO each fighter displays its number
+    # TODO pending groups go at the top
+    # TODO after committing an action, there should be no selected group
+    # TODO pending should have no "commit orders"
+    # TODO add an unselect button
+  end
+
 end
