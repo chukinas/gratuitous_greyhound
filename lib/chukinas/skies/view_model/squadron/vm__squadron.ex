@@ -24,6 +24,7 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
     avail_tp = vm_tactical_points.avail
     groups = g_squadron.groups
     |> Enum.map(&(VM_FighterGroup.build(&1, g_squadron.fighters, avail_tp)))
+    |> Enum.sort(VM_FighterGroup)
     %__MODULE__{
       avail_tp: avail_tp,
       groups: groups,

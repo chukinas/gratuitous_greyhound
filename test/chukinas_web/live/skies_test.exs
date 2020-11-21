@@ -73,11 +73,21 @@ defmodule ChukinasWeb.SkiesLiveTest do
 
   test "squadron buttons and checkboxes works", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/skies")
-    # TODO each fighter displays its number
-    # TODO pending groups go at the top
+    refute has_element?(view, "#group_1 .select_group")
+    toggle_fighter(view, 2)
+    refute element(view, "#fighter_2") |> render() =~ "checked"
+    view
+    |> delay_entry()
+    # TODO the above is copied from above. Extract?
+    assert render(view)
+    |> String.split("id=\"group_1\"")
+    |> Enum.at(1)
+    |> String.contains?("id=\"group_2\"")
+    # TODO groups sort ascending order
     # TODO after committing an action, there should be no selected group
     # TODO pending should have no "commit orders"
     # TODO add an unselect button
+    # TODO clean up
   end
 
 end

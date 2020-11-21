@@ -6,8 +6,8 @@
   <!-- *** GROUP -->
   <%= for group <- @groups do %>
   <div
-  id="group_<%= group.id %>"
-  class="bg-indigo-200 rounded-xl border border-indigo-900 p-3"
+    id="group_<%= group.id %>"
+    class="bg-indigo-200 rounded-xl border border-indigo-900 p-3"
   >
     <p>group <%= group.id %>: <%= group.state %></p>
     <p class="font-bold"><%= group.starting_location %></p>
@@ -22,7 +22,7 @@
         phx-value-id="<%= fighter.id %>"
         <%= if fighter.selected, do: "checked" %>        
       >
-        <%= fighter.name %>
+        <%= fighter.name %> (#<%= fighter.id %>)
     </label>
     <% end %>
 

@@ -13,6 +13,14 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
     :can_delay_entry,
   ]
 
+  def compare(s1, s2) do
+    cond do
+      s1.id > s2.id -> :gt
+      s1.id < s2.id -> :lt
+      true -> :eq
+    end
+  end
+
   @type vm_fighter :: VM_Fighter.t()
 
   @type vm_tags :: []
