@@ -20,9 +20,13 @@ defmodule Chukinas.Skies.Game.Squadron do
 
   @spec new() :: t()
   def new() do
-    1..2
+    squadron = 1..2
     |> Enum.map(&Fighter.new/1)
     |> rebuild()
+    group = squadron.groups
+    |> Enum.at(0)
+    |> FighterGroup.select()
+    %{squadron | groups: [group]}
   end
 
   @spec build([Fighter.t()], [FighterGroup.t()]) :: t()
@@ -30,8 +34,11 @@ defmodule Chukinas.Skies.Game.Squadron do
     %__MODULE__{fighters: fighters, groups: groups}
   end
 
+  @spec rebuild([Fighter.t()]) :: t()
   def rebuild(fighters) do
-    groups = FighterGroup.build_groups(fighters)
+    groups = fighters
+    |> Enum.map(&Fighter.unselect/1)
+    |> FighterGroup.build_groups()
     build(fighters, groups)
   end
 
