@@ -56,6 +56,15 @@ defmodule ChukinasWeb.SkiesLiveTest do
     assert element(view, "#avail_tp") |> render() =~ "#{tp}"
     view
   end
+  defp assert_group_has_unselect_btn(view, group_id, assert? \\ true) do
+    has_element = has_element?(view, "#group_#{group_id} .unselect_group")
+    has_element = case assert? do
+      true -> has_element
+      false -> !has_element
+    end
+    assert has_element
+    view
+  end
   defp group_has_no_select_btn(view, group_id) do
     assert has_element?(view, "#group_#{group_id} .select_group")
     view
@@ -89,7 +98,10 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> String.contains?("id=\"group_2\"")
     [1, 2]
     |> Enum.each(&(group_has_no_select_btn(view, &1)))
-    # TODO add an unselect button
+    view
+    |> select_group(1)
+    |> assert_group_has_unselect_btn(1)
+    |> assert_group_has_unselect_btn(2, false)
     # TODO clean up
   end
 

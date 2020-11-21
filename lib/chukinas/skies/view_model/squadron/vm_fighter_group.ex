@@ -11,6 +11,7 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
     :tags,
     :selectable,
     :can_delay_entry,
+    :selected?,
   ]
 
   def compare(s1, s2) do
@@ -35,10 +36,7 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
     # TODO rename can_select
     selectable: boolean(),
     can_delay_entry: boolean(),
-    # attack_space: String.t(),
-    # end_turn_location: String.t(),
-    # action_required: boolean(),
-    # complete: boolean()
+    selected?: boolean(),
   }
 
   @spec build(FighterGroup.t(), [Fighter.t()], integer()) :: t()
@@ -53,6 +51,7 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
       tags: [],
       selectable: Enum.member?([:pending, :complete], group.state),
       can_delay_entry: can_delay_entry?(group, all_fighters, avail_tp),
+      selected?: group.state == :selected,
     }
   end
 

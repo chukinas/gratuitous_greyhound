@@ -48,6 +48,18 @@
     </button>
     <% end %>
 
+    <%= if group.selected? do %>
+    <!-- *** UNSELECT -->
+    <button
+      id="unselect_group"
+      class="unselect_group <%= button_styling() %>"
+      phx-click="unselect_group"
+      phx-value-group_id="<%= group.id %>"
+    >
+      Unselect
+    </button>
+    <% end %>
+
   </div>
   <% end %>
 </div>
