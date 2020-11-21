@@ -89,7 +89,6 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> String.contains?("id=\"group_2\"")
     [1, 2]
     |> Enum.each(&(group_has_no_select_btn(view, &1)))
-    # TODO pending should have no "commit orders"
     # TODO add an unselect button
     # TODO clean up
   end
