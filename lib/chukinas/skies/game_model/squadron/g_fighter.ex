@@ -58,6 +58,7 @@ defmodule Chukinas.Skies.Game.Fighter do
 
   @spec unselect(t()) :: t()
   def unselect(fighter) do
+    # TODO this should only work if not unavail
     %{fighter | state: :pending}
   end
 

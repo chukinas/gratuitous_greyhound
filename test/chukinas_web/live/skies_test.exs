@@ -56,6 +56,10 @@ defmodule ChukinasWeb.SkiesLiveTest do
     assert element(view, "#avail_tp") |> render() =~ "#{tp}"
     view
   end
+  defp group_has_no_select_btn(view, group_id) do
+    assert has_element?(view, "#group_#{group_id} .select_group")
+    view
+  end
 
   test "(un)select", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/skies")
@@ -83,8 +87,8 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> String.split("id=\"group_1\"")
     |> Enum.at(1)
     |> String.contains?("id=\"group_2\"")
-    # TODO groups sort ascending order
-    # TODO after committing an action, there should be no selected group
+    [1, 2]
+    |> Enum.each(&(group_has_no_select_btn(view, &1)))
     # TODO pending should have no "commit orders"
     # TODO add an unselect button
     # TODO clean up
