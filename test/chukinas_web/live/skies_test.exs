@@ -9,20 +9,16 @@ defmodule ChukinasWeb.SkiesLiveTest do
     assert render(skies_live) =~ "Skies"
   end
 
-  test "Next Turn", %{conn: conn} do
+  test "End Phase btn when all groups are complete", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/skies")
-    assert view
-    |> element("#current_phase")
-    |> render() =~ "Move"
-    refute view
-    |> element("#current_phase")
-    |> render() =~ "Return"
     view
-    |> element("#next_phase")
-    |> render_click()
-    assert view
-    |> element("#current_phase")
-    |> render() =~ "Return"
+    |> assert_turn(1)
+    |> assert_current_phase("Move")
+    |> assert_current_phase("Return", false)
+    |> assert_disabled("#next_phase")
+    |> delay_entry()
+    |> click_next_phase()
+    |> assert_turn(2)
   end
 
   test "delay entry", %{conn: conn} do
@@ -34,6 +30,21 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> assert_tp(0)
   end
 
+  # TODO move asserts into own module
+  # TODO move selects into own module
+  # TODO display the liveview pid at the top so I can see when it restarts
+  defp assert_current_phase(view, phase_name, assert? \\ true) do
+    has_element = element(view, "#current_phase") |> render() =~ phase_name
+    assert has_element |> flip_bool(assert?)
+    view
+  end
+  defp flip_bool(orig, keep) do
+    # TODO is there a better way to do this?
+    case keep do
+      true -> orig
+      false -> !orig
+    end
+  end
   defp delay_entry(view) do
     view |> element("#delay_entry") |> render_click()
     view
@@ -67,6 +78,11 @@ defmodule ChukinasWeb.SkiesLiveTest do
   end
   defp group_has_no_select_btn(view, group_id) do
     assert has_element?(view, "#group_#{group_id} .select_group")
+    view
+  end
+  defp assert_disabled(view, selector) do
+    # TODO how do I combine the disabled into the selector?
+    assert element(view, selector) |> render() =~ "disabled"
     view
   end
 

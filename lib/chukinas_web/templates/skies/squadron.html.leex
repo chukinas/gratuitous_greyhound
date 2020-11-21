@@ -62,4 +62,19 @@
 
   </div>
   <% end %>
+
+  <!-- *** END PHASE -->
+  <!-- TODO enable disabled -->
+  <button
+    class="<%= button_styling() %> disabled:opacity-50"
+    id="next_phase"
+    <%= if @done? do %>
+    phx-click="next_phase"
+    <% else %>
+    disabled
+    <% end %>
+  >
+    End Phase
+  </button>
+
 </div>

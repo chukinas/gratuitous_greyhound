@@ -58,8 +58,11 @@ defmodule Chukinas.Skies.Game.Fighter do
 
   @spec unselect(t()) :: t()
   def unselect(fighter) do
-    # TODO this should only work if not unavail
-    %{fighter | state: :pending}
+    state = case fighter.state do
+      :selected -> :pending
+      current_state -> current_state
+    end
+    %{fighter | state: state}
   end
 
   def toggle_select(%__MODULE__{state: state} = f) do
@@ -74,6 +77,9 @@ defmodule Chukinas.Skies.Game.Fighter do
   def delay_entry(%__MODULE__{} = f), do: %{f | move_location: :not_entered}
   def delayed_entry?(%__MODULE__{} = fighter) do
     fighter.move_location == :not_entered
+  end
+  def complete(%__MODULE__{} = fighter) do
+    %{fighter | state: :complete}
   end
 
 end

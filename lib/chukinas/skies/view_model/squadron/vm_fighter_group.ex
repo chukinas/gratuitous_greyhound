@@ -12,6 +12,7 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
     :selectable,
     :can_delay_entry,
     :selected?,
+    :done?,
   ]
 
   def compare(s1, s2) do
@@ -37,6 +38,7 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
     selectable: boolean(),
     can_delay_entry: boolean(),
     selected?: boolean(),
+    done?: boolean(),
   }
 
   @spec build(FighterGroup.t(), [Fighter.t()], integer()) :: t()
@@ -52,6 +54,7 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
       selectable: Enum.member?([:pending, :complete], group.state),
       can_delay_entry: can_delay_entry?(group, all_fighters, avail_tp),
       selected?: group.state == :selected,
+      done?: Enum.member?([:not_avail, :complete], group.state)
     }
   end
 
@@ -63,6 +66,7 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
       Enum.any?(all_fighters, &Fighter.delayed_entry?/1) -> true
       true -> false
     end
+
   end
 
 end
