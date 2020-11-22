@@ -54,7 +54,7 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
       selectable: Enum.member?([:pending, :complete], group.state),
       can_delay_entry: can_delay_entry?(group, all_fighters, avail_tp),
       selected?: group.state == :selected,
-      done?: Enum.member?([:not_avail, :complete], group.state)
+      done?: done?(group)
     }
   end
 

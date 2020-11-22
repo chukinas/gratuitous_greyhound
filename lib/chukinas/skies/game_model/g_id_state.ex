@@ -43,5 +43,8 @@ defmodule Chukinas.Skies.Game.IdAndState do
   def get_list_of_ids(items) do
     Enum.map(items, &(&1.id))
   end
+  def done?(item) do
+    Enum.member?([:not_avail, :complete], item.state)
+  end
 
 end

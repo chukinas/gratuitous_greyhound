@@ -18,9 +18,10 @@ defmodule ChukinasWeb.SkiesLive do
   # end
 
   @impl true
+  # TODO rename end phase
   def handle_event("next_phase", _, socket) do
     game = socket.assigns.game
-    |> Map.update!(:turn_manager, &Game.TurnManager.advance_to_next_phase/1)
+    |> Game.end_phase()
     socket = assign_game_and_vm(socket, game)
     {:noreply, socket}
   end

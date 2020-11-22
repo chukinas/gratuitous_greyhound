@@ -1,6 +1,7 @@
 defmodule Chukinas.Skies.Game.Squadron do
   alias Chukinas.Skies.Game.{Fighter, FighterGroup}
   import Chukinas.Skies.Game.IdAndState
+  alias Chukinas.Skies.Game.IdAndState
 
   # *** *******************************
   # *** TYPES
@@ -76,6 +77,7 @@ defmodule Chukinas.Skies.Game.Squadron do
 
   def any_fighters?(squadron, fun), do: squadron.fighters |> Enum.any?(fun)
   def all_fighters?(squadron, fun), do: squadron.fighters |> Enum.all?(fun)
+  def done?(squadron), do: all_fighters?(squadron, &IdAndState.done?/1)
 
   # *** *******************************
   # *** HELPERS
