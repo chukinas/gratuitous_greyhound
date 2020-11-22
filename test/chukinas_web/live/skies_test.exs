@@ -48,6 +48,7 @@ defmodule ChukinasWeb.SkiesLiveTest do
   end
   defp toggle_fighter(view, fighter_id) do
     element(view, "#fighter_#{fighter_id}") |> render_click()
+    view
   end
   defp select_group(view, group_id) do
     element(view, "#group_#{group_id} .select_group") |> render_click()
@@ -87,9 +88,9 @@ defmodule ChukinasWeb.SkiesLiveTest do
 
   test "(un)select", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/skies")
-    refute has_element?(view, "#group_1 .select_group")
-    toggle_fighter(view, 2)
     view
+    |> refute_element("#group_1 .select_group")
+    |> toggle_fighter(2)
     |> refute_element("#fighter_2", "checked")
     |> delay_entry()
     |> assert_turn(1)
