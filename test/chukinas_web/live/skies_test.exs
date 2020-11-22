@@ -63,12 +63,7 @@ defmodule ChukinasWeb.SkiesLiveTest do
   end
   defp assert_group_has_unselect_btn(view, group_id, assert? \\ true) do
     has_element = has_element?(view, "#group_#{group_id} .unselect_group")
-    # TODO make use of new helper
-    has_element = case assert? do
-      true -> has_element
-      false -> !has_element
-    end
-    assert has_element
+    assert flip_bool(has_element, assert?)
     view
   end
   defp group_has_no_select_btn(view, group_id) do
