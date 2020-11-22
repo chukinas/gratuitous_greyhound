@@ -18,8 +18,7 @@ defmodule ChukinasWeb.SkiesLive do
   # end
 
   @impl true
-  # TODO rename end phase
-  def handle_event("next_phase", _, socket) do
+  def handle_event("end_phase", _, socket) do
     game = socket.assigns.game
     |> Game.end_phase()
     socket = assign_game_and_vm(socket, game)

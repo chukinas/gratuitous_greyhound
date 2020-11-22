@@ -33,7 +33,6 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
     state: IdAndState.state(),
     tags: vm_tags(),
     can_select?: boolean(),
-    # TODO q mark
     can_delay_entry?: boolean(),
     selected?: boolean(),
     done?: boolean(),
