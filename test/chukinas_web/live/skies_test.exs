@@ -15,7 +15,7 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> assert_turn(1)
     |> assert_current_phase("Move")
     |> assert_current_phase("Return", false)
-    |> assert_disabled("#next_phase")
+    |> assert_disabled("#end_phase")
     |> delay_entry()
     |> end_phase()
     |> assert_turn(2)
@@ -30,20 +30,13 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> assert_tp(0)
   end
 
-  # TODO move asserts into own module
-  # TODO move selects into own module
-  # TODO display the liveview pid at the top so I can see when it restarts
   defp assert_current_phase(view, phase_name, assert? \\ true) do
     has_element = element(view, "#current_phase") |> render() =~ phase_name
     assert has_element |> flip_bool(assert?)
     view
   end
   defp flip_bool(orig, keep) do
-    # TODO is there a better way to do this?
-    case keep do
-      true -> orig
-      false -> !orig
-    end
+    if keep, do: orig, else: !orig
   end
   defp delay_entry(view) do
     view |> element("#delay_entry") |> render_click()
@@ -51,7 +44,7 @@ defmodule ChukinasWeb.SkiesLiveTest do
   end
   defp end_phase(view) do
     # TODO rename end_phase
-    element(view, "#next_phase") |> render_click()
+    element(view, "#end_phase") |> render_click()
     view
   end
   defp toggle_fighter(view, fighter_id) do

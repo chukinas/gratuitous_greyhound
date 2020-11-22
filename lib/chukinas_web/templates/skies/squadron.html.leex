@@ -66,7 +66,7 @@
   <!-- *** END PHASE -->
   <button
     class="<%= button_styling([disabled: !@done?]) %>"
-    id="next_phase"
+    id="end_phase"
     <%= if @done? do %>
     phx-click="end_phase"
     <% else %>
