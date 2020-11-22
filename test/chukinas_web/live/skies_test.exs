@@ -75,13 +75,22 @@ defmodule ChukinasWeb.SkiesLiveTest do
     assert element(view, selector) |> render() =~ "disabled"
     view
   end
+  defp assert_element(view, selector, text_filter \\ nil) do
+    # TODO use this
+    assert has_element?(view, selector, text_filter)
+    view
+  end
+  defp refute_element(view, selector, text_filter \\ nil) do
+    refute has_element?(view, selector, text_filter)
+    view
+  end
 
   test "(un)select", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/skies")
     refute has_element?(view, "#group_1 .select_group")
     toggle_fighter(view, 2)
-    refute element(view, "#fighter_2") |> render() =~ "checked"
     view
+    |> refute_element("#fighter_2", "checked")
     |> delay_entry()
     |> assert_turn(1)
     |> select_group(2)
