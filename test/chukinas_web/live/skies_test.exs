@@ -85,6 +85,13 @@ defmodule ChukinasWeb.SkiesLiveTest do
     refute has_element?(view, selector, text_filter)
     view
   end
+  defp assert_ids_appear_in_order(view, id1, id2) do
+    assert render(view)
+    |> String.split("id=\"#{id1}\"")
+    |> Enum.at(1)
+    |> String.contains?("id=\"#{id2}\"")
+    view
+  end
 
   test "(un)select", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/skies")
@@ -103,16 +110,12 @@ defmodule ChukinasWeb.SkiesLiveTest do
 
   test "squadron buttons and checkboxes works", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/skies")
-    refute has_element?(view, "#group_1 .select_group")
-    toggle_fighter(view, 2)
-    refute element(view, "#fighter_2") |> render() =~ "checked"
     view
+    |> refute_element("#group_1 .select_group")
+    |> toggle_fighter(2)
+    |> refute_element("#fighter_2", "checked")
     |> delay_entry()
-    # TODO the above is copied from above. Extract?
-    assert render(view)
-    |> String.split("id=\"group_1\"")
-    |> Enum.at(1)
-    |> String.contains?("id=\"group_2\"")
+    |> assert_ids_appear_in_order("group_1", "group_2")
     [1, 2]
     |> Enum.each(&(group_has_no_select_btn(view, &1)))
     view
