@@ -1,5 +1,5 @@
 defmodule Chukinas.Skies.Spec.Boxes do
-  alias Chukinas.Skies.Position
+  alias Chukinas.Skies.Game.Position
 
   def build() do
     [:nose, :left, :right, :tail]
