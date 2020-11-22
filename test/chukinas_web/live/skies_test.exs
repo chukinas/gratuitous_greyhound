@@ -110,17 +110,24 @@ defmodule ChukinasWeb.SkiesLiveTest do
   test "squadron buttons and checkboxes works", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/skies")
     view
-    |> refute_element("#group_1 .select_group")
     |> toggle_fighter(2)
-    |> refute_element("#fighter_2", "checked")
     |> delay_entry()
     |> assert_ids_appear_in_order("group_1", "group_2")
+    # TODO extract
     [1, 2]
     |> Enum.each(&(group_has_no_select_btn(view, &1)))
     view
     |> select_group(1)
     |> assert_group_has_unselect_btn(1)
     |> assert_group_has_unselect_btn(2, false)
+  end
+
+  test "enter board", %{conn: conn} do
+    # TODO click nose/low
+    # TODO make sure there's no commit orders btn
+    # TODO assert group 1 token is in nose/low
+    # TODO click end phase
+    # TODO assert turn 2
   end
 
 end
