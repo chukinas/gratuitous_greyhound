@@ -26,7 +26,7 @@
     </label>
     <% end %>
 
-    <%= if group.selectable do %>
+    <%= if group.can_select? do %>
     <!-- *** SELECT GROUP -->
     <button
       class="select_group <%= button_styling() %>"
@@ -37,7 +37,7 @@
     </button>
     <% end %>
 
-    <%= if group.can_delay_entry do %>
+    <%= if group.can_delay_entry? do %>
     <!-- *** DELAY ENTRY -->
     <button
       id="delay_entry"
@@ -62,4 +62,18 @@
 
   </div>
   <% end %>
+
+  <!-- *** END PHASE -->
+  <button
+    class="<%= button_styling([disabled: !@done?]) %>"
+    id="end_phase"
+    <%= if @done? do %>
+    phx-click="end_phase"
+    <% else %>
+    disabled
+    <% end %>
+  >
+    End Phase
+  </button>
+
 </div>
