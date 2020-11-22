@@ -91,6 +91,13 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> String.contains?("id=\"#{id2}\"")
     view
   end
+  def move_position(view, direction, altitude) do
+    id = "##{Atom.to_string(direction)}_#{Atom.to_string(altitude)}"
+    view
+    |> element(id)
+    |> render_click()
+    view
+  end
 
   test "(un)select", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/skies")
@@ -123,7 +130,9 @@ defmodule ChukinasWeb.SkiesLiveTest do
   end
 
   test "enter board", %{conn: conn} do
-    # TODO click nose/low
+    {:ok, view, _html} = live(conn, "/skies")
+    view
+    |> move_position(:nose, :low)
     # TODO make sure there's no commit orders btn
     # TODO assert group 1 token is in nose/low
     # TODO click end phase

@@ -12,15 +12,18 @@ Grenze Gotisc
 <!-- *** SQUADRON -->
 <%= component.(:squadron) %>
 
+<!-- *** POSITION -->
+<%= for position <- @vm.positions do %>
+<!-- TODO can this be expressed as position: position? -->
+<%= build(:position, position) %>
+<% end %>
+
 <!-- *** TURN MANAGER -->
 <%= component.(:turn_manager) %>
 
 <%= if false do %>
 <!-- *** ESCORT STATIONS -->
 <%= component.(:escort_stations) %>
-
-<!-- *** POSITION -->
-<%= render_component(:position) %>
 
 <!-- *** MAP -->
 <div class="grid" style="background-color: lightblue">

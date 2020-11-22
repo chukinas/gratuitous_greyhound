@@ -6,19 +6,25 @@ defmodule ChukinasWeb.SkiesView do
     fn view_model_key -> render_component(vm, view_model_key) end
   end
 
+  # TODO used?
   def render_component(key) do
     build Atom.to_string(key)
   end
 
   def render_component(view_model, key) do
+    # TODO no longer need this tostring?
     build Atom.to_string(key), Map.fetch!(view_model, key)
   end
 
-  defp build(name, assigns \\ [])
-  defp build(name, assigns) when is_struct(assigns) do
+  # TODO I don't like the name of this
+  def build(name, assigns \\ [])
+  def build(name, assigns) when is_atom(name) do
+    build(Atom.to_string(name), assigns)
+  end
+  def build(name, assigns) when is_struct(assigns) do
     build(name, Map.from_struct(assigns))
   end
-  defp build(name, assigns) do
+  def build(name, assigns) do
     template = [name, ".html"] |> Enum.join("")
     Phoenix.View.render(__MODULE__, template, assigns)
   end
