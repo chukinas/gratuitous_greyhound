@@ -1,4 +1,4 @@
-defmodule Chukinas.Skies.Spec.Boxes do
+defmodule Chukinas.Skies.Game.Positions.New do
   alias Chukinas.Skies.Game.Position
 
   def build() do
