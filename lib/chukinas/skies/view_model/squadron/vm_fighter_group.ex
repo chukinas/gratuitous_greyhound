@@ -9,7 +9,7 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
     :state,
     :tags,
     :can_select?,
-    :can_delay_entry,
+    :can_delay_entry?,
     :selected?,
     :done?,
   ]
@@ -32,9 +32,9 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
     starting_location: String.t(),
     state: IdAndState.state(),
     tags: vm_tags(),
-    # TODO rename can_select
     can_select?: boolean(),
-    can_delay_entry: boolean(),
+    # TODO q mark
+    can_delay_entry?: boolean(),
     selected?: boolean(),
     done?: boolean(),
   }
@@ -50,7 +50,7 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
       state: group.state,
       tags: [],
       can_select?: Enum.member?([:pending, :complete], group.state),
-      can_delay_entry: can_delay_entry?(group, all_fighters, avail_tp),
+      can_delay_entry?: can_delay_entry?(group, all_fighters, avail_tp),
       selected?: group.state == :selected,
       done?: IdAndState.done?(group)
     }
