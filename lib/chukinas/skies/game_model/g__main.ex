@@ -59,10 +59,10 @@ defmodule Chukinas.Skies.Game do
     cond do
       !Squadron.done?(s) -> game
       !TurnManager.current_phase?(tm, :move) ->
-        Map.update!(game, :turn_manager, &TurnManager.advance_to_next_phase/1)
+        Map.update!(game, :turn_manager, &TurnManager.next_phase/1)
       Squadron.all_fighters?(s, &Fighter.delayed_entry?/1) ->
         Map.update!(game, :turn_manager, &TurnManager.next_turn/1)
-      true ->  Map.update!(game, :turn_manager, &TurnManager.advance_to_next_phase/1)
+      true ->  Map.update!(game, :turn_manager, &TurnManager.next_phase/1)
     end
   end
 

@@ -37,9 +37,8 @@ defmodule Chukinas.Skies.Game.TurnManager do
   # *** *******************************
   # *** API
 
-  @spec advance_to_next_phase(t()) :: t()
-  # TODO rename 'next_phase'
-  def advance_to_next_phase(turn_mgr) do
+advance_to_next_phase  @spec next_phase(t()) :: t()
+  def next_phase(turn_mgr) do
     next_phase = get_next_phase(turn_mgr.phase)
     next_turn = turn_mgr.turn + cond do
       next_phase == get_first_phase() -> 1
