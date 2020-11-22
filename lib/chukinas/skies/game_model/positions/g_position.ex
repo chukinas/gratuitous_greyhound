@@ -1,19 +1,29 @@
-defmodule Chukinas.Skies.Game.Position do
+defmodule Chukinas.Skies.Game.Box do
 
   # *** *******************************
   # *** TYPES
 
+  defstruct [
+    :location,
+    :moves,
+  ]
+
+  # TODO rename file g_location?
+  # TODO rename attack direction?
   @type generic_direction :: :nose | :tail | :flank
+  # TODO rename this to simply be direction
   @type specific_direction :: :nose | :tail | :left | :right
-  @type approach_type :: :preapproach | :approach
-  @type box_type :: :return | approach_type()
-  @type altitude :: :high | :level | :low
   @type mode :: :determined | :evasive
-  @type box :: :dogfight | :not_entered | :exited
-    | {specific_direction(), :preapproach | :approach, altitude()}
-    | {specific_direction(), :return, altitude(), mode()}
-
-
+  @type location_type :: {:return, mode()} | :preapproach | :approach
+  @type altitude :: :high | :level | :low
+  @type location :: {specific_direction(), location_type(), altitude()}
+  @type cost :: integer()
+  @type move :: {location(), cost()}
+  # TODO not_entered_should be a location?
+  @type t :: %__MODULE__{
+    location: location(),
+    moves: [move()],
+  }
 
   # *** *******************************
   # *** API

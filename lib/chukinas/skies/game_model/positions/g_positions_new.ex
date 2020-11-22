@@ -1,5 +1,6 @@
 defmodule Chukinas.Skies.Game.Positions.New do
-  alias Chukinas.Skies.Game.Position
+  # TODO remove the alias rename
+  alias Chukinas.Skies.Game.Box, as: Position
 
   def build() do
     [:nose, :left, :right, :tail]
@@ -7,7 +8,7 @@ defmodule Chukinas.Skies.Game.Positions.New do
     |> Map.new()
   end
 
-  @spec build_position(Position.specific_direction()) :: any()
+  @spec build_position(Position.specific_direction()) :: Position.t()
   defp build_position(direction) do
     generic_location = Position.to_generic(direction)
     boxes = build_boxes(generic_location)

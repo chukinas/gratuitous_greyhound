@@ -1,6 +1,7 @@
 defmodule Chukinas.Skies.Game.Positions do
 
   alias Chukinas.Skies.Game.Position
+  alias Chukinas.Skies.Game.Positions.New, as: NewPositions
 
   # *** *******************************
   # *** TYPES
@@ -12,7 +13,7 @@ defmodule Chukinas.Skies.Game.Positions do
 
   @spec new() :: t()
   def new() do
-    []
+    NewPositions.build()
   end
 
   # *** *******************************
