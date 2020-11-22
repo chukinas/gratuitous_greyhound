@@ -89,21 +89,20 @@ defmodule ChukinasWeb.SkiesLiveTest do
     view
   end
 
-  # TODO
-  # test "(un)select", %{conn: conn} do
-  #   {:ok, view, _html} = live(conn, "/skies")
-  #   refute has_element?(view, "#group_1 .select_group")
-  #   toggle_fighter(view, 2)
-  #   refute element(view, "#fighter_2") |> render() =~ "checked"
-  #   view
-  #   |> delay_entry()
-  #   |> assert_turn(1)
-  #   |> select_group(2)
-  #   |> delay_entry()
-  #   |> end_phase()
-  #   |> assert_turn(2)
-  #   |> assert_tp(0)
-  # end
+  test "(un)select", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/skies")
+    refute has_element?(view, "#group_1 .select_group")
+    toggle_fighter(view, 2)
+    refute element(view, "#fighter_2") |> render() =~ "checked"
+    view
+    |> delay_entry()
+    |> assert_turn(1)
+    |> select_group(2)
+    |> delay_entry()
+    |> end_phase()
+    |> assert_turn(2)
+    |> assert_tp(0)
+  end
 
   test "squadron buttons and checkboxes works", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/skies")
