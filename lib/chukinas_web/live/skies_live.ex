@@ -5,7 +5,7 @@ defmodule ChukinasWeb.SkiesLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    socket = socket
+    {_, socket} = socket
     |> assign(page_title: "Skies Above the Reich")
     |> assign_game_and_vm(Game.new({1, "a"}))
     {:ok, socket}
@@ -19,10 +19,8 @@ defmodule ChukinasWeb.SkiesLive do
 
   @impl true
   def handle_event("end_phase", _, socket) do
-    game = socket.assigns.game
-    |> Game.end_phase()
-    socket = assign_game_and_vm(socket, game)
-    {:noreply, socket}
+    game = Game.end_phase(socket.assigns.game)
+    assign_game_and_vm(socket, game)
   end
 
   @impl true
@@ -31,8 +29,7 @@ defmodule ChukinasWeb.SkiesLive do
       socket.assigns.game,
       String.to_integer(id)
     )
-    socket = assign_game_and_vm(socket, game)
-    {:noreply, socket}
+    assign_game_and_vm(socket, game)
   end
 
   @impl true
@@ -41,29 +38,27 @@ defmodule ChukinasWeb.SkiesLive do
       socket.assigns.game,
       String.to_integer(id)
     )
-    socket = assign_game_and_vm(socket, game)
-    # TODO have the above function return this
-    {:noreply, socket}
+    assign_game_and_vm(socket, game)
   end
 
   @impl true
   def handle_event("delay_entry", _, socket) do
     game = socket.assigns.game |> Game.delay_entry()
-    # TODO i keep getting warnings here
-    socket = assign_game_and_vm(socket, game)
-    {:noreply, socket}
+    assign_game_and_vm(socket, game)
   end
 
   @impl true
+  # TODO where used?
   def handle_event("commit_order", _params, socket) do
     {:noreply, socket}
   end
 
   @spec assign_game_and_vm(any(), any()) :: any()
   defp assign_game_and_vm(socket, game) do
-    socket
+    socket = socket
     |> assign(:game, game)
     |> assign(:vm, ViewModel.build(game))
+    {:noreply, socket}
   end
 
 
