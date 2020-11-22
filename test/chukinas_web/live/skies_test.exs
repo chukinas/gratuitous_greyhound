@@ -25,9 +25,9 @@ defmodule ChukinasWeb.SkiesLiveTest do
     {:ok, view, _html} = live(conn, "/skies")
     view
     |> assert_turn(1)
-    |> assert_tp(1)
+    |> assert_tactical_points(1)
     |> delay_entry()
-    |> assert_tp(0)
+    |> assert_tactical_points(0)
   end
 
   defp assert_current_phase(view, phase_name, assert? \\ true) do
@@ -43,7 +43,6 @@ defmodule ChukinasWeb.SkiesLiveTest do
     view
   end
   defp end_phase(view) do
-    # TODO rename end_phase
     element(view, "#end_phase") |> render_click()
     view
   end
@@ -58,13 +57,13 @@ defmodule ChukinasWeb.SkiesLiveTest do
     assert has_element?(view, "#current_turn", "#{turn_number}")
     view
   end
-  defp assert_tp(view, tp) do
-    # TODO use text filter, haselement
-    assert element(view, "#avail_tp") |> render() =~ "#{tp}"
+  defp assert_tactical_points(view, tp) do
+    assert has_element?(view, "#avail_tp", "#{tp}")
     view
   end
   defp assert_group_has_unselect_btn(view, group_id, assert? \\ true) do
     has_element = has_element?(view, "#group_#{group_id} .unselect_group")
+    # TODO make use of new helper
     has_element = case assert? do
       true -> has_element
       false -> !has_element
@@ -94,7 +93,7 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> delay_entry()
     |> end_phase()
     |> assert_turn(2)
-    |> assert_tp(0)
+    |> assert_tactical_points(0)
   end
 
   test "squadron buttons and checkboxes works", %{conn: conn} do
