@@ -5,7 +5,6 @@ defmodule Chukinas.Skies.Game.IdAndState do
   # For anything with id and state
   # """
 
-  # TODO should items and id be swapped?
   def apply_if_matching_id(items, id, func) when is_integer(id) do
     Enum.map(items, fn item ->
       if item.id == id do
