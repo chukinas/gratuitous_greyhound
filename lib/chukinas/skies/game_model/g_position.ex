@@ -33,7 +33,7 @@ defmodule Chukinas.Skies.Game.Position do
   @type box_type :: :return | approach_type()
   @type altitude :: :high | :level | :low
   @type mode :: :determined | :evasive
-  @type box :: :dogfight
+  @type box :: :dogfight | :not_entered | :exited
     | {specific_direction(), :preapproach | :approach, altitude()}
     | {specific_direction(), :return, altitude(), mode()}
 
