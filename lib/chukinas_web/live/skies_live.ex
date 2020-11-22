@@ -7,7 +7,7 @@ defmodule ChukinasWeb.SkiesLive do
   def mount(_params, _session, socket) do
     socket = socket
     |> assign(page_title: "Skies Above the Reich")
-    |> assign_game_and_vm(Game.init({1, "a"}))
+    |> assign_game_and_vm(Game.new({1, "a"}))
     {:ok, socket}
   end
 

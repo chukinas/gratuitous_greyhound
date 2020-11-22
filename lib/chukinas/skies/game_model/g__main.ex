@@ -1,6 +1,6 @@
 defmodule Chukinas.Skies.Game do
   alias Chukinas.Skies.Spec
-  alias Chukinas.Skies.Game.{Fighter, Squadron, TacticalPoints, TurnManager, IdAndState}
+  alias Chukinas.Skies.Game.{Fighter, Squadron, TacticalPoints, TurnManager}
 
   defstruct [
     :spaces,
@@ -20,15 +20,15 @@ defmodule Chukinas.Skies.Game do
     tactical_points: TacticalPoints.t(),
   }
 
-  @spec init(any()) :: t()
-  def init(map_id) do
+  @spec new(any()) :: t()
+  def new(map_id) do
     state = Spec.build(map_id)
     %__MODULE__{
       spaces: state.spaces,
       elements: state.elements,
       boxes: state.boxes,
       squadron: Squadron.new(),
-      turn_manager: TurnManager.init(),
+      turn_manager: TurnManager.new(),
       tactical_points: TacticalPoints.new(),
     }
   end

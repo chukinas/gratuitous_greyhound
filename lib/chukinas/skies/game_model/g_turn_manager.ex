@@ -26,8 +26,7 @@ defmodule Chukinas.Skies.Game.TurnManager do
   # *** *******************************
   # *** NEW
 
-  #  TODO 'new'
-  def init() do
+  def new() do
     %__MODULE__{
       turn: 1,
       max_turn: 7,
