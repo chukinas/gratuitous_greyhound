@@ -76,11 +76,10 @@ defmodule ChukinasWeb.SkiesLiveTest do
     assert element(view, selector) |> render() =~ "disabled"
     view
   end
-  defp assert_element(view, selector, text_filter \\ nil) do
-    # TODO use this
-    assert has_element?(view, selector, text_filter)
-    view
-  end
+  # defp assert_element(view, selector, text_filter \\ nil) do
+  #   assert has_element?(view, selector, text_filter)
+  #   view
+  # end
   defp refute_element(view, selector, text_filter \\ nil) do
     refute has_element?(view, selector, text_filter)
     view
@@ -122,7 +121,6 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> select_group(1)
     |> assert_group_has_unselect_btn(1)
     |> assert_group_has_unselect_btn(2, false)
-    # TODO clean up
   end
 
 end
