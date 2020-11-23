@@ -1,6 +1,20 @@
 defmodule Chukinas.Skies.Game.Positions.New do
+  # TODO rename spec?
   # TODO remove the alias rename
   alias Chukinas.Skies.Game.Box, as: Position
+
+
+  # *** *******************************
+  # *** TYPES
+
+  @type direction :: Position.generic_direction() | :this
+  @type altitude :: Position.altitude() | :any
+  @type move :: {direction(), Position.location_type(), altitude(), Position.cost()}
+  @type box_spec :: {direction(), Position.location_type(), Position.altitude(), [move()]}
+  @type t :: [box_spec()]
+
+  # *** *******************************
+  # *** BUILD
 
   def build() do
     [:nose, :left, :right, :tail]
@@ -12,10 +26,12 @@ defmodule Chukinas.Skies.Game.Positions.New do
   defp build_position(direction) do
     generic_location = Position.to_generic(direction)
     boxes = build_boxes(generic_location)
+    # TODO replace :this with specific direction
+    # TODO replace flank moves with two moves: :left and :right
     {direction, boxes}
   end
 
-  @spec build_boxes(Position.generic_direction()) :: any()
+  @spec build_boxes(Position.generic_direction()) :: t()
   defp build_boxes(direction) do
     boxes = [
       high_position_spec(direction),
@@ -27,90 +43,92 @@ defmodule Chukinas.Skies.Game.Positions.New do
     boxes
   end
 
-  @spec high_position_spec(Position.generic_direction) :: any()
+
+  @spec high_position_spec(Position.generic_direction) :: box_spec()
   defp high_position_spec(location) do
     common_moves = [
       {:this, :approach, :high, 0},
-      {:this, :position, :level, 0},
-      {:this, :position, :low, 0},
+      {:this, :preapproach, :level, 0},
+      {:this, :preapproach, :low, 0},
     ]
     specific_moves = case location do
       :nose -> [
-        {:flank, :position, :any, 0},
-        {:tail, :position, :any, 0},
+        {:flank, :preapproach, :any, 0},
+        {:tail, :preapproach, :any, 0},
       ]
       :flank -> [
-        {:nose, :position, :any, 1},
-        {:tail, :position, :any, 0},
+        {:nose, :preapproach, :any, 1},
+        {:tail, :preapproach, :any, 0},
       ]
       :tail -> [
-        {:nose, :position, :any, 2},
-        {:flank, :position, :any, 1},
+        {:nose, :preapproach, :any, 2},
+        {:flank, :preapproach, :any, 1},
       ]
     end
-    {:this, :position, :high, common_moves ++ specific_moves}
+    {:this, :preapproach, :high, common_moves ++ specific_moves}
   end
 
-  @spec level_position_spec(Position.generic_direction) :: any()
+  @spec level_position_spec(Position.generic_direction) :: box_spec()
   defp level_position_spec(location) do
     common_moves = [
       {:this, :approach, :level, 0},
-      {:this, :position, :high, 0},
-      {:this, :position, :low, 0},
+      {:this, :preapproach, :high, 0},
+      {:this, :preapproach, :low, 0},
     ]
     specific_moves = case location do
       :nose -> [
-        {:flank, :position, :any, 0},
-        {:tail, :position, :any, 0},
+        {:flank, :preapproach, :any, 0},
+        {:tail, :preapproach, :any, 0},
       ]
       :flank -> [
         {:this, :approach, :high, 1},
-        {:nose, :position, :any, 1},
-        {:tail, :position, :any, 0},
+        {:nose, :preapproach, :any, 1},
+        {:tail, :preapproach, :any, 0},
       ]
       :tail -> [
-        {:nose, :position, :any, 2},
-        {:flank, :position, :any, 1},
+        {:nose, :preapproach, :any, 2},
+        {:flank, :preapproach, :any, 1},
       ]
     end
-    {:this, :position, :level, common_moves ++ specific_moves}
+    {:this, :preapproach, :level, common_moves ++ specific_moves}
   end
 
-  @spec low_position_spec(Position.generic_direction) :: any()
+  @spec low_position_spec(Position.generic_direction) :: box_spec()
   defp low_position_spec(location) do
     common_moves = [
       {:this, :approach, :low, 0},
-      {:this, :position, :high, 1},
-      {:this, :position, :level, 0},
+      {:this, :preapproach, :high, 1},
+      {:this, :preapproach, :level, 0},
     ]
     specific_moves = case location do
       :nose -> [
-        {:flank, :position, :any, 0},
-        {:tail, :position, :high, 1},
-        {:tail, :position, :low, 0},
+        {:flank, :preapproach, :any, 0},
+        {:tail, :preapproach, :high, 1},
+        {:tail, :preapproach, :low, 0},
       ]
       :flank -> [
-        {:nose, :position, :any, 2},
-        {:tail, :position, :any, 0},
+        {:nose, :preapproach, :any, 2},
+        {:tail, :preapproach, :any, 0},
       ]
       :tail -> [
-        {:nose, :position, :any, 2},
-        {:flank, :position, :any, 1},
+        {:nose, :preapproach, :any, 2},
+        {:flank, :preapproach, :any, 1},
       ]
     end
-    {:this, :position, :low, common_moves ++ specific_moves}
+    {:this, :preapproach, :low, common_moves ++ specific_moves}
   end
 
+  @spec return_box_specs() :: t()
   defp return_box_specs() do
     [
       {:this, {:return, :evasive}, :high, [
         {:this, {:return, :determined}, :high, 0},
       ]},
       {:this, {:return, :determined}, :high, [
-        {:this, :position, :high, 0},
+        {:this, :preapproach, :high, 0},
       ]},
       {:this, {:return, :determined}, :low, [
-        {:this, :position, :low, 0},
+        {:this, :preapproach, :low, 0},
       ]},
       {:this, {:return, :evasive}, :low, [
         {:this, {:return, :determined}, :low, 0},
@@ -118,15 +136,20 @@ defmodule Chukinas.Skies.Game.Positions.New do
     ]
   end
 
-  @spec approach_box_specs(Position.generic_direction) :: any()
+  @spec approach_box_specs(Position.generic_direction) :: t()
   defp approach_box_specs(direction) do
     common_boxes = [
-      {:this, :approach, :low},
-      {:this, :approach, :high},
+      {:this, :approach, :low, []},
+      {:this, :approach, :high, []},
     ]
     case direction do
       :flank -> common_boxes
-      _ -> [{:this, :approach, :level} | common_boxes]
+      _ -> [{:this, :approach, :level, []} | common_boxes]
     end
+  end
+
+  @spec some_move() :: move()
+  def some_move() do
+    {:this, :preapproach, :high, 0}
   end
 end

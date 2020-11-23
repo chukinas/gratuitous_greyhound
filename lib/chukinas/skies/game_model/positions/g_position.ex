@@ -8,7 +8,7 @@ defmodule Chukinas.Skies.Game.Box do
     :moves,
   ]
 
-  # TODO rename file g_location?
+  # TODO rename file g_box
   # TODO rename attack direction?
   @type generic_direction :: :nose | :tail | :flank
   # TODO rename this to simply be direction
