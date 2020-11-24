@@ -5,92 +5,40 @@ defmodule Chukinas.Skies.Game.Boxes do
   # *** *******************************
   # *** TYPES
 
-  # TODO revisit, clean up
-  # TODO where is :flank?
-  @type direction :: Box.generic_direction() | :this
-  @type altitude :: Box.altitude() | :any
-  @type location :: {direction(), Box.location_type(), altitude()}
-  @type move :: {direction(), Box.location_type(), altitude(), Box.cost()}
-  @type box_spec :: {direction(), Box.location_type(), Box.altitude(), [move()]}
+  # TODO look for private types in other modules
+  @typep direction :: Box.generic_direction() | :this
+  @typep altitude :: Box.altitude() | :any
+  @typep move :: {direction(), Box.location_type(), altitude(), Box.cost()}
+  @typep box_spec :: {direction(), Box.location_type(), Box.altitude(), [move()]}
   @type t :: [box_spec()]
 
   # *** *******************************
-  # *** BUILD
+  # *** NEW
 
   @spec new() :: [Box.t()]
   def new() do
     [:nose, :left, :right, :tail]
-    |> Enum.map(&build_position/1)
+    |> Enum.map(&new_position/1)
     |> Enum.concat()
   end
 
-  @spec build_position(Box.specific_direction()) :: [Box.t()]
-  defp build_position(position) do
+  # *** *******************************
+  # *** HELPERS: NEW
+
+  @spec new_position(Box.specific_direction()) :: [Box.t()]
+  defp new_position(position) do
     [
-      high_position_spec(position),
-      level_position_spec(position),
-      low_position_spec(position),
-      return_box_specs(position),
-      approach_box_specs(position),
+      new_high_preapproach(position),
+      new_level_preapproach(position),
+      new_low_preapproach(position),
+      new_return_boxes(position),
+      new_approach_boxes(position),
     ]
     |> Enum.concat()
   end
 
-  # *** *******************************
-  # *** CONVERTER: 4-TUPLE -> 2-TUPLE
-
-  # TODO these all need to be defp
-  # TODO clean this whole thing up
-
-  # def convert_boxes({dir, loc, alt, moves}, specific_direction) when is_list(moves) do
-  #   moves = moves
-  #   |> Enum.map(&convert_moves(&1, specific_direction))
-  #   |> Enum.concat()
-  #   {dir, loc, alt}
-  #   |> replace_this(specific_direction)
-  #   |> expand_altitude()
-  #   |> Enum.map(&expand_flank/1)
-  #   |> Enum.concat()
-  #   |> Enum.map(&({&1, moves}))
-  # end
-
-  def expand_flank_and_altitude({{dir, loc, alt}, cost}) do
-    {dir, loc, alt}
-    |> expand_altitude()
-    |> Enum.map(&expand_flank/1)
-    |> Enum.concat()
-    |> Enum.map(&({&1, cost}))
-  end
-
-  # *** *******************************
-  # *** CONVERTERS: REPLACE LOCATION
-
-  # # @spec replace_this({direction(), _, _}, Box.specific_direction()) :: [{Box.specific_direction(), _, _}]
-  # def replace_this({:this, loc_type, alt}, specific_direction) do
-  #   {specific_direction, loc_type, alt}
-  # end
-  # def replace_this(location, _), do: location
-
-  # *** *******************************
-  # *** CONVERTERS: EXPAND LOCATION
-
-  # @spec expand_altitude({_, _, altitude()}) :: [{_, _, Box.altitude()}]
-  def expand_altitude({dir, loc_type, :any}) do
-    [:high, :level, :low] |> Enum.map(&({dir, loc_type, &1}))
-  end
-  def expand_altitude(location), do: [location]
-
-  # @spec expand_flank({Box.generic_direction(), _, _}) :: [{Box.specific_direction(), _, _}]
-  def expand_flank({:flank, loc_type, altitude}) do
-    [:right, :left] |> Enum.map(&({&1, loc_type, altitude}))
-  end
-  def expand_flank(location), do: [location]
-
-  # *** *******************************
-  # *** SPECS
-
-  @spec high_position_spec(Box.specific_direction) :: [Box.t()]
-  defp high_position_spec(position) do
+  @spec new_high_preapproach(Box.specific_direction) :: [Box.t()]
+  defp new_high_preapproach(position) do
     common_moves = [
       {{:this, :approach, :high}, 0},
       {{:this, :preapproach, :level}, 0},
@@ -119,8 +67,8 @@ defmodule Chukinas.Skies.Game.Boxes do
     }]
   end
 
-  @spec level_position_spec(Box.specific_direction) :: [Box.t()]
-  defp level_position_spec(position) do
+  @spec new_level_preapproach(Box.specific_direction) :: [Box.t()]
+  defp new_level_preapproach(position) do
     common_moves = [
       {{position, :approach, :level}, 0},
       {{position, :preapproach, :high}, 0},
@@ -150,8 +98,8 @@ defmodule Chukinas.Skies.Game.Boxes do
     }]
   end
 
-  @spec low_position_spec(Box.specific_direction) :: [Box.t()]
-  defp low_position_spec(position) do
+  @spec new_low_preapproach(Box.specific_direction) :: [Box.t()]
+  defp new_low_preapproach(position) do
     moves = [
       # Common moves
       {{position, :approach, :low}, 0},
@@ -183,9 +131,8 @@ defmodule Chukinas.Skies.Game.Boxes do
     }]
   end
 
-  @spec return_box_specs(Box.specific_direction()) :: [Box.t()]
-  # TODO rename funcs
-  defp return_box_specs(position) do
+  @spec new_return_boxes(Box.specific_direction()) :: [Box.t()]
+  defp new_return_boxes(position) do
     [
       %Box{
         location: {position, {:return, :evasive}, :high},
@@ -206,8 +153,8 @@ defmodule Chukinas.Skies.Game.Boxes do
     ]
   end
 
-  @spec approach_box_specs(Box.specific_direction()) :: [Box.t()]
-  defp approach_box_specs(position) do
+  @spec new_approach_boxes(Box.specific_direction()) :: [Box.t()]
+  defp new_approach_boxes(position) do
     common_boxes = [
       {position, :approach, :low},
       {position, :approach, :high},
@@ -218,5 +165,26 @@ defmodule Chukinas.Skies.Game.Boxes do
     end
     |> Enum.map(&%Box{location: &1, moves: []})
   end
+
+  # *** *******************************
+  # *** HELPERS
+
+  defp expand_flank_and_altitude({{dir, loc, alt}, cost}) do
+    {dir, loc, alt}
+    |> expand_altitude()
+    |> Enum.map(&expand_flank/1)
+    |> Enum.concat()
+    |> Enum.map(&({&1, cost}))
+  end
+
+  def expand_altitude({dir, loc_type, :any}) do
+    [:high, :level, :low] |> Enum.map(&({dir, loc_type, &1}))
+  end
+  def expand_altitude(location), do: [location]
+
+  def expand_flank({:flank, loc_type, altitude}) do
+    [:right, :left] |> Enum.map(&({&1, loc_type, altitude}))
+  end
+  def expand_flank(location), do: [location]
 
 end
