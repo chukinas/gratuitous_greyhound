@@ -1,7 +1,7 @@
 defmodule Chukinas.Skies.Game.Positions do
 
   alias Chukinas.Skies.Game.Position
-  alias Chukinas.Skies.Game.Positions.New, as: NewPositions
+  alias Chukinas.Skies.Game.Boxes, as: NewPositions
 
   # *** *******************************
   # *** TYPES

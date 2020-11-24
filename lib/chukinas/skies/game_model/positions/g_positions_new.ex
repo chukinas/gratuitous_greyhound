@@ -1,4 +1,4 @@
-defmodule Chukinas.Skies.Game.Positions.New do
+defmodule Chukinas.Skies.Game.Boxes do
   # TODO rename spec?
   # TODO remove the alias rename
   alias Chukinas.Skies.Game.Box, as: Position
@@ -18,6 +18,7 @@ defmodule Chukinas.Skies.Game.Positions.New do
   # *** *******************************
   # *** BUILD
 
+  # TODO rename new
   @spec build() :: [Position.t()]
   def build() do
     [:nose, :left, :right, :tail]
