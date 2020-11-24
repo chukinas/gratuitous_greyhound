@@ -13,7 +13,7 @@ defmodule Chukinas.Skies.ViewModel.Positions do
     :tail,
   ]
 
-  @type direction :: G_Box.specific_direction()
+  @type direction :: G_Box.position()
 
   @type t :: %__MODULE__{
     nose: [VM_Box.t()],

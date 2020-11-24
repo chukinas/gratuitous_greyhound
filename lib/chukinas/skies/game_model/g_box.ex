@@ -13,16 +13,18 @@ defmodule Chukinas.Skies.Game.Box do
   ]
 
   # TODO which are private?
-  # TODO rename this to simply be direction
-  # TODO rename to position?
-  @type specific_direction :: :nose | :tail | :left | :right
+  @type position :: :nose | :tail | :left | :right
   @type mode :: :determined | :evasive
+  # TODO rename box_type
   @type location_type :: {:return, mode()} | :preapproach | :approach
+  # TODO this is more general than box.
   @type altitude :: :high | :level | :low
-  @type location :: {specific_direction(), location_type(), altitude()}
+  # TODO rename id?
+  @type location :: {position(), location_type(), altitude()}
   @type cost :: integer()
   @type move :: {location(), cost()}
   @type t :: %__MODULE__{
+    # TODO rename id
     location: location(),
     moves: [move()],
   }

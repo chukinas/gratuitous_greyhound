@@ -27,7 +27,7 @@ defmodule Chukinas.Skies.Game.Boxes do
   # *** *******************************
   # *** HELPERS: NEW
 
-  @spec new_position(Box.specific_direction()) :: [Box.t()]
+  @spec new_position(Box.position()) :: [Box.t()]
   defp new_position(position) do
     [
       new_high_preapproach(position),
@@ -39,7 +39,7 @@ defmodule Chukinas.Skies.Game.Boxes do
     |> Enum.concat()
   end
 
-  @spec new_high_preapproach(Box.specific_direction) :: [Box.t()]
+  @spec new_high_preapproach(Box.position) :: [Box.t()]
   defp new_high_preapproach(position) do
     common_moves = [
       {{:this, :approach, :high}, 0},
@@ -69,7 +69,7 @@ defmodule Chukinas.Skies.Game.Boxes do
     }]
   end
 
-  @spec new_level_preapproach(Box.specific_direction) :: [Box.t()]
+  @spec new_level_preapproach(Box.position) :: [Box.t()]
   defp new_level_preapproach(position) do
     common_moves = [
       {{position, :approach, :level}, 0},
@@ -100,7 +100,7 @@ defmodule Chukinas.Skies.Game.Boxes do
     }]
   end
 
-  @spec new_low_preapproach(Box.specific_direction) :: [Box.t()]
+  @spec new_low_preapproach(Box.position) :: [Box.t()]
   defp new_low_preapproach(position) do
     moves = [
       # Common moves
@@ -133,7 +133,7 @@ defmodule Chukinas.Skies.Game.Boxes do
     }]
   end
 
-  @spec new_return_boxes(Box.specific_direction()) :: [Box.t()]
+  @spec new_return_boxes(Box.position()) :: [Box.t()]
   defp new_return_boxes(position) do
     [
       %Box{
@@ -155,7 +155,7 @@ defmodule Chukinas.Skies.Game.Boxes do
     ]
   end
 
-  @spec new_approach_boxes(Box.specific_direction()) :: [Box.t()]
+  @spec new_approach_boxes(Box.position()) :: [Box.t()]
   defp new_approach_boxes(position) do
     common_boxes = [
       {position, :approach, :low},
@@ -171,7 +171,7 @@ defmodule Chukinas.Skies.Game.Boxes do
   # *** *******************************
   # *** HELPERS
 
-  @spec to_attack_direction(Box.specific_direction()) :: attack_direction()
+  @spec to_attack_direction(Box.position()) :: attack_direction()
   def to_attack_direction(direction) do
     case direction do
       :right -> :flank

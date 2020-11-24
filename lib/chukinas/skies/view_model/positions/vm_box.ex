@@ -12,7 +12,7 @@ defmodule Chukinas.Skies.ViewModel.Box do
     :id
   ]
 
-  @type direction :: G_Box.specific_direction()
+  @type direction :: G_Box.position()
 
   @type t :: %__MODULE__{
     position: String.t(),
