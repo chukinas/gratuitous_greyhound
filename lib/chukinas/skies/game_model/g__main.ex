@@ -64,10 +64,9 @@ defmodule Chukinas.Skies.Game do
     %{game | squadron: s, tactical_points: tp}
   end
 
-  # TODO should the pattern match occur in the event handler?
-  def select_box(%__MODULE__{} = game, %{"position" => position, "box_type" => box_type, "altitude" => altitude}) do
-    {position, box_type, altitude}
-    |> Box.from_strings()
+  def select_box(%__MODULE__{} = game, location) when is_binary(location) do
+    location
+    |> Box.location_from_string()
     # TODO JJC temp
     game
   end

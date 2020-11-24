@@ -3,9 +3,7 @@
 <button
   id="<%= box.id %>"
   phx-click="select_box"
-  phx-value-position="<%= box.position %>"
-  phx-value-box_type="<%= box.box_type %>"
-  phx-value-altitude="<%= box.altitude %>"
+  phx-value-location="<%= box.id %>"
 >
   <%= box.position %>, <%= box.altitude %>
 </button>

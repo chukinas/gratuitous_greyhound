@@ -49,7 +49,7 @@ defmodule ChukinasWeb.SkiesLive do
 
   @impl true
   # Move the pattern matching to game func?
-  def handle_event("select_box", location, socket) do
+  def handle_event("select_box", %{"location" => location}, socket) do
     game = socket.assigns.game
     |> Game.select_box(location)
     assign_game_and_vm(socket, game)

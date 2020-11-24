@@ -72,4 +72,25 @@ defmodule Chukinas.Skies.Game.Box do
       String.to_atom(alt),
     }
   end
+
+  def location_to_string(location) do
+    {_, _, _, stringified_location} = to_strings(location)
+    stringified_location
+  end
+
+  def location_from_string(location) do
+    location
+    |> String.split("_")
+    |> Enum.map(&String.to_atom/1)
+    |> List.to_tuple()
+    |> normalize_location_tuple()
+  end
+
+  # *** *******************************
+  # *** HELPERS
+
+  defp normalize_location_tuple({pos, :return, return_type, alt}) do
+    {pos, {:return, return_type}, alt}
+  end
+  defp normalize_location_tuple(location), do: location
 end

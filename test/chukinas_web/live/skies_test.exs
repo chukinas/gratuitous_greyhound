@@ -134,7 +134,6 @@ defmodule ChukinasWeb.SkiesLiveTest do
     {:ok, view, _html} = live(conn, "/skies")
     view
     |> move_position({:nose, :preapproach, :low})
-    # TODO make sure there's no commit orders btn
     # TODO assert group 1 token is in nose/low
     # TODO click end phase
     # TODO assert turn 2
