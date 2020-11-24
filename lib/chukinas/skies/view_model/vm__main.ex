@@ -2,7 +2,7 @@ defmodule Chukinas.Skies.ViewModel do
   alias Chukinas.Skies.Game
   alias Chukinas.Skies.ViewModel.{
     Bombers,
-    Boxes,
+    # TODO is Boxes even used anywhere?
     Positions,
     Squadron,
     Spaces,
@@ -14,7 +14,6 @@ defmodule Chukinas.Skies.ViewModel do
     :squadron,
     :spaces,
     :bombers,
-    :boxes,
     :turn_manager,
     :escort_stations,
     :positions,
@@ -30,7 +29,6 @@ defmodule Chukinas.Skies.ViewModel do
       squadron: Squadron.build(game.squadron, vm_tp),
       spaces: Spaces.build(game.spaces),
       bombers: Bombers.build(game.elements),
-      boxes: Boxes.render(game.boxes),
       turn_manager: TurnManager.build(game.turn_manager),
       escort_stations: %{},
       positions: Positions.build(),

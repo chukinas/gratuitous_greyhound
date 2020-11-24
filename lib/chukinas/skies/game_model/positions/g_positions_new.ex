@@ -41,6 +41,7 @@ defmodule Chukinas.Skies.Game.Positions.New do
   # *** CONVERTER: 4-TUPLE -> 2-TUPLE
 
   # TODO these all need to be defp
+  # TODO clean this whole thing up
 
   # def convert_boxes({dir, loc, alt, moves}, specific_direction) when is_list(moves) do
   #   moves = moves
