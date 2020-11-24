@@ -5,9 +5,10 @@ defmodule ChukinasWeb.SkiesLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    {_, socket} = socket
+    socket = socket
     |> assign(page_title: "Skies Above the Reich")
-    |> assign_game_and_vm(Game.new({1, "a"}))
+    {_, socket} = Game.new({1, "a"})
+    |> assign_game_and_vm(socket)
     {:ok, socket}
   end
 
@@ -19,45 +20,41 @@ defmodule ChukinasWeb.SkiesLive do
 
   @impl true
   def handle_event("end_phase", _, socket) do
-    game = Game.end_phase(socket.assigns.game)
-    assign_game_and_vm(socket, game)
+    socket.assigns.game
+    |> Game.end_phase()
+    |> assign_game_and_vm(socket)
   end
 
   @impl true
   def handle_event("select_group", %{"group_id" => id}, socket) do
-    game = Game.select_group(
-      socket.assigns.game,
-      String.to_integer(id)
-    )
-    assign_game_and_vm(socket, game)
+    socket.assigns.game
+    |> Game.select_group(String.to_integer(id))
+    |> assign_game_and_vm(socket)
   end
 
   @impl true
   def handle_event("toggle_fighter_select", %{"id" => id}, socket) do
-    game = Game.toggle_fighter_select(
-      socket.assigns.game,
-      String.to_integer(id)
-    )
-    assign_game_and_vm(socket, game)
+    socket.assigns.game
+    |> Game.toggle_fighter_select(String.to_integer(id))
+    |> assign_game_and_vm(socket)
   end
 
   @impl true
   def handle_event("delay_entry", _, socket) do
-    game = socket.assigns.game |> Game.delay_entry()
-    assign_game_and_vm(socket, game)
+    socket.assigns.game
+    |> Game.delay_entry()
+    |> assign_game_and_vm(socket)
   end
 
   @impl true
   # Move the pattern matching to game func?
   def handle_event("select_box", %{"location" => location}, socket) do
-    game = socket.assigns.game
+    socket.assigns.game
     |> Game.select_box(location)
-    assign_game_and_vm(socket, game)
+    |> assign_game_and_vm(socket)
   end
 
-  @spec assign_game_and_vm(any(), any()) :: any()
-  # TODO swap params
-  defp assign_game_and_vm(socket, game) do
+  defp assign_game_and_vm(game, socket) do
     socket = socket
     |> assign(:game, game)
     |> assign(:vm, ViewModel.build(game))
