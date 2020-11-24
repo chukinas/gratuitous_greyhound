@@ -120,10 +120,8 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> toggle_fighter(2)
     |> delay_entry()
     |> assert_ids_appear_in_order("group_1", "group_2")
-    # TODO extract
-    [1, 2]
-    |> Enum.each(&(group_has_no_select_btn(view, &1)))
-    view
+    |> group_has_no_select_btn(1)
+    |> group_has_no_select_btn(2)
     |> select_group(1)
     |> assert_group_has_unselect_btn(1)
     |> assert_group_has_unselect_btn(2, false)
