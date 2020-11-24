@@ -30,7 +30,7 @@ defmodule Chukinas.Skies.ViewModel do
       bombers: Bombers.build(game.elements),
       turn_manager: TurnManager.build(game.turn_manager),
       escort_stations: %{},
-      positions: Positions.build(game.positions),
+      positions: Positions.build(game.boxes),
     }
   end
 

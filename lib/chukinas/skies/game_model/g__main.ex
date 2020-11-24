@@ -2,6 +2,7 @@ defmodule Chukinas.Skies.Game do
   alias Chukinas.Skies.Spec
   alias Chukinas.Skies.Game.{
     Box,
+    Boxes,
     Fighter,
     Positions,
     Squadron,
@@ -15,7 +16,7 @@ defmodule Chukinas.Skies.Game do
     :squadron,
     :turn_manager,
     :tactical_points,
-    :positions,
+    :boxes,
   ]
 
   @type t :: %__MODULE__{
@@ -24,7 +25,7 @@ defmodule Chukinas.Skies.Game do
     squadron: any(),
     turn_manager: TurnManager.t(),
     tactical_points: TacticalPoints.t(),
-    positions: Positions.t(),
+    boxes: Positions.t(),
   }
 
   @spec new(any()) :: t()
@@ -36,8 +37,7 @@ defmodule Chukinas.Skies.Game do
       squadron: Squadron.new(),
       turn_manager: TurnManager.new(),
       tactical_points: TacticalPoints.new(),
-      # TODO this should actually be Boxes
-      positions: Positions.new(),
+      boxes: Boxes.new(),
     }
   end
 
