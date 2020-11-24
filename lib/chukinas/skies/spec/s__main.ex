@@ -7,7 +7,7 @@ defmodule Chukinas.Skies.Spec do
     %{
       spaces: spaces,
       elements: elements,
-      # TODO not needed
+      # FIX not needed
       boxes: Positions.build()
     }
   end

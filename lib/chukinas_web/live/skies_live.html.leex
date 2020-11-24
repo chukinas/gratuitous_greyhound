@@ -13,8 +13,7 @@ Grenze Gotisc
 <%= component.(:squadron) %>
 
 <!-- *** POSITION -->
-<!-- TODO can this be expressed as position: boxes? -->
-<%= build(:position, %{boxes: @vm.positions.nose, position: :nose}) %>
+<%= build(:position, boxes: @vm.positions.nose, position: :nose) %>
 
 <!-- *** TURN MANAGER -->
 <%= component.(:turn_manager) %>
