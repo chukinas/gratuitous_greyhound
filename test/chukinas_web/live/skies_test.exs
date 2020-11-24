@@ -91,10 +91,9 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> String.contains?("id=\"#{id2}\"")
     view
   end
-  def move_position(view, id) do
-    {_, _, _, id} = Box.to_strings(id)
+  def move_position(view, box_id) do
     view
-    |> element("#" <> id)
+    |> element("#" <> Box.id_to_string(box_id))
     |> render_click()
     view
   end

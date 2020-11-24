@@ -10,8 +10,8 @@ defmodule Chukinas.Skies.Game.Boxes do
   # TODO combine attack direction and direction?
   @typep direction :: Box.attack_direction() | :this
   @typep altitude :: Box.altitude() | :any
-  @typep move :: {direction(), Box.location_type(), altitude(), Box.cost()}
-  @typep box_spec :: {direction(), Box.location_type(), Box.altitude(), [move()]}
+  @typep move :: {direction(), Box.box_type(), altitude(), Box.cost()}
+  @typep box_spec :: {direction(), Box.box_type(), Box.altitude(), [move()]}
   @type t :: [box_spec()]
 
   # *** *******************************

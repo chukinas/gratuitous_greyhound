@@ -26,7 +26,7 @@ defmodule Chukinas.Skies.ViewModel.Box do
 
   @spec build(G_Box.t()) :: t()
   def build(box) do
-    {position, box_type, altitude, id} = box.id |> G_Box.to_strings()
+    {position, box_type, altitude, id} = box.id |> G_Box.id_to_strings()
     %__MODULE__{
       position: position,
       box_type: box_type,
