@@ -16,7 +16,7 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> assert_turn(1)
     |> assert_current_phase("Move")
     |> assert_current_phase("Return", false)
-    |> assert_disabled("#end_phase")
+    |> assert_disabled("end_phase")
     |> delay_entry()
     |> end_phase()
     |> assert_turn(2)
@@ -72,9 +72,8 @@ defmodule ChukinasWeb.SkiesLiveTest do
     assert has_element?(view, "#group_#{group_id} .select_group")
     view
   end
-  defp assert_disabled(view, selector) do
-    # TODO how do I combine the disabled into the selector?
-    assert element(view, selector) |> render() =~ "disabled"
+  defp assert_disabled(view, element_id) do
+    assert has_element?(view, "##{element_id}[disabled]")
     view
   end
   # defp assert_element(view, selector, text_filter \\ nil) do
