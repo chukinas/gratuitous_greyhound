@@ -5,8 +5,10 @@ defmodule Chukinas.Skies.Game.Boxes do
   # *** *******************************
   # *** TYPES
 
-  # TODO look for private types in other modules
-  @typep direction :: Box.generic_direction() | :this
+    # TODO should attack direction be used here? I think it's only used in boxes?
+  @type attack_direction :: :nose | :tail | :flank
+  # TODO combine attack direction and direction?
+  @typep direction :: Box.attack_direction() | :this
   @typep altitude :: Box.altitude() | :any
   @typep move :: {direction(), Box.location_type(), altitude(), Box.cost()}
   @typep box_spec :: {direction(), Box.location_type(), Box.altitude(), [move()]}
@@ -44,7 +46,7 @@ defmodule Chukinas.Skies.Game.Boxes do
       {{:this, :preapproach, :level}, 0},
       {{:this, :preapproach, :low}, 0},
     ]
-    specific_moves = case Box.to_generic(position) do
+    specific_moves = case to_attack_direction(position) do
       :nose -> [
         {{:flank, :preapproach, :any}, 0},
         {{:tail, :preapproach, :any}, 0},
@@ -74,7 +76,7 @@ defmodule Chukinas.Skies.Game.Boxes do
       {{position, :preapproach, :high}, 0},
       {{position, :preapproach, :low}, 0},
     ]
-    specific_moves = case Box.to_generic(position) do
+    specific_moves = case to_attack_direction(position) do
       :nose -> [
         {{:flank, :preapproach, :any}, 0},
         {{:tail, :preapproach, :any}, 0},
@@ -108,7 +110,7 @@ defmodule Chukinas.Skies.Game.Boxes do
     ]
     ++
     # specific moves
-    case Box.to_generic(position) do
+    case to_attack_direction(position) do
       :nose -> [
         {{:flank, :preapproach, :any}, 0},
         {{:tail, :preapproach, :high}, 1},
@@ -159,7 +161,7 @@ defmodule Chukinas.Skies.Game.Boxes do
       {position, :approach, :low},
       {position, :approach, :high},
     ]
-    case Box.to_generic(position) do
+    case to_attack_direction(position) do
       :flank -> common_boxes
       _ ->[{position, :approach, :level} | common_boxes]
     end
@@ -168,6 +170,15 @@ defmodule Chukinas.Skies.Game.Boxes do
 
   # *** *******************************
   # *** HELPERS
+
+  @spec to_attack_direction(Box.specific_direction()) :: attack_direction()
+  def to_attack_direction(direction) do
+    case direction do
+      :right -> :flank
+      :left  -> :flank
+      other -> other
+    end
+  end
 
   defp expand_flank_and_altitude({{dir, loc, alt}, cost}) do
     {dir, loc, alt}

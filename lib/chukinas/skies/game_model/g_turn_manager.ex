@@ -5,6 +5,7 @@ defmodule Chukinas.Skies.Game.TurnManager do
 
   defstruct [:turn, :max_turn, :phase]
 
+  # TODO which of these are private?
   @type phase_name :: :move
     | :return
     | :escort
