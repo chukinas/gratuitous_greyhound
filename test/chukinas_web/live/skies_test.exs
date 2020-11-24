@@ -1,5 +1,6 @@
 defmodule ChukinasWeb.SkiesLiveTest do
   use ChukinasWeb.ConnCase
+  alias Chukinas.Skies.Game.Box
 
   import Phoenix.LiveViewTest
 
@@ -91,10 +92,10 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> String.contains?("id=\"#{id2}\"")
     view
   end
-  def move_position(view, direction, altitude) do
-    id = "##{Atom.to_string(direction)}_#{Atom.to_string(altitude)}"
+  def move_position(view, location) do
+    {_, _, _, id} = Box.to_strings(location)
     view
-    |> element(id)
+    |> element("#" <> id)
     |> render_click()
     view
   end
@@ -132,7 +133,7 @@ defmodule ChukinasWeb.SkiesLiveTest do
   test "enter board", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/skies")
     view
-    |> move_position(:nose, :low)
+    |> move_position({:nose, :preapproach, :low})
     # TODO make sure there's no commit orders btn
     # TODO assert group 1 token is in nose/low
     # TODO click end phase

@@ -36,4 +36,21 @@ defmodule Chukinas.Skies.Game.Box do
       other -> other
     end
   end
+
+  def box_type_to_string({:return, return_type}) do
+    "return_" <> Atom.to_string(return_type)
+  end
+  def box_type_to_string(box_type), do: Atom.to_string(box_type)
+
+  def to_strings({pos, loc_type, alt}) do
+    loc = {pos, loc_type, alt} = {
+      Atom.to_string(pos),
+      box_type_to_string(loc_type),
+      Atom.to_string(alt),
+    }
+    id = loc
+    |> Tuple.to_list()
+    |> Enum.join("_")
+    {pos, loc_type, alt, id}
+  end
 end

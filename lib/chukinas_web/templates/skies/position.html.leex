@@ -1,6 +1,10 @@
 <h3><%= @position |> Atom.to_string() |> String.capitalize()%> Position</h3>
+<%= for box <- @boxes do %>
+<p id="<%= box.id %>"><%= box.position %>, <%= box.altitude %></p>
+<% end %>
 
-<div >
+
+<!-- <div >
   <div>Evasive Return</div>
   <div>Return</div>
   <div>High</div>
@@ -11,5 +15,5 @@
   <div>Low Approach</div>
   <div>Return</div>
   <div>Evasive Return</div>
-</div>
+</div> -->
   
