@@ -91,8 +91,8 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> String.contains?("id=\"#{id2}\"")
     view
   end
-  def move_position(view, location) do
-    {_, _, _, id} = Box.to_strings(location)
+  def move_position(view, id) do
+    {_, _, _, id} = Box.to_strings(id)
     view
     |> element("#" <> id)
     |> render_click()
@@ -137,8 +137,8 @@ defmodule ChukinasWeb.SkiesLiveTest do
   end
 
   # TODO future tests/tasks:
-  # delay entry shouldn't be anything special. It should be a location like any other
+  # delay entry shouldn't be anything special. It should be a id like any other
   # Unify selection of locations and tp cost
-  # not_entered_should be a location?
+  # not_entered_should be a id?
 
 end

@@ -64,7 +64,7 @@ defmodule Chukinas.Skies.Game.Boxes do
     |> Enum.map(&expand_flank_and_altitude/1)
     |> Enum.concat()
     [%Box{
-      location: {position, :preapproach, :high},
+      id: {position, :preapproach, :high},
       moves: moves,
     }]
   end
@@ -95,7 +95,7 @@ defmodule Chukinas.Skies.Game.Boxes do
     |> Enum.map(&expand_flank_and_altitude/1)
     |> Enum.concat()
     [%Box{
-      location: {position, :preapproach, :level},
+      id: {position, :preapproach, :level},
       moves: moves,
     }]
   end
@@ -128,7 +128,7 @@ defmodule Chukinas.Skies.Game.Boxes do
     |> Enum.map(&expand_flank_and_altitude/1)
     |> Enum.concat()
     [%Box{
-      location: {position, :preapproach, :low},
+      id: {position, :preapproach, :low},
       moves: moves,
     }]
   end
@@ -137,19 +137,19 @@ defmodule Chukinas.Skies.Game.Boxes do
   defp new_return_boxes(position) do
     [
       %Box{
-        location: {position, {:return, :evasive}, :high},
+        id: {position, {:return, :evasive}, :high},
         moves: [{{position, {:return, :determined}, :high}, 0}]
       },
       %Box{
-        location: {position, {:return, :determined}, :high},
+        id: {position, {:return, :determined}, :high},
         moves: [{{position, :preapproach, :high}, 0}]
       },
       %Box{
-        location: {position, {:return, :determined}, :low},
+        id: {position, {:return, :determined}, :low},
         moves: [{{position, :preapproach, :low}, 0}]
       },
       %Box{
-        location: {position, {:return, :evasive}, :low},
+        id: {position, {:return, :evasive}, :low},
         moves: [{{position, {:return, :determined}, :low}, 0}]
       },
     ]
@@ -165,7 +165,7 @@ defmodule Chukinas.Skies.Game.Boxes do
       :flank -> common_boxes
       _ ->[{position, :approach, :level} | common_boxes]
     end
-    |> Enum.map(&%Box{location: &1, moves: []})
+    |> Enum.map(&%Box{id: &1, moves: []})
   end
 
   # *** *******************************
@@ -191,11 +191,11 @@ defmodule Chukinas.Skies.Game.Boxes do
   def expand_altitude({dir, loc_type, :any}) do
     [:high, :level, :low] |> Enum.map(&({dir, loc_type, &1}))
   end
-  def expand_altitude(location), do: [location]
+  def expand_altitude(id), do: [id]
 
   def expand_flank({:flank, loc_type, altitude}) do
     [:right, :left] |> Enum.map(&({&1, loc_type, altitude}))
   end
-  def expand_flank(location), do: [location]
+  def expand_flank(id), do: [id]
 
 end

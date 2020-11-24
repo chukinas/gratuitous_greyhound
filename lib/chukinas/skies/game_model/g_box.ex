@@ -8,7 +8,7 @@ defmodule Chukinas.Skies.Game.Box do
   # *** TYPES
 
   defstruct [
-    :location,
+    :id,
     :moves,
   ]
 
@@ -20,12 +20,12 @@ defmodule Chukinas.Skies.Game.Box do
   # TODO this is more general than box.
   @type altitude :: :high | :level | :low
   # TODO rename id?
-  @type location :: {position(), location_type(), altitude()}
+  @type id :: {position(), location_type(), altitude()}
   @type cost :: integer()
-  @type move :: {location(), cost()}
+  @type move :: {id(), cost()}
   @type t :: %__MODULE__{
     # TODO rename id
-    location: location(),
+    id: id(),
     moves: [move()],
   }
 
@@ -48,7 +48,7 @@ defmodule Chukinas.Skies.Game.Box do
     |> List.to_tuple()
   end
 
-  # TODO this returns a location, not a box
+  # TODO this returns a id, not a box
   def to_strings({pos, loc_type, alt}) do
     loc = {pos, loc_type, alt} = {
       Atom.to_string(pos),
@@ -61,7 +61,7 @@ defmodule Chukinas.Skies.Game.Box do
     {pos, loc_type, alt, id}
   end
 
-  # TODO this returns a location, not a box
+  # TODO this returns a id, not a box
   def from_strings({pos, loc_type, alt}) do
     {
       String.to_atom(pos),
@@ -70,13 +70,13 @@ defmodule Chukinas.Skies.Game.Box do
     }
   end
 
-  def location_to_string(location) do
-    {_, _, _, stringified_location} = to_strings(location)
+  def location_to_string(id) do
+    {_, _, _, stringified_location} = to_strings(id)
     stringified_location
   end
 
-  def location_from_string(location) do
-    location
+  def location_from_string(id) do
+    id
     |> String.split("_")
     |> Enum.map(&String.to_atom/1)
     |> List.to_tuple()
@@ -89,5 +89,5 @@ defmodule Chukinas.Skies.Game.Box do
   defp normalize_location_tuple({pos, :return, return_type, alt}) do
     {pos, {:return, return_type}, alt}
   end
-  defp normalize_location_tuple(location), do: location
+  defp normalize_location_tuple(id), do: id
 end
