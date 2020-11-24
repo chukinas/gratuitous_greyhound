@@ -12,15 +12,14 @@ defmodule Chukinas.Skies.Game.Box do
     :moves,
   ]
 
-  # TODO which are private?
   @type position :: :nose | :tail | :left | :right
-  @type mode :: :determined | :evasive
-  @type box_type :: {:return, mode()} | :preapproach | :approach
+  @typep mode :: :determined | :evasive
+  @typep box_type :: {:return, mode()} | :preapproach | :approach
   # FIX this is more general than box.
-  @type altitude :: :high | :level | :low
-  @type id :: {position(), box_type(), altitude()}
-  @type cost :: integer()
-  @type move :: {id(), cost()}
+  @typep altitude :: :high | :level | :low
+  @typep id :: {position(), box_type(), altitude()}
+  @typep cost :: integer()
+  @typep move :: {id(), cost()}
   @type t :: %__MODULE__{
     id: id(),
     moves: [move()],

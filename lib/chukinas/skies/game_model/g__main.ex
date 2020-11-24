@@ -65,7 +65,6 @@ defmodule Chukinas.Skies.Game do
   def select_box(%__MODULE__{} = game, location) when is_binary(location) do
     location
     |> Box.id_from_string()
-    # TODO JJC temp
     game
   end
 

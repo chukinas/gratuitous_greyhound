@@ -5,9 +5,7 @@ defmodule Chukinas.Skies.Game.Boxes do
   # *** *******************************
   # *** TYPES
 
-    # TODO should attack direction be used here? I think it's only used in boxes?
   @type attack_direction :: :nose | :tail | :flank
-  # TODO combine attack direction and direction?
   @typep direction :: Box.attack_direction() | :this
   @typep altitude :: Box.altitude() | :any
   @typep move :: {direction(), Box.box_type(), altitude(), Box.cost()}
