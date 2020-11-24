@@ -2,7 +2,6 @@ defmodule Chukinas.Skies.ViewModel do
   alias Chukinas.Skies.Game
   alias Chukinas.Skies.ViewModel.{
     Bombers,
-    # TODO is Boxes even used anywhere?
     Positions,
     Squadron,
     Spaces,
