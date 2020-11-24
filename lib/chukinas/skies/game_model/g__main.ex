@@ -12,7 +12,6 @@ defmodule Chukinas.Skies.Game do
   defstruct [
     :spaces,
     :elements,
-    :boxes,
     :squadron,
     :turn_manager,
     :tactical_points,
@@ -22,7 +21,6 @@ defmodule Chukinas.Skies.Game do
   @type t :: %__MODULE__{
     spaces: any(),
     elements: any(),
-    boxes: any(),
     squadron: any(),
     turn_manager: TurnManager.t(),
     tactical_points: TacticalPoints.t(),
@@ -35,10 +33,10 @@ defmodule Chukinas.Skies.Game do
     %__MODULE__{
       spaces: state.spaces,
       elements: state.elements,
-      boxes: state.boxes,
       squadron: Squadron.new(),
       turn_manager: TurnManager.new(),
       tactical_points: TacticalPoints.new(),
+      # TODO this should actually be Boxes
       positions: Positions.new(),
     }
   end

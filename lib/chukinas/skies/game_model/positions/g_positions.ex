@@ -1,7 +1,7 @@
 defmodule Chukinas.Skies.Game.Positions do
+  # TODO delete module
 
-  alias Chukinas.Skies.Game.Position
-  alias Chukinas.Skies.Game.Boxes, as: NewPositions
+  alias Chukinas.Skies.Game.{Position, Boxes}
 
   # *** *******************************
   # *** TYPES
@@ -13,7 +13,7 @@ defmodule Chukinas.Skies.Game.Positions do
 
   @spec new() :: t()
   def new() do
-    NewPositions.build()
+    Boxes.new()
   end
 
   # *** *******************************
