@@ -140,4 +140,8 @@ defmodule ChukinasWeb.SkiesLiveTest do
     # TODO assert turn 2
   end
 
+  # TODO future tests/tasks:
+  # delay entry shouldn't be anything special. It should be a location like any other
+  # Unify selection of locations and tp cost
+
 end

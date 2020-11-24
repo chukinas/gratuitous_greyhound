@@ -37,11 +37,21 @@ defmodule Chukinas.Skies.Game.Box do
     end
   end
 
+  # TODO I think these are defp?
+  # TODO correct box_type refs to loc_type
   def box_type_to_string({:return, return_type}) do
     "return_" <> Atom.to_string(return_type)
   end
   def box_type_to_string(box_type), do: Atom.to_string(box_type)
 
+  def box_type_from_string(box_type) do
+    box_type
+    |> String.split("_")
+    |> Enum.map(&String.to_atom/1)
+    |> List.to_tuple()
+  end
+
+  # TODO this returns a location, not a box
   def to_strings({pos, loc_type, alt}) do
     loc = {pos, loc_type, alt} = {
       Atom.to_string(pos),
@@ -52,5 +62,14 @@ defmodule Chukinas.Skies.Game.Box do
     |> Tuple.to_list()
     |> Enum.join("_")
     {pos, loc_type, alt, id}
+  end
+
+  # TODO this returns a location, not a box
+  def from_strings({pos, loc_type, alt}) do
+    {
+      String.to_atom(pos),
+      box_type_from_string(loc_type),
+      String.to_atom(alt),
+    }
   end
 end

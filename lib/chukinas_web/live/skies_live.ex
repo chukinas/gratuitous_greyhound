@@ -47,7 +47,16 @@ defmodule ChukinasWeb.SkiesLive do
     assign_game_and_vm(socket, game)
   end
 
+  @impl true
+  # Move the pattern matching to game func?
+  def handle_event("select_box", location, socket) do
+    game = socket.assigns.game
+    |> Game.select_box(location)
+    assign_game_and_vm(socket, game)
+  end
+
   @spec assign_game_and_vm(any(), any()) :: any()
+  # TODO swap params
   defp assign_game_and_vm(socket, game) do
     socket = socket
     |> assign(:game, game)

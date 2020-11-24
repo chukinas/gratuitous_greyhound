@@ -1,8 +1,15 @@
 <h3><%= @position |> Atom.to_string() |> String.capitalize()%> Position</h3>
 <%= for box <- @boxes do %>
-<p id="<%= box.id %>"><%= box.position %>, <%= box.altitude %></p>
+<button
+  id="<%= box.id %>"
+  phx-click="select_box"
+  phx-value-position="<%= box.position %>"
+  phx-value-box_type="<%= box.box_type %>"
+  phx-value-altitude="<%= box.altitude %>"
+>
+  <%= box.position %>, <%= box.altitude %>
+</button>
 <% end %>
-
 
 <!-- <div >
   <div>Evasive Return</div>
@@ -16,4 +23,3 @@
   <div>Return</div>
   <div>Evasive Return</div>
 </div> -->
-  
