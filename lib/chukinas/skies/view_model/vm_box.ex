@@ -7,19 +7,13 @@ defmodule Chukinas.Skies.ViewModel.Box do
   # *** TYPES
 
   defstruct [
-    :position,
-    :box_type,
-    :altitude,
+    :title,
     :id,
     :pawns,
   ]
 
-  @type direction :: G_Box.position()
-
   @type t :: %__MODULE__{
-    position: String.t(),
-    box_type: String.t(),
-    altitude: String.t(),
+    title: String.t(),
     id: String.t(),
     pawns: [GroupPawn.t()],
   }
@@ -32,11 +26,9 @@ defmodule Chukinas.Skies.ViewModel.Box do
     group_pawns = all_groups
     |> Enum.filter(fn group -> group.current_location == box.id end)
     |> Enum.map(&GroupPawn.build/1)
-    {position, box_type, altitude, id} = box.id |> G_Box.id_to_strings()
+    id = box.id |> G_Box.id_to_string()
     %__MODULE__{
-      position: position,
-      box_type: box_type,
-      altitude: altitude,
+      title: id,
       id: id,
       pawns: group_pawns,
     }
@@ -45,14 +37,6 @@ defmodule Chukinas.Skies.ViewModel.Box do
   @spec build_boxes([G_Box.t()], [G_FighterGroup.t()]) :: [t()]
   def build_boxes(boxes, all_groups) do
     boxes |> Enum.map(&build(&1, all_groups))
-  end
-
-  # *** *******************************
-  # *** HELPERS
-
-  @spec in_position?(t(), direction()) :: boolean()
-  def in_position?(%__MODULE__{position: actual_position}, position) do
-    actual_position == Atom.to_string(position)
   end
 
 end

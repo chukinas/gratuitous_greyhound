@@ -1,0 +1,11 @@
+<button
+  class="<%= button_styling() %>"
+  id="<%= @id %>"
+  phx-click="select_box"
+  phx-value-id="<%= @id %>"
+>
+  Not Yet Entered
+  <%= for group_pawn <- @pawns do %>
+  <%= build(:pawn, group_pawn) %>
+  <% end %>
+</button>

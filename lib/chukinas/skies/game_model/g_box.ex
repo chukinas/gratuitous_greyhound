@@ -13,11 +13,15 @@ defmodule Chukinas.Skies.Game.Box do
   ]
 
   @type position :: :nose | :tail | :left | :right
+  @type box_group :: position | :not_entered | :dogfight
   @typep mode :: :determined | :evasive
   @typep box_type :: {:return, mode()} | :preapproach | :approach
   # FIX this is more general than box.
   @typep altitude :: :high | :level | :low
-  @typep id :: {position(), box_type(), altitude()}
+  @typep id_not_entered :: :not_entered
+  @typep id_dogfight :: {:dogfight, integer()}
+  @typep id_position :: {position(), box_type(), altitude()}
+  @typep id :: id_not_entered() | id_dogfight() | id_position()
   @typep cost :: integer()
   @typep move :: {id(), cost()}
   @type t :: %__MODULE__{
@@ -28,22 +32,16 @@ defmodule Chukinas.Skies.Game.Box do
   # *** *******************************
   # *** API
 
-  def id_to_strings({pos, loc_type, alt}) do
-    loc = {pos, loc_type, alt} = {
+  @spec id_to_string(id()) :: String.t()
+  def id_to_string(id) when is_atom(id), do: Atom.to_string(id)
+  def id_to_string({:dogfight, index}), do: "dogfight_#{index}"
+  def id_to_string({pos, loc_type, alt}) do
+    [
       Atom.to_string(pos),
       box_type_to_string(loc_type),
       Atom.to_string(alt),
-    }
-    id = loc
-    |> Tuple.to_list()
+    ]
     |> Enum.join("_")
-    {pos, loc_type, alt, id}
-  end
-
-  @spec id_to_string(id()) :: String.t()
-  def id_to_string(id) do
-    {_, _, _, stringified_location} = id_to_strings(id)
-    stringified_location
   end
 
   @spec id_from_string(String.t()) :: id()

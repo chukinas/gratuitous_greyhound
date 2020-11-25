@@ -76,10 +76,10 @@ defmodule ChukinasWeb.SkiesLiveTest do
     assert has_element?(view, "##{element_id}[disabled]")
     view
   end
-  # defp assert_element(view, selector, text_filter \\ nil) do
-  #   assert has_element?(view, selector, text_filter)
-  #   view
-  # end
+  defp assert_element(view, element_id) do
+    assert has_element?(view, "#" <> element_id)
+    view
+  end
   defp refute_element(view, selector, text_filter \\ nil) do
     refute has_element?(view, selector, text_filter)
     view
@@ -137,6 +137,8 @@ defmodule ChukinasWeb.SkiesLiveTest do
     {:ok, view, _html} = live(conn, "/skies")
     box = {:nose, :preapproach, :low}
     view
+    |> assert_element("not_entered")
+    |> assert_group_in_box(1, :not_entered)
     |> move(box)
     |> assert_group_in_box(1, box)
     |> end_phase()
@@ -147,5 +149,6 @@ defmodule ChukinasWeb.SkiesLiveTest do
   # delay entry shouldn't be anything special. It should be a id like any other
   # Unify selection of locations and tp cost
   # not_entered_should be a id?
+  # boxes should be disabled if not avail
 
 end

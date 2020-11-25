@@ -1,4 +1,4 @@
-defmodule Chukinas.Skies.ViewModel.Positions do
+defmodule Chukinas.Skies.ViewModel.Boxes do
 
   alias Chukinas.Skies.Game.Box, as: G_Box
   alias Chukinas.Skies.Game.FighterGroup, as: G_FighterGroup
@@ -12,15 +12,15 @@ defmodule Chukinas.Skies.ViewModel.Positions do
     :left,
     :right,
     :tail,
+    :not_entered,
   ]
-
-  @type direction :: G_Box.position()
 
   @type t :: %__MODULE__{
     nose: [VM_Box.t()],
     left: [VM_Box.t()],
     right: [VM_Box.t()],
     tail: [VM_Box.t()],
+    not_entered: VM_Box.t(),
   }
 
 
@@ -35,15 +35,29 @@ defmodule Chukinas.Skies.ViewModel.Positions do
       left: filter_boxes(boxes, :left),
       right: filter_boxes(boxes, :right),
       tail: filter_boxes(boxes, :tail),
+      not_entered: find_box(boxes, :not_entered),
     }
   end
 
   # *** *******************************
   # *** HELPERS
 
-  @spec filter_boxes([VM_Box.t()], direction()) :: [VM_Box.t()]
-  defp filter_boxes(boxes, desired_position) do
-    Enum.filter(boxes, &VM_Box.in_position?(&1, desired_position))
+  @spec filter_boxes([VM_Box.t()], G_Box.box_group()) :: [VM_Box.t()]
+  defp filter_boxes(boxes, box_group) do
+    Enum.filter(boxes, &in_box_group?(&1, box_group))
+  end
+
+  @spec find_box([VM_Box.t()], G_Box.box_group()) :: VM_Box.t()
+  defp find_box(boxes, :not_entered) do
+    Enum.find(boxes, &in_box_group?(&1, :not_entered))
+  end
+
+  @spec in_box_group?(VM_Box.t(), G_Box.box_group()) :: boolean()
+  defp in_box_group?(%VM_Box{id: id}, box_group) do
+    String.starts_with?(
+      id,
+      Atom.to_string(box_group)
+    )
   end
 
 end

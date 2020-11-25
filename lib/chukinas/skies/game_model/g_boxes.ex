@@ -13,7 +13,7 @@ defmodule Chukinas.Skies.Game.Boxes do
 
   @spec new() :: [Box.t()]
   def new() do
-    [:nose, :left, :right, :tail]
+    [:not_entered, :nose, :left, :right, :tail]
     |> Enum.map(&new_position/1)
     |> Enum.concat()
   end
@@ -21,7 +21,19 @@ defmodule Chukinas.Skies.Game.Boxes do
   # *** *******************************
   # *** HELPERS: NEW
 
-  @spec new_position(Box.position()) :: [Box.t()]
+  @spec new_position(Box.box_group()) :: [Box.t()]
+  defp new_position(:not_entered) do
+    [%Box{
+      id: :not_entered,
+      moves: [
+        {:not_entered, 1},
+        {{:nose, :preapproach, :low}, 0},
+        {{:left, :preapproach, :low}, 0},
+        {{:right, :preapproach, :low}, 0},
+        {{:tail, :preapproach, :low}, 0},
+      ]
+    }]
+  end
   defp new_position(position) do
     [
       new_high_preapproach(position),
@@ -36,6 +48,7 @@ defmodule Chukinas.Skies.Game.Boxes do
   @spec new_high_preapproach(Box.position()) :: [Box.t()]
   defp new_high_preapproach(position) do
     common_moves = [
+      {{position, :preapproach, :high}, 0},
       {{position, :approach, :high}, 0},
       {{position, :preapproach, :level}, 0},
       {{position, :preapproach, :low}, 0},
@@ -66,6 +79,7 @@ defmodule Chukinas.Skies.Game.Boxes do
   @spec new_level_preapproach(Box.position) :: [Box.t()]
   defp new_level_preapproach(position) do
     common_moves = [
+      {{position, :preapproach, :level}, 0},
       {{position, :approach, :level}, 0},
       {{position, :preapproach, :high}, 0},
       {{position, :preapproach, :low}, 0},
@@ -98,6 +112,7 @@ defmodule Chukinas.Skies.Game.Boxes do
   defp new_low_preapproach(position) do
     moves = [
       # Common moves
+      {{position, :preapproach, :low}, 0},
       {{position, :approach, :low}, 0},
       {{position, :preapproach, :high}, 1},
       {{position, :preapproach, :level}, 0},
