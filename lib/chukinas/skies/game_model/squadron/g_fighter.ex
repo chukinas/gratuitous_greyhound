@@ -74,9 +74,8 @@ defmodule Chukinas.Skies.Game.Fighter do
     end}
   end
 
-  # TODO rename move
-  @spec move_to_box(t(), Box.id) :: t()
-  def move_to_box(%__MODULE__{} = f, box_id) do
+  @spec move(t(), Box.id) :: t()
+  def move(%__MODULE__{} = f, box_id) do
     %{f | move_location: box_id}
   end
 
