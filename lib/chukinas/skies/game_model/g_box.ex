@@ -48,7 +48,6 @@ defmodule Chukinas.Skies.Game.Box do
 
   @spec id_from_string(String.t()) :: id()
   def id_from_string(id) do
-    # TODO will this be a problem for :notentered?
     id
     |> String.split("_")
     |> Enum.map(&String.to_atom/1)
@@ -56,16 +55,15 @@ defmodule Chukinas.Skies.Game.Box do
     |> normalize_location_tuple()
   end
 
-  #TODO spec
+  @spec get_move_cost(t(), id()) :: integer()
   def get_move_cost(_box, nil), do: 0
   def get_move_cost(box, end_box_id) do
     {_, cost} = find_move(box.moves, end_box_id)
     cost
   end
 
-  # TODO rename friendly string?
-  @spec id_to_ui_string(id()) :: String.t()
-  def id_to_ui_string(box_id) do
+  @spec to_friendly_string(id()) :: String.t()
+  def to_friendly_string(box_id) do
     id_to_string(box_id)
   end
 
@@ -100,16 +98,6 @@ defmodule Chukinas.Skies.Game.Box do
     # |> IO.inspect(label: "matching move")
   end
 
-  defp matching_move?(move, box_id) do
-    # TODO clean up
-    {id, _} = move
-    val = (id == box_id)
-    # if :notentered != box_id do
-    #   IO.inspect(move, label: "move")
-    #   IO.inspect(box_id, label: "box id")
-    #   IO.inspect(val, label: "result")
-    # end
-    val
-  end
+  defp matching_move?({id, _}, box_id), do: val = (id == box_id)
 
 end
