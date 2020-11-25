@@ -1,5 +1,4 @@
 defmodule Chukinas.Skies.Game.Spaces do
-  # TODO rename file?
 
   # *** *******************************
   # *** TYPES
@@ -11,9 +10,7 @@ defmodule Chukinas.Skies.Game.Spaces do
   # *** *******************************
   # *** NEW
 
-  # TODO be more specific
   @spec new(any()) :: t()
-  # TODO change argument to :1a?
   def new({1, "a"}) do
     %{
                    {1, 0} => 1, {2, 0} => 1, {3, 0} => 1,
