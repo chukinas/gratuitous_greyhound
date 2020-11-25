@@ -141,8 +141,14 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> assert_group_in_box(1, :not_entered)
     |> move(box)
     |> assert_group_in_box(1, box)
+    |> assert_tactical_points(1)
     |> end_phase()
-    |> assert_current_phase("Return")
+    # TODO rename assert_phase
+    # |> assert_current_phase("Return")
+    |> assert_turn(2)
+    |> select_group(1)
+    |> move({:nose, :preapproach, :high})
+    |> assert_tactical_points(0)
   end
 
   # TODO future tests/tasks:
