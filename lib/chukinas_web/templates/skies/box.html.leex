@@ -4,12 +4,9 @@
   phx-click="select_box"
   phx-value-id="<%= @id %>"
 >
-<!-- TODO make a group pawn template -->
-<!-- TODO implement disabled -->
   Not Yet Entered
+  <!-- TODO can this be one-lined? -->
   <%= for group_pawn <- @pawns do %>
-  <p id="<%= group_pawn.id %>" >
-    (<%= group_pawn.fighter_count %>)
-  </p>
+  <%= build(:pawn, group_pawn) %>
   <% end %>
 </button>
