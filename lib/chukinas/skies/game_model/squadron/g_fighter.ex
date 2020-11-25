@@ -82,7 +82,7 @@ defmodule Chukinas.Skies.Game.Fighter do
     move(f, box)
   end
 
-  # TODO spec
+  @spec get_move(t()) :: Box.fighter_move()
   def get_move(%__MODULE__{} = fighter) do
     {fighter.box_start, fighter.box_end}
   end
