@@ -19,6 +19,16 @@ defmodule Chukinas.Skies.Game.Boxes do
   end
 
   # *** *******************************
+  # *** API
+
+  #TODO spec
+  def get_move_cost(all_boxes, {start_id, end_id}) do
+    all_boxes
+    |> find_box(start_id)
+    |> Box.get_move_cost(end_id)
+  end
+
+  # *** *******************************
   # *** HELPERS: NEW
 
   @spec new_position(Box.box_group()) :: [Box.t()]
@@ -206,5 +216,9 @@ defmodule Chukinas.Skies.Game.Boxes do
     [:right, :left] |> Enum.map(&({&1, loc_type, altitude}))
   end
   def expand_flank(id), do: [id]
+
+  def find_box(boxes, box_id) do
+    Enum.find(boxes, fn box -> box.id == box_id end)
+  end
 
 end

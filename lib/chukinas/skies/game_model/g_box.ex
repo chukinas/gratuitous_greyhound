@@ -24,6 +24,8 @@ defmodule Chukinas.Skies.Game.Box do
   @typep id :: id_not_entered() | id_dogfight() | id_position()
   @typep cost :: integer()
   @typep move :: {id(), cost()}
+  # TODO use this type in Fighter
+  @type fighter_move :: {id(), id()}
   @type t :: %__MODULE__{
     id: id(),
     moves: [move()],
@@ -46,11 +48,18 @@ defmodule Chukinas.Skies.Game.Box do
 
   @spec id_from_string(String.t()) :: id()
   def id_from_string(id) do
+    # TODO will this be a problem for :not_entered?
     id
     |> String.split("_")
     |> Enum.map(&String.to_atom/1)
     |> List.to_tuple()
     |> normalize_location_tuple()
+  end
+
+  #TODO spec
+  def get_move_cost(box, end_box_id) do
+    {_, cost} = find_move(box.moves, end_box_id)
+    cost
   end
 
   # *** *******************************
@@ -72,4 +81,14 @@ defmodule Chukinas.Skies.Game.Box do
     {pos, {:return, return_type}, alt}
   end
   defp normalize_location_tuple(id), do: id
+
+  defp find_move(moves, box_id) do
+    case Enum.find(moves, fn {box_id, _} -> box_id == box_id end) do
+      nil ->
+        IO.inspect(%{moves: moves, box_id: box_id})
+        raise "no matching move"
+      move -> move
+    end
+  end
+
 end

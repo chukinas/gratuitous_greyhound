@@ -82,6 +82,11 @@ defmodule Chukinas.Skies.Game.Fighter do
     move(f, box)
   end
 
+  # TODO spec
+  def get_move(%__MODULE__{} = fighter) do
+    {fighter.box_start, fighter.box_end}
+  end
+
   def selected?(%__MODULE__{state: :selected}), do: true
   def selected?(_), do: false
   def delayed_entry?(%__MODULE__{} = fighter) do

@@ -54,27 +54,33 @@ defmodule Chukinas.Skies.Game do
     %{game | squadron: Squadron.toggle_fighter_select(s, fighter_id)}
   end
 
+  # TODO rename do not move?
   def delay_entry(%__MODULE__{
     squadron: s,
     tactical_points: tp
   } = game) do
     s = Squadron.do_not_move(s)
-    tp = TacticalPoints.calculate(tp, s)
+    tp = TacticalPoints.calculate(tp, s, game.boxes)
     %{game | squadron: s, tactical_points: tp}
   end
 
+  # TODO rename move?
   def select_box(%__MODULE__{} = game, location) when is_binary(location) do
     s = Squadron.move(game.squadron, Box.id_from_string(location))
-    tp = TacticalPoints.calculate(game.tactical_points, s)
+    tp = TacticalPoints.calculate(game.tactical_points, s, game.boxes)
     %{game | squadron: s, tactical_points: tp}
   end
 
   @spec end_phase(t()) :: t()
   def end_phase(%__MODULE__{squadron: s} = game) do
     cond do
+      # TODO use 'not'?
       !Squadron.done?(s) -> game
-      true -> Map.update!(game, :turn_manager, &TurnManager.next_turn/1)
-      # !TurnManager.current_phase?(tm, :move) ->
+      true ->
+        game
+        |> Map.update!(:turn_manager, &TurnManager.next_turn/1)
+        |> Map.update!(:tactical_points, &TacticalPoints.commit_spent_point/1)
+      # not TurnManager.current_phase?(tm, :move) ->
       #   Map.update!(game, :turn_manager, &TurnManager.next_phase/1)
       # Squadron.all_fighters?(s, &Fighter.delayed_entry?/1) ->
       #   Map.update!(game, :turn_manager, &TurnManager.next_turn/1)

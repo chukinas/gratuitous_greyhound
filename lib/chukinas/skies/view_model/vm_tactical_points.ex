@@ -2,9 +2,10 @@ defmodule Chukinas.Skies.ViewModel.TacticalPoints do
 
   alias Chukinas.Skies.Game.TacticalPoints
 
+  # TODO add struct
   @type t() :: %{
+    starting: integer(),
     avail: integer(),
-    # starting: integer(),
     # spent: integer(),
   }
 
@@ -14,7 +15,8 @@ defmodule Chukinas.Skies.ViewModel.TacticalPoints do
   @spec build(TacticalPoints.t()) :: t()
   def build(tp) do
     %{
-      avail: tp.starting - tp.spent
+      starting: tp.starting,
+      avail: tp.starting - tp.spent - tp.spent_committed,
     }
   end
 

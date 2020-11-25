@@ -82,6 +82,12 @@ defmodule Chukinas.Skies.Game.Squadron do
     |> rebuild()
   end
 
+  def get_unique_moves(%__MODULE__{fighters: fighters}) do
+    fighters
+    |> Enum.map(&Fighter.get_move/1)
+    |> Enum.uniq()
+  end
+
   def any_fighters?(squadron, fun), do: squadron.fighters |> Enum.any?(fun)
   def all_fighters?(squadron, fun), do: squadron.fighters |> Enum.all?(fun)
   def done?(squadron), do: all_fighters?(squadron, &IdAndState.done?/1)

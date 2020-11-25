@@ -153,8 +153,6 @@ defmodule ChukinasWeb.SkiesLiveTest do
 
   # TODO future tests/tasks:
   # delay entry shouldn't be anything special. It should be a id like any other
-  # Unify selection of locations and tp cost
-  # not_entered_should be a id?
   # boxes should be disabled if not avail
 
 end
