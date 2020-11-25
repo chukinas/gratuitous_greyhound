@@ -63,6 +63,12 @@ defmodule Chukinas.Skies.Game.Box do
     cost
   end
 
+  # TODO rename friendly string?
+  @spec id_to_ui_string(id()) :: String.t()
+  def id_to_ui_string(box_id) do
+    id_to_string(box_id)
+  end
+
   # *** *******************************
   # *** HELPERS
 
