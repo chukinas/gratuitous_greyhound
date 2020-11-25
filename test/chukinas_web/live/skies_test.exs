@@ -147,6 +147,12 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> select_group(1)
     |> move({:nose, :preapproach, :high})
     |> assert_tactical_points(0)
+    |> end_phase()
+    |> select_group(1)
+    |> move({:nose, :approach, :high})
+    |> end_phase()
+    |> assert_phase("Approach")
+    # TODO remove console warnings
   end
 
   # TODO future tests/tasks:
