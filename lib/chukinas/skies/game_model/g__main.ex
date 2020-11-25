@@ -59,13 +59,13 @@ defmodule Chukinas.Skies.Game do
     tactical_points: tp
   } = game) do
     s = Squadron.do_not_move(s)
-    tp = TacticalPoints.calculate(tp, s, game.boxes)
+    tp = TacticalPoints.update_spent_this_phase(tp, s, game.boxes)
     %{game | squadron: s, tactical_points: tp}
   end
 
   def move(%__MODULE__{} = game, location) when is_binary(location) do
     s = Squadron.move(game.squadron, Box.id_from_string(location))
-    tp = TacticalPoints.calculate(game.tactical_points, s, game.boxes)
+    tp = TacticalPoints.update_spent_this_phase(game.tactical_points, s, game.boxes)
     %{game | squadron: s, tactical_points: tp}
   end
 
