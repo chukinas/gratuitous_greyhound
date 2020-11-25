@@ -14,8 +14,8 @@ defmodule ChukinasWeb.SkiesLiveTest do
     {:ok, view, _html} = live(conn, "/skies")
     view
     |> assert_turn(1)
-    |> assert_current_phase("Move")
-    |> assert_current_phase("Return", false)
+    |> assert_phase("Move")
+    |> assert_phase("Return", false)
     |> assert_disabled("end_phase")
     |> delay_entry()
     |> end_phase()
@@ -31,7 +31,7 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> assert_tactical_points(0)
   end
 
-  defp assert_current_phase(view, phase_name, assert? \\ true) do
+  defp assert_phase(view, phase_name, assert? \\ true) do
     has_element = element(view, "#current_phase") |> render() =~ phase_name
     assert has_element |> flip_bool(assert?)
     view
@@ -137,18 +137,20 @@ defmodule ChukinasWeb.SkiesLiveTest do
     {:ok, view, _html} = live(conn, "/skies")
     box = {:nose, :preapproach, :low}
     view
-    |> assert_element("not_entered")
-    |> assert_group_in_box(1, :not_entered)
+    |> assert_element("notentered")
+    |> assert_group_in_box(1, :notentered)
     |> move(box)
     |> assert_group_in_box(1, box)
+    |> assert_tactical_points(1)
     |> end_phase()
-    |> assert_current_phase("Return")
+    |> assert_turn(2)
+    |> select_group(1)
+    |> move({:nose, :preapproach, :high})
+    |> assert_tactical_points(0)
   end
 
   # TODO future tests/tasks:
   # delay entry shouldn't be anything special. It should be a id like any other
-  # Unify selection of locations and tp cost
-  # not_entered_should be a id?
   # boxes should be disabled if not avail
 
 end

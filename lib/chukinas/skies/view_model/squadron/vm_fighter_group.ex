@@ -1,4 +1,5 @@
 defmodule Chukinas.Skies.ViewModel.FighterGroup do
+  alias Chukinas.Skies.Game.Box, as: G_Box
   alias Chukinas.Skies.Game.{Fighter, FighterGroup, IdAndState}
   alias Chukinas.Skies.ViewModel.Fighter, as: VM_Fighter
 
@@ -47,7 +48,7 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
     |> IdAndState.get_items(all_fighters)
     %__MODULE__{
       id: group.id,
-      starting_location: f.box_start,
+      starting_location: G_Box.to_friendly_string(f.box_start),
       fighters: Enum.map(fighters, &VM_Fighter.build/1),
       state: group.state,
       tags: [],

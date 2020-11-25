@@ -41,7 +41,7 @@ defmodule Chukinas.Skies.Game.Fighter do
       airframe: :bf109,
       pilot_name: Enum.at(names, id, "no name"),
       hits: [],
-      box_start: :not_entered,
+      box_start: :notentered,
       box_end: nil,
       end_turn_location: nil,
       state: :selected,
@@ -82,17 +82,30 @@ defmodule Chukinas.Skies.Game.Fighter do
     move(f, box)
   end
 
+  @spec get_move(t()) :: Box.fighter_move()
+  def get_move(%__MODULE__{} = fighter) do
+    {fighter.box_start, fighter.box_end}
+  end
+
   def selected?(%__MODULE__{state: :selected}), do: true
   def selected?(_), do: false
   def delayed_entry?(%__MODULE__{} = fighter) do
-    fighter.box_end == :not_entered
+    fighter.box_end == :notentered
   end
   def complete(%__MODULE__{} = fighter) do
     %{fighter | state: :complete}
   end
 
-  def get_current_location(fighter) do
+  def get_current_location(%__MODULE__{} = fighter) do
     fighter.box_end || fighter.box_start
+  end
+
+  def start_new_turn(%__MODULE__{} = fighter) do
+    %{fighter |
+      box_start: get_current_location(fighter),
+      box_end: nil,
+      state: :pending
+    }
   end
 
 end

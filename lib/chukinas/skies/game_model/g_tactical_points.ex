@@ -1,38 +1,38 @@
 defmodule Chukinas.Skies.Game.TacticalPoints do
-  alias Chukinas.Skies.Game.{Fighter, Squadron}
+  alias Chukinas.Skies.Game.{Boxes, Fighter, Squadron}
 
   defstruct [
     :starting,
-    :spent,
+    :spent_this_phase,
+    :spent_committed,
   ]
 
   @type t :: %__MODULE__{
     starting: integer(),
-    spent: integer(),
+    spent_this_phase: integer(),
+    spent_committed: integer(),
   }
 
   def new() do
     %__MODULE__{
       starting: 1,
-      spent: 0,
+      spent_this_phase: 0,
+      spent_committed: 0
     }
   end
 
-  # @spec calculate(t(), Squadron.t()) :: t()
-  def calculate(%__MODULE__{} = tp, %Squadron{} = squadron) do
+  @spec update_spent_this_phase(t(), Squadron.t(), Boxes.t()) :: t()
+  def update_spent_this_phase(%__MODULE__{} = tp, %Squadron{} = squadron, boxes) do
+    spent_this_phase = squadron
+    |> Squadron.get_unique_moves()
+    |> Enum.map(&Boxes.get_move_cost(boxes, &1))
+    |> Enum.sum()
+    %{tp | spent_this_phase: spent_this_phase}
+  end
 
-    any_delayed_entries? = squadron.fighters
-    |> Enum.any?(&Fighter.delayed_entry?/1)
-    spent = if any_delayed_entries?, do: 1, else: 0
-
-    # spent = spent + case Squadron.any_fighters?(
-    #   squadron,
-    #   &Fighter.delayed_entry?/1
-    # ) do
-    #   true -> 1
-    #   false -> 0
-    # end
-    %{tp | spent: spent}
+  @spec commit_spent_point(t()) :: t()
+  def commit_spent_point(%__MODULE__{} = tp) do
+    %{tp | spent_this_phase: 0, spent_committed: tp.spent_this_phase + tp.spent_committed}
   end
 
 end
