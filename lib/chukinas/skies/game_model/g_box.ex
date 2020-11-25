@@ -57,6 +57,7 @@ defmodule Chukinas.Skies.Game.Box do
   end
 
   #TODO spec
+  def get_move_cost(_box, nil), do: 0
   def get_move_cost(box, end_box_id) do
     {_, cost} = find_move(box.moves, end_box_id)
     cost
@@ -83,12 +84,26 @@ defmodule Chukinas.Skies.Game.Box do
   defp normalize_location_tuple(id), do: id
 
   defp find_move(moves, box_id) do
-    case Enum.find(moves, fn {box_id, _} -> box_id == box_id end) do
+    # IO.inspect(box_id, label: "looking for this box_id")
+    case Enum.find(moves, &matching_move?(&1, box_id)) do
       nil ->
-        IO.inspect(%{moves: moves, box_id: box_id})
+        IO.inspect(%{moves: moves, box_id: box_id}, label: "no matching move")
         raise "no matching move"
       move -> move
     end
+    # |> IO.inspect(label: "matching move")
+  end
+
+  defp matching_move?(move, box_id) do
+    # TODO clean up
+    {id, _} = move
+    val = (id == box_id)
+    # if :not_entered != box_id do
+    #   IO.inspect(move, label: "move")
+    #   IO.inspect(box_id, label: "box id")
+    #   IO.inspect(val, label: "result")
+    # end
+    val
   end
 
 end

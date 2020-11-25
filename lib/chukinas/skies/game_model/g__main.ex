@@ -78,8 +78,10 @@ defmodule Chukinas.Skies.Game do
       !Squadron.done?(s) -> game
       true ->
         game
+        # TODO extract this out into a private next_turn
         |> Map.update!(:turn_manager, &TurnManager.next_turn/1)
         |> Map.update!(:tactical_points, &TacticalPoints.commit_spent_point/1)
+        |> Map.update!(:squadron, &Squadron.start_new_turn/1)
       # not TurnManager.current_phase?(tm, :move) ->
       #   Map.update!(game, :turn_manager, &TurnManager.next_phase/1)
       # Squadron.all_fighters?(s, &Fighter.delayed_entry?/1) ->

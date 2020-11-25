@@ -96,8 +96,16 @@ defmodule Chukinas.Skies.Game.Fighter do
     %{fighter | state: :complete}
   end
 
-  def get_current_location(fighter) do
+  def get_current_location(%__MODULE__{} = fighter) do
     fighter.box_end || fighter.box_start
+  end
+
+  def start_new_turn(%__MODULE__{} = fighter) do
+    %{fighter |
+      box_start: get_current_location(fighter),
+      box_end: nil,
+      state: :pending
+    }
   end
 
 end

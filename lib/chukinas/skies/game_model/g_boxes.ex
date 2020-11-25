@@ -23,9 +23,13 @@ defmodule Chukinas.Skies.Game.Boxes do
 
   #TODO spec
   def get_move_cost(all_boxes, {start_id, end_id}) do
+    # TODO temp
+    # IO.inspect(move, label: "move")
     all_boxes
     |> find_box(start_id)
+    # |> IO.inspect(label: "matching box")
     |> Box.get_move_cost(end_id)
+    # |> IO.inspect(label: "move cost")
   end
 
   # *** *******************************
