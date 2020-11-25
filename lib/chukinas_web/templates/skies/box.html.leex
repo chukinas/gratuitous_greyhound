@@ -5,7 +5,6 @@
   phx-value-id="<%= @id %>"
 >
   Not Yet Entered
-  <!-- TODO can this be one-lined? -->
   <%= for group_pawn <- @pawns do %>
   <%= build(:pawn, group_pawn) %>
   <% end %>

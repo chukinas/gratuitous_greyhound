@@ -1,6 +1,5 @@
 defmodule Chukinas.Skies.ViewModel.Boxes do
 
-  # TODO rename Boxes
   alias Chukinas.Skies.Game.Box, as: G_Box
   alias Chukinas.Skies.Game.FighterGroup, as: G_FighterGroup
   alias Chukinas.Skies.ViewModel.Box, as: VM_Box
@@ -15,8 +14,6 @@ defmodule Chukinas.Skies.ViewModel.Boxes do
     :tail,
     :not_entered,
   ]
-
-  @type direction :: G_Box.position()
 
   @type t :: %__MODULE__{
     nose: [VM_Box.t()],
@@ -45,17 +42,14 @@ defmodule Chukinas.Skies.ViewModel.Boxes do
   # *** *******************************
   # *** HELPERS
 
-  # TODO I don't think
-  @spec filter_boxes([VM_Box.t()], direction()) :: [VM_Box.t()]
-  defp filter_boxes(boxes, desired_position) do
-    Enum.filter(boxes, &VM_Box.in_position?(&1, desired_position))
+  @spec filter_boxes([VM_Box.t()], G_Box.box_group()) :: [VM_Box.t()]
+  defp filter_boxes(boxes, box_group) do
+    Enum.filter(boxes, &VM_Box.in_position?(&1, box_group))
   end
 
-  # TODO check spec
-  # TODO these two should share a filter function
-  @spec find_box([VM_Box.t()], G_Box.id()) :: VM_Box.t()
-  defp find_box(boxes, box_id) do
-    Enum.find(boxes, fn box -> box.id == G_Box.id_to_string(box_id) end)
+  @spec find_box([VM_Box.t()], G_Box.box_group()) :: VM_Box.t()
+  defp find_box(boxes, :not_entered) do
+    Enum.find(boxes, &VM_Box.in_position?(&1, :not_entered))
   end
 
 end

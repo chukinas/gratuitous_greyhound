@@ -40,14 +40,15 @@ defmodule Chukinas.Skies.ViewModel.Box do
   end
 
   # *** *******************************
-  # *** HELPERS
+  # *** API
 
+  # TODO dumb name
   @spec in_position?(t(), G_Box.box_group()) :: boolean()
   def in_position?(%__MODULE__{id: id}, box_group) do
-    box_group == id
-    |> String.split("_")
-    |> Enum.at(0)
-    |> String.to_atom()
+    String.starts_with?(
+      id,
+      Atom.to_string(box_group)
+    )
   end
 
 end
