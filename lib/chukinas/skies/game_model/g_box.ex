@@ -17,7 +17,10 @@ defmodule Chukinas.Skies.Game.Box do
   @typep box_type :: {:return, mode()} | :preapproach | :approach
   # FIX this is more general than box.
   @typep altitude :: :high | :level | :low
-  @typep id :: {position(), box_type(), altitude()}
+  @typep id_not_entered :: :not_entered
+  @typep id_dogfight :: {:dogfight, integer()}
+  @typep id_position :: {position(), box_type(), altitude()}
+  @typep id :: id_not_entered() | id_dogfight() | id_position()
   @typep cost :: integer()
   @typep move :: {id(), cost()}
   @type t :: %__MODULE__{
@@ -41,6 +44,8 @@ defmodule Chukinas.Skies.Game.Box do
   end
 
   @spec id_to_string(id()) :: String.t()
+  def id_to_string(id) when is_atom(id), do: Atom.to_string(id)
+  def id_to_string({:dogfight, index}), do: "dogfight_#{index}"
   def id_to_string(id) do
     {_, _, _, stringified_location} = id_to_strings(id)
     stringified_location
