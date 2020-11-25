@@ -1,0 +1,15 @@
+<button
+  class="<%= button_styling() %>"
+  id="<%= @id %>"
+  phx-click="select_box"
+  phx-value-id="<%= @id %>"
+>
+<!-- TODO make a group pawn template -->
+<!-- TODO implement disabled -->
+  Not Yet Entered
+  <%= for group_pawn <- @pawns do %>
+  <p id="<%= group_pawn.id %>" >
+    (<%= group_pawn.fighter_count %>)
+  </p>
+  <% end %>
+</button>

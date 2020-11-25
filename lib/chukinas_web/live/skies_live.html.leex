@@ -12,7 +12,11 @@ Grenze Gotisc
 <!-- *** SQUADRON -->
 <%= component.(:squadron) %>
 
+<!-- *** NOT YET ENTERED -->
+<%= build(:box, @vm.positions.not_entered) %>
+
 <!-- *** POSITION -->
+<!-- TODO rename positions to boxes -->
 <%= build(:position, boxes: @vm.positions.nose, position: :nose) %>
 
 <!-- *** TURN MANAGER -->

@@ -23,6 +23,7 @@ defmodule ChukinasWeb.SkiesView do
   end
   def build(name, assigns) do
     template = [name, ".html"] |> Enum.join("")
+    # IO.inspect(assigns, label: "looking for bad assigns: " <> name)
     Phoenix.View.render(__MODULE__, template, assigns)
   end
 

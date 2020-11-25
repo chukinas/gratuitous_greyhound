@@ -31,6 +31,11 @@ defmodule Chukinas.Skies.Game.Box do
   # *** *******************************
   # *** API
 
+  def id_to_strings(id) when is_atom(id) do
+    # TODO this is ugly
+    id = Atom.to_string(id)
+    {id, id, id, id}
+  end
   def id_to_strings({pos, loc_type, alt}) do
     loc = {pos, loc_type, alt} = {
       Atom.to_string(pos),

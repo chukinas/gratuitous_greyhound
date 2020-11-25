@@ -76,10 +76,11 @@ defmodule ChukinasWeb.SkiesLiveTest do
     assert has_element?(view, "##{element_id}[disabled]")
     view
   end
-  # defp assert_element(view, selector, text_filter \\ nil) do
-  #   assert has_element?(view, selector, text_filter)
-  #   view
-  # end
+  defp assert_element(view, element_id) do
+    assert has_element?(view, "#" <> element_id)
+    view
+  end
+  # TODO replace with element id?
   defp refute_element(view, selector, text_filter \\ nil) do
     refute has_element?(view, selector, text_filter)
     view
@@ -137,6 +138,7 @@ defmodule ChukinasWeb.SkiesLiveTest do
     {:ok, view, _html} = live(conn, "/skies")
     box = {:nose, :preapproach, :low}
     view
+    |> assert_element("not_entered")
     |> assert_group_in_box(1, :not_entered)
     |> move(box)
     |> assert_group_in_box(1, box)

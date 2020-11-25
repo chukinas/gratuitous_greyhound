@@ -13,15 +13,33 @@ defmodule Chukinas.Skies.Game.Boxes do
 
   @spec new() :: [Box.t()]
   def new() do
-    [:nose, :left, :right, :tail]
+    boxes = [:not_entered, :nose, :left, :right, :tail]
     |> Enum.map(&new_position/1)
     |> Enum.concat()
+    boxes
+    # |> Enum.map(&(&1.id))
+    |> IO.inspect(label: "box ids")
+    boxes
   end
 
   # *** *******************************
   # *** HELPERS: NEW
 
-  @spec new_position(Box.position()) :: [Box.t()]
+  # TODO better input
+  @spec new_position(any()) :: [Box.t()]
+  defp new_position(:not_entered) do
+    [%Box{
+      id: :not_entered,
+      moves: [
+        {:not_entered, 1},
+        {{:nose, :preapproach, :low}, 0},
+        {{:left, :preapproach, :low}, 0},
+        {{:right, :preapproach, :low}, 0},
+        {{:tail, :preapproach, :low}, 0},
+      ]
+    }]
+  end
+  # TODO add don't move moves below
   defp new_position(position) do
     [
       new_high_preapproach(position),

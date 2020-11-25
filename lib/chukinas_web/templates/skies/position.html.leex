@@ -1,4 +1,6 @@
 <h3><%= @position |> Atom.to_string() |> String.capitalize()%> Position</h3>
+
+<!-- TODO make use of box template -->
 <%= for box <- @boxes do %>
 <button
   class="<%= button_styling() %>"
