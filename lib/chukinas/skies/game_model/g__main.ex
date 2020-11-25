@@ -70,14 +70,15 @@ defmodule Chukinas.Skies.Game do
   end
 
   @spec end_phase(t()) :: t()
-  def end_phase(%__MODULE__{squadron: s, turn_manager: tm} = game) do
+  def end_phase(%__MODULE__{squadron: s} = game) do
     cond do
       !Squadron.done?(s) -> game
-      !TurnManager.current_phase?(tm, :move) ->
-        Map.update!(game, :turn_manager, &TurnManager.next_phase/1)
-      Squadron.all_fighters?(s, &Fighter.delayed_entry?/1) ->
-        Map.update!(game, :turn_manager, &TurnManager.next_turn/1)
-      true ->  Map.update!(game, :turn_manager, &TurnManager.next_phase/1)
+      true -> Map.update!(game, :turn_manager, &TurnManager.next_turn/1)
+      # !TurnManager.current_phase?(tm, :move) ->
+      #   Map.update!(game, :turn_manager, &TurnManager.next_phase/1)
+      # Squadron.all_fighters?(s, &Fighter.delayed_entry?/1) ->
+      #   Map.update!(game, :turn_manager, &TurnManager.next_turn/1)
+      # true ->  Map.update!(game, :turn_manager, &TurnManager.next_phase/1)
     end
   end
 
