@@ -1,19 +1,7 @@
 <h3><%= @position |> Atom.to_string() |> String.capitalize()%> Position</h3>
 
-<!-- TODO make use of box template -->
 <%= for box <- @boxes do %>
-<button
-  class="<%= button_styling() %>"
-  id="<%= box.id %>"
-  phx-click="select_box"
-  phx-value-id="<%= box.id %>"
->
-
-  <%= box.title %>
-  <%= for group <- box.pawns do %>
-  <p id="<%= group.id %>" >(<%= group.fighter_count %>)</p>
-  <% end %>
-</button>
+<%= build(:box, box) %>
 <% end %>
 
 <!-- <div >
