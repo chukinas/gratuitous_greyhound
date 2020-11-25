@@ -67,6 +67,9 @@ defmodule Chukinas.Skies.Game.Box do
     id_to_string(box_id)
   end
 
+  def approach?({_, :approach, _}), do: true
+  def approach?(_), do: false
+
   # *** *******************************
   # *** HELPERS
 

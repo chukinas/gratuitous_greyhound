@@ -108,4 +108,8 @@ defmodule Chukinas.Skies.Game.Fighter do
     }
   end
 
+  def available_this_turn?(%__MODULE__{state: state}) do
+    state != :not_avail
+  end
+
 end

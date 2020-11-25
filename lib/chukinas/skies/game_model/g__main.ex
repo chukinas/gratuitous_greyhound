@@ -70,7 +70,7 @@ defmodule Chukinas.Skies.Game do
   end
 
   @spec end_phase(t()) :: t()
-  def end_phase(%__MODULE__{squadron: s} = game) do
+  def end_phase(%__MODULE__{} = game) do
     {_, game} = {:cont, game}
     |> maybe_next_phase()
     |> maybe_next_turn()
@@ -110,6 +110,7 @@ defmodule Chukinas.Skies.Game do
       game
       # TODO make sure this forces the phase to Move
       |> Map.update!(:turn_manager, &TurnManager.next_turn/1)
+      # TODO unify language
       |> Map.update!(:squadron, &Squadron.start_new_turn/1)
       |> build_token(:cont)
     else
@@ -140,13 +141,15 @@ defmodule Chukinas.Skies.Game do
   defp build_token(game, response), do: {response, game}
 
   defp move?(game) do
-    # TODO implement
-    true
+    TurnManager.current_phase?(game.turn_manager, :move) &&
+      Enum.any?(game.squadron.fighters, &Fighter.available_this_turn?/1)
   end
 
   defp attack?(game) do
-    # TODO implement
-    false
+    TurnManager.current_phase?(game.turn_manager, :approach) &&
+      Enum.any?(game.squadron.fighters, fn f ->
+        Box.approach?(f.box_end)
+      end)
   end
 
 end
