@@ -5,8 +5,6 @@ defmodule Chukinas.Skies.Game.IdAndState do
   # For anything with id and state
   # """
 
-  # TODO can this be defp?
-  # TODO should items and id be swapped?
   def apply_if_matching_id(items, id, func) when is_integer(id) do
     Enum.map(items, fn item ->
       if item.id == id do
@@ -42,6 +40,9 @@ defmodule Chukinas.Skies.Game.IdAndState do
 
   def get_list_of_ids(items) do
     Enum.map(items, &(&1.id))
+  end
+  def done?(item) do
+    Enum.member?([:not_avail, :complete], item.state)
   end
 
 end

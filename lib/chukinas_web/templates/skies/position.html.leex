@@ -1,11 +1,12 @@
-<!-- *** POSITION -->
-<p>Position!</p>
-<!-- This is called position. This means that the 3 boxes I previously called position need renamed to... altitude? -->
+<h3><%= @position |> Atom.to_string() |> String.capitalize()%> Position</h3>
+
+<%= for box <- @boxes do %>
+<%= build(:box, box) %>
+<% end %>
+
 <!-- <div >
   <div>Evasive Return</div>
-  <div></div>
   <div>Return</div>
-  <div></div>
   <div>High</div>
   <div>High Approach</div>
   <div>Level</div>
@@ -13,7 +14,5 @@
   <div>Low</div>
   <div>Low Approach</div>
   <div>Return</div>
-  <div></div>
   <div>Evasive Return</div>
-  <div></div>
 </div> -->

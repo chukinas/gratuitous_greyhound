@@ -25,7 +25,6 @@ defmodule ChukinasWeb.InsiderLive do
   @impl true
   def mount(params, _session, socket) do
     room_name = Map.get(params, "room")
-    IO.inspect(room_name, label: "Room Name")
     #  replace placeholder uuid
     game_state = API.get_state(room_name, 1)
     socket =
@@ -37,7 +36,6 @@ defmodule ChukinasWeb.InsiderLive do
 
   @impl true
   def handle_event("flip", _params, socket) do
-    IO.inspect(socket, label: "flipping!")
     #  uuid
     state = API.flip(socket.assigns.state.name, 1)
     socket = assign(socket, :state, state)

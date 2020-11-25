@@ -7,7 +7,8 @@ defmodule ChukinasWeb.SkiesLive do
   def mount(_params, _session, socket) do
     socket = socket
     |> assign(page_title: "Skies Above the Reich")
-    |> assign_game_and_vm(Game.init({1, "a"}))
+    {_, socket} = Game.new({1, "a"})
+    |> assign_game_and_vm(socket)
     {:ok, socket}
   end
 
@@ -18,52 +19,46 @@ defmodule ChukinasWeb.SkiesLive do
   # end
 
   @impl true
-  def handle_event("next_phase", _, socket) do
-    game = socket.assigns.game
-    |> Map.update!(:turn_manager, &Game.TurnManager.advance_to_next_phase/1)
-    socket = assign_game_and_vm(socket, game)
-    {:noreply, socket}
+  def handle_event("end_phase", _, socket) do
+    socket.assigns.game
+    |> Game.end_phase()
+    |> assign_game_and_vm(socket)
   end
 
   @impl true
   def handle_event("select_group", %{"group_id" => id}, socket) do
-    game = Game.select_group(
-      socket.assigns.game,
-      String.to_integer(id)
-    )
-    socket = assign_game_and_vm(socket, game)
-    {:noreply, socket}
+    socket.assigns.game
+    |> Game.select_group(String.to_integer(id))
+    |> assign_game_and_vm(socket)
   end
 
   @impl true
   def handle_event("toggle_fighter_select", %{"id" => id}, socket) do
-    game = Game.toggle_fighter_select(
-      socket.assigns.game,
-      String.to_integer(id)
-    )
-    socket = assign_game_and_vm(socket, game)
-    # TODO have the above function return this
-    {:noreply, socket}
+    socket.assigns.game
+    |> Game.toggle_fighter_select(String.to_integer(id))
+    |> assign_game_and_vm(socket)
   end
 
   @impl true
   def handle_event("delay_entry", _, socket) do
-    game = socket.assigns.game |> Game.delay_entry()
-    # TODO i keep getting warnings here
-    socket = assign_game_and_vm(socket, game)
-    {:noreply, socket}
+    socket.assigns.game
+    |> Game.delay_entry()
+    |> assign_game_and_vm(socket)
   end
 
   @impl true
-  def handle_event("commit_order", _params, socket) do
-    {:noreply, socket}
+  # Move the pattern matching to game func?
+  def handle_event("select_box", %{"id" => id}, socket) do
+    socket.assigns.game
+    |> Game.select_box(id)
+    |> assign_game_and_vm(socket)
   end
 
-  @spec assign_game_and_vm(any(), any()) :: any()
-  defp assign_game_and_vm(socket, game) do
-    socket
+  defp assign_game_and_vm(game, socket) do
+    socket = socket
     |> assign(:game, game)
     |> assign(:vm, ViewModel.build(game))
+    {:noreply, socket}
   end
 
 

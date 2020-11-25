@@ -1,35 +1,44 @@
 defmodule Chukinas.Skies.Game do
-  alias Chukinas.Skies.Spec
-  alias Chukinas.Skies.Game.{Fighter, Squadron, TacticalPoints, TurnManager}
+
+  alias Chukinas.Skies.Game.{
+    Box,
+    Boxes,
+    Elements,
+    Fighter,
+    Positions,
+    Spaces,
+    Squadron,
+    TacticalPoints,
+    TurnManager,
+  }
 
   defstruct [
     :spaces,
     :elements,
-    :boxes,
     :squadron,
     :turn_manager,
     :tactical_points,
+    :boxes,
   ]
 
   @type t :: %__MODULE__{
     spaces: any(),
     elements: any(),
-    boxes: any(),
     squadron: any(),
     turn_manager: TurnManager.t(),
     tactical_points: TacticalPoints.t(),
+    boxes: Positions.t(),
   }
 
-  @spec init(any()) :: t()
-  def init(map_id) do
-    state = Spec.build(map_id)
+  @spec new(any()) :: t()
+  def new(map_id) do
     %__MODULE__{
-      spaces: state.spaces,
-      elements: state.elements,
-      boxes: state.boxes,
+      spaces: Spaces.new(map_id),
+      elements: Elements.new(map_id),
       squadron: Squadron.new(),
-      turn_manager: TurnManager.init(),
+      turn_manager: TurnManager.new(),
       tactical_points: TacticalPoints.new(),
+      boxes: Boxes.new(),
     }
   end
 
@@ -47,17 +56,29 @@ defmodule Chukinas.Skies.Game do
 
   def delay_entry(%__MODULE__{
     squadron: s,
-    turn_manager: tm,
     tactical_points: tp
   } = game) do
-    s = Squadron.delay_entry(s)
-    tm = if Squadron.all_fighters?(s, &Fighter.delayed_entry?/1) do
-      TurnManager.next_turn(tm)
-    else
-      tm
-    end
+    s = Squadron.do_not_move(s)
     tp = TacticalPoints.calculate(tp, s)
-    %{game | squadron: s, turn_manager: tm, tactical_points: tp}
+    %{game | squadron: s, tactical_points: tp}
+  end
+
+  def select_box(%__MODULE__{} = game, location) when is_binary(location) do
+    s = Squadron.move(game.squadron, Box.id_from_string(location))
+    tp = TacticalPoints.calculate(game.tactical_points, s)
+    %{game | squadron: s, tactical_points: tp}
+  end
+
+  @spec end_phase(t()) :: t()
+  def end_phase(%__MODULE__{squadron: s, turn_manager: tm} = game) do
+    cond do
+      !Squadron.done?(s) -> game
+      !TurnManager.current_phase?(tm, :move) ->
+        Map.update!(game, :turn_manager, &TurnManager.next_phase/1)
+      Squadron.all_fighters?(s, &Fighter.delayed_entry?/1) ->
+        Map.update!(game, :turn_manager, &TurnManager.next_turn/1)
+      true ->  Map.update!(game, :turn_manager, &TurnManager.next_phase/1)
+    end
   end
 
 end

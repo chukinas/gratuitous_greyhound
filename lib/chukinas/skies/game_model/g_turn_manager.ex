@@ -26,8 +26,7 @@ defmodule Chukinas.Skies.Game.TurnManager do
   # *** *******************************
   # *** NEW
 
-  #  TODO 'new'
-  def init() do
+  def new() do
     %__MODULE__{
       turn: 1,
       max_turn: 7,
@@ -38,8 +37,8 @@ defmodule Chukinas.Skies.Game.TurnManager do
   # *** *******************************
   # *** API
 
-  @spec advance_to_next_phase(t()) :: t()
-  def advance_to_next_phase(turn_mgr) do
+@spec next_phase(t()) :: t()
+  def next_phase(turn_mgr) do
     next_phase = get_next_phase(turn_mgr.phase)
     next_turn = turn_mgr.turn + cond do
       next_phase == get_first_phase() -> 1
@@ -104,6 +103,9 @@ defmodule Chukinas.Skies.Game.TurnManager do
 
   def next_turn(%__MODULE__{turn: turn} = tm) do
     %{tm | turn: turn + 1, phase: get_first_phase()}
+  end
+  def current_phase?(%__MODULE__{} = tm, phase) do
+    tm.phase == phase
   end
 
 end

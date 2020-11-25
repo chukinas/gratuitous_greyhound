@@ -44,8 +44,6 @@ defmodule Chukinas.Insider.Boundary.Registry do
       room_record -> {room_record, state}
     end
     {_room_name, room_pid} = room_record
-    # temp
-    IO.inspect(Process.info(room_pid))
     {:reply, room_pid, state}
   end
 

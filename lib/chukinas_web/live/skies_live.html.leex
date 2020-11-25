@@ -12,15 +12,18 @@ Grenze Gotisc
 <!-- *** SQUADRON -->
 <%= component.(:squadron) %>
 
+<!-- *** NOT YET ENTERED -->
+<%= build(:box, @vm.boxes.not_entered) %>
+
+<!-- *** POSITION -->
+<%= build(:position, boxes: @vm.boxes.nose, position: :nose) %>
+
 <!-- *** TURN MANAGER -->
 <%= component.(:turn_manager) %>
 
 <%= if false do %>
 <!-- *** ESCORT STATIONS -->
 <%= component.(:escort_stations) %>
-
-<!-- *** POSITION -->
-<%= render_component(:position) %>
 
 <!-- *** MAP -->
 <div class="grid" style="background-color: lightblue">
@@ -47,8 +50,3 @@ Grenze Gotisc
   <% end %>
 </div>
 <% end %>
-
-<%= for box <- @vm.boxes do %>
-<div><%= box %></div>
-<% end %>
-

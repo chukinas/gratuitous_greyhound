@@ -8,6 +8,9 @@ defmodule Chukinas.Skies.ViewModel.TacticalPoints do
     # spent: integer(),
   }
 
+  # *** *******************************
+  # *** BUILD
+
   @spec build(TacticalPoints.t()) :: t()
   def build(tp) do
     %{

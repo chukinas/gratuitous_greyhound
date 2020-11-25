@@ -1,15 +1,25 @@
 defmodule Chukinas.Skies.ViewModel do
   alias Chukinas.Skies.Game
-  alias Chukinas.Skies.ViewModel.{Bombers, Boxes, Squadron, Spaces, TacticalPoints, TurnManager}
+  alias Chukinas.Skies.ViewModel.{
+    Bombers,
+    Boxes,
+    Squadron,
+    Spaces,
+    TacticalPoints,
+    TurnManager
+  }
 
   defstruct [
     :squadron,
     :spaces,
     :bombers,
-    :boxes,
     :turn_manager,
     :escort_stations,
+    :boxes,
   ]
+
+  # *** *******************************
+  # *** BUILD
 
   @spec build(Game.t()) :: any()
   def build(game) do
@@ -18,9 +28,9 @@ defmodule Chukinas.Skies.ViewModel do
       squadron: Squadron.build(game.squadron, vm_tp),
       spaces: Spaces.build(game.spaces),
       bombers: Bombers.build(game.elements),
-      boxes: Boxes.render(game.boxes),
       turn_manager: TurnManager.build(game.turn_manager),
       escort_stations: %{},
+      boxes: Boxes.build(game.boxes, game.squadron.groups),
     }
   end
 

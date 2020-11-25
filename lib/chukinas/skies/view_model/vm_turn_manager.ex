@@ -16,7 +16,7 @@ defmodule Chukinas.Skies.ViewModel.TurnManager do
   }
 
   # *** *******************************
-  # *** BUILDERS
+  # *** BUILD
 
   @spec build(TM.t()) :: t()
   def build(turn_mgr) do
@@ -47,6 +47,9 @@ defmodule Chukinas.Skies.ViewModel.TurnManager do
     TM.get_phases()
     |> Enum.map(&(phase_to_vm(&1, current_phase)))
   end
+
+  # *** *******************************
+  # *** API
 
   @spec phase_to_vm(TM.phase_name(), TM.phase_name()) :: phase()
   defp phase_to_vm(phase, current_phase) when is_atom(phase) do
