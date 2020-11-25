@@ -1,4 +1,4 @@
-defmodule Chukinas.Skies.ViewModel.Positions do
+defmodule Chukinas.Skies.ViewModel.Boxes do
 
   # TODO rename Boxes
   alias Chukinas.Skies.Game.Box, as: G_Box
