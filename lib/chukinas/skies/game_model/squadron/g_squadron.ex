@@ -1,5 +1,5 @@
 defmodule Chukinas.Skies.Game.Squadron do
-  alias Chukinas.Skies.Game.{Fighter, FighterGroup}
+  alias Chukinas.Skies.Game.{Box, Fighter, FighterGroup}
   import Chukinas.Skies.Game.IdAndState
   alias Chukinas.Skies.Game.IdAndState
 
@@ -66,12 +66,19 @@ defmodule Chukinas.Skies.Game.Squadron do
     |> update_fighters(squadron)
   end
 
-  @spec delay_entry(t()) :: t()
-  def delay_entry(squadron) do
+  @spec do_not_move(t()) :: t()
+  def do_not_move(squadron) do
     fighter_ids = get_selected_fighter_ids(squadron)
     squadron.fighters
-    |> apply_if_matching_id(fighter_ids, &Fighter.delay_entry/1)
-    |> apply_if_matching_id(fighter_ids, &Fighter.complete/1)
+    |> apply_if_matching_id(fighter_ids, &Fighter.do_not_move/1)
+    |> rebuild()
+  end
+
+  @spec move(t(), Box.id()) :: t()
+  def move(squadron, box_id) do
+    fighter_ids = get_selected_fighter_ids(squadron)
+    squadron.fighters
+    |> apply_if_matching_id(fighter_ids, &Fighter.move(&1, box_id))
     |> rebuild()
   end
 

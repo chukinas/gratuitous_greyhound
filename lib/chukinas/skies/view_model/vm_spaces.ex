@@ -3,6 +3,9 @@ defmodule Chukinas.Skies.ViewModel.Spaces do
 
   @type t :: [Space.t()]
 
+  # *** *******************************
+  # *** BUILD
+
   def build(spaces) do
     spaces
     |> Map.to_list()

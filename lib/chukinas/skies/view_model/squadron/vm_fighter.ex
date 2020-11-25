@@ -17,6 +17,9 @@ defmodule Chukinas.Skies.ViewModel.Fighter do
     selected: boolean(),
   }
 
+  # *** *******************************
+  # *** BUILD
+  
   @spec build(Fighter.t()) :: t()
   def build(fighter) do
     %__MODULE__{

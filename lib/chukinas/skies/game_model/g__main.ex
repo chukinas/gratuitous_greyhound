@@ -1,35 +1,44 @@
 defmodule Chukinas.Skies.Game do
-  alias Chukinas.Skies.Spec
-  alias Chukinas.Skies.Game.{Fighter, Squadron, TacticalPoints, TurnManager}
+
+  alias Chukinas.Skies.Game.{
+    Box,
+    Boxes,
+    Elements,
+    Fighter,
+    Positions,
+    Spaces,
+    Squadron,
+    TacticalPoints,
+    TurnManager,
+  }
 
   defstruct [
     :spaces,
     :elements,
-    :boxes,
     :squadron,
     :turn_manager,
     :tactical_points,
+    :boxes,
   ]
 
   @type t :: %__MODULE__{
     spaces: any(),
     elements: any(),
-    boxes: any(),
     squadron: any(),
     turn_manager: TurnManager.t(),
     tactical_points: TacticalPoints.t(),
+    boxes: Positions.t(),
   }
 
   @spec new(any()) :: t()
   def new(map_id) do
-    state = Spec.build(map_id)
     %__MODULE__{
-      spaces: state.spaces,
-      elements: state.elements,
-      boxes: state.boxes,
+      spaces: Spaces.new(map_id),
+      elements: Elements.new(map_id),
       squadron: Squadron.new(),
       turn_manager: TurnManager.new(),
       tactical_points: TacticalPoints.new(),
+      boxes: Boxes.new(),
     }
   end
 
@@ -49,8 +58,14 @@ defmodule Chukinas.Skies.Game do
     squadron: s,
     tactical_points: tp
   } = game) do
-    s = Squadron.delay_entry(s)
+    s = Squadron.do_not_move(s)
     tp = TacticalPoints.calculate(tp, s)
+    %{game | squadron: s, tactical_points: tp}
+  end
+
+  def select_box(%__MODULE__{} = game, location) when is_binary(location) do
+    s = Squadron.move(game.squadron, Box.id_from_string(location))
+    tp = TacticalPoints.calculate(game.tactical_points, s)
     %{game | squadron: s, tactical_points: tp}
   end
 

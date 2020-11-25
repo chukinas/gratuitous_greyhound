@@ -1,5 +1,6 @@
 defmodule ChukinasWeb.SkiesLiveTest do
   use ChukinasWeb.ConnCase
+  alias Chukinas.Skies.Game.Box
 
   import Phoenix.LiveViewTest
 
@@ -15,7 +16,7 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> assert_turn(1)
     |> assert_current_phase("Move")
     |> assert_current_phase("Return", false)
-    |> assert_disabled("#end_phase")
+    |> assert_disabled("end_phase")
     |> delay_entry()
     |> end_phase()
     |> assert_turn(2)
@@ -71,9 +72,8 @@ defmodule ChukinasWeb.SkiesLiveTest do
     assert has_element?(view, "#group_#{group_id} .select_group")
     view
   end
-  defp assert_disabled(view, selector) do
-    # TODO how do I combine the disabled into the selector?
-    assert element(view, selector) |> render() =~ "disabled"
+  defp assert_disabled(view, element_id) do
+    assert has_element?(view, "##{element_id}[disabled]")
     view
   end
   # defp assert_element(view, selector, text_filter \\ nil) do
@@ -89,6 +89,19 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> String.split("id=\"#{id1}\"")
     |> Enum.at(1)
     |> String.contains?("id=\"#{id2}\"")
+    view
+
+  end
+  def move(view, box_id) do
+    view
+    |> element("#" <> Box.id_to_string(box_id))
+    |> render_click()
+    view
+  end
+  def assert_group_in_box(view, group_id, box_id) do
+    group_selector = "#pawn_group_" <> Integer.to_string(group_id)
+    box_selector = "#" <> Box.id_to_string(box_id)
+    assert has_element?(view, "#{box_selector} #{group_selector}")
     view
   end
 
@@ -110,17 +123,29 @@ defmodule ChukinasWeb.SkiesLiveTest do
   test "squadron buttons and checkboxes works", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/skies")
     view
-    |> refute_element("#group_1 .select_group")
     |> toggle_fighter(2)
-    |> refute_element("#fighter_2", "checked")
     |> delay_entry()
     |> assert_ids_appear_in_order("group_1", "group_2")
-    [1, 2]
-    |> Enum.each(&(group_has_no_select_btn(view, &1)))
-    view
+    |> group_has_no_select_btn(1)
+    |> group_has_no_select_btn(2)
     |> select_group(1)
     |> assert_group_has_unselect_btn(1)
     |> assert_group_has_unselect_btn(2, false)
   end
+
+  test "enter board", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/skies")
+    box = {:nose, :preapproach, :low}
+    view
+    |> move(box)
+    |> assert_group_in_box(1, box)
+    |> end_phase()
+    |> assert_current_phase("Return")
+  end
+
+  # TODO future tests/tasks:
+  # delay entry shouldn't be anything special. It should be a id like any other
+  # Unify selection of locations and tp cost
+  # not_entered_should be a id?
 
 end

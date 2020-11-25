@@ -10,8 +10,8 @@ defmodule Chukinas.Skies.Game.Fighter do
     :airframe,
     :pilot_name,
     :hits,
-    :start_turn_location,
-    :move_location,
+    :box_start,
+    :box_end,
     :end_turn_location,
     :state,
   ]
@@ -24,8 +24,8 @@ defmodule Chukinas.Skies.Game.Fighter do
     airframe: airframe(),
     pilot_name: String.t(),
     hits: [Hit.t()],
-    start_turn_location: Location.t(),
-    move_location: Location.t(),
+    box_start: Location.t(),
+    box_end: Location.t(),
     end_turn_location: Location.t(),
     state: IdAndState.state(),
   }
@@ -41,8 +41,8 @@ defmodule Chukinas.Skies.Game.Fighter do
       airframe: :bf109,
       pilot_name: Enum.at(names, id, "no name"),
       hits: [],
-      start_turn_location: :not_entered,
-      move_location: nil,
+      box_start: :not_entered,
+      box_end: nil,
       end_turn_location: nil,
       state: :selected,
     }
@@ -72,14 +72,27 @@ defmodule Chukinas.Skies.Game.Fighter do
     end}
   end
 
+  @spec move(t(), Box.id) :: t()
+  def move(%__MODULE__{} = f, box_id) do
+    %{f | box_end: box_id}
+    |> complete()
+  end
+
+  def do_not_move(%__MODULE__{box_start: box} = f) do
+    move(f, box)
+  end
+
   def selected?(%__MODULE__{state: :selected}), do: true
   def selected?(_), do: false
-  def delay_entry(%__MODULE__{} = f), do: %{f | move_location: :not_entered}
   def delayed_entry?(%__MODULE__{} = fighter) do
-    fighter.move_location == :not_entered
+    fighter.box_end == :not_entered
   end
   def complete(%__MODULE__{} = fighter) do
     %{fighter | state: :complete}
+  end
+
+  def get_current_location(fighter) do
+    fighter.box_end || fighter.box_start
   end
 
 end

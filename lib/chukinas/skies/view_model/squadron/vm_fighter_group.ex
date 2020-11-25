@@ -38,13 +38,16 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
     done?: boolean(),
   }
 
+  # *** *******************************
+  # *** BUILD
+
   @spec build(FighterGroup.t(), [Fighter.t()], integer()) :: t()
   def build(group, all_fighters, avail_tp) do
     [f | _] = fighters = group.fighter_ids
     |> IdAndState.get_items(all_fighters)
     %__MODULE__{
       id: group.id,
-      starting_location: f.start_turn_location,
+      starting_location: f.box_start,
       fighters: Enum.map(fighters, &VM_Fighter.build/1),
       state: group.state,
       tags: [],
@@ -54,6 +57,9 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
       done?: IdAndState.done?(group)
     }
   end
+
+  # *** *******************************
+  # *** API
 
   @spec can_delay_entry?(FighterGroup.t(), [Fighter.t()], integer()) :: boolean()
   def can_delay_entry?(group, all_fighters, avail_tp) do

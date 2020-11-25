@@ -19,7 +19,7 @@ defmodule Chukinas.Skies.ViewModel.Squadron do
   }
 
   # *** *******************************
-  # *** NEW
+  # *** BUILD
 
   @spec build(Squadron.t(), VM_TacticalPoints.t()) :: t()
   def build(g_squadron, vm_tactical_points) do
