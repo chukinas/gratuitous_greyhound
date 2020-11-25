@@ -58,7 +58,7 @@ defmodule Chukinas.Skies.Game do
     squadron: s,
     tactical_points: tp
   } = game) do
-    s = Squadron.delay_entry(s)
+    s = Squadron.do_not_move(s)
     tp = TacticalPoints.calculate(tp, s)
     %{game | squadron: s, tactical_points: tp}
   end
