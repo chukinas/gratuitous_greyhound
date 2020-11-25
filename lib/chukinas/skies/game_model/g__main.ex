@@ -54,8 +54,7 @@ defmodule Chukinas.Skies.Game do
     %{game | squadron: Squadron.toggle_fighter_select(s, fighter_id)}
   end
 
-  # TODO rename do not move?
-  def delay_entry(%__MODULE__{
+  def do_not_move(%__MODULE__{
     squadron: s,
     tactical_points: tp
   } = game) do

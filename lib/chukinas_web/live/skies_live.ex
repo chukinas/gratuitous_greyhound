@@ -40,9 +40,9 @@ defmodule ChukinasWeb.SkiesLive do
   end
 
   @impl true
-  def handle_event("delay_entry", _, socket) do
+  def handle_event("do_not_move", _, socket) do
     socket.assigns.game
-    |> Game.delay_entry()
+    |> Game.do_not_move()
     |> assign_game_and_vm(socket)
   end
 
