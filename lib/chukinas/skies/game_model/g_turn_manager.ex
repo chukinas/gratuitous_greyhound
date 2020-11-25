@@ -41,13 +41,8 @@ defmodule Chukinas.Skies.Game.TurnManager do
   # *** API
 
   @spec next_phase(t()) :: t()
-  def next_phase(turn_mgr) do
-    next_phase = get_next_phase(turn_mgr.phase)
-    next_turn = turn_mgr.turn + cond do
-      next_phase == get_first_phase() -> 1
-      true -> 0
-    end
-    Map.merge(turn_mgr, %{turn: next_turn, phase: next_phase})
+  def next_phase(tm) do
+    %{tm | phase: get_next_phase(tm.phase)}
   end
 
   @spec to_flat_list(phases()) :: [phase_name()]
