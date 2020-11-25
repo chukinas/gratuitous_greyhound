@@ -26,7 +26,7 @@ defmodule Chukinas.Skies.ViewModel.Box do
     group_pawns = all_groups
     |> Enum.filter(fn group -> group.current_location == box.id end)
     |> Enum.map(&GroupPawn.build/1)
-    {_, _, _, id} = box.id |> G_Box.id_to_strings()
+    id = box.id |> G_Box.id_to_string()
     %__MODULE__{
       title: id,
       id: id,

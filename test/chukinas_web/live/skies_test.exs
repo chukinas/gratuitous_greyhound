@@ -80,7 +80,6 @@ defmodule ChukinasWeb.SkiesLiveTest do
     assert has_element?(view, "#" <> element_id)
     view
   end
-  # TODO replace with element id?
   defp refute_element(view, selector, text_filter \\ nil) do
     refute has_element?(view, selector, text_filter)
     view

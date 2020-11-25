@@ -32,29 +32,16 @@ defmodule Chukinas.Skies.Game.Box do
   # *** *******************************
   # *** API
 
-  def id_to_strings(id) when is_atom(id) do
-    # TODO this is ugly
-    id = Atom.to_string(id)
-    {id, id, id, id}
-  end
-  def id_to_strings({pos, loc_type, alt}) do
-    loc = {pos, loc_type, alt} = {
-      Atom.to_string(pos),
-      box_type_to_string(loc_type),
-      Atom.to_string(alt),
-    }
-    id = loc
-    |> Tuple.to_list()
-    |> Enum.join("_")
-    {pos, loc_type, alt, id}
-  end
-
   @spec id_to_string(id()) :: String.t()
   def id_to_string(id) when is_atom(id), do: Atom.to_string(id)
   def id_to_string({:dogfight, index}), do: "dogfight_#{index}"
-  def id_to_string(id) do
-    {_, _, _, stringified_location} = id_to_strings(id)
-    stringified_location
+  def id_to_string({pos, loc_type, alt}) do
+    [
+      Atom.to_string(pos),
+      box_type_to_string(loc_type),
+      Atom.to_string(alt),
+    ]
+    |> Enum.join("_")
   end
 
   @spec id_from_string(String.t()) :: id()
