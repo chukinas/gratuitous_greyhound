@@ -63,8 +63,7 @@ defmodule Chukinas.Skies.Game do
     %{game | squadron: s, tactical_points: tp}
   end
 
-  # TODO rename move?
-  def select_box(%__MODULE__{} = game, location) when is_binary(location) do
+  def move(%__MODULE__{} = game, location) when is_binary(location) do
     s = Squadron.move(game.squadron, Box.id_from_string(location))
     tp = TacticalPoints.calculate(game.tactical_points, s, game.boxes)
     %{game | squadron: s, tactical_points: tp}
