@@ -71,7 +71,6 @@ defmodule Chukinas.Skies.Game.Squadron do
     fighter_ids = get_selected_fighter_ids(squadron)
     squadron.fighters
     |> apply_if_matching_id(fighter_ids, &Fighter.do_not_move/1)
-    |> apply_if_matching_id(fighter_ids, &Fighter.complete/1)
     |> rebuild()
   end
 
@@ -80,8 +79,6 @@ defmodule Chukinas.Skies.Game.Squadron do
     fighter_ids = get_selected_fighter_ids(squadron)
     squadron.fighters
     |> apply_if_matching_id(fighter_ids, &Fighter.move(&1, box_id))
-    # TODO I think complete should be automatic. I shouldn't have to call it manually
-    |> apply_if_matching_id(fighter_ids, &Fighter.complete/1)
     |> rebuild()
   end
 
