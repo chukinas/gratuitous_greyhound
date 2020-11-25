@@ -13,13 +13,9 @@ defmodule Chukinas.Skies.Game.Boxes do
 
   @spec new() :: [Box.t()]
   def new() do
-    boxes = [:not_entered, :nose, :left, :right, :tail]
+    [:not_entered, :nose, :left, :right, :tail]
     |> Enum.map(&new_position/1)
     |> Enum.concat()
-    boxes
-    # |> Enum.map(&(&1.id))
-    |> IO.inspect(label: "box ids")
-    boxes
   end
 
   # *** *******************************

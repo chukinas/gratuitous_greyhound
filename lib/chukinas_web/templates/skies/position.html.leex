@@ -9,7 +9,7 @@
   phx-value-id="<%= box.id %>"
 >
 
-  <%= box.box_type  %>, <%= box.altitude %>
+  <%= box.title %>
   <%= for group <- box.pawns do %>
   <p id="<%= group.id %>" >(<%= group.fighter_count %>)</p>
   <% end %>

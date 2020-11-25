@@ -7,9 +7,7 @@ defmodule Chukinas.Skies.ViewModel.Box do
   # *** TYPES
 
   defstruct [
-    :position,
-    :box_type,
-    :altitude,
+    :title,
     :id,
     :pawns,
   ]
@@ -17,9 +15,7 @@ defmodule Chukinas.Skies.ViewModel.Box do
   @type direction :: G_Box.position()
 
   @type t :: %__MODULE__{
-    position: String.t(),
-    box_type: String.t(),
-    altitude: String.t(),
+    title: String.t(),
     id: String.t(),
     pawns: [GroupPawn.t()],
   }
@@ -32,11 +28,9 @@ defmodule Chukinas.Skies.ViewModel.Box do
     group_pawns = all_groups
     |> Enum.filter(fn group -> group.current_location == box.id end)
     |> Enum.map(&GroupPawn.build/1)
-    {position, box_type, altitude, id} = box.id |> G_Box.id_to_strings()
+    {_, _, _, id} = box.id |> G_Box.id_to_strings()
     %__MODULE__{
-      position: position,
-      box_type: box_type,
-      altitude: altitude,
+      title: id,
       id: id,
       pawns: group_pawns,
     }
@@ -50,9 +44,13 @@ defmodule Chukinas.Skies.ViewModel.Box do
   # *** *******************************
   # *** HELPERS
 
+  # TODO is this direction type spec correct? it includes not ented
   @spec in_position?(t(), direction()) :: boolean()
-  def in_position?(%__MODULE__{position: actual_position}, position) do
-    actual_position == Atom.to_string(position)
+  def in_position?(%__MODULE__{id: id}, position) do
+    position == id
+    |> String.split("_")
+    |> Enum.at(0)
+    |> String.to_atom()
   end
 
 end

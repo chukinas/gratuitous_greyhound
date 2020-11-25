@@ -24,7 +24,7 @@ defmodule Chukinas.Skies.ViewModel do
   @spec build(Game.t()) :: any()
   def build(game) do
     vm_tp = TacticalPoints.build(game.tactical_points)
-    vm = %__MODULE__{
+    %__MODULE__{
       squadron: Squadron.build(game.squadron, vm_tp),
       spaces: Spaces.build(game.spaces),
       bombers: Bombers.build(game.elements),
@@ -32,8 +32,6 @@ defmodule Chukinas.Skies.ViewModel do
       escort_stations: %{},
       positions: Positions.build(game.boxes, game.squadron.groups),
     }
-    # IO.inspect(vm.positions.not_entered, label: "not_entered")
-    vm
   end
 
 end
