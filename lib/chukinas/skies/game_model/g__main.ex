@@ -71,19 +71,82 @@ defmodule Chukinas.Skies.Game do
 
   @spec end_phase(t()) :: t()
   def end_phase(%__MODULE__{squadron: s} = game) do
+    {_, game} = {:cont, game}
+    |> maybe_next_phase()
+    |> maybe_next_turn()
+    |> maybe_end_game()
+    |> maybe_skip_phase()
+    game
+  end
+
+  # *** *******************************
+  # *** HELPERS
+
+  defp maybe_next_phase({:cont, game}) do
     cond do
-      not Squadron.done?(s) -> game
+      not Squadron.done?(game.squadron) ->
+        {:stop, game}
+      Squadron.all_fighters?(game.squadron, &Fighter.delayed_entry?/1) ->
+        game
+        |> Map.update!(:turn_manager, &TurnManager.next_phase/1)
+        |> build_token(:all_delayed_entry)
       true ->
         game
-        |> Map.update!(:turn_manager, &TurnManager.next_turn/1)
+        |> Map.update!(:turn_manager, &TurnManager.next_phase/1)
         |> Map.update!(:tactical_points, &TacticalPoints.commit_spent_point/1)
-        |> Map.update!(:squadron, &Squadron.start_new_turn/1)
-      # not TurnManager.current_phase?(tm, :move) ->
-      #   Map.update!(game, :turn_manager, &TurnManager.next_phase/1)
-      # Squadron.all_fighters?(s, &Fighter.delayed_entry?/1) ->
-      #   Map.update!(game, :turn_manager, &TurnManager.next_turn/1)
-      # true ->  Map.update!(game, :turn_manager, &TurnManager.next_phase/1)
+        |> build_token(:cont)
     end
+  end
+
+  defp maybe_next_turn({:stop, _} = token), do: token
+  defp maybe_next_turn({:all_delayed_entry, game}) do
+    game
+    |> Map.update!(:turn_manager, &TurnManager.next_turn/1)
+    |> build_token(:stop)
+  end
+  defp maybe_next_turn({:cont, game}) do
+    # TODO abstract this out:
+    if TurnManager.current_phase?(game.turn_manager, :move) do
+      game
+      # TODO make sure this forces the phase to Move
+      |> Map.update!(:turn_manager, &TurnManager.next_turn/1)
+      |> Map.update!(:squadron, &Squadron.start_new_turn/1)
+      |> build_token(:cont)
+    else
+      {:cont, game}
+    end
+  end
+
+  defp maybe_end_game({:stop, _} = token), do: token
+  defp maybe_end_game({:cont, game}) do
+    cond do
+      TurnManager.end_game?(game.turn_manager) ->
+        # FIX implement
+        {:stop, game}
+      true ->
+        {:cont, game}
+    end
+  end
+
+  defp maybe_skip_phase({:stop, _} = token), do: token
+  defp maybe_skip_phase({:cont, game}) do
+    cond do
+      move?(game) -> {:cont, game}
+      attack?(game) -> {:cont, game}
+      true -> {:cont, end_phase(game)}
+    end
+  end
+
+  defp build_token(game, response), do: {response, game}
+
+  defp move?(game) do
+    # TODO implement
+    true
+  end
+
+  defp attack?(game) do
+    # TODO implement
+    false
   end
 
 end
