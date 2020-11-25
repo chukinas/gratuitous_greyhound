@@ -71,7 +71,7 @@ defmodule Chukinas.Skies.Game.Squadron do
   def delay_entry(squadron) do
     fighter_ids = get_selected_fighter_ids(squadron)
     squadron.fighters
-    |> apply_if_matching_id(fighter_ids, &Fighter.delay_entry/1)
+    |> apply_if_matching_id(fighter_ids, &Fighter.do_not_move/1)
     |> apply_if_matching_id(fighter_ids, &Fighter.complete/1)
     |> rebuild()
   end
