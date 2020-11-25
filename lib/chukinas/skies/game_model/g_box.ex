@@ -13,6 +13,7 @@ defmodule Chukinas.Skies.Game.Box do
   ]
 
   @type position :: :nose | :tail | :left | :right
+  @type box_group :: position | :not_entered | :dogfight
   @typep mode :: :determined | :evasive
   @typep box_type :: {:return, mode()} | :preapproach | :approach
   # FIX this is more general than box.

@@ -12,8 +12,6 @@ defmodule Chukinas.Skies.ViewModel.Box do
     :pawns,
   ]
 
-  @type direction :: G_Box.position()
-
   @type t :: %__MODULE__{
     title: String.t(),
     id: String.t(),
@@ -44,10 +42,9 @@ defmodule Chukinas.Skies.ViewModel.Box do
   # *** *******************************
   # *** HELPERS
 
-  # TODO is this direction type spec correct? it includes not ented
-  @spec in_position?(t(), direction()) :: boolean()
-  def in_position?(%__MODULE__{id: id}, position) do
-    position == id
+  @spec in_position?(t(), G_Box.box_group()) :: boolean()
+  def in_position?(%__MODULE__{id: id}, box_group) do
+    box_group == id
     |> String.split("_")
     |> Enum.at(0)
     |> String.to_atom()
