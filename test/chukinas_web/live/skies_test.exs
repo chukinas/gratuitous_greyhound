@@ -92,7 +92,6 @@ defmodule ChukinasWeb.SkiesLiveTest do
     view
 
   end
-  # TODO rename
   def move(view, box_id) do
     view
     |> element("#" <> Box.id_to_string(box_id))
