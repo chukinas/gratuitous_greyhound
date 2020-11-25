@@ -44,12 +44,20 @@ defmodule Chukinas.Skies.ViewModel.Boxes do
 
   @spec filter_boxes([VM_Box.t()], G_Box.box_group()) :: [VM_Box.t()]
   defp filter_boxes(boxes, box_group) do
-    Enum.filter(boxes, &VM_Box.in_position?(&1, box_group))
+    Enum.filter(boxes, &in_box_group?(&1, box_group))
   end
 
   @spec find_box([VM_Box.t()], G_Box.box_group()) :: VM_Box.t()
   defp find_box(boxes, :not_entered) do
-    Enum.find(boxes, &VM_Box.in_position?(&1, :not_entered))
+    Enum.find(boxes, &in_box_group?(&1, :not_entered))
+  end
+
+  @spec in_box_group?(VM_Box.t(), G_Box.box_group()) :: boolean()
+  defp in_box_group?(%VM_Box{id: id}, box_group) do
+    String.starts_with?(
+      id,
+      Atom.to_string(box_group)
+    )
   end
 
 end

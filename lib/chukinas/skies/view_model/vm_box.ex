@@ -39,16 +39,4 @@ defmodule Chukinas.Skies.ViewModel.Box do
     boxes |> Enum.map(&build(&1, all_groups))
   end
 
-  # *** *******************************
-  # *** API
-
-  # TODO dumb name
-  @spec in_position?(t(), G_Box.box_group()) :: boolean()
-  def in_position?(%__MODULE__{id: id}, box_group) do
-    String.starts_with?(
-      id,
-      Atom.to_string(box_group)
-    )
-  end
-
 end
