@@ -40,11 +40,13 @@ defmodule Chukinas.Skies.Game.Box do
     {pos, loc_type, alt, id}
   end
 
+  @spec id_to_string(id()) :: String.t()
   def id_to_string(id) do
     {_, _, _, stringified_location} = id_to_strings(id)
     stringified_location
   end
 
+  @spec id_from_string(String.t()) :: id()
   def id_from_string(id) do
     id
     |> String.split("_")

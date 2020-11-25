@@ -6,11 +6,7 @@ defmodule Chukinas.Skies.Game.Boxes do
   # *** TYPES
 
   @type attack_direction :: :nose | :tail | :flank
-  @typep direction :: Box.attack_direction() | :this
-  @typep altitude :: Box.altitude() | :any
-  @typep move :: {direction(), Box.box_type(), altitude(), Box.cost()}
-  @typep box_spec :: {direction(), Box.box_type(), Box.altitude(), [move()]}
-  @type t :: [box_spec()]
+  @type t :: [Box.t()]
 
   # *** *******************************
   # *** NEW
@@ -37,12 +33,12 @@ defmodule Chukinas.Skies.Game.Boxes do
     |> Enum.concat()
   end
 
-  @spec new_high_preapproach(Box.position) :: [Box.t()]
+  @spec new_high_preapproach(Box.position()) :: [Box.t()]
   defp new_high_preapproach(position) do
     common_moves = [
-      {{:this, :approach, :high}, 0},
-      {{:this, :preapproach, :level}, 0},
-      {{:this, :preapproach, :low}, 0},
+      {{position, :approach, :high}, 0},
+      {{position, :preapproach, :level}, 0},
+      {{position, :preapproach, :low}, 0},
     ]
     specific_moves = case to_attack_direction(position) do
       :nose -> [
@@ -170,8 +166,8 @@ defmodule Chukinas.Skies.Game.Boxes do
   # *** HELPERS
 
   @spec to_attack_direction(Box.position()) :: attack_direction()
-  def to_attack_direction(direction) do
-    case direction do
+  def to_attack_direction(position) do
+    case position do
       :right -> :flank
       :left  -> :flank
       other -> other

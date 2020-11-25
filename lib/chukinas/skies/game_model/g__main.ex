@@ -63,9 +63,9 @@ defmodule Chukinas.Skies.Game do
   end
 
   def select_box(%__MODULE__{} = game, location) when is_binary(location) do
-    location
-    |> Box.id_from_string()
-    game
+    s = Squadron.move_to_box(game.squadron, Box.id_from_string(location))
+    tp = TacticalPoints.calculate(game.tactical_points, s)
+    %{game | squadron: s, tactical_points: tp}
   end
 
   @spec end_phase(t()) :: t()

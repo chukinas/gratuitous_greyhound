@@ -1,5 +1,5 @@
 defmodule Chukinas.Skies.Game.Squadron do
-  alias Chukinas.Skies.Game.{Fighter, FighterGroup}
+  alias Chukinas.Skies.Game.{Box, Fighter, FighterGroup}
   import Chukinas.Skies.Game.IdAndState
   alias Chukinas.Skies.Game.IdAndState
 
@@ -66,11 +66,22 @@ defmodule Chukinas.Skies.Game.Squadron do
     |> update_fighters(squadron)
   end
 
+  # TODO this should be genericized to move_to
   @spec delay_entry(t()) :: t()
   def delay_entry(squadron) do
     fighter_ids = get_selected_fighter_ids(squadron)
     squadron.fighters
     |> apply_if_matching_id(fighter_ids, &Fighter.delay_entry/1)
+    |> apply_if_matching_id(fighter_ids, &Fighter.complete/1)
+    |> rebuild()
+  end
+
+  @spec move_to_box(t(), Box.id()) :: t()
+  def move_to_box(squadron, box_id) do
+    fighter_ids = get_selected_fighter_ids(squadron)
+    squadron.fighters
+    |> apply_if_matching_id(fighter_ids, &Fighter.move_to_box(&1, box_id))
+    # TODO I think complete should be automatic. I shouldn't have to call it manually
     |> apply_if_matching_id(fighter_ids, &Fighter.complete/1)
     |> rebuild()
   end
