@@ -13,18 +13,18 @@ defmodule Chukinas.Skies.Game.Box do
   ]
 
   @type position :: :nose | :tail | :left | :right
-  @type box_group :: position | :not_entered | :dogfight
+  # NOTE: if any of these have an underscore, it'll cause errors in id_from_string
+  @type box_group :: position | :notentered | :dogfight
   @typep mode :: :determined | :evasive
   @typep box_type :: {:return, mode()} | :preapproach | :approach
   # FIX this is more general than box.
   @typep altitude :: :high | :level | :low
-  @typep id_not_entered :: :not_entered
+  @typep id_notentered :: :notentered
   @typep id_dogfight :: {:dogfight, integer()}
   @typep id_position :: {position(), box_type(), altitude()}
-  @typep id :: id_not_entered() | id_dogfight() | id_position()
+  @typep id :: id_notentered() | id_dogfight() | id_position()
   @typep cost :: integer()
   @typep move :: {id(), cost()}
-  # TODO use this type in Fighter
   @type fighter_move :: {id(), id()}
   @type t :: %__MODULE__{
     id: id(),
@@ -48,7 +48,7 @@ defmodule Chukinas.Skies.Game.Box do
 
   @spec id_from_string(String.t()) :: id()
   def id_from_string(id) do
-    # TODO will this be a problem for :not_entered?
+    # TODO will this be a problem for :notentered?
     id
     |> String.split("_")
     |> Enum.map(&String.to_atom/1)
@@ -104,7 +104,7 @@ defmodule Chukinas.Skies.Game.Box do
     # TODO clean up
     {id, _} = move
     val = (id == box_id)
-    # if :not_entered != box_id do
+    # if :notentered != box_id do
     #   IO.inspect(move, label: "move")
     #   IO.inspect(box_id, label: "box id")
     #   IO.inspect(val, label: "result")

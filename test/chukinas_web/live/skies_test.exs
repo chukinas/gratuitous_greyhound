@@ -137,8 +137,8 @@ defmodule ChukinasWeb.SkiesLiveTest do
     {:ok, view, _html} = live(conn, "/skies")
     box = {:nose, :preapproach, :low}
     view
-    |> assert_element("not_entered")
-    |> assert_group_in_box(1, :not_entered)
+    |> assert_element("notentered")
+    |> assert_group_in_box(1, :notentered)
     |> move(box)
     |> assert_group_in_box(1, box)
     |> assert_tactical_points(1)

@@ -72,11 +72,9 @@ defmodule Chukinas.Skies.Game do
   @spec end_phase(t()) :: t()
   def end_phase(%__MODULE__{squadron: s} = game) do
     cond do
-      # TODO use 'not'?
-      !Squadron.done?(s) -> game
+      not Squadron.done?(s) -> game
       true ->
         game
-        # TODO extract this out into a private next_turn
         |> Map.update!(:turn_manager, &TurnManager.next_turn/1)
         |> Map.update!(:tactical_points, &TacticalPoints.commit_spent_point/1)
         |> Map.update!(:squadron, &Squadron.start_new_turn/1)

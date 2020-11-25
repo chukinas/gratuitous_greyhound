@@ -13,7 +13,7 @@ defmodule Chukinas.Skies.Game.Boxes do
 
   @spec new() :: [Box.t()]
   def new() do
-    [:not_entered, :nose, :left, :right, :tail]
+    [:notentered, :nose, :left, :right, :tail]
     |> Enum.map(&new_position/1)
     |> Enum.concat()
   end
@@ -32,11 +32,11 @@ defmodule Chukinas.Skies.Game.Boxes do
   # *** HELPERS: NEW
 
   @spec new_position(Box.box_group()) :: [Box.t()]
-  defp new_position(:not_entered) do
+  defp new_position(:notentered) do
     [%Box{
-      id: :not_entered,
+      id: :notentered,
       moves: [
-        {:not_entered, 1},
+        {:notentered, 1},
         {{:nose, :preapproach, :low}, 0},
         {{:left, :preapproach, :low}, 0},
         {{:right, :preapproach, :low}, 0},
