@@ -3,14 +3,14 @@ defmodule Chukinas.Skies.Game.TacticalPoints do
 
   defstruct [
     :starting,
-    # TODO rename spent this phase
-    :spent,
+    # TODO rename spent_this_phase this phase
+    :spent_this_phase,
     :spent_committed,
   ]
 
   @type t :: %__MODULE__{
     starting: integer(),
-    spent: integer(),
+    spent_this_phase: integer(),
     spent_committed: integer(),
   }
 
@@ -18,7 +18,7 @@ defmodule Chukinas.Skies.Game.TacticalPoints do
     %__MODULE__{
       starting: 1,
       # TODO vm has to add these two up
-      spent: 0,
+      spent_this_phase: 0,
       spent_committed: 0
     }
   end
@@ -27,16 +27,16 @@ defmodule Chukinas.Skies.Game.TacticalPoints do
   # @spec calculate(t(), Squadron.t(), [Boxes.t()]) :: t()
   # TODO rename calculate move costs
   def calculate(%__MODULE__{} = tp, %Squadron{} = squadron, boxes) do
-    spent = squadron
+    spent_this_phase = squadron
     |> Squadron.get_unique_moves()
     |> Enum.map(&Boxes.get_move_cost(boxes, &1))
     |> Enum.sum()
-    %{tp | spent: spent}
+    %{tp | spent_this_phase: spent_this_phase}
   end
 
   # TODO spec
   def commit_spent_point(%__MODULE__{} = tp) do
-    %{tp | spent: 0, spent_committed: tp.spent + tp.spent_committed}
+    %{tp | spent_this_phase: 0, spent_committed: tp.spent_this_phase + tp.spent_committed}
   end
 
 end

@@ -19,7 +19,7 @@ defmodule Chukinas.Skies.ViewModel.TacticalPoints do
   def build(tp) do
     %__MODULE__{
       starting: tp.starting,
-      avail: tp.starting - tp.spent - tp.spent_committed,
+      avail: tp.starting - tp.spent_this_phase - tp.spent_committed,
     }
   end
 
