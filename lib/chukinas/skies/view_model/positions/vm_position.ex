@@ -70,10 +70,11 @@ defmodule Chukinas.Skies.ViewModel.GroupPawn do
   # *** *******************************
   # *** BUILD
 
+  # TODO check success typing
   @spec build(G_FighterGroup.t()) :: t()
   def build(group) do
     %__MODULE__{
-      id: group.id,
+      id: "pawn_group_#{group.id}",
       fighter_count: Enum.count(group.fighter_ids),
     }
   end

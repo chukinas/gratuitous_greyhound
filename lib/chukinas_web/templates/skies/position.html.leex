@@ -1,11 +1,16 @@
 <h3><%= @position |> Atom.to_string() |> String.capitalize()%> Position</h3>
 <%= for box <- @boxes do %>
 <button
+  class="<%= button_styling() %>"
   id="<%= box.id %>"
   phx-click="select_box"
   phx-value-id="<%= box.id %>"
 >
-  <%= box.position %>, <%= box.altitude %>
+
+  <%= box.box_type  %>, <%= box.altitude %>
+  <%= for group <- box.pawns do %>
+  <p id="<%= group.id %>" >(<%= group.fighter_count %>)</p>
+  <% end %>
 </button>
 <% end %>
 
