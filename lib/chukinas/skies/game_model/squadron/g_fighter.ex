@@ -1,5 +1,5 @@
 defmodule Chukinas.Skies.Game.Fighter do
-  alias Chukinas.Skies.Game.{Hit, Location}
+  alias Chukinas.Skies.Game.{Box, Hit}
   alias Chukinas.Skies.Game.IdAndState
 
   # *** *******************************
@@ -24,9 +24,11 @@ defmodule Chukinas.Skies.Game.Fighter do
     airframe: airframe(),
     pilot_name: String.t(),
     hits: [Hit.t()],
-    box_start: Location.t(),
-    box_end: Location.t(),
-    end_turn_location: Location.t(),
+    box_start: Box.id(),
+    # TODO rename box move?
+    box_end: nil | Box.id(),
+    # TODO rename box end?
+    end_turn_location: nil | Box.id(),
     state: IdAndState.state(),
   }
 
@@ -72,14 +74,15 @@ defmodule Chukinas.Skies.Game.Fighter do
     end}
   end
 
+  @spec do_not_move(t()) :: t()
+  def do_not_move(%__MODULE__{box_start: box} = f) do
+    move(f, box)
+  end
+
   @spec move(t(), Box.id) :: t()
   def move(%__MODULE__{} = f, box_id) do
     %{f | box_end: box_id}
     |> complete()
-  end
-
-  def do_not_move(%__MODULE__{box_start: box} = f) do
-    move(f, box)
   end
 
   @spec get_move(t()) :: Box.fighter_move()

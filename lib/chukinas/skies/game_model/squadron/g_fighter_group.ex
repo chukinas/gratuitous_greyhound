@@ -1,6 +1,6 @@
 defmodule Chukinas.Skies.Game.FighterGroup do
-  alias Chukinas.Skies.Game.{Fighter}
-  alias Chukinas.Skies.Game.IdAndState
+  
+  alias Chukinas.Skies.Game.{Fighter, IdAndState, Location}
 
   # *** *******************************
   # *** TYPES

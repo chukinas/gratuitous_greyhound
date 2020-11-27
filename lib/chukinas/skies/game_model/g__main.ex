@@ -5,18 +5,19 @@ defmodule Chukinas.Skies.Game do
     Boxes,
     Elements,
     Fighter,
-    Positions,
     Spaces,
     Squadron,
     TacticalPoints,
-    TurnManager,
+    Turn,
+    Phase,
   }
 
   defstruct [
     :spaces,
     :elements,
     :squadron,
-    :turn_manager,
+    :turn,
+    :phase,
     :tactical_points,
     :boxes,
   ]
@@ -25,10 +26,16 @@ defmodule Chukinas.Skies.Game do
     spaces: any(),
     elements: any(),
     squadron: any(),
-    turn_manager: TurnManager.t(),
+    turn: Turn.t(),
+    phase: Phase.t(),
     tactical_points: TacticalPoints.t(),
-    boxes: Positions.t(),
+    boxes: Boxes.t(),
   }
+
+  @type token :: {atom(), t()}
+
+  # *** *******************************
+  # *** NEW
 
   @spec new(any()) :: t()
   def new(map_id) do
@@ -36,7 +43,8 @@ defmodule Chukinas.Skies.Game do
       spaces: Spaces.new(map_id),
       elements: Elements.new(map_id),
       squadron: Squadron.new(),
-      turn_manager: TurnManager.new(),
+      turn: Turn.new(),
+      phase: Phase.new(),
       tactical_points: TacticalPoints.new(),
       boxes: Boxes.new(),
     }
@@ -88,11 +96,11 @@ defmodule Chukinas.Skies.Game do
         {:stop, game}
       Squadron.all_fighters?(game.squadron, &Fighter.delayed_entry?/1) ->
         game
-        |> Map.update!(:turn_manager, &TurnManager.next_phase/1)
+        |> Map.update!(:phase, &(&1.next.()))
         |> build_token(:all_delayed_entry)
       true ->
         game
-        |> Map.update!(:turn_manager, &TurnManager.next_phase/1)
+        |> Map.update!(:phase, &(&1.next.()))
         |> Map.update!(:tactical_points, &TacticalPoints.commit_spent_point/1)
         |> build_token(:cont)
     end
@@ -101,15 +109,15 @@ defmodule Chukinas.Skies.Game do
   defp maybe_next_turn({:stop, _} = token), do: token
   defp maybe_next_turn({:all_delayed_entry, game}) do
     game
-    |> Map.update!(:turn_manager, &TurnManager.next_turn/1)
+    |> Map.update!(:turn, &Turn.next/1)
     |> build_token(:stop)
   end
   defp maybe_next_turn({:cont, game}) do
     # TODO abstract this out:
-    if TurnManager.current_phase?(game.turn_manager, :move) do
+    if game.phase.is?.(:move) do
       game
       # TODO make sure this forces the phase to Move
-      |> Map.update!(:turn_manager, &TurnManager.next_turn/1)
+      |> Map.update!(:turn, &Turn.next/1)
       # TODO unify language
       |> Map.update!(:squadron, &Squadron.start_new_turn/1)
       |> build_token(:cont)
@@ -118,10 +126,11 @@ defmodule Chukinas.Skies.Game do
     end
   end
 
+  @spec maybe_end_game(token()) :: token()
   defp maybe_end_game({:stop, _} = token), do: token
   defp maybe_end_game({:cont, game}) do
     cond do
-      TurnManager.end_game?(game.turn_manager) ->
+      game.turn.end_game? ->
         # FIX implement
         {:stop, game}
       true ->
@@ -129,6 +138,7 @@ defmodule Chukinas.Skies.Game do
     end
   end
 
+  @spec maybe_skip_phase(token()) :: token()
   defp maybe_skip_phase({:stop, _} = token), do: token
   defp maybe_skip_phase({:cont, game}) do
     cond do
@@ -138,15 +148,19 @@ defmodule Chukinas.Skies.Game do
     end
   end
 
+  @spec build_token(t(), atom()) :: token()
   defp build_token(game, response), do: {response, game}
 
+  @spec move?(t()) :: boolean()
   defp move?(game) do
-    TurnManager.current_phase?(game.turn_manager, :move) &&
+    game.phase.is?.(:move) &&
       Enum.any?(game.squadron.fighters, &Fighter.available_this_turn?/1)
   end
 
+  @spec attack?(t()) :: boolean()
   defp attack?(game) do
-    TurnManager.current_phase?(game.turn_manager, :approach) &&
+    game.phase.is?.(:approach) &&
+    # TODO too low level
       Enum.any?(game.squadron.fighters, fn f ->
         Box.approach?(f.box_end)
       end)

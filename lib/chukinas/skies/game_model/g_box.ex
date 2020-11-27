@@ -22,7 +22,7 @@ defmodule Chukinas.Skies.Game.Box do
   @typep id_notentered :: :notentered
   @typep id_dogfight :: {:dogfight, integer()}
   @typep id_position :: {position(), box_type(), altitude()}
-  @typep id :: id_notentered() | id_dogfight() | id_position()
+  @type id :: id_notentered() | id_dogfight() | id_position()
   @typep cost :: integer()
   @typep move :: {id(), cost()}
   @type fighter_move :: {id(), id()}

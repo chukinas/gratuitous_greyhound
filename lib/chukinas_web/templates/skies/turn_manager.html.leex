@@ -7,14 +7,14 @@
       <%= for phase <- @phases do %>
       <li
         class="<%= phase_class(phase.status) %> p-2 px-3"
-        <%= current_phase_id(phase) %>
+        <%= phase.maybe_current_phase_id %>
         > <%= phase.name %>
         <%= if !Enum.empty?(phase.subphases) do %>
         <ul>
           <%= for subphase <- phase.subphases do %>
           <li
             class="<%= phase_class(subphase.status) %> italic text-xs"
-            <%=current_phase_id(phase) %>
+            <%= subphase.maybe_current_phase_id %>            
             > <%= subphase.name %>
           </li>
           <% end %>
