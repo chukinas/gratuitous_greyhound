@@ -82,12 +82,7 @@ defmodule Chukinas.Skies.Game.Phase do
   # *** *******************************
   # *** API
 
-  @spec all() :: nested_phases()
-  def all() do
-    @phases
-    |> Enum.map(fn {phase_name, _} -> phase_name end)
-    |> Enum.map(&build/1)
-  end
+  def all(), do: @phases
 
   # *** *******************************
   # *** HELPERS

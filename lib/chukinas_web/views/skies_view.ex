@@ -1,6 +1,6 @@
 defmodule ChukinasWeb.SkiesView do
   use ChukinasWeb, :view
-  # alias Chukinas.Skies.
+  alias Chukinas.Skies.ViewModel.Phase
 
   def build_component_renderer(vm) do
     fn view_model_key -> render_component(vm, view_model_key) end
@@ -29,9 +29,19 @@ defmodule ChukinasWeb.SkiesView do
   # *** *******************************
   # *** TURN MANAGER
 
-  defp phase_class(:in_progress), do: "bg-indigo-100  font-bold"
-  defp phase_class(:sub_in_progress), do: "bg-indigo-100 font-normal"
-  defp phase_class(:other), do: "font-normal"
+  defp phase_class(%Phase{} = phase) do
+    case {phase.active?, phase.active_child?} do
+      {true, _} -> "bg-indigo-100  font-bold"
+      {_, true} -> "bg-indigo-100 font-normal"
+      _ -> "font-normal"
+    end
+  end
+  defp subphase_class(%Phase{} = subphase) do
+    case subphase.active? do
+      true -> "bg-indigo-100  font-bold"
+      false -> "font-normal"
+    end
+  end
 
   # *** *******************************
   # *** COMPONENTS

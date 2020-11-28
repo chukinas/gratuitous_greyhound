@@ -5,15 +5,19 @@
   <div class="w-32 bg-indigo-200 rounded-xl border border-indigo-900">
     <ul class="divide-y divide-indigo-300 text-center">
       <%= for phase <- @phases do %>
+
+      <!-- *** MAIN PHASE -->
       <li
-        class="<%= phase_class(phase.status) %> p-2 px-3"
+        class="<%= phase_class(phase) %> p-2 px-3"
         <%= phase.maybe_current_phase_id %>
         > <%= phase.name %>
-        <%= if !Enum.empty?(phase.subphases) do %>
+        <%= if phase.has_children? do %>
         <ul>
           <%= for subphase <- phase.subphases do %>
+
+          <!-- *** SUB PHASE -->
           <li
-            class="<%= phase_class(subphase.status) %> italic text-xs"
+            class="<%= subphase_class(subphase) %> italic text-xs"
             <%= subphase.maybe_current_phase_id %>            
             > <%= subphase.name %>
           </li>

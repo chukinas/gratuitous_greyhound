@@ -11,6 +11,7 @@ defmodule Chukinas.Skies.ViewModel.Phase do
     :subphases,
     :active?,
     :active_child?,
+    :has_children?,
   ]
 
   @type phase :: %{
@@ -19,6 +20,7 @@ defmodule Chukinas.Skies.ViewModel.Phase do
     subphases: [phase()],
     active?: boolean(),
     active_child?: boolean(),
+    has_children?: boolean(),
   }
 
   @type t :: [phase]
@@ -27,10 +29,11 @@ defmodule Chukinas.Skies.ViewModel.Phase do
   # *** BUILD
 
   @spec build(G_Phase.t()) :: t()
-  def build(phase) do
+  def build(%G_Phase{} = phase) do
     G_Phase.all()
     |> Enum.map(&replace_nil_parent/1)
     |> Enum.chunk_by(fn {_, parent} -> parent end)
+    |> IO.inspect(label: "chunks")
     |> Enum.map(&build_phase(&1, phase))
   end
 
@@ -40,27 +43,28 @@ defmodule Chukinas.Skies.ViewModel.Phase do
   defp replace_nil_parent({this, parent}) when is_nil(parent), do: {this, this}
   defp replace_nil_parent({this, parent}), do: {this, parent}
 
-  defp build_phase([{phase_name, _}], active_phase_name) do
-    active? = phase_name == active_phase_name
+  defp build_phase({_, _} = phase, g_phase), do: build_phase([phase], g_phase)
+  defp build_phase([{phase_name, _}], g_phase) do
+    active? = g_phase.is?.(phase_name)
     %__MODULE__{
       name: to_display_string(phase_name),
       maybe_current_phase_id: if active? do "id=\"current_phase\"" end,
       subphases: [],
       active?: active?,
-      active_child?: false
+      active_child?: false,
+      has_children?: false,
     }
   end
-  defp build_phase([{_, parent} | _] = phases, active_phase_name) do
+  defp build_phase([{_, parent} | _] = phases, g_phase) do
     children = phases
-    |> Enum.map(&build_phase(&1, active_phase_name))
-    active_child? = children
-    |> Enum.any?(fn c -> c.active end)
+    |> Enum.map(&build_phase(&1, g_phase))
     %__MODULE__{
       name: to_display_string(parent),
       maybe_current_phase_id: nil,
       subphases: children,
       active?: false,
-      active_child?: active_child?,
+      active_child?: g_phase.parent == parent,
+      has_children?: true,
     }
   end
 
