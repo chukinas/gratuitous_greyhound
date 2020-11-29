@@ -4,15 +4,15 @@ defmodule Chukinas.Skies.Game.Turn do
   # *** TYPES
 
   defstruct [
-    :current,
-    :max_turn,
+    :number,
+    :max,
     :end_game?,
   ]
 
   # TODO typedstruct
   @type t :: %__MODULE__{
-    current: integer(),
-    max_turn: integer(),
+    number: integer(),
+    max: integer(),
     end_game?: boolean(),
   }
 
@@ -25,17 +25,17 @@ defmodule Chukinas.Skies.Game.Turn do
   # *** *******************************
   # *** API
 
-  def next(%__MODULE__{} = tm), do: build(tm.turn + 1, tm.max_turn)
+  def next(%__MODULE__{} = turn), do: build(turn.number + 1, turn.max)
 
   # *** *******************************
   # *** HELPERS
 
   @spec build(integer(), integer()) :: t()
-  defp build(turn, max_turn) do
+  defp build(turn, max) do
     %__MODULE__{
-      current: turn,
-      max_turn: max_turn,
-      end_game?: turn > max_turn,
+      number: turn,
+      max: max,
+      end_game?: turn > max,
     }
   end
 

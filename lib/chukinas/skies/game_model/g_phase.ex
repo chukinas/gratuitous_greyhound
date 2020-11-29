@@ -28,7 +28,6 @@ defmodule Chukinas.Skies.Game.Phase do
   defstruct [
     :name,
     :parent,
-    :next,
     :is?,
   ]
 
@@ -58,7 +57,6 @@ defmodule Chukinas.Skies.Game.Phase do
   @type t :: %__MODULE__{
     name: phase_name(),
     parent: phase_name() | nil,
-    next: (-> t()),
     is?: (phase_name() -> boolean()),
   }
 
@@ -84,6 +82,14 @@ defmodule Chukinas.Skies.Game.Phase do
 
   def all(), do: @phases
 
+  @spec next(t()) :: t()
+  def next(phase) do
+    IO.inspect(phase, label: "Phase.next/1")
+    phase.name
+    |> get_next_phase_name()
+    |> build()
+  end
+
   # *** *******************************
   # *** HELPERS
 
@@ -92,7 +98,6 @@ defmodule Chukinas.Skies.Game.Phase do
     %__MODULE__{
       name: phase,
       parent: get_parent(phase),
-      next: fn -> phase |> get_next_phase_name() |> build() end,
       is?: fn p -> p == phase end,
     }
   end
@@ -111,7 +116,7 @@ defmodule Chukinas.Skies.Game.Phase do
   @spec get_phase_at(integer()) :: phase_name()
   defp get_phase_at(index) do
     case Enum.fetch(@phases, index) do
-      {:ok, next_phase} -> next_phase
+      {:ok, {next_phase, _}} -> next_phase
       :error -> @first_phase
     end
   end

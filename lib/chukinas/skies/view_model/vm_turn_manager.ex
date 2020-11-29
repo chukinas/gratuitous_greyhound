@@ -32,8 +32,8 @@ defmodule Chukinas.Skies.ViewModel.TurnManager do
   @spec build(G_Turn.t(), G_Phase.t()) :: t()
   def build(turn, phase) do
     %{
-      turn: turn.current,
-      max_turn: turn.max_turn,
+      turn: turn.number,
+      max_turn: turn.max,
       phases: Phase.build(phase),
     }
   end
