@@ -95,7 +95,6 @@ defmodule Chukinas.Skies.Game do
       not Squadron.done?(game.squadron) ->
         {:stop, game}
       Squadron.all_fighters?(game.squadron, &Fighter.delayed_entry?/1) ->
-        IO.inspect(game.phase, label: "maybe next phase")
         game
         |> Map.update!(:phase, &Phase.next/1)
         |> build_token(:all_delayed_entry)

@@ -84,7 +84,6 @@ defmodule Chukinas.Skies.Game.Phase do
 
   @spec next(t()) :: t()
   def next(phase) do
-    IO.inspect(phase, label: "Phase.next/1")
     phase.name
     |> get_next_phase_name()
     |> build()
@@ -123,9 +122,8 @@ defmodule Chukinas.Skies.Game.Phase do
 
   @spec get_parent(phase_name()) :: nil | phase_name()
   defp get_parent(phase_name) do
-    IO.inspect(phase_name, label: "phase_name")
     {_, parent} = @phases |> Enum.find(&matching_spec?(&1, phase_name))
-    parent |> IO.inspect(label: "parent")
+    parent
   end
 
   @spec matching_spec?(spec_phase(), phase_name()) :: boolean()
