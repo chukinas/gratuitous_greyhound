@@ -92,17 +92,20 @@ defmodule ChukinasWeb.SkiesLiveTest do
     view
 
   end
-  def move(view, box_id) do
+  defp move(view, box_id) do
     view
     |> element("#" <> Box.id_to_string(box_id))
     |> render_click()
     view
   end
-  def assert_group_in_box(view, group_id, box_id) do
+  defp assert_group_in_box(view, group_id, box_id) do
     group_selector = "#pawn_group_" <> Integer.to_string(group_id)
     box_selector = "#" <> Box.id_to_string(box_id)
     assert has_element?(view, "#{box_selector} #{group_selector}")
     view
+  end
+  defp attack_bomber(view, x, y) do
+    view |> element("#bomber_#{x}_#{y}") |> render_click(); view
   end
 
   test "(un)select", %{conn: conn} do
@@ -155,8 +158,24 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> assert_phase("Approach")
   end
 
+  test "fighters on approach", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/skies")
+    view
+    |> move({:nose, :preapproach, :low})
+    |> end_phase()
+    |> select_group(1)
+    |> move({:nose, :approach, :low})
+    |> end_phase()
+    |> assert_phase("Approach")
+    |> select_group(1)
+    |> attack_bomber(1,1)
+    # TODO fighters should be grouped by their approach box
+    # TODO fighters not in approach box should be disabled
+    # TODO select mode
+    # TODO select maneuver (climb/dive, straight or roll left/right)
+  end
+
   # TODO future tests/tasks:
-  # delay entry shouldn't be anything special. It should be a id like any other
   # boxes should be disabled if not avail
 
 end

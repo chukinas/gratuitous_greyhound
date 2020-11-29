@@ -2,9 +2,6 @@ require IEx
 
 defmodule ChukinasWeb.InsiderLive do
   use ChukinasWeb, :live_view
-  alias Chukinas.User
-  # remove
-  alias Chukinas.Chat.Users
   alias Chukinas.Chat.Room
   alias Chukinas.Insider.Boundary.API
 
