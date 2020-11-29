@@ -168,7 +168,7 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> end_phase()
     |> assert_phase("Approach")
     |> select_group(1)
-    |> attack_bomber(1,1)
+    |> attack_bomber(2, 2)
     # TODO fighters should be grouped by their approach box
     # TODO fighters not in approach box should be disabled
     # TODO select mode
@@ -179,3 +179,8 @@ defmodule ChukinasWeb.SkiesLiveTest do
   # boxes should be disabled if not avail
 
 end
+
+# <!-- font Germania One? Pirata One - UnifrakturCook UnifrakturMaguntia Vampiro One NewRocker stencil... Rakkas Ceviche One
+# Grenze Gotisc
+# ...typewriterh
+# -->

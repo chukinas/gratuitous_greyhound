@@ -1,8 +1,4 @@
 <% component = build_component_renderer(@vm) %>
-<!-- font Germania One? Pirata One - UnifrakturCook UnifrakturMaguntia Vampiro One NewRocker stencil... Rakkas Ceviche One 
-Grenze Gotisc
-...typewriterh
--->
 
 <!-- *** HEADER -->
 <h1 class="text-orange-500 text-5xl font-bold text-center">
@@ -21,7 +17,6 @@ Grenze Gotisc
 <!-- *** TURN MANAGER -->
 <%= component.(:turn_manager) %>
 
-<%= if false do %>
 <!-- *** ESCORT STATIONS -->
 <%= component.(:escort_stations) %>
 
@@ -37,16 +32,9 @@ Grenze Gotisc
   >
     <%= space.lethal_level %>
   </div>
-  <% end %> <%= for {x, y} <- @vm.bombers do %>
-  <div
-    style="
-      grid-area: <%= y * 2 %> / <%= x * 2 %>;
-      background-color: black;
-      color: white;
-    "
-  >
-    ↖
-  </div>
+  <% end %>
+  <!-- TODO one-line this? -->
+  <%= for bomber <- @vm.bombers do %>
+  <%= build(:bomber, bomber) %>
   <% end %>
 </div>
-<% end %>
