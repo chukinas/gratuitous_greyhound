@@ -1,4 +1,5 @@
 defmodule Chukinas.Skies.ViewModel do
+
   alias Chukinas.Skies.Game
   alias Chukinas.Skies.ViewModel.{
     Bombers,
@@ -28,7 +29,7 @@ defmodule Chukinas.Skies.ViewModel do
       squadron: Squadron.build(game.squadron, vm_tp),
       spaces: Spaces.build(game.spaces),
       bombers: Bombers.build(game.elements),
-      turn_manager: TurnManager.build(game.turn_manager),
+      turn_manager: TurnManager.build(game.turn, game.phase),
       escort_stations: %{},
       boxes: Boxes.build(game.boxes, game.squadron.groups),
     }

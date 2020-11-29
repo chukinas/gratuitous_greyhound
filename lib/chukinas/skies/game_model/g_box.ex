@@ -13,17 +13,19 @@ defmodule Chukinas.Skies.Game.Box do
   ]
 
   @type position :: :nose | :tail | :left | :right
-  @type box_group :: position | :not_entered | :dogfight
+  # NOTE: if any of these have an underscore, it'll cause errors in id_from_string
+  @type box_group :: position | :notentered | :dogfight
   @typep mode :: :determined | :evasive
   @typep box_type :: {:return, mode()} | :preapproach | :approach
   # FIX this is more general than box.
   @typep altitude :: :high | :level | :low
-  @typep id_not_entered :: :not_entered
+  @typep id_notentered :: :notentered
   @typep id_dogfight :: {:dogfight, integer()}
   @typep id_position :: {position(), box_type(), altitude()}
-  @typep id :: id_not_entered() | id_dogfight() | id_position()
+  @type id :: id_notentered() | id_dogfight() | id_position()
   @typep cost :: integer()
   @typep move :: {id(), cost()}
+  @type fighter_move :: {id(), id()}
   @type t :: %__MODULE__{
     id: id(),
     moves: [move()],
@@ -53,6 +55,21 @@ defmodule Chukinas.Skies.Game.Box do
     |> normalize_location_tuple()
   end
 
+  @spec get_move_cost(t(), id()) :: integer()
+  def get_move_cost(_box, nil), do: 0
+  def get_move_cost(box, end_box_id) do
+    {_, cost} = find_move(box.moves, end_box_id)
+    cost
+  end
+
+  @spec to_friendly_string(id()) :: String.t()
+  def to_friendly_string(box_id) do
+    id_to_string(box_id)
+  end
+
+  def approach?({_, :approach, _}), do: true
+  def approach?(_), do: false
+
   # *** *******************************
   # *** HELPERS
 
@@ -72,4 +89,15 @@ defmodule Chukinas.Skies.Game.Box do
     {pos, {:return, return_type}, alt}
   end
   defp normalize_location_tuple(id), do: id
+
+  defp find_move(moves, box_id) do
+    case Enum.find(moves, &matching_move?(&1, box_id)) do
+      nil ->
+        raise "no matching move"
+      move -> move
+    end
+  end
+
+  defp matching_move?({id, _}, box_id), do: id == box_id
+
 end

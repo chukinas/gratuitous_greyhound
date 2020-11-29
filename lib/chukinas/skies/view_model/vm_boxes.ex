@@ -12,7 +12,7 @@ defmodule Chukinas.Skies.ViewModel.Boxes do
     :left,
     :right,
     :tail,
-    :not_entered,
+    :notentered,
   ]
 
   @type t :: %__MODULE__{
@@ -20,7 +20,7 @@ defmodule Chukinas.Skies.ViewModel.Boxes do
     left: [VM_Box.t()],
     right: [VM_Box.t()],
     tail: [VM_Box.t()],
-    not_entered: VM_Box.t(),
+    notentered: VM_Box.t(),
   }
 
 
@@ -35,7 +35,7 @@ defmodule Chukinas.Skies.ViewModel.Boxes do
       left: filter_boxes(boxes, :left),
       right: filter_boxes(boxes, :right),
       tail: filter_boxes(boxes, :tail),
-      not_entered: find_box(boxes, :not_entered),
+      notentered: find_box(boxes, :notentered),
     }
   end
 
@@ -48,8 +48,8 @@ defmodule Chukinas.Skies.ViewModel.Boxes do
   end
 
   @spec find_box([VM_Box.t()], G_Box.box_group()) :: VM_Box.t()
-  defp find_box(boxes, :not_entered) do
-    Enum.find(boxes, &in_box_group?(&1, :not_entered))
+  defp find_box(boxes, :notentered) do
+    Enum.find(boxes, &in_box_group?(&1, :notentered))
   end
 
   @spec in_box_group?(VM_Box.t(), G_Box.box_group()) :: boolean()
