@@ -1,5 +1,6 @@
 defmodule Chukinas.Skies.ViewModel.Box do
 
+  alias Chukinas.Skies.Game.FighterGroup, as: G_FighterGroup
   alias Chukinas.Skies.Game.Box, as: G_Box
   alias Chukinas.Skies.ViewModel.GroupPawn
 

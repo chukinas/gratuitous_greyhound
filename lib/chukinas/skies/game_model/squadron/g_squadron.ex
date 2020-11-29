@@ -92,9 +92,9 @@ defmodule Chukinas.Skies.Game.Squadron do
   def all_fighters?(squadron, fun), do: squadron.fighters |> Enum.all?(fun)
   def done?(squadron), do: all_fighters?(squadron, &IdAndState.done?/1)
 
-  def start_new_turn(%__MODULE__{} = s) do
+  def next_turn(%__MODULE__{} = s) do
     s.fighters
-    |> Enum.map(&Fighter.start_new_turn/1)
+    |> Enum.map(&Fighter.next_turn/1)
     |> rebuild()
   end
 

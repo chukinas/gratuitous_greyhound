@@ -32,8 +32,8 @@ defmodule ChukinasWeb.SkiesLiveTest do
   end
 
   defp assert_phase(view, phase_name, assert? \\ true) do
-    has_element = element(view, "#current_phase") |> render() =~ phase_name
-    assert has_element |> flip_bool(assert?)
+    assert has_element?(view, "#current_phase", phase_name)
+    |> flip_bool(assert?)
     view
   end
   defp flip_bool(orig, keep) do
@@ -144,9 +144,15 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> assert_tactical_points(1)
     |> end_phase()
     |> assert_turn(2)
+    |> assert_phase("Move")
     |> select_group(1)
     |> move({:nose, :preapproach, :high})
     |> assert_tactical_points(0)
+    |> end_phase()
+    |> select_group(1)
+    |> move({:nose, :approach, :high})
+    |> end_phase()
+    |> assert_phase("Approach")
   end
 
   # TODO future tests/tasks:

@@ -53,6 +53,7 @@ defmodule Chukinas.MixProject do
       {:gen_state_machine, "~> 2.0"},
       # https://github.com/jeremyjh/dialyxir/wiki/Phoenix-Dialyxir-Quickstart
       {:dialyxir, "~> 0.5.0", only: [:dev], runtime: false},
+      {:typed_struct, "~> 0.2.1"},
     ]
   end
 

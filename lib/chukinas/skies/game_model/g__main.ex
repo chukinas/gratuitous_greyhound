@@ -5,18 +5,19 @@ defmodule Chukinas.Skies.Game do
     Boxes,
     Elements,
     Fighter,
-    Positions,
     Spaces,
     Squadron,
     TacticalPoints,
-    TurnManager,
+    Turn,
+    Phase,
   }
 
   defstruct [
     :spaces,
     :elements,
     :squadron,
-    :turn_manager,
+    :turn,
+    :phase,
     :tactical_points,
     :boxes,
   ]
@@ -25,10 +26,16 @@ defmodule Chukinas.Skies.Game do
     spaces: any(),
     elements: any(),
     squadron: any(),
-    turn_manager: TurnManager.t(),
+    turn: Turn.t(),
+    phase: Phase.t(),
     tactical_points: TacticalPoints.t(),
-    boxes: Positions.t(),
+    boxes: Boxes.t(),
   }
+
+  @type token :: {atom(), t()}
+
+  # *** *******************************
+  # *** NEW
 
   @spec new(any()) :: t()
   def new(map_id) do
@@ -36,7 +43,8 @@ defmodule Chukinas.Skies.Game do
       spaces: Spaces.new(map_id),
       elements: Elements.new(map_id),
       squadron: Squadron.new(),
-      turn_manager: TurnManager.new(),
+      turn: Turn.new(),
+      phase: Phase.new(),
       tactical_points: TacticalPoints.new(),
       boxes: Boxes.new(),
     }
@@ -70,20 +78,85 @@ defmodule Chukinas.Skies.Game do
   end
 
   @spec end_phase(t()) :: t()
-  def end_phase(%__MODULE__{squadron: s} = game) do
+  def end_phase(%__MODULE__{} = game) do
+    {_, game} = {:cont, game}
+    |> maybe_next_phase()
+    |> maybe_next_turn()
+    |> maybe_end_game()
+    |> maybe_skip_phase()
+    game
+  end
+
+  # *** *******************************
+  # *** HELPERS
+
+  defp maybe_next_phase({:cont, game}) do
     cond do
-      not Squadron.done?(s) -> game
+      not Squadron.done?(game.squadron) ->
+        {:stop, game}
+      Squadron.all_fighters?(game.squadron, &Fighter.delayed_entry?/1) ->
+        game
+        |> Map.update!(:phase, &Phase.next/1)
+        |> build_token(:all_delayed_entry)
       true ->
         game
-        |> Map.update!(:turn_manager, &TurnManager.next_turn/1)
+        |> Map.update!(:phase, &Phase.next/1)
         |> Map.update!(:tactical_points, &TacticalPoints.commit_spent_point/1)
-        |> Map.update!(:squadron, &Squadron.start_new_turn/1)
-      # not TurnManager.current_phase?(tm, :move) ->
-      #   Map.update!(game, :turn_manager, &TurnManager.next_phase/1)
-      # Squadron.all_fighters?(s, &Fighter.delayed_entry?/1) ->
-      #   Map.update!(game, :turn_manager, &TurnManager.next_turn/1)
-      # true ->  Map.update!(game, :turn_manager, &TurnManager.next_phase/1)
+        |> build_token(:cont)
     end
   end
+
+  defp maybe_next_turn({:stop, _} = token), do: token
+  defp maybe_next_turn({:all_delayed_entry, game}) do
+    game
+    |> Map.update!(:turn, &Turn.next/1)
+    |> build_token(:stop)
+  end
+  defp maybe_next_turn({:cont, game}) do
+    if game.phase.is?.(:move) do
+      game
+      |> Map.update!(:turn, &Turn.next/1)
+      |> Map.update!(:squadron, &Squadron.next_turn/1)
+      |> build_token(:cont)
+    else
+      {:cont, game}
+    end
+  end
+
+  @spec maybe_end_game(token()) :: token()
+  defp maybe_end_game({:stop, _} = token), do: token
+  defp maybe_end_game({:cont, game}) do
+    cond do
+      game.turn.end_game? ->
+        # FIX implement
+        {:stop, game}
+      true ->
+        {:cont, game}
+    end
+  end
+
+  @spec maybe_skip_phase(token()) :: token()
+  defp maybe_skip_phase({:stop, _} = token), do: token
+  defp maybe_skip_phase({:cont, game}) do
+    if play_phase?(game) do
+      {:cont, game}
+    else
+      {:cont, end_phase(game)}
+    end
+  end
+
+  @spec build_token(t(), atom()) :: token()
+  defp build_token(game, response), do: {response, game}
+
+  @spec play_phase?(t()) :: boolean()
+  def play_phase?(%__MODULE__{phase: %{name: :move}} = game) do
+    Enum.any?(game.squadron.fighters, &Fighter.available_this_turn?/1)
+  end
+  def play_phase?(%__MODULE__{phase: %{name: :approach}} = game) do
+    Enum.any?(game.squadron.fighters, fn f ->
+      Box.approach?(f.box_move)
+    end)
+  end
+  def play_phase?(_), do: false
 
 end
