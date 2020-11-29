@@ -1,36 +1,25 @@
 defmodule Chukinas.Skies.Game.Fighter do
+
   alias Chukinas.Skies.Game.{Box, Hit}
   alias Chukinas.Skies.Game.IdAndState
 
   # *** *******************************
   # *** TYPES
 
-  defstruct [
-    :id,
-    :airframe,
-    :pilot_name,
-    :hits,
-    :box_start,
-    :box_move,
-    :end_turn_location,
-    :state,
-  ]
+  use TypedStruct
 
   @type airframe :: :bf109 | :bf110 | :fw190
 
-
-  @type t :: %__MODULE__{
-    id: integer(),
-    airframe: airframe(),
-    pilot_name: String.t(),
-    hits: [Hit.t()],
-    box_start: Box.id(),
-    # TODO rename box move?
-    box_move: nil | Box.id(),
-    # TODO rename box end?
-    end_turn_location: nil | Box.id(),
-    state: IdAndState.state(),
-  }
+  typedstruct enforce: true do
+    field :id, integer(), enforce: true
+    field :airframe, airframe(), default: :bf109
+    field :pilot_name, String.t(), default: ""
+    field :hits, [Hit.t()], default: []
+    field :box_start, Box.id(), default: :notentered
+    field :box_move, Box.id() | nil, default: nil
+    field :box_end, Box.id() | nil, default: nil
+    field :state, IdAndState.state(), default: :selected
+  end
 
   # *** *******************************
   # *** NEW
@@ -40,13 +29,7 @@ defmodule Chukinas.Skies.Game.Fighter do
     names = ~w(Bill Ted RedBaron John Steve TheRock TheHulk)
     %__MODULE__{
       id: id,
-      airframe: :bf109,
       pilot_name: Enum.at(names, id, "no name"),
-      hits: [],
-      box_start: :notentered,
-      box_move: nil,
-      end_turn_location: nil,
-      state: :selected,
     }
   end
 
