@@ -19,7 +19,7 @@
 
           <li
             class="<%= subphase_class(subphase) %> italic text-xs"
-            <%= if phase.active?, do: "id=current_phase" %>          
+            <%= if subphase.active?, do: "id=current_phase" %>          
             > <%= subphase.name %>
           </li>
           <% end %>

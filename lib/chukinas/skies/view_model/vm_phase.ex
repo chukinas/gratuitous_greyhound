@@ -28,12 +28,17 @@ defmodule Chukinas.Skies.ViewModel.Phase do
   # *** *******************************
   # *** BUILD
 
+  # TODO maybe phase id should be deleted
   @spec build(G_Phase.t()) :: t()
   def build(%G_Phase{} = phase) do
-    G_Phase.all()
+    result = G_Phase.all()
     |> Enum.map(&replace_nil_parent/1)
     |> Enum.chunk_by(fn {_, parent} -> parent end)
     |> Enum.map(&build_phase(&1, phase))
+    if phase.name == :approach do
+      IO.inspect(result, label: "approach is active?")
+    end
+    result
   end
 
   # *** *******************************

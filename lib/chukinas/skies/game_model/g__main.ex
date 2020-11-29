@@ -141,29 +141,28 @@ defmodule Chukinas.Skies.Game do
   @spec maybe_skip_phase(token()) :: token()
   defp maybe_skip_phase({:stop, _} = token), do: token
   defp maybe_skip_phase({:cont, game}) do
-    cond do
-      move?(game) -> {:cont, game}
-      attack?(game) -> {:cont, game}
-      true -> {:cont, end_phase(game)}
+    IO.inspect(game.phase.name, label: "maybe skip this phase?")
+    if play_phase?(game) do
+      {:cont, game}
+    else
+      {:cont, end_phase(game)}
     end
+    # IO.inspect(game.phase.name, label: "result")
+    # result
   end
 
   @spec build_token(t(), atom()) :: token()
   defp build_token(game, response), do: {response, game}
 
-  @spec move?(t()) :: boolean()
-  defp move?(game) do
-    game.phase.is?.(:move) &&
-      Enum.any?(game.squadron.fighters, &Fighter.available_this_turn?/1)
+  @spec play_phase?(t()) :: boolean()
+  def play_phase?(%__MODULE__{phase: %{name: :move}} = game) do
+    Enum.any?(game.squadron.fighters, &Fighter.available_this_turn?/1)
   end
-
-  @spec attack?(t()) :: boolean()
-  defp attack?(game) do
-    game.phase.is?.(:approach) &&
-    # TODO too low level
-      Enum.any?(game.squadron.fighters, fn f ->
-        Box.approach?(f.box_end)
-      end)
+  def play_phase?(%__MODULE__{phase: %{name: :approach}} = game) do
+    Enum.any?(game.squadron.fighters, fn f ->
+      Box.approach?(f.box_end)
+    end) |> IO.inspect(label: "play approach?")
   end
+  def play_phase?(_), do: false
 
 end
