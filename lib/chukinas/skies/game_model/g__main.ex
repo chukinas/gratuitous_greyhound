@@ -141,14 +141,11 @@ defmodule Chukinas.Skies.Game do
   @spec maybe_skip_phase(token()) :: token()
   defp maybe_skip_phase({:stop, _} = token), do: token
   defp maybe_skip_phase({:cont, game}) do
-    IO.inspect(game.phase.name, label: "maybe skip this phase?")
     if play_phase?(game) do
       {:cont, game}
     else
       {:cont, end_phase(game)}
     end
-    # IO.inspect(game.phase.name, label: "result")
-    # result
   end
 
   @spec build_token(t(), atom()) :: token()
@@ -160,8 +157,8 @@ defmodule Chukinas.Skies.Game do
   end
   def play_phase?(%__MODULE__{phase: %{name: :approach}} = game) do
     Enum.any?(game.squadron.fighters, fn f ->
-      Box.approach?(f.box_end)
-    end) |> IO.inspect(label: "play approach?")
+      Box.approach?(f.box_move)
+    end)
   end
   def play_phase?(_), do: false
 

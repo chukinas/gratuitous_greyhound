@@ -1,5 +1,5 @@
 defmodule Chukinas.Skies.Game.FighterGroup do
-  
+
   alias Chukinas.Skies.Game.{Fighter, IdAndState, Location}
 
   # *** *******************************
@@ -41,7 +41,7 @@ defmodule Chukinas.Skies.Game.FighterGroup do
   @spec build_groups(fighters()) :: [t()]
   def build_groups(fighters) do
     fighters
-    |> Enum.group_by(&({&1.box_start, &1.box_end, &1.state}))
+    |> Enum.group_by(&({&1.box_start, &1.box_move, &1.state}))
     |> Map.values()
     |> Enum.map(&build/1)
   end
