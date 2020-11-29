@@ -33,7 +33,6 @@ defmodule Chukinas.Skies.ViewModel.Phase do
     G_Phase.all()
     |> Enum.map(&replace_nil_parent/1)
     |> Enum.chunk_by(fn {_, parent} -> parent end)
-    |> IO.inspect(label: "chunks")
     |> Enum.map(&build_phase(&1, phase))
   end
 
@@ -48,7 +47,7 @@ defmodule Chukinas.Skies.ViewModel.Phase do
     active? = g_phase.is?.(phase_name)
     %__MODULE__{
       name: to_display_string(phase_name),
-      maybe_current_phase_id: if active? do "id=\"current_phase\"" end,
+      maybe_current_phase_id: if active? do "id=current_phase" end,
       subphases: [],
       active?: active?,
       active_child?: false,

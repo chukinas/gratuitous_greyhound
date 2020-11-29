@@ -118,8 +118,9 @@ defmodule Chukinas.Skies.Game.Phase do
 
   @spec get_parent(phase_name()) :: nil | phase_name()
   defp get_parent(phase_name) do
+    IO.inspect(phase_name, label: "phase_name")
     {_, parent} = @phases |> Enum.find(&matching_spec?(&1, phase_name))
-    parent
+    parent |> IO.inspect(label: "parent")
   end
 
   @spec matching_spec?(spec_phase(), phase_name()) :: boolean()

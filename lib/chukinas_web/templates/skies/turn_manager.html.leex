@@ -9,7 +9,7 @@
       <!-- *** MAIN PHASE -->
       <li
         class="<%= phase_class(phase) %> p-2 px-3"
-        <%= phase.maybe_current_phase_id %>
+        <%= if phase.active?, do: "id=current_phase" %>
         > <%= phase.name %>
         <%= if phase.has_children? do %>
         <ul>
@@ -18,7 +18,7 @@
           <!-- *** SUB PHASE -->
           <li
             class="<%= subphase_class(subphase) %> italic text-xs"
-            <%= subphase.maybe_current_phase_id %>            
+            <%= if phase.active?, do: "id=current_phase" %>          
             > <%= subphase.name %>
           </li>
           <% end %>

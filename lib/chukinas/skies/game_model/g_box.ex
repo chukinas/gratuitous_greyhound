@@ -91,16 +91,13 @@ defmodule Chukinas.Skies.Game.Box do
   defp normalize_location_tuple(id), do: id
 
   defp find_move(moves, box_id) do
-    # IO.inspect(box_id, label: "looking for this box_id")
     case Enum.find(moves, &matching_move?(&1, box_id)) do
       nil ->
-        IO.inspect(%{moves: moves, box_id: box_id}, label: "no matching move")
         raise "no matching move"
       move -> move
     end
-    # |> IO.inspect(label: "matching move")
   end
 
-  defp matching_move?({id, _}, box_id), do: val = (id == box_id)
+  defp matching_move?({id, _}, box_id), do: id == box_id
 
 end
