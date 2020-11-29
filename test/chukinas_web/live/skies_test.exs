@@ -32,9 +32,8 @@ defmodule ChukinasWeb.SkiesLiveTest do
   end
 
   defp assert_phase(view, phase_name, assert? \\ true) do
-    # TODO refactor the selector
-    has_element = element(view, "#current_phase") |> render() =~ phase_name
-    assert has_element |> flip_bool(assert?)
+    assert has_element?(view, "#current_phase", phase_name)
+    |> flip_bool(assert?)
     view
   end
   defp flip_bool(orig, keep) do
@@ -154,7 +153,6 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> move({:nose, :approach, :high})
     |> end_phase()
     |> assert_phase("Approach")
-    # TODO remove console warnings
   end
 
   # TODO future tests/tasks:

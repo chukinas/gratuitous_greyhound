@@ -86,7 +86,7 @@ defmodule Chukinas.Skies.Game.Fighter do
     fighter.box_move || fighter.box_start
   end
 
-  def start_new_turn(%__MODULE__{} = fighter) do
+  def next_turn(%__MODULE__{} = fighter) do
     %{fighter |
       box_start: get_current_location(fighter),
       box_move: nil,

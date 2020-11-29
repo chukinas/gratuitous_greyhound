@@ -119,7 +119,7 @@ defmodule Chukinas.Skies.Game do
       # TODO make sure this forces the phase to Move
       |> Map.update!(:turn, &Turn.next/1)
       # TODO unify language
-      |> Map.update!(:squadron, &Squadron.start_new_turn/1)
+      |> Map.update!(:squadron, &Squadron.next_turn/1)
       |> build_token(:cont)
     else
       {:cont, game}
