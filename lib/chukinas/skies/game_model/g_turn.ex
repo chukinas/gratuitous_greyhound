@@ -3,24 +3,19 @@ defmodule Chukinas.Skies.Game.Turn do
   # *** *******************************
   # *** TYPES
 
-  defstruct [
-    :number,
-    :max,
-    :end_game?,
-  ]
+  use TypedStruct
 
-  # TODO typedstruct
-  @type t :: %__MODULE__{
-    number: integer(),
-    max: integer(),
-    end_game?: boolean(),
-  }
+  typedstruct do
+    field :number, integer(), default: 1
+    field :max, integer(), default: 7
+    field :end_game?, boolean(), default: false
+  end
 
   # *** *******************************
   # *** NEW
 
   @spec new() :: t()
-  def new(), do: build(1, 7)
+  def new(), do: %__MODULE__{}
 
   # *** *******************************
   # *** API

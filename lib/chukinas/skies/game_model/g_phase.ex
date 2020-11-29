@@ -31,7 +31,6 @@ defmodule Chukinas.Skies.Game.Phase do
     :is?,
   ]
 
-  # TODO which are private?
   @type phase_name :: :move
     | :return
     | :escort

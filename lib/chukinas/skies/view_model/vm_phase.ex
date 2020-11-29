@@ -7,7 +7,6 @@ defmodule Chukinas.Skies.ViewModel.Phase do
 
   defstruct [
     :name,
-    :maybe_current_phase_id,
     :subphases,
     :active?,
     :active_child?,
@@ -16,7 +15,6 @@ defmodule Chukinas.Skies.ViewModel.Phase do
 
   @type phase :: %{
     name: String.t(),
-    maybe_current_phase_id: String.t(),
     subphases: [phase()],
     active?: boolean(),
     active_child?: boolean(),
@@ -28,7 +26,6 @@ defmodule Chukinas.Skies.ViewModel.Phase do
   # *** *******************************
   # *** BUILD
 
-  # TODO maybe phase id should be deleted
   @spec build(G_Phase.t()) :: t()
   def build(%G_Phase{} = phase) do
     result = G_Phase.all()
@@ -52,7 +49,6 @@ defmodule Chukinas.Skies.ViewModel.Phase do
     active? = g_phase.is?.(phase_name)
     %__MODULE__{
       name: to_display_string(phase_name),
-      maybe_current_phase_id: if active? do "id=current_phase" end,
       subphases: [],
       active?: active?,
       active_child?: false,
@@ -64,7 +60,6 @@ defmodule Chukinas.Skies.ViewModel.Phase do
     |> Enum.map(&build_phase(&1, g_phase))
     %__MODULE__{
       name: to_display_string(parent),
-      maybe_current_phase_id: nil,
       subphases: children,
       active?: false,
       active_child?: g_phase.parent == parent,

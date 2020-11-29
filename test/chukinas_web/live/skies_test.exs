@@ -153,7 +153,6 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> select_group(1)
     |> move({:nose, :approach, :high})
     |> end_phase()
-    # TODO this is failing
     |> assert_phase("Approach")
     # TODO remove console warnings
   end
