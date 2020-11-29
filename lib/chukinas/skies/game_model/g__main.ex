@@ -113,12 +113,9 @@ defmodule Chukinas.Skies.Game do
     |> build_token(:stop)
   end
   defp maybe_next_turn({:cont, game}) do
-    # TODO abstract this out:
     if game.phase.is?.(:move) do
       game
-      # TODO make sure this forces the phase to Move
       |> Map.update!(:turn, &Turn.next/1)
-      # TODO unify language
       |> Map.update!(:squadron, &Squadron.next_turn/1)
       |> build_token(:cont)
     else

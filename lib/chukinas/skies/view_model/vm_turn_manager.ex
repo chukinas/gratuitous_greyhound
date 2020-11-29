@@ -4,34 +4,23 @@ defmodule Chukinas.Skies.ViewModel.TurnManager do
   alias Chukinas.Skies.Game.Turn, as: G_Turn
   alias Chukinas.Skies.ViewModel.Phase
 
-  # TODO rename? Progress ...?
-
   # *** *******************************
   # *** TYPES
 
-  # TODO struct
+  use TypedStruct
 
-  @type phase :: %{
-    name: String.t(),
-    # TODO the second two are confusing
-    status: (:other | :in_progress | :sub_in_progress),
-    maybe_current_phase_id: String.t(),
-    subphases: [phase()],
-  }
-
-  # TODO struct
-  @type t :: %{
-    turn: integer(),
-    max_turn: integer(),
-    phases: [phase()],
-  }
+  typedstruct enforce: true do
+    field :turn, integer()
+    field :max_turn, integer()
+    field :phases, [Phase.t()]
+  end
 
   # *** *******************************
   # *** BUILD
 
   @spec build(G_Turn.t(), G_Phase.t()) :: t()
   def build(turn, phase) do
-    %{
+    %__MODULE__{
       turn: turn.number,
       max_turn: turn.max,
       phases: Phase.build(phase),
