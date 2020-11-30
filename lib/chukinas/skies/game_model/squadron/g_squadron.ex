@@ -1,5 +1,5 @@
 defmodule Chukinas.Skies.Game.Squadron do
-  alias Chukinas.Skies.Game.{Box, Fighter, FighterGroup}
+  alias Chukinas.Skies.Game.{Bomber, Box, Fighter, FighterGroup}
   import Chukinas.Skies.Game.IdAndState
   alias Chukinas.Skies.Game.IdAndState
 
@@ -95,6 +95,14 @@ defmodule Chukinas.Skies.Game.Squadron do
   def next_turn(%__MODULE__{} = s) do
     s.fighters
     |> Enum.map(&Fighter.next_turn/1)
+    |> rebuild()
+  end
+
+  @spec attack(t(), Bomber.id()) :: t()
+  def attack(squadron, bomber_id) do
+    fighter_ids = get_selected_fighter_ids(squadron)
+    squadron.fighters
+    |> apply_if_matching_id(fighter_ids, &Fighter.attack(&1, bomber_id))
     |> rebuild()
   end
 

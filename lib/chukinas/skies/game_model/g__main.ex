@@ -1,6 +1,7 @@
 defmodule Chukinas.Skies.Game do
 
   alias Chukinas.Skies.Game.{
+    Bomber,
     Box,
     Boxes,
     Elements,
@@ -14,6 +15,7 @@ defmodule Chukinas.Skies.Game do
 
   defstruct [
     :spaces,
+    # TODO rename bombers
     :elements,
     :squadron,
     :turn,
@@ -71,10 +73,15 @@ defmodule Chukinas.Skies.Game do
     %{game | squadron: s, tactical_points: tp}
   end
 
-  def move(%__MODULE__{} = game, location) when is_binary(location) do
+  def move(%__MODULE__{} = game, location) do
     s = Squadron.move(game.squadron, Box.id_from_string(location))
     tp = TacticalPoints.update_spent_this_phase(game.tactical_points, s, game.boxes)
     %{game | squadron: s, tactical_points: tp}
+  end
+
+  def attack(%__MODULE__{} = game, bomber_id) do
+    s = Squadron.attack(game.squadron, Bomber.id_from_client_id(bomber_id))
+    %{game | squadron: s}
   end
 
   @spec end_phase(t()) :: t()

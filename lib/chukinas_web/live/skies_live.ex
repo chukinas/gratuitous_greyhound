@@ -12,12 +12,6 @@ defmodule ChukinasWeb.SkiesLive do
     {:ok, socket}
   end
 
-  # @impl true
-  # def handle_event("select_space", %{"x" => x, "y" => y}, socket) do
-  #   IO.puts("selected a space: {#{x}, #{y}}")
-  #   {:noreply, socket}
-  # end
-
   @impl true
   def handle_event("end_phase", _, socket) do
     socket.assigns.game
@@ -54,6 +48,14 @@ defmodule ChukinasWeb.SkiesLive do
     |> assign_game_and_vm(socket)
   end
 
+  @impl true
+  # Move the pattern matching to game func?
+  def handle_event("attack", %{"id" => bomber_id}, socket) do
+    socket.assigns.game
+    |> Game.attack(bomber_id)
+    |> assign_game_and_vm(socket)
+  end
+
   defp assign_game_and_vm(game, socket) do
     socket = socket
     |> assign(:game, game)
@@ -61,5 +63,6 @@ defmodule ChukinasWeb.SkiesLive do
     {:noreply, socket}
   end
 
+  # TODO centralize phase done and skip checks
 
 end

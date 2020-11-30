@@ -18,6 +18,7 @@ defmodule Chukinas.Skies.Game.Fighter do
     field :box_start, Box.id(), default: :notentered
     field :box_move, Box.id() | nil, default: nil
     field :box_end, Box.id() | nil, default: nil
+    field :attack_bomber_id, Bomber.id() | nil, default: nil
     field :state, IdAndState.state(), default: :selected
   end
 
@@ -96,6 +97,12 @@ defmodule Chukinas.Skies.Game.Fighter do
 
   def available_this_turn?(%__MODULE__{state: state}) do
     state != :not_avail
+  end
+
+  @spec attack(t(), Bomber.id) :: t()
+  def attack(%__MODULE__{} = f, bomber_id) do
+    %{f | attack_bomber_id: bomber_id}
+    |> complete()
   end
 
 end
