@@ -1,6 +1,4 @@
-defmodule Chukinas.Skies.Game.Elements do
-
-  # TODO rename Bombers?
+defmodule Chukinas.Skies.Game.Bombers do
 
   alias Chukinas.Skies.Game.Bomber
 

@@ -4,7 +4,7 @@ defmodule Chukinas.Skies.Game do
     Bomber,
     Box,
     Boxes,
-    Elements,
+    Bombers,
     Fighter,
     Spaces,
     Squadron,
@@ -15,8 +15,7 @@ defmodule Chukinas.Skies.Game do
 
   defstruct [
     :spaces,
-    # TODO rename bombers
-    :elements,
+    :bombers,
     :squadron,
     :turn,
     :phase,
@@ -26,7 +25,7 @@ defmodule Chukinas.Skies.Game do
 
   @type t :: %__MODULE__{
     spaces: any(),
-    elements: any(),
+    bombers: any(),
     squadron: any(),
     turn: Turn.t(),
     phase: Phase.t(),
@@ -43,7 +42,7 @@ defmodule Chukinas.Skies.Game do
   def new(map_id) do
     %__MODULE__{
       spaces: Spaces.new(map_id),
-      elements: Elements.new(map_id),
+      bombers: Bombers.new(map_id),
       squadron: Squadron.new(),
       turn: Turn.new(),
       phase: Phase.new(),

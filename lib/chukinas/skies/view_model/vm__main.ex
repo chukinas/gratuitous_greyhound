@@ -28,7 +28,7 @@ defmodule Chukinas.Skies.ViewModel do
     %__MODULE__{
       squadron: Squadron.build(game.squadron, vm_tp),
       spaces: Spaces.build(game.spaces),
-      bombers: Bombers.build(game.elements),
+      bombers: Bombers.build(game.bombers),
       turn_manager: TurnManager.build(game.turn, game.phase),
       escort_stations: %{},
       boxes: Boxes.build(game.boxes, game.squadron.groups),
