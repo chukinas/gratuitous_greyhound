@@ -32,7 +32,7 @@ defmodule Chukinas.Skies.Game.Space do
   # *** *******************************
   # *** API
 
-  @spec space_to_bomber(id(), Box.position()) :: Bomber.location()
+  @spec space_to_bomber(id(), Box.position()) :: Bomber.id()
   def space_to_bomber({x, y}, position) do
     {dx, dy} = case position do
       :nose  -> { 0,  0}

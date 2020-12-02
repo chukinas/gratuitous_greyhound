@@ -7,12 +7,11 @@ defmodule Chukinas.Skies.Game.Bomber do
 
   # TODO rename id? do this for entire file
   # TODO this location is the same as Spaces.id...
-  @type location() :: {x ::integer(), y :: integer()}
-  @type id() :: location()
+  @type id() :: {x ::integer(), y :: integer()}
 
   typedstruct enforce: true do
     field :element, integer()
-    field :location, location()
+    field :location, id()
   end
 
   # TODO add shortcut for add comment header
@@ -21,7 +20,7 @@ defmodule Chukinas.Skies.Game.Bomber do
   # *** *******************************
   # *** NEW
 
-  @spec new(element :: integer(), location()) :: t()
+  @spec new(element :: integer(), id()) :: t()
   def new(element, location), do: %__MODULE__{
     element: element,
     location: location
@@ -33,7 +32,7 @@ defmodule Chukinas.Skies.Game.Bomber do
   @spec to_client_id(t()) :: String.t()
   def to_client_id(%__MODULE__{location: {x, y}}), do: "bomber_#{x}_#{y}"
 
-  @spec id_from_client_id(String.t()) :: location()
+  @spec id_from_client_id(String.t()) :: id()
   def id_from_client_id(client_id) do
     [_ | location] = String.split(client_id, "_")
     location

@@ -21,7 +21,7 @@ defmodule Chukinas.Skies.Game.Bombers do
   # *** *******************************
   # *** MAP SPEC
 
-  @spec map_spec(Formation.id()) :: [[Bomber.location()]]
+  @spec map_spec(Formation.id()) :: [[Bomber.id()]]
   defp map_spec({1, "a"}) do
     [
       [
@@ -46,7 +46,7 @@ defmodule Chukinas.Skies.Game.Bombers do
   # *** *******************************
   # *** HELPERS
 
-  @spec build_bombers({[Bomber.location()], integer()}) :: [Bomber.t()]
+  @spec build_bombers({[Bomber.id()], integer()}) :: [Bomber.t()]
   defp build_bombers({bomber_list, element_index}) do
     bomber_list
     |> Enum.map(&Bomber.new(element_index, &1))

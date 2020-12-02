@@ -1,5 +1,7 @@
 defmodule Chukinas.Skies.ViewModel.Space do
 
+  alias Chukinas.Skies.Game.Space, as: G_Space
+
   # *** *******************************
   # *** TYPES
 
@@ -14,7 +16,7 @@ defmodule Chukinas.Skies.ViewModel.Space do
   # *** *******************************
   # *** BUILD
 
-  @spec build(Space.t()) :: t()
+  @spec build(G_Space.t()) :: t()
   def build(space) do
     %__MODULE__{x: space.x, y: space.y, lethal_level: space.lethal_level}
   end
