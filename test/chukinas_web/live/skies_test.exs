@@ -233,3 +233,5 @@ end
 # TODO fighters should group correctly on approach
 # TODO during attack, fighters not in approach box should be disabled
 # TODO boxes should be disabled if not avail
+# TODO initial unselect crashes
+# TODO try https://github.com/keathley/norm
