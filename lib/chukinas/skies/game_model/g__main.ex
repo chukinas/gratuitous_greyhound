@@ -106,9 +106,11 @@ defmodule Chukinas.Skies.Game do
         |> Map.update!(:phase, &Phase.next/1)
         |> build_token(:all_delayed_entry)
       true ->
+        phase = Phase.next(game.phase)
         game
-        |> Map.update!(:phase, &Phase.next/1)
+        |> Map.put(:phase, phase)
         |> Map.update!(:tactical_points, &TacticalPoints.commit_spent_point/1)
+        |> Map.update!(:squadron, &Squadron.start_phase(&1, phase.name))
         |> build_token(:cont)
     end
   end

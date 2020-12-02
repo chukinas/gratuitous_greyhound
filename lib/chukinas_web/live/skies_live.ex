@@ -64,5 +64,6 @@ defmodule ChukinasWeb.SkiesLive do
   end
 
   # TODO centralize phase done and skip checks
+  # TODO handle unselect
 
 end

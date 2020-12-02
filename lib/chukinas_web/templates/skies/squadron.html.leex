@@ -10,7 +10,14 @@
     class="bg-indigo-200 rounded-xl border border-indigo-900 p-3"
   >
     <p>group <%= group.id %>: <%= group.state %></p>
-    <p class="font-bold"><%= group.starting_location %></p>
+    <p class="from_location">
+      <span class="font-bold">From:</span>
+      <%= group.starting_location %>
+    </p>
+    <p class="to_location">
+      <span class="font-bold">To:</span>
+      <%= group.ending_location %>
+    </p>
     <%= for fighter <- group.fighters do %>
 
     <!-- *** CHECKBOX AND LABEL -->

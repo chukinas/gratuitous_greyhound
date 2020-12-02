@@ -6,7 +6,9 @@ defmodule Chukinas.Skies.Game.Bomber do
   use TypedStruct
 
   # TODO rename id? do this for entire file
+  # TODO this location is the same as Spaces.id...
   @type location() :: {x ::integer(), y :: integer()}
+  @type id() :: location()
 
   typedstruct enforce: true do
     field :element, integer()

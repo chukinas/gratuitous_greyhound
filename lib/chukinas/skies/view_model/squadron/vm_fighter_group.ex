@@ -1,12 +1,14 @@
 defmodule Chukinas.Skies.ViewModel.FighterGroup do
   alias Chukinas.Skies.Game.Box, as: G_Box
-  alias Chukinas.Skies.Game.{Fighter, FighterGroup, IdAndState}
+  alias Chukinas.Skies.Game.{Fighter, FighterGroup, IdAndState, Location}
   alias Chukinas.Skies.ViewModel.Fighter, as: VM_Fighter
 
+  # TODO typedstruct
   defstruct [
     :id,
     :fighters,
     :starting_location,
+    :ending_location,
     :state,
     :tags,
     :can_select?,
@@ -31,6 +33,7 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
     id: integer(),
     fighters: [vm_fighter()],
     starting_location: String.t(),
+    ending_location: String.t(),
     state: IdAndState.state(),
     tags: vm_tags(),
     can_select?: boolean(),
@@ -48,7 +51,8 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
     |> IdAndState.get_items(all_fighters)
     %__MODULE__{
       id: group.id,
-      starting_location: G_Box.to_friendly_string(f.box_start),
+      starting_location: Location.to_friendly_string(f.from_location),
+      ending_location: Location.to_friendly_string(f.to_location),
       fighters: Enum.map(fighters, &VM_Fighter.build/1),
       state: group.state,
       tags: [],
