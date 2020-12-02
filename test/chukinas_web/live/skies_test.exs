@@ -234,4 +234,5 @@ end
 # TODO during attack, fighters not in approach box should be disabled
 # TODO boxes should be disabled if not avail
 # TODO initial unselect crashes
+# TODO attack should store stace id, not bomber id
 # TODO try https://github.com/keathley/norm

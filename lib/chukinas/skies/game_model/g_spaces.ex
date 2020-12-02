@@ -1,52 +1,51 @@
 defmodule Chukinas.Skies.Game.Spaces do
 
-  alias Chukinas.Skies.Game.{Bomber, Box}
+  alias Chukinas.Skies.Game.{Formation, Space}
 
   # *** *******************************
   # *** TYPES
 
-  @type id :: {integer(), integer()}
+  @type map_spaces() :: %{Space.id() => integer()}
 
-  @type t :: %{id => integer()}
+  @type t() :: [Space.t()]
 
   # *** *******************************
   # *** NEW
 
-  @spec new(any()) :: t()
-  def new({1, "a"}) do
-    # TODO spaces should be 1-indexed
-    # TODO this will affect the attack bomber method
-    %{
-                   {1, 0} => 1, {2, 0} => 1, {3, 0} => 1,
-      {0, 1} => 1, {1, 1} => 1, {2, 1} => 2, {3, 1} => 1,
-      {0, 2} => 1, {1, 2} => 2, {2, 2} => 3, {3, 2} => 1,
-      {0, 3} => 1, {1, 3} => 2, {2, 3} => 2, {3, 3} => 1,
-      {0, 4} => 1, {1, 4} => 1, {2, 4} => 1, {3, 4} => 1,
-    }
-  end
-  def new({1, "b"}) do
-    %{
-      {0, 0} => 1, {1, 0} => 1, {2, 0} => 1, {3, 0} => 1,
-      {0, 1} => 1, {1, 1} => 2, {2, 1} => 2, {3, 1} => 1,
-      {0, 2} => 1, {1, 2} => 2, {2, 2} => 2, {3, 2} => 1,
-      {0, 3} => 1, {1, 3} => 2, {2, 3} => 2, {3, 3} => 1,
-      {0, 4} => 1, {1, 4} => 2, {2, 4} => 2, {3, 4} => 1,
-      {0, 5} => 1, {1, 5} => 1, {2, 5} => 1, {3, 5} => 1,
-    }
+  @spec new(Formation.id()) :: t()
+  def new(map_id) do
+    map(map_id)
+    |> Map.to_list()
+    |> Enum.map(&build_space/1)
   end
 
   # *** *******************************
-  # *** API
+  # *** HELPERS
 
-  @spec space_to_bomber(id(), Box.position()) :: Bomber.location()
-  def space_to_bomber({x, y}, position) do
-    {dx, dy} = case position do
-      :nose  -> { 0,  0}
-      :left  -> { 0, -1}
-      :right -> {-1,  0}
-      :tail  -> {-1, -1}
-    end
-    {x + dx, y + dy}
+  @spec build_space({Space.id(), integer()}) :: Space.t()
+  defp build_space({space_id, lethal_level}) do
+    Space.new(space_id, lethal_level)
+  end
+
+  @spec map(Formation.id()) :: map_spaces()
+  defp map({1, "a"}) do
+    %{
+                   {2, 1} => 1, {3, 1} => 1, {4, 1} => 1,
+      {1, 2} => 1, {2, 2} => 1, {3, 2} => 2, {4, 2} => 1,
+      {1, 3} => 1, {2, 3} => 2, {3, 3} => 3, {4, 3} => 1,
+      {1, 4} => 1, {2, 4} => 2, {3, 4} => 2, {4, 4} => 1,
+      {1, 5} => 1, {2, 5} => 1, {3, 5} => 1, {4, 5} => 1,
+    }
+  end
+  defp map({2, "b"}) do
+    %{
+      {1, 1} => 1, {2, 1} => 1, {3, 1} => 1, {4, 1} => 1,
+      {1, 2} => 1, {2, 2} => 2, {3, 2} => 2, {4, 2} => 1,
+      {1, 3} => 1, {2, 3} => 2, {3, 3} => 2, {4, 3} => 1,
+      {1, 4} => 1, {2, 4} => 2, {3, 4} => 2, {4, 4} => 1,
+      {1, 5} => 1, {2, 5} => 2, {3, 5} => 2, {4, 5} => 1,
+      {1, 6} => 1, {2, 6} => 1, {3, 6} => 1, {4, 6} => 1,
+    }
   end
 
 end

@@ -1,6 +1,6 @@
 defmodule Chukinas.Skies.Game.Bombers do
 
-  alias Chukinas.Skies.Game.{Bomber, Map}
+  alias Chukinas.Skies.Game.{Bomber, Formation}
 
   # *** *******************************
   # *** TYPES
@@ -10,7 +10,7 @@ defmodule Chukinas.Skies.Game.Bombers do
   # *** *******************************
   # *** NEW
 
-  @spec new(Map.id()) :: [Bomber.t()]
+  @spec new(Formation.id()) :: [Bomber.t()]
   def new(map_spec) do
     map_spec(map_spec)
     |> Enum.with_index()
@@ -21,7 +21,7 @@ defmodule Chukinas.Skies.Game.Bombers do
   # *** *******************************
   # *** MAP SPEC
 
-  @spec map_spec(Map.id()) :: [[Bomber.location()]]
+  @spec map_spec(Formation.id()) :: [[Bomber.location()]]
   defp map_spec({1, "a"}) do
     [
       [
