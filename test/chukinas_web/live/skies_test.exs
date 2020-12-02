@@ -217,13 +217,8 @@ defmodule ChukinasWeb.SkiesLiveTest do
     |> assert_phase("Approach")
     |> select_group(1)
     |> attack_bomber(2, 2)
-    |> assert_group_to(1, "Bomber 1A")
-    # TODO select mode
-    # TODO select maneuver (climb/dive, straight or roll left/right)
+    |> assert_group_to(1, "Space (2, 2)")
   end
-
-  # TODO future tests/tasks:
-  # boxes should be disabled if not avail
 
 end
 
@@ -232,6 +227,9 @@ end
 # ...typewriterh
 # -->
 
-  # TODO Nil locations shouldn't render as Nil. What instead?
+# TODO Nil locations shouldn't render as Nil. What instead?
+# TODO select mode
+# TODO select maneuver (climb/dive, straight or roll left/right)
 # TODO fighters should group correctly on approach
 # TODO during attack, fighters not in approach box should be disabled
+# TODO boxes should be disabled if not avail
