@@ -38,10 +38,6 @@ defmodule Chukinas.Skies.Game.Spaces do
   # *** *******************************
   # *** API
 
-  def to_friendly_string({x, y}) do
-    "Space (#{x}, #{y})"
-  end
-
   @spec space_to_bomber(id(), Box.position()) :: Bomber.location()
   def space_to_bomber({x, y}, position) do
     {dx, dy} = case position do

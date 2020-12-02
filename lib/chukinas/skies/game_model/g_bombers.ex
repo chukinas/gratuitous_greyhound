@@ -20,7 +20,6 @@ defmodule Chukinas.Skies.Game.Bombers do
 
   # *** *******************************
   # *** MAP SPEC
-  # TODO I like the term map_spec. Use this elsewhere?
 
   @spec map_spec(Map.id()) :: [[Bomber.location()]]
   defp map_spec({1, "a"}) do

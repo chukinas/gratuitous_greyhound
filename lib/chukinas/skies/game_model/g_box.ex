@@ -62,16 +62,6 @@ defmodule Chukinas.Skies.Game.Box do
     cost
   end
 
-  # TODO if this is only called in the vm, I should probably move it ove there
-  @spec to_friendly_string(id()) :: String.t()
-  def to_friendly_string(id) when is_atom(id), do: atom_to_display_string(id)
-  def to_friendly_string({_pos, typ, _alt} = id) when is_atom(typ) do
-    id
-    |> Tuple.to_list()
-    |> Enum.map(&atom_to_display_string/1)
-    |> Enum.join("/")
-  end
-
   def approach?({_, :approach, _}), do: true
   def approach?(_), do: false
 
@@ -105,12 +95,5 @@ defmodule Chukinas.Skies.Game.Box do
   end
 
   defp matching_move?({id, _}, box_id), do: id == box_id
-
-  # TODO what should nil render as?
-  # defp atom_to_display_string(nil), do: "Nil"
-  defp atom_to_display_string(:notentered), do: "Not Yet Entered"
-  defp atom_to_display_string(atom) do
-    atom |> Atom.to_string() |> String.capitalize()
-  end
 
 end
