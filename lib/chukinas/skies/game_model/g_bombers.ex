@@ -1,19 +1,16 @@
 defmodule Chukinas.Skies.Game.Bombers do
 
-  alias Chukinas.Skies.Game.Bomber
+  alias Chukinas.Skies.Game.{Bomber, Map}
 
   # *** *******************************
   # *** TYPES
 
   @type t :: [Bomber.t()]
 
-  # TODO be more specific
-  @type map_spec() :: any()
-
   # *** *******************************
   # *** NEW
 
-  @spec new(map_spec()) :: [Bomber.t()]
+  @spec new(Map.id()) :: [Bomber.t()]
   def new(map_spec) do
     map_spec(map_spec)
     |> Enum.with_index()
@@ -25,7 +22,7 @@ defmodule Chukinas.Skies.Game.Bombers do
   # *** MAP SPEC
   # TODO I like the term map_spec. Use this elsewhere?
 
-  @spec map_spec(map_spec()) :: [[Bomber.location()]]
+  @spec map_spec(Map.id()) :: [[Bomber.location()]]
   defp map_spec({1, "a"}) do
     [
       [
