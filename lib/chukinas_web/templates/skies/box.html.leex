@@ -1,12 +1,18 @@
 <!-- TODO don't add grid classes if no grid -->
-<button
-  class="<%= button_styling() %> <%= @grid_tailwind %>"
+<div
+  class="
+    bg-blue-500 hover:bg-blue-700
+    text-blue-200 text-left align-top
+    py-1 px-1
+    h-16 w-24 
+    border border-blue-700 rounded
+    <%= @grid_tailwind %>"
   id="<%= @id %>"
   phx-click="move"
   phx-value-id="<%= @id %>"
 >
-  <p><%= @id %></p>
+  Approach
   <%= for group_pawn <- @pawns do %>
   <%= build(:pawn, group_pawn) %>
   <% end %>
-</button>
+</div>

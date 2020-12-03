@@ -7,6 +7,11 @@ module.exports = {
   theme: {
     extend: {
       opacity: ['disabled'],
+      gridRowStart: {
+        '8': '8',
+        '9': '9',
+        '10': '10',
+      }
     },
   },
   variants: {},

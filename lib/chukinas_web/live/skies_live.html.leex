@@ -1,39 +1,57 @@
 <% component = build_component_renderer(@vm) %>
 
 <!-- *** HEADER -->
-<h1 class="text-orange-500 text-5xl font-bold text-center">
+<h1 class="text-orange-500 text-5xl font-bold text-center hidden">
   Skies Above the Reich
 </h1>
 
-<!-- *** SQUADRON -->
-<%= component.(:squadron) %>
-
-<!-- *** NOT YET ENTERED -->
-<%= build(:box, @vm.boxes.notentered) %>
-
-<!-- *** POSITION -->
-<%= build(:position, boxes: @vm.boxes.nose, position: :nose) %>
-
-<!-- *** TURN MANAGER -->
-<%= component.(:turn_manager) %>
-
-<!-- *** ESCORT STATIONS -->
-<%= component.(:escort_stations) %>
-
-<!-- *** MAP -->
-<div class="grid" style="background-color: lightblue">
-  <%= for space <- @vm.spaces do %>
-  <div
-    style="
-      grid-area: <%= space.y * 2 + 1 %> / <%= space.x * 2 + 1 %>;
-      background-color: deepskyblue;
-      color: white;
-    "
-  >
-    <%= space.lethal_level %>
+<div class="grid">
+  
+  <!-- *** NOSE POSITION -->
+  <div class="col-span-2">
+    <%= build(:position, boxes: @vm.boxes.nose, position: :nose) %>
   </div>
-  <% end %>
-  <%= for bomber <- @vm.bombers do %>
-  <%= build(:bomber, bomber) %>
-  <% end %>
+  
+  <div class="col-start-3">
+    <!-- *** NOT YET ENTERED -->
+    <%= build(:box, @vm.boxes.notentered) %>
+  </div>
+    
+  
+  <!-- *** RIGHT POSITION -->
+  <div class="col-start-4 col-span-2 row-start-1">
+    <%= build(:position, boxes: @vm.boxes.right, position: :right) %>
+  </div>
+    
+  <div class="col-start-1 row-start-2 ">
+    <!-- *** TURN MANAGER -->
+    <%= component.(:turn_manager) %>
+  </div>
+
+  <!-- *** MAP -->
+  <div class="grid col-start-2 col-span-3 row-start-2 bg-blue-200">
+    <%= build_from_list(:space, @vm.spaces) %>
+    <%= build_from_list(:bomber, @vm.bombers) %>
+  </div>
+
+  <!-- *** SQUADRON -->
+  <div class="row-start-2 col-start-5">
+    <%= component.(:squadron) %>
+  </div>
+
+  <!-- *** LEFT POSITION -->
+  <div class="col-start-1 col-span-2">
+    <%= build(:position, boxes: @vm.boxes.left, position: :left) %>
+  </div>
+      
+  <!-- *** ESCORT STATIONS -->
+  <div class="col-start-3">
+    <%= component.(:escort_stations) %>
+  </div>
+
+  <!-- *** TAIL POSITION -->
+  <div class="col-start-4 col-span-2 row-start-3">
+    <%= build(:position, boxes: @vm.boxes.tail, position: :tail) %>
+  </div>
+
 </div>

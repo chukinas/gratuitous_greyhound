@@ -2,6 +2,15 @@ defmodule ChukinasWeb.SkiesView do
   use ChukinasWeb, :view
   alias Chukinas.Skies.ViewModel.Phase
 
+  def build_from_list(name, items) do
+    # TODO snippet for eex with end
+    ~E"""
+    <%= for item <- items do %>
+    <%= build(name, item) %>
+    <% end %>
+    """
+  end
+
   def build_component_renderer(vm) do
     fn view_model_key -> render_component(vm, view_model_key) end
   end

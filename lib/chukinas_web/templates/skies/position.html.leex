@@ -3,7 +3,7 @@
   <!-- TODO put this title in VM -->
   <h3><%= @position |> Atom.to_string() |> String.capitalize()%> Position</h3>
   
-  <div class="grid gap-1 auto-rows-auto auto-cols-auto">
+  <div class="inline-grid gap-1 auto-rows-auto auto-cols-auto col-span-2">
     <%= for box <- @boxes do %>
     <%= build(:box, box) %>
     <% end %>
