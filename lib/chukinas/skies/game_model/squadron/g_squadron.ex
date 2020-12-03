@@ -107,7 +107,7 @@ defmodule Chukinas.Skies.Game.Squadron do
   @spec start_phase(t(), Phase.phase_name()) :: t()
   def start_phase(s, phase_name) do
     s.fighters
-    |> Enum.map(&Fighter.set_phase(&1, phase_name))
+    |> Enum.map(&Fighter.start_phase(&1, phase_name))
     |> build()
   end
 

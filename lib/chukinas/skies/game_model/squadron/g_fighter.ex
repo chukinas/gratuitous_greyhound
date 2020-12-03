@@ -31,7 +31,6 @@ defmodule Chukinas.Skies.Game.Fighter do
   # *** *******************************
   # *** NEW
 
-  # TODO fix success typing
   @spec new(integer()) :: t()
   def new(id) do
     # names = ~w(Bill Ted RedBaron John Steve TheRock TheHulk)
@@ -46,14 +45,11 @@ defmodule Chukinas.Skies.Game.Fighter do
   # *** *******************************
   # *** API :: t()
 
-  # TODO rename start_phase
-  # TODO call this
-  @spec set_phase(t(), Phase.phase_name()) :: t()
-  def set_phase(fighter, phase_name) do
+  @spec start_phase(t(), Phase.phase_name()) :: t()
+  def start_phase(fighter, phase_name) do
     %{fighter | phase: phase_name} |> update()
   end
 
-  # TODO where used?
   @spec select(t()) :: t()
   def select(fighter) do
     %{fighter | state: :selected}
@@ -85,12 +81,7 @@ defmodule Chukinas.Skies.Game.Fighter do
     %{f | box_move: box_id} |> complete()
   end
 
-  # TODO private?
-  def complete(%__MODULE__{} = fighter) do
-    %{fighter | state: :complete} |> update()
-  end
-
-  # TODO remove this in favor of set_phase
+  # TODO remove this in favor of start_phase
   def next_turn(%__MODULE__{} = fighter) do
     %{fighter |
       box_start: get_current_location(fighter),
@@ -164,6 +155,10 @@ defmodule Chukinas.Skies.Game.Fighter do
       to_location: get_current_location(f),
       grouping: nil,
     }
+  end
+
+  defp complete(%__MODULE__{} = fighter) do
+    %{fighter | state: :complete} |> update()
   end
 
 end
