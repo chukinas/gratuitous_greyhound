@@ -30,8 +30,6 @@ defmodule ChukinasWeb.SkiesLiveTest do
     view
   end
   defp attack_bomber(view, x, y) do
-    # TODO I'll also need a test func for 'approach space'.
-    # TODO Spaces should key into same attack bomber command?
     view |> element("#bomber_#{x}_#{y}") |> render_click(); view
   end
 
@@ -236,3 +234,5 @@ end
 # TODO initial unselect crashes
 # TODO attack should store stace id, not bomber id
 # TODO try https://github.com/keathley/norm
+# TODO I'll also need a test func for 'approach space'.
+# TODO Spaces should key into same attack bomber command?
