@@ -1,8 +1,9 @@
 <div
   id="group_<%= @id %>"
-  class="bg-indigo-200 rounded-xl border border-indigo-900 p-3"
+  class="rounded border-2 border-blue-100 p-2 relative text-blue-100 font-bold"
 >
-  <p>group <%= @id %>: <%= @state %></p>
+  <div class="absolute top-0 right-0 w-8 py-2 bg-blue-100 text-blue-200 text-center font-bold rounded-bl text-2xl "><%= @id %></div>
+  <p><%= @state %></p>
   <p class="from_location">
     <span class="font-bold">From:</span>
     <%= @starting_location %>

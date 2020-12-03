@@ -32,7 +32,7 @@ defmodule Chukinas.Skies.ViewModel do
       turn_manager: TurnManager.build(game.turn, game.phase),
       escort_stations: %{},
       boxes: Boxes.build(game.boxes, game.squadron.groups),
-    }
+    } |> IO.inspect()
   end
 
 end

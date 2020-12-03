@@ -56,14 +56,17 @@ defmodule ChukinasWeb.SkiesView do
   # *** COMPONENTS
 
   def button_styling(opts \\ []) do
+    # TODO this needs reworked
+    # TODO - disabled, happy path, other
     opts = Keyword.merge([disabled: false], opts)
     base = """
-    bg-blue-500 hover:bg-blue-700
-    text-white font-bold
-    py-2 px-4 mt-1
-    border border-blue-700 rounded
+    hover:bg-blue-300
+    text-blue-100 hover:text-blue-100
+    font-bold
+    py-2 px-4 
+    border-2 border-blue-100 rounded
     """
-    if Keyword.fetch!(opts, :disabled), do: base <> " opacity-50", else: base
+    if Keyword.fetch!(opts, :disabled), do: base <> " opacity-75", else: base
   end
 
   # def position_box() do
