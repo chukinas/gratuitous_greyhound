@@ -12,7 +12,8 @@
     <%= build(:position, boxes: @vm.boxes.nose, position: :nose) %>
   </div>
   
-  <div class="col-start-3">
+  <div class="col-start-3 border-2 border-blue-100 rounded p-2">
+    <h3 class="text-blue-100 font-bold">Other Boxes</h3>
     <!-- *** NOT YET ENTERED -->
     <%= build(:box, @vm.boxes.notentered) %>
   </div>
@@ -29,13 +30,15 @@
   </div>
 
   <!-- *** MAP -->
-  <div class="grid gap-1 col-start-2 col-span-3 row-start-2">
-    <%= build_from_list(:space, @vm.spaces) %>
-    <%= build_from_list(:bomber, @vm.bombers) %>
+  <div class="col-start-2 col-span-3 row-start-2 border-2 border-blue-100 rounded p-2">
+    <div class="grid gap-1">
+      <%= build_from_list(:space, @vm.spaces) %>
+      <%= build_from_list(:bomber, @vm.bombers) %>
+    </div>
   </div>
 
   <!-- *** SQUADRON -->
-  <div class="row-start-2 col-start-5">
+  <div class="row-start-2 col-start-5 border-2 border-blue-100 rounded p-2">
     <%= component.(:squadron) %>
   </div>
 
