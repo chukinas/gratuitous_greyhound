@@ -5,7 +5,7 @@
   Skies Above the Reich
 </h1>
 
-<div class="grid">
+<div class="grid bg-blue-200 gap-4">
   
   <!-- *** NOSE POSITION -->
   <div class="col-span-2">
@@ -29,7 +29,7 @@
   </div>
 
   <!-- *** MAP -->
-  <div class="grid col-start-2 col-span-3 row-start-2 bg-blue-200">
+  <div class="grid gap-1 col-start-2 col-span-3 row-start-2">
     <%= build_from_list(:space, @vm.spaces) %>
     <%= build_from_list(:bomber, @vm.bombers) %>
   </div>

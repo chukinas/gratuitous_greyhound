@@ -1,9 +1,9 @@
-<div>
+<div class="border-2 border-blue-100 rounded p-2">
 
   <!-- TODO put this title in VM -->
-  <h3><%= @position |> Atom.to_string() |> String.capitalize()%> Position</h3>
+  <h3 class="text-blue-100 font-bold"><%= @position |> Atom.to_string() |> String.capitalize()%> Position</h3>
   
-  <div class="inline-grid gap-1 auto-rows-auto auto-cols-auto col-span-2">
+  <div class="inline-grid gap-1">
     <%= for box <- @boxes do %>
     <%= build(:box, box) %>
     <% end %>
