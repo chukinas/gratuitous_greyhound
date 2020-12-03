@@ -4,6 +4,7 @@ defmodule Chukinas.Skies.Game.Squadron do
     Box,
     Fighter,
     FighterGroup,
+    FighterGroups,
     IdAndState,
     Phase,
   }
@@ -40,7 +41,7 @@ defmodule Chukinas.Skies.Game.Squadron do
   defp build(fighters) do
     groups = fighters
     |> Enum.map(&Fighter.unselect/1)
-    |> FighterGroup.build_groups()
+    |> FighterGroups.build()
     build(fighters, groups)
   end
 
@@ -113,7 +114,6 @@ defmodule Chukinas.Skies.Game.Squadron do
   # *** *******************************
   # *** API, Other
 
-  # TODO where used?
   def get_unique_moves(%__MODULE__{fighters: fighters}) do
     fighters
     |> Enum.map(&Fighter.get_move/1)
