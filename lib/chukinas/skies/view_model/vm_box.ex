@@ -31,10 +31,4 @@ defmodule Chukinas.Skies.ViewModel.Box do
     }
   end
 
-  # TODO where used?
-  @spec build_boxes([G_Box.t()], [G_FighterGroup.t()]) :: [t()]
-  def build_boxes(boxes, all_groups) do
-    boxes |> Enum.map(&build(&1, all_groups))
-  end
-
 end

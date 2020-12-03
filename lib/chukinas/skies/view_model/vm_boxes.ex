@@ -22,7 +22,8 @@ defmodule Chukinas.Skies.ViewModel.Boxes do
 
   @spec build([G_Box.t()], [G_FighterGroup.t()]) :: t()
   def build(boxes, all_groups) do
-    boxes = VM_Box.build_boxes(boxes, all_groups)
+    boxes = boxes
+    |> Enum.map(&VM_Box.build(&1, all_groups))
     %__MODULE__{
       nose: filter_boxes(boxes, :nose),
       left: filter_boxes(boxes, :left),
