@@ -1,5 +1,5 @@
 defmodule Chukinas.Skies.Game.TacticalPoints do
-  alias Chukinas.Skies.Game.{Boxes, Fighter, Squadron}
+  alias Chukinas.Skies.Game.{Boxes, Squadron}
 
   defstruct [
     :starting,

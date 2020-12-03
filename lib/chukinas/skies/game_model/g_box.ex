@@ -62,11 +62,6 @@ defmodule Chukinas.Skies.Game.Box do
     cost
   end
 
-  @spec to_friendly_string(id()) :: String.t()
-  def to_friendly_string(box_id) do
-    id_to_string(box_id)
-  end
-
   def approach?({_, :approach, _}), do: true
   def approach?(_), do: false
 
@@ -85,6 +80,7 @@ defmodule Chukinas.Skies.Game.Box do
     |> List.to_tuple()
   end
 
+  defp normalize_location_tuple({atom}), do: atom
   defp normalize_location_tuple({pos, :return, return_type, alt}) do
     {pos, {:return, return_type}, alt}
   end

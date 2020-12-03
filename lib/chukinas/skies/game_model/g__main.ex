@@ -1,9 +1,10 @@
 defmodule Chukinas.Skies.Game do
 
   alias Chukinas.Skies.Game.{
+    Bomber,
     Box,
     Boxes,
-    Elements,
+    Bombers,
     Fighter,
     Spaces,
     Squadron,
@@ -14,7 +15,7 @@ defmodule Chukinas.Skies.Game do
 
   defstruct [
     :spaces,
-    :elements,
+    :bombers,
     :squadron,
     :turn,
     :phase,
@@ -24,7 +25,7 @@ defmodule Chukinas.Skies.Game do
 
   @type t :: %__MODULE__{
     spaces: any(),
-    elements: any(),
+    bombers: any(),
     squadron: any(),
     turn: Turn.t(),
     phase: Phase.t(),
@@ -41,7 +42,7 @@ defmodule Chukinas.Skies.Game do
   def new(map_id) do
     %__MODULE__{
       spaces: Spaces.new(map_id),
-      elements: Elements.new(map_id),
+      bombers: Bombers.new(map_id),
       squadron: Squadron.new(),
       turn: Turn.new(),
       phase: Phase.new(),
@@ -71,10 +72,15 @@ defmodule Chukinas.Skies.Game do
     %{game | squadron: s, tactical_points: tp}
   end
 
-  def move(%__MODULE__{} = game, location) when is_binary(location) do
+  def move(%__MODULE__{} = game, location) do
     s = Squadron.move(game.squadron, Box.id_from_string(location))
     tp = TacticalPoints.update_spent_this_phase(game.tactical_points, s, game.boxes)
     %{game | squadron: s, tactical_points: tp}
+  end
+
+  def attack(%__MODULE__{} = game, bomber_id) do
+    s = Squadron.attack(game.squadron, Bomber.id_from_client_id(bomber_id))
+    %{game | squadron: s}
   end
 
   @spec end_phase(t()) :: t()
@@ -99,9 +105,11 @@ defmodule Chukinas.Skies.Game do
         |> Map.update!(:phase, &Phase.next/1)
         |> build_token(:all_delayed_entry)
       true ->
+        phase = Phase.next(game.phase)
         game
-        |> Map.update!(:phase, &Phase.next/1)
+        |> Map.put(:phase, phase)
         |> Map.update!(:tactical_points, &TacticalPoints.commit_spent_point/1)
+        |> Map.update!(:squadron, &Squadron.start_phase(&1, phase.name))
         |> build_token(:cont)
     end
   end
@@ -149,14 +157,14 @@ defmodule Chukinas.Skies.Game do
   defp build_token(game, response), do: {response, game}
 
   @spec play_phase?(t()) :: boolean()
-  def play_phase?(%__MODULE__{phase: %{name: :move}} = game) do
+  defp play_phase?(%__MODULE__{phase: %{name: :move}} = game) do
     Enum.any?(game.squadron.fighters, &Fighter.available_this_turn?/1)
   end
-  def play_phase?(%__MODULE__{phase: %{name: :approach}} = game) do
+  defp play_phase?(%__MODULE__{phase: %{name: :approach}} = game) do
     Enum.any?(game.squadron.fighters, fn f ->
       Box.approach?(f.box_move)
     end)
   end
-  def play_phase?(_), do: false
+  defp play_phase?(_), do: false
 
 end

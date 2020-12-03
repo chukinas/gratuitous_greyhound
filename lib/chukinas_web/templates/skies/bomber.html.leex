@@ -1,0 +1,11 @@
+<button
+  style="
+    grid-area: <%= @y * 2 %> / <%= @x * 2 %>;
+  "
+  class="<%= button_styling() %>"
+  id="<%= @id %>"
+  phx-click="attack"
+  phx-value-id="<%= @id %>"
+>
+  ↖
+</button>
