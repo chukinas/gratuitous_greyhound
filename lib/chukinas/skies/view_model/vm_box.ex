@@ -7,17 +7,13 @@ defmodule Chukinas.Skies.ViewModel.Box do
   # *** *******************************
   # *** TYPES
 
-  defstruct [
-    :title,
-    :id,
-    :pawns,
-  ]
+  use TypedStruct
 
-  @type t :: %__MODULE__{
-    title: String.t(),
-    id: String.t(),
-    pawns: [GroupPawn.t()],
-  }
+  typedstruct enforce: true do
+    field :title, String.t()
+    field :id, String.t()
+    field :pawns, [GroupPawn.t()]
+  end
 
   # *** *******************************
   # *** BUILD
@@ -35,6 +31,7 @@ defmodule Chukinas.Skies.ViewModel.Box do
     }
   end
 
+  # TODO where used?
   @spec build_boxes([G_Box.t()], [G_FighterGroup.t()]) :: [t()]
   def build_boxes(boxes, all_groups) do
     boxes |> Enum.map(&build(&1, all_groups))

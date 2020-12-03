@@ -7,22 +7,15 @@ defmodule Chukinas.Skies.ViewModel.Boxes do
   # *** *******************************
   # *** TYPES
 
-  defstruct [
-    :nose,
-    :left,
-    :right,
-    :tail,
-    :notentered,
-  ]
+  use TypedStruct
 
-  @type t :: %__MODULE__{
-    nose: [VM_Box.t()],
-    left: [VM_Box.t()],
-    right: [VM_Box.t()],
-    tail: [VM_Box.t()],
-    notentered: VM_Box.t(),
-  }
-
+  typedstruct enforce: true do
+    field :nose, [VM_Box.t()]
+    field :left, [VM_Box.t()]
+    field :right, [VM_Box.t()]
+    field :tail, [VM_Box.t()]
+    field :notentered, VM_Box.t()
+  end
 
   # *** *******************************
   # *** BUILD
