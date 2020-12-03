@@ -1,5 +1,6 @@
+<!-- TODO don't add grid classes if no grid -->
 <button
-  class="<%= button_styling() %>"
+  class="<%= button_styling() %> <%= @grid_tailwind %>"
   id="<%= @id %>"
   phx-click="move"
   phx-value-id="<%= @id %>"

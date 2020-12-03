@@ -13,6 +13,10 @@ defmodule Chukinas.Skies.ViewModel.Box do
     field :title, String.t()
     field :id, String.t()
     field :pawns, [GroupPawn.t()]
+    field :grid_tailwind, String.t()
+    # TODO
+    # field :row, integer()
+    # field :col, integer()
   end
 
   # *** *******************************
@@ -28,7 +32,41 @@ defmodule Chukinas.Skies.ViewModel.Box do
       title: id,
       id: id,
       pawns: group_pawns,
+      grid_tailwind: grid_tailwind(box.id)
+      # TODO
+      # row: grid_row(box.id),
+      # col: grid_col(box.id),
     }
   end
+
+  # *** *******************************
+  # *** HELPERS
+
+  @spec grid_tailwind(G_Box.id()) :: String.t()
+  def grid_tailwind(g_box) do
+    [
+      "row-start-#{grid_row(g_box)}",
+      "col-start-#{grid_col(g_box)}",
+    ]
+    |> Enum.join(" ")
+  end
+
+  @spec grid_row(G_Box.id()) :: integer()
+  defp grid_row({_, _, altitude}) do
+    [nil, :high, :level, :low]
+    |> Enum.find_index(&(&1 == altitude))
+  end
+  defp grid_row(_), do: 0
+
+  @spec grid_col(G_Box.id()) :: integer()
+  defp grid_col({_, box_type, _}) do
+    case box_type do
+      {_, :evasive}    -> 1
+      {_, :determined} -> 2
+          :preapproach -> 3
+          :approach    -> 4
+    end
+  end
+  defp grid_col(_), do: 0
 
 end
