@@ -5,17 +5,12 @@ defmodule Chukinas.Skies.Game.Bomber do
 
   use TypedStruct
 
-  # TODO rename id? do this for entire file
-  # TODO this location is the same as Spaces.id...
   @type id() :: {x ::integer(), y :: integer()}
 
   typedstruct enforce: true do
     field :element, integer()
     field :location, id()
   end
-
-  # TODO add shortcut for add comment header
-  # TODO add shortcut for def func
 
   # *** *******************************
   # *** NEW
@@ -25,9 +20,6 @@ defmodule Chukinas.Skies.Game.Bomber do
     element: element,
     location: location
   }
-
-  # *** *******************************
-  # *** API
 
   @spec to_client_id(t()) :: String.t()
   def to_client_id(%__MODULE__{location: {x, y}}), do: "bomber_#{x}_#{y}"

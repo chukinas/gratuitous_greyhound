@@ -4,20 +4,6 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
   alias Chukinas.Skies.ViewModel.Fighter, as: VM_Fighter
   alias Chukinas.Skies.ViewModel.Location, as: VM_Location
 
-  # TODO typedstruct
-  defstruct [
-    :id,
-    :fighters,
-    :starting_location,
-    :ending_location,
-    :state,
-    :tags,
-    :can_select?,
-    :can_delay_entry?,
-    :selected?,
-    :done?,
-  ]
-
   def compare(s1, s2) do
     cond do
       s1.id > s2.id -> :gt
@@ -30,18 +16,21 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
 
   @type vm_tags :: []
 
-  @type t :: %__MODULE__{
-    id: integer(),
-    fighters: [vm_fighter()],
-    starting_location: String.t(),
-    ending_location: String.t(),
-    state: IdAndState.state(),
-    tags: vm_tags(),
-    can_select?: boolean(),
-    can_delay_entry?: boolean(),
-    selected?: boolean(),
-    done?: boolean(),
-  }
+  # TODO snippet
+  use TypedStruct
+
+  typedstruct enforce: true do
+    field :id, integer()
+    field :fighters, [vm_fighter()]
+    field :starting_location, String.t()
+    field :ending_location, String.t()
+    field :state, IdAndState.state()
+    field :tags, vm_tags()
+    field :can_select?, boolean()
+    field :can_delay_entry?, boolean()
+    field :selected?, boolean()
+    field :done?, boolean()
+  end
 
   # *** *******************************
   # *** BUILD
