@@ -1,7 +1,7 @@
 defmodule Chukinas.Skies.ViewModel.Boxes do
 
   alias Chukinas.Skies.Game.Box, as: G_Box
-  alias Chukinas.Skies.Game.FighterGroup, as: G_FighterGroup
+  alias Chukinas.Skies.Game.FighterGroups, as: G_FighterGroups
   alias Chukinas.Skies.ViewModel.Box, as: VM_Box
 
   # *** *******************************
@@ -20,7 +20,7 @@ defmodule Chukinas.Skies.ViewModel.Boxes do
   # *** *******************************
   # *** BUILD
 
-  @spec build([G_Box.t()], [G_FighterGroup.t()]) :: t()
+  @spec build([G_Box.t()], G_FighterGroups.t()) :: t()
   def build(boxes, all_groups) do
     boxes = boxes
     |> Enum.map(&VM_Box.build(&1, all_groups))

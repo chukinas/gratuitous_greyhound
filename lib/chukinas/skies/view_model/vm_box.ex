@@ -1,6 +1,6 @@
 defmodule Chukinas.Skies.ViewModel.Box do
 
-  alias Chukinas.Skies.Game.FighterGroup, as: G_FighterGroup
+  alias Chukinas.Skies.Game.FighterGroups, as: G_FighterGroups
   alias Chukinas.Skies.Game.Box, as: G_Box
   alias Chukinas.Skies.ViewModel.GroupPawn
 
@@ -18,7 +18,7 @@ defmodule Chukinas.Skies.ViewModel.Box do
   # *** *******************************
   # *** BUILD
 
-  @spec build(G_Box.t(), [G_FighterGroup.t()]) :: t()
+  @spec build(G_Box.t(), G_FighterGroups.t()) :: t()
   def build(box, all_groups) do
     group_pawns = all_groups
     |> Enum.filter(fn group -> group.current_location == box.id end)
