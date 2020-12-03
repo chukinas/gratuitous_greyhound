@@ -39,7 +39,7 @@ defmodule Chukinas.Skies.Game.Fighter do
       # pilot_name: Enum.at(names, id, "no name"),
       pilot_name: "Billy",
     }
-    |> update()
+    |> update_aux_data()
   end
 
   # *** *******************************
@@ -47,7 +47,7 @@ defmodule Chukinas.Skies.Game.Fighter do
 
   @spec start_phase(t(), Phase.phase_name()) :: t()
   def start_phase(fighter, phase_name) do
-    %{fighter | phase: phase_name} |> update()
+    %{fighter | phase: phase_name} |> update_aux_data()
   end
 
   @spec select(t()) :: t()
@@ -73,7 +73,7 @@ defmodule Chukinas.Skies.Game.Fighter do
 
   @spec do_not_move(t()) :: t()
   def do_not_move(%__MODULE__{box_start: box} = f) do
-    move(f, box) |> update()
+    move(f, box) |> update_aux_data()
   end
 
   @spec move(t(), Box.id) :: t()
@@ -118,14 +118,12 @@ defmodule Chukinas.Skies.Game.Fighter do
   # *** *******************************
   # *** HELPERS
 
-  # TODO better name?
   # TODO this should be called privately in any func that updates state
-  @spec update(t()) :: t()
-  defp update(fighter), do: do_update(fighter, fighter.phase)
+  @spec update_aux_data(t()) :: t()
+  defp update_aux_data(fighter), do: update_aux_data(fighter, fighter.phase)
 
-  # TODO better name?
-  @spec do_update(t(), Phase.phase_name()) :: t()
-  defp do_update(f, :move) do
+  @spec update_aux_data(t(), Phase.phase_name()) :: t()
+  defp update_aux_data(f, :move) do
     %{f |
       from_location: f.box_start,
       to_location: f.box_move,
@@ -136,7 +134,7 @@ defmodule Chukinas.Skies.Game.Fighter do
       },
     }
   end
-  defp do_update(f, :approach) do
+  defp update_aux_data(f, :approach) do
     %{f |
       from_location: f.box_move,
       to_location: f.attack_bomber_id,
@@ -149,7 +147,7 @@ defmodule Chukinas.Skies.Game.Fighter do
       },
     }
   end
-  defp do_update(f, _) do
+  defp update_aux_data(f, _) do
     %{f |
       from_location: f.box_start,
       to_location: get_current_location(f),
@@ -158,7 +156,7 @@ defmodule Chukinas.Skies.Game.Fighter do
   end
 
   defp complete(%__MODULE__{} = fighter) do
-    %{fighter | state: :complete} |> update()
+    %{fighter | state: :complete} |> update_aux_data()
   end
 
 end
