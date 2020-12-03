@@ -156,6 +156,7 @@ defmodule Chukinas.Skies.Game do
   @spec build_token(t(), atom()) :: token()
   defp build_token(game, response), do: {response, game}
 
+  # TODO move to g phase
   @spec play_phase?(t()) :: boolean()
   def play_phase?(%__MODULE__{phase: %{name: :move}} = game) do
     Enum.any?(game.squadron.fighters, &Fighter.available_this_turn?/1)

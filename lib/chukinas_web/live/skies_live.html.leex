@@ -33,7 +33,6 @@
     <%= space.lethal_level %>
   </div>
   <% end %>
-  <!-- TODO one-line this? -->
   <%= for bomber <- @vm.bombers do %>
   <%= build(:bomber, bomber) %>
   <% end %>

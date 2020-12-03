@@ -16,7 +16,6 @@ defmodule Chukinas.Skies.ViewModel.FighterGroup do
 
   @type vm_tags :: []
 
-  # TODO snippet
   use TypedStruct
 
   typedstruct enforce: true do

@@ -63,7 +63,4 @@ defmodule ChukinasWeb.SkiesLive do
     {:noreply, socket}
   end
 
-  # TODO centralize phase done and skip checks
-  # TODO handle unselect
-
 end
