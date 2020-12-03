@@ -63,7 +63,7 @@ defmodule ChukinasWeb.SkiesView do
     hover:bg-blue-300
     text-blue-100 hover:text-blue-100
     font-bold
-    py-2 px-4 
+    py-2 px-4
     border-2 border-blue-100 rounded
     """
     if Keyword.fetch!(opts, :disabled), do: base <> " opacity-75", else: base

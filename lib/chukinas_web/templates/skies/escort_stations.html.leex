@@ -1,20 +1,9 @@
-<style>
-  .escort_stations_grid {
-    grid-template-areas: 
-      ". above"
-      "forward ."
-      ". trailing"
-  }
-</style>
 <div class="col-start-3 font-bold text-blue-100 border-2 rounded border-blue-100 p-2">
   <p>Escort Stations</p>
-  <div class="grid grid-cols-2 gap-2">
-    <div></div>
-    <div>Above Trailing</div>
-    <div>Forward</div>
-    <div></div>
-    <div></div>
-    <div>Below Trailing</div>
-  </div>
+  <!-- <div class="grid grid-cols-2 gap-2"> -->
+    <%= for station <- @stations do %>
+    <%= station.title %>
+    <% end %>
+  <!-- </div> -->
 
 </div>

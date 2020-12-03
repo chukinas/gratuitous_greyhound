@@ -48,7 +48,7 @@
   </div>
       
   <!-- *** ESCORT STATIONS -->
-  <%= component.(:escort_stations) %>
+  <%= build(:escort_stations, stations: @vm.escort_stations) %>
 
   <!-- *** TAIL POSITION -->
   <div class="col-start-4 col-span-2 row-start-3">
@@ -64,3 +64,5 @@
 <!-- TODO other boxes -->
 <!-- TODO turn mgr: box should extend all the way down -->
 <!-- TODO end phase should stick to bottom of box -->
+<!-- TODO make whole screen blue, center board -->
+<!-- TODO add better looking title -->
