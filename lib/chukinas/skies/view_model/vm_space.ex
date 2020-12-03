@@ -1,7 +1,7 @@
 defmodule Chukinas.Skies.ViewModel.Space do
 
-  alias Chukinas.Skies.Game.Space, as: G_Space
   alias Chukinas.Skies.Common, as: C
+  alias Chukinas.Skies.Game.Space, as: G_Space
 
   # *** *******************************
   # *** TYPES

@@ -1,5 +1,11 @@
-defmodule Chukinas.Skies.ViewModel.Escort do
+defmodule Chukinas.Skies.ViewModel.EscortPawn do
 
+  # *** *******************************
+  # *** TYPES
+  
+  # TODO be more specific
+  @type t() :: any()
+  
   # TODO move this to a template
 
   import Phoenix.HTML
