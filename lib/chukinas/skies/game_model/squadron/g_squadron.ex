@@ -29,17 +29,24 @@ defmodule Chukinas.Skies.Game.Squadron do
   def new() do
     1..2
     |> Enum.map(&Fighter.new/1)
-    |> rebuild()
+    |> build()
     |> select_group(1)
   end
 
-  # TODO rename t_from_fighters? or build?
-  @spec rebuild([Fighter.t()]) :: t()
-  def rebuild(fighters) do
+  # *** *******************************
+  # *** BUILD
+
+  @spec build([Fighter.t()]) :: t()
+  defp build(fighters) do
     groups = fighters
     |> Enum.map(&Fighter.unselect/1)
     |> FighterGroup.build_groups()
     build(fighters, groups)
+  end
+
+  @spec build([Fighter.t()], [FighterGroup.t()]) :: t()
+  defp build(fighters, groups) do
+    %__MODULE__{fighters: fighters, groups: groups}
   end
 
   # *** *******************************
@@ -70,7 +77,7 @@ defmodule Chukinas.Skies.Game.Squadron do
     fighter_ids = get_selected_fighter_ids(squadron)
     squadron.fighters
     |> apply_if_matching_id(fighter_ids, &Fighter.do_not_move/1)
-    |> rebuild()
+    |> build()
   end
 
   @spec move(t(), Box.id()) :: t()
@@ -78,14 +85,14 @@ defmodule Chukinas.Skies.Game.Squadron do
     fighter_ids = get_selected_fighter_ids(squadron)
     squadron.fighters
     |> apply_if_matching_id(fighter_ids, &Fighter.move(&1, box_id))
-    |> rebuild()
+    |> build()
   end
 
   @spec next_turn(t()) :: t()
   def next_turn(%__MODULE__{} = s) do
     s.fighters
     |> Enum.map(&Fighter.next_turn/1)
-    |> rebuild()
+    |> build()
   end
 
   @spec attack(t(), Bomber.id()) :: t()
@@ -93,14 +100,14 @@ defmodule Chukinas.Skies.Game.Squadron do
     fighter_ids = get_selected_fighter_ids(squadron)
     squadron.fighters
     |> apply_if_matching_id(fighter_ids, &Fighter.attack(&1, bomber_id))
-    |> rebuild()
+    |> build()
   end
 
   @spec start_phase(t(), Phase.phase_name()) :: t()
   def start_phase(s, phase_name) do
     s.fighters
     |> Enum.map(&Fighter.set_phase(&1, phase_name))
-    |> rebuild()
+    |> build()
   end
 
   # *** *******************************
@@ -118,12 +125,6 @@ defmodule Chukinas.Skies.Game.Squadron do
 
   # *** *******************************
   # *** HELPERS
-
-  # TODO rename?
-  @spec build([Fighter.t()], [FighterGroup.t()]) :: t()
-  defp build(fighters, groups) do
-    %__MODULE__{fighters: fighters, groups: groups}
-  end
 
   @spec update_fighters([Fighter.t()], t()) :: t()
   defp update_fighters(fighters, squadron) do
