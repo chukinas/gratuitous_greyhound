@@ -5,6 +5,7 @@ defmodule Chukinas.Skies.Game do
     Box,
     Boxes,
     Bombers,
+    Escorts,
     Fighter,
     Spaces,
     Squadron,
@@ -13,25 +14,18 @@ defmodule Chukinas.Skies.Game do
     Phase,
   }
 
-  defstruct [
-    :spaces,
-    :bombers,
-    :squadron,
-    :turn,
-    :phase,
-    :tactical_points,
-    :boxes,
-  ]
+  use TypedStruct
 
-  @type t :: %__MODULE__{
-    spaces: any(),
-    bombers: any(),
-    squadron: any(),
-    turn: Turn.t(),
-    phase: Phase.t(),
-    tactical_points: TacticalPoints.t(),
-    boxes: Boxes.t(),
-  }
+  typedstruct enforce: true do
+    field :escorts, Escorts.t()
+    field :spaces, Spaces.t()
+    field :bombers, Bombers.t()
+    field :squadron, Squadron.t()
+    field :turn, Turn.t()
+    field :phase, Phase.t()
+    field :tactical_points, TacticalPoints.t()
+    field :boxes, Boxes.t()
+  end
 
   @type token :: {atom(), t()}
 
@@ -41,6 +35,7 @@ defmodule Chukinas.Skies.Game do
   @spec new(any()) :: t()
   def new(map_id) do
     %__MODULE__{
+      escorts: Escorts.new(),
       spaces: Spaces.new(map_id),
       bombers: Bombers.new(map_id),
       squadron: Squadron.new(),

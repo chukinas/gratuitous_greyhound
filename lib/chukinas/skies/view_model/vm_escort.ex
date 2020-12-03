@@ -1,5 +1,7 @@
 defmodule Chukinas.Skies.ViewModel.Escort do
 
+  # TODO move this to a template
+
   import Phoenix.HTML
 
   def render() do
