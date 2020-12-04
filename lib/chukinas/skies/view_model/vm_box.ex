@@ -5,7 +5,7 @@ defmodule Chukinas.Skies.ViewModel.Box do
   alias Chukinas.Skies.Game.EscortStation, as: G_EscortStation
   alias Chukinas.Skies.Game.Escorts, as: G_Escorts
   alias Chukinas.Skies.Game.FighterGroups, as: G_FighterGroups
-  alias Chukinas.Skies.ViewModel.GroupPawn
+  alias Chukinas.Skies.ViewModel.GroupPawns, as: VM_GroupPawns
 
   # *** *******************************
   # *** TYPES
@@ -15,8 +15,8 @@ defmodule Chukinas.Skies.ViewModel.Box do
   typedstruct enforce: true do
     field :title, String.t()
     field :uiid, String.t()
-    field :fighter_group_pawns, [GroupPawn.t()]
-    field :escort_pawns, [GroupPawn.t()]
+    field :fighter_group_pawns, VM_GroupPawns.t()
+    field :escort_pawns, VM_GroupPawns.t()
     field :grid_tailwind, String.t()
   end
 
@@ -25,14 +25,10 @@ defmodule Chukinas.Skies.ViewModel.Box do
 
   @spec build_fighter_box(G_Box.t(), G_FighterGroups.t()) :: t()
   def build_fighter_box(%G_Box{} = box, all_groups) do
-    # TODO extract this to func
-    group_pawns = all_groups
-    |> Enum.filter(fn group -> group.current_location == box.id end)
-    |> Enum.map(&GroupPawn.build/1)
     %__MODULE__{
       title: build_title(box.id),
       uiid: box.id |> G_Box.id_to_uiid(),
-      fighter_group_pawns: group_pawns,
+      fighter_group_pawns: VM_GroupPawns.build(box.id, all_groups),
       escort_pawns: [],
       grid_tailwind: grid_tailwind(box.id)
     }
