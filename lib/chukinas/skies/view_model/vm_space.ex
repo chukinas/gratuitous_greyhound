@@ -1,7 +1,7 @@
 defmodule Chukinas.Skies.ViewModel.Space do
 
-  alias Chukinas.Skies.Game.Space, as: G_Space
   alias Chukinas.Skies.Common, as: C
+  alias Chukinas.Skies.Game.Space, as: G_Space
 
   # *** *******************************
   # *** TYPES
@@ -30,8 +30,6 @@ defmodule Chukinas.Skies.ViewModel.Space do
 
   # *** *******************************
   # *** HELPERS
-
-  # TODO snippet defp
 
   @spec coordinates_tailwind(G_Space.t()) :: String.t()
   defp coordinates_tailwind(space) do

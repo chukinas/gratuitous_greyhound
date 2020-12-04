@@ -1,5 +1,7 @@
 defmodule Chukinas.Skies.Game.Box do
 
+  alias Chukinas.Skies.Game.EscortStation
+
   # Terminology:
   # Location refers to the unique indentifier of a unique box on the board
   # Box is a Location with other data, e.g. allowed moves and their cost
@@ -22,7 +24,11 @@ defmodule Chukinas.Skies.Game.Box do
   @typep id_notentered :: :notentered
   @typep id_dogfight :: {:dogfight, integer()}
   @typep id_position :: {position(), box_type(), altitude()}
-  @type id :: id_notentered() | id_dogfight() | id_position()
+  @type id ::
+    id_notentered() |
+    id_dogfight() |
+    id_position() |
+    EscortStation.id()
   @typep cost :: integer()
   @typep move :: {id(), cost()}
   @type fighter_move :: {id(), id()}

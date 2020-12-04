@@ -3,7 +3,6 @@ defmodule ChukinasWeb.SkiesView do
   alias Chukinas.Skies.ViewModel.Phase
 
   def build_from_list(name, items) do
-    # TODO snippet for eex with end
     ~E"""
     <%= for item <- items do %>
     <%= build(name, item) %>
@@ -56,14 +55,12 @@ defmodule ChukinasWeb.SkiesView do
   # *** COMPONENTS
 
   def button_styling(opts \\ []) do
-    # TODO this needs reworked
-    # TODO - disabled, happy path, other
     opts = Keyword.merge([disabled: false], opts)
     base = """
     hover:bg-blue-300
     text-blue-100 hover:text-blue-100
     font-bold
-    py-2 px-4 
+    py-2 px-4
     border-2 border-blue-100 rounded
     """
     if Keyword.fetch!(opts, :disabled), do: base <> " opacity-75", else: base
