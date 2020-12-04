@@ -14,8 +14,7 @@ defmodule Chukinas.Skies.Game.EscortStation do
   # *** *******************************
   # *** API
 
-  # TODO rename ids?
-  @spec box_names :: [id()]
-  def box_names(), do: [:forward, :abovetrailing, :belowtrailing]
+  @spec ids :: [id()]
+  def ids(), do: [:forward, :abovetrailing, :belowtrailing]
 
 end
