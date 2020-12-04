@@ -3,7 +3,6 @@ defmodule Chukinas.Skies.Game.EscortStation do
   # *** *******************************
   # *** TYPES
 
-  # TODO is this used in vm?
   @type id() :: :forward | :abovetrailing | :belowtrailing
 
   use TypedStruct

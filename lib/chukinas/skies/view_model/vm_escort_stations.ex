@@ -16,7 +16,7 @@ defmodule Chukinas.Skies.ViewModel.EscortStations do
   @spec build(G_Escorts.t()) :: t()
   def build(escorts) do
     G_EscortStation.box_names()
-    |> Enum.map(&VM_Box.build(&1, escorts))
+    |> Enum.map(&VM_Box.build_escort_station(&1, escorts))
   end
 
 end

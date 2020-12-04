@@ -1,8 +1,10 @@
 defmodule Chukinas.Skies.ViewModel.Box do
 
   alias Chukinas.Skies.Common, as: C
-  alias Chukinas.Skies.Game.FighterGroups, as: G_FighterGroups
   alias Chukinas.Skies.Game.Box, as: G_Box
+  alias Chukinas.Skies.Game.EscortStation, as: G_EscortStation
+  alias Chukinas.Skies.Game.Escorts, as: G_Escorts
+  alias Chukinas.Skies.Game.FighterGroups, as: G_FighterGroups
   alias Chukinas.Skies.ViewModel.GroupPawn
 
   # *** *******************************
@@ -22,8 +24,8 @@ defmodule Chukinas.Skies.ViewModel.Box do
   # *** *******************************
   # *** BUILD
 
-  @spec build(G_Box.t(), G_FighterGroups.t()) :: t()
-  def build(%G_Box{} = box, all_groups) do
+  @spec build_fighter_box(G_Box.t(), G_FighterGroups.t()) :: t()
+  def build_fighter_box(%G_Box{} = box, all_groups) do
     group_pawns = all_groups
     |> Enum.filter(fn group -> group.current_location == box.id end)
     |> Enum.map(&GroupPawn.build/1)
@@ -38,8 +40,8 @@ defmodule Chukinas.Skies.ViewModel.Box do
     }
   end
 
-  @spec build(G_EscortStation.box_name(), G_Escorts.t()) :: t()
-  def build(escort_station_name, _escorts) do
+  @spec build_escort_station(G_EscortStation.id(), G_Escorts.t()) :: t()
+  def build_escort_station(escort_station_name, _escorts) do
     %__MODULE__{
       title: escort_station_name |> Atom.to_string() |> String.capitalize(),
       id: escort_station_name |> Atom.to_string(),
