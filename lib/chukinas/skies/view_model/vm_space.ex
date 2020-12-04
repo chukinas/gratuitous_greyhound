@@ -31,8 +31,6 @@ defmodule Chukinas.Skies.ViewModel.Space do
   # *** *******************************
   # *** HELPERS
 
-  # TODO snippet defp
-
   @spec coordinates_tailwind(G_Space.t()) :: String.t()
   defp coordinates_tailwind(space) do
     space.id
