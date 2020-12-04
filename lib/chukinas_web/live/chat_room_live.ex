@@ -3,7 +3,6 @@ require IEx
 defmodule ChukinasWeb.JustOneLive do
   use ChukinasWeb, :live_view
   alias Chukinas.User
-  alias Chukinas.Chat.Users
   alias Chukinas.Chat.Room
 
   #############################################################################

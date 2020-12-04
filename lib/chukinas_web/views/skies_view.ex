@@ -2,6 +2,14 @@ defmodule ChukinasWeb.SkiesView do
   use ChukinasWeb, :view
   alias Chukinas.Skies.ViewModel.Phase
 
+  def build_from_list(name, items) do
+    ~E"""
+    <%= for item <- items do %>
+    <%= build(name, item) %>
+    <% end %>
+    """
+  end
+
   def build_component_renderer(vm) do
     fn view_model_key -> render_component(vm, view_model_key) end
   end
@@ -31,14 +39,14 @@ defmodule ChukinasWeb.SkiesView do
 
   defp phase_class(%Phase{} = phase) do
     case {phase.active?, phase.active_child?} do
-      {true, _} -> "bg-indigo-100  font-bold"
-      {_, true} -> "bg-indigo-100 font-normal"
+      {true, _} -> "bg-blue-100 text-blue-200  font-bold"
+      {_, true} -> "bg-blue-100 text-blue-200 font-normal"
       _ -> "font-normal"
     end
   end
   defp subphase_class(%Phase{} = subphase) do
     case subphase.active? do
-      true -> "bg-indigo-100  font-bold"
+      true -> "bg-blue-100 text-blue-200 font-bold"
       false -> "font-normal"
     end
   end
@@ -49,12 +57,13 @@ defmodule ChukinasWeb.SkiesView do
   def button_styling(opts \\ []) do
     opts = Keyword.merge([disabled: false], opts)
     base = """
-    bg-blue-500 hover:bg-blue-700
-    text-white font-bold
-    py-2 px-4 mt-1
-    border border-blue-700 rounded
+    hover:bg-blue-300
+    text-blue-100 hover:text-blue-100
+    font-bold
+    py-2 px-4
+    border-2 border-blue-100 rounded
     """
-    if Keyword.fetch!(opts, :disabled), do: base <> " opacity-50", else: base
+    if Keyword.fetch!(opts, :disabled), do: base <> " opacity-75", else: base
   end
 
   # def position_box() do

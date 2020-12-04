@@ -1,11 +1,21 @@
-<button
-  class="<%= button_styling() %>"
-  id="<%= @id %>"
+<div
+  class="
+    hover:bg-blue-300
+    text-blue-100 text-left align-top font-bold
+    py-1 px-1
+    h-16 w-24 
+    border-2 border-blue-100 rounded relative
+    <%= @grid_tailwind %>"
+  id="<%= @uiid %>"
   phx-click="move"
-  phx-value-id="<%= @id %>"
+  phx-value-id="<%= @uiid %>"
 >
-  <p><%= @id %></p>
-  <%= for group_pawn <- @pawns do %>
-  <%= build(:pawn, group_pawn) %>
-  <% end %>
-</button>
+  <%= @title %>
+  <div class="absolute right-0 bottom-0 p-1 flex space-x-1">
+    <%= for group_pawn <- @fighter_group_pawns do %>
+    <div class="">
+      <%= build(:pawn, group_pawn) %>
+    </div>
+    <% end %>
+  </div>
+</div>

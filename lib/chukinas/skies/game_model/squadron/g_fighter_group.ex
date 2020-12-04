@@ -5,25 +5,21 @@ defmodule Chukinas.Skies.Game.FighterGroup do
   # *** *******************************
   # *** TYPES
 
-  defstruct [
-    :id,
-    :fighter_ids,
-    :state,
-    :current_location,
-  ]
-
   @type fighters :: [Fighter.t()]
-  @type fighter_func :: (Fighter.t() -> Fighter.t())
 
-  @type t :: %__MODULE__{
-    id: integer(),
-    fighter_ids: fighters(),
-    state: IdAndState.state(),
-    current_location: Location.t(),
-  }
+  use TypedStruct
+
+  typedstruct enforce: true do
+    field :id, integer()
+    field :fighter_ids, fighters()
+    field :state, IdAndState.state()
+    field :current_location, Location.t()
+    field :from_location, Location.t()
+    field :to_location, Location.t()
+  end
 
   # *** *******************************
-  # *** NEW
+  # *** BUILD
 
   @spec build(fighters()) :: t()
   def build([f | _] = fighters) do
@@ -35,15 +31,9 @@ defmodule Chukinas.Skies.Game.FighterGroup do
       fighter_ids: IdAndState.get_list_of_ids(fighters),
       state: f.state,
       current_location: Fighter.get_current_location(f),
+      from_location: f.from_location,
+      to_location: f.to_location,
     }
-  end
-
-  @spec build_groups(fighters()) :: [t()]
-  def build_groups(fighters) do
-    fighters
-    |> Enum.group_by(&({&1.box_start, &1.box_move, &1.state}))
-    |> Map.values()
-    |> Enum.map(&build/1)
   end
 
   # *** *******************************

@@ -1,7 +1,14 @@
 defmodule Chukinas.Skies.Game.Squadron do
-  alias Chukinas.Skies.Game.{Box, Fighter, FighterGroup}
+  alias Chukinas.Skies.Game.{
+    Bomber,
+    Box,
+    Fighter,
+    FighterGroup,
+    FighterGroups,
+    IdAndState,
+    Phase,
+  }
   import Chukinas.Skies.Game.IdAndState
-  alias Chukinas.Skies.Game.IdAndState
 
   # *** *******************************
   # *** TYPES
@@ -21,30 +28,30 @@ defmodule Chukinas.Skies.Game.Squadron do
 
   @spec new() :: t()
   def new() do
-    squadron = 1..2
+    1..2
     |> Enum.map(&Fighter.new/1)
-    |> rebuild()
-    group = squadron.groups
-    |> Enum.at(0)
-    |> FighterGroup.select()
-    %{squadron | groups: [group]}
-  end
-
-  @spec build([Fighter.t()], [FighterGroup.t()]) :: t()
-  def build(fighters, groups) do
-    %__MODULE__{fighters: fighters, groups: groups}
-  end
-
-  @spec rebuild([Fighter.t()]) :: t()
-  def rebuild(fighters) do
-    groups = fighters
-    |> Enum.map(&Fighter.unselect/1)
-    |> FighterGroup.build_groups()
-    build(fighters, groups)
+    |> build()
+    |> select_group(1)
   end
 
   # *** *******************************
-  # *** API
+  # *** BUILD
+
+  @spec build([Fighter.t()]) :: t()
+  defp build(fighters) do
+    groups = fighters
+    |> Enum.map(&Fighter.unselect/1)
+    |> FighterGroups.build()
+    build(fighters, groups)
+  end
+
+  @spec build([Fighter.t()], [FighterGroup.t()]) :: t()
+  defp build(fighters, groups) do
+    %__MODULE__{fighters: fighters, groups: groups}
+  end
+
+  # *** *******************************
+  # *** API, Pipeable
 
   @spec select_group(t(), integer()) :: t()
   def select_group(squadron, group_id) do
@@ -71,7 +78,7 @@ defmodule Chukinas.Skies.Game.Squadron do
     fighter_ids = get_selected_fighter_ids(squadron)
     squadron.fighters
     |> apply_if_matching_id(fighter_ids, &Fighter.do_not_move/1)
-    |> rebuild()
+    |> build()
   end
 
   @spec move(t(), Box.id()) :: t()
@@ -79,24 +86,42 @@ defmodule Chukinas.Skies.Game.Squadron do
     fighter_ids = get_selected_fighter_ids(squadron)
     squadron.fighters
     |> apply_if_matching_id(fighter_ids, &Fighter.move(&1, box_id))
-    |> rebuild()
+    |> build()
   end
+
+  @spec next_turn(t()) :: t()
+  def next_turn(%__MODULE__{} = s) do
+    s.fighters
+    |> Enum.map(&Fighter.next_turn/1)
+    |> build()
+  end
+
+  @spec attack(t(), Bomber.id()) :: t()
+  def attack(squadron, bomber_id) do
+    fighter_ids = get_selected_fighter_ids(squadron)
+    squadron.fighters
+    |> apply_if_matching_id(fighter_ids, &Fighter.attack(&1, bomber_id))
+    |> build()
+  end
+
+  @spec start_phase(t(), Phase.phase_name()) :: t()
+  def start_phase(s, phase_name) do
+    s.fighters
+    |> Enum.map(&Fighter.start_phase(&1, phase_name))
+    |> build()
+  end
+
+  # *** *******************************
+  # *** API, Other
 
   def get_unique_moves(%__MODULE__{fighters: fighters}) do
     fighters
     |> Enum.map(&Fighter.get_move/1)
     |> Enum.uniq()
   end
-
   def any_fighters?(squadron, fun), do: squadron.fighters |> Enum.any?(fun)
   def all_fighters?(squadron, fun), do: squadron.fighters |> Enum.all?(fun)
   def done?(squadron), do: all_fighters?(squadron, &IdAndState.done?/1)
-
-  def next_turn(%__MODULE__{} = s) do
-    s.fighters
-    |> Enum.map(&Fighter.next_turn/1)
-    |> rebuild()
-  end
 
   # *** *******************************
   # *** HELPERS

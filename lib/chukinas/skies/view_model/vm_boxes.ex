@@ -1,35 +1,29 @@
 defmodule Chukinas.Skies.ViewModel.Boxes do
 
   alias Chukinas.Skies.Game.Box, as: G_Box
-  alias Chukinas.Skies.Game.FighterGroup, as: G_FighterGroup
+  alias Chukinas.Skies.Game.FighterGroups, as: G_FighterGroups
   alias Chukinas.Skies.ViewModel.Box, as: VM_Box
 
   # *** *******************************
   # *** TYPES
 
-  defstruct [
-    :nose,
-    :left,
-    :right,
-    :tail,
-    :notentered,
-  ]
+  use TypedStruct
 
-  @type t :: %__MODULE__{
-    nose: [VM_Box.t()],
-    left: [VM_Box.t()],
-    right: [VM_Box.t()],
-    tail: [VM_Box.t()],
-    notentered: VM_Box.t(),
-  }
-
+  typedstruct enforce: true do
+    field :nose, [VM_Box.t()]
+    field :left, [VM_Box.t()]
+    field :right, [VM_Box.t()]
+    field :tail, [VM_Box.t()]
+    field :notentered, VM_Box.t()
+  end
 
   # *** *******************************
   # *** BUILD
 
-  @spec build([G_Box.t()], [G_FighterGroup.t()]) :: t()
+  @spec build([G_Box.t()], G_FighterGroups.t()) :: t()
   def build(boxes, all_groups) do
-    boxes = VM_Box.build_boxes(boxes, all_groups)
+    boxes = boxes
+    |> Enum.map(&VM_Box.build_fighter_box(&1, all_groups))
     %__MODULE__{
       nose: filter_boxes(boxes, :nose),
       left: filter_boxes(boxes, :left),
@@ -53,9 +47,9 @@ defmodule Chukinas.Skies.ViewModel.Boxes do
   end
 
   @spec in_box_group?(VM_Box.t(), G_Box.box_group()) :: boolean()
-  defp in_box_group?(%VM_Box{id: id}, box_group) do
+  defp in_box_group?(%VM_Box{uiid: uiid}, box_group) do
     String.starts_with?(
-      id,
+      uiid,
       Atom.to_string(box_group)
     )
   end

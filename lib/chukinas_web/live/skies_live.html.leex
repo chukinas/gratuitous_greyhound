@@ -1,52 +1,71 @@
 <% component = build_component_renderer(@vm) %>
-<!-- font Germania One? Pirata One - UnifrakturCook UnifrakturMaguntia Vampiro One NewRocker stencil... Rakkas Ceviche One 
-Grenze Gotisc
-...typewriterh
--->
 
 <!-- *** HEADER -->
-<h1 class="text-orange-500 text-5xl font-bold text-center">
+<h1 class="text-orange-500 text-5xl font-bold text-center hidden">
   Skies Above the Reich
 </h1>
 
-<!-- *** SQUADRON -->
-<%= component.(:squadron) %>
-
-<!-- *** NOT YET ENTERED -->
-<%= build(:box, @vm.boxes.notentered) %>
-
-<!-- *** POSITION -->
-<%= build(:position, boxes: @vm.boxes.nose, position: :nose) %>
-
-<!-- *** TURN MANAGER -->
-<%= component.(:turn_manager) %>
-
-<%= if false do %>
-<!-- *** ESCORT STATIONS -->
-<%= component.(:escort_stations) %>
-
-<!-- *** MAP -->
-<div class="grid" style="background-color: lightblue">
-  <%= for space <- @vm.spaces do %>
-  <div
-    style="
-      grid-area: <%= space.y * 2 + 1 %> / <%= space.x * 2 + 1 %>;
-      background-color: deepskyblue;
-      color: white;
-    "
-  >
-    <%= space.lethal_level %>
+<div class="grid bg-blue-200 gap-4">
+  
+  <!-- *** NOSE POSITION -->
+  <div class="col-span-2">
+    <%= build(:position, boxes: @vm.boxes.nose, position: :nose) %>
   </div>
-  <% end %> <%= for {x, y} <- @vm.bombers do %>
-  <div
-    style="
-      grid-area: <%= y * 2 %> / <%= x * 2 %>;
-      background-color: black;
-      color: white;
-    "
-  >
-    ↖
+  
+  <div class="col-start-3 border-2 border-blue-100 rounded p-2">
+    <h3 class="text-blue-100 font-bold">Other Boxes</h3>
+    <!-- *** NOT YET ENTERED -->
+    <%= build(:box, @vm.boxes.notentered) %>
   </div>
-  <% end %>
+    
+  
+  <!-- *** RIGHT POSITION -->
+  <div class="col-start-4 col-span-2 row-start-1">
+    <%= build(:position, boxes: @vm.boxes.right, position: :right) %>
+  </div>
+    
+  <div class="col-start-1 row-start-2 ">
+    <!-- *** TURN MANAGER -->
+    <%= component.(:turn_manager) %>
+  </div>
+
+  <!-- *** MAP -->
+  <div class="col-start-2 col-span-3 row-start-2 border-2 border-blue-100 rounded p-2">
+    <div class="grid gap-1">
+      <%= build_from_list(:space, @vm.spaces) %>
+      <%= build_from_list(:bomber, @vm.bombers) %>
+    </div>
+  </div>
+
+  <!-- *** SQUADRON -->
+  <div class="row-start-2 col-start-5 border-2 border-blue-100 rounded p-2">
+    <%= component.(:squadron) %>
+  </div>
+
+  <!-- *** LEFT POSITION -->
+  <div class="col-start-1 col-span-2">
+    <%= build(:position, boxes: @vm.boxes.left, position: :left) %>
+  </div>
+      
+  <!-- *** ESCORT STATIONS -->
+  <%= build(:escort_stations, stations: @vm.escort_stations) %>
+
+  <!-- *** TAIL POSITION -->
+  <div class="col-start-4 col-span-2 row-start-3">
+    <%= build(:position, boxes: @vm.boxes.tail, position: :tail) %>
+  </div>
+
 </div>
-<% end %>
+
+<!-- TODO turn mgr: too wide -->
+<!-- TODO btns: 3-state formatting -->
+<!-- TODO other boxes -->
+<!-- TODO end phase should stick to bottom of box -->
+<!-- TODO make whole screen blue, center board -->
+<!-- TODO add better looking title -->
+
+<!-- TODO states -->
+<!-- TODO disabled / read only -->
+<!-- TODO selected -->
+<!-- TODO happy path selection -->
+<!-- TODO other selection -->
