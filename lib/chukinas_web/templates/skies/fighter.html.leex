@@ -1,0 +1,11 @@
+<label class="block">
+  <!-- TODO rename uiid -->
+  <input
+    id="fighter_<%= @id %>"
+    type="checkbox"
+    phx-click="toggle_fighter_select"
+    phx-value-id="<%= @id %>"
+    <%= if @selected, do: "checked" %>        
+  >
+    <%= @name %> (#<%= @id %>)
+</label>

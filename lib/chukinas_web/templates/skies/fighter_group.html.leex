@@ -12,20 +12,12 @@
     <span class="font-bold">To:</span>
     <%= @ending_location %>
   </p>
-  <%= for fighter <- @fighters do %>
 
-  <!-- *** CHECKBOX AND LABEL -->
-  <label class="block">
-    <input
-      id="fighter_<%= fighter.id %>"
-      type="checkbox"
-      phx-click="toggle_fighter_select"
-      phx-value-id="<%= fighter.id %>"
-      <%= if fighter.selected, do: "checked" %>        
-    >
-      <%= fighter.name %> (#<%= fighter.id %>)
-  </label>
-  <% end %>
+  <!-- *** FIGHTERS -->
+  <div class="rounded border-2">
+    <%= build_from_list(:fighter, @fighters) %>
+  </div>
+
 
   <%= if @can_select? do %>
   <!-- *** SELECT GROUP -->
