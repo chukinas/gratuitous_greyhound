@@ -1,6 +1,7 @@
-<label class="block">
+<label class="block first:rounded-lg border-2 border-blue-100">
   <!-- TODO rename uiid -->
   <input
+    class="invisible "
     id="fighter_<%= @id %>"
     type="checkbox"
     phx-click="toggle_fighter_select"
@@ -9,3 +10,5 @@
   >
     <%= @name %> (#<%= @id %>)
 </label>
+
+<!-- bg-blue-100 text-blue-200 -->
