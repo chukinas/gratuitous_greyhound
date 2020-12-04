@@ -7,7 +7,7 @@ defmodule ChukinasWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_chukinas_key",
-    signing_salt: "2xBd64CR"
+    signing_salt: "L7gj7vCP"
   ]
 
   socket "/socket", ChukinasWeb.UserSocket,

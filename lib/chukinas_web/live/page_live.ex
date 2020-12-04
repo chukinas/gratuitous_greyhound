@@ -3,7 +3,6 @@ defmodule ChukinasWeb.PageLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    socket = assign(socket, :uuid, "awaiting uuid...")
     {:ok, assign(socket, query: "", results: %{})}
   end
 
@@ -24,11 +23,6 @@ defmodule ChukinasWeb.PageLive do
          |> put_flash(:error, "No dependencies found matching \"#{query}\"")
          |> assign(results: %{}, query: query)}
     end
-  end
-
-  @impl true
-  def handle_event("uuid", uuid, socket) do
-    {:noreply, assign(socket, uuid: uuid)}
   end
 
   defp search(query) do
