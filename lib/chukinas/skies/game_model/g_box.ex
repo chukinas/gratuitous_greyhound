@@ -40,6 +40,7 @@ defmodule Chukinas.Skies.Game.Box do
   # *** *******************************
   # *** API
 
+  # TODO rename id to uiid
   @spec id_to_string(id()) :: String.t()
   def id_to_string(id) when is_atom(id), do: Atom.to_string(id)
   def id_to_string({:dogfight, index}), do: "dogfight_#{index}"

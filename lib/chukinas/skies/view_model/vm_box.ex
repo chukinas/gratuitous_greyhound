@@ -25,13 +25,13 @@ defmodule Chukinas.Skies.ViewModel.Box do
 
   @spec build_fighter_box(G_Box.t(), G_FighterGroups.t()) :: t()
   def build_fighter_box(%G_Box{} = box, all_groups) do
+    # TODO extract this to func
     group_pawns = all_groups
     |> Enum.filter(fn group -> group.current_location == box.id end)
     |> Enum.map(&GroupPawn.build/1)
-    id = box.id |> G_Box.id_to_string()
     %__MODULE__{
-      title: id,
-      uiid: id,
+      title: build_title(box.id),
+      uiid: box.id |> G_Box.id_to_string(),
       fighter_group_pawns: group_pawns,
       escort_pawns: [],
       grid_tailwind: grid_tailwind(box.id)
@@ -41,7 +41,7 @@ defmodule Chukinas.Skies.ViewModel.Box do
   @spec build_escort_station(G_EscortStation.id(), G_Escorts.t()) :: t()
   def build_escort_station(escort_station_name, _escorts) do
     %__MODULE__{
-      title: escort_station_name |> Atom.to_string() |> String.capitalize(),
+      title: build_title(escort_station_name),
       uiid: escort_station_name |> Atom.to_string(),
       fighter_group_pawns: [],
       escort_pawns: [],
@@ -50,13 +50,29 @@ defmodule Chukinas.Skies.ViewModel.Box do
   end
 
   # *** *******************************
-  # *** HELPERS
+  # *** HELPERS - TITLE
+
+  @spec build_title(G_Box.id()) :: String.t()
+  # TODO replace with case in single func
+  defp build_title({_, :approach, _}), do: "Approach"
+  defp build_title({_, :preapproach, alt}), do: build_title(alt)
+  defp build_title({_, {:return, :evasive}, _}), do: "Evasive Return"
+  defp build_title({_, {:return, _}, _}), do: "Return"
+  defp build_title(:noentered), do: "Not Entered"
+  defp build_title(:abovetrailing), do: "Above Trailing"
+  defp build_title(:belowtrailing), do: "Below Trailing"
+  defp build_title(id) when is_atom(id) do
+    Atom.to_string(id) |> String.capitalize()
+  end
+
+  # *** *******************************
+  # *** HELPERS - GRID
 
   @spec grid_tailwind(G_EscortStation.id() | G_Box.id()) :: String.t()
-  def grid_tailwind(:abovetrailing), do: build_tailwind({2, 1})
-  def grid_tailwind(:forward),       do: build_tailwind({1, 2})
-  def grid_tailwind(:belowtrailing), do: build_tailwind({2, 3})
-  def grid_tailwind(g_box) do
+  defp grid_tailwind(:abovetrailing), do: build_tailwind({2, 1})
+  defp grid_tailwind(:forward),       do: build_tailwind({1, 2})
+  defp grid_tailwind(:belowtrailing), do: build_tailwind({2, 3})
+  defp grid_tailwind(g_box) do
     build_tailwind({
       grid_col(g_box),
       grid_row(g_box),
