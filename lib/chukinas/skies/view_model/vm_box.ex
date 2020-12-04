@@ -1,43 +1,100 @@
 defmodule Chukinas.Skies.ViewModel.Box do
 
-  alias Chukinas.Skies.Game.FighterGroup, as: G_FighterGroup
+  alias Chukinas.Skies.Common, as: C
   alias Chukinas.Skies.Game.Box, as: G_Box
-  alias Chukinas.Skies.ViewModel.GroupPawn
+  alias Chukinas.Skies.Game.EscortStation, as: G_EscortStation
+  alias Chukinas.Skies.Game.Escorts, as: G_Escorts
+  alias Chukinas.Skies.Game.FighterGroups, as: G_FighterGroups
+  alias Chukinas.Skies.ViewModel.GroupPawns, as: VM_GroupPawns
 
   # *** *******************************
   # *** TYPES
 
-  defstruct [
-    :title,
-    :id,
-    :pawns,
-  ]
+  use TypedStruct
 
-  @type t :: %__MODULE__{
-    title: String.t(),
-    id: String.t(),
-    pawns: [GroupPawn.t()],
-  }
+  typedstruct enforce: true do
+    field :title, String.t()
+    field :uiid, String.t()
+    field :fighter_group_pawns, VM_GroupPawns.t()
+    field :escort_pawns, VM_GroupPawns.t()
+    field :grid_tailwind, String.t()
+  end
 
   # *** *******************************
   # *** BUILD
 
-  @spec build(G_Box.t(), [G_FighterGroup.t()]) :: t()
-  def build(box, all_groups) do
-    group_pawns = all_groups
-    |> Enum.filter(fn group -> group.current_location == box.id end)
-    |> Enum.map(&GroupPawn.build/1)
-    id = box.id |> G_Box.id_to_string()
+  @spec build_fighter_box(G_Box.t(), G_FighterGroups.t()) :: t()
+  def build_fighter_box(%G_Box{} = box, all_groups) do
     %__MODULE__{
-      title: id,
-      id: id,
-      pawns: group_pawns,
+      title: build_title(box.id),
+      uiid: box.id |> G_Box.id_to_uiid(),
+      fighter_group_pawns: VM_GroupPawns.build(box.id, all_groups),
+      escort_pawns: [],
+      grid_tailwind: grid_tailwind(box.id)
     }
   end
 
-  @spec build_boxes([G_Box.t()], [G_FighterGroup.t()]) :: [t()]
-  def build_boxes(boxes, all_groups) do
-    boxes |> Enum.map(&build(&1, all_groups))
+  @spec build_escort_station(G_EscortStation.id(), G_Escorts.t()) :: t()
+  def build_escort_station(escort_station_name, _escorts) do
+    %__MODULE__{
+      title: build_title(escort_station_name),
+      uiid: escort_station_name |> Atom.to_string(),
+      fighter_group_pawns: [],
+      escort_pawns: [],
+      grid_tailwind: grid_tailwind(escort_station_name)
+    }
   end
+
+  # *** *******************************
+  # *** HELPERS - TITLE
+
+  @spec build_title(G_Box.id()) :: String.t()
+  defp build_title(box_id) do
+    case box_id do
+      {_, :approach, _} -> "Approach"
+      {_, :preapproach, alt} -> build_title(alt)
+      {_, {:return, :evasive}, _} -> "Evasive Return"
+      {_, {:return, _}, _} -> "Return"
+      :notentered -> "Not Entered"
+      :abovetrailing -> "Above Trailing"
+      :belowtrailing -> "Below Trailing"
+      id when is_atom(id) -> Atom.to_string(id) |> String.capitalize()
+    end
+  end
+
+  # *** *******************************
+  # *** HELPERS - GRID
+
+  @spec grid_tailwind(G_EscortStation.id() | G_Box.id()) :: String.t()
+  defp grid_tailwind(:abovetrailing), do: build_tailwind({2, 1})
+  defp grid_tailwind(:forward),       do: build_tailwind({1, 2})
+  defp grid_tailwind(:belowtrailing), do: build_tailwind({2, 3})
+  defp grid_tailwind(g_box) do
+    build_tailwind({
+      grid_col(g_box),
+      grid_row(g_box),
+    })
+  end
+
+  @spec build_tailwind(C.coordinates()) :: String.t()
+  defp build_tailwind({x, y}), do: "row-start-#{y} col-start-#{x}"
+
+  @spec grid_row(G_Box.id()) :: integer()
+  defp grid_row({_, _, altitude}) do
+    [nil, :high, :level, :low]
+    |> Enum.find_index(&(&1 == altitude))
+  end
+  defp grid_row(_), do: 0
+
+  @spec grid_col(G_Box.id()) :: integer()
+  defp grid_col({_, box_type, _}) do
+    case box_type do
+      {_, :evasive}    -> 1
+      {_, :determined} -> 2
+          :preapproach -> 3
+          :approach    -> 4
+    end
+  end
+  defp grid_col(_), do: 0
 
 end

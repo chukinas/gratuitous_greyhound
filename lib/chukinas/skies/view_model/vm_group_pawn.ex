@@ -5,16 +5,12 @@ defmodule Chukinas.Skies.ViewModel.GroupPawn do
   # *** *******************************
   # *** TYPES
 
-  defstruct [
-    :id,
-    :fighter_count,
-  ]
+  use TypedStruct
 
-  @type t :: %__MODULE__{
-    id: String.t(),
-    fighter_count: integer(),
-  }
-
+  typedstruct enforce: true do
+    field :id, integer()
+    field :uiid, String.t()
+  end
 
   # *** *******************************
   # *** BUILD
@@ -22,8 +18,8 @@ defmodule Chukinas.Skies.ViewModel.GroupPawn do
   @spec build(G_FighterGroup.t()) :: t()
   def build(group) do
     %__MODULE__{
-      id: "pawn_group_#{group.id}",
-      fighter_count: Enum.count(group.fighter_ids),
+      id: group.id,
+      uiid: "pawn_group_#{group.id}",
     }
   end
 

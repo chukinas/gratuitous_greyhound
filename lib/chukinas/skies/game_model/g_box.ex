@@ -1,5 +1,7 @@
 defmodule Chukinas.Skies.Game.Box do
 
+  alias Chukinas.Skies.Game.EscortStation
+
   # Terminology:
   # Location refers to the unique indentifier of a unique box on the board
   # Box is a Location with other data, e.g. allowed moves and their cost
@@ -22,7 +24,11 @@ defmodule Chukinas.Skies.Game.Box do
   @typep id_notentered :: :notentered
   @typep id_dogfight :: {:dogfight, integer()}
   @typep id_position :: {position(), box_type(), altitude()}
-  @type id :: id_notentered() | id_dogfight() | id_position()
+  @type id ::
+    id_notentered() |
+    id_dogfight() |
+    id_position() |
+    EscortStation.id()
   @typep cost :: integer()
   @typep move :: {id(), cost()}
   @type fighter_move :: {id(), id()}
@@ -34,10 +40,10 @@ defmodule Chukinas.Skies.Game.Box do
   # *** *******************************
   # *** API
 
-  @spec id_to_string(id()) :: String.t()
-  def id_to_string(id) when is_atom(id), do: Atom.to_string(id)
-  def id_to_string({:dogfight, index}), do: "dogfight_#{index}"
-  def id_to_string({pos, loc_type, alt}) do
+  @spec id_to_uiid(id()) :: String.t()
+  def id_to_uiid(id) when is_atom(id), do: Atom.to_string(id)
+  def id_to_uiid({:dogfight, index}), do: "dogfight_#{index}"
+  def id_to_uiid({pos, loc_type, alt}) do
     [
       Atom.to_string(pos),
       box_type_to_string(loc_type),

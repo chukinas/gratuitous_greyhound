@@ -1,13 +1,10 @@
-.grid {
-  display: grid;
-  /* grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); */
-  grid-template-columns: 40px 20px 40px 20px 40px 20px 40px 20px 40px 20px 40px 20px;
-  grid-template-rows: 40px 20px 40px 20px 40px 20px 40px 20px 40px 20px 40px 20px;
+.row-start-8 {
+  grid-row-start: 8;
 }
-
-.vert-boxes {
-  display: grid;
-  gap: 15px;
-  grid-template-columns: 100px 100px;
-  grid-template-rows: 100px 100px 100px 100px 100px 100px 100px;
+.row-start-9 {
+  grid-row-start: 9;
 }
+.row-start-10 {
+  grid-row-start: 10;
+}
+/* TODO replace this with tailwind config */

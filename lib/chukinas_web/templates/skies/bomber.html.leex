@@ -1,11 +1,19 @@
-<button
+<div
   style="
     grid-area: <%= @y * 2 %> / <%= @x * 2 %>;
   "
-  class="<%= button_styling() %>"
+  class="text-blue-200 rounded border-2 border-blue-100 w-12 h-12 relative text-sm font-bold"
   id="<%= @id %>"
   phx-click="attack"
   phx-value-id="<%= @id %>"
 >
-  ↖
-</button>
+  <div class="absolute top-0 right-0 bg-blue-100 rounded-bl pl-1">
+    <%= @x %>/<%= @y %>
+  </div>
+  <div class="absolute bottom-0 left-0 bg-blue-100 rounded-tr pr-1">
+    B 
+  </div>
+</div>
+
+<!-- flex items-center justify-center -->
+<!-- text-center align-middle  -->

@@ -1,18 +1,11 @@
-<h3><%= @position |> Atom.to_string() |> String.capitalize()%> Position</h3>
+<div class="border-2 border-blue-100 rounded p-2">
 
-<%= for box <- @boxes do %>
-<%= build(:box, box) %>
-<% end %>
+  <h3 class="text-blue-100 font-bold"><%= @position |> Atom.to_string() |> String.capitalize()%> Position</h3>
+  
+  <div class="grid gap-1">
+    <%= for box <- @boxes do %>
+    <%= build(:box, box) %>
+    <% end %>
+  </div>
 
-<!-- <div >
-  <div>Evasive Return</div>
-  <div>Return</div>
-  <div>High</div>
-  <div>High Approach</div>
-  <div>Level</div>
-  <div>Level Approach</div>
-  <div>Low</div>
-  <div>Low Approach</div>
-  <div>Return</div>
-  <div>Evasive Return</div>
-</div> -->
+</div>

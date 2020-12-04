@@ -81,7 +81,6 @@ defmodule Chukinas.Skies.Game.Fighter do
     %{f | box_move: box_id} |> complete()
   end
 
-  # TODO remove this in favor of start_phase
   def next_turn(%__MODULE__{} = fighter) do
     %{fighter |
       box_start: get_current_location(fighter),
@@ -118,7 +117,6 @@ defmodule Chukinas.Skies.Game.Fighter do
   # *** *******************************
   # *** HELPERS
 
-  # TODO this should be called privately in any func that updates state
   @spec update_aux_data(t()) :: t()
   defp update_aux_data(fighter), do: update_aux_data(fighter, fighter.phase)
 
