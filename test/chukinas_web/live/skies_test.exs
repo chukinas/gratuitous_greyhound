@@ -25,7 +25,7 @@ defmodule ChukinasWeb.SkiesLiveTest do
   end
   defp move(view, box_id) do
     view
-    |> element("#" <> Box.id_to_string(box_id))
+    |> element("#" <> Box.id_to_uiid(box_id))
     |> render_click()
     view
   end
@@ -82,7 +82,7 @@ defmodule ChukinasWeb.SkiesLiveTest do
 
   defp assert_group_in_box(view, group_id, box_id) do
     group_selector = "#pawn_group_" <> Integer.to_string(group_id)
-    box_selector = "#" <> Box.id_to_string(box_id)
+    box_selector = "#" <> Box.id_to_uiid(box_id)
     assert has_element?(view, "#{box_selector} #{group_selector}")
     view
   end

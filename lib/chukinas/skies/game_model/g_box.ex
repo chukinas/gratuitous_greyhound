@@ -40,10 +40,10 @@ defmodule Chukinas.Skies.Game.Box do
   # *** *******************************
   # *** API
 
-  @spec id_to_string(id()) :: String.t()
-  def id_to_string(id) when is_atom(id), do: Atom.to_string(id)
-  def id_to_string({:dogfight, index}), do: "dogfight_#{index}"
-  def id_to_string({pos, loc_type, alt}) do
+  @spec id_to_uiid(id()) :: String.t()
+  def id_to_uiid(id) when is_atom(id), do: Atom.to_string(id)
+  def id_to_uiid({:dogfight, index}), do: "dogfight_#{index}"
+  def id_to_uiid({pos, loc_type, alt}) do
     [
       Atom.to_string(pos),
       box_type_to_string(loc_type),
