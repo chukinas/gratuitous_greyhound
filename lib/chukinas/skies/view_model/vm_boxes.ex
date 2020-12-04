@@ -47,9 +47,9 @@ defmodule Chukinas.Skies.ViewModel.Boxes do
   end
 
   @spec in_box_group?(VM_Box.t(), G_Box.box_group()) :: boolean()
-  defp in_box_group?(%VM_Box{id: id}, box_group) do
+  defp in_box_group?(%VM_Box{uiid: uiid}, box_group) do
     String.starts_with?(
-      id,
+      uiid,
       Atom.to_string(box_group)
     )
   end
