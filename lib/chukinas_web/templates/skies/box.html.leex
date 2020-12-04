@@ -1,4 +1,3 @@
-<!-- TODO don't add grid classes if no grid -->
 <div
   class="
     hover:bg-blue-300
@@ -13,7 +12,7 @@
 >
   Approach
   <div class="absolute right-0 bottom-0 p-1 flex space-x-1">
-    <%= for group_pawn <- @pawns do %>
+    <%= for group_pawn <- @fighter_group_pawns do %>
     <div class="">
       <%= build(:pawn, group_pawn) %>
     </div>

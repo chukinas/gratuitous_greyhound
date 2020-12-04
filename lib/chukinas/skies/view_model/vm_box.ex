@@ -15,8 +15,7 @@ defmodule Chukinas.Skies.ViewModel.Box do
   typedstruct enforce: true do
     field :title, String.t()
     field :uiid, String.t()
-    # TODO rename fighter_pawns or group pawns
-    field :pawns, [GroupPawn.t()]
+    field :fighter_group_pawns, [GroupPawn.t()]
     field :escort_pawns, [GroupPawn.t()]
     field :grid_tailwind, String.t()
   end
@@ -33,7 +32,7 @@ defmodule Chukinas.Skies.ViewModel.Box do
     %__MODULE__{
       title: id,
       uiid: id,
-      pawns: group_pawns,
+      fighter_group_pawns: group_pawns,
       escort_pawns: [],
       grid_tailwind: grid_tailwind(box.id)
     }
@@ -44,7 +43,7 @@ defmodule Chukinas.Skies.ViewModel.Box do
     %__MODULE__{
       title: escort_station_name |> Atom.to_string() |> String.capitalize(),
       uiid: escort_station_name |> Atom.to_string(),
-      pawns: [],
+      fighter_group_pawns: [],
       escort_pawns: [],
       grid_tailwind: grid_tailwind(escort_station_name)
     }
