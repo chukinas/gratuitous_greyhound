@@ -1,5 +1,7 @@
 defmodule Chukinas.Skies.ViewModel.EscortStation do
 
+  # TODO should this be removed in favor of VM Box? I think so...
+
   alias Chukinas.Skies.ViewModel.EscortPawn
 
   # *** *******************************
