@@ -52,8 +52,7 @@ defmodule Chukinas.Skies.ViewModel.Box do
   # *** *******************************
   # *** HELPERS
 
-  # TODO be more specific than atom
-  @spec grid_tailwind(atom() | G_Box.id()) :: String.t()
+  @spec grid_tailwind(G_EscortStation.id() | G_Box.id()) :: String.t()
   def grid_tailwind(:abovetrailing), do: build_tailwind({2, 1})
   def grid_tailwind(:forward),       do: build_tailwind({1, 2})
   def grid_tailwind(:belowtrailing), do: build_tailwind({2, 3})
