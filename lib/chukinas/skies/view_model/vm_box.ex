@@ -49,16 +49,17 @@ defmodule Chukinas.Skies.ViewModel.Box do
   # *** HELPERS - TITLE
 
   @spec build_title(G_Box.id()) :: String.t()
-  # TODO replace with case in single func
-  defp build_title({_, :approach, _}), do: "Approach"
-  defp build_title({_, :preapproach, alt}), do: build_title(alt)
-  defp build_title({_, {:return, :evasive}, _}), do: "Evasive Return"
-  defp build_title({_, {:return, _}, _}), do: "Return"
-  defp build_title(:notentered), do: "Not Entered"
-  defp build_title(:abovetrailing), do: "Above Trailing"
-  defp build_title(:belowtrailing), do: "Below Trailing"
-  defp build_title(id) when is_atom(id) do
-    Atom.to_string(id) |> String.capitalize()
+  defp build_title(box_id) do
+    case box_id do
+      {_, :approach, _} -> "Approach"
+      {_, :preapproach, alt} -> build_title(alt)
+      {_, {:return, :evasive}, _} -> "Evasive Return"
+      {_, {:return, _}, _} -> "Return"
+      :notentered -> "Not Entered"
+      :abovetrailing -> "Above Trailing"
+      :belowtrailing -> "Below Trailing"
+      id when is_atom(id) -> Atom.to_string(id) |> String.capitalize()
+    end
   end
 
   # *** *******************************
