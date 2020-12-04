@@ -31,7 +31,7 @@ defmodule Chukinas.Skies.ViewModel.Box do
     |> Enum.map(&GroupPawn.build/1)
     %__MODULE__{
       title: build_title(box.id),
-      uiid: box.id |> G_Box.id_to_string(),
+      uiid: box.id |> G_Box.id_to_uiid(),
       fighter_group_pawns: group_pawns,
       escort_pawns: [],
       grid_tailwind: grid_tailwind(box.id)
@@ -58,7 +58,7 @@ defmodule Chukinas.Skies.ViewModel.Box do
   defp build_title({_, :preapproach, alt}), do: build_title(alt)
   defp build_title({_, {:return, :evasive}, _}), do: "Evasive Return"
   defp build_title({_, {:return, _}, _}), do: "Return"
-  defp build_title(:noentered), do: "Not Entered"
+  defp build_title(:notentered), do: "Not Entered"
   defp build_title(:abovetrailing), do: "Above Trailing"
   defp build_title(:belowtrailing), do: "Below Trailing"
   defp build_title(id) when is_atom(id) do
