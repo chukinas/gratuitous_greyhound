@@ -6,7 +6,6 @@ module.exports = {
   purge: [],
   theme: {
     extend: {
-      opacity: ['disabled'],
       gridRowStart: {
         '8': '8',
         '9': '9',
@@ -14,6 +13,11 @@ module.exports = {
       }
     },
   },
-  variants: {},
+  variants: {
+    extend: {
+      borderRadius: ['first, last'],
+      opacity: ['disabled'],
+    }
+  },
   plugins: [],
 }
