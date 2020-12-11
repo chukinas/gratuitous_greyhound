@@ -1,15 +1,21 @@
 module.exports = {
-  future: {
-    // removeDeprecatedGapUtilities: true,
-    // purgeLayersByDefault: true,
+  purge: {
+    enabled: process.env.MIX_ENV === "prod",
+    content: [
+      "../lib/**/*.eex",
+      "../lib/**/*.leex"
+    ],
+    options: {
+      whitelist: []
+    }
   },
-  purge: [],
   theme: {
     extend: {
       gridRowStart: {
         '8': '8',
         '9': '9',
         '10': '10',
+        '11': '11',
       }
     },
   },
@@ -19,5 +25,5 @@ module.exports = {
       opacity: ['disabled'],
     }
   },
-  plugins: [],
+  plugins: [require("kutty")]
 }

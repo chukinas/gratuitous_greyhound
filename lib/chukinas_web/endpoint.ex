@@ -7,7 +7,7 @@ defmodule ChukinasWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_chukinas_key",
-    signing_salt: "2xBd64CR"
+    signing_salt: "L7gj7vCP"
   ]
 
   socket "/socket", ChukinasWeb.UserSocket,
@@ -32,7 +32,6 @@ defmodule ChukinasWeb.Endpoint do
     socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
     plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
-    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :chukinas
   end
 
   plug Phoenix.LiveDashboard.RequestLogger,

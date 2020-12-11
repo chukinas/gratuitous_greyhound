@@ -7,16 +7,13 @@
 # General application configuration
 use Mix.Config
 
-config :chukinas,
-  ecto_repos: [Chukinas.Repo]
-
 # Configures the endpoint
 config :chukinas, ChukinasWeb.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "9YHwCGiAXZYJaPtGU+p3VR3v5OEToMar0XBG2XWuiaVHXKCynVq9yLcgiUugwtwt",
+  secret_key_base: "zZwwhFZNgMm5ObJ5k7iJAyRH27UZQX4aL+6Cfw54p3jZdUS0K/hg1SYNOA1MPkac",
   render_errors: [view: ChukinasWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: Chukinas.PubSub,
-  live_view: [signing_salt: "VqULGrtf"]
+  live_view: [signing_salt: "4bfIP8sz"]
 
 # Configures Elixir's Logger
 config :logger, :console,

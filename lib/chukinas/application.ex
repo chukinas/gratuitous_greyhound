@@ -1,15 +1,19 @@
 defmodule Chukinas.Application do
+  # See https://hexdocs.pm/elixir/Application.html
+  # for more information on OTP Applications
   @moduledoc false
   use Application
 
   def start(_type, _args) do
     children = [
-      Chukinas.Repo,
+      # Start the Telemetry supervisor
       ChukinasWeb.Telemetry,
+      # Start the PubSub system
       {Phoenix.PubSub, name: Chukinas.PubSub},
-      ChukinasWeb.Endpoint,
-      Chukinas.Chat.Supervisor,
-      Chukinas.Insider.Boundary.Supervisor,
+      # Start the Endpoint (http/https)
+      ChukinasWeb.Endpoint
+      # Start a worker by calling: Chukinas.Worker.start_link(arg)
+      # {Chukinas.Worker, arg}
     ]
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options

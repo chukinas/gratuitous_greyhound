@@ -1,7 +1,7 @@
 // We need to import the CSS so that webpack will load it.
 // The MiniCssExtractPlugin is used to separate it out into
 // its own CSS file.
-import "../css/app.scss";
+import "../css/app.scss"
 
 // webpack automatically bundles all modules in your
 // entry points. Those entry points can be configured
@@ -12,45 +12,39 @@ import "../css/app.scss";
 //     import {Socket} from "phoenix"
 //     import socket from "./socket"
 //
-import "phoenix_html";
-import { Socket } from "phoenix";
-import NProgress from "nprogress";
-import { LiveSocket } from "phoenix_live_view";
+import "phoenix_html"
+import {Socket} from "phoenix"
+import NProgress from "nprogress"
+import {LiveSocket} from "phoenix_live_view"
+import {InitToast} from "./init_toast.js"
 
-// https://thepugautomatic.com/2020/05/persistent-session-data-via-localstorage-in-phoenix-liveview/
-let Hooks = {};
-Hooks.uuid = {
-  mounted() {
-    const tentativeUuid = document.getElementById("uuid").value;
-    const existingUuid = localStorage.getItem("uuid");
-    let finalUuid;
-    if (existingUuid == null) {
-      finalUuid = tentativeUuid;
-      localStorage.setItem("uuid", finalUuid);
-    } else {
-      finalUuid = existingUuid;
-    }
-    this.pushEvent("uuid", finalUuid);
-  },
-};
+let Hooks = {}
+Hooks.InitToast = InitToast
 
-let csrfToken = document
-  .querySelector("meta[name='csrf-token']")
-  .getAttribute("content");
+let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {
-  params: { _csrf_token: csrfToken },
   hooks: Hooks,
-});
+  params: {_csrf_token: csrfToken},
+  dom: {
+    onBeforeElUpdated(from, to){
+      if(from.__x){ window.Alpine.clone(from.__x, to) }
+    }
+  }
+})
+
 
 // Show progress bar on live navigation and form submits
-window.addEventListener("phx:page-loading-start", (info) => NProgress.start());
-window.addEventListener("phx:page-loading-stop", (info) => NProgress.done());
+window.addEventListener("phx:page-loading-start", info => NProgress.start())
+window.addEventListener("phx:page-loading-stop", info => NProgress.done())
 
 // connect if there are any LiveViews on the page
-liveSocket.connect();
+liveSocket.connect()
 
 // expose liveSocket on window for web console debug logs and latency simulation:
 // >> liveSocket.enableDebug()
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
-window.liveSocket = liveSocket;
+window.liveSocket = liveSocket
+
+
+import "alpinejs"

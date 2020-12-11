@@ -1,4 +1,0 @@
-<p>Jonathan Chukinas</p>
-<p>chukinas@gmail.com</p>
-<p>814 812 0289</p>
-<%= Phoenix.HTML.Link.button("Play Just One", to: "/just-one", method: :get) %>
