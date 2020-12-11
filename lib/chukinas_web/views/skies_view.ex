@@ -39,14 +39,14 @@ defmodule ChukinasWeb.SkiesView do
 
   defp phase_class(%Phase{} = phase) do
     case {phase.active?, phase.active_child?} do
-      {true, _} -> "bg-blue-100 text-blue-200  font-bold"
-      {_, true} -> "bg-blue-100 text-blue-200 font-normal"
+      {true, _} -> "bg-blue-100 text-blue-300  font-bold"
+      {_, true} -> "bg-blue-100 text-blue-300 font-normal"
       _ -> "font-normal"
     end
   end
   defp subphase_class(%Phase{} = subphase) do
     case subphase.active? do
-      true -> "bg-blue-100 text-blue-200 font-bold"
+      true -> "bg-blue-100 text-blue-300 font-bold"
       false -> "font-normal"
     end
   end
