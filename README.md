@@ -24,7 +24,4 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 
   * Read Practical VIM
   * Read bash book 
-  * remove package lock
-  * remove tool opts copy
-  * should yarn.lock be in top level?
   * change elixir version to 1.11 in mix.exs?
