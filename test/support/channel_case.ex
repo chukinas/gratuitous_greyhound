@@ -28,13 +28,7 @@ defmodule ChukinasWeb.ChannelCase do
     end
   end
 
-  setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Chukinas.Repo)
-
-    unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Chukinas.Repo, {:shared, self()})
-    end
-
+  setup _tags do
     :ok
   end
 end

@@ -7,9 +7,6 @@
 # General application configuration
 use Mix.Config
 
-config :chukinas,
-  ecto_repos: [Chukinas.Repo]
-
 # Configures the endpoint
 config :chukinas, ChukinasWeb.Endpoint,
   url: [host: "localhost"],

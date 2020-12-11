@@ -6,8 +6,6 @@ defmodule Chukinas.Application do
 
   def start(_type, _args) do
     children = [
-      # Start the Ecto repository
-      Chukinas.Repo,
       # Start the Telemetry supervisor
       ChukinasWeb.Telemetry,
       # Start the PubSub system
