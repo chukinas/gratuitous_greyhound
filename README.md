@@ -14,3 +14,7 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   1. Clone repo
   2. `asdf install`
   3.i 
+
+  TODO
+
+  Install plugins
