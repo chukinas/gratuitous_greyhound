@@ -10,6 +10,18 @@ module.exports = {
     }
   },
   theme: {
+    color: {
+      sepia: {
+        50: 'ebe7df',
+        100: 'd8cfbf',
+        200: 'c5b89f',
+        300: 'b1a080',
+        400: '9e8860',
+        500: '7e6d4d',
+        600: '5f5239',
+        700: '3f3626',
+      },
+    },
     extend: {
       gridRowStart: {
         '8': '8',
