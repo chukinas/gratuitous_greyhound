@@ -2,15 +2,15 @@
   style="
     grid-area: <%= @y * 2 %> / <%= @x * 2 %>;
   "
-  class="text-blue-300 rounded border-2 border-blue-100 w-12 h-12 relative text-sm font-bold"
+  class="text-sepia-500 rounded border-2 border-sepia-300 w-12 h-12 relative text-sm font-bold"
   id="<%= @id %>"
   phx-click="attack"
   phx-value-id="<%= @id %>"
 >
-  <div class="absolute top-0 right-0 bg-blue-100 rounded-bl pl-1">
+  <div class="absolute top-0 right-0 bg-sepia-300 rounded-bl pl-1">
     <%= @x %>/<%= @y %>
   </div>
-  <div class="absolute bottom-0 left-0 bg-blue-100 rounded-tr pr-1">
+  <div class="absolute bottom-0 left-0 bg-sepia-300 rounded-tr pr-1">
     B 
   </div>
 </div>

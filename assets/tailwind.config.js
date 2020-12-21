@@ -10,7 +10,7 @@ module.exports = {
     }
   },
   theme: {
-    color: {
+    colors: {
       sepia: {
         50: 'ebe7df',
         100: 'd8cfbf',

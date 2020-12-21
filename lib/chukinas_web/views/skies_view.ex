@@ -39,14 +39,14 @@ defmodule ChukinasWeb.SkiesView do
 
   defp phase_class(%Phase{} = phase) do
     case {phase.active?, phase.active_child?} do
-      {true, _} -> "bg-blue-100 text-blue-300  font-bold"
-      {_, true} -> "bg-blue-100 text-blue-300 font-normal"
+      {true, _} -> "bg-sepia-300 text-sepia-500  font-bold"
+      {_, true} -> "bg-sepia-300 text-sepia-500 font-normal"
       _ -> "font-normal"
     end
   end
   defp subphase_class(%Phase{} = subphase) do
     case subphase.active? do
-      true -> "bg-blue-100 text-blue-300 font-bold"
+      true -> "bg-sepia-300 text-sepia-500 font-bold"
       false -> "font-normal"
     end
   end
@@ -57,11 +57,11 @@ defmodule ChukinasWeb.SkiesView do
   def button_styling(opts \\ []) do
     opts = Keyword.merge([disabled: false], opts)
     base = """
-    hover:bg-blue-300
-    text-blue-100 hover:text-blue-100
+    hover:bg-sepia-500
+    text-sepia-300 hover:text-sepia-300
     font-bold
     py-2 px-4
-    border-2 border-blue-100 rounded
+    border-2 border-sepia-300 rounded
     """
     if Keyword.fetch!(opts, :disabled), do: base <> " opacity-75", else: base
   end
