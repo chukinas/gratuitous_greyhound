@@ -226,7 +226,6 @@ end
 # -->
 
 # TODO Nil locations shouldn't render as Nil. What instead?
-# TODO select mode
 # TODO select maneuver (climb/dive, straight or roll left/right)
 # TODO fighters should group correctly on approach
 # TODO during attack, fighters not in approach box should be disabled

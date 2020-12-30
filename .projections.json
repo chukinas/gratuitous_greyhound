@@ -1,0 +1,7 @@
+{
+    "lib/chukinas/skies/*/model.ex": { "type": "model" },
+    "lib/chukinas/skies/*/model_collection.ex": { "type": "mcollection" },
+    "lib/chukinas/skies/*/viewmodel.ex": { "type": "view" },
+    "lib/chukinas/skies/*/viewmodel_collection.ex": { "type": "vcollection" },
+    "lib/chukinas_web/templates/skies/*.html.leex": { "type": "template" },
+}
