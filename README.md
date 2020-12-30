@@ -2,8 +2,8 @@
 
 To start your Phoenix server:
 
+  * install asdf and the plugins for erlang, elixer, node, and yarn
   * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.setup`
   * Install Node.js dependencies with `yarn` inside the `assets` directory
   * Start Phoenix endpoint with `mix phx.server`
 
@@ -22,8 +22,6 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 
 ## Jonathan's Notes while trying to get this to work in WSL
 
-  * Read Practical VIM
-  * Read bash book 
   * remove package lock
   * remove tool opts copy
   * should yarn.lock be in top level?
