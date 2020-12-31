@@ -10,6 +10,7 @@ defmodule Chukinas.Skies.ViewModel.GroupPawn do
   typedstruct enforce: true do
     field :id, integer()
     field :uiid, String.t()
+    field :count, integer()
   end
 
   # *** *******************************
@@ -20,6 +21,8 @@ defmodule Chukinas.Skies.ViewModel.GroupPawn do
     %__MODULE__{
       id: group.id,
       uiid: "pawn_group_#{group.id}",
+      # TODO placeholder
+      count: 3,
     }
   end
 
