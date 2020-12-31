@@ -1,11 +1,8 @@
-<div
-  class="text-sepia-500 rounded border-2 border-sepia-300 w-8 h-8 relative text-xs font-bold"
-  id="<%= @uiid %>"
->
-  <div class="absolute top-0 right-0 bg-sepia-300 rounded-bl pl-1">
-    <%= @id %>
-  </div>
-  <div class="absolute bottom-0 left-0 bg-sepia-300 rounded-tr pr-1">
-    G
-  </div>
+<div class="flex" id="<%= @uiid %>">
+  <%= for x <- 1..@count do %>
+    <div
+      class="rounded-full border-2 border-gray-100 w-8 h-8 bg-gray-800 first:ml-0 -ml-4"
+    >
+    </div>
+  <% end %>
 </div>

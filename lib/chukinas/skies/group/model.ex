@@ -16,6 +16,7 @@ defmodule Chukinas.Skies.Game.FighterGroup do
     field :current_location, Location.t()
     field :from_location, Location.t()
     field :to_location, Location.t()
+    field :count, integer()
   end
 
   # *** *******************************
@@ -33,6 +34,7 @@ defmodule Chukinas.Skies.Game.FighterGroup do
       current_location: Fighter.get_current_location(f),
       from_location: f.from_location,
       to_location: f.to_location,
+      count: Enum.count(fighters),
     }
   end
 
