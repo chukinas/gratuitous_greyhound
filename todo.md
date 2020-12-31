@@ -1,11 +1,12 @@
 # Current Branch
 
-  * check todos
+  * 
 
 # VIM
 
   * look into vim git
   * specifically, how to diff a file
+  * go to end of whole word
   * comment current line
   * insert snippets. Examples:
     * class=""
@@ -18,6 +19,7 @@
   * git: how side by sid comparison
   * figure out vim-rhubarb
   * autocompletion
+  * repeat last command
 
 # GENERAL
 

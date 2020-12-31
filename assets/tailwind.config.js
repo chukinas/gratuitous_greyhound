@@ -24,7 +24,6 @@ module.exports = {
       borderRadius: ['first, last'],
       opacity: ['disabled'],
       margin: ['first'],
-      borderWidth: ['first'],
     }
   },
   plugins: [require("kutty")]

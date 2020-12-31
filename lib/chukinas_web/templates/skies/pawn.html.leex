@@ -1,14 +1,8 @@
 <div class="flex" id="<%= @uiid %>">
-  <div
-    class="text-red-200 rounded-full  first:border-4 border-2 border-red-200 w-8 h-8 relative bg-blue-600 -ml-4"
-  >
-  </div>
-  <div
-    class="text-red-200 rounded-full border-2 border-red-200 w-8 h-8 relative bg-green-600 -ml-4"
-  >
-  </div>
-  <div
-    class="text-red-200 rounded-full border-2 border-red-200 w-8 h-8 relative bg-red-600 -ml-4"
-  >
-  </div>
+  <%= for x <- 1..@count do %>
+    <div
+      class="rounded-full border-2 border-gray-100 w-8 h-8 bg-gray-800 first:ml-0 -ml-4"
+    >
+    </div>
+  <% end %>
 </div>
