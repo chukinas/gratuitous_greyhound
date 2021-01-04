@@ -26,3 +26,4 @@
   * pop os: how switch tabs
   * center current line
   * git add and commit in one command
+  * add fzf to linux setup script

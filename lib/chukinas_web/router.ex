@@ -19,6 +19,7 @@ defmodule ChukinasWeb.Router do
     live "/", PageLive, :index
     get "/", PageController, :index
     live "/skies", SkiesLive
+    live "/dreadnought", DreadnoughtLive
   end
 
   # Other scopes may use custom stacks.
