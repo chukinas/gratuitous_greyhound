@@ -62,6 +62,7 @@ import_config "prod.secret.exs"
 
 config :chukinas, ChukinasWeb.Endpoint,
   http: [port: {:system, "PORT"}], # Possibly not needed, but doesn't hurt
-  url: [host: "http://www.chukinas.com" , port: 443],
+  url: [host: System.get_env("APP_NAME") <> ".gigalixirapp.com" , port: 443],
   secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE"),
   server: true
+  check_origin: ["http://www.chukinas.com"]
