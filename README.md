@@ -13,3 +13,7 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 
   1. Clone repo
   2. `asdf install`
+
+Gigalixir-specific config
+
+  * The `*buildpack.config` files are required per the docs: https://gigalixir.readthedocs.io/en/latest/getting-started-guide.html#specify-versions

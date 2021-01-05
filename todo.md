@@ -1,6 +1,7 @@
 # Current Branch
 
-  * 
+  * Remove header and footer
+  * link to github
 
 # VIM
 

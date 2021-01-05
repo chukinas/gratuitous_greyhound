@@ -53,3 +53,16 @@ config :logger, level: :info
 # Finally import the config/prod.secret.exs which loads secrets
 # and configuration from environment variables.
 import_config "prod.secret.exs"
+
+# 20210104 I chose to deploy to Gigalixir using Mix.
+# This is the config based on the one recommended here:
+# https://gigalixir.readthedocs.io/en/latest/modify-app/mix.html#modifying-existing-app-with-mix
+# The instructions said not to replace what I have above, which looks very similar.
+# I chose not to add the db config since I won't be needing it. Yet.
+
+config :chukinas, ChukinasWeb.Endpoint,
+  http: [port: {:system, "PORT"}], # Possibly not needed, but doesn't hurt
+  url: [host: System.get_env("APP_NAME") <> ".gigalixirapp.com", port: 443],
+  secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE"),
+  server: true
+
