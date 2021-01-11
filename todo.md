@@ -2,9 +2,13 @@
 
   * Remove header and footer
   * link to github
+  * arrow shadow
+  * card drop shadow
+  * shading inside red
 
 # VIM
 
+  * add command to add class or add to class
   * look into vim git
   * specifically, how to diff a file
   * go to end of whole word

@@ -4,4 +4,6 @@
     "lib/chukinas/skies/*/viewmodel.ex": { "type": "view" },
     "lib/chukinas/skies/*/viewmodel_collection.ex": { "type": "vcollection" },
     "lib/chukinas_web/templates/skies/*.html.leex": { "type": "template" },
+    "lib/chukinas_web/live/*_live.html.leex": { "type": "page" },
+    "lib/chukinas_web/live/*_live.ex": { "type": "controller" },
 }
