@@ -1,5 +1,5 @@
-<div class="bg-blue-300 h-screen p-4 flex space-x-2">
-  <div class="shadow-inner">
+<div class="bg-blue-300 h-screen p-4 flex space-x-2 ">
+  <div class="shadow-inner invisible absolute">
     <h1 class="text-5xl font-bold text-center mb-4">
       Dreadnought
     </h1>
@@ -38,7 +38,7 @@
   </div>
 
   <%# STRAIGHT CARDS %>
-  <div class="space-y-2">
+  <div class="space-y-2 invisible absolute">
     <%= for speed <- 1..5 do %>
     <div class="h-20 w-20 rounded-lg bg-white p-1 shadow border-1 border-gray-400 relative">
       <div class="h-full bg-red-500 rounded-lg shadow-inner border-2 border-red-700 flex">
@@ -52,7 +52,7 @@
   </div>
 
   <%# RIGHT CARDS %>
-  <div class="space-y-2">
+  <div class="space-y-2 invisible absolute">
     <%= for speed <- 1..5 do %>
     <div class="h-20 w-20 rounded-lg bg-white p-1 shadow border-1 border-gray-400 relative">
       <div class="h-full bg-red-500 rounded-lg shadow-inner border-2 border-red-700 flex">
@@ -63,20 +63,51 @@
       </div>
     </div>
     <% end %>
+
+
+    <%# experiment for speed and angle indication %>
+    <div class="h-40 w-40 border-1 border-black">
+        <div class="flex flex-col space-y-1">
+        <%= for speed <- 1..5 do %>
+            <div class="h-2 w-1 bg-blue-400 rounded-full">
+            </div>
+        <% end %>
+        </div>
+    </div>
+
   </div>
 
   <%# NEW STYLE CARDS %>
+
   <div class="space-y-2">
+
+    <%# experiment with card speed and angle layou %>
+    <div class="bg-green-300 align-text-baseline leading-none">
+    inset
+    </div>
+    <div class="h-16 w-16 bg-pink-300 grid grid-cols-2 grid-rows-2 p-1 m-2">
+      <div class="row-span-2 bg-green-300 grid grid-rows-5 gap-0.5">
+        <%= for speed <- 5..1 do %>
+            <div class="w-1 <%= if speed > 3 do %>opacity-30<% end %> bg-red-900 ">
+            </div>
+        <% end %>
+      </div>
+      <div class="row-start-2 bg-green-300 col-start-2 text-xs place-self-end align-baseline ">
+        180&deg;
+      </div>
+    </div>
+
     <%= for angle <- @angles do %>
     <div class="h-20 w-20 rounded-lg bg-white p-1 shadow border-1 border-gray-400 relative">
       <div class="h-full bg-red-500 rounded-lg shadow-inner border-2 border-red-700 flex ">
         <img class="justify-self-center" src="<%= Routes.static_path(@socket, "/images/arrow/#{angle}.svg") %>">
       </div>
       <div class="absolute top-14 left-12 h-full w-full font-bold text-sm">
-        <%= angle  %> 
+        <%= angle  %>&deg;
       </div>
     </div>
     <% end %>
+
   </div>
 
 </div>
