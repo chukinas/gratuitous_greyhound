@@ -1,5 +1,5 @@
 <div class="bg-blue-300 h-screen p-4 flex space-x-2 ">
-  <div class="shadow-inner invisible absolute">
+  <div class="shadow-inner">
     <h1 class="text-5xl font-bold text-center mb-4">
       Dreadnought
     </h1>
@@ -38,7 +38,7 @@
   </div>
 
   <%# STRAIGHT CARDS %>
-  <div class="space-y-2 invisible absolute">
+  <div class="space-y-2">
     <%= for speed <- 1..5 do %>
     <div class="h-20 w-20 rounded-lg bg-white p-1 shadow border-1 border-gray-400 relative">
       <div class="h-full bg-red-500 rounded-lg shadow-inner border-2 border-red-700 flex">
@@ -52,7 +52,7 @@
   </div>
 
   <%# RIGHT CARDS %>
-  <div class="space-y-2 invisible absolute">
+  <div class="space-y-2">
     <%= for speed <- 1..5 do %>
     <div class="h-20 w-20 rounded-lg bg-white p-1 shadow border-1 border-gray-400 relative">
       <div class="h-full bg-red-500 rounded-lg shadow-inner border-2 border-red-700 flex">
@@ -63,17 +63,6 @@
       </div>
     </div>
     <% end %>
-
-
-    <%# experiment for speed and angle indication %>
-    <div class="h-40 w-40 border-1 border-black">
-        <div class="flex flex-col space-y-1">
-        <%= for speed <- 1..5 do %>
-            <div class="h-2 w-1 bg-blue-400 rounded-full">
-            </div>
-        <% end %>
-        </div>
-    </div>
 
   </div>
 
