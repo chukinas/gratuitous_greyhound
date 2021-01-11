@@ -81,29 +81,21 @@
 
   <div class="space-y-2">
 
-    <%# experiment with card speed and angle layou %>
-    <div class="bg-green-300 align-text-baseline leading-none">
-    inset
-    </div>
-    <div class="h-16 w-16 bg-pink-300 grid grid-cols-2 grid-rows-2 p-1 m-2">
-      <div class="row-span-2 bg-green-300 grid grid-rows-5 gap-0.5">
-        <%= for speed <- 5..1 do %>
-            <div class="w-1 <%= if speed > 3 do %>opacity-30<% end %> bg-red-900 ">
-            </div>
-        <% end %>
-      </div>
-      <div class="row-start-2 bg-green-300 col-start-2 text-xs place-self-end align-baseline ">
-        180&deg;
-      </div>
-    </div>
-
     <%= for angle <- @angles do %>
     <div class="h-20 w-20 rounded-lg bg-white p-1 shadow border-1 border-gray-400 relative">
       <div class="h-full bg-red-500 rounded-lg shadow-inner border-2 border-red-700 flex ">
         <img class="justify-self-center" src="<%= Routes.static_path(@socket, "/images/arrow/#{angle}.svg") %>">
       </div>
-      <div class="absolute top-14 left-12 h-full w-full font-bold text-sm">
-        <%= angle  %>&deg;
+      <div class="absolute top-0 left-0 h-full w-full grid grid-cols-2 grid-rows-2 p-2">
+        <div class="row-span-2 grid grid-rows-5 gap-0.5 m-0.5">
+          <%= for speed <- 5..1 do %>
+              <div class="w-1.5 <%= if speed > 3 do %>opacity-20<% end %> bg-red-900 ">
+              </div>
+          <% end %>
+        </div>
+        <div class="row-start-2 col-start-2 text-xs place-self-end align-baseline text-red-900">
+          <%= angle %>&deg;
+        </div>
       </div>
     </div>
     <% end %>
