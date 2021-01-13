@@ -8,8 +8,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
     socket = socket
     |> assign(page_title: "Dreadnought")
     |> assign(deck: Deck.new(1) |> Deck.draw(5))
-    # TODO remove:
-    |> assign(angles: ~w"000 030 045 060 090 180")
     {:ok, socket}
   end
 
