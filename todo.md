@@ -6,6 +6,10 @@
   * card drop shadow
   * shading inside red
 
+# DREADNOUGHT
+
+  *
+
 # VIM
 
   * add command to add class or add to class
@@ -25,6 +29,8 @@
   * figure out vim-rhubarb
   * autocompletion
   * repeat last command
+  * templates for new files, e.g. Dreadnought.Card
+  * vim-SyntaxRange
 
 # GENERAL
 
