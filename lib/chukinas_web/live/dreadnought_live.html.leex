@@ -61,5 +61,14 @@
     <% end %>
 
   </div>
+  
+  <%# COMMAND CARD HAND %>
+  <div class="space-y-2">
+    <%= for card <- @deck.hand do %>
+      <div>
+        <%= card.angle %>
+      </div>
+    <% end %>
+  </div>
 
 </div>
