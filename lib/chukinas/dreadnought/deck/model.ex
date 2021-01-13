@@ -32,7 +32,7 @@ defmodule Chukinas.Dreadnought.Model.Deck do
   def new(id) do
     %__MODULE__{
       id: id,
-      draw_pile: Enum.map(1..30, &Card.new/1)
+      draw_pile: Enum.map(1..30, &Card.new(&1, id))
     }
   end
 
