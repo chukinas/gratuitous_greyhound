@@ -1,6 +1,8 @@
 <div 
   id="<%= "unit:#{@card.unit_id};card:#{@card.id}" %>" 
-  class="h-20 w-20 rounded-lg bg-white p-1 shadow border-1 border-gray-400 relative"
+  <%# TODO replace cursor-move with cursor-drag after fixing tailwind config file. %>
+  <%# TODO Make sure the cursor doesn't automatically change once I make this component draggable %>
+  class="h-20 w-20 rounded-lg bg-white p-1 shadow border-1 border-gray-400 relative cursor-move"
 >
   <div class="h-full bg-red-500 rounded-lg shadow-inner border-2 border-red-700 flex ">
     <img class="justify-self-center" src="<%= Routes.static_path(@socket, "/images/arrow/090.svg") %>">
