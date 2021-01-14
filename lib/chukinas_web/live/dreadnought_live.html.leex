@@ -41,8 +41,7 @@
   <%# TODO replace spacing with grid %>
   <div class="space-y-2">
     <%= for card <- @deck.hand do %>
-      <%# TODO remove the socket assigns after inlining the svg %>
-      <%= DreadnoughtView.render "card.html", %{socket: @socket, card: card} %>
+      <%= DreadnoughtView.render "card.html", %{card: card} %>
     <% end %>
   </div>
 
