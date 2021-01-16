@@ -11,6 +11,7 @@ defmodule Chukinas.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
+      dialyzer: [plt_add_deps: :transitive],
     ]
   end
 
@@ -47,6 +48,7 @@ defmodule Chukinas.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:typed_struct, "~> 0.2.1"},
+      {:dialyxir, "~> 0.5.0", only: [:dev], runtime: false},
     ]
   end
 
