@@ -1,3 +1,4 @@
+<% svg_paths = build_arrow_svg_paths(@card.angle) %>
 <div 
   id="<%= "unit:#{@card.unit_id};card:#{@card.id}" %>" 
   <%# TODO replace cursor-move with cursor-drag after fixing tailwind config file. %>
@@ -6,8 +7,8 @@
 >
   <div class="h-full bg-red-500 rounded-lg shadow-inner border-2 border-red-700 flex ">
     <svg version="1.1" viewBox="0 0 11 11" xmlns="http://www.w3.org/2000/svg">
-      <path d="<%= build_svg_arrow_shaft(@card.angle) %>" style="fill:none;stroke-width:.75;stroke:#000"/>
-      <path d="<%= build_svg_arrow_head(@card.angle) %>" style="stroke-width:.26px;stroke:#000"/>
+      <path d="<%= svg_paths.shaft %>" style="fill:none;stroke-width:.75;stroke:#000"/>
+      <path d="<%= svg_paths.head  %>" style="stroke-width:.26px;stroke:#000"/>
     </svg>
   </div>
   <div class="absolute top-0 left-0 h-full w-full grid grid-cols-2 grid-rows-2 p-2">
