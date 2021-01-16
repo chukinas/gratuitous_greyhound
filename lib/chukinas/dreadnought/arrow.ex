@@ -1,10 +1,26 @@
-# TODO add docs
 defmodule Chukinas.Dreadnought.Arrow do
+  @moduledoc """
+  Generates the svg paths for movement arrow (shaft and head) on Dreadnought Command Cards
+  """
+
   alias Chukinas.Dreadnought.Cartesian
+
+  @arrow_length 10
 
   # *** *******************************
   # *** API
   
+  @doc """
+  Return map of svg paths for Command Card arrow head and shaft
+
+  ## Examples
+  
+      iex> Chukinas.Dreadnought.Arrow.build_arrow_svg_paths(45)
+      %{
+        head: "M 4.0 4.0, 4.4 5.0, 4.8 3.2, 3.0 3.6 z",
+        shaft: "m 3 10 q 0 -5.0, 4 -4"
+      }
+  """
   def build_arrow_svg_paths(angle_deg) do
     end_point = {4, 4}
     %{shaft: build_svg_arrow_shaft(angle_deg), head: build_svg_arrow_head(end_point, angle_deg)}
@@ -18,9 +34,7 @@ defmodule Chukinas.Dreadnought.Arrow do
   end
 
   defp build_svg_arrow_shaft_curve(_angle) do
-    # TODO change length to a module property
-    path_len = 10
-    "q 0 -#{path_len/2}, 4 -4"
+    "q 0 -#{@arrow_length/2}, 4 -4"
   end
 
   # *** *******************************
@@ -29,10 +43,6 @@ defmodule Chukinas.Dreadnought.Arrow do
   defp build_svg_arrow_head(point, angle_deg) do
     tip = {0, -1.18}
     barb = {1, 0.42}
-    # TODO replace above with actual values
-    # TODO make a note in the docs that y points down
-    # TODO is `points` a better term for x,y than `coordinates`?
-    # TODO make a not that angle is relative to straight up. It's a command card value. point is a view/rendering value
     points = [
       {0, 0},
       barb,
@@ -42,7 +52,7 @@ defmodule Chukinas.Dreadnought.Arrow do
     |> Cartesian.rotate_coordinate_list(angle_deg)
     |> Cartesian.translate_coordinate_list(point)
     |> to_space_separated_strings()
-    "M #{points} z"
+    "M #{points} Z"
   end
 
   # *** *******************************
@@ -65,6 +75,4 @@ defmodule Chukinas.Dreadnought.Arrow do
     Float.round(number, 1)
   end
   
-  # TODO run dialyxir.
-  # TODO can I run dialyxir on every git commit?
 end
