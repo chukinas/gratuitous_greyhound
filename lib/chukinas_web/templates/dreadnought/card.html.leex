@@ -1,4 +1,4 @@
-<% svg_paths = build_arrow_svg_paths(@card.angle) %>
+<% svg_paths = Arrow.build_arrow_svg_paths(@card.angle) %>
 <div 
   id="<%= "unit:#{@card.unit_id};card:#{@card.id}" %>" 
   <%# TODO replace cursor-move with cursor-drag after fixing tailwind config file. %>
