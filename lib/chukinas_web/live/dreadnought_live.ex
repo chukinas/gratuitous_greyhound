@@ -1,6 +1,6 @@
 defmodule ChukinasWeb.DreadnoughtLive do
   use ChukinasWeb, :live_view
-  alias Chukinas.Dreadnought.Model.Deck
+  alias Chukinas.Dreadnought.Deck
   alias ChukinasWeb.DreadnoughtView
 
   @impl true

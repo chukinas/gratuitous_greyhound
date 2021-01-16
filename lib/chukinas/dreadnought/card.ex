@@ -1,4 +1,4 @@
-defmodule Chukinas.Dreadnought.Model.Card do
+defmodule Chukinas.Dreadnought.Card do
 
   # *** *******************************
   # *** TYPES

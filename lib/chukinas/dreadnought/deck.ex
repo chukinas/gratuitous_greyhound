@@ -1,5 +1,5 @@
-defmodule Chukinas.Dreadnought.Model.Deck do
-  alias Chukinas.Dreadnought.Model.Card
+defmodule Chukinas.Dreadnought.Deck do
+  alias Chukinas.Dreadnought.Card
 
   # *** *******************************
   # *** TYPES
