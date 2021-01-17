@@ -9,4 +9,5 @@
     "lib/chukinas_web/views/*.ex": { "type": "view" },
     "lib/chukinas_web/live/*_live.html.leex": { "type": "page" },
     "lib/chukinas_web/live/*_live.ex": { "type": "controller" },
+    "test/chukinas/dreadnought/*_test.exs": { "type": "test" },
 }
