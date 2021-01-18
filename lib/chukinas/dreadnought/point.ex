@@ -12,6 +12,25 @@ defmodule Chukinas.Dreadnought.Point do
   @type point_or_points :: t() | list_of() | map_of()
 
   # *** *******************************
+  # *** FROM POLAR
+
+  @doc """
+  Calculate a point (cartesian) from polar coordinates
+
+  ## Examples
+
+      iex> alias Chukinas.Dreadnought.{Point, Angle}
+      iex> angle = Angle.new(90)
+      iex> Point.from_polar(angle, 1)
+      ...> |> Point.set_precision(:int)
+      {0, 1}
+  """
+  def from_polar(%Angle{}=angle, radius) when is_number(radius) do
+    {radius, 0}
+    |> rotate(angle)
+  end 
+  
+  # *** *******************************
   # *** TRANSLATE
 
   @doc """
@@ -28,7 +47,6 @@ defmodule Chukinas.Dreadnought.Point do
       iex> Chukinas.Dreadnought.Point.translate(%{a: {1, 2.5}, b: {0, 0}}, {2, -0.5})
       %{a: {3, 2.0}, b: {2, -0.5}}
   """
-  # TODO add documentation.
   def translate(points, dxdy) when is_map(points) do
     points
     |> update_map_values(fn point -> translate(point, dxdy) end)

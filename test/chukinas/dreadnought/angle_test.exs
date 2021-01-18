@@ -6,8 +6,4 @@ defmodule Chukinas.Dreadnought.AngleTest do
   use ExUnit.Case, async: true
   doctest Angle
 
-  test "the angle module" do
-    assert true
-  end
-
 end
