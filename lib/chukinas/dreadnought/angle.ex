@@ -83,6 +83,26 @@ defmodule Chukinas.Dreadnought.Angle do
   end
 
   # *** *******************************
+  # *** ADD
+
+  @doc """
+  Add two angles together, returning an angle struct
+
+  ## Examples
+  
+      iex> alias Chukinas.Dreadnought.Angle
+      iex> Angle.new(-45)
+      ...> |> Angle.add(45)
+      %Angle{deg: 0, deg_abs: 0, negative?: false, rad: 0.0, rad_abs: 0.0}
+  """
+  def add(%__MODULE__{}=angle1, %__MODULE__{}=angle2) do
+    new(angle1.deg + angle2.deg)
+  end
+  def add(%__MODULE__{}=angle1, angle2) when is_number(angle2) do
+    new(angle1.deg + angle2)
+  end
+
+  # *** *******************************
   # *** HELPERS
 
   @spec deg_to_rad(number()) :: number()
