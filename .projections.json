@@ -1,9 +1,13 @@
 {
-    "lib/chukinas/skies/*/model.ex": { "type": "model" },
-    "lib/chukinas/skies/*/model_collection.ex": { "type": "mcollection" },
-    "lib/chukinas/skies/*/viewmodel.ex": { "type": "view" },
-    "lib/chukinas/skies/*/viewmodel_collection.ex": { "type": "vcollection" },
-    "lib/chukinas_web/templates/skies/*.html.leex": { "type": "template" },
+    "lib/chukinas/skies/*/model.ex": { "type": "skiesmodel" },
+    "lib/chukinas/skies/*/model_collection.ex": { "type": "skiesmcollection" },
+    "lib/chukinas/skies/*/viewmodel.ex": { "type": "skiesview" },
+    "lib/chukinas/skies/*/viewmodel_collection.ex": { "type": "skiesvcollection" },
+    "lib/chukinas_web/templates/skies/*.html.leex": { "type": "skiestemplate" },
+    "lib/chukinas/dreadnought/*.ex": { "type": "core" },
+    "lib/chukinas_web/templates/dreadnought/*.html.leex": { "type": "template" },
+    "lib/chukinas_web/views/*.ex": { "type": "view" },
     "lib/chukinas_web/live/*_live.html.leex": { "type": "page" },
     "lib/chukinas_web/live/*_live.ex": { "type": "controller" },
+    "test/chukinas/dreadnought/*_test.exs": { "type": "test" },
 }

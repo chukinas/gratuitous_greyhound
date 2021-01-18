@@ -36,59 +36,13 @@
       <li>Battlefleet Gothic</li>
     </ul>
   </div>
-
-  <%# STRAIGHT CARDS %>
+  
+  <%# COMMAND CARD HAND %>
+  <%# TODO replace spacing with grid %>
   <div class="space-y-2">
-    <%= for speed <- 1..5 do %>
-    <div class="h-20 w-20 rounded-lg bg-white p-1 shadow border-1 border-gray-400 relative">
-      <div class="h-full bg-red-500 rounded-lg shadow-inner border-2 border-red-700 flex">
-        <img class="justify-self-center" src="<%= Routes.static_path(@socket, "/images/arrow_straight_#{speed}.svg") %>">
-      </div>
-      <div class="absolute top-0 left-0 h-full w-full flex justify-center flex-col text-center font-bold text-lg">
-        <%= speed  %>
-      </div>
-    </div>
+    <%= for card <- @deck.hand do %>
+      <%= DreadnoughtView.render "card.html", %{card: card} %>
     <% end %>
-  </div>
-
-  <%# RIGHT CARDS %>
-  <div class="space-y-2">
-    <%= for speed <- 1..5 do %>
-    <div class="h-20 w-20 rounded-lg bg-white p-1 shadow border-1 border-gray-400 relative">
-      <div class="h-full bg-red-500 rounded-lg shadow-inner border-2 border-red-700 flex">
-        <img class="justify-self-center" src="<%= Routes.static_path(@socket, "/images/arrow_right_30_#{speed}.svg") %>">
-      </div>
-      <div class="absolute top-0 left-0 h-full w-full flex justify-center flex-col text-center font-bold text-lg">
-        <%= speed  %>
-      </div>
-    </div>
-    <% end %>
-
-  </div>
-
-  <%# NEW STYLE CARDS %>
-
-  <div class="space-y-2">
-
-    <%= for angle <- @angles do %>
-    <div class="h-20 w-20 rounded-lg bg-white p-1 shadow border-1 border-gray-400 relative">
-      <div class="h-full bg-red-500 rounded-lg shadow-inner border-2 border-red-700 flex ">
-        <img class="justify-self-center" src="<%= Routes.static_path(@socket, "/images/arrow/#{angle}.svg") %>">
-      </div>
-      <div class="absolute top-0 left-0 h-full w-full grid grid-cols-2 grid-rows-2 p-2">
-        <div class="row-span-2 grid grid-rows-5 gap-0.5 m-0.5">
-          <%= for speed <- 5..1 do %>
-              <div class="w-1.5 <%= if speed > 3 do %>opacity-20<% end %> bg-red-900 ">
-              </div>
-          <% end %>
-        </div>
-        <div class="row-start-2 col-start-2 text-xs place-self-end align-baseline text-red-900">
-          <%= angle %>&deg;
-        </div>
-      </div>
-    </div>
-    <% end %>
-
   </div>
 
 </div>
