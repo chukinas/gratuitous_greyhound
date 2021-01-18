@@ -103,6 +103,25 @@ defmodule Chukinas.Dreadnought.Angle do
   end
 
   # *** *******************************
+  # *** SUBTRACT
+
+  @doc """
+  Subtract one angle from another
+
+  ## Examples
+  
+      iex> alias Chukinas.Dreadnought.Angle
+      iex> angle1 = Angle.new(180)
+      iex> angle2 = Angle.new(45)
+      iex> Angle.subtract(angle1, angle2)
+      %Angle{deg: 135, deg_abs: 135, negative?: false, rad: 2.356194490192345, rad_abs: 2.356194490192345}
+  """
+  # TODO are the absolute values and negative? still needed after building so much other infrastructure?
+  def subtract(%__MODULE__{}=angle1, %__MODULE__{}=angle2) do
+    new(angle1.deg - angle2.deg)
+  end
+
+  # *** *******************************
   # *** HELPERS
 
   @spec deg_to_rad(number()) :: number()
