@@ -79,7 +79,7 @@ defmodule Chukinas.Dreadnought.Angle do
   """
   def spin_90(%__MODULE__{}=angle, direction) do
     rotation_deg = 90 * get_sign(direction)
-    new(angle.deg + rotation_deg)
+    add(angle, rotation_deg)
   end
 
   # *** *******************************
