@@ -173,6 +173,31 @@ defmodule Chukinas.Dreadnought.Vector do
     |> new(vector_angle_end)
   end
 
+  # *** *******************************
+  # *** Y-INTERCEPT
+
+  @doc """
+  Find a vector's y-intercept
+
+  ## Examples
+
+      iex> Vector.new(1, 1, 0)
+      ...> |> Vector.get_y_intercept()
+      ...> |> round()
+      1
+
+      iex> Vector.new(1, 1, 45)
+      ...> |> Vector.get_y_intercept()
+      ...> |> round()
+      0
+  """
+  def get_y_intercept(%__MODULE__{}=vector) do
+    {x, y} = vector.point
+    slope = :math.tan(vector.angle.rad)
+    intercept = y - slope * x
+    {0, intercept}
+  end
+
   # TODO move this to a different module
   def get_sign_of_angle(angle) do
     round(angle / abs(angle))
