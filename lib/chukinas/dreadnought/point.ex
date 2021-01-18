@@ -70,10 +70,6 @@ defmodule Chukinas.Dreadnought.Point do
 
   ## Examples
 
-      iex> a = 2
-      iex> a == 2
-      true
-
       iex> alias Chukinas.Dreadnought.{Angle, Point}
       iex> point = {0, 1}
       iex> angle = Angle.new(90)

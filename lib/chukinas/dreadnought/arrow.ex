@@ -1,12 +1,16 @@
 defmodule Chukinas.Dreadnought.Arrow do
   @moduledoc """
-  Generates the svg paths for movement arrow (shaft and head) on Dreadnought Command Cards
+  Generate svg paths for movement arrow (shaft and head) on Dreadnought Command Cards
   """
 
-  alias Chukinas.Dreadnought.Cartesian
+  alias Chukinas.Dreadnought.Point
+  alias Chukinas.Dreadnought.Vector
+  alias Chukinas.Dreadnought.Svg
 
-  @arrow_length 10
-
+  @arrow_length 7
+  @arrow_start_y 9
+  @arrow_center_x 7
+  
   # *** *******************************
   # *** API
   
@@ -15,64 +19,70 @@ defmodule Chukinas.Dreadnought.Arrow do
 
   ## Examples
   
-      iex> Chukinas.Dreadnought.Arrow.build_arrow_svg_paths(45)
+      iex> Chukinas.Dreadnought.Arrow.build_arrow_svg_paths(90)
       %{
-        head: "M 4.0 4.0, 4.4 5.0, 4.8 3.2, 3.0 3.6 z",
-        shaft: "m 3 10 q 0 -5.0, 4 -4"
+        head: "M 8.6 4.5, 8.2 5.5, 9.8 4.5, 8.2 3.5 Z",
+        shaft: "M 4.2 9 Q 4.2 4.5, 8.6 4.5"
       }
   """
   def build_arrow_svg_paths(angle_deg) do
-    end_point = {4, 4}
-    %{shaft: build_svg_arrow_shaft(angle_deg), head: build_svg_arrow_head(end_point, angle_deg)}
-  end
-
-  # *** *******************************
-  # *** HELPERS - SHAFT
-  
-  defp build_svg_arrow_shaft(angle) do
-    "m 3 10 #{build_svg_arrow_shaft_curve(angle)}"
-  end
-
-  defp build_svg_arrow_shaft_curve(_angle) do
-    "q 0 -#{@arrow_length/2}, 4 -4"
-  end
-
-  # *** *******************************
-  # *** HELPERS - HEAD
-
-  defp build_svg_arrow_head(point, angle_deg) do
-    tip = {0, -1.18}
-    barb = {1, 0.42}
-    points = [
-      {0, 0},
-      barb,
-      tip,
-      Cartesian.mirror_y(barb)
-    ]
-    |> Cartesian.rotate_coordinate_list(angle_deg)
-    |> Cartesian.translate_coordinate_list(point)
-    |> to_space_separated_strings()
-    "M #{points} Z"
+    start_vector = Vector.new(0, 0, -90)
+    end_vector = Vector.move_along_arc(start_vector, @arrow_length, angle_deg)
+    head_points = get_arrow_head_points()
+    |> Vector.move_with_vector(start_vector, end_vector)
+    points = %{
+      shaft_start: start_vector.point,
+      shaft_end: end_vector.point,
+      shaft_quad_control: Vector.get_y_intercept(end_vector),
+    }
+    |> Map.merge(head_points)
+    |> center_on_y_axis()
+    |> Point.translate({@arrow_center_x, @arrow_start_y})
+    %{
+      shaft: build_svg_arrow_shaft(points),
+      head: build_svg_arrow_head(points)
+    }
   end
 
   # *** *******************************
   # *** HELPERS
 
-  def to_space_separated_strings(list_of_points) do
-    list_of_points
-    |> Enum.map(&point_to_space_separated_string/1)
-    |> Enum.join(", ")
+  defp get_arrow_head_points() do
+    barb = {1, 0.42}
+    %{
+      tip: {0, -1.18},
+      barb_right: barb,
+      barb_left: Point.mirror_y barb
+    }
+  end
+  
+  defp center_on_y_axis(points) do
+    {min, max} = points
+    |> Map.values()
+    # TODO can this be a Stream?
+    |> Enum.map(fn {x, _y} -> x end)
+    |> Enum.min_max()
+    points
+    |> Point.translate({(min - max)/2, 0})
   end
 
-  def point_to_space_separated_string({x, y}) do
-    "#{_round(x)} #{_round(y)}"
+  defp build_svg_arrow_shaft(points) do
+    [
+      points.shaft_start |> Svg.m_abs(),
+      Svg.q_abs(points.shaft_quad_control, points.shaft_end)
+    ]
+    |> Enum.join(" ")
   end
 
-  def _round(number) when is_integer(number) do
-    number
-  end
-  def _round(number) do
-    Float.round(number, 1)
+  defp build_svg_arrow_head(points) do
+    [
+      :shaft_end,
+      :barb_right,
+      :tip,
+      :barb_left,
+    ]
+    |> Enum.map(fn key -> Map.get(points, key) end)
+    |> Svg.mz_abs()
   end
   
 end

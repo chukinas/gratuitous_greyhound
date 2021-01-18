@@ -30,8 +30,10 @@ defmodule Chukinas.Dreadnought.Card do
     %__MODULE__{
       id: id,
       unit_id: unit_id,
-      speed: Enum.random(1..5),
-      angle: Enum.random(-90..90)
+      speed: 3,
+      angle: 45,
+      # speed: Enum.random(1..5),
+      # angle: Enum.random(-90..90)
     }
   end
 

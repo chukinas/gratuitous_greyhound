@@ -7,7 +7,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
   def mount(_params, _session, socket) do
     socket = socket
     |> assign(page_title: "Dreadnought")
-    |> assign(deck: Deck.new(1) |> Deck.draw(5))
+    |> assign(deck: Deck.new(1) |> Deck.draw(1))
     {:ok, socket}
   end
 
