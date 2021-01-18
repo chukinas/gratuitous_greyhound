@@ -58,8 +58,29 @@ defmodule Chukinas.Dreadnought.Angle do
   def get_sign(%__MODULE__{}=angle) do
     _get_sign(angle.deg)
   end
+  def get_sign(angle) when is_number(angle) do
+    _get_sign(angle)
+  end
   defp _get_sign(angle) when angle < 0, do: -1
-  defp _get_sign(), do: 1
+  defp _get_sign(_angle), do: 1
+
+  # *** *******************************
+  # *** SPIN 90
+
+  @doc """
+  Add 90deg if argument is positive; subtract if negative
+
+  ## Examples
+  
+      iex> alias Chukinas.Dreadnought.Angle
+      iex> Angle.new(-45)
+      ...> |> Angle.spin_90(60)
+      %Angle{deg: 45, deg_abs: 45, negative?: false, rad: 0.7853981633974483, rad_abs: 0.7853981633974483}
+  """
+  def spin_90(%__MODULE__{}=angle, direction) do
+    rotation_deg = 90 * get_sign(direction)
+    new(angle.deg + rotation_deg)
+  end
 
   # *** *******************************
   # *** HELPERS
