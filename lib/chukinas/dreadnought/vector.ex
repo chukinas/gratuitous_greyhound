@@ -183,19 +183,43 @@ defmodule Chukinas.Dreadnought.Vector do
 
       iex> Vector.new(1, 1, 0)
       ...> |> Vector.get_y_intercept()
-      ...> |> round()
-      1
+      ...> |> Chukinas.Dreadnought.Point.set_precision(:int)
+      {0, 1}
 
       iex> Vector.new(1, 1, 45)
       ...> |> Vector.get_y_intercept()
-      ...> |> round()
-      0
+      ...> |> Chukinas.Dreadnought.Point.set_precision(:int)
+      {0, 0}
   """
   def get_y_intercept(%__MODULE__{}=vector) do
     {x, y} = vector.point
     slope = :math.tan(vector.angle.rad)
     intercept = y - slope * x
     {0, intercept}
+  end
+
+  # *** *******************************
+  # *** MOVE WITH VECTOR
+
+  @doc """
+  Move a collection of points from one vector to another
+
+  ## Examples
+
+      iex> alias Chukinas.Dreadnought.Point
+      iex> points = [{-1, 0}, {1, 0}]
+      iex> vector_start = Vector.new(0, 0, 90)
+      iex> vector_end = Vector.new(5, 0, 0)
+      iex> Vector.move_with_vector(points, vector_start, vector_end)
+      ...> |> Point.set_precision(:int)
+      [{5, 1}, {5, -1}]
+  """
+  def move_with_vector(points, %__MODULE__{}=vector_start, %__MODULE__{}=vector_end) do
+    translation = Point.subtract(vector_end.point, vector_start.point)
+    rotation = Angle.subtract(vector_end.angle, vector_start.angle)
+    points
+    |> Point.translate(translation)
+    |> Point.rotate(rotation, vector_end.point)
   end
 
   # TODO move this to a different module
