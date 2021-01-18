@@ -92,4 +92,21 @@ defmodule Chukinas.Dreadnought.Vector do
     |> Point.add(vector.point)
     |> new(vector.angle)
   end
+
+  # *** *******************************
+  # *** SPIN
+
+  @doc """
+  Change a vector's orientation
+
+  ## Examples
+
+      iex> Vector.new(1, 2, 90)
+      ...> |> Vector.spin(-45)
+      ...> |> Vector.to_map()
+      %{x: 1, y: 2, angle_deg: 45}
+  """
+  def spin(%__MODULE__{}=vector, angle_deg) when is_number(angle_deg) do
+    %{vector | angle: Angle.new(vector.angle.deg + angle_deg)}
+  end
 end
