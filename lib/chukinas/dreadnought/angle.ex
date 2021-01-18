@@ -16,6 +16,9 @@ defmodule Chukinas.Dreadnought.Angle do
     field :negative?, boolean()
   end
 
+  # *** *******************************
+  # *** NEW
+
   @doc """
   Create new Angle struct from angle (degrees)
 
@@ -38,6 +41,28 @@ defmodule Chukinas.Dreadnought.Angle do
       negative?: rad < 0,
     }
   end
+
+  # *** *******************************
+  # *** SIGN
+
+  @doc """
+  Return `-1` or `1`, the sign of which matches the sign of the angle
+
+  ## Examples
+  
+      iex> alias Chukinas.Dreadnought.Angle
+      iex> Angle.new(-45)
+      ...> |> Angle.get_sign()
+      -1
+  """
+  def get_sign(%__MODULE__{}=angle) do
+    _get_sign(angle.deg)
+  end
+  defp _get_sign(angle) when angle < 0, do: -1
+  defp _get_sign(), do: 1
+
+  # *** *******************************
+  # *** HELPERS
 
   @spec deg_to_rad(number()) :: number()
   defp deg_to_rad(angle_deg) do
