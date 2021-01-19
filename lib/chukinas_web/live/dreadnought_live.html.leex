@@ -35,14 +35,14 @@
       <li>Halo Fleet Battles</li>
       <li>Battlefleet Gothic</li>
     </ul>
-  </div>
-  
-  <%# COMMAND CARD HAND %>
-  <%# TODO replace spacing with grid %>
-  <div class="space-y-2">
-    <%= for card <- @deck.hand do %>
-      <%= DreadnoughtView.render "card.html", %{card: card} %>
-    <% end %>
-  </div>
+    <img src="<%= Routes.static_path(@socket, "/images/dreadnought.svg") %>">
 
+    <%# COMMAND CARD HAND %>
+    <%# TODO replace spacing with grid %>
+    <div class="space-y-2">
+      <%= for card <- @deck.hand do %>
+        <%= DreadnoughtView.render "card.html", %{card: card} %>
+      <% end %>
+    </div>
+  </div>
 </div>
