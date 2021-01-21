@@ -1,3 +1,5 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
+
 <div class="bg-blue-300 h-screen p-4 flex space-x-2 ">
   <div class="shadow-inner">
     <h1 class="text-5xl font-bold text-center mb-4">
@@ -35,7 +37,6 @@
       <li>Halo Fleet Battles</li>
       <li>Battlefleet Gothic</li>
     </ul>
-    <img src="<%= Routes.static_path(@socket, "/images/dreadnought.svg") %>">
 
     <%# COMMAND CARD HAND %>
     <%# TODO replace spacing with grid %>
@@ -44,5 +45,12 @@
         <%= DreadnoughtView.render "card.html", %{card: card} %>
       <% end %>
     </div>
+
+    <%# Dreadnought SVG %>
+    <img id="unit1"  src="<%= Routes.static_path(@socket, "/images/dreadnought.svg") %>">
   </div>
 </div>
+
+<script>
+  gsap.to('#unit1', {opacity: 0, duration: 1, x: 100})
+</script>
