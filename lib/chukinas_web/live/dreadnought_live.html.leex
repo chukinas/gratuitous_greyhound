@@ -1,23 +1,21 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/MotionPathPlugin.min.js"></script>
 
-<div class="bg-blue-300 h-screen p-4 flex space-x-2 ">
-  <div>
-    <%# COMMAND CARD HAND %>
-    <%# TODO replace spacing with grid %>
-    <div class="space-y-2">
-      <%= for card <- @deck.hand do %>
-        <%= DreadnoughtView.render "card.html", %{card: card} %>
-      <% end %>
-    </div>
+<div class="">
+  <%# COMMAND CARD HAND %>
+  <%# TODO replace spacing with grid %>
+  <div class="hidden space-y-2">
+    <%= for card <- @deck.hand do %>
+      <%= DreadnoughtView.render "card.html", %{card: card} %>
+    <% end %>
+  </div>
 
-    <%# Dreadnought SVG %>
-    <div id="unit1"  class="relative">
-      <img src="<%= Routes.static_path(@socket, "/images/dreadnought2/hull.svg") %>">
-      <img class="absolute top-0 left-2 js-turret-rear" src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>">
-      <img class="absolute top-0 left-10 js-turret" src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>">
-      <img class="absolute top-0 left-14 js-turret" src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>">
-    </div>
+  <%# Dreadnought SVG %>
+  <div id="unit1"  class="relative">
+    <img src="<%= Routes.static_path(@socket, "/images/dreadnought2/hull.svg") %>">
+    <img class="absolute top-0 left-2 js-turret-rear" src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>">
+    <img class="absolute top-0 left-10 js-turret" src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>">
+    <img class="absolute top-0 left-14 js-turret" src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>">
   </div>
 </div>
 
