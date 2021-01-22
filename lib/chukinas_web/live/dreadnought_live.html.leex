@@ -47,7 +47,13 @@
     </div>
 
     <%# Dreadnought SVG %>
-    <img id="unit1"  src="<%= Routes.static_path(@socket, "/images/dreadnought.svg") %>">
+    <img id="unit3"  src="<%= Routes.static_path(@socket, "/images/dreadnought.svg") %>">
+
+    <%# Dreadnought SVG - animated turret %>
+    <div id="unit2"  class="relative">
+      <img src="<%= Routes.static_path(@socket, "/images/dreadnought2/hull.svg") %>">
+      <img class="absolute top-0 left-12" src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>">
+    </div>
   </div>
 </div>
 
