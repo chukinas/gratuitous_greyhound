@@ -1,43 +1,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/MotionPathPlugin.min.js"></script>
 
 <div class="bg-blue-300 h-screen p-4 flex space-x-2 ">
-  <div class="shadow-inner">
-    <h1 class="text-5xl font-bold text-center mb-4">
-      Dreadnought
-    </h1>
-
-    This page will ultimately be a real-time PvP strategy game of battleship combat.
-
-    It takes inspiration from some of my favorite board games, mechanics, and themes:
-
-    <h2 class="mt-4 font-bold">
-      Programmed Actions
-    </h2>
-    <ul>
-      <li>Mechs Versus Minions</li>
-      <li>Colt Express</li>
-      <li>Twin Tin Bots</li>
-      <li>Wings of Glory</li>
-      <li>Star Wars Armada</li>
-    </ul>
-
-    <h2 class="mt-4 font-bold">
-      Template Movement
-    </h2>
-    <ul>
-      <li>x-Wing Miniatures</li>
-      <li>Wings of Glory</li>
-    </ul>
-
-    <h2 class="mt-4 font-bold">
-      Tabletop Naval Wargames
-    </h2>
-    <ul>
-      <li>Dystopian Wars</li>
-      <li>Halo Fleet Battles</li>
-      <li>Battlefleet Gothic</li>
-    </ul>
-
+  <div>
     <%# COMMAND CARD HAND %>
     <%# TODO replace spacing with grid %>
     <div class="space-y-2">
@@ -47,10 +12,29 @@
     </div>
 
     <%# Dreadnought SVG %>
-    <img id="unit1"  src="<%= Routes.static_path(@socket, "/images/dreadnought.svg") %>">
+    <div id="unit1"  class="relative">
+      <img src="<%= Routes.static_path(@socket, "/images/dreadnought2/hull.svg") %>">
+      <img class="absolute top-0 left-2 js-turret-rear" src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>">
+      <img class="absolute top-0 left-10 js-turret" src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>">
+      <img class="absolute top-0 left-14 js-turret" src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>">
+    </div>
   </div>
 </div>
 
 <script>
-  gsap.to('#unit1', {opacity: 0, duration: 1, x: 100})
+  gsap.registerPlugin(MotionPathPlugin);
+  gsap.set("#unit1", {x: -50})
+  gsap.to('#unit1 .js-turret', {duration: 3, rotation: -60, ease: Sine.easeInOut})
+    gsap.to('#unit1', {
+        motionPath: {
+          autoRotate: true,
+            path: [
+              {x: 0, y: 50},
+              {x: 500, y: 500},
+              {x: 500, y: 100},
+            ]
+        },
+        duration: 20})
+  gsap.set('#unit1 .js-turret-rear', {rotation: 180, ease: Sine.easeInOut})
+  gsap.to('#unit1 .js-turret-rear', {duration: 3, rotation: "+=120", ease: Sine.easeInOut})
 </script>
