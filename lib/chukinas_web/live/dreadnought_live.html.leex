@@ -1,17 +1,23 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/MotionPathPlugin.min.js"></script>
 
-<div class="">
-  <%# COMMAND CARD HAND %>
-  <%# TODO replace spacing with grid %>
-  <div class="hidden space-y-2">
-    <%= for card <- @deck.hand do %>
-      <%= DreadnoughtView.render "card.html", %{card: card} %>
-    <% end %>
-  </div>
+<style>
+  iframe {
+    height: 0;
+  }
+  body {
+    background-image: url("<%= Routes.static_path(@socket, "/images/ocean.png") %>");
+  }
+</style>
+
+<div class="overflow-hidden h-screen w-screen relative">
+
+  <img src="<%= Routes.static_path(@socket, "/images/island_top_left.png") %>" class="absolute top-0">
+  <img src="<%= Routes.static_path(@socket, "/images/island_side.png") %>" class="absolute top-0" style="left:900px"> 
+  <img src="<%= Routes.static_path(@socket, "/images/island_middle.png") %>" class="absolute" style="top:500px;left:500px"> 
 
   <%# Dreadnought SVG %>
-  <div id="unit1"  class="relative">
+  <div id="unit1"  class="relative inline-block">
     <img src="<%= Routes.static_path(@socket, "/images/dreadnought2/hull.svg") %>">
     <img class="absolute top-0 left-2 js-turret-rear" src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>">
     <img class="absolute top-0 left-10 js-turret" src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>">
