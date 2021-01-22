@@ -17,25 +17,26 @@
   <img src="<%= Routes.static_path(@socket, "/images/island_middle.png") %>" class="absolute" style="top:500px;left:500px"> 
 
   <%# Dreadnought SVG %>
-  <div id="unit1"  class="relative inline-block">
-    <img src="<%= Routes.static_path(@socket, "/images/dreadnought2/hull.svg") %>">
-    <img class="absolute top-0 left-2 js-turret-rear" src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>">
-    <img class="absolute top-0 left-10 js-turret" src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>">
-    <img class="absolute top-0 left-14 js-turret" src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>">
+  <div id="unit1" class="absolute top-0 left-0">
+    <div class="relative inline-block">
+      <img src="<%= Routes.static_path(@socket, "/images/dreadnought2/hull.svg") %>">
+      <img class="absolute top-0 left-2 js-turret-rear" src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>">
+      <img class="absolute top-0 left-10 js-turret" src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>">
+      <img class="absolute top-0 left-14 js-turret" src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>">
+    </div>
   </div>
 </div>
 
 <script>
   gsap.registerPlugin(MotionPathPlugin);
-  gsap.set("#unit1", {x: -50})
+  gsap.set("#unit1", {x: -100, y: 700})
   gsap.to('#unit1 .js-turret', {duration: 3, rotation: -60, ease: Sine.easeInOut})
     gsap.to('#unit1', {
         motionPath: {
           autoRotate: true,
             path: [
-              {x: 0, y: 50},
-              {x: 500, y: 500},
-              {x: 500, y: 100},
+              {x: 800, y: 200},
+              {x: 900, y: -200},
             ]
         },
         duration: 20})
