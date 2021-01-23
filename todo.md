@@ -17,6 +17,7 @@
     * Smythe - maybe body
     * Vast Shadow - maybe title. Looks kinda old west
     * Roboto Slabj
+  * Update the Phase 1 description
 
 # VIM
 
