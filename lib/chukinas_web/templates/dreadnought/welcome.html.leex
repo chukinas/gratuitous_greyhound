@@ -1,0 +1,57 @@
+<div
+   class="absolute inset-0 grid text-white " 
+   style="grid-template-columns: 1fr auto 1fr; grid-template-rows: 1fr auto 1.75fr"
+>
+  <div class="col-start-2 row-start-2" style="width:600px">
+    <img src="<%= Routes.static_path(@socket, "/images/ship_logo.svg") %>" class="w-full ">
+    <div 
+       class="border-0 border-t-4 border-white mt-1 p-4  space-y-3"
+       style="margin-left: 10%; margin-right: 10%; background-color: rgba(255, 255, 255, 0.1 )"
+    >
+      <h1 class="text-3xl  font-bold font-display text-center uppercase">
+        Dreadnought
+      </h1>
+      <h2 class="text-1xl  font-bold font-display text-center">
+        The Game
+      </h2>
+      <p class="font-serif">
+        This game is for you if you're a fan of games like 
+        <a target="_blank" href="https://www.dystopianwars.com" class="underline">Dystopian Wars</a>,
+        <a target="_blank" href="https://boardgamegeek.com/boardgame/119866/wings-glory-ww1-rules-and-accessories-pack" class="underline">Wings of Glory</a>,
+        <a target="_blank" href="https://boardgamegeek.com/boardgame/126239/twin-tin-bots" class="underline">Twin Tin Bots</a>, or
+        <a target="_blank" href="https://boardgamegeek.com/boardgame/10630/memoir-44" class="underline">Memoir '44</a>,
+        The main mechanism has you progressively pre-programming 
+        your battleships' movement and watching those decisions play out. 
+        Can you find the enemy first?
+        Will your maneuvers expose the enemy to your full broadside while minimizing your exposure to theirs?
+      </p>
+      <h2 class="text-1xl  font-bold font-display text-center">
+        Roadmap
+      </h2>
+      <p class="font-serif">
+        Currently in phase 1, I am developing the main aesthetic and proving out some concepts.
+        Phase 2 will begin in Feb 2021, and will see ship command and maneuvers implemented.
+        See the game's 
+        <a target="_blank" href="https://github.com/jonathanchukinas/chukinas/projects/3" class="underline">github</a>
+        project for details.
+      </p>
+      <h2 class="text-1xl  font-bold font-display text-center">
+        About the Developer
+      </h2>
+      <p class="font-serif">
+        Jonathan Chukinas (chukinas@gmail.com) is a web development living in the Philadelphia area.
+        When not building web apps for the nuclear industry, 
+        he's working on projects like this, or training for his next triathlon. 
+        Hopefully there will actually be one in 2021...?
+        Check out his 
+        <a target="_blank" href="https://www.github.com/jonathanchukinas" class="underline">github</a>
+        and 
+        <a target="_blank" href="https://www.linkedin.com/in/chukinas" class="underline">linkedin</a>
+        pages.
+      </p>
+      <p>
+      <%# link("linkedin", external: "www.google.com") %>
+      </p>
+    </div>
+  </div>
+</div>

@@ -11,7 +11,7 @@
 </style>
 
 <div class="overflow-hidden h-screen w-screen relative">
-
+  
   <%# Islands %>
   <img src="<%= Routes.static_path(@socket, "/images/island_top_left.png") %>" class="absolute top-0">
   <img src="<%= Routes.static_path(@socket, "/images/island_side.png") %>" class="absolute top-0" style="left:900px"> 
@@ -26,6 +26,10 @@
       <img class="absolute top-0 left-14 js-turret" src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>">
     </div>
   </div>
+  
+  <%# Welcome and Logo %>
+  <%= DreadnoughtView.render "welcome.html", %{socket: @socket} %>
+
 </div>
 
 <script>

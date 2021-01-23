@@ -11,6 +11,9 @@ module.exports = {
   },
   theme: {
     extend: {
+      fontFamily: {
+        'display': ['"Roboto Slab"', 'serif']
+      },
       gridRowStart: {
         '8': '8',
         '9': '9',

@@ -1,11 +1,16 @@
 # Current Branch
 
-
 # DREADNOUGHT
 
-  * link to github
   * does the dreadnought view need to have the `_view` suffix?
   * Can I run dialyzer when pushing to github? Can a pull request be automatically rejected that way?
+  * Replace some ad hoc styles with custom tailwind classes
+  * some perhaps applicable google fonts
+    * Special Elite - looks like a typewriter. Title or body?
+    * Smythe - maybe body
+    * Vast Shadow - maybe title. Looks kinda old west
+    * Roboto Slabj
+  * Update the Phase 1 description
 
 # VIM
 
@@ -13,7 +18,6 @@
   * comment current line
   * insert snippets. Examples:
     * class=""
-    * eex comment
     * eex for loop
   * format html (a la prettier)
   * templates for new files, e.g. Dreadnought.Card
@@ -21,6 +25,8 @@
   * snippets - snipMate?
   * Remove white space from end of line on save
   * keep cursor at least X lines away from edge
+  * <leader>c should handle for extra spaces
+  * ElixirLS
 
 # GENERAL
 
