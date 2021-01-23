@@ -2,7 +2,6 @@
 
 # DREADNOUGHT
 
-  * link to github
   * does the dreadnought view need to have the `_view` suffix?
   * Can I run dialyzer when pushing to github? Can a pull request be automatically rejected that way?
   * Replace some ad hoc styles with custom tailwind classes
