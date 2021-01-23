@@ -1,10 +1,4 @@
 # Current Branch
-  * box text: 
-    * github
-    * email
-    * inspiration
-    * click to close
-  * center h1
 
 # DREADNOUGHT
 
