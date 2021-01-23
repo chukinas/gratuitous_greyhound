@@ -28,9 +28,7 @@
   </div>
   
   <%# Welcome and Logo %>
-  <div class="absolute inset-0 ">
-    <img src="<%= Routes.static_path(@socket, "/images/ship_logo.svg") %>" class="w-1/2">
-  </div>
+  <%= DreadnoughtView.render "welcome.html", %{socket: @socket} %>
 
 </div>
 
