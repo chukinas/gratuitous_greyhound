@@ -1,67 +1,83 @@
 <div
-   class="absolute inset-0 grid text-sm inline-block bg-yellow-300" 
-   style="grid-template-columns: 1fr auto 1fr; grid-template-rows: minmax(20px, 1fr) minmax(mincontent, 1vh) minmax(20px, 1fr)"
+   class="absolute inset-0 grid text-sm md:text-base inline-block bg-yellow-300" 
+   style="grid-template-columns: 1fr minmax(1vw, 40rem) 1fr"
 >
-  <div class="col-start-2 row-start-1 bg-blue-500 opacity:50">
-  </div>
-  <div class="col-start-2 row-start-3 bg-green-500 opacity:50">
-  </div>
-  <div class="col-start-2 row-start-2 w-44 bg-red-500 opacity:50 overflow-auto h-screen" >
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
-    <p>testing</p>
+  <div class="col-start-2 bg-red-500 opacity:50 overflow-auto h-screen flex flex-col" >
+    <div class="bg-blue-500 opacity:50 flex-1"> </div>
+    <div class="bg-gray-500 opacity:50 flex-1" style="order: 3"> </div>
+    <div class="bg-green-500 opacity:50 flex-1" style="order: 4"> </div>
+    <div class="flex-1">
+    <img src="<%= Routes.static_path(@socket, "/images/ship_logo.svg") %>" class="w-full ">
+    <div 
+       class="border-0 border-t-4 border-white mt-1 p-4  space-y-3 overflow-y-auto"
+       style="margin-left: 10%; margin-right: 10%; background-color: rgba(255, 255, 255, 0.1 )"
+    >
+      <h1 class="text-3xl  font-bold font-display text-center uppercase">
+        Dreadnought
+      </h1>
+      <h2 class="text-1xl  font-bold font-display text-center">
+        The Game
+      </h2>
+      <p class="font-serif">
+        Progressively pre-program your battleships' movement and watch those decisions play out. 
+        Can you find the enemy first?
+        Will your maneuvers expose the enemy to your full broadside while minimizing your exposure to theirs?
+      </p>
+      <h2 class="text-1xl  font-bold font-display text-center">
+        Inspiration
+      </h2>
+      <p class="font-serif">
+        Every good game stands on the shoulders of the greats that came before it.
+        This game takes the best parts of some of my favorites:
+      </p>
+      <ul class="list-disc font-serif ml-4">
+        <li>
+          The progressive planning of <b>Sails of Glory</b>
+        </li>
+        <li>
+          The 'plan and see what happens' of <b>Galaxy Trucker</b>
+        </li>
+        <li>
+          The limited decision space of <b>Memoir '44</b>
+        </li>
+        <li>
+          Larger ships require more pre-planning a la <b>Star Wars Armada</b>
+        </li>
+        <li>
+          Each ship has a deck of cards that desribes its movement a la <b>Wings of Glory</b>
+        </li>
+      </ul>
+      <h2 class="text-1xl  font-bold font-display text-center">
+        Roadmap
+      </h2>
+      <p class="font-serif">
+        Currently in phase 1: developing the main aesthetic and proving out some concepts.
+        Phase 2 will begin in Feb 2021, and will see ship command and maneuvers implemented.
+        See the game's 
+        <a target="_blank" href="https://github.com/jonathanchukinas/chukinas/projects/3" class="underline">github</a>
+        project for details.
+      </p>
+      <h2 class="text-1xl  font-bold font-display text-center">
+        About the Developer
+      </h2>
+      <p class="font-serif">
+        Jonathan Chukinas 
+        (<a href="mailto:chukinas@gmail.com" class="underline">chukinas@gmail.com</a>)
+        is a web developer living in the Philadelphia area.
+        When not building web apps for the nuclear industry, 
+        he's working on projects like this, or training for his next triathlon. 
+        Hopefully there will actually be one in 2021...?
+        Check out his 
+        <a target="_blank" href="https://www.github.com/jonathanchukinas" class="underline">github</a>
+        and 
+        <a target="_blank" href="https://www.linkedin.com/in/chukinas" class="underline">linkedin</a>
+        pages.
+      </p>
+      <p>
+      <%# link("linkedin", external: "www.google.com") %>
+      </p>
+    </div>
+  
+    </div>
   </div>
 </div>
