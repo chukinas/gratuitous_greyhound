@@ -16,7 +16,7 @@ defmodule ChukinasWeb.Router do
 
   scope "/", ChukinasWeb do
     pipe_through :browser
-    live "/", PageLive, :index
+    get "/", PageController, :index
     live "/dreadnought", DreadnoughtLive
   end
 
