@@ -1,11 +1,11 @@
 <div
-   class="absolute inset-0 grid text-sm md:text-base inline-block bg-yellow-300" 
+   class="absolute inset-0 grid text-sm md:text-base inline-block text-white" 
    style="grid-template-columns: 1fr minmax(1vw, 40rem) 1fr"
 >
-  <div class="col-start-2 bg-red-500 opacity:50 overflow-auto h-screen flex flex-col" >
-    <div class="bg-blue-500 opacity:50 flex-1"> </div>
-    <div class="bg-gray-500 opacity:50 flex-1" style="order: 3"> </div>
-    <div class="bg-green-500 opacity:50 flex-1" style="order: 4"> </div>
+  <div class="col-start-2 overflow-auto h-screen flex flex-col" >
+    <div class="flex-1"> </div>
+    <div class="flex-1" style="order: 3"> </div>
+    <div class="flex-1" style="order: 4"> </div>
     <div class="flex-1">
     <img src="<%= Routes.static_path(@socket, "/images/ship_logo.svg") %>" class="w-full ">
     <div 
