@@ -1,9 +1,4 @@
 {
-    "lib/chukinas/skies/*/model.ex": { "type": "skiesmodel" },
-    "lib/chukinas/skies/*/model_collection.ex": { "type": "skiesmcollection" },
-    "lib/chukinas/skies/*/viewmodel.ex": { "type": "skiesview" },
-    "lib/chukinas/skies/*/viewmodel_collection.ex": { "type": "skiesvcollection" },
-    "lib/chukinas_web/templates/skies/*.html.leex": { "type": "skiestemplate" },
     "lib/chukinas/dreadnought/*.ex": { "type": "core" },
     "lib/chukinas_web/templates/dreadnought/*.html.leex": { "type": "template" },
     "lib/chukinas_web/views/*.ex": { "type": "view" },

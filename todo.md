@@ -23,7 +23,6 @@
   * templates for new files, e.g. Dreadnought.Card
   * vim-SyntaxRange
   * snippets - snipMate?
-  * Remove white space from end of line on save
   * keep cursor at least X lines away from edge
   * <leader>c should handle for extra spaces
   * ElixirLS
