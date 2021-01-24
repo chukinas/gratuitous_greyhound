@@ -1,122 +1,122 @@
 defmodule ChukinasWeb.DreadnoughtLiveTest do
   use ChukinasWeb.ConnCase
 
-  import Phoenix.LiveViewTest
+  # import Phoenix.LiveViewTest
 
   # *** *******************************
   # *** ACTIONS
 
-  defp delay_entry(view) do
-    view |> element("#delay_entry") |> render_click()
-    view
-  end
-  defp end_phase(view) do
-    element(view, "#end_phase") |> render_click()
-    view
-  end
-  defp toggle_fighter(view, fighter_id) do
-    element(view, "#fighter_#{fighter_id}") |> render_click()
-    view
-  end
-  defp select_group(view, group_id) do
-    element(view, "#group_#{group_id} .select_group") |> render_click()
-    view
-  end
-  defp move(view, box_id) do
-    view
-    |> element("#" <> Box.id_to_uiid(box_id))
-    |> render_click()
-    view
-  end
-  defp attack_bomber(view, x, y) do
-    view |> element("#bomber_#{x}_#{y}") |> render_click(); view
-  end
+  # defp delay_entry(view) do
+  #   view |> element("#delay_entry") |> render_click()
+  #   view
+  # end
+  # defp end_phase(view) do
+  #   element(view, "#end_phase") |> render_click()
+  #   view
+  # end
+  # defp toggle_fighter(view, fighter_id) do
+  #   element(view, "#fighter_#{fighter_id}") |> render_click()
+  #   view
+  # end
+  # defp select_group(view, group_id) do
+  #   element(view, "#group_#{group_id} .select_group") |> render_click()
+  #   view
+  # end
+  # defp move(view, box_id) do
+  #   view
+  #   |> element("#" <> Box.id_to_uiid(box_id))
+  #   |> render_click()
+  #   view
+  # end
+  # defp attack_bomber(view, x, y) do
+  #   view |> element("#bomber_#{x}_#{y}") |> render_click(); view
+  # end
 
-  # *** *******************************
-  # *** ASSERTS - GAME HOUSEKEEPING
+  # # *** *******************************
+  # # *** ASSERTS - GAME HOUSEKEEPING
 
-  defp assert_phase(view, phase_name, assert? \\ true) do
-    assert has_element?(view, "#current_phase", phase_name)
-    |> flip_bool(assert?)
-    view
-  end
-  defp assert_turn(view, turn_number) do
-    assert has_element?(view, "#current_turn", "#{turn_number}")
-    view
-  end
-  defp assert_tactical_points(view, tp) do
-    assert has_element?(view, "#avail_tp", "#{tp}")
-    view
-  end
+  # defp assert_phase(view, phase_name, assert? \\ true) do
+  #   assert has_element?(view, "#current_phase", phase_name)
+  #   |> flip_bool(assert?)
+  #   view
+  # end
+  # defp assert_turn(view, turn_number) do
+  #   assert has_element?(view, "#current_turn", "#{turn_number}")
+  #   view
+  # end
+  # defp assert_tactical_points(view, tp) do
+  #   assert has_element?(view, "#avail_tp", "#{tp}")
+  #   view
+  # end
 
-  # *** *******************************
-  # *** ASSERTS - SQUADRON
+  # # *** *******************************
+  # # *** ASSERTS - SQUADRON
 
-  defp assert_group_has_unselect_btn(view, group_id, assert? \\ true) do
-    has_element = has_element?(view, "#group_#{group_id} .unselect_group")
-    assert flip_bool(has_element, assert?)
-    view
-  end
-  defp group_has_no_select_btn(view, group_id) do
-    assert has_element?(view, "#group_#{group_id} .select_group"); view
-  end
-  defp assert_group_from(view, group_id, from_text) do
-    # TODO use has_element instead?
-    assert view
-    |> has_element?("#group_#{group_id} .from_location", from_text)
-    # assert view
-    # |> element("#group_#{group_id} .from_location")
-    # |> render() =~ from_text
-    view
-  end
-  defp assert_group_to(view, group_id, to_text) do
-    assert view
-    |> element("#group_#{group_id} .to_location")
-    |> render() =~ to_text
-    view
-  end
+  # defp assert_group_has_unselect_btn(view, group_id, assert? \\ true) do
+  #   has_element = has_element?(view, "#group_#{group_id} .unselect_group")
+  #   assert flip_bool(has_element, assert?)
+  #   view
+  # end
+  # defp group_has_no_select_btn(view, group_id) do
+  #   assert has_element?(view, "#group_#{group_id} .select_group"); view
+  # end
+  # defp assert_group_from(view, group_id, from_text) do
+  #   # TODO use has_element instead?
+  #   assert view
+  #   |> has_element?("#group_#{group_id} .from_location", from_text)
+  #   # assert view
+  #   # |> element("#group_#{group_id} .from_location")
+  #   # |> render() =~ from_text
+  #   view
+  # end
+  # defp assert_group_to(view, group_id, to_text) do
+  #   assert view
+  #   |> element("#group_#{group_id} .to_location")
+  #   |> render() =~ to_text
+  #   view
+  # end
 
-  # *** *******************************
-  # *** ASSERTS - PAWNS
+  # # *** *******************************
+  # # *** ASSERTS - PAWNS
 
-  defp assert_group_in_box(view, group_id, box_id) do
-    group_selector = "#pawn_group_" <> Integer.to_string(group_id)
-    box_selector = "#" <> Box.id_to_uiid(box_id)
-    assert has_element?(view, "#{box_selector} #{group_selector}")
-    view
-  end
+  # defp assert_group_in_box(view, group_id, box_id) do
+  #   group_selector = "#pawn_group_" <> Integer.to_string(group_id)
+  #   box_selector = "#" <> Box.id_to_uiid(box_id)
+  #   assert has_element?(view, "#{box_selector} #{group_selector}")
+  #   view
+  # end
 
-  # *** *******************************
-  # *** ASSERTS - GENERAL HTML
+  # # *** *******************************
+  # # *** ASSERTS - GENERAL HTML
 
-  defp assert_disabled(view, element_id) do
-    assert has_element?(view, "##{element_id}[disabled]")
-    view
-  end
-  # TODO element is bad term (means bomber group)
-  defp assert_element(view, element_id) do
-    assert has_element?(view, "#" <> element_id)
-    view
-  end
-  defp refute_element(view, selector, text_filter \\ nil) do
-    refute has_element?(view, selector, text_filter)
-    view
-  end
-  defp assert_ids_appear_in_order(view, id1, id2) do
-    assert render(view)
-    |> String.split("id=\"#{id1}\"")
-    |> Enum.at(1)
-    |> String.contains?("id=\"#{id2}\"")
-    view
-  end
+  # defp assert_disabled(view, element_id) do
+  #   assert has_element?(view, "##{element_id}[disabled]")
+  #   view
+  # end
+  # # TODO element is bad term (means bomber group)
+  # defp assert_element(view, element_id) do
+  #   assert has_element?(view, "#" <> element_id)
+  #   view
+  # end
+  # defp refute_element(view, selector, text_filter \\ nil) do
+  #   refute has_element?(view, selector, text_filter)
+  #   view
+  # end
+  # defp assert_ids_appear_in_order(view, id1, id2) do
+  #   assert render(view)
+  #   |> String.split("id=\"#{id1}\"")
+  #   |> Enum.at(1)
+  #   |> String.contains?("id=\"#{id2}\"")
+  #   view
+  # end
 
 
-  # *** *******************************
-  # *** HELPERS
+  # # *** *******************************
+  # # *** HELPERS
 
-  defp flip_bool(orig, keep) do
-    if keep, do: orig, else: !orig
-  end
+  # defp flip_bool(orig, keep) do
+  #   if keep, do: orig, else: !orig
+  # end
 
   # *** *******************************
   # *** TESTS
