@@ -1,6 +1,5 @@
-defmodule ChukinasWeb.SkiesLiveTest do
+defmodule ChukinasWeb.DreadnoughtLiveTest do
   use ChukinasWeb.ConnCase
-  alias Chukinas.Skies.Game.Box
 
   import Phoenix.LiveViewTest
 
@@ -122,101 +121,101 @@ defmodule ChukinasWeb.SkiesLiveTest do
   # *** *******************************
   # *** TESTS
 
-  test "disconnected and connected render", %{conn: conn} do
-    {:ok, skies_live, disconnected_html} = live(conn, "/skies")
-    assert disconnected_html =~ "Skies"
-    assert render(skies_live) =~ "Skies"
-  end
+  # test "disconnected and connected render", %{conn: conn} do
+  #   {:ok, skies_live, disconnected_html} = live(conn, "/skies")
+  #   assert disconnected_html =~ "Skies"
+  #   assert render(skies_live) =~ "Skies"
+  # end
 
-  test "End Phase btn when all groups are complete", %{conn: conn} do
-    {:ok, view, _html} = live(conn, "/skies")
-    view
-    |> assert_turn(1)
-    |> assert_phase("Move")
-    |> assert_phase("Return", false)
-    |> assert_disabled("end_phase")
-    |> delay_entry()
-    |> end_phase()
-    |> assert_turn(2)
-  end
+  # test "End Phase btn when all groups are complete", %{conn: conn} do
+  #   {:ok, view, _html} = live(conn, "/skies")
+  #   view
+  #   |> assert_turn(1)
+  #   |> assert_phase("Move")
+  #   |> assert_phase("Return", false)
+  #   |> assert_disabled("end_phase")
+  #   |> delay_entry()
+  #   |> end_phase()
+  #   |> assert_turn(2)
+  # end
 
-  test "delay entry", %{conn: conn} do
-    {:ok, view, _html} = live(conn, "/skies")
-    view
-    |> assert_turn(1)
-    |> assert_tactical_points(1)
-    |> delay_entry()
-    |> assert_tactical_points(0)
-  end
+  # test "delay entry", %{conn: conn} do
+  #   {:ok, view, _html} = live(conn, "/skies")
+  #   view
+  #   |> assert_turn(1)
+  #   |> assert_tactical_points(1)
+  #   |> delay_entry()
+  #   |> assert_tactical_points(0)
+  # end
 
-  test "(un)select", %{conn: conn} do
-    {:ok, view, _html} = live(conn, "/skies")
-    view
-    |> refute_element("#group_1 .select_group")
-    |> toggle_fighter(2)
-    |> refute_element("#fighter_2", "checked")
-    |> delay_entry()
-    |> assert_turn(1)
-    |> select_group(2)
-    |> delay_entry()
-    |> end_phase()
-    |> assert_turn(2)
-    |> assert_tactical_points(0)
-  end
+  # test "(un)select", %{conn: conn} do
+  #   {:ok, view, _html} = live(conn, "/skies")
+  #   view
+  #   |> refute_element("#group_1 .select_group")
+  #   |> toggle_fighter(2)
+  #   |> refute_element("#fighter_2", "checked")
+  #   |> delay_entry()
+  #   |> assert_turn(1)
+  #   |> select_group(2)
+  #   |> delay_entry()
+  #   |> end_phase()
+  #   |> assert_turn(2)
+  #   |> assert_tactical_points(0)
+  # end
 
-  test "squadron buttons and checkboxes works", %{conn: conn} do
-    {:ok, view, _html} = live(conn, "/skies")
-    view
-    |> toggle_fighter(2)
-    |> delay_entry()
-    |> assert_ids_appear_in_order("group_1", "group_2")
-    |> group_has_no_select_btn(1)
-    |> group_has_no_select_btn(2)
-    |> select_group(1)
-    |> assert_group_has_unselect_btn(1)
-    |> assert_group_has_unselect_btn(2, false)
-  end
+  # test "squadron buttons and checkboxes works", %{conn: conn} do
+  #   {:ok, view, _html} = live(conn, "/skies")
+  #   view
+  #   |> toggle_fighter(2)
+  #   |> delay_entry()
+  #   |> assert_ids_appear_in_order("group_1", "group_2")
+  #   |> group_has_no_select_btn(1)
+  #   |> group_has_no_select_btn(2)
+  #   |> select_group(1)
+  #   |> assert_group_has_unselect_btn(1)
+  #   |> assert_group_has_unselect_btn(2, false)
+  # end
 
-  test "enter board", %{conn: conn} do
-    {:ok, view, _html} = live(conn, "/skies")
-    box = {:nose, :preapproach, :low}
-    view
-    |> assert_element("notentered")
-    |> assert_group_in_box(1, :notentered)
-    |> move(box)
-    |> assert_group_in_box(1, box)
-    |> assert_tactical_points(1)
-    |> end_phase()
-    |> assert_turn(2)
-    |> assert_phase("Move")
-    |> select_group(1)
-    |> move({:nose, :preapproach, :high})
-    |> assert_tactical_points(0)
-    |> end_phase()
-    |> select_group(1)
-    |> move({:nose, :approach, :high})
-    |> end_phase()
-    |> assert_phase("Approach")
-  end
+  # test "enter board", %{conn: conn} do
+  #   {:ok, view, _html} = live(conn, "/skies")
+  #   box = {:nose, :preapproach, :low}
+  #   view
+  #   |> assert_element("notentered")
+  #   |> assert_group_in_box(1, :notentered)
+  #   |> move(box)
+  #   |> assert_group_in_box(1, box)
+  #   |> assert_tactical_points(1)
+  #   |> end_phase()
+  #   |> assert_turn(2)
+  #   |> assert_phase("Move")
+  #   |> select_group(1)
+  #   |> move({:nose, :preapproach, :high})
+  #   |> assert_tactical_points(0)
+  #   |> end_phase()
+  #   |> select_group(1)
+  #   |> move({:nose, :approach, :high})
+  #   |> end_phase()
+  #   |> assert_phase("Approach")
+  # end
 
-  test "fighters on approach", %{conn: conn} do
-    {:ok, view, _html} = live(conn, "/skies")
-    view
-    # *** Turn 1
-    |> assert_group_from(1, "Not Yet Entered")
-    |> assert_group_to(1, "Nil")
-    |> move({:nose, :preapproach, :low})
-    |> assert_group_to(1, "Nose/Preapproach/Low")
-    |> end_phase()
-    # *** Turn 2: Move
-    |> select_group(1) |> move({:nose, :approach, :low})
-    |> end_phase()
-    # *** Turn 3: Approach
-    |> assert_phase("Approach")
-    |> select_group(1)
-    |> attack_bomber(2, 2)
-    |> assert_group_to(1, "Space (2, 2)")
-  end
+  # test "fighters on approach", %{conn: conn} do
+  #   {:ok, view, _html} = live(conn, "/skies")
+  #   view
+  #   # *** Turn 1
+  #   |> assert_group_from(1, "Not Yet Entered")
+  #   |> assert_group_to(1, "Nil")
+  #   |> move({:nose, :preapproach, :low})
+  #   |> assert_group_to(1, "Nose/Preapproach/Low")
+  #   |> end_phase()
+  #   # *** Turn 2: Move
+  #   |> select_group(1) |> move({:nose, :approach, :low})
+  #   |> end_phase()
+  #   # *** Turn 3: Approach
+  #   |> assert_phase("Approach")
+  #   |> select_group(1)
+  #   |> attack_bomber(2, 2)
+  #   |> assert_group_to(1, "Space (2, 2)")
+  # end
 
 end
 
