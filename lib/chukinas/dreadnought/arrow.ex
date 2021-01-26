@@ -10,15 +10,15 @@ defmodule Chukinas.Dreadnought.Arrow do
   @arrow_length 7
   @arrow_start_y 9
   @arrow_center_x 7
-  
+
   # *** *******************************
   # *** API
-  
+
   @doc """
   Return map of svg paths for Command Card arrow head and shaft
 
   ## Examples
-  
+
       iex> Chukinas.Dreadnought.Arrow.build_arrow_svg_paths(90)
       %{
         head: "M 8.6 4.5, 8.2 5.5, 9.8 4.5, 8.2 3.5 Z",
@@ -55,7 +55,7 @@ defmodule Chukinas.Dreadnought.Arrow do
       barb_left: Point.mirror_y barb
     }
   end
-  
+
   defp center_on_y_axis(points) do
     {min, max} = points
     |> Map.values()
@@ -63,7 +63,7 @@ defmodule Chukinas.Dreadnought.Arrow do
     |> Enum.map(fn {x, _y} -> x end)
     |> Enum.min_max()
     points
-    |> Point.translate({(min - max)/2, 0})
+    |> Point.translate({(min - max) / 2, 0})
   end
 
   defp build_svg_arrow_shaft(points) do
@@ -84,5 +84,5 @@ defmodule Chukinas.Dreadnought.Arrow do
     |> Enum.map(fn key -> Map.get(points, key) end)
     |> Svg.mz_abs()
   end
-  
+
 end

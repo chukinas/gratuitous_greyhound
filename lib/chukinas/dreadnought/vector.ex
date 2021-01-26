@@ -43,7 +43,7 @@ defmodule Chukinas.Dreadnought.Vector do
       angle: Angle.new(angle_deg)
     }
   end
-  def new(point, %Angle{}=angle) when is_point(point) do
+  def new(point, %Angle{} = angle) when is_point(point) do
     %__MODULE__{
       point: point,
       angle: angle
@@ -71,7 +71,7 @@ defmodule Chukinas.Dreadnought.Vector do
       %{x: 1, y: 2, angle_deg: 90}
   """
   def to_map(vector, precision \\ :noop)
-  def to_map(%__MODULE__{}=vector, :noop) do
+  def to_map(%__MODULE__{} = vector, :noop) do
     {x, y} = vector.point
     %{
       x: x,
@@ -80,7 +80,7 @@ defmodule Chukinas.Dreadnought.Vector do
     }
   end
   # TODO Precision keeps cropping up. Make a new module for it?
-  def to_map(%__MODULE__{}=vector, :int) do
+  def to_map(%__MODULE__{} = vector, :int) do
     {x, y} = vector.point
     %{
       x: round(x),
@@ -102,7 +102,7 @@ defmodule Chukinas.Dreadnought.Vector do
       ...> |> Vector.to_map()
       %{x: 1.0, y: 3.0, angle_deg: 90}
   """
-  def move_straight(%__MODULE__{}=vector, distance) do
+  def move_straight(%__MODULE__{} = vector, distance) do
     vector.angle
     |> Point.from_polar(distance)
     |> Point.add(vector.point)
@@ -122,7 +122,7 @@ defmodule Chukinas.Dreadnought.Vector do
       ...> |> Vector.to_map()
       %{x: 1, y: 2, angle_deg: 45}
   """
-  def spin(%__MODULE__{}=vector, angle_deg) when is_number(angle_deg) do
+  def spin(%__MODULE__{} = vector, angle_deg) when is_number(angle_deg) do
     %{vector | angle: Angle.new(vector.angle.deg + angle_deg)}
   end
 
@@ -140,7 +140,7 @@ defmodule Chukinas.Dreadnought.Vector do
       ...> |> Point.set_precision(:int)
       {1, 0}
   """
-  def find_center_of_rotation(%__MODULE__{}=vector, radius, angle_sign) when is_number(radius) and is_number(angle_sign) do
+  def find_center_of_rotation(%__MODULE__{} = vector, radius, angle_sign) when is_number(radius) and is_number(angle_sign) do
     spin_90 = 90 * get_sign_of_angle(angle_sign)
     vector
     |> spin(spin_90)
@@ -162,7 +162,7 @@ defmodule Chukinas.Dreadnought.Vector do
       %{x: 2, y: 0, angle_deg: -90}
   """
   # TODO make sure angle is not zero
-  def move_along_arc(%__MODULE__{}=vector, arc_length, angle_deg) when is_number(arc_length) and is_number(angle_deg) do
+  def move_along_arc(%__MODULE__{} = vector, arc_length, angle_deg) when is_number(arc_length) and is_number(angle_deg) do
     turn_angle = Angle.new(angle_deg)
     turn_radius = abs(arc_length / turn_angle.rad)
     rotation_point = find_center_of_rotation(vector, turn_radius, angle_deg)
@@ -191,7 +191,7 @@ defmodule Chukinas.Dreadnought.Vector do
       ...> |> Chukinas.Dreadnought.Point.set_precision(:int)
       {0, 0}
   """
-  def get_y_intercept(%__MODULE__{}=vector) do
+  def get_y_intercept(%__MODULE__{} = vector) do
     {x, y} = vector.point
     slope = :math.tan(vector.angle.rad)
     intercept = y - slope * x
@@ -214,7 +214,7 @@ defmodule Chukinas.Dreadnought.Vector do
       ...> |> Point.set_precision(:int)
       [{5, 1}, {5, -1}]
   """
-  def move_with_vector(points, %__MODULE__{}=vector_start, %__MODULE__{}=vector_end) do
+  def move_with_vector(points, %__MODULE__{} = vector_start, %__MODULE__{} = vector_end) do
     translation = Point.subtract(vector_end.point, vector_start.point)
     rotation = Angle.subtract(vector_end.angle, vector_start.angle)
     points

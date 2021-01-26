@@ -25,11 +25,11 @@ defmodule Chukinas.Dreadnought.Point do
       ...> |> Point.set_precision(:int)
       {0, 1}
   """
-  def from_polar(%Angle{}=angle, radius) when is_number(radius) do
+  def from_polar(%Angle{} = angle, radius) when is_number(radius) do
     {radius, 0}
     |> rotate(angle)
-  end 
-  
+  end
+
   # *** *******************************
   # *** TRANSLATE
 
@@ -50,19 +50,19 @@ defmodule Chukinas.Dreadnought.Point do
   def translate(points, dxdy) when is_map(points) do
     points
     |> update_map_values(fn point -> translate(point, dxdy) end)
-  end 
+  end
   def translate(coords, dxdy) when is_list(coords) do
     coords
     |> Enum.map(&translate(&1, dxdy))
     # TODO refactor above to use fn...
-  end 
-  def translate({x, y}=point, {dx, dy}=dxdy) when is_point(point) and is_point(dxdy) do
-    {x + dx, y + dy}        
-  end 
+  end
+  def translate({x, y} = point, {dx, dy} = dxdy) when is_point(point) and is_point(dxdy) do
+    {x + dx, y + dy}
+  end
 
   # *** *******************************
   # *** ROTATE
-  
+
   @doc """
   Rotate a point or points about the {0, 0} point
 
@@ -97,23 +97,23 @@ defmodule Chukinas.Dreadnought.Point do
   def rotate(points, angle, rotation_point) when is_map(points) do
     points
     |> update_map_values(&rotate(&1, angle, rotation_point))
-  end 
+  end
   def rotate(points, angle, rotation_point) when is_list(points) do
     points
     |> Enum.map(&rotate(&1, angle, rotation_point))
-  end 
-  def rotate({x, y}=point, %Angle{rad: angle}, {0, 0}) when is_point(point) do
+  end
+  def rotate({x, y} = point, %Angle{rad: angle}, {0, 0}) when is_point(point) do
     {
       (x * :math.cos(angle)) - (y * :math.sin(angle)),
       (y * :math.cos(angle)) + (x * :math.sin(angle))
     }
-  end 
+  end
   def rotate(point, angle, rotation_point) when is_point(rotation_point) do
     point
     |> subtract(rotation_point)
     |> rotate(angle, {0, 0})
     |> add(rotation_point)
-  end 
+  end
 
   # *** *******************************
   # *** MIRROR
@@ -159,7 +159,7 @@ defmodule Chukinas.Dreadnought.Point do
 
   # *** *******************************
   # *** ADD, SUBTRACT
-  
+
   @doc """
   Add two points
 
@@ -200,11 +200,11 @@ defmodule Chukinas.Dreadnought.Point do
     points
     |> update_map_values(fn point -> set_precision(point, precision) end)
   end
-  def set_precision({x, y}=point, precision) when is_point(point) do
+  def set_precision({x, y} = point, precision) when is_point(point) do
     {
       round_number(x, precision),
       round_number(y, precision),
-    }   
+    }
   end
 
   defp round_number(number, :int) do
