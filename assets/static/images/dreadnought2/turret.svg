@@ -24,7 +24,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -73,7 +73,7 @@
     </pattern>
   </defs>
   <sodipodi:namedview
-     pagecolor="#ffffff"
+     pagecolor="#c0c0c0"
      bordercolor="#666666"
      borderopacity="1"
      objecttolerance="10"
@@ -81,17 +81,17 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="2560"
-     inkscape:window-height="1403"
+     inkscape:window-width="1280"
+     inkscape:window-height="1376"
      id="namedview1205"
      showgrid="true"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:zoom="17.068719"
-     inkscape:cx="50.380495"
-     inkscape:cy="16.932219"
-     inkscape:window-x="2560"
-     inkscape:window-y="0"
+     inkscape:zoom="8.1956491"
+     inkscape:cx="23.911602"
+     inkscape:cy="17.197633"
+     inkscape:window-x="3840"
+     inkscape:window-y="27"
      inkscape:window-maximized="0"
      inkscape:current-layer="g1211"
      inkscape:document-rotation="0">
@@ -115,15 +115,15 @@
      inkscape:label="Image"
      id="g1211">
     <path
-       style="fill:none;stroke:#1a3030;stroke-width:0.944882;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 29.736019,21.7991 H 20"
        id="path1221-7-3" />
     <path
-       style="fill:none;stroke:#1a3030;stroke-width:0.944882;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 29.736019,18 H 20"
        id="path1221-3-5-6" />
     <circle
-       style="fill:#008080;stroke:#1a3030;stroke-width:0.944882;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#50d0c1;stroke:#ffffff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
        id="path1219-3-0"
        cx="-19.927837"
        cy="-20.017498"

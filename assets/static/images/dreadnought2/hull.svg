@@ -24,7 +24,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -73,7 +73,7 @@
     </pattern>
   </defs>
   <sodipodi:namedview
-     pagecolor="#ffffff"
+     pagecolor="#b1b1b1"
      bordercolor="#666666"
      borderopacity="1"
      objecttolerance="10"
@@ -87,9 +87,9 @@
      showgrid="false"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:zoom="7.2027339"
-     inkscape:cx="83.152012"
-     inkscape:cy="25.118932"
+     inkscape:zoom="16.787695"
+     inkscape:cx="54.843351"
+     inkscape:cy="22.335724"
      inkscape:window-x="2560"
      inkscape:window-y="27"
      inkscape:window-maximized="0"
@@ -109,8 +109,24 @@
      id="g1211">
     <path
        id="path1217"
-       style="opacity:1;fill:#8badad;fill-opacity:1;stroke:#223a3a;stroke-width:1.467;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="opacity:1;fill:#50d0c1;fill-opacity:1;stroke:#ffffff;stroke-width:2.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 45.511218,7.234375 C 19.316492,7.234375 3.7167969,20 3.7167969,20 c 0,0 15.5996951,12.765625 41.7944211,12.765625 C 71.705942,32.765625 88.204817,25.296852 97.44077,20 88.204817,14.703148 71.705942,7.234375 45.511218,7.234375 Z"
        sodipodi:nodetypes="scscs" />
+    <path
+       style="fill:none;stroke:#ffffff;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0.6682446;stroke-miterlimit:4;stroke-dasharray:none"
+       d="m 47.643429,13.20189 c 5.039163,3.93389 4.504245,4.014166 4.504245,4.014166 v 6.261518 l -4.167065,4.167065"
+       id="path2002" />
+    <path
+       style="fill:none;stroke:#ffffff;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0.6682446;stroke-miterlimit:4;stroke-dasharray:none"
+       d="m 41.777746,27.604068 c -5.039163,-3.93389 -4.504245,-4.014166 -4.504245,-4.014166 v -6.261518 l 4.167065,-4.167065"
+       id="path2004" />
+    <path
+       style="fill:none;stroke:#ffffff;stroke-width:1.66453;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 88.711945,15.466288 v 2.816565 l 2.989761,-1.642676 z"
+       id="path2006" />
+    <path
+       style="fill:none;stroke:#ffffff;stroke-width:1.66453;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 88.711945,24.441336 v -2.816565 l 2.989761,1.642676 z"
+       id="path2008" />
   </g>
 </svg>
