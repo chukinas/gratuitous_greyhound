@@ -1,7 +1,7 @@
 defmodule ChukinasWeb.DreadnoughtLiveTest do
   use ChukinasWeb.ConnCase
 
-  # import Phoenix.LiveViewTest
+  import Phoenix.LiveViewTest
 
   # *** *******************************
   # *** ACTIONS
@@ -139,98 +139,9 @@ defmodule ChukinasWeb.DreadnoughtLiveTest do
   #   |> assert_turn(2)
   # end
 
-  # test "delay entry", %{conn: conn} do
-  #   {:ok, view, _html} = live(conn, "/skies")
-  #   view
-  #   |> assert_turn(1)
-  #   |> assert_tactical_points(1)
-  #   |> delay_entry()
-  #   |> assert_tactical_points(0)
-  # end
-
-  # test "(un)select", %{conn: conn} do
-  #   {:ok, view, _html} = live(conn, "/skies")
-  #   view
-  #   |> refute_element("#group_1 .select_group")
-  #   |> toggle_fighter(2)
-  #   |> refute_element("#fighter_2", "checked")
-  #   |> delay_entry()
-  #   |> assert_turn(1)
-  #   |> select_group(2)
-  #   |> delay_entry()
-  #   |> end_phase()
-  #   |> assert_turn(2)
-  #   |> assert_tactical_points(0)
-  # end
-
-  # test "squadron buttons and checkboxes works", %{conn: conn} do
-  #   {:ok, view, _html} = live(conn, "/skies")
-  #   view
-  #   |> toggle_fighter(2)
-  #   |> delay_entry()
-  #   |> assert_ids_appear_in_order("group_1", "group_2")
-  #   |> group_has_no_select_btn(1)
-  #   |> group_has_no_select_btn(2)
-  #   |> select_group(1)
-  #   |> assert_group_has_unselect_btn(1)
-  #   |> assert_group_has_unselect_btn(2, false)
-  # end
-
-  # test "enter board", %{conn: conn} do
-  #   {:ok, view, _html} = live(conn, "/skies")
-  #   box = {:nose, :preapproach, :low}
-  #   view
-  #   |> assert_element("notentered")
-  #   |> assert_group_in_box(1, :notentered)
-  #   |> move(box)
-  #   |> assert_group_in_box(1, box)
-  #   |> assert_tactical_points(1)
-  #   |> end_phase()
-  #   |> assert_turn(2)
-  #   |> assert_phase("Move")
-  #   |> select_group(1)
-  #   |> move({:nose, :preapproach, :high})
-  #   |> assert_tactical_points(0)
-  #   |> end_phase()
-  #   |> select_group(1)
-  #   |> move({:nose, :approach, :high})
-  #   |> end_phase()
-  #   |> assert_phase("Approach")
-  # end
-
-  # test "fighters on approach", %{conn: conn} do
-  #   {:ok, view, _html} = live(conn, "/skies")
-  #   view
-  #   # *** Turn 1
-  #   |> assert_group_from(1, "Not Yet Entered")
-  #   |> assert_group_to(1, "Nil")
-  #   |> move({:nose, :preapproach, :low})
-  #   |> assert_group_to(1, "Nose/Preapproach/Low")
-  #   |> end_phase()
-  #   # *** Turn 2: Move
-  #   |> select_group(1) |> move({:nose, :approach, :low})
-  #   |> end_phase()
-  #   # *** Turn 3: Approach
-  #   |> assert_phase("Approach")
-  #   |> select_group(1)
-  #   |> attack_bomber(2, 2)
-  #   |> assert_group_to(1, "Space (2, 2)")
-  # end
+  test "Ship 1", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/dreadnought")
+    assert has_element?(view, "#unit--1")
+  end
 
 end
-
-# <!-- font Germania One? Pirata One - UnifrakturCook UnifrakturMaguntia Vampiro One NewRocker stencil... Rakkas Ceviche One
-# Grenze Gotisc
-# ...typewriterh
-# -->
-
-# TODO Nil locations shouldn't render as Nil. What instead?
-# TODO select maneuver (climb/dive, straight or roll left/right)
-# TODO fighters should group correctly on approach
-# TODO during attack, fighters not in approach box should be disabled
-# TODO boxes should be disabled if not avail
-# TODO initial unselect crashes
-# TODO attack should store stace id, not bomber id
-# TODO try https://github.com/keathley/norm
-# TODO I'll also need a test func for 'approach space'.
-# TODO Spaces should key into same attack bomber command?

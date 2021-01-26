@@ -30,7 +30,7 @@
   > 
 
   <%# Dreadnought SVG %>
-  <div id="unit1" class="absolute top-0 left-0">
+  <div id="unit--1" class="absolute top-0 left-0">
     <div class="relative inline-block">
       <img src="<%= Routes.static_path(@socket, "/images/dreadnought2/hull.svg") %>">
       <img class="absolute top-0 left-2 js-turret-rear" src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>">
@@ -46,9 +46,9 @@
 
 <script>
   gsap.registerPlugin(MotionPathPlugin);
-  gsap.set("#unit1", {x: -100, y: 700})
-  gsap.to('#unit1 .js-turret', {duration: 3, rotation: -60, ease: Sine.easeInOut})
-  gsap.to('#unit1', {
+  gsap.set("#unit--1", {x: -100, y: 700})
+  gsap.to('#unit--1 .js-turret', {duration: 3, rotation: -60, ease: Sine.easeInOut})
+  gsap.to('#unit--1', {
     motionPath: {
       autoRotate: true,
         path: [
@@ -58,6 +58,6 @@
     },
     repeat: -1,
     duration: 20})
-  gsap.set('#unit1 .js-turret-rear', {rotation: 180, ease: Sine.easeInOut})
-  gsap.to('#unit1 .js-turret-rear', {duration: 3, rotation: "+=120", ease: Sine.easeInOut})
+  gsap.set('#unit--1 .js-turret-rear', {rotation: 180, ease: Sine.easeInOut})
+  gsap.to('#unit--1 .js-turret-rear', {duration: 3, rotation: "+=120", ease: Sine.easeInOut})
 </script>
