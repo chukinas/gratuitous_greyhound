@@ -1,7 +1,7 @@
 defmodule ChukinasWeb.DreadnoughtLiveTest do
   use ChukinasWeb.ConnCase
 
-  # import Phoenix.LiveViewTest
+  import Phoenix.LiveViewTest
 
   # *** *******************************
   # *** ACTIONS
@@ -198,39 +198,9 @@ defmodule ChukinasWeb.DreadnoughtLiveTest do
   #   |> assert_phase("Approach")
   # end
 
-  # test "fighters on approach", %{conn: conn} do
-  #   {:ok, view, _html} = live(conn, "/skies")
-  #   view
-  #   # *** Turn 1
-  #   |> assert_group_from(1, "Not Yet Entered")
-  #   |> assert_group_to(1, "Nil")
-  #   |> move({:nose, :preapproach, :low})
-  #   |> assert_group_to(1, "Nose/Preapproach/Low")
-  #   |> end_phase()
-  #   # *** Turn 2: Move
-  #   |> select_group(1) |> move({:nose, :approach, :low})
-  #   |> end_phase()
-  #   # *** Turn 3: Approach
-  #   |> assert_phase("Approach")
-  #   |> select_group(1)
-  #   |> attack_bomber(2, 2)
-  #   |> assert_group_to(1, "Space (2, 2)")
-  # end
+  test "This is just an example!", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/dreadnought")
+    assert true
+  end
 
 end
-
-# <!-- font Germania One? Pirata One - UnifrakturCook UnifrakturMaguntia Vampiro One NewRocker stencil... Rakkas Ceviche One
-# Grenze Gotisc
-# ...typewriterh
-# -->
-
-# TODO Nil locations shouldn't render as Nil. What instead?
-# TODO select maneuver (climb/dive, straight or roll left/right)
-# TODO fighters should group correctly on approach
-# TODO during attack, fighters not in approach box should be disabled
-# TODO boxes should be disabled if not avail
-# TODO initial unselect crashes
-# TODO attack should store stace id, not bomber id
-# TODO try https://github.com/keathley/norm
-# TODO I'll also need a test func for 'approach space'.
-# TODO Spaces should key into same attack bomber command?
