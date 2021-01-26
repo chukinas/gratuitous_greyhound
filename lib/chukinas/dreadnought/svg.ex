@@ -29,7 +29,7 @@ defmodule Chukinas.Dreadnought.Svg do
     |> Enum.join(", ")
   end
 
-  defp _to_string({x, y}=point) when is_point(point) do
+  defp _to_string({x, y} = point) when is_point(point) do
     "#{_round(x)} #{_round(y)}"
   end
 
