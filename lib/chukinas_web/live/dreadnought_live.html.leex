@@ -48,15 +48,16 @@
   gsap.registerPlugin(MotionPathPlugin);
   gsap.set("#unit1", {x: -100, y: 700})
   gsap.to('#unit1 .js-turret', {duration: 3, rotation: -60, ease: Sine.easeInOut})
-    gsap.to('#unit1', {
-        motionPath: {
-          autoRotate: true,
-            path: [
-              {x: 800, y: 200},
-              {x: 900, y: -200},
-            ]
-        },
-        duration: 20})
+  gsap.to('#unit1', {
+    motionPath: {
+      autoRotate: true,
+        path: [
+          {x: 800, y: 200},
+          {x: 900, y: -200},
+        ]
+    },
+    repeat: -1,
+    duration: 20})
   gsap.set('#unit1 .js-turret-rear', {rotation: 180, ease: Sine.easeInOut})
   gsap.to('#unit1 .js-turret-rear', {duration: 3, rotation: "+=120", ease: Sine.easeInOut})
 </script>
