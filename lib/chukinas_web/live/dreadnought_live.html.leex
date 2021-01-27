@@ -13,11 +13,13 @@
 <div class="overflow-hidden h-screen w-screen relative">
   
   <%# Islands %>
+  <%= if @live_action == :dev do %>
   <img 
      src="<%= Routes.static_path(@socket, "/images/island_top_left.png") %>" 
      class="absolute top-0 left-0"
      style="width:800px"
   >
+  <% end %>
   <img 
      src="<%= Routes.static_path(@socket, "/images/island_side.png") %>" 
      class="absolute top-0" 
