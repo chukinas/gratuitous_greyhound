@@ -11,15 +11,22 @@
 </style>
 
 <div class="overflow-hidden h-screen w-screen relative">
+
+  <%# Let user know they're looking at dev page %>
+  <%= if @live_action == :dev do %> 
+    <div class="absolute top-0 left-0 h-screen w-screen bg-red-500 opacity-20"></div>
+    <div class="absolute top-0 left-0 p-8 text-lg">DEV</div>
+    <div class="absolute top-0 right-0 p-8 text-lg ">DEV</div>
+    <div class="absolute bottom-0 right-0 p-8 text-lg">DEV</div>
+    <div class="absolute bottom-0 left-0 p-8 text-lg">DEV</div>
+  <% end %>
   
   <%# Islands %>
-  <%= if @live_action == :dev do %>
   <img 
      src="<%= Routes.static_path(@socket, "/images/island_top_left.png") %>" 
      class="absolute top-0 left-0"
      style="width:800px"
   >
-  <% end %>
   <img 
      src="<%= Routes.static_path(@socket, "/images/island_side.png") %>" 
      class="absolute top-0" 
