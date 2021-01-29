@@ -11,6 +11,15 @@
 </style>
 
 <div class="overflow-hidden h-screen w-screen relative">
+
+  <%# Let user know they're looking at dev page %>
+  <%= if @live_action == :dev do %> 
+    <div class="absolute top-0 left-0 h-screen w-screen bg-red-500 opacity-20"></div>
+    <div class="absolute top-0 left-0 p-8 text-lg">DEV</div>
+    <div class="absolute top-0 right-0 p-8 text-lg ">DEV</div>
+    <div class="absolute bottom-0 right-0 p-8 text-lg">DEV</div>
+    <div class="absolute bottom-0 left-0 p-8 text-lg">DEV</div>
+  <% end %>
   
   <%# Islands %>
   <img 
