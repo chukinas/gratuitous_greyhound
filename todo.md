@@ -1,5 +1,6 @@
 # Current Branch
-  * remove unneeded pagelive
+  * Extract world into its own template?
+  * shrink it down in the dreadnought live template
 
 
 # DREADNOUGHT

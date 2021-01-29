@@ -1,0 +1,52 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/MotionPathPlugin.min.js"></script>
+
+<div class="absolute top-0 left-0">
+    <div class="overflow-hidden h-screen w-screen relative">
+
+    <%# Islands %>
+    <img 
+          src="<%= Routes.static_path(@socket, "/images/island_top_left.png") %>" 
+          class="absolute top-0 left-0"
+          style="width:800px"
+          >
+          <img 
+          src="<%= Routes.static_path(@socket, "/images/island_side.png") %>" 
+          class="absolute top-0" 
+          style="left:1000px; width: 600px"
+          > 
+          <img 
+          src="<%= Routes.static_path(@socket, "/images/island_middle.png") %>" 
+          class="absolute" 
+          style="top:500px;left:500px; width: 900px"
+          > 
+
+          <%# Dreadnought SVG %>
+          <div id="unit--1" class="absolute top-0 left-0">
+            <div class="relative inline-block">
+              <img src="<%= Routes.static_path(@socket, "/images/dreadnought2/hull.svg") %>">
+              <img class="absolute top-0 left-2 js-turret-rear" src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>">
+              <img class="absolute top-0 left-10 js-turret" src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>">
+              <img class="absolute top-0 left-14 js-turret" src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>">
+            </div>
+          </div>
+
+  </div></div>
+
+<script>
+  gsap.registerPlugin(MotionPathPlugin);
+  gsap.set("#unit--1", {x: -100, y: 700})
+  gsap.to('#unit--1 .js-turret', {duration: 3, rotation: -60, ease: Sine.easeInOut})
+  gsap.to('#unit--1', {
+    motionPath: {
+      autoRotate: true,
+        path: [
+          {x: 800, y: 200},
+          {x: 900, y: -200},
+        ]
+    },
+    repeat: -1,
+    duration: 20})
+  gsap.set('#unit--1 .js-turret-rear', {rotation: 180, ease: Sine.easeInOut})
+  gsap.to('#unit--1 .js-turret-rear', {duration: 3, rotation: "+=120", ease: Sine.easeInOut})
+</script>
