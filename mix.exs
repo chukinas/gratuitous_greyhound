@@ -36,7 +36,6 @@ defmodule Chukinas.MixProject do
     [
       {:phoenix, "~> 1.5.7"},
       {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
-      {:postgrex, ">= 0.0.0"},
       {:phoenix_live_view, "~> 0.15.0"},
       {:floki, ">= 0.27.0", only: :test},
       {:phoenix_html, "~> 2.11"},
@@ -60,7 +59,7 @@ defmodule Chukinas.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "cmd npm install --prefix assets"],
+      setup: ["deps.get", "cmd npm install --prefix assets"]
     ]
   end
 end
