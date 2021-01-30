@@ -10,10 +10,6 @@ module.exports = {
   },
   variants: {
     extend: {
-      borderRadius: ['first, last'],
-      margin: ['first'],
-      backgroundColor: ['disabled'],
-      opacity: ['disabled'],
     },
   },
   plugins: [],
