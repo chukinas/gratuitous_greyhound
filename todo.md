@@ -14,6 +14,7 @@
     * Vast Shadow - maybe title. Looks kinda old west
     * Roboto Slabj
   * Update the Phase 1 description
+  * Is it distracting seeing the dreadnought pass behind the welcome card?
 
 # VIM
 

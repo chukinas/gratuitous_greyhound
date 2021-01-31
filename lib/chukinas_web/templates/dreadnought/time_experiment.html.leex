@@ -2,6 +2,15 @@
   Slider
 </div>
 
+<div class="absolute top-16 left-16">
+  <button
+    class="bg-white p-2 rounded"
+    phx-click="check_time"
+  >
+    Check Position
+  </button>
+</div>
+
 <script>
   gsap.to('#slider', {ease: 'none', duration: 10, x: 1000, repeat: -1})
 </script>
