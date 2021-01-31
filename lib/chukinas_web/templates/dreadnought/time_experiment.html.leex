@@ -9,6 +9,13 @@
   >
     Check Position
   </button>
+  <ul>
+    <%= for something <- @time_checks do %>
+      <li>
+        <%= something %>
+      </li>
+    <% end %>
+  </ul>
 </div>
 
 <script>

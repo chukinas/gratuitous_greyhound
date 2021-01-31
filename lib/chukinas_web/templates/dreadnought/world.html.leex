@@ -32,7 +32,7 @@
           </div>
 
     <%= if @live_action == :dev do %>
-      <%= render "time_experiment.html", %{socket: @socket} %>
+      <%= render "time_experiment.html", %{socket: @socket, time_checks: @time_checks} %>
     <% end %>
 
   </div>

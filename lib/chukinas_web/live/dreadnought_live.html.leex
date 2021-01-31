@@ -19,7 +19,7 @@
   <% end %>
 
   <%# The World %>
-  <%= DreadnoughtView.render "world.html", %{socket: @socket, live_action: @live_action} %>
+  <%= DreadnoughtView.render "world.html", %{socket: @socket, live_action: @live_action, time_checks: @time_checks} %>
 
   <%= if @live_action != :dev do %> 
     <%# Welcome Card %>
