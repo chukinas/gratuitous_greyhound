@@ -30,8 +30,10 @@
               <img class="absolute top-0 left-14 js-turret" src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>">
             </div>
           </div>
-
-  </div></div>
+    
+    <%= render "time_experiment.html", %{socket: @socket} %>
+  </div>
+</div>
 
 <script>
   gsap.registerPlugin(MotionPathPlugin);
