@@ -7,6 +7,7 @@ module.exports = {
       '50': '.50',
       '75': '.75',
       '100': '1',
+    },
     extend: {
       fontFamily: {
         'display': ['"Roboto Slab"', 'serif']
