@@ -12,8 +12,8 @@ defmodule ChukinasWeb.DreadnoughtLive do
     {:ok, socket}
   end
 
-  def handle_event("check_time", _value, socket) do
-    time_checks = ["something" | socket.assigns.time_checks]
+  def handle_event("check_time", %{"rand" => rand}, socket) do
+    time_checks = [rand | socket.assigns.time_checks]
     {:noreply, assign(socket, :time_checks, time_checks)}
   end
 end
