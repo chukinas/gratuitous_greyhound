@@ -1,4 +1,4 @@
-<div id="slider" class="absolute top-0 left-0 text-white">
+<div id="slider" class="absolute top-0 left-0 text-white" phx-hook="MoveSlider">
   Slider
 </div>
 
@@ -25,7 +25,3 @@
     <% end %>
   </ul>
 </div>
-
-<script>
-  gsap.to('#slider', {ease: 'none', duration: 10, x: 1000, repeat: -1})
-</script>

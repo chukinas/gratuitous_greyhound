@@ -12,7 +12,7 @@ function checkGsapLoad() {
 // --------------------------------------------------------
 // HOOKS
 
-const CheckGsapLoad = {
+export const CheckGsapLoad = {
   mounted() {
     checkGsapLoad();
     this.el.addEventListener("click", () => {
@@ -21,4 +21,8 @@ const CheckGsapLoad = {
   }
 }
 
-export default { CheckGsapLoad }
+export const MoveSlider = {
+  mounted() {
+    window.gsap.to(this.el, {ease: 'none', duration: 10, x: 1000, repeat: -1})
+  }
+}
