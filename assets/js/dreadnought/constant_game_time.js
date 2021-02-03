@@ -1,6 +1,12 @@
+// --------------------------------------------------------
+// CONSTANTS
+
 const DISTANCE = 1000; // pixels
 const DURATION = 10; // seconds
 const SPEED = DISTANCE / DURATION; // px/sec
+
+// --------------------------------------------------------
+// FUNCTIONS
 
 function initClosure_getElapsedSeconds() {
   const startTime = Date.now();
@@ -24,9 +30,12 @@ function calcIdealPosition(elapsedSecondsCurrentTrip) {
   return SPEED * elapsedSecondsCurrentTrip;
 }
 
-let DreadnoughtHooks = {}
+// --------------------------------------------------------
+// HOOKS
 
-DreadnoughtHooks.PositionCheck = {
+export const Hooks = {}
+
+Hooks.PositionCheck = {
   mounted() {
     const getElapsedSeconds = initClosure_getElapsedSeconds();
     this.el.addEventListener("click", () => {
@@ -41,5 +50,3 @@ DreadnoughtHooks.PositionCheck = {
     })
   }
 }
-
-export {DreadnoughtHooks}
