@@ -33,9 +33,7 @@ function calcIdealPosition(elapsedSecondsCurrentTrip) {
 // --------------------------------------------------------
 // HOOKS
 
-export const Hooks = {}
-
-Hooks.PositionCheck = {
+const PositionCheck = {
   mounted() {
     const getElapsedSeconds = initClosure_getElapsedSeconds();
     this.el.addEventListener("click", () => {
@@ -50,3 +48,5 @@ Hooks.PositionCheck = {
     })
   }
 }
+
+export default { PositionCheck }
