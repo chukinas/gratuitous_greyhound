@@ -1,4 +1,5 @@
 {
+    "assets/js/dreadnought/*.js": { "type": "hook" },
     "lib/chukinas/dreadnought/*.ex": { "type": "core" },
     "lib/chukinas_web/templates/dreadnought/*.html.leex": { "type": "template" },
     "lib/chukinas_web/views/*.ex": { "type": "view" },
