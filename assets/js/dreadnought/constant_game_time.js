@@ -5,17 +5,17 @@ const DISTANCE = 1000; // pixels
 const DURATION = 10; // seconds
 const SPEED = DISTANCE / DURATION; // px/sec
 
-// --------------------------------------------------------
-// FUNCTIONS
-
-function initClosure_getElapsedSeconds() {
+const getElapsedSeconds = (function() {
   const startTime = Date.now();
   return () => {
     const currentTime = Date.now();
     const elapsedMilliseconds = currentTime - startTime;
-    return (elapsedMilliseconds / DISTANCE);
+    return (elapsedMilliseconds / 1000);
   }
-}
+})();
+
+// --------------------------------------------------------
+// FUNCTIONS
 
 function getSliderPosition() {
   const slider = document.getElementById("slider");
@@ -35,7 +35,6 @@ function calcIdealPosition(elapsedSecondsCurrentTrip) {
 
 const PositionCheck = {
   mounted() {
-    const getElapsedSeconds = initClosure_getElapsedSeconds();
     this.el.addEventListener("click", () => {
       const actualPosition = getSliderPosition();
       const elapsedSecondsTotal = getElapsedSeconds();
@@ -49,4 +48,10 @@ const PositionCheck = {
   }
 }
 
-export default { PositionCheck }
+const SliderSync = {
+  mounted() {
+    console.log('SliderSync just mounted!');
+  }
+}
+
+export default { PositionCheck, SliderSync }
