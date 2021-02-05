@@ -6,7 +6,7 @@
 
 function checkGsapLoad() {
   const gsap = window.gsap;
-  console.log(gsap);
+  // console.log(gsap);
 }
 
 // --------------------------------------------------------

@@ -1,0 +1,28 @@
+<%# Ship Template %>
+<div
+  id="unit--1"
+  class="absolute top-0 left-0"
+  phx-hook="WelcomeCardShip"
+>
+  <div class="relative inline-block">
+    <img src="<%= Routes.static_path(@socket, "/images/dreadnought2/hull.svg") %>">
+    <img
+      id="unit--1--turret--1"
+      class="absolute top-0 left-14"
+      src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>"
+      phx-hook="WelcomeCardShipFwdTurret"
+    >
+    <img
+      id="unit--1--turret--2"
+      class="absolute top-0 left-10"
+      src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>"
+      phx-hook="WelcomeCardShipFwdTurret"
+    >
+    <img
+      id="unit--1--turret--3"
+      class="absolute top-0 left-2"
+      src="<%= Routes.static_path(@socket, "/images/dreadnought2/turret.svg") %>"
+      phx-hook="WelcomeCardShipRearTurret"
+    >
+  </div>
+</div>
