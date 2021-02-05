@@ -11,10 +11,10 @@ function dragstart_handler(ev) {
   console.log(`Just started dragging ${ev.target.id}!`)
 }
 
-function dragover_handler(ev) {
+function dragenter_handler(ev) {
   const commandCardId = ev.dataTransfer.getData("text/plain")
-  console.log(`${commandCardId} might be dropped on ${ev.target.id}...`)
-  ev.preventDefault()
+  console.log(`${commandCardId} just entered ${ev.target.id}...`)
+  // ev.preventdefault()
 }
 
 function drop_handler(ev) {
@@ -34,8 +34,8 @@ const CommandCard = {
 
 const CommandCardTarget = {
   mounted() {
+    this.el.addEventListener("dragover", dragenter_handler)
     this.el.addEventListener("drop", drop_handler)
-    this.el.addEventListener("dragover", dragover_handler)
   }
 }
 
