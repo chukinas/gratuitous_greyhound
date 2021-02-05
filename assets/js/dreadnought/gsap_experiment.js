@@ -20,9 +20,3 @@ export const CheckGsapLoad = {
     })
   }
 }
-
-export const MoveSlider = {
-  mounted() {
-    window.gsap.to(this.el, {ease: 'none', duration: 10, x: 1000, repeat: -1})
-  }
-}
