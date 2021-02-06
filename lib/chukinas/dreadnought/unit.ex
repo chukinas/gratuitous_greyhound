@@ -1,4 +1,5 @@
 defmodule Chukinas.Dreadnought.Unit do
+  alias Chukinas.Dreadnought.Vector
   @moduledoc """
   Represents a ship or some other combat unit
   """
@@ -11,6 +12,9 @@ defmodule Chukinas.Dreadnought.Unit do
   typedstruct enforce: true do
     # ID must be unique within the world
     field :id, number()
+
+    # Vector (location and orientation)
+    field :vector, Vector.t()
 
     # Hull and Turrets describe the physical properties of the unit.
     # field :hull, Hull.t()
@@ -31,6 +35,7 @@ defmodule Chukinas.Dreadnought.Unit do
   def new() do
     %__MODULE__{
       id: 2,
+      vector: Vector.new(50, 50, 0),
       # hull: Hull.new(),
       # turrets: Turret.new(),
     }
