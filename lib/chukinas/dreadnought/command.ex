@@ -1,5 +1,6 @@
 defmodule Chukinas.Dreadnought.Command do
   alias Chukinas.Dreadnought.Vector
+  alias Chukinas.Dreadnought.Svg
 
   # *** *******************************
   # *** TYPES
@@ -14,6 +15,7 @@ defmodule Chukinas.Dreadnought.Command do
     field :type, atom(), default: :default
     field :vector_start, Vector.t(), enforce: false
     field :vector_end, Vector.t(), enforce: false
+    field :svg_path, String.t(), enforce: false
   end
 
   # *** *******************************
@@ -28,10 +30,12 @@ defmodule Chukinas.Dreadnought.Command do
   # *** *******************************
   # *** API
 
-  def set_path(%__MODULE__{angle: 0, speed: 3} = command, %Vector{} = start_vector) do
+  def set_path(%__MODULE__{angle: 0, speed: speed} = command, %Vector{} = start_vector) do
+    vector_end = Vector.move_straight(start_vector, speed_to_distance(speed))
     command
     |> Map.put(:vector_start, start_vector)
-    |> Map.put(:vector_end, Vector.move_straight(start_vector, 100))
+    |> Map.put(:vector_end, vector_end)
+    |> Map.put(:svg_path, Svg.relative_line(vector_end.point))
   end
 
   # TODO make note about how segments are listed from later (future) to oldest (past)
@@ -42,6 +46,19 @@ defmodule Chukinas.Dreadnought.Command do
 
   def occupies_segment(%__MODULE__{} = command, segment_number) do
     segment_number in get_segment_numbers(command)
+  end
+
+  # *** *******************************
+  # *** PRIVATE
+
+  defp speed_to_distance(speed) when is_integer(speed) do
+    %{
+      1 => 50,
+      2 => 75,
+      3 => 100,
+      4 => 150,
+      5 => 200
+    } |> Map.fetch!(speed)
   end
 
 end

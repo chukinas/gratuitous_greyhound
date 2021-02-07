@@ -20,6 +20,10 @@ defmodule Chukinas.Dreadnought.Svg do
     "Q #{[quad_control, end_point] |> _to_string}"
   end
 
+  def relative_line(end_point) when is_point(end_point) do
+    "l #{end_point |> _to_string}"
+  end
+
   # *** *******************************
   # *** HELPERS
 
