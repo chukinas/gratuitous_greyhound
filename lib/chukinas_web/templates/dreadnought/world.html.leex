@@ -24,6 +24,9 @@
     <%= if @live_action == :dev do %>
       <%= render "time_experiment.html", %{socket: @socket, time_checks: @time_checks} %>
       <%= render "drag_and_drop.html" %>
+      <%= for unit <- @units do %>
+        <%= render "unit.html", %{unit: unit}%>
+      <% end %>
     <% end %>
 
   </div>

@@ -17,7 +17,15 @@ defmodule Chukinas.Dreadnought.Vector do
   use TypedStruct
 
   typedstruct enforce: true do
+    # X,Y coordinates measured from the top left.
     field :point, Point.t()
+
+    # Zero points to the right, in the direction of positive X
+    # A positive angle opens in the direction of positive y,
+    # i.e. counterclockwise, as in standard geometry.
+    # The catch when working with SVGs is that they have positive Y
+    # pointing down. So in this mirrored perspective, a positive angle will
+    # look like clockwise rotation to the user.
     field :angle, Angle.t()
   end
 
