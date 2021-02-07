@@ -24,7 +24,9 @@
         <% end %>
 
     <%= if @live_action == :dev do %>
-      <%= render "arena.html", @mission %>
+      <div class="m-12">
+        <%= render "arena.html", @mission %>
+      </div>
     <% end %>
 
   </div>

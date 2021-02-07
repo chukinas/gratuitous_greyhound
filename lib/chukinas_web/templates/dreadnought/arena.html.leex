@@ -1,6 +1,7 @@
 <div
   id="arena"
   style="width:<%= @size_x %>px; height: <%= @size_y %>px"
+  class="border-4 border-red-500 border-opacity-50 border-dashed"
 >
   <%= for unit <- @units do %>
     <%= render "unit.html", %{unit: unit}%>
