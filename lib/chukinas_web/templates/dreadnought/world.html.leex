@@ -2,6 +2,7 @@
     <div id="world" class="relative" style="width:1280px; height:800px">
 
     <%# Islands %>
+    <%= if @live_action != :dev do %>
     <img 
           src="<%= Routes.static_path(@socket, "/images/island_top_left.png") %>" 
           class="absolute top-0 left-0"
@@ -20,13 +21,10 @@
 
           <%# Dreadnought SVG %>
           <%= render "ship.html", %{socket: @socket} %>
+        <% end %>
 
     <%= if @live_action == :dev do %>
-      <%= render "time_experiment.html", %{socket: @socket, time_checks: @time_checks} %>
-      <%= render "drag_and_drop.html" %>
-      <%= for unit <- @mission.units do %>
-        <%= render "unit.html", %{unit: unit}%>
-      <% end %>
+      <%= render "arena.html", @mission %>
     <% end %>
 
   </div>

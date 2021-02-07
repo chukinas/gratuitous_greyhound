@@ -1,0 +1,8 @@
+<div
+  id="arena"
+  style="width:<%= @size_x %>px; height: <%= @size_y %>px"
+>
+  <%= for unit <- @units do %>
+    <%= render "unit.html", %{unit: unit}%>
+  <% end %>
+</div>
