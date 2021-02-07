@@ -1,5 +1,6 @@
 defmodule Chukinas.Dreadnought.Mission do
   alias Chukinas.Dreadnought.Unit
+  alias Chukinas.Dreadnought.Deck
   # *** *******************************
   # *** TYPES
 
