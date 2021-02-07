@@ -16,6 +16,7 @@ defmodule Chukinas.Dreadnought.Command do
     field :vector_start, Vector.t(), enforce: false
     field :vector_end, Vector.t(), enforce: false
     field :svg_path, String.t(), enforce: false
+    field :viewbox, String.t(), enforce: false
   end
 
   # *** *******************************
