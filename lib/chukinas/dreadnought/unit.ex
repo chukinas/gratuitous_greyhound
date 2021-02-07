@@ -27,18 +27,18 @@ defmodule Chukinas.Dreadnought.Unit do
 
     # Commands draw their data from command cards from the deck.
     # The cards' data is copied to here. Keeps a nice separation of concerns.
-    field :commands, [Command.t()]
+    field :commands, Command.E.t()
   end
 
   # *** *******************************
   # *** NEW
 
   def new() do
-    start_vector = Vector.new(50, 50, 0)
+    start_vector = Vector.new(0, 375, 0)
     %__MODULE__{
       id: 2,
       vector: start_vector,
-      commands: 1..20 |> Enum.map(&Command.new/1) |> (fn commands -> Command.set_path(commands, start_vector) end).()
+      commands: 1..20 |> Command.E.new() |> (fn commands -> Command.E.set_paths(commands, start_vector) end).()
       # hull: Hull.new(),
       # turrets: Turret.new(),
     }
