@@ -1,4 +1,5 @@
 defmodule Chukinas.Dreadnought.Command do
+  alias Chukinas.Dreadnought.Vector
 
   # *** *******************************
   # *** TYPES
@@ -11,6 +12,8 @@ defmodule Chukinas.Dreadnought.Command do
     field :segment_number, integer()
     field :segment_count, integer(), default: 1
     field :type, atom(), default: :default
+    field :vector_start, Vector.t(), enforce: false
+    field :vector_end, Vector.t(), enforce: false
   end
 
   # *** *******************************
@@ -32,7 +35,7 @@ defmodule Chukinas.Dreadnought.Command do
     min_segment..max_segment
   end
 
-  def occupies_segment(command, segment_number) do
+  defp occupies_segment(command, segment_number) do
     segment_number in get_segment_numbers(command)
   end
 
@@ -44,6 +47,23 @@ defmodule Chukinas.Dreadnought.Command do
     |> Enum.split_while(&(!occupies_segment(&1, segment_number)))
     new_commands = get_segment_numbers(removed_command) |> Enum.map(&new/1)
     Enum.concat([before_commands, new_commands, after_commands])
+  end
+
+  def set_path(commands, start_vector) when is_list(commands) do
+    # flat map reduce
+    IO.inspect(start_vector)
+    {commands_with_paths, _final_end_vector} = commands
+    |> Enum.map_reduce(start_vector, fn x, acc ->
+      command = set_path(x, acc) |> IO.inspect()
+      {command, command.vector_end}
+    end)
+    commands_with_paths
+  end
+
+  def set_path(%__MODULE__{angle: 0, speed: 3} = command, %Vector{} = start_vector) do
+    command
+    |> Map.put(:vector_start, start_vector)
+    |> Map.put(:vector_end, Vector.move_straight(start_vector, 100))
   end
 
 end

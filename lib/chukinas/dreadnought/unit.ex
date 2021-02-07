@@ -34,10 +34,11 @@ defmodule Chukinas.Dreadnought.Unit do
   # *** NEW
 
   def new() do
+    start_vector = Vector.new(50, 50, 0)
     %__MODULE__{
       id: 2,
-      vector: Vector.new(50, 50, 0),
-      commands: 1..20 |> Enum.map(&Command.new/1)
+      vector: start_vector,
+      commands: 1..20 |> Enum.map(&Command.new/1) |> (fn commands -> Command.set_path(commands, start_vector) end).()
       # hull: Hull.new(),
       # turrets: Turret.new(),
     }
