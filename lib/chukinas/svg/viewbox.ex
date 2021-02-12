@@ -26,10 +26,6 @@ defmodule ViewBox do
     |> Map.put(:margin, 10)
   end
 
-  # *** *******************************
-  # *** PRIVATE
-  # TODO this is no longer private. Try making it so again. If not, move to API section
-
   def apply_margin(viewbox) do
     add_margin = fn size -> size + 2 * viewbox.margin end
     viewbox

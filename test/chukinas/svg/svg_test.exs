@@ -1,4 +1,3 @@
-# TODO rename svg_test
 ExUnit.start()
 
 defmodule Chukinas.SvgTest do
@@ -6,7 +5,6 @@ defmodule Chukinas.SvgTest do
   use DreadnoughtHelpers
 
   test "svg path string from straight path" do
-    # TODO: vim abbrev ""
     assert "l 10.0 0.0" = Path.new_straight(0, 0, 0, 10) |> Svg.to_string()
   end
 
