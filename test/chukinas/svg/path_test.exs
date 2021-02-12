@@ -6,7 +6,7 @@ defmodule Chukinas.SvgTest do
 
   test "svg path string from straight path" do
     # TODO: vim abbrev ""
-    assert "l 10 0" = Path.new_straight(0, 0, 0, 10) |> Svg.to_string()
+    assert "l 10.0 0.0" = Path.new_straight(0, 0, 0, 10) |> Svg.to_string()
   end
 
   test "view box string from straight path" do

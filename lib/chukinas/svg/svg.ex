@@ -1,6 +1,9 @@
+alias Chukinas.Svg.ViewBox
+alias Chukinas.Geometry.{Path, Position}
+alias Chukinas.Geometry.Path.{Straight}
+
 # TODO add docs
 defmodule Chukinas.Svg do
-  alias Chukinas.Svg.ViewBox
   # TODO used?
   # @decimal_count 1
 
@@ -9,8 +12,9 @@ defmodule Chukinas.Svg do
 
   defdelegate new_viewbox(path), to: ViewBox, as: :new
 
-  def to_string(_path) do
-    "This is just a placeholder. It'll soon return something like `l 10 24`"
+  def to_string(%Straight{} = path) do
+    {x, y} = path |> Path.get_end_pose() |> Position.to_tuple()
+    "l #{x} #{y}"
   end
 
   # def m_abs(point) when is_point(point) do
