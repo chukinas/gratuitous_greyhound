@@ -22,6 +22,7 @@ defmodule Chukinas.Geometry.Pose do
   # *** *******************************
   # *** API
 
+  # TODO move this to POsition
   def position_to_tuple(pose) do
     {pose.x, pose.y}
   end

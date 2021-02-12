@@ -31,8 +31,12 @@ defmodule Chukinas.Geometry.PathTest do
   end
 
   test "view box of a 45deg straight path" do
-    Path.Straight.new(0, 0, 45, :math.sqrt(2))
+    path = Path.Straight.new(0, 0, 45, :math.sqrt(2))
+    path
     |> Path.view_box()
     |> assert_view_box(0, 0, 1, 1)
+    path
+    |> Path.view_box(1)
+    |> assert_view_box(-1, -1, 3, 3)
   end
 end
