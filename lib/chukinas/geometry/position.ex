@@ -1,4 +1,6 @@
-defprotocol Chukinas.Geometry.Position do
+alias Chukinas.Geometry.{Position, Pose, Point}
+
+defprotocol Position do
 
   @type position_tuple() :: {number(), number()}
 
@@ -7,8 +9,7 @@ defprotocol Chukinas.Geometry.Position do
 
 end
 
-# TODO is there a cleaner way to write these long module names?
-defimpl Chukinas.Geometry.Position, for: [Chukinas.Geometry.Pose, Chukinas.Geometry.Point] do
+defimpl Position, for: [Pose, Point] do
 
   def to_tuple(%{x: x, y: y}), do: {x, y}
 
