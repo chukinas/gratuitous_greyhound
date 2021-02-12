@@ -12,8 +12,7 @@ defprotocol Chukinas.Geometry.Path do
 end
 
 defimpl Chukinas.Geometry.Path, for: Chukinas.Geometry.Path.Straight do
-  alias Chukinas.Geometry.Polar
-  alias Chukinas.Geometry.Pose
+  alias Chukinas.Geometry.{Polar, Pose, Position}
   def pose_start(path), do: path.start
   def pose_end(path) do
     len = len(path)
@@ -24,8 +23,8 @@ defimpl Chukinas.Geometry.Path, for: Chukinas.Geometry.Path.Straight do
   end
   def len(path), do: path.len
   def view_box(path, margin) do
-    {x_start, y_start} = path |> pose_start() |> Pose.position_to_tuple()
-    {x_end, y_end} = path |> pose_end() |> Pose.position_to_tuple()
+    {x_start, y_start} = path |> pose_start() |> Position.to_tuple()
+    {x_end, y_end} = path |> pose_end() |> Position.to_tuple()
     {xmin, xmax} = Enum.min_max([x_start, x_end])
     {ymin, ymax} = Enum.min_max([y_start, y_end])
     %{
