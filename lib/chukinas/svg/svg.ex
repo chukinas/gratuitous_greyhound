@@ -2,16 +2,19 @@ alias Chukinas.Svg.ViewBox
 alias Chukinas.Geometry.{Path, Position}
 alias Chukinas.Geometry.Path.{Straight}
 
-# TODO add docs
 defmodule Chukinas.Svg do
-  # TODO used?
-  # @decimal_count 1
+  @moduledoc"""
+  This module converts path structs to svg path strings for use in eex templates.
+  """
 
   # *** *******************************
   # *** API
 
   defdelegate new_viewbox(path), to: ViewBox, as: :new
 
+  @doc"""
+  Convert a path struct to a svg path string that can be dropped into an eex template.
+  """
   def to_string(%Straight{} = path) do
     {x, y} = path |> Path.get_end_pose() |> Position.to_tuple()
     "l #{x} #{y}"
@@ -27,28 +30,5 @@ defmodule Chukinas.Svg do
 
   # def q_abs(quad_control, end_point) when is_point(quad_control) and is_point(end_point) do
   #   "Q #{[quad_control, end_point] |> _to_string}"
-  # end
-
-  # *** *******************************
-  # *** HELPERS
-
-  # defp _to_string(points) when is_list(points)do
-  #   points
-  #   |> Enum.map(&_to_string/1)
-  #   |> Enum.join(", ")
-  # end
-
-  # defp _to_string({x, y} = point) when is_point(point) do
-  #   "#{_round(x)} #{_round(y)}"
-  # end
-
-  # # TODO this has been moved to the Point module.
-  # # TODO or make this its own module?
-  # defp _round(number) when is_integer(number) do
-  #   number
-  # end
-
-  # defp _round(number) when is_number(number) do
-  #   Float.round(number, @decimal_count)
   # end
 end
