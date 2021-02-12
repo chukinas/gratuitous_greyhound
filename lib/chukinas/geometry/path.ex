@@ -1,4 +1,25 @@
-defprotocol Chukinas.Geometry.Path do
+defmodule Chukinas.Geometry.Path do
+  # TODO add vim abberv for }}
+  alias Chukinas.Geometry.Path.{Straight}
+  alias Chukinas.Geometry.IsPath
+
+  # *** *******************************
+  # *** TYPES
+
+  @type t() :: IsPath.t()
+
+    # TODO my vim paren abbrev doesn't work unless it follows whitespace
+  defdelegate new_straight(x, y, angle, length), to: Straight, as: :new
+  defdelegate get_start_pose(path), to: IsPath, as: :pose_start
+  defdelegate get_end_pose(path), to: IsPath, as: :pose_end
+  # TODO rename this something like get_bounding_rect ...
+  defdelegate viewbox(path), to: IsPath, as: :view_box
+  defdelegate get_bounding_rect(path), to: IsPath, as: :view_box
+end
+
+# TODO move to separate file
+# TODO rename to CHukinas.geometry.path.ispath
+defprotocol Chukinas.Geometry.IsPath do
   def pose_start(path)
   def pose_end(path)
   def len(path)
@@ -12,7 +33,7 @@ defprotocol Chukinas.Geometry.Path do
 end
 
 # TODO clean up names with aliases
-defimpl Chukinas.Geometry.Path, for: Chukinas.Geometry.Path.Straight do
+defimpl Chukinas.Geometry.IsPath, for: Chukinas.Geometry.Path.Straight do
   alias Chukinas.Geometry.{Polar, Pose, Position}
   def pose_start(path), do: path.start
   def pose_end(path) do
@@ -23,7 +44,9 @@ defimpl Chukinas.Geometry.Path, for: Chukinas.Geometry.Path.Straight do
     Pose.new(x0 + dx, y0 + dy, angle)
   end
   def len(path), do: path.len
-  def view_box(path, margin) do
+
+  # TODO rename get_bounding_rect
+  def view_box(path, margin \\ 0) do
     {x_start, y_start} = path |> pose_start() |> Position.to_tuple()
     {x_end, y_end} = path |> pose_end() |> Position.to_tuple()
     {xmin, xmax} = Enum.min_max([x_start, x_end])

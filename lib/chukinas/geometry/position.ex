@@ -1,19 +1,14 @@
-alias Chukinas.Geometry.{Position, Pose, Point}
+alias Chukinas.Geometry.{Position}
 
-defprotocol Position do
+defmodule Position do
+
+  # *** *******************************
+  # *** TYPES
 
   @type position_tuple() :: {number(), number()}
-  @type translation() :: position_tuple() | t()
 
-  @spec to_tuple(t()) :: position_tuple()
-  def to_tuple(position)
-
-  @spec translate(t(), translation()) :: t()
-  def translate(positionable, translation)
-
-end
-
-defimpl Position, for: [Pose, Point] do
+  # *** *******************************
+  # *** API
 
   def to_tuple(%{x: x, y: y}), do: {x, y}
 
@@ -22,6 +17,14 @@ defimpl Position, for: [Pose, Point] do
       orig + trans
     end)
   end
+
+  def subtract(position, x, y), do: translate(position, {-x, -y})
+  def subtract(position, translation) do
+    translate(position, {-translation.x, -translation.y})
+  end
+
+  # *** *******************************
+  # *** PRIVATE
 
   defp sanitize_translation({x, y}), do: %{x: x, y: y}
   defp sanitize_translation(%{x: x, y: y}), do: %{x: x, y: y}

@@ -20,23 +20,23 @@ defmodule Chukinas.Geometry.PathTest do
 
   test "end position of vertical straight path" do
     Path.Straight.new(0, 0, 90, 10)
-    |> Path.pose_end()
+    |> Path.get_end_pose()
     |> assert_position({0, 10})
   end
 
   test "end position of horizontal straight path" do
     Path.Straight.new(0, 0, 0, 10)
-    |> Path.pose_end()
+    |> Path.get_end_pose()
     |> assert_position({10, 0})
   end
 
   test "view box of a 45deg straight path" do
     path = Path.Straight.new(0, 0, 45, :math.sqrt(2))
     path
-    |> Path.view_box()
+    |> Path.viewbox()
     |> assert_view_box(0, 0, 1, 1)
     path
-    |> Path.view_box(1)
+    |> Path.viewbox()
     |> assert_view_box(-1, -1, 3, 3)
   end
 end
