@@ -1,4 +1,6 @@
-defmodule Chukinas.Geometry.Polar do
+alias Chukinas.Geometry, as: G
+
+defmodule G.Polar do
 
   # *** *******************************
   # *** TYPE
@@ -21,10 +23,9 @@ defmodule Chukinas.Geometry.Polar do
   # *** API
 
   def to_cartesian(%__MODULE__{r: r, angle: angle}) do
-    alias Chukinas.Geometry.Trig
-    x = r * Trig.cos(angle)
-    y = r * Trig.sin(angle)
-    Chukinas.Geometry.Cartesian.new(x, y)
+    x = r * G.Trig.cos(angle)
+    y = r * G.Trig.sin(angle)
+    G.Point.new(x, y)
   end
 
 end

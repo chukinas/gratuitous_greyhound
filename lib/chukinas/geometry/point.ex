@@ -1,4 +1,4 @@
-defmodule Chukinas.Geometry.Cartesian do
+defmodule Chukinas.Geometry.Point do
 
   # *** *******************************
   # *** TYPE

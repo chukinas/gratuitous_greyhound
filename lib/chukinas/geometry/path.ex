@@ -11,6 +11,7 @@ defprotocol Chukinas.Geometry.Path do
   def view_box(path, margin \\ 0)
 end
 
+# TODO clean up names with aliases
 defimpl Chukinas.Geometry.Path, for: Chukinas.Geometry.Path.Straight do
   alias Chukinas.Geometry.{Polar, Pose, Position}
   def pose_start(path), do: path.start
