@@ -18,4 +18,11 @@ defmodule Chukinas.Geometry.Pose do
       angle: angle,
     }
   end
+
+  # *** *******************************
+  # *** API
+
+  def position_to_tuple(pose) do
+    {pose.x, pose.y}
+  end
 end

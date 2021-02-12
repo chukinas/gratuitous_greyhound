@@ -2,6 +2,13 @@ defprotocol Chukinas.Geometry.Path do
   def pose_start(path)
   def pose_end(path)
   def len(path)
+
+  @doc """
+  Returns a map describing the smallest rectangle that fully bounds the path.
+  The x,y coordinates describe the corner closest to the origin.
+  `width` and `height` describe the size of the box.
+  """
+  def view_box(path, margin \\ 0)
 end
 
 defimpl Chukinas.Geometry.Path, for: Chukinas.Geometry.Path.Straight do
@@ -16,4 +23,16 @@ defimpl Chukinas.Geometry.Path, for: Chukinas.Geometry.Path.Straight do
     Pose.new(x0 + dx, y0 + dy, angle)
   end
   def len(path), do: path.len
+  def view_box(path, margin) do
+    {x_start, y_start} = path |> pose_start() |> Pose.position_to_tuple()
+    {x_end, y_end} = path |> pose_end() |> Pose.position_to_tuple()
+    {xmin, xmax} = Enum.min_max([x_start, x_end])
+    {ymin, ymax} = Enum.min_max([y_start, y_end])
+    %{
+      x: xmin - x_start - margin,
+      y: ymin - y_start - margin,
+      width: xmax - xmin + 2 * margin,
+      height: ymax - ymin + 2 * margin
+    }
+  end
 end
