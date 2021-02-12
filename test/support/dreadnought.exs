@@ -7,17 +7,20 @@ defmodule DreadnoughtHelpers do
     end
   end
 
+  # *** *******************************
+  # *** API
+
   def match_numerical_map?(expected, actual) do
     expected = expected |> set_precision()
     actual = Map.take(actual, Map.keys(expected)) |> set_precision()
     Map.equal?(expected, actual)
   end
 
+  # *** *******************************
+  # *** PRIVATE
+
   defp set_precision(%{} = map) do
     map
-    # TODO is the 'to list' necessary?
-    # TODO vim remove the underline. It's getting distracting
-    |> Map.to_list()
     |> Enum.map(&set_precision/1)
     |> Map.new()
   end
