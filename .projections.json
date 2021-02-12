@@ -1,6 +1,7 @@
 {
     "assets/js/dreadnought/*.js": { "type": "hook" },
     "lib/chukinas/dreadnought/*.ex": { "type": "core" },
+    "lib/chukinas/geometry/*.ex": { "type": "geo" },
     "lib/chukinas_web/templates/dreadnought/*.html.leex": { "type": "template" },
     "lib/chukinas_web/views/*.ex": { "type": "view" },
     "lib/chukinas_web/live/*_live.html.leex": { "type": "page" },
