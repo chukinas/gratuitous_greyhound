@@ -32,7 +32,7 @@ defmodule Chukinas.Geometry.PathTest do
   test "bounding rect of 45deg straight path" do
     path = Path.Straight.new(0, 0, 45, :math.sqrt(2))
     path
-    |> Path.viewbox()
+    |> Path.get_bounding_rect()
     |> assert_bounding_rect(0, 0, 1, 1)
   end
 end
