@@ -1,3 +1,4 @@
+# TODO rename svg_test
 ExUnit.start()
 
 defmodule Chukinas.SvgTest do

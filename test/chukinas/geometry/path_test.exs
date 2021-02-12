@@ -1,15 +1,14 @@
 ExUnit.start()
 
 defmodule Chukinas.Geometry.PathTest do
-  alias Chukinas.Geometry.{Path}
   use ExUnit.Case, async: true
+  use DreadnoughtHelpers
 
   def assert_equal(val1, val2), do: assert_in_delta(val1, val2, 0.01)
 
-  def assert_view_box(box, x, y, width, height) do
-    %{x: x, y: y, width: width, height: height}
-    |> Map.to_list()
-    |> Enum.each(fn {key, value} -> assert_equal(box[key], value) end)
+  def assert_bounding_rect(actual, x, y, width, height) do
+    expected = %{x: x, y: y, width: width, height: height}
+    assert match_numerical_map?(expected, actual)
   end
 
   def assert_position(position1, {x, y}), do: assert_position(position1, %{x: x, y: y})
@@ -30,13 +29,10 @@ defmodule Chukinas.Geometry.PathTest do
     |> assert_position({10, 0})
   end
 
-  test "view box of a 45deg straight path" do
+  test "bounding rect of 45deg straight path" do
     path = Path.Straight.new(0, 0, 45, :math.sqrt(2))
     path
     |> Path.viewbox()
-    |> assert_view_box(0, 0, 1, 1)
-    path
-    |> Path.viewbox()
-    |> assert_view_box(-1, -1, 3, 3)
+    |> assert_bounding_rect(0, 0, 1, 1)
   end
 end
