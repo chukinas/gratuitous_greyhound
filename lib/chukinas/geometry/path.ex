@@ -10,5 +10,5 @@ defmodule Chukinas.Geometry.Path do
   defdelegate new_straight(x, y, angle, length), to: Straight, as: :new
   defdelegate get_start_pose(path), to: IsPath, as: :pose_start
   defdelegate get_end_pose(path), to: IsPath, as: :pose_end
-  defdelegate get_bounding_rect(path), to: IsPath, as: :view_box
+  defdelegate get_bounding_rect(path), to: IsPath, as: :get_bounding_rect
 end

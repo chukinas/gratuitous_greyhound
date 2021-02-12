@@ -1,6 +1,5 @@
 alias Chukinas.Geometry.{Polar, Pose, Position, IsPath, Path}
 
-# TODO rename to CHukinas.geometry.path.ispath
 defprotocol IsPath do
   def pose_start(path)
   def pose_end(path)
@@ -11,7 +10,7 @@ defprotocol IsPath do
   The x,y coordinates describe the corner closest to the origin.
   `width` and `height` describe the size of the box.
   """
-  def view_box(path, margin \\ 0)
+  def get_bounding_rect(path, margin \\ 0)
 end
 
 defimpl IsPath, for: Path.Straight do
@@ -25,8 +24,7 @@ defimpl IsPath, for: Path.Straight do
   end
   def len(path), do: path.len
 
-  # TODO rename get_bounding_rect
-  def view_box(path, margin \\ 0) do
+  def get_bounding_rect(path, margin \\ 0) do
     {x_start, y_start} = path |> pose_start() |> Position.to_tuple()
     {x_end, y_end} = path |> pose_end() |> Position.to_tuple()
     {xmin, xmax} = Enum.min_max([x_start, x_end])
