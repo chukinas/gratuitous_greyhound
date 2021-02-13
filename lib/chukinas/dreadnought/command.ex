@@ -1,4 +1,8 @@
 alias Chukinas.Dreadnought.{Command, Vector, Svg, MoveSegment}
+alias Chukinas.Geometry.{Path, Pose, Point}
+# TODO remove refs to the old svg
+alias Chukinas.Svg, as: SvgNew
+alias Chukinas.Svg.ViewBox
 
 defmodule Command do
 
@@ -24,9 +28,8 @@ defmodule Command do
   # *** *******************************
   # *** NEW
 
-  def new(segment_number) do
+  def new(_opts \\ []) do
     %__MODULE__{
-      segment_number: segment_number,
     }
   end
 
@@ -52,14 +55,21 @@ defmodule Command do
   end
 
   @spec get_segment_numbers(t()) :: [MoveSegment.t()]
-  def get_move_segments(%__MODULE__{segment_count: 1} = command) do
+  def get_move_segments(%__MODULE__{segment_count: 1} = command, %Pose{} = start_pose) do
+    path = Path.new_straight(start_pose, speed_to_distance(command.speed))
+    viewbox = SvgNew.new_viewbox(path)
     move_segment = %MoveSegment{
+      svg_viewbox: viewbox |> to_string(),
+      svg_path: SvgNew.to_string(path),
+      position: ViewBox.get_position(viewbox)
     }
+    [move_segment]
   end
 
   # *** *******************************
   # *** PRIVATE
 
+  # TODO rename speed to length?
   defp speed_to_distance(speed) when is_integer(speed) do
     %{
       1 => 50,

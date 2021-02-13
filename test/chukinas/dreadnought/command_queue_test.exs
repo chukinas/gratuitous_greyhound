@@ -20,7 +20,9 @@ defmodule CommandQueueTest do
     move_segment = command |> Command.get_move_segments(start_pose) |> List.first()
     expected_position = start_pose |> Point.new() |> Position.subtract(get_margin())
     assert match_numerical_map? expected_position, move_segment.position
-    assert "-10, -10, 120, 20" = move_segment.svg_viewbox
-    assert "l 10, 0" = move_segment.svg_path
+    assert "-10 -10 120.0 20" = move_segment.svg_viewbox
+    # TODO make these svg strings consistent. Either all ints or all floats.
+    # TODO I don't like this inconsistency.
+    assert "l 100.0 0.0" = move_segment.svg_path
   end
 end

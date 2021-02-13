@@ -29,9 +29,14 @@ defmodule ViewBox do
   def apply_margin(viewbox) do
     add_margin = fn size -> size + 2 * viewbox.margin end
     viewbox
+    # TODO use subtract/1
     |> Position.subtract(viewbox.margin, viewbox.margin)
     |> Map.update!(:width, add_margin)
     |> Map.update!(:height, add_margin)
+  end
+
+  def get_position(viewbox) do
+    viewbox |> apply_margin() |> Map.take([:x, :y])
   end
 
   # *** *******************************
