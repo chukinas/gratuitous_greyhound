@@ -26,6 +26,12 @@ defmodule Position do
     translate(position, {-translation.x, -translation.y})
   end
 
+  def round_to_int(position) do
+    position
+    |> Map.update!(:x, &round/1)
+    |> Map.update!(:y, &round/1)
+  end
+
   # *** *******************************
   # *** PRIVATE
 

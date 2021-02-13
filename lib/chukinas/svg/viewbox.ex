@@ -1,5 +1,6 @@
 alias Chukinas.Svg.ViewBox
 alias Chukinas.Geometry.{Path, Position}
+alias Chukinas.Util.Precision
 
 defmodule ViewBox do
 
@@ -39,13 +40,17 @@ defmodule ViewBox do
     viewbox |> apply_margin() |> Map.take([:x, :y])
   end
 
+  def values_to_int(viewbox) do
+    viewbox |> Precision.values_to_int([:x, :y, :width, :height, :margin])
+  end
+
   # *** *******************************
   # *** IMPLEMENTATIONS
 
   defimpl String.Chars do
 
     def to_string(viewbox) do
-      viewbox = ViewBox.apply_margin viewbox
+      viewbox = ViewBox.apply_margin(viewbox) |> ViewBox.values_to_int()
       "#{viewbox.x} #{viewbox.y} #{viewbox.width} #{viewbox.height}"
     end
   end
