@@ -23,4 +23,11 @@ defmodule CommandQueueTest do
     assert "-10 -10 120 20" = move_segment.svg_viewbox
     assert "l 100 0" = move_segment.svg_path
   end
+
+  test "Get movement segments from default command queue" do
+    command_queue = CommandQueue.new()
+    arena = Arena.new(450, 450)
+    movement_segments = MovementSegments.init(command_queue, arena)
+    assert 5 = Enum.count(movement_segments)
+  end
 end
