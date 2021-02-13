@@ -1,6 +1,6 @@
-defmodule Chukinas.Dreadnought.Command do
-  alias Chukinas.Dreadnought.Vector
-  alias Chukinas.Dreadnought.Svg
+alias Chukinas.Dreadnought.{Command, Vector, Svg, MoveSegment}
+
+defmodule Command do
 
   # *** *******************************
   # *** TYPES
