@@ -42,7 +42,6 @@ defmodule Chukinas.Dreadnought.Unit do
       # hull: Hull.new(),
       # turrets: Turret.new(),
     }
-    |> IO.inspect()
   end
 
 end
