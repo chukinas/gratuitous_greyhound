@@ -1,6 +1,7 @@
+# TODO this will be superseded by CommandQueue
+#
 defmodule Chukinas.Dreadnought.Command.E do
   alias Chukinas.Dreadnought.Command
-  alias Chukinas.Dreadnought.Vector
 
   # *** *******************************
   # *** TYPES

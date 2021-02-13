@@ -1,6 +1,5 @@
 defmodule Chukinas.Dreadnought.Unit do
-  alias Chukinas.Dreadnought.Command
-  alias Chukinas.Dreadnought.Vector
+  alias Chukinas.Dreadnought.{Command, Vector}
   @moduledoc """
   Represents a ship or some other combat unit
   """

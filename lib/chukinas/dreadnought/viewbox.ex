@@ -1,6 +1,6 @@
+# TODO delete this eventually. Superseded by Svg.ViewBox.
+#
 defmodule Chukinas.Dreadnought.Viewbox do
-  alias Chukinas.Dreadnought.Vector
-  alias Chukinas.Dreadnought.Svg
 
   # *** *******************************
   # *** TYPES
@@ -17,7 +17,7 @@ defmodule Chukinas.Dreadnought.Viewbox do
   # *** *******************************
   # *** NEW
 
-  def from_line(vector_end, margin) do
+  def from_line(vector_end, _margin) do
     %__MODULE__{
       min_x: elem(vector_end.point, 0),
       min_y: elem(vector_end.point, 1),
