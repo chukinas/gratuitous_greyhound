@@ -1,4 +1,5 @@
 alias Chukinas.Dreadnought.{MoveSegment}
+alias Chukinas.Geometry.Point
 
 defmodule MoveSegment do
 
@@ -8,7 +9,7 @@ defmodule MoveSegment do
   use TypedStruct
 
   typedstruct enforce: true do
-    field :element_position, String.t()
+    field :position, Point.t()
     field :svg_path, String.t()
     field :svg_viewbox, String.t()
   end

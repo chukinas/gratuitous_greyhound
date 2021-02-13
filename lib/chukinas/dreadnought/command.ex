@@ -51,6 +51,12 @@ defmodule Command do
     segment_number in get_segment_numbers(command)
   end
 
+  @spec get_segment_numbers(t()) :: [MoveSegment.t()]
+  def get_move_segments(%__MODULE__{segment_count: 1} = command) do
+    move_segment = %MoveSegment{
+    }
+  end
+
   # *** *******************************
   # *** PRIVATE
 
