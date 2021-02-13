@@ -8,12 +8,14 @@ defmodule Chukinas.Dreadnought.Command do
   use TypedStruct
 
   typedstruct enforce: true do
+    # TODO keep
     field :speed, integer(), default: 3
     field :angle, integer(), default: 0
-    field :segment_number, integer()
+    field :segment_number, integer(), enforce: false
     field :segment_count, integer(), default: 1
     field :type, atom(), default: :default
     field :vector_start, Vector.t(), enforce: false
+    # TODO remove (this will be captured by Routes)
     field :vector_end, Vector.t(), enforce: false
     field :svg_path, String.t(), enforce: false
     field :viewbox, String.t(), enforce: false
