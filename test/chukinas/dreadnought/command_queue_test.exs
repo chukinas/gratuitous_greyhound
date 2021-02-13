@@ -1,5 +1,3 @@
-alias Chukinas.Dreadnought.{CommandQueue, Command, CommandQueueTest}
-
 ExUnit.start()
 
 defmodule CommandQueueTest do
