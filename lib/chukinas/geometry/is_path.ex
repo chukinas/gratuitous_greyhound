@@ -1,3 +1,4 @@
+# TODO rename IsPath to PathLike
 alias Chukinas.Geometry.{Polar, Pose, Position, IsPath, Path}
 
 defprotocol IsPath do
@@ -10,9 +11,11 @@ defprotocol IsPath do
   The x,y coordinates describe the corner closest to the origin.
   `width` and `height` describe the size of the box.
   """
+  # TODO should I have a Rect
   def get_bounding_rect(path, margin \\ 0)
 end
 
+# TODO move this into own file
 defimpl IsPath, for: Path.Straight do
   def pose_start(path), do: path.start
   def pose_end(path) do

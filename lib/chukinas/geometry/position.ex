@@ -32,6 +32,27 @@ defmodule Position do
     |> Map.update!(:y, &round/1)
   end
 
+  def gt(position1, position2) do
+    position1.x > position2 && position1.y > position2.y
+  end
+
+  def gte(position1, position2) do
+    position1.x >=  position2.x && position1.y >=  position2.y
+  end
+
+  def lte(position1, position2) do
+    position1.x <=  position2.x && position1.y <=  position2.y
+  end
+
+  def get(position) do
+    take(position)
+  end
+
+  # TODO replace with get
+  def take(position) do
+    position |> Map.take([:x, :y])
+  end
+
   # *** *******************************
   # *** PRIVATE
 

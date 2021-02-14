@@ -18,4 +18,11 @@ defmodule Chukinas.Geometry.Point do
     %__MODULE__{x: x, y: y}
   end
 
+  # *** *******************************
+  # *** API
+
+  def origin() do
+    %__MODULE__{x: 0, y: 0}
+  end
+
 end
