@@ -1,9 +1,11 @@
-alias Chukinas.Geometry.{Position, Point}
+alias Chukinas.Geometry.{Position, Point, Rect}
 
-defmodule Chukinas.Geometry.Rect do
+defmodule Rect do
   @moduledoc"""
   A Rect is an in-grid rectangle, meaning it comprises only horizontal and vertical lines.
   """
+
+  import Position.Guard
 
   use TypedStruct
 
@@ -25,8 +27,7 @@ defmodule Chukinas.Geometry.Rect do
   # *** *******************************
   # *** API
 
-  # TODO create position guard `has_position` or `is_position`?
-  def contains?(%__MODULE__{} = rect, position) do
+  def contains?(%__MODULE__{} = rect, position) when has_position(position) do
     Position.gte(position, rect.start_position) && Position.lte(position, rect.end_position)
   end
 
