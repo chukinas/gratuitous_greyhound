@@ -1,5 +1,5 @@
 # TODO rename IsPath to PathLike
-alias Chukinas.Geometry.{Polar, Pose, Position, IsPath, Path}
+alias Chukinas.Geometry.{Polar, Pose, Position, IsPath, Path, Point, Rect}
 
 defprotocol IsPath do
   def pose_start(path)
@@ -32,11 +32,6 @@ defimpl IsPath, for: Path.Straight do
     {x_end, y_end} = path |> pose_end() |> Position.to_tuple()
     {xmin, xmax} = Enum.min_max([x_start, x_end])
     {ymin, ymax} = Enum.min_max([y_start, y_end])
-    %{
-      x: xmin - x_start,
-      y: ymin - y_start,
-      width: xmax - xmin,
-      height: ymax - ymin,
-    }
+    Rect.new(Point.new(xmin, ymin), Point.new(xmax, ymax))
   end
 end

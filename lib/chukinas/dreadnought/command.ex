@@ -1,8 +1,7 @@
 alias Chukinas.Dreadnought.{Command, Vector, Svg, MoveSegment}
-alias Chukinas.Geometry.{Path, Pose}
+alias Chukinas.Geometry.{Path, Pose, Position, Rect}
 # TODO remove refs to the old svg
 alias Chukinas.Svg, as: SvgNew
-alias Chukinas.Svg.ViewBox
 
 defmodule Command do
 
@@ -60,14 +59,16 @@ defmodule Command do
   end
   def get_move_segments(%__MODULE__{segment_count: 1} = command, %Pose{} = start_pose) do
     path = Path.new_straight(start_pose, speed_to_distance(command.speed))
-    viewbox = SvgNew.new_viewbox(path)
+    bounding_rect = path |> Path.get_bounding_rect()
+    margin = 10
     move_segment = %MoveSegment{
       # TODO should this constructor be moved out into a `new` fun in MoveSeg?
       start_pose: Path.get_start_pose(path),
       end_pose: Path.get_end_pose(path),
-      svg_viewbox: viewbox |> to_string(),
+      svg_viewbox: bounding_rect |> SvgNew.ViewBox.to_viewbox_string(start_pose, margin),
       svg_path: SvgNew.to_string(path),
-      position: ViewBox.get_position(viewbox)
+      # TODO I don't like this...
+      position: bounding_rect |> Rect.get_start_position() |> Position.subtract(margin)
     }
     [move_segment]
   end

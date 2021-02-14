@@ -1,4 +1,7 @@
-defmodule Chukinas.Geometry.Pose do
+alias Chukinas.Geometry.{Pose, Position}
+defmodule Pose do
+
+  import Position.Guard
 
   use TypedStruct
 
@@ -11,6 +14,9 @@ defmodule Chukinas.Geometry.Pose do
   # *** *******************************
   # *** NEW
 
+  def new(position, angle) when has_position(position) do
+    new(position.x, position.y, angle)
+  end
   def new(x, y, angle) do
     %__MODULE__{
       x: x,

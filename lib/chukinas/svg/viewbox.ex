@@ -1,8 +1,9 @@
 alias Chukinas.Svg.ViewBox
-alias Chukinas.Geometry.{Path, Position, Rect}
+alias Chukinas.Geometry.{Path, Rect, Position}
 alias Chukinas.Util.Precision
 
 defmodule ViewBox do
+  import Position.Guard
 
   # *** *******************************
   # *** TYPES
@@ -10,12 +11,9 @@ defmodule ViewBox do
   use TypedStruct
 
   typedstruct enforce: true do
-    # field :rect, Rect.t()
-    field :x, number()
-    field :y, number()
-    field :width, number()
-    field :height, number()
-    field :margin, number(), enforce: false
+    # This rect is relative to the start point of the path
+    field :relative_rect, Rect.t()
+    field :margin, number(), default: 10
   end
 
   # *** *******************************
@@ -23,26 +21,24 @@ defmodule ViewBox do
 
   @spec new(Path.t()) :: t()
   def new(path) do
-    struct(__MODULE__, Path.get_bounding_rect path)
-    |> Position.subtract(Path.get_start_pose path)
-    |> Map.put(:margin, 10)
+    start_position = path |> Path.get_start_pose()
+    %__MODULE__{
+      relative_rect: path |> Path.get_bounding_rect() |> Rect.subtract(start_position)
+    }
   end
 
-  def apply_margin(viewbox) do
-    add_margin = fn size -> size + 2 * viewbox.margin end
-    viewbox
-    # TODO use subtract/1
-    |> Position.subtract(viewbox.margin, viewbox.margin)
-    |> Map.update!(:width, add_margin)
-    |> Map.update!(:height, add_margin)
-  end
+  # *** *******************************
+  # *** API
 
-  def get_position(viewbox) do
-    viewbox |> apply_margin() |> Map.take([:x, :y])
-  end
-
-  def values_to_int(viewbox) do
-    viewbox |> Precision.values_to_int([:x, :y, :width, :height, :margin])
+  def to_viewbox_string(%Rect{} = bounding_rect, path_start_point, margin)
+      when has_position(path_start_point)
+      and is_number(margin) do
+        relative_rect_with_margin = bounding_rect
+                                    |> Rect.subtract(path_start_point)
+                                |> Rect.apply_margin(margin)
+        position = relative_rect_with_margin |> Rect.get_start_position() |> Precision.values_to_int()
+        size = Rect.get_size(relative_rect_with_margin)
+        "#{position.x} #{position.y} #{round(size.width)} #{size.height |> round()}"
   end
 
   # *** *******************************
@@ -51,8 +47,9 @@ defmodule ViewBox do
   defimpl String.Chars do
 
     def to_string(viewbox) do
-      viewbox = ViewBox.apply_margin(viewbox) |> ViewBox.values_to_int()
-      "#{viewbox.x} #{viewbox.y} #{viewbox.width} #{viewbox.height}"
+      r = viewbox.relative_rect |> Rect.apply_margin(viewbox.margin) |> Precision.values_to_int()
+      size = Rect.get_size(r)
+      "#{r.start_position.x} #{r.start_position.y} #{size.width} #{size.height}"
     end
   end
 
