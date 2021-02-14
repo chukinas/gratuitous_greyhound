@@ -17,10 +17,16 @@ defmodule Rect do
   # *** *******************************
   # *** NEW
 
-  def new(start_position, end_position) do
+  def new(start_position, end_position) when has_position(start_position) and has_position(end_position) do
     %__MODULE__{
       start_position: start_position,
       end_position: end_position
+    }
+  end
+  def new(width, height) when is_number(width) and is_number(height) do
+    %__MODULE__{
+      start_position: Point.origin(),
+      end_position: Point.new(width, height)
     }
   end
 

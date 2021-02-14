@@ -1,12 +1,12 @@
-alias Chukinas.Dreadnought.{Arena, Command, MovementSegments, MoveSegment}
-alias Chukinas.Geometry.{Rect, Point}
+alias Chukinas.Dreadnought.{Command, MovementSegments, MoveSegment}
+alias Chukinas.Geometry.{Rect}
 
-defmodule Chukinas.Dreadnought.MovementSegments do
+defmodule MovementSegments do
 
   # *** *******************************
   # *** API
 
-  def init(command_queue, start_pose, arena) do
+  def init(command_queue, start_pose, %Rect{} = arena) do
     starts_inbounds? = get_inbounds_checker(arena)
     command_queue
     # TODO get move segments needs a second param that's the pose
@@ -23,8 +23,7 @@ defmodule Chukinas.Dreadnought.MovementSegments do
   defp get_inbounds_checker(arena) do
     fn segments ->
       pose = segments |> List.first() |> MoveSegment.get_start_pose()
-      arena_rect = Rect.new(Point.origin(), Point.new(arena.size))
-      arena_rect |> Rect.contains?(pose)
+      arena |> Rect.contains?(pose)
     end
   end
 end
