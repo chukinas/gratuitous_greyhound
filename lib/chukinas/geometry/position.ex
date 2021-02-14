@@ -49,11 +49,6 @@ defmodule Position do
   end
 
   def get(position) do
-    take(position)
-  end
-
-  # TODO replace with get
-  def take(position) do
     position |> Map.take([:x, :y])
   end
 
