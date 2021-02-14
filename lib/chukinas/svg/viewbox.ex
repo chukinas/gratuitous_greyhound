@@ -41,16 +41,4 @@ defmodule ViewBox do
         "#{position.x} #{position.y} #{round(size.width)} #{size.height |> round()}"
   end
 
-  # *** *******************************
-  # *** IMPLEMENTATIONS
-
-  defimpl String.Chars do
-
-    def to_string(viewbox) do
-      r = viewbox.relative_rect |> Rect.apply_margin(viewbox.margin) |> Precision.values_to_int()
-      size = Rect.get_size(r)
-      "#{r.start_position.x} #{r.start_position.y} #{size.width} #{size.height}"
-    end
-  end
-
 end

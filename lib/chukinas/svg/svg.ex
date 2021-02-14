@@ -1,5 +1,5 @@
 alias Chukinas.Svg.ViewBox
-alias Chukinas.Geometry.{Path, Position}
+alias Chukinas.Geometry.{Path, Position, Rect}
 alias Chukinas.Geometry.Path.{Straight}
 
 defmodule Chukinas.Svg do
@@ -7,9 +7,12 @@ defmodule Chukinas.Svg do
   This module converts path structs to svg path strings for use in eex templates.
   """
 
+  import Position.Guard
+
   # *** *******************************
   # *** API
 
+  # TODO delete
   defdelegate new_viewbox(path), to: ViewBox, as: :new
 
   @doc"""
@@ -18,6 +21,12 @@ defmodule Chukinas.Svg do
   def to_string(%Straight{} = path) do
     {x, y} = path |> Path.get_end_pose() |> Position.round_to_int() |> Position.to_tuple()
     "l #{x} #{y}"
+  end
+
+  def get_string(%Rect{} = bounding_rect, path_start_point, margin)
+      when has_position(path_start_point)
+      and is_number(margin) do
+        ViewBox.to_viewbox_string(bounding_rect, path_start_point, margin)
   end
 
   # def m_abs(point) when is_point(point) do
