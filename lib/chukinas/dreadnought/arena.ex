@@ -20,16 +20,4 @@ defmodule Arena do
     %__MODULE__{size: size}
   end
 
-  # *** *******************************
-  # *** API
-
-  # TODO this should be in MoveSegment
-  def get_inbounds_checker(arena) do
-    fn segments ->
-      pose = segments |> List.first() |> MoveSegment.get_start_pose()
-      arena_rect = Rect.new(Point.origin(), Point.new(arena.size))
-      arena_rect |> Rect.contains?(pose)
-    end
-  end
-
 end
