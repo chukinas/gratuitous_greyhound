@@ -44,8 +44,6 @@ defmodule Rect do
   end
 
   def subtract(%__MODULE__{} = rect, position) when has_position(position) do
-    # TODO add io.inspect to vimrc
-    # TODO subtract is where the prob is
     new_rect = new(
       rect.start_position |> Position.subtract(position),
       rect.end_position |> Position.subtract(position)
