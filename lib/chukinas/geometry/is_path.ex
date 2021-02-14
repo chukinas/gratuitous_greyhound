@@ -12,7 +12,7 @@ defprotocol IsPath do
   `width` and `height` describe the size of the box.
   """
   # TODO should I have a Rect
-  def get_bounding_rect(path, margin \\ 0)
+  def get_bounding_rect(path)
 end
 
 # TODO move this into own file
@@ -27,16 +27,16 @@ defimpl IsPath, for: Path.Straight do
   end
   def len(path), do: path.len
 
-  def get_bounding_rect(path, margin \\ 0) do
+  def get_bounding_rect(path) do
     {x_start, y_start} = path |> pose_start() |> Position.to_tuple()
     {x_end, y_end} = path |> pose_end() |> Position.to_tuple()
     {xmin, xmax} = Enum.min_max([x_start, x_end])
     {ymin, ymax} = Enum.min_max([y_start, y_end])
     %{
-      x: xmin - x_start - margin,
-      y: ymin - y_start - margin,
-      width: xmax - xmin + 2 * margin,
-      height: ymax - ymin + 2 * margin
+      x: xmin - x_start,
+      y: ymin - y_start,
+      width: xmax - xmin,
+      height: ymax - ymin,
     }
   end
 end

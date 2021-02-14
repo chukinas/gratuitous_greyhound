@@ -1,5 +1,5 @@
 alias Chukinas.Svg.ViewBox
-alias Chukinas.Geometry.{Path, Position}
+alias Chukinas.Geometry.{Path, Position, Rect}
 alias Chukinas.Util.Precision
 
 defmodule ViewBox do
@@ -10,6 +10,7 @@ defmodule ViewBox do
   use TypedStruct
 
   typedstruct enforce: true do
+    # field :rect, Rect.t()
     field :x, number()
     field :y, number()
     field :width, number()

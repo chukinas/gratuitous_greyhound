@@ -9,8 +9,7 @@ defimpl IsPath, for: Pose do
 
   def len(_pose), do: 0
 
-  # TODO this shouldn't have a margin. Margin is for viewbox alone.
-  def get_bounding_rect(pose, _margin) do
+  def get_bounding_rect(pose) do
     pose |> Position.take() |> Map.merge(%{width: 0, height: 0})
   end
 end
