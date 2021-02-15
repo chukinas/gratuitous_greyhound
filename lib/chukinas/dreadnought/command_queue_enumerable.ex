@@ -4,7 +4,6 @@ defimpl Enumerable, for: CommandQueue do
 
   def count(_command_queue), do: {:error, __MODULE__}
 
-  # TODO this needs to be implemented
   def member?(_command_queue, _element), do: {:ok, false}
 
   def reduce(_cq, {:halt, acc}, _fun), do: {:halted, acc}

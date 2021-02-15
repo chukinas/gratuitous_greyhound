@@ -2,7 +2,7 @@
 <div
   id="unit--<%= @unit.id %>"
   class="absolute top-12 left-12 text-purple-500"
-  style="top: <%= elem(@unit.vector.point, 1) %>px; left: <%= elem(@unit.vector.point, 0) %>px"
+  style="top: <%= @unit.start_pose.y %>px; left: <%= @unit.start_pose.x %>px"
 >
   <svg
     width="140"
