@@ -16,7 +16,13 @@ defmodule Chukinas.Svg do
   Convert a path struct to a svg path string that can be dropped into an eex template.
   """
   def to_string(%Straight{} = path) do
-    {x, y} = path |> Path.get_end_pose() |> Position.round_to_int() |> Position.to_tuple()
+    start_pose = path
+                 |> Path.get_start_pose()
+    {x, y} = path
+             |> Path.get_end_pose()
+             |> Position.subtract(start_pose)
+             |> Position.round_to_int()
+             |> Position.to_tuple()
     "l #{x} #{y}"
   end
 

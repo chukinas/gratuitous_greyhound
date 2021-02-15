@@ -1,5 +1,5 @@
-alias Chukinas.Geometry.{Pose}
 alias Chukinas.Dreadnought.{Unit, CommandQueue, Segments}
+alias Chukinas.Geometry.{Pose}
 
 defmodule Unit do
   @moduledoc """
@@ -37,7 +37,7 @@ defmodule Unit do
   # *** NEW
 
   def new(arena_rect) do
-    start_pose = Pose.new(0, 375, 0)
+    start_pose = Pose.new(0, 0, 45)
     command_queue = CommandQueue.new()
     %__MODULE__{
       id: 2,

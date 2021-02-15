@@ -42,7 +42,7 @@ defmodule Command do
     get_move_segments(command, start_pose)
   end
   def get_move_segments(%__MODULE__{segment_count: 1} = command, %Pose{} = start_pose) do
-    [Segment.new(command.speed, command.angle, start_pose)]
+    [Segment.new(command.speed, command.angle, start_pose, command.segment_number)]
   end
 
 end

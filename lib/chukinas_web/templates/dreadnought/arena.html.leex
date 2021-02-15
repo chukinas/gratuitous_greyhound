@@ -1,12 +1,12 @@
 <div
   id="arena"
-  style="width:<%= @size_x %>px; height: <%= @size_y %>px"
+  style="width:<%= @arena.end_position.x %>px; height: <%= @arena.end_position.y %>px"
   class="border-4 border-red-500 border-opacity-50 border-dashed"
 >
   <%= for unit <- @units do %>
     <%= render "unit.html", %{unit: unit}%>
-    <%# for command <- unit.commands do %>
-      <%# render "command.html", command %>
-    <%# end %>
+    <%= for segment <- unit.segments do %>
+      <%= render "segment.html", segment %>
+    <% end %>
   <% end %>
 </div>

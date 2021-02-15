@@ -7,7 +7,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
   def mount(_params, _session, socket) do
     socket = socket
     |> assign(page_title: "Dreadnought")
-    |> assign(mission: Mission.new())
+    |> assign(mission: Mission.new() |> IO.inspect(label: "mission"))
     {:ok, socket}
   end
 
