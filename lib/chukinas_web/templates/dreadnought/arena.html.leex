@@ -5,8 +5,8 @@
 >
   <%= for unit <- @units do %>
     <%= render "unit.html", %{unit: unit}%>
-    <%= for command <- unit.commands do %>
-      <%= render "command.html", command %>
-    <% end %>
+    <%# for command <- unit.commands do %>
+      <%# render "command.html", command %>
+    <%# end %>
   <% end %>
 </div>

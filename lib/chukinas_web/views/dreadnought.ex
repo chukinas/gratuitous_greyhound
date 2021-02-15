@@ -1,6 +1,5 @@
 defmodule ChukinasWeb.DreadnoughtView do
   use ChukinasWeb, :view
-  alias Chukinas.Dreadnought.Arrow
 end
 
 # https://bernheisel.com/blog/phoenix-liveview-and-views

@@ -1,5 +1,5 @@
 defmodule Chukinas.Dreadnought.Unit do
-  alias Chukinas.Dreadnought.{Command, Vector}
+  alias Chukinas.Dreadnought.{Vector}
   @moduledoc """
   Represents a ship or some other combat unit
   """
@@ -26,7 +26,7 @@ defmodule Chukinas.Dreadnought.Unit do
 
     # Commands draw their data from command cards from the deck.
     # The cards' data is copied to here. Keeps a nice separation of concerns.
-    field :commands, Command.E.t()
+    # field :commands, Command.E.t()
   end
 
   # *** *******************************
@@ -37,7 +37,6 @@ defmodule Chukinas.Dreadnought.Unit do
     %__MODULE__{
       id: 2,
       vector: start_vector,
-      commands: 1..20 |> Command.E.new() |> (fn commands -> Command.E.set_paths(commands, start_vector) end).()
       # hull: Hull.new(),
       # turrets: Turret.new(),
     }

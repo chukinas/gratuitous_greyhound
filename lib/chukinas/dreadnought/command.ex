@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Command, Vector, Svg, Segment}
+alias Chukinas.Dreadnought.{Command, Vector, Segment}
 alias Chukinas.Geometry.{Path, Pose, Position, Rect}
 # TODO remove refs to the old svg
 alias Chukinas.Svg, as: SvgNew
@@ -34,14 +34,6 @@ defmodule Command do
 
   # *** *******************************
   # *** API
-
-  def set_path(%__MODULE__{angle: 0, speed: speed} = command, %Vector{} = start_vector) do
-    vector_end = Vector.move_straight(start_vector, speed_to_distance(speed))
-    command
-    |> Map.put(:vector_start, start_vector)
-    |> Map.put(:vector_end, vector_end)
-    |> Map.put(:svg_path, Svg.relative_line(vector_end.point))
-  end
 
   # TODO make note about how segments are listed from later (future) to oldest (past)
   def get_segment_numbers(%__MODULE__{segment_number: min_segment} = command) do
