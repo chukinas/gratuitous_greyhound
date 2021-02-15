@@ -1,22 +1,6 @@
-# TODO rename IsPath to PathLike
-alias Chukinas.Geometry.{Polar, Pose, Position, IsPath, Path, Point, Rect}
+alias Chukinas.Geometry.{Polar, Pose, Position, PathLike, Path, Point, Rect}
 
-defprotocol IsPath do
-  def pose_start(path)
-  def pose_end(path)
-  def len(path)
-
-  @doc """
-  Returns a map describing the smallest rectangle that fully bounds the path.
-  The x,y coordinates describe the corner closest to the origin.
-  `width` and `height` describe the size of the box.
-  """
-  # TODO should I have a Rect
-  def get_bounding_rect(path)
-end
-
-# TODO move this into own file
-defimpl IsPath, for: Path.Straight do
+defimpl PathLike, for: Path.Straight do
   def pose_start(path), do: path.start
   def pose_end(path) do
     len = len(path)
