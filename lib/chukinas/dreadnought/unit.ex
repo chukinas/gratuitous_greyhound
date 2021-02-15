@@ -1,5 +1,5 @@
 alias Chukinas.Geometry.{Pose}
-alias Chukinas.Dreadnought.{Unit, CommandQueue}
+alias Chukinas.Dreadnought.{Unit, CommandQueue, Segments}
 
 defmodule Unit do
   @moduledoc """
@@ -28,20 +28,22 @@ defmodule Unit do
 
     # Commands draw their data from command cards from the deck.
     # The cards' data is copied to here. Keeps a nice separation of concerns.
-    field :commands, CommandQueue.t()
+    field :command_queue, CommandQueue.t()
+
+    field :segments, Segments.t()
   end
 
   # *** *******************************
   # *** NEW
 
-  def new() do
-    # TODO fix this.
+  def new(arena_rect) do
+    start_pose = Pose.new(0, 375, 0)
+    command_queue = CommandQueue.new()
     %__MODULE__{
       id: 2,
-      start_pose: Pose.new(0, 375, 0),
-      commands: CommandQueue.new()
-      # hull: Hull.new(),
-      # turrets: Turret.new(),
+      start_pose: start_pose,
+      command_queue: command_queue,
+      segments: Segments.init(command_queue, start_pose, arena_rect)
     }
   end
 
