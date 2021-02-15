@@ -1,7 +1,7 @@
-alias Chukinas.Dreadnought.{MoveSegment}
+alias Chukinas.Dreadnought.{Segment}
 alias Chukinas.Geometry.{Point, Pose}
 
-defmodule MoveSegment do
+defmodule Segment do
 
   # *** *******************************
   # *** TYPES

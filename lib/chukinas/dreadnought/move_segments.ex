@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Command, MovementSegments, MoveSegment}
+alias Chukinas.Dreadnought.{Command, MovementSegments, Segment}
 alias Chukinas.Geometry.{Rect}
 
 defmodule MovementSegments do
@@ -22,7 +22,7 @@ defmodule MovementSegments do
 
   defp get_inbounds_checker(arena) do
     fn segments ->
-      pose = segments |> List.first() |> MoveSegment.get_start_pose()
+      pose = segments |> List.first() |> Segment.get_start_pose()
       arena |> Rect.contains?(pose)
     end
   end
