@@ -8,8 +8,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
     socket = socket
     |> assign(page_title: "Dreadnought")
     |> assign(mission: Mission.new())
-    # TODO remove this assigns
-    |> assign(time_checks: [])
     {:ok, socket}
   end
 
