@@ -1,7 +1,5 @@
-alias Chukinas.Dreadnought.{Command, Vector, Segment}
-alias Chukinas.Geometry.{Path, Pose, Position, Rect}
-# TODO remove refs to the old svg
-alias Chukinas.Svg, as: SvgNew
+alias Chukinas.Dreadnought.{Command, Segment}
+alias Chukinas.Geometry.{Pose}
 
 defmodule Command do
 
@@ -11,17 +9,11 @@ defmodule Command do
   use TypedStruct
 
   typedstruct enforce: true do
-    # TODO keep
     field :speed, integer(), default: 3
     field :angle, integer(), default: 0
     field :segment_number, integer(), enforce: false
     field :segment_count, integer(), default: 1
     field :type, atom(), default: :default
-    field :vector_start, Vector.t(), enforce: false
-    # TODO remove (this will be captured by Routes)
-    field :vector_end, Vector.t(), enforce: false
-    field :svg_path, String.t(), enforce: false
-    field :viewbox, String.t(), enforce: false
   end
 
   # *** *******************************
@@ -50,33 +42,7 @@ defmodule Command do
     get_move_segments(command, start_pose)
   end
   def get_move_segments(%__MODULE__{segment_count: 1} = command, %Pose{} = start_pose) do
-    path = Path.new_straight(start_pose, speed_to_distance(command.speed))
-    bounding_rect = path |> Path.get_bounding_rect()
-    margin = 10
-    move_segment = %Segment{
-      # TODO should this constructor be moved out into a `new` fun in MoveSeg?
-      start_pose: Path.get_start_pose(path),
-      end_pose: Path.get_end_pose(path),
-      svg_viewbox: bounding_rect |> SvgNew.ViewBox.to_viewbox_string(start_pose, margin),
-      svg_path: SvgNew.to_string(path),
-      # TODO I don't like this...
-      position: bounding_rect |> Rect.get_start_position() |> Position.subtract(margin)
-    }
-    [move_segment]
-  end
-
-  # *** *******************************
-  # *** PRIVATE
-
-  # TODO rename speed to length?
-  defp speed_to_distance(speed) when is_integer(speed) do
-    %{
-      1 => 50,
-      2 => 75,
-      3 => 100,
-      4 => 150,
-      5 => 200
-    } |> Map.fetch!(speed)
+    [Segment.new(command.speed, command.angle, start_pose)]
   end
 
 end
