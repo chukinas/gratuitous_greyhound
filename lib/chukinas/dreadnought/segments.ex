@@ -1,7 +1,7 @@
-alias Chukinas.Dreadnought.{Command, MovementSegments, Segment}
+alias Chukinas.Dreadnought.{Command, Segments, Segment}
 alias Chukinas.Geometry.{Rect}
 
-defmodule MovementSegments do
+defmodule Segments do
 
   # *** *******************************
   # *** API
@@ -9,12 +9,10 @@ defmodule MovementSegments do
   def init(command_queue, start_pose, %Rect{} = arena) do
     starts_inbounds? = get_inbounds_checker(arena)
     command_queue
-    # TODO get move segments needs a second param that's the pose
     |> Stream.scan(start_pose, &Command.get_move_segments/2)
     |> Stream.take_while(starts_inbounds?)
-    # TODO replace with Stream.concat
+    |> Stream.concat()
     |> Enum.to_list()
-    |> List.flatten()
   end
 
   # *** *******************************
