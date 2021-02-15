@@ -12,9 +12,6 @@ defmodule Chukinas.Svg do
   # *** *******************************
   # *** API
 
-  # TODO delete
-  defdelegate new_viewbox(path), to: ViewBox, as: :new
-
   @doc"""
   Convert a path struct to a svg path string that can be dropped into an eex template.
   """
