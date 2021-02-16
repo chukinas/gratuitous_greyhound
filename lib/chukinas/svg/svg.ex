@@ -18,12 +18,11 @@ defmodule Chukinas.Svg do
   def to_string(%Straight{} = path) do
     start_pose = path
                  |> Path.get_start_pose()
-    {x, y} = path
+    p = _relative_end_pose = path
              |> Path.get_end_pose()
              |> Position.subtract(start_pose)
              |> Position.round_to_int()
-             |> Position.to_tuple()
-    "l #{x} #{y}"
+    "m 0 0 l #{p.x} #{p.y}"
   end
 
   def get_string(%Rect{} = bounding_rect, path_start_point, margin)
