@@ -5,7 +5,7 @@ defmodule Chukinas.SvgTest do
   use DreadnoughtHelpers
 
   test "svg path string from straight path" do
-    assert "l 10 0" = Path.new_straight(0, 0, 0, 10) |> Svg.to_string()
+    assert "M 0 0 L 10 0" = Path.new_straight(0, 0, 0, 10) |> Svg.to_string()
   end
 
   test "view box string from straight path" do

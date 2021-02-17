@@ -21,7 +21,7 @@ defmodule CommandQueueTest do
     expected_position = start_pose |> Point.new() |> Position.subtract(get_margin())
     assert match_numerical_map? expected_position, move_segment.position
     assert "-10 -10 120 20" = move_segment.svg_viewbox
-    assert "l 100 0" = move_segment.svg_path
+    assert "M 0 0 L 100 0" = move_segment.svg_path
   end
 
   test "Get movement segments from default command queue" do
