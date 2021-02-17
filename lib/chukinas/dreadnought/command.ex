@@ -35,4 +35,7 @@ defmodule Command do
     [Segment.new(command.speed, command.angle, start_pose, command.segment_number)]
   end
 
+  def set_segment_number(command, segment_number) do
+    Map.put(command, :segment_number, segment_number)
+  end
 end
