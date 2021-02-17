@@ -10,11 +10,15 @@ defmodule Segment do
   use TypedStruct
 
   typedstruct enforce: true do
+    # TODO I don't think this number is being set properly
     field :segment_number, integer()
     field :start_pose, Pose.t()
     field :end_pose, Pose.t()
+    # TODO no that I'm no longer doing relative paths, this can probably be deleted
     field :position, Point.t()
+    # TODO change this to absolute path
     field :svg_path, String.t()
+    # TODO no that I'm no longer doing relative paths, this can probably be deleted
     field :svg_viewbox, String.t()
   end
 
