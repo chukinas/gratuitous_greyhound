@@ -1,6 +1,7 @@
-defmodule Chukinas.Dreadnought.Unit do
-  alias Chukinas.Dreadnought.Command
-  alias Chukinas.Dreadnought.Vector
+alias Chukinas.Dreadnought.{Unit, CommandQueue, Segments}
+alias Chukinas.Geometry.{Pose}
+
+defmodule Unit do
   @moduledoc """
   Represents a ship or some other combat unit
   """
@@ -15,7 +16,7 @@ defmodule Chukinas.Dreadnought.Unit do
     field :id, number()
 
     # Vector (location and orientation)
-    field :vector, Vector.t()
+    field :start_pose, Pose.t()
 
     # Hull and Turrets describe the physical properties of the unit.
     # field :hull, Hull.t()
@@ -27,20 +28,22 @@ defmodule Chukinas.Dreadnought.Unit do
 
     # Commands draw their data from command cards from the deck.
     # The cards' data is copied to here. Keeps a nice separation of concerns.
-    field :commands, Command.E.t()
+    field :command_queue, CommandQueue.t()
+
+    field :segments, Segments.t()
   end
 
   # *** *******************************
   # *** NEW
 
-  def new() do
-    start_vector = Vector.new(0, 375, 0)
+  def new(arena_rect) do
+    start_pose = Pose.new(0, 0, 45)
+    command_queue = CommandQueue.new()
     %__MODULE__{
       id: 2,
-      vector: start_vector,
-      commands: 1..20 |> Command.E.new() |> (fn commands -> Command.E.set_paths(commands, start_vector) end).()
-      # hull: Hull.new(),
-      # turrets: Turret.new(),
+      start_pose: start_pose,
+      command_queue: command_queue,
+      segments: Segments.init(command_queue, start_pose, arena_rect)
     }
   end
 

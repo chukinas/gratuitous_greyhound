@@ -8,10 +8,10 @@ defmodule ChukinasWeb.DreadnoughtLive do
     socket = socket
     |> assign(page_title: "Dreadnought")
     |> assign(mission: Mission.new())
-    |> assign(time_checks: [])
     {:ok, socket}
   end
 
+  @impl true
   def handle_event("check_time", %{"rand" => rand}, socket) do
     time_checks = [rand | socket.assigns.time_checks]
     {:noreply, assign(socket, :time_checks, time_checks)}

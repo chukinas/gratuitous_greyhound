@@ -1,5 +1,7 @@
-defmodule Chukinas.Dreadnought.Command do
-  alias Chukinas.Dreadnought.Vector
+alias Chukinas.Dreadnought.{Command, Segment}
+alias Chukinas.Geometry.{Pose}
+
+defmodule Command do
 
   # *** *******************************
   # *** TYPES
@@ -9,39 +11,31 @@ defmodule Chukinas.Dreadnought.Command do
   typedstruct enforce: true do
     field :speed, integer(), default: 3
     field :angle, integer(), default: 0
-    field :segment_number, integer()
+    field :segment_number, integer(), enforce: false
     field :segment_count, integer(), default: 1
     field :type, atom(), default: :default
-    field :vector_start, Vector.t(), enforce: false
-    field :vector_end, Vector.t(), enforce: false
   end
 
   # *** *******************************
   # *** NEW
 
-  def new(segment_number) do
+  def new(_opts \\ []) do
     %__MODULE__{
-      segment_number: segment_number,
     }
   end
 
   # *** *******************************
   # *** API
 
-  def set_path(%__MODULE__{angle: 0, speed: 3} = command, %Vector{} = start_vector) do
-    command
-    |> Map.put(:vector_start, start_vector)
-    |> Map.put(:vector_end, Vector.move_straight(start_vector, 100))
+  def generate_segments(command, previous_segments) when is_list(previous_segments) do
+    start_pose = previous_segments |> List.last() |> Segment.get_end_pose()
+    generate_segments(command, start_pose)
+  end
+  def generate_segments(%__MODULE__{segment_count: 1} = command, %Pose{} = start_pose) do
+    [Segment.new(command.speed, command.angle, start_pose, command.segment_number)]
   end
 
-  # TODO make note about how segments are listed from later (future) to oldest (past)
-  def get_segment_numbers(%__MODULE__{segment_number: min_segment} = command) do
-    max_segment = min_segment + command.segment_count - 1
-    min_segment..max_segment
+  def set_segment_number(command, segment_number) do
+    Map.put(command, :segment_number, segment_number)
   end
-
-  def occupies_segment(%__MODULE__{} = command, segment_number) do
-    segment_number in get_segment_numbers(command)
-  end
-
 end

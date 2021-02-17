@@ -1,16 +1,14 @@
-defmodule Chukinas.Dreadnought.Mission do
-  alias Chukinas.Dreadnought.Unit
-  alias Chukinas.Dreadnought.Deck
+alias Chukinas.Dreadnought.{Unit, Deck, Mission}
+alias Chukinas.Geometry.{Rect}
+
+defmodule Mission do
   # *** *******************************
   # *** TYPES
 
   use TypedStruct
 
   typedstruct enforce: true do
-    field :size_x, integer()
-    field :size_y, integer()
-    # field :terrain, [Terrain.t()]
-    # field :start_areas, [StartArea.t()]
+    field :arena, Rect.t()
     field :units, [Unit.t()], default: []
     field :decks, [Deck.t()], default: []
   end
@@ -19,10 +17,10 @@ defmodule Chukinas.Dreadnought.Mission do
   # *** NEW
 
   def new() do
+    arena = Rect.new(1000, 750)
     %__MODULE__{
-      size_x: 1000,
-      size_y: 750,
-      units: [Unit.new()],
+      arena: arena,
+      units: [Unit.new(arena)],
     }
   end
 

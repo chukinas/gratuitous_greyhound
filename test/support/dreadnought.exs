@@ -1,7 +1,8 @@
 defmodule DreadnoughtHelpers do
   defmacro __using__(_options) do
     quote do
-      alias Chukinas.Geometry.Path
+      alias Chukinas.Dreadnought.{Arena, CommandQueue, Command, Segments}
+      alias Chukinas.Geometry.{Path, Point, Pose, Position, Rect}
       alias Chukinas.Svg
       import DreadnoughtHelpers, only: :functions
     end
@@ -16,9 +17,16 @@ defmodule DreadnoughtHelpers do
     Map.equal?(expected, actual)
   end
 
+  def get_margin() do
+    10
+  end
+
   # *** *******************************
   # *** PRIVATE
 
+  defp set_precision(struct) when is_struct(struct) do
+    struct |> Map.from_struct() |> set_precision()
+  end
   defp set_precision(%{} = map) do
     map
     |> Enum.map(&set_precision/1)

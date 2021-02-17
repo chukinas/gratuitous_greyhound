@@ -1,9 +1,22 @@
 <div
   id="arena"
-  style="width:<%= @size_x %>px; height: <%= @size_y %>px"
-  class="border-4 border-red-500 border-opacity-50 border-dashed"
+  style="width:<%= @arena.end_position.x %>px; height: <%= @arena.end_position.y %>px"
+  class="border-4 border-red-500 border-opacity-50 border-dashed relative"
 >
   <%= for unit <- @units do %>
     <%= render "unit.html", %{unit: unit}%>
+    <%# Segment Paths %>
+    <svg
+      version="1.1"
+      viewBox="0 0 1000 750"
+      width=1000
+      height=750
+      stroke-width=10
+      stroke="black"
+    >
+      <%= for segment <- unit.segments do %>
+        <path id="unit--<%= unit.id %>--segment--<%= segment.id %>" d="<%= segment.svg_path %>" />
+      <% end %>
+    </svg>
   <% end %>
 </div>
