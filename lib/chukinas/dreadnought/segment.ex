@@ -1,6 +1,6 @@
 alias Chukinas.Dreadnought.{Segment}
 alias Chukinas.Svg
-alias Chukinas.Geometry.{Point, Pose, Path, Position, Rect}
+alias Chukinas.Geometry.{Pose, Path}
 
 defmodule Segment do
 
@@ -14,8 +14,6 @@ defmodule Segment do
     field :segment_number, integer()
     field :start_pose, Pose.t()
     field :end_pose, Pose.t()
-    # TODO no that I'm no longer doing relative paths, this can probably be deleted
-    field :position, Point.t()
     # TODO change this to absolute path
     field :svg_path, String.t()
     # TODO no that I'm no longer doing relative paths, this can probably be deleted
@@ -35,8 +33,6 @@ defmodule Segment do
       end_pose: Path.get_end_pose(path),
       svg_viewbox: bounding_rect |> Svg.ViewBox.to_viewbox_string(start_pose, margin),
       svg_path: Svg.get_path_string(path),
-      # TODO I don't like this...
-      position: bounding_rect |> Rect.get_start_position() |> Position.subtract(margin) |> Position.round_to_int()
     }
   end
 

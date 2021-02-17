@@ -16,12 +16,9 @@ defmodule CommandQueueTest do
   test "Convert a 1-segment straight command into move segments" do
     command = Command.new()
     start_pose = Pose.new(0, 0, 0)
-    # TODO I don't like th name move segment...
-    move_segment = command |> Command.generate_segments(start_pose) |> List.first()
-    expected_position = start_pose |> Point.new() |> Position.subtract(get_margin())
-    assert match_numerical_map? expected_position, move_segment.position
-    assert "-10 -10 120 20" = move_segment.svg_viewbox
-    assert "M 0 0 L 100 0" = move_segment.svg_path
+    segment = command |> Command.generate_segments(start_pose) |> List.first()
+    assert "-10 -10 120 20" = segment.svg_viewbox
+    assert "M 0 0 L 100 0" = segment.svg_path
   end
 
   test "Get movement segments from default command queue" do
