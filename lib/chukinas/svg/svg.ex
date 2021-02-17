@@ -15,9 +15,7 @@ defmodule Chukinas.Svg do
   @doc"""
   Convert a path struct to a svg path string that can be dropped into an eex template.
   """
-  # TODO rename path string. or get absolute path ...?
-  # TODO make this a protocol?
-  def to_string(%Straight{} = path) do
+  def get_path_string(%Straight{} = path) do
     start_pose = path
                  |> Path.get_start_pose()
              |> Position.round_to_int()
