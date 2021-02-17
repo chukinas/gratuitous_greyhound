@@ -14,10 +14,7 @@ defmodule Segment do
     field :segment_number, integer()
     field :start_pose, Pose.t()
     field :end_pose, Pose.t()
-    # TODO change this to absolute path
     field :svg_path, String.t()
-    # TODO no that I'm no longer doing relative paths, this can probably be deleted
-    field :svg_viewbox, String.t()
   end
 
   # *** *******************************
@@ -25,13 +22,10 @@ defmodule Segment do
 
   def new(speed, 0 = _angle, start_pose, segment_number) do
     path = Path.new_straight(start_pose, speed_to_distance(speed))
-    bounding_rect = path |> Path.get_bounding_rect()
-    margin = 10
     %__MODULE__{
       segment_number: segment_number,
       start_pose: Path.get_start_pose(path),
       end_pose: Path.get_end_pose(path),
-      svg_viewbox: bounding_rect |> Svg.ViewBox.to_viewbox_string(start_pose, margin),
       svg_path: Svg.get_path_string(path),
     }
   end

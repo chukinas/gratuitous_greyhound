@@ -12,12 +12,10 @@ defmodule CommandQueueTest do
     assert 3 = first_default_command.speed
   end
 
-  @tag pita: true
   test "Convert a 1-segment straight command into move segments" do
     command = Command.new()
     start_pose = Pose.new(0, 0, 0)
     segment = command |> Command.generate_segments(start_pose) |> List.first()
-    assert "-10 -10 120 20" = segment.svg_viewbox
     assert "M 0 0 L 100 0" = segment.svg_path
   end
 
