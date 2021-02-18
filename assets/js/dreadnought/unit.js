@@ -1,5 +1,4 @@
 // --------------------------------------------------------
-//
 // CONSTANTS
 
 // --------------------------------------------------------
@@ -37,4 +36,10 @@ const WelcomeCardShipRearTurret = {
   }
 }
 
-export default { WelcomeCardShip, WelcomeCardShipFwdTurret, WelcomeCardShipRearTurret }
+const Unit = {
+  mounted() {
+    console.log('Unit mounted!')
+  }
+}
+
+export default { WelcomeCardShip, WelcomeCardShipFwdTurret, WelcomeCardShipRearTurret, Unit }
