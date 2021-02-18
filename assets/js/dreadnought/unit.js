@@ -38,7 +38,15 @@ const WelcomeCardShipRearTurret = {
 
 const Unit = {
   mounted() {
-    console.log('Unit mounted!')
+    gsap.to(this.el, {
+      motionPath: {
+        autoRotate: true,
+        path: "#unit--2--segment--1",
+        align: "#unit--2--segment--1",
+      },
+      repeat: -1,
+      duration: 4
+    })
   }
 }
 

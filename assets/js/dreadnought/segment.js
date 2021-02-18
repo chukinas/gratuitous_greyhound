@@ -1,6 +1,10 @@
 // --------------------------------------------------------
 // CONSTANTS
 
+const segmentDuration = 5; // seconds
+const worldTimeline = gsap.timeline()
+const segmentIds = []
+
 // --------------------------------------------------------
 // FUNCTIONS
 
@@ -9,7 +13,8 @@
 
 const Segment = {
   mounted() {
-    console.log('segment mounted!', this.el.id)
+    segmentIds.push(this.el.id)
+    console.log('just pushed new segment id to array...', segmentIds)
   }
 }
 
