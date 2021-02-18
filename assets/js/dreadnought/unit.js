@@ -43,6 +43,7 @@ const Unit = {
         autoRotate: true,
         path: "#unit--2--segment--1",
         align: "#unit--2--segment--1",
+        alignOrigin: [0.5, 0.5],
       },
       repeat: -1,
       duration: 4
