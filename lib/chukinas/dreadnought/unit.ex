@@ -13,6 +13,8 @@ defmodule Unit do
 
   typedstruct enforce: true do
     # ID must be unique within the world
+    # TODO this maybe should be called `number`. Here and in Segment.
+    # TODO then, whenever i see number, I know it's an integet. id would mean a string like `unit--1`
     field :id, number()
 
     # Vector (location and orientation)

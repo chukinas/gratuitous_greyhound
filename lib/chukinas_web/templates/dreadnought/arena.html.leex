@@ -15,13 +15,22 @@
       stroke-width=10
       stroke="black"
     >
-      <%= for segment <- unit.segments do %>
+      <% [segment | segments] = unit.segments %>
         <path
           id="unit--<%= unit.id %>--segment--<%= segment.id %>" 
           d="<%= segment.svg_path %>" 
+          data-segment-number="<%= segment.id %>"
+          data-unit-id="<%= unit.id %>"
           phx-hook="Segment"
         />
-      <% end %>
+      <% segment = List.first(segments) %>
+        <path
+          id="unit--<%= unit.id %>--segment--<%= segment.id %>" 
+          d="<%= segment.svg_path %>" 
+          data-segment-number="<%= segment.id %>"
+          data-unit-id="<%= unit.id %>"
+          phx-hook="Segment"
+        />
     </svg>
   <% end %>
 </div>

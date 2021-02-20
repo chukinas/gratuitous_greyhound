@@ -10,6 +10,7 @@ defmodule Segment do
   use TypedStruct
 
   typedstruct enforce: true do
+    # TODO this really ought to be called soething like number or segment_number
     field :id, integer()
     field :start_pose, Pose.t()
     field :end_pose, Pose.t()
