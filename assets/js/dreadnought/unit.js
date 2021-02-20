@@ -66,7 +66,16 @@ const Unit = {
     tl.eventCallback("onComplete", () => {
       onUnitOutOfBounds(unitHookObject)
     })
-  }
+  },
+  beforeUpdate() {
+    console.log("unit element before update!")
+  },
+  update() {
+    console.log("unit element updated!")
+  },
+  destroyed() {
+    console.log("unit element destroyed!")
+  },
 }
 
 export default { WelcomeCardShip, WelcomeCardShipFwdTurret, WelcomeCardShipRearTurret, Unit }
