@@ -4,7 +4,7 @@
 // DATA
 
 const gsap = window.gsap;
-const segmentDuration = 0.5; // seconds
+const segmentDuration = 0.3; // seconds
 const worldTimeline = gsap.timeline({
   paused: true,
   onComplete: complete,
@@ -50,6 +50,21 @@ export function subscribeStateChanges(callback) {
   stateChangeCallbacks.push(callback)
 }
 
+export function getUnitTimeline(unitNumber) {
+  if (!unitTimelines.has(unitNumber)) {
+    const newUnitTimeline = gsap.timeline({
+    });
+    worldTimeline.add(newUnitTimeline, 0)
+    unitTimelines.set(unitNumber, newUnitTimeline)
+  }
+  return unitTimelines.get(unitNumber)
+}
+
+
+export function getUnitTarget(unitNumber) {
+  return "#unit--" + unitNumber
+}
+
 // --------------------------------------------------------
 // PRIVATE FUNCTIONS
 
@@ -60,6 +75,7 @@ function complete() {
   }
 }
 
+// TODO rename segment to segmentNumber
 function getStartTime(segment) {
   // TODO create stylesheet. Incl eg data attr are dash-separated, which converts to camelCase in js. IDs follow eg something--XY--else--AB
   return (segment - 1) * segmentDuration;
@@ -69,26 +85,9 @@ function executeStateChangeCallbacks() {
   stateChangeCallbacks.forEach(callback => callback(currentState))
 }
 
-function getUnitTimeline(unitNumber) {
-  if (!unitTimelines.has(unitNumber)) {
-    const onCompleteCallback = () => {
-      onUnitTimelineComplete(unitNumber)
-    }
-    const newUnitTimeline = gsap.timeline({
-      onComplete: onCompleteCallback
-    });
-    worldTimeline.add(newUnitTimeline, 0)
-    unitTimelines.set(unitNumber, newUnitTimeline)
-  }
-  return unitTimelines.get(unitNumber)
-}
-
-function getUnitTarget(unitNumber) {
-  return "#unit--" + unitNumber
-}
-
-function onUnitTimelineComplete(unitNumber) {
-  gsap.to(getUnitTarget(unitNumber), {
-    opacity: 0,
-  })
-}
+// function gameOver(unitNumber) {
+//   gsap.to(getUnitTarget(unitNumber), {
+//     opacity: 0,
+//   });
+//   this.pushEvent("game_over")
+// }

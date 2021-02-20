@@ -26,11 +26,7 @@ const playBtnConfig = {
 // FUNCTIONS
 
 function configurePlayButton(el, state) {
-  console.log(playBtnConfig)
-  console.log(playBtnConfig["notStarted"])
-  console.log(state)
   const config = playBtnConfig[state]
-  console.log(config)
   el.innerText = config.innerText
 }
 

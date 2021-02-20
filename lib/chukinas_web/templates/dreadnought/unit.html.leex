@@ -3,6 +3,8 @@
   id="unit--<%= @unit.id %>"
   class="absolute top-12 left-12 text-purple-500"
   style="top: <%= @unit.start_pose.y %>px; left: <%= @unit.start_pose.x %>px"
+  data-unit-number="<%= @unit.id %>"
+  phx-hook="Unit"
 >
   <svg
     width="140"
