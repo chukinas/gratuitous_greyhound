@@ -1,8 +1,30 @@
+import * as worldTimeline from "./worldTimeline.js";
+
 // --------------------------------------------------------
 // CONSTANTS
 
+const gsap = window.gsap
+
 // --------------------------------------------------------
 // FUNCTIONS
+
+function onUnitOutOfBounds(unitHookObject) {
+  console.log("unit out of bounds")
+  // TODO this getunittarget... doesn't feel like it's in the right module
+  const unitNumber = unitHookObject.el.dataset.unitNumber
+  gsap.to(worldTimeline.getUnitTarget(unitNumber), {
+    opacity: 0,
+    onComplete: () => {
+      console.log("on complete")
+      gameOver(unitHookObject)
+    },
+  })
+}
+
+function gameOver(unitHookObject) {
+  console.log("game over")
+  unitHookObject.pushEvent("game_over")
+}
 
 // --------------------------------------------------------
 // HOOKS
@@ -36,4 +58,24 @@ const WelcomeCardShipRearTurret = {
   }
 }
 
-export default { WelcomeCardShip, WelcomeCardShipFwdTurret, WelcomeCardShipRearTurret }
+const Unit = {
+  mounted() {
+    const unitHookObject = this;
+    const unitNumber = this.el.dataset.unitNumber
+    const tl = worldTimeline.getUnitTimeline(unitNumber)
+    tl.eventCallback("onComplete", () => {
+      onUnitOutOfBounds(unitHookObject)
+    })
+  },
+  beforeUpdate() {
+    console.log("unit element before update!")
+  },
+  update() {
+    console.log("unit element updated!")
+  },
+  destroyed() {
+    console.log("unit element destroyed!")
+  },
+}
+
+export default { WelcomeCardShip, WelcomeCardShipFwdTurret, WelcomeCardShipRearTurret, Unit }

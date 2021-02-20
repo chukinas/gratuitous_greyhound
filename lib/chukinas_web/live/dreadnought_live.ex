@@ -12,8 +12,9 @@ defmodule ChukinasWeb.DreadnoughtLive do
   end
 
   @impl true
-  def handle_event("check_time", %{"rand" => rand}, socket) do
-    time_checks = [rand | socket.assigns.time_checks]
-    {:noreply, assign(socket, :time_checks, time_checks)}
+  def handle_event("game_over", _, socket) do
+    mission = socket.assigns.mission
+              |> Map.put(:state, :game_over)
+    {:noreply, assign(socket, :mission, mission)}
   end
 end
