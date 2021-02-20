@@ -12,6 +12,7 @@ const worldTimeline = window.gsap.timeline({
     duration: segmentDuration,
   },
 })
+const stateChangeCallbacks = [() => console.log(currentState)]
 let currentState = "notStarted"
 
 // --------------------------------------------------------
@@ -26,17 +27,23 @@ export function toggle() {
     case "notStarted":
       currentState = "playing"
       worldTimeline.play()
+      executeStateChangeCallbacks();
       break;
     case "playing":
       currentState = "paused"
       worldTimeline.pause()
+      executeStateChangeCallbacks();
       break;
     case "paused":
       currentState = "playing"
       worldTimeline.play()
+      executeStateChangeCallbacks()
       break;
   }
-  console.log(currentState)
+}
+
+export function subscribeStateChanges(callback) {
+  stateChangeCallbacks.push(callback)
 }
 
 // --------------------------------------------------------
@@ -45,11 +52,15 @@ export function toggle() {
 function complete() {
   if (currentState != "complete") {
     currentState = "complete"
-    console.log(currentState)
+    executeStateChangeCallbacks()
   }
 }
 
 function getStartTime(segment) {
   // TODO create stylesheet. Incl eg data attr are dash-separated, which converts to camelCase in js. IDs follow eg something--XY--else--AB
   return (segment - 1) * segmentDuration;
+}
+
+function executeStateChangeCallbacks() {
+  stateChangeCallbacks.forEach(callback => callback(currentState))
 }
