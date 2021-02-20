@@ -1,9 +1,11 @@
 // TODO hooks modules should maybe be in their own hooks dir?
+// TODO rename module to `timelines`?
 // --------------------------------------------------------
 // DATA
 
+const gsap = window.gsap;
 const segmentDuration = 1; // seconds
-const worldTimeline = window.gsap.timeline({
+const worldTimeline = gsap.timeline({
   paused: true,
   onComplete: complete,
   autoRemoveChildren: true,
@@ -12,14 +14,16 @@ const worldTimeline = window.gsap.timeline({
     duration: segmentDuration,
   },
 })
+const unitTimelines = new Map();
 const stateChangeCallbacks = [() => console.log(currentState)]
 let currentState = "notStarted"
 
 // --------------------------------------------------------
 // PUBLIC FUNCTIONS
 
-export function addTween(target, vars, segment) {
-  worldTimeline.to(target, vars, getStartTime(segment))
+// TODO maybe rename addUnitSegment
+export function addTween(unitNumber, vars, segment) {
+  getUnitTimeline(unitNumber).to(getUnitTarget(unitNumber), vars, getStartTime(segment))
 }
 
 export function toggle() {
@@ -63,4 +67,17 @@ function getStartTime(segment) {
 
 function executeStateChangeCallbacks() {
   stateChangeCallbacks.forEach(callback => callback(currentState))
+}
+
+function getUnitTimeline(unitNumber) {
+  if (!unitTimelines.has(unitNumber)) {
+    const newUnitTimeline = gsap.timeline();
+    worldTimeline.add(newUnitTimeline, 0)
+    unitTimelines.set(unitNumber, newUnitTimeline)
+  }
+  return unitTimelines.get(unitNumber)
+}
+
+function getUnitTarget(unitNumber) {
+  return "#unit--" + unitNumber
 }

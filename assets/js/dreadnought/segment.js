@@ -25,10 +25,6 @@ const playBtnConfig = {
 // --------------------------------------------------------
 // FUNCTIONS
 
-function getUnitTarget(segment) {
-  return "#unit--" + segment.dataset.unitId
-}
-
 function configurePlayButton(el, state) {
   console.log(playBtnConfig)
   console.log(playBtnConfig["notStarted"])
@@ -43,7 +39,7 @@ function configurePlayButton(el, state) {
 
 const Segment = {
   mounted() {
-    worldTimeline.addTween(getUnitTarget(this.el), {
+    worldTimeline.addTween(this.el.dataset.unitNumber, {
       motionPath: {
         autoRotate: true,
         path: this.el,
