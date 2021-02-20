@@ -38,4 +38,8 @@
     <%= DreadnoughtView.render "welcome.html", %{socket: @socket} %>
   <% end %>
 
+  <%# Game Over! %>
+  <%= if @live_action == :dev && @mission.state == :game_over do %>
+    <%= DreadnoughtView.render "message.html", %{socket: @socket} %>
+  <% end %>
 </div>
