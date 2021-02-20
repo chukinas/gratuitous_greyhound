@@ -1,11 +1,15 @@
 // --------------------------------------------------------
 // CONSTANTS
 
-const segmentDuration = 2.5; // seconds
-const worldTimeline = gsap.timeline({defaults: {
-  ease: "none", 
-  duration: segmentDuration,
-}})
+const segmentDuration = 1; // seconds
+const worldTimeline = gsap.timeline({
+  onComplete: printTimeLineInfo,
+  autoRemoveChildren: true,
+  defaults: {
+    ease: "none", 
+    duration: segmentDuration,
+  },
+})
 
 // --------------------------------------------------------
 // FUNCTIONS
@@ -19,20 +23,24 @@ function getUnitTarget(segment) {
   return "#unit--" + segment.dataset.unitId
 }
 
+function printTimeLineInfo() {
+  console.log(worldTimeline.getChildren())
+}
+
 // --------------------------------------------------------
 // HOOKS
 
 const Segment = {
   mounted() {
-    const tl = worldTimeline.to(getUnitTarget(this.el), {
+    worldTimeline.to(getUnitTarget(this.el), {
       motionPath: {
         autoRotate: true,
         path: this.el,
         align: this.el,
         alignOrigin: [0.5, 0.5],
       },
+      onComplete: printTimeLineInfo,
     }, getStartTime(this.el))
-    console.log(tl)
   }
 }
 
