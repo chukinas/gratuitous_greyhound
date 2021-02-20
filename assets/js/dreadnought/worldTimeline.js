@@ -4,7 +4,7 @@
 // DATA
 
 const gsap = window.gsap;
-const segmentDuration = 1; // seconds
+const segmentDuration = 0.5; // seconds
 const worldTimeline = gsap.timeline({
   paused: true,
   onComplete: complete,
@@ -71,7 +71,12 @@ function executeStateChangeCallbacks() {
 
 function getUnitTimeline(unitNumber) {
   if (!unitTimelines.has(unitNumber)) {
-    const newUnitTimeline = gsap.timeline();
+    const onCompleteCallback = () => {
+      onUnitTimelineComplete(unitNumber)
+    }
+    const newUnitTimeline = gsap.timeline({
+      onComplete: onCompleteCallback
+    });
     worldTimeline.add(newUnitTimeline, 0)
     unitTimelines.set(unitNumber, newUnitTimeline)
   }
@@ -80,4 +85,10 @@ function getUnitTimeline(unitNumber) {
 
 function getUnitTarget(unitNumber) {
   return "#unit--" + unitNumber
+}
+
+function onUnitTimelineComplete(unitNumber) {
+  gsap.to(getUnitTarget(unitNumber), {
+    opacity: 0,
+  })
 }
