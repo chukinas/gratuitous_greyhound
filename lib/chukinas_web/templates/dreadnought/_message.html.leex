@@ -1,3 +1,20 @@
-<div class="text-red-300">
-  <%= @inner_content %>
+<div
+   class="absolute inset-0 grid text-sm md:text-base inline-block text-white" 
+   style="grid-template-columns: 1fr minmax(1vw, 40rem) 1fr"
+>
+  <div class="col-start-2 overflow-auto h-screen flex flex-col" >
+    <div class="flex-1"> </div>
+    <div class="flex-1" style="order: 3"> </div>
+    <div class="flex-1" style="order: 4"> </div>
+    <div class="flex-1">
+    <img src="<%= Routes.static_path(@socket, "/images/ship_logo.svg") %>" class="w-full ">
+    <div 
+       class="border-0 border-t-4 border-white mt-1 p-4  space-y-3 overflow-y-auto"
+       style="margin-left: 10%; margin-right: 10%; background-color: rgba(255, 255, 255, 0.1 )"
+    >
+      <h1 class="text-3xl  font-bold font-display text-center uppercase">
+      <%= @inner_content %>
+      </h1>
+    </div>
+  </div>
 </div>

@@ -1,7 +1,7 @@
 defmodule ChukinasWeb.DreadnoughtView do
   use ChukinasWeb, :view
 
-  def message(assigns \\ %{}, do: block) do
+  def message(%{socket: _socket} = assigns, do: block) do
     render_template("_message.html", assigns, block)
   end
 

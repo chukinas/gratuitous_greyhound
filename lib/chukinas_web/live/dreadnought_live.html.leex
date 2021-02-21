@@ -41,6 +41,8 @@
 
   <%# Game Over! %>
   <%= if @mission.state == :game_over do %>
-    <%= DreadnoughtView.render "message.html", %{socket: @socket} %>
+    <%= DreadnoughtView.message %{socket: @socket} do %>
+      Game End
+    <% end %>
   <% end %>
 </div>
