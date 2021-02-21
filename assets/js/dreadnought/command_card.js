@@ -42,6 +42,7 @@ const CommandCardTarget = {
 const SegmentDroppable = {
   mounted() {
     this.el.addEventListener("mouseenter", function(event) {
+      segment
       console.log("mouseenter", event)
       window.gsap.to(event.target, {
         y: 100,
