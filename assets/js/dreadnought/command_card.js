@@ -39,4 +39,18 @@ const CommandCardTarget = {
   }
 }
 
-export default { CommandCard, CommandCardTarget }
+const SegmentDroppable = {
+  mounted() {
+    this.el.addEventListener("mouseenter", function(event) {
+      console.log("mouseenter", event)
+      window.gsap.to(event.target, {
+        y: 100,
+      })
+    }); 
+  },
+  reconnect() {
+    console.log("reconncted!")
+  }
+}
+
+export default { CommandCard, CommandCardTarget, SegmentDroppable }

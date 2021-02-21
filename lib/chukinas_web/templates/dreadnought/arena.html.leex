@@ -5,8 +5,26 @@
 >
   <%= if @state != :game_over do %>
     <%= for unit <- @units do %>
-      <%= render "unit.html", %{unit: unit}%>
       <%# Segment Paths %>
+      <svg
+        version="1.1"
+        viewBox="0 0 1000 750"
+        width=1000
+        height=750
+        stroke-width=75
+        stroke-linecap="butt"
+        stroke="grey"
+      >
+        <%= for segment <- unit.segments do %>
+          <path
+            id="unit--<%= unit.id %>--segment--<%= segment.id %>--droppable" 
+            d="<%= segment.svg_path %>" 
+            data-segment-number="<%= segment.id %>"
+            data-unit-number="<%= unit.id %>"
+            phx-hook="SegmentDroppable"
+          />
+        <% end %>
+      </svg>
       <svg
         version="1.1"
         viewBox="0 0 1000 750"
@@ -14,6 +32,8 @@
         height=750
         stroke-width=10
         stroke="black"
+        class="absolute top-0 left-0"
+        style="pointer-events:none"
       >
         <%= for segment <- unit.segments do %>
           <path
@@ -25,6 +45,7 @@
           />
         <% end %>
       </svg>
+      <%= render "unit.html", %{unit: unit}%>
     <% end %>
   <% end %>
 </div>

@@ -24,7 +24,11 @@
   <%# Dummy Command Card %>
   <%# TODO See card and drag_and_drop templates %>
   <%= if @mission.state == :playing and @live_action == :dev do %>
-    <span class="height-12 width-12 bg-red-700 text-white p-12 m-64">
+    <span 
+     class="height-12 width-12 bg-red-700 text-white p-12 m-64"
+     id="somethingridiculous"
+     phx-hook="CommandCard"
+    >
       Command Card
     </span>
   <% end %>
