@@ -5,9 +5,10 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def mount(_params, _session, socket) do
+    mission = Mission.new()
     socket = socket
     |> assign(page_title: "Dreadnought")
-    |> assign(mission: Mission.new())
+    |> assign(mission: mission)
     {:ok, socket}
   end
 
@@ -15,6 +16,13 @@ defmodule ChukinasWeb.DreadnoughtLive do
   def handle_event("game_over", _, socket) do
     mission = socket.assigns.mission
               |> Map.put(:state, :game_over)
+    {:noreply, assign(socket, :mission, mission)}
+  end
+
+  @impl true
+  def handle_event("start_game", _, socket) do
+    mission = socket.assigns.mission
+              |> Map.put(:state, :playing)
     {:noreply, assign(socket, :mission, mission)}
   end
 end

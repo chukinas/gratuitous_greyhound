@@ -3,7 +3,7 @@
 
     <%# TODO eventually, these will be moved out of this into the arena template %>
     <%# Islands %>
-    <%= if @live_action != :dev do %>
+    <%= if @mission.state == :pregame do %>
     <img 
           src="<%= Routes.static_path(@socket, "/images/island_top_left.png") %>" 
           class="absolute top-0 left-0"
@@ -24,7 +24,7 @@
           <%= render "ship.html", %{socket: @socket} %>
         <% end %>
 
-    <%= if @live_action == :dev do %>
+    <%= if @mission.state == :playing do %>
       <div class="m-12">
         <%= render "arena.html", @mission %>
       </div>

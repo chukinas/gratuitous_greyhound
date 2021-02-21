@@ -21,21 +21,22 @@
   <%# The World %>
   <%= DreadnoughtView.render "world.html", %{socket: @socket, live_action: @live_action, mission: @mission} %>
 
-  <%= if @live_action == :dev do %> 
-    <%= if @mission.state != :game_over do %>
-      <div class="absolute left-0 bottom-0 padding-16">
-        <button
-          id="sliderSyncButton"
-          class="bg-blue-200 p-2 rounded"
-          phx-hook="ToggleWorldPlay"
-        >
-          Play
-        </button>
-      </div>
-    <% end %>
-  <% else %>
-    <%# Welcome Card %>
+  <%# Welcome! %>
+  <%= if @mission.state == :pregame do %>
     <%= DreadnoughtView.render "welcome.html", %{socket: @socket} %>
+  <% end %>
+
+  <%# Playing! %>
+  <%= if @mission.state == :playing do %> 
+    <div class="absolute left-0 bottom-0 padding-16">
+      <button
+        id="sliderSyncButton"
+        class="bg-blue-200 p-2 rounded"
+        phx-hook="ToggleWorldPlay"
+      >
+        Play
+      </button>
+    </div>
   <% end %>
 
   <%# Game Over! %>
