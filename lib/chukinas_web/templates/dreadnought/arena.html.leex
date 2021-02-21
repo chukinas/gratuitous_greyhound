@@ -20,6 +20,8 @@
           <path
             id="drop-target--unit--<%= unit.id %>--segment--<%= segment.id %>" 
             d="<%= segment.svg_path %>" 
+            data-segment-number="<%= segment.id %>"
+            data-unit-number="<%= unit.id %>"
             phx-hook="SegmentDroppable"
           />
         <% end %>
@@ -38,6 +40,7 @@
           <path
             id="unit--<%= unit.id %>--segment--<%= segment.id %>" 
             d="<%= segment.svg_path %>" 
+            data-segment-display
             data-segment-number="<%= segment.id %>"
             data-unit-number="<%= unit.id %>"
             phx-hook="Segment"
