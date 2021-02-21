@@ -1,5 +1,22 @@
 defmodule ChukinasWeb.DreadnoughtView do
   use ChukinasWeb, :view
+
+  def message(%{socket: _socket} = assigns, do: block) do
+    assigns =
+      case assigns do
+        %{button: _} -> assigns
+        _ -> assigns |> Map.put(:button, false)
+      end
+    render_template("_message.html", assigns, block)
+  end
+
+  defp render_template(template, assigns, block) do
+    assigns =
+      assigns
+      |> Map.new()
+      |> Map.put(:inner_content, block)
+    render template, assigns
+  end
 end
 
 # https://bernheisel.com/blog/phoenix-liveview-and-views

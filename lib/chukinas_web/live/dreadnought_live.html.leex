@@ -21,25 +21,32 @@
   <%# The World %>
   <%= DreadnoughtView.render "world.html", %{socket: @socket, live_action: @live_action, mission: @mission} %>
 
-  <%= if @live_action == :dev do %> 
-    <%= if @mission.state != :game_over do %>
-      <div class="absolute left-0 bottom-0 padding-16">
-        <button
-          id="sliderSyncButton"
-          class="bg-blue-200 p-2 rounded"
-          phx-hook="ToggleWorldPlay"
-        >
-          Play
-        </button>
-      </div>
+  <%# Welcome! %>
+  <%= if @mission.state == :pregame do %>
+    <%= DreadnoughtView.message %{socket: @socket, button: %{text: "Start Game", on_click: "start_game"}} do %>
+      <%= DreadnoughtView.render "welcome.html" %>
     <% end %>
-  <% else %>
-    <%# Welcome Card %>
-    <%= DreadnoughtView.render "welcome.html", %{socket: @socket} %>
+  <% end %>
+
+  <%# Playing! %>
+  <%= if @mission.state == :playing do %> 
+    <div class="absolute left-0 bottom-0 padding-16">
+      <button
+        id="sliderSyncButton"
+        class="bg-blue-200 p-2 rounded"
+        phx-hook="ToggleWorldPlay"
+      >
+        Play
+      </button>
+    </div>
   <% end %>
 
   <%# Game Over! %>
-  <%= if @live_action == :dev && @mission.state == :game_over do %>
-    <%= DreadnoughtView.render "message.html", %{socket: @socket} %>
+  <%= if @mission.state == :game_over do %>
+    <%= DreadnoughtView.message %{socket: @socket} do %>
+      <h1 class="text-3xl font-bold font-display text-center uppercase tracking-widest p-16">
+        Game Over
+      </h1>
+    <% end %>
   <% end %>
 </div>
