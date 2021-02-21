@@ -5,7 +5,9 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    mission = Mission.new()
+    mission =
+      Mission.new()
+      |> Map.put(:state, :game_over)
     socket = socket
     |> assign(page_title: "Dreadnought")
     |> assign(mission: mission)
