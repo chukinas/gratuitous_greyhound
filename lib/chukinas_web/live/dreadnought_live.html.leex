@@ -21,6 +21,14 @@
   <%# The World %>
   <%= DreadnoughtView.render "world.html", %{socket: @socket, live_action: @live_action, mission: @mission} %>
 
+  <%# Dummy Command Card %>
+  <%# TODO See card and drag_and_drop templates %>
+  <%= if @mission.state == :playing and @live_action == :dev do %>
+    <span class="height-12 width-12 bg-red-700 text-white p-12 m-64">
+      Command Card
+    </span>
+  <% end %>
+
   <%# Welcome! %>
   <%= if @mission.state == :pregame do %>
     <%= DreadnoughtView.message %{socket: @socket, button: %{text: "Start Game", on_click: "start_game"}} do %>
