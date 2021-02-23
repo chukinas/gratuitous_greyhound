@@ -25,4 +25,13 @@ defmodule CommandQueueTest do
     movement_segments = Segments.init(command_queue, Pose.new(0, 0, 0), arena)
     assert 5 = Enum.count(movement_segments)
   end
+
+  test "Command Queue with one long staight produces correct number of segments" do
+    arena = Rect.new(450, 450)
+    segments =
+      CommandQueue.new()
+      |> CommandQueue.add(Command.new(speed: 5, segment: 2))
+      |> Segments.init(Pose.new(0, 0, 0), arena)
+    assert 4 = Enum.count segments
+  end
 end

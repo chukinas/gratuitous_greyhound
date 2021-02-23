@@ -19,9 +19,8 @@ defmodule Command do
   # *** *******************************
   # *** NEW
 
-  def new(_opts \\ []) do
-    %__MODULE__{
-    }
+  def new(opts \\ []) do
+    struct(__MODULE__, opts)
   end
 
   # *** *******************************
