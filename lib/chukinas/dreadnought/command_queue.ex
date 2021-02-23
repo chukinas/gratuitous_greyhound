@@ -27,4 +27,17 @@ defmodule CommandQueue do
   # *** *******************************
   # *** API
 
+  def add(
+    %__MODULE__{} = command_queue,
+    %Command{segment_count: 1, segment_number: segment} = command
+  ) do
+    {earlier_cmds, later_cmds} =
+      command_queue.issued_commands
+      |> Enum.split_while(fn cmd -> cmd.segment_number < segment end)
+    {_, later_cmds} =
+      later_cmds
+      |> Enum.split_while(fn cmd -> cmd.segment_number == segment end)
+    cmds = Enum.concat([earlier_cmds, [command], later_cmds])
+    %{command_queue | issued_commands: cmds}
+  end
 end
