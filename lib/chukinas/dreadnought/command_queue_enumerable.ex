@@ -6,8 +6,8 @@ defimpl Enumerable, for: CommandQueue do
 
   def member?(_command_queue, _element), do: {:ok, false}
 
-  def reduce(_cq, {:halt, acc}, _fun), do: {:halted, acc}
-  def reduce(cq, {:suspend, acc}, fun), do: {:suspended, acc, &reduce(cq, &1, fun)}
+  def reduce(_enum, {:halt, acc}, _fun), do: {:halted, acc}
+  def reduce(enum, {:suspend, acc}, fun), do: {:suspended, acc, &reduce(enum, &1, fun)}
   def reduce(%CommandQueue{} = cq, {:cont, acc}, fun) do
     seg_num = 1
     # TODO need a default command builder instead of just a default command
