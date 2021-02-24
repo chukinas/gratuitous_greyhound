@@ -30,7 +30,7 @@ defmodule CommandQueueTest do
     arena = Rect.new(450, 450)
     segments =
       CommandQueue.new()
-      |> CommandQueue.add(Command.new(speed: 5, segment: 2))
+      |> CommandQueue.add(Command.new(speed: 5, segment_number: 2))
       |> Segments.init(Pose.new(0, 0, 0), arena)
     assert 4 = Enum.count segments
   end

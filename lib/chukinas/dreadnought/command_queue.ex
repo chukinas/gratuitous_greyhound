@@ -9,18 +9,16 @@ defmodule CommandQueue do
 
   typedstruct enforce: true do
     field :issued_commands, [Command.t()], default: []
-    field :default_command, Command.t()
-    # For use in the enumerable implementation
-    field :segment_counter, integer(), default: 1
-  end
+    field :default_command_builder, (integer() -> Command.t()
+    )  end
 
   # *** *******************************
   # *** NEW
 
   def new() do
+    default_builder = fn seg_num -> Command.new(segment_number: seg_num) end
     %__MODULE__{
-      # TODO there should be a default command function. Maybe the default command doesn't require a segment number. In the meantime, I'm passing a negative number in here. It won't be used anyway.
-      default_command: Command.new(),
+      default_command_builder: default_builder
     }
   end
 
