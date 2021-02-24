@@ -1,4 +1,4 @@
-import * as worldTimeline from "./worldTimeline.js";
+import * as worldTimeline from "../core/worldTimeline.js";
 
 // --------------------------------------------------------
 // CONSTANTS
