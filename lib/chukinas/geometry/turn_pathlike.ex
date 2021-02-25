@@ -1,13 +1,19 @@
-alias Chukinas.Geometry.{Polar, Pose, Position, PathLike, Path, Point, Rect}
+alias Chukinas.Geometry.{Pose, Position, PathLike, Path, Point, Rect}
 
+# TODO move this to geometry/turn.ex?
 defimpl PathLike, for: Path.Turn do
-  def pose_start(path), do: path.start
+  def pose_start(path), do: path.pose
   def pose_end(path) do
-    len = len(path)
-    %{x: x0, y: y0, angle: angle} = pose_start(path)
-    %{x: dx, y: dy} = Polar.new(len, angle)
-    |> Polar.to_cartesian()
-    Pose.new(x0 + dx, y0 + dy, angle)
+    radius = (path.length * 360) / (2 * :math.pi() * path.angle)
+    right_angle = 90 * get_sign path.angle
+    path.pose
+    |> Pose.rotate(right_angle)
+    |> Path.new_straight(radius)
+    |> Path.get_end_pose()
+    |> Pose.rotate(180 + path.angle)
+    |> Path.new_straight(radius)
+    |> Path.get_end_pose()
+    |> Pose.rotate(right_angle)
   end
   def len(path), do: path.length
 
@@ -19,4 +25,10 @@ defimpl PathLike, for: Path.Turn do
     {ymin, ymax} = Enum.min_max([y_start, y_end])
     Rect.new(Point.new(xmin, ymin), Point.new(xmax, ymax))
   end
+
+  # *** *******************************
+  # *** PRIVATE
+
+  defp get_sign(number) when number > 0, do: 1
+  defp get_sign(_number), do: -1
 end

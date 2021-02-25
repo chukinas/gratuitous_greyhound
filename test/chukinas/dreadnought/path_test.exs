@@ -1,5 +1,6 @@
 ExUnit.start()
 
+# TODO this file isn't in the right place?
 defmodule PathTest do
   use ExUnit.Case, async: true
   use DreadnoughtHelpers
@@ -18,12 +19,12 @@ defmodule PathTest do
   test "calculate end pose of turn path" do
     actual_end_pose =
       Path.new(
-        pose: Pose.new(-1, 0, 90),
-        length: :math.pi(),
+        pose: Pose.new(0, -1, 0),
+        length: :math.pi() / 2,
         angle: 90
       )
       |> Path.get_end_pose()
-    expected_end_pose = Pose.new(0, 1, 0)
+    expected_end_pose = Pose.new(1, 0, 90)
     assert match_numerical_map? expected_end_pose, actual_end_pose
   end
 end
