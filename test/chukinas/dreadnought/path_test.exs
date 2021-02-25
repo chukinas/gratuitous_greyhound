@@ -8,7 +8,7 @@ defmodule PathTest do
     actual_end_pose =
       Path.new(
         pose: Pose.origin(),
-        length: :math.pi()
+        length: 1
       )
       |> Path.get_end_pose()
     expected_end_pose = Pose.new(1, 0, 0)

@@ -9,7 +9,7 @@ defimpl PathLike, for: Path.Turn do
     |> Polar.to_cartesian()
     Pose.new(x0 + dx, y0 + dy, angle)
   end
-  def len(path), do: path.len
+  def len(path), do: path.length
 
   # TODO get rid of?
   def get_bounding_rect(path) do

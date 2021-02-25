@@ -25,4 +25,8 @@ defmodule Pose do
     }
   end
 
+  # *** *******************************
+  # *** NEW
+
+  def origin(), do: new(0, 0, 0)
 end
