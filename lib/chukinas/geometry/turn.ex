@@ -7,6 +7,7 @@ defmodule Chukinas.Geometry.Path.Turn do
     field :pose, Pose.t()
     field :length, number()
     field :angle, integer()
+    field :radius, float()
   end
 
   # *** *******************************
@@ -17,13 +18,15 @@ defmodule Chukinas.Geometry.Path.Turn do
       pose: start_pose,
       length: len,
       angle: angle,
+      radius: radius(len, angle)
     }
   end
   def new(x, y, angle, len, angle) do
-    %__MODULE__{
-      pose: Pose.new(x, y, angle),
-      length: len,
-      angle: angle,
-    }
+    new Pose.new(x, y, angle), len, angle
   end
+
+  # *** *******************************
+  # *** PRIVATE
+
+  defp radius(length, angle), do: (length * 360) / (2 * :math.pi() * angle)
 end

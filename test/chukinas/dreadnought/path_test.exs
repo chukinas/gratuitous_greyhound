@@ -27,4 +27,16 @@ defmodule PathTest do
     expected_end_pose = Pose.new(1, 0, 90)
     assert match_numerical_map? expected_end_pose, actual_end_pose
   end
+
+  test "SVG for 90deg turn" do
+    actual_svg =
+      Path.new(
+        pose: Pose.origin(),
+        length: :math.pi() / 2,
+        angle: 90
+      )
+      |> Svg.get_path_string()
+    expected_svg = "M 0 0 Q 1 0 1 1"
+    assert actual_svg == expected_svg
+  end
 end

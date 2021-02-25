@@ -4,14 +4,13 @@ alias Chukinas.Geometry.{Pose, Position, PathLike, Path, Point, Rect}
 defimpl PathLike, for: Path.Turn do
   def pose_start(path), do: path.pose
   def pose_end(path) do
-    radius = (path.length * 360) / (2 * :math.pi() * path.angle)
     right_angle = 90 * get_sign path.angle
     path.pose
     |> Pose.rotate(right_angle)
-    |> Path.new_straight(radius)
+    |> Path.new_straight(path.radius)
     |> Path.get_end_pose()
     |> Pose.rotate(180 + path.angle)
-    |> Path.new_straight(radius)
+    |> Path.new_straight(path.radius)
     |> Path.get_end_pose()
     |> Pose.rotate(right_angle)
   end
