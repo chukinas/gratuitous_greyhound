@@ -48,7 +48,7 @@ defmodule PathTest do
         angle: 180
       )
       |> Svg.get_path_string()
-    expected_svg = "M 0 0 Q 1 0 1 1 Q 2 1 0 2"
+    expected_svg = "M 0 0 Q 1 0 1 1 Q 1 2 0 2"
     assert expected_svg == actual_svg
   end
 end

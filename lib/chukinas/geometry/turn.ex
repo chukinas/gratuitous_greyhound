@@ -1,5 +1,5 @@
-defmodule Chukinas.Geometry.Path.Turn do
-  alias Chukinas.Geometry.Pose
+alias Chukinas.Geometry.{Path, Pose}
+defmodule Path.Turn do
 
   use TypedStruct
 
@@ -32,6 +32,21 @@ defmodule Chukinas.Geometry.Path.Turn do
 
   def get_angle_radians(path) do
     path.angle * :math.pi() / 180
+  end
+
+  def split(%__MODULE__{angle: angle_orig} = path, angle) when angle_orig > angle do
+    ratio = angle / angle_orig
+    path1 = new(
+      path.pose,
+      len1 = (path.length * ratio),
+      angle
+    )
+    path2 = new(
+      Path.get_end_pose(path1),
+      path.length - len1,
+      angle_orig - angle
+    )
+    {path1, path2}
   end
 
   # *** *******************************

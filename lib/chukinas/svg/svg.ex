@@ -60,15 +60,8 @@ defmodule Chukinas.Svg do
     {x1, y1} = get_end_coord(path)
     "Q #{dx} #{dy} #{x1} #{y1}"
   end
-  # def m_abs(point) when is_point(point) do
-  #   "M #{point|> _to_string}"
-  # end
-
-  # def mz_abs(points) do
-  #   "M #{points |> _to_string} Z"
-  # end
-
-  # def q_abs(quad_control, end_point) when is_point(quad_control) and is_point(end_point) do
-  #   "Q #{[quad_control, end_point] |> _to_string}"
-  # end
+  defp get_quadratic_curve(%Turn{} = path) do
+    {right_angle_turn, remaining_turn} = Turn.split(path, 90)
+    "#{get_quadratic_curve right_angle_turn} #{get_quadratic_curve remaining_turn}"
+  end
 end
