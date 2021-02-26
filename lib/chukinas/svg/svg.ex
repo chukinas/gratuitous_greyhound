@@ -21,19 +21,9 @@ defmodule Chukinas.Svg do
     {x1, y1} = get_end_coord(path)
     "M #{x0} #{y0} L #{x1} #{y1}"
   end
-  def get_path_string(%Turn{angle: angle} = path) when angle <= 90 do
+  def get_path_string(%Turn{} = path) do
     {x0, y0} = get_start_coord(path)
-    radius = Turn.get_radius path
-    half_angle_rad = Turn.get_angle_radians(path) / 2
-    length_to_intercept = radius * :math.tan(half_angle_rad)
-    {dx, dy} =
-      path
-      |> Path.get_start_pose()
-      |> Path.new_straight(length_to_intercept)
-      |> Path.get_end_pose()
-      |> Position.to_int_tuple()
-    {x1, y1} = get_end_coord(path)
-    "M #{x0} #{y0} Q #{dx} #{dy} #{x1} #{y1}"
+    "M #{x0} #{y0} #{get_quadratic_curve(path)}"
   end
 
   def get_string(%Rect{} = bounding_rect, path_start_point, margin)
@@ -57,6 +47,19 @@ defmodule Chukinas.Svg do
     |> Position.to_int_tuple()
   end
 
+  defp get_quadratic_curve(%Turn{angle: angle} = path) when abs(angle) <= 90 do
+    radius = Turn.get_radius path
+    half_angle_rad = Turn.get_angle_radians(path) / 2
+    length_to_intercept = radius * :math.tan(half_angle_rad)
+    {dx, dy} =
+      path
+      |> Path.get_start_pose()
+      |> Path.new_straight(length_to_intercept)
+      |> Path.get_end_pose()
+      |> Position.to_int_tuple()
+    {x1, y1} = get_end_coord(path)
+    "Q #{dx} #{dy} #{x1} #{y1}"
+  end
   # def m_abs(point) when is_point(point) do
   #   "M #{point|> _to_string}"
   # end

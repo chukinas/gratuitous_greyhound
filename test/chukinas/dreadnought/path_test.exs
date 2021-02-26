@@ -45,7 +45,7 @@ defmodule PathTest do
       Path.new(
         pose: Pose.origin(),
         length: :math.pi(),
-        angle: 90
+        angle: 180
       )
       |> Svg.get_path_string()
     expected_svg = "M 0 0 Q 1 0 1 1 Q 2 1 0 2"
