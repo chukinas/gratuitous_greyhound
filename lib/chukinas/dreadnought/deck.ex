@@ -1,5 +1,5 @@
-defmodule Chukinas.Dreadnought.Deck do
-  alias Chukinas.Dreadnought.Card
+alias Chukinas.Dreadnought.{Card, Deck}
+defmodule Deck do
 
   # *** *******************************
   # *** TYPES
@@ -18,7 +18,7 @@ defmodule Chukinas.Dreadnought.Deck do
     # Cards currently assigned to its unit's path
     field :path, [Card.t()], default: []
 
-    # Cards that have discarded, awaiting shuffle and add to draw pile 
+    # Cards that have discarded, awaiting shuffle and add to draw pile
     field :discard_pile, [Card.t()], default: []
 
     # Destroyed cards are out of the game, never to return.
