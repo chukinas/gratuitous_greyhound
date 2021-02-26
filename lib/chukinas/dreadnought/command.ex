@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Command, Segment}
-alias Chukinas.Geometry.{Pose}
+alias Chukinas.Geometry.{Pose, Path}
 
 defmodule Command do
 
@@ -31,7 +31,12 @@ defmodule Command do
     generate_segments(command, start_pose)
   end
   def generate_segments(%__MODULE__{segment_count: 1} = command, %Pose{} = start_pose) do
-    [Segment.new(command.speed, command.angle, start_pose, command.segment_number)]
+    len = Segment.speed_to_distance(command.speed)
+    path = case command.angle do
+      0 -> Path.new_straight(start_pose, len)
+      angle -> Path.new_turn(start_pose, len, angle)
+    end
+    [Segment.new(path, command.segment_number)]
   end
 
   def set_segment_number(command, segment_number) do

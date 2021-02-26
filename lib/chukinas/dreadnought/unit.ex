@@ -54,7 +54,7 @@ defmodule Unit do
 
   defp build_command_queue() do
     CommandQueue.new()
-    |> CommandQueue.add(Command.new(segment_number: 4, speed: 5))
+    |> CommandQueue.add(Command.new(segment_number: 4, speed: 5, angle: -45))
   end
 
 end
