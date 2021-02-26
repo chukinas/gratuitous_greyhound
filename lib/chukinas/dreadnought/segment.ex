@@ -20,10 +20,9 @@ defmodule Segment do
   # *** *******************************
   # *** NEW
 
-  def new(speed, 0 = _angle, start_pose, id) do
-    path = Path.new_straight(start_pose, speed_to_distance(speed))
+  def new(path, segment_number) do
     %__MODULE__{
-      id: id,
+      id: segment_number,
       start_pose: Path.get_start_pose(path),
       end_pose: Path.get_end_pose(path),
       svg_path: Svg.get_path_string(path),
@@ -41,10 +40,8 @@ defmodule Segment do
     segment.end_pose
   end
 
-  # *** *******************************
-  # *** PRIVATE
-
-  defp speed_to_distance(speed) when is_integer(speed) do
+  # TODO no longer belongs here?
+  def speed_to_distance(speed) when is_integer(speed) do
     %{
       1 => 50,
       2 => 75,

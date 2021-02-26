@@ -35,20 +35,10 @@ defmodule Pose do
     %{pose | angle: normalize_angle(pose.angle + angle)}
   end
 
-  def get_intercept(pose1, pose2) do
-
-  end
-
   # *** *******************************
   # *** PRIVATE
 
   defp normalize_angle(angle) when angle > 360, do: normalize_angle(angle - 360)
   defp normalize_angle(angle) when angle < -360, do: normalize_angle(angle + 360)
   defp normalize_angle(angle), do: angle
-
-  defp calc_slope(pose) do
-    pose |> get_radians() |> :math.tan()
-  end
-
-  defp get_radians(degrees), do: degrees * :math.pi() / 180
 end

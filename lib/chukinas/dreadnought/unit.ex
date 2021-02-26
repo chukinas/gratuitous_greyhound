@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Unit, CommandQueue, Segments}
+alias Chukinas.Dreadnought.{Unit, CommandQueue, Segments, Command}
 alias Chukinas.Geometry.{Pose}
 
 defmodule Unit do
@@ -40,13 +40,21 @@ defmodule Unit do
 
   def new(arena_rect) do
     start_pose = Pose.new(0, 0, 45)
-    command_queue = CommandQueue.new()
+    command_queue = build_command_queue()
     %__MODULE__{
       id: 2,
       start_pose: start_pose,
       command_queue: command_queue,
       segments: Segments.init(command_queue, start_pose, arena_rect)
     }
+  end
+
+  # *** *******************************
+  # *** PRIVATE
+
+  defp build_command_queue() do
+    CommandQueue.new()
+    |> CommandQueue.add(Command.new(segment_number: 4, speed: 5, angle: -45))
   end
 
 end

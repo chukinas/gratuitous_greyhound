@@ -1,5 +1,4 @@
 alias Chukinas.Dreadnought.{CommandQueue, Command}
-
 defmodule CommandQueue do
 
   # *** *******************************
