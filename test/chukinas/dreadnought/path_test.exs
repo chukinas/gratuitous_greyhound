@@ -37,6 +37,18 @@ defmodule PathTest do
       )
       |> Svg.get_path_string()
     expected_svg = "M 0 0 Q 1 0 1 1"
-    assert actual_svg == expected_svg
+    assert expected_svg == actual_svg
+  end
+
+  test "SVG for 180deg turn" do
+    actual_svg =
+      Path.new(
+        pose: Pose.origin(),
+        length: :math.pi(),
+        angle: 90
+      )
+      |> Svg.get_path_string()
+    expected_svg = "M 0 0 Q 1 0 1 1 Q 2 1 0 2"
+    assert expected_svg == actual_svg
   end
 end

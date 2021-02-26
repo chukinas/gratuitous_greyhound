@@ -26,6 +26,15 @@ defmodule Chukinas.Geometry.Path.Turn do
   end
 
   # *** *******************************
+  # *** API
+
+  def get_radius(path), do: path.radius
+
+  def get_angle_radians(path) do
+    path.angle * :math.pi() / 180
+  end
+
+  # *** *******************************
   # *** PRIVATE
 
   defp radius(length, angle), do: (length * 360) / (2 * :math.pi() * angle)

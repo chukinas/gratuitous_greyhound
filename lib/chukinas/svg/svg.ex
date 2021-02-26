@@ -1,6 +1,6 @@
 alias Chukinas.Svg.ViewBox
 alias Chukinas.Geometry.{Path, Position, Rect}
-alias Chukinas.Geometry.Path.{Straight}
+alias Chukinas.Geometry.Path.{Straight, Turn}
 
 defmodule Chukinas.Svg do
   @moduledoc"""
@@ -16,19 +16,45 @@ defmodule Chukinas.Svg do
   Convert a path struct to a svg path string that can be dropped into an eex template.
   """
   def get_path_string(%Straight{} = path) do
-    start_pose = path
-                 |> Path.get_start_pose()
-             |> Position.round_to_int()
-    end_pose = path
-               |> Path.get_end_pose()
-             |> Position.round_to_int()
-    "M #{start_pose.x} #{start_pose.y} L #{end_pose.x} #{end_pose.y}"
+    {x0, y0} = get_start_coord(path)
+    # TODO x1 should just be x
+    {x1, y1} = get_end_coord(path)
+    "M #{x0} #{y0} L #{x1} #{y1}"
+  end
+  def get_path_string(%Turn{angle: angle} = path) when angle <= 90 do
+    {x0, y0} = get_start_coord(path)
+    radius = Turn.get_radius path
+    half_angle_rad = Turn.get_angle_radians(path) / 2
+    length_to_intercept = radius * :math.tan(half_angle_rad)
+    {dx, dy} =
+      path
+      |> Path.get_start_pose()
+      |> Path.new_straight(length_to_intercept)
+      |> Path.get_end_pose()
+      |> Position.to_int_tuple()
+    {x1, y1} = get_end_coord(path)
+    "M #{x0} #{y0} Q #{dx} #{dy} #{x1} #{y1}"
   end
 
   def get_string(%Rect{} = bounding_rect, path_start_point, margin)
       when has_position(path_start_point)
       and is_number(margin) do
         ViewBox.to_viewbox_string(bounding_rect, path_start_point, margin)
+  end
+
+  # *** *******************************
+  # *** API
+
+  defp get_start_coord(path) do
+    path
+    |> Path.get_start_pose()
+    |> Position.to_int_tuple()
+  end
+
+  defp get_end_coord(path) do
+    path
+    |> Path.get_end_pose()
+    |> Position.to_int_tuple()
   end
 
   # def m_abs(point) when is_point(point) do

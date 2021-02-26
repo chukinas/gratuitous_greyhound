@@ -13,6 +13,8 @@ defmodule Position do
 
   def to_tuple(%{x: x, y: y}), do: {x, y}
 
+  def to_int_tuple(positionable), do: positionable |> round_to_int() |> to_tuple()
+
   def translate(positionable, addend) when has_position(positionable) do
     addend_map = addend |> sanitize_translation()
     positionable
