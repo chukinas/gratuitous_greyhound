@@ -1,6 +1,6 @@
 alias Chukinas.Svg.ViewBox
 alias Chukinas.Geometry.{Path, Position, Rect}
-alias Chukinas.Geometry.Path.{Straight, Turn}
+alias Path.{Straight, Turn}
 
 defmodule Chukinas.Svg do
   @moduledoc"""
@@ -49,7 +49,7 @@ defmodule Chukinas.Svg do
 
   defp get_quadratic_curve(%Turn{angle: angle} = path) when abs(angle) <= 90 do
     radius = Turn.get_radius path
-    half_angle_rad = Turn.get_angle_radians(path) / 2
+    half_angle_rad = abs(Turn.get_angle_radians(path)) / 2
     length_to_intercept = radius * :math.tan(half_angle_rad)
     {dx, dy} =
       path

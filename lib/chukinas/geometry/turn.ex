@@ -52,5 +52,7 @@ defmodule Path.Turn do
   # *** *******************************
   # *** PRIVATE
 
-  defp radius(length, angle), do: (length * 360) / (2 * :math.pi() * angle)
+  defp radius(length, angle) do
+    (length * 360) / (2 * :math.pi() * abs(angle))
+  end
 end
