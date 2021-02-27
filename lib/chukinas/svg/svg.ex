@@ -7,7 +7,7 @@ defmodule Chukinas.Svg do
   This module converts path structs to svg path strings for use in eex templates.
   """
 
-  import Position.Guard
+  require Position
 
   # *** *******************************
   # *** API
@@ -27,7 +27,7 @@ defmodule Chukinas.Svg do
   end
 
   def get_string(%Rect{} = bounding_rect, path_start_point, margin)
-      when has_position(path_start_point)
+      when Position.is(path_start_point)
       and is_number(margin) do
         ViewBox.to_viewbox_string(bounding_rect, path_start_point, margin)
   end

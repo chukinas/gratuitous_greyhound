@@ -1,3 +1,5 @@
+# TODO rename PositionGuard
+# TODO make note here that Position.is should be used instead.
 defmodule Chukinas.Geometry.Position.Guard do
 
   defguard has_position(position)

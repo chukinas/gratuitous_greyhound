@@ -3,6 +3,8 @@ alias Chukinas.Geometry.{Position}
 defmodule Position do
   import Position.Guard
 
+  defguard is(position) when has_position(position)
+
   # *** *******************************
   # *** TYPES
 

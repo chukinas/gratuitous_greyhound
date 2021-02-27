@@ -5,7 +5,7 @@ defmodule Rect do
   A Rect is an in-grid rectangle, meaning it comprises only horizontal and vertical lines.
   """
 
-  import Position.Guard
+  require Position
 
   use TypedStruct
 
@@ -23,7 +23,7 @@ defmodule Rect do
       end_position: Point.new(end_x, end_y)
     }
   end
-  def new(start_position, end_position) when has_position(start_position) and has_position(end_position) do
+  def new(start_position, end_position) when Position.is(start_position) and Position.is(end_position) do
     %__MODULE__{
       start_position: start_position,
       end_position: end_position
@@ -39,11 +39,11 @@ defmodule Rect do
   # *** *******************************
   # *** API
 
-  def contains?(%__MODULE__{} = rect, position) when has_position(position) do
+  def contains?(%__MODULE__{} = rect, position) when Position.is(position) do
     Position.gte(position, rect.start_position) && Position.lte(position, rect.end_position)
   end
 
-  def subtract(%__MODULE__{} = rect, position) when has_position(position) do
+  def subtract(%__MODULE__{} = rect, position) when Position.is(position) do
     new_rect = new(
       rect.start_position |> Position.subtract(position),
       rect.end_position |> Position.subtract(position)

@@ -3,7 +3,7 @@ alias Chukinas.Geometry.{Path, Rect, Position}
 alias Chukinas.Util.Precision
 
 defmodule ViewBox do
-  import Position.Guard
+  require Position
 
   # *** *******************************
   # *** TYPES
@@ -31,7 +31,7 @@ defmodule ViewBox do
   # *** API
 
   def to_viewbox_string(%Rect{} = bounding_rect, path_start_point, margin)
-      when has_position(path_start_point)
+      when Position.is(path_start_point)
       and is_number(margin) do
         relative_rect_with_margin = bounding_rect
                                     |> Rect.subtract(path_start_point)
