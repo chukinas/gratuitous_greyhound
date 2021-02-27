@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Unit, Deck, Mission, Guards}
+alias Chukinas.Dreadnought.{Unit, Mission, Guards, CommandQueue}
 alias Chukinas.Geometry.{Rect}
 
 defmodule Mission do
@@ -13,7 +13,7 @@ defmodule Mission do
     field :state, atom(), default: :pregame
     field :arena, Rect.t()
     field :units, [Unit.t()], default: []
-    field :decks, [Deck.t()], default: []
+    field :decks, [CommandQueue.t()], default: []
   end
 
   # *** *******************************
@@ -25,7 +25,7 @@ defmodule Mission do
       arena: arena,
       # TODO need to pass in the unit number here as well
       units: [Unit.new(arena)],
-      decks: [Deck.new(2)]
+      decks: [CommandQueue.new(2)]
     }
   end
 
@@ -47,7 +47,7 @@ defmodule Mission do
   def push(%__MODULE__{units: units} = mission, %Unit{} = unit) do
     %{mission | units: replace_by_id(units, unit)}
   end
-  def push(%__MODULE__{decks: decks} = mission, %Deck{} = deck) do
+  def push(%__MODULE__{decks: decks} = mission, %CommandQueue{} = deck) do
     %{mission | decks: replace_by_id(decks, deck)}
   end
 
@@ -57,7 +57,7 @@ defmodule Mission do
   def issue_command(mission, cmd) do
     {played_card, deck} =
       get_deck(mission, cmd)
-      |> Deck.play_card(cmd)
+      |> CommandQueue.play_card(cmd)
     # find card in hand and remove it from hand
     # extraxt command from the card
     # put card in discard pile

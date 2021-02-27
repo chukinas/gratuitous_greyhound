@@ -9,19 +9,30 @@ defmodule Command do
   use TypedStruct
 
   typedstruct enforce: true do
+    field :id, integer()
+    # 1..5
+    # Each speed rating transforms into a distance travelled.
     field :speed, integer(), default: 3
+    # Angle of turn
+    # 0 for straight maneuver
+    # X  for right turn (e.g. 45)
+    # -X for left turn (e.g. -45)
     field :angle, integer(), default: 0
     field :segment_number, integer(), enforce: false
     field :segment_count, integer(), default: 1
-    # TODO get rid of this type
-    field :type, atom(), default: :default
   end
 
   # *** *******************************
   # *** NEW
 
   def new(opts \\ []) do
-    struct(__MODULE__, opts)
+    fields =
+      [
+        speed: Enum.random(1..5),
+        angle: -18..18 |> Enum.map(&(&1 * 5)) |> Enum.random()
+      ]
+      |> Keyword.merge(opts)
+    struct(__MODULE__, fields)
   end
 
   # *** *******************************

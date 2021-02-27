@@ -35,6 +35,7 @@ defmodule Segment do
   # TODO these should replace the get_* below
   def start_pose(segment), do: segment.start_pose
   def end_pose(segment), do: segment.end_pose
+  def svg_path(segment), do: segment.svg_path
 
   # *** *******************************
   # *** API

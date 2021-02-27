@@ -8,6 +8,7 @@ defmodule CommandQueue do
   use TypedStruct
 
   typedstruct enforce: true do
+    field :id, integer()
     field :issued_commands, [Command.t()], default: []
     field :default_command_builder, (integer() -> Command.t()
     )  end
@@ -15,9 +16,10 @@ defmodule CommandQueue do
   # *** *******************************
   # *** NEW
 
-  def new() do
+  def new(id) do
     default_builder = fn seg_num -> Command.new(segment_number: seg_num) end
     %__MODULE__{
+      id: id,
       default_command_builder: default_builder
     }
   end
