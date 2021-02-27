@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{Polar, Pose, Position, PathLike, Point, Rect, Straight}
+alias Chukinas.Geometry.{Polar, Pose, PathLike, Rect, Straight}
 
 defmodule Straight do
 
@@ -40,11 +40,11 @@ defmodule Straight do
     Pose.new(x0 + dx, y0 + dy, angle)
   end
   def bounding_rect(path) do
-    {x_start, y_start} = path |> start_pose() |> Position.to_tuple()
-    {x_end, y_end} = path |> end_pose() |> Position.to_tuple()
-    {xmin, xmax} = Enum.min_max([x_start, x_end])
-    {ymin, ymax} = Enum.min_max([y_start, y_end])
-    Rect.new(Point.new(xmin, ymin), Point.new(xmax, ymax))
+    start = path |> start_pose()
+    final = path |> end_pose()
+    {xmin, xmax} = Enum.min_max([start.x, final.x])
+    {ymin, ymax} = Enum.min_max([start.y, final.y])
+    Rect.new(xmin, ymin, xmax, ymax)
   end
 
   # *** *******************************

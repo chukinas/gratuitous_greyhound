@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{Position, Point, Rect}
+alias Chukinas.Geometry.{Position, Rect}
 
 defmodule Rect do
   @moduledoc"""
@@ -10,8 +10,8 @@ defmodule Rect do
   use TypedStruct
 
   typedstruct enforce: true do
-    field :start_position, Point.t()
-    field :end_position, Point.t()
+    field :start_position, Position.t()
+    field :end_position, Position.t()
   end
 
   # *** *******************************
@@ -19,8 +19,8 @@ defmodule Rect do
 
   def new(start_x, start_y, end_x, end_y) do
     %__MODULE__{
-      start_position: Point.new(start_x, start_y),
-      end_position: Point.new(end_x, end_y)
+      start_position: Position.new(start_x, start_y),
+      end_position: Position.new(end_x, end_y)
     }
   end
   def new(start_position, end_position) when Position.is(start_position) and Position.is(end_position) do
@@ -31,8 +31,8 @@ defmodule Rect do
   end
   def new(width, height) when is_number(width) and is_number(height) do
     %__MODULE__{
-      start_position: Point.origin(),
-      end_position: Point.new(width, height)
+      start_position: Position.origin(),
+      end_position: Position.new(width, height)
     }
   end
 

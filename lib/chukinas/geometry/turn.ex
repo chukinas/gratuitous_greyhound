@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{Pose, Position, PathLike, Point, Rect, Straight, Turn}
+alias Chukinas.Geometry.{Pose, Position, PathLike, Rect, Straight, Turn}
 
 defmodule Turn do
 
@@ -46,7 +46,7 @@ defmodule Turn do
     {x_end, y_end} = path |> end_pose() |> Position.to_tuple()
     {xmin, xmax} = Enum.min_max([x_start, x_end])
     {ymin, ymax} = Enum.min_max([y_start, y_end])
-    Rect.new(Point.new(xmin, ymin), Point.new(xmax, ymax))
+    Rect.new(xmin, ymin, xmax, ymax)
   end
 
   # *** *******************************
