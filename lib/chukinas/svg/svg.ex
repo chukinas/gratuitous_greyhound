@@ -1,4 +1,4 @@
-alias Chukinas.Svg.ViewBox
+alias Chukinas.Util.Precision
 alias Chukinas.Geometry.{Straight, Path, Position, Rect, Turn}
 
 defmodule Chukinas.Svg do
@@ -28,11 +28,16 @@ defmodule Chukinas.Svg do
   def get_string(%Rect{} = bounding_rect, path_start_point, margin)
       when Position.is(path_start_point)
       and is_number(margin) do
-        ViewBox.to_viewbox_string(bounding_rect, path_start_point, margin)
+    relative_rect_with_margin = bounding_rect
+                                |> Rect.subtract(path_start_point)
+                            |> Rect.apply_margin(margin)
+    position = relative_rect_with_margin |> Rect.get_start_position() |> Precision.values_to_int()
+    size = Rect.get_size(relative_rect_with_margin)
+    "#{position.x} #{position.y} #{round(size.width)} #{size.height |> round()}"
   end
 
   # *** *******************************
-  # *** API
+  # *** PRIVATE
 
   defp get_start_coord(path) do
     path
