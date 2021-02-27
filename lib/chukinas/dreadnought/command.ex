@@ -13,6 +13,7 @@ defmodule Command do
     field :angle, integer(), default: 0
     field :segment_number, integer(), enforce: false
     field :segment_count, integer(), default: 1
+    # TODO get rid of this type
     field :type, atom(), default: :default
   end
 

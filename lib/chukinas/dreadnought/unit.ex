@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Unit, CommandQueue, Segments, Command}
+alias Chukinas.Dreadnought.{Unit, CommandQueue, Segment, Command}
 alias Chukinas.Geometry.{Pose}
 
 defmodule Unit do
@@ -32,7 +32,7 @@ defmodule Unit do
     # The cards' data is copied to here. Keeps a nice separation of concerns.
     field :command_queue, CommandQueue.t()
 
-    field :segments, Segments.t()
+    field :segments, [Segment.t()]
   end
 
   # *** *******************************
@@ -45,13 +45,15 @@ defmodule Unit do
       id: 2,
       start_pose: start_pose,
       command_queue: command_queue,
-      segments: Segments.init(command_queue, start_pose, arena_rect)
+      segments: CommandQueue.build_segments(command_queue, start_pose, arena_rect)
     }
   end
 
   # *** *******************************
   # *** PRIVATE
 
+  # TODO remove this. This will remove another dependency
+  # TODO make note of this in the notebook
   defp build_command_queue() do
     CommandQueue.new()
     |> CommandQueue.add(Command.new(segment_number: 4, speed: 5, angle: -45))

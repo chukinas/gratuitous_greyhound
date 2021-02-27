@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{CommandQueue, Command}
+alias Chukinas.Dreadnought.{CommandQueue, Command, Segments}
 defmodule CommandQueue do
 
   # *** *******************************
@@ -36,5 +36,9 @@ defmodule CommandQueue do
       |> Enum.split_while(fn cmd -> cmd.segment_number == segment end)
     cmds = Enum.concat([earlier_cmds, [command], later_cmds])
     %{command_queue | issued_commands: cmds}
+  end
+
+  def build_segments(command_queue, start_pose, arena) do
+    Segments.init(command_queue, start_pose, arena)
   end
 end

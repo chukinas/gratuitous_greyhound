@@ -29,11 +29,20 @@ defmodule Deck do
   # *** NEW
 
   @spec new(integer()) :: t()
-  def new(id) do
+  def new(unit_number) do
     %__MODULE__{
-      id: id,
-      draw_pile: Enum.map(1..30, &Card.new(&1, id))
+      id: unit_number,
+      draw_pile: Enum.map(1..30, &Card.new(&1, unit_number))
     }
+  end
+
+  # *** *******************************
+  # *** DRAW UP TO
+
+  def draw_up_to(deck, hand_size) do
+    # TODO implement this correctly
+    draw_count = hand_size - Enum.count(deck.hand)
+    draw(deck, draw_count)
   end
 
   # *** *******************************
