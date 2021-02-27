@@ -26,12 +26,15 @@ defmodule Command do
   # *** NEW
 
   def new(opts \\ []) do
+    struct(__MODULE__, opts)
+  end
+
+  def random() do
     fields =
       [
         speed: Enum.random(1..5),
         angle: -18..18 |> Enum.map(&(&1 * 5)) |> Enum.random()
       ]
-      |> Keyword.merge(opts)
     struct(__MODULE__, fields)
   end
 
