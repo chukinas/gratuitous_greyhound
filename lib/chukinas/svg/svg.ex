@@ -1,6 +1,5 @@
 alias Chukinas.Svg.ViewBox
-alias Chukinas.Geometry.{Straight, Path, Position, Rect}
-alias Path.{Turn}
+alias Chukinas.Geometry.{Straight, Path, Position, Rect, Turn}
 
 defmodule Chukinas.Svg do
   @moduledoc"""
