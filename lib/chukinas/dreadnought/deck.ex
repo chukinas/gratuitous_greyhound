@@ -37,6 +37,13 @@ defmodule Deck do
   end
 
   # *** *******************************
+  # *** GETTERS
+
+  def id(deck), do: deck.id
+  def hand(deck), do: deck.hand
+  def discards(deck), do: deck.discard_pile
+
+  # *** *******************************
   # *** DRAW UP TO
 
   def draw_up_to(deck, hand_size) do

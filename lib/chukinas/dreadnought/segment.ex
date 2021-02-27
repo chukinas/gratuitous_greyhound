@@ -30,6 +30,13 @@ defmodule Segment do
   end
 
   # *** *******************************
+  # *** GETTERS
+
+  # TODO these should replace the get_* below
+  def start_pose(segment), do: segment.start_pose
+  def end_pose(segment), do: segment.end_pose
+
+  # *** *******************************
   # *** API
 
   def get_start_pose(segment) do

@@ -48,4 +48,12 @@ defmodule Unit do
       segments: CommandQueue.build_segments(command_queue, start_pose, arena_rect)
     }
   end
+
+  # *** *******************************
+  # *** GETTERS
+
+  def id(unit), do: unit.id
+  def segment(unit, id) do
+
+  end
 end

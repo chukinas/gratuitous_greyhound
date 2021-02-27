@@ -1,7 +1,9 @@
-alias Chukinas.Dreadnought.{Unit, Deck, Mission}
+alias Chukinas.Dreadnought.{Unit, Deck, Mission, Guards}
 alias Chukinas.Geometry.{Rect}
 
 defmodule Mission do
+  import Guards
+
   # *** *******************************
   # *** TYPES
 
@@ -27,7 +29,17 @@ defmodule Mission do
     }
   end
 
-  def issue_command(_unit_num, _card_num, _seg_num) do
+  # *** *******************************
+  # *** GETTERS
+
+  def unit(mission, id), do: get_by_id(mission.units, id)
+  def deck(mission, id), do: get_by_id(mission.decks, id)
+
+  # *** *******************************
+  # *** API
+
+  def issue_command(mission, opts) when is_list(opts), do: issue_command(mission, Map.new(opts))
+  def issue_command(mission, opts) do
     # find card in hand and remove it from hand
     # extraxt command from the card
     # put card in discard pile
