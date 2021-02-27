@@ -8,8 +8,15 @@ defmodule Chukinas.Dreadnought.Guards do
   # TODO either rename this module or move this function to new/other mod
   def get_by_id(enum, id) do
     default = "No id of #{id} found in #{enum}."
-    Enum.find enum, default, fn item -> id_matches?(item, id) end
+    Enum.find enum, default, fn item -> id_match?(item, id) end
   end
 
-  defp id_matches?(%{id: id}, sought_id), do: id == sought_id
+  def replace_by_id(enum, item) when is_list(enum) do
+    {non_matches1, [_match | non_matches2]} =
+      Enum.split_while(enum, fn x -> not id_match?(x, item) end)
+    Enum.concat(non_matches1, [item, non_matches2])
+  end
+
+  defp id_match?(%{id: id1}, %{id: id2}), do: id1 == id2
+  defp id_match?(%{id: id}, sought_id), do: id == sought_id
 end

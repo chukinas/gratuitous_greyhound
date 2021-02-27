@@ -1,6 +1,4 @@
-alias Chukinas.Dreadnought.{CommandIds}
-
-defmodule Mission do
+defmodule Chukinas.Dreadnought.CommandIds do
 
   # *** *******************************
   # *** TYPES

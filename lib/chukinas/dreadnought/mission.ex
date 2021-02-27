@@ -32,14 +32,32 @@ defmodule Mission do
   # *** *******************************
   # *** GETTERS
 
+  def unit(mission, %{unit: id}), do: unit(mission, id)
   def unit(mission, id), do: get_by_id(mission.units, id)
+  def get_unit(mission, id), do: unit(mission, id)
+
+  def deck(mission, %{unit: id}), do: deck(mission, id)
   def deck(mission, id), do: get_by_id(mission.decks, id)
+  def get_deck(mission, id), do: deck(mission, id)
+  # TODO which syntax to use?
+
+  # *** *******************************
+  # *** SETTERS
+
+  def push(%__MODULE__{units: units} = mission, %Unit{} = unit) do
+    %{mission | units: replace_by_id(units, unit)}
+  end
+  def push(%__MODULE__{decks: decks} = mission, %Deck{} = deck) do
+    %{mission | decks: replace_by_id(decks, deck)}
+  end
 
   # *** *******************************
   # *** API
 
-  def issue_command(mission, opts) when is_list(opts), do: issue_command(mission, Map.new(opts))
-  def issue_command(mission, opts) do
+  def issue_command(mission, cmd) do
+    {played_card, deck} =
+      get_deck(mission, cmd)
+      |> Deck.play_card(cmd)
     # find card in hand and remove it from hand
     # extraxt command from the card
     # put card in discard pile

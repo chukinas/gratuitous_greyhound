@@ -1,5 +1,6 @@
-alias Chukinas.Geometry.{Path, Pose}
-defmodule Path.Turn do
+alias Chukinas.Geometry.{PathLike, Pose}
+alias Chukinas.Geometry.Path.Turn
+defmodule Turn do
 
   use TypedStruct
 
@@ -42,7 +43,7 @@ defmodule Path.Turn do
       angle
     )
     path2 = new(
-      Path.get_end_pose(path1),
+      PathLike.pose_end(path1),
       path.length - len1,
       angle_orig - angle
     )

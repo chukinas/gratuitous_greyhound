@@ -1,17 +1,18 @@
-alias Chukinas.Geometry.{Pose, Position, PathLike, Path, Point, Rect}
+alias Chukinas.Geometry.{Pose, Position, PathLike, Point, Rect}
+alias Chukinas.Geometry.Path.{Turn, Straight}
 
 # TODO move this to geometry/turn.ex?
-defimpl PathLike, for: Path.Turn do
+defimpl PathLike, for: Turn do
   def pose_start(path), do: path.pose
   def pose_end(path) do
     right_angle = (90 * get_sign path.angle)
     path.pose
     |> Pose.rotate(right_angle)
-    |> Path.new_straight(path.radius)
-    |> Path.get_end_pose()
+    |> Straight.new(path.radius)
+    |> PathLike.pose_end()
     |> Pose.rotate(180 + path.angle)
-    |> Path.new_straight(path.radius)
-    |> Path.get_end_pose()
+    |> Straight.new(path.radius)
+    |> PathLike.pose_end()
     |> Pose.rotate(right_angle)
   end
   def len(path), do: path.length

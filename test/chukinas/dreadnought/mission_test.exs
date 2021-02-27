@@ -7,7 +7,7 @@ defmodule MissionTest do
   test "Issue Command" do
     mission =
       Mission.new()
-      |> Mission.issue_command(unit: 1, card: 1, segment: 1)
+      |> Mission.issue_command(CommandIds.new(1, 1, 1))
 
     actual_end_pose =
       mission
