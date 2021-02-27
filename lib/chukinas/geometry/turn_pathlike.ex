@@ -1,5 +1,5 @@
-alias Chukinas.Geometry.{Pose, Position, PathLike, Point, Rect}
-alias Chukinas.Geometry.Path.{Turn, Straight}
+alias Chukinas.Geometry.{Pose, Position, PathLike, Point, Rect, Straight}
+alias Chukinas.Geometry.Path.{Turn}
 
 # TODO move this to geometry/turn.ex?
 defimpl PathLike, for: Turn do

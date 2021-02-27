@@ -1,5 +1,5 @@
-alias Chukinas.Geometry.{Path, PathLike}
-alias Path.{Straight, Turn}
+alias Chukinas.Geometry.{Path, PathLike, Straight}
+alias Path.{Turn}
 defmodule Path do
 
   # *** *******************************

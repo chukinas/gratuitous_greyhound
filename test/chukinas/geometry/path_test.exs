@@ -13,19 +13,19 @@ defmodule Chukinas.Geometry.PathTest do
   end
 
   test "end position of vertical straight path" do
-    Path.Straight.new(0, 0, 90, 10)
+    Straight.new(0, 0, 90, 10)
     |> Path.get_end_pose()
     |> assert_position({0, 10})
   end
 
   test "end position of horizontal straight path" do
-    Path.Straight.new(0, 0, 0, 10)
+    Straight.new(0, 0, 0, 10)
     |> Path.get_end_pose()
     |> assert_position({10, 0})
   end
 
   test "bounding rect of 45deg straight path" do
-    path = Path.Straight.new(0, 0, 45, :math.sqrt(2))
+    path = Straight.new(0, 0, 45, :math.sqrt(2))
     actual_rect = path
     |> Path.get_bounding_rect()
     expected_rect = Rect.new(0, 0, 1, 1)
