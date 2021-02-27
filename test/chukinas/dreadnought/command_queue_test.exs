@@ -22,7 +22,7 @@ defmodule CommandQueueTest do
   test "Get movement segments from default command queue" do
     command_queue = CommandQueue.new()
     arena = Rect.new(450, 450)
-    movement_segments = Segments.init(command_queue, Pose.new(0, 0, 0), arena)
+    movement_segments = CommandQueue.build_segments(command_queue, Pose.new(0, 0, 0), arena)
     assert 5 = Enum.count(movement_segments)
   end
 
@@ -31,7 +31,7 @@ defmodule CommandQueueTest do
     segments =
       CommandQueue.new()
       |> CommandQueue.add(Command.new(speed: 5, segment_number: 2))
-      |> Segments.init(Pose.new(0, 0, 0), arena)
+      |> CommandQueue.build_segments(Pose.new(0, 0, 0), arena)
     assert 4 = Enum.count segments
   end
 end
