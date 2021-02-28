@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{CommandQueue, Command, Segment, CommandIds}
-alias Chukinas.Geometry.Rect
+alias Chukinas.Geometry.{Pose, Rect}
 defmodule CommandQueue do
 
   # *** *******************************
@@ -49,7 +49,8 @@ defmodule CommandQueue do
     %{command_queue | issued_commands: cmds}
   end
 
-  def build_segments(command_queue, start_pose, arena) do
+  @spec build_segments(t(), Pose.t(), Rect.t()) :: [Segment.t()]
+  def build_segments(%__MODULE__{} = command_queue, %Pose{} = start_pose, %Rect{} = arena) do
     starts_inbounds? = get_inbounds_checker(arena)
     command_queue
     |> Stream.scan(start_pose, &Command.generate_segments/2)
@@ -59,7 +60,7 @@ defmodule CommandQueue do
   end
 
   # TODO rename issue_command?
-  @spec play_card(t(), CommandIds.t()) :: {:noop, t()} | {Command.t(), t()}
+  @spec play_card(t(), CommandIds.t()) :: t()
   def play_card(
     %__MODULE__{issued_commands: commands} = current_deck,
     %CommandIds{segment: segment_id} = cmd
@@ -67,22 +68,16 @@ defmodule CommandQueue do
     match? = fn command ->
       Command.id(command) == cmd.card and Command.playable?(command)
     end
-    if Enum.member?(Command, match?) do
-      command =
-        commands
-        |> Enum.find(match?)
-        |> Command.play(segment_id)
-      new_commands =
-        commands
-        |> Enum.reject(match?)
-        |> Enum.concat([command])
-      deck =
-        current_deck
-        |> Map.put(:issued_commands, new_commands)
-      {command, deck}
-    else
-      {:noop, current_deck}
-    end
+    command =
+      commands
+      |> Enum.find(match?)
+      |> Command.play(segment_id)
+    new_commands =
+      commands
+      |> Enum.reject(match?)
+      |> Enum.concat([command])
+    current_deck
+    |> Map.put(:issued_commands, new_commands)
   end
 
   # *** *******************************

@@ -41,7 +41,10 @@ defmodule Mission do
   def unit(%__MODULE__{} = mission, id), do: get_by_id(mission.units, id)
   def get_unit(%__MODULE__{} = mission, id), do: unit(mission, id)
 
-  def deck(%__MODULE__{} = mission, %CommandIds{unit: id}), do: deck(mission, id)
+  def deck(%__MODULE__{} = mission, %CommandIds{unit: id}) do
+    mission.decks |> get_by_id(id)
+    |> IO.inspect(label: "Deck getter result")
+  end
   def deck(%__MODULE__{} = mission, id), do: get_by_id(mission.decks, id)
   def get_deck(%__MODULE__{} = mission, id), do: deck(mission, id)
   # TODO which syntax to use?
@@ -49,6 +52,8 @@ defmodule Mission do
   # *** *******************************
   # *** SETTERS
 
+  # TODO rename put
+  # TODO are these private?
   def push(%__MODULE__{units: units} = mission, %Unit{} = unit) do
     %{mission | units: replace_by_id(units, unit)}
   end
@@ -56,13 +61,25 @@ defmodule Mission do
     %{mission | decks: replace_by_id(decks, deck)}
   end
 
+  def set_segments(%__MODULE__{} = mission, segments) do
+    %{mission | segments: segments}
+  end
+
   # *** *******************************
   # *** API
 
   def issue_command(%__MODULE__{} = mission, %CommandIds{} = cmd) do
-    {played_card, deck} =
-      get_deck(mission, cmd)
+    deck =
+      mission
+      |> get_deck(cmd)
+      |> IO.inspect(label: "this should be a deck")
+    # TODO rename CommandQueue to Deck
       |> CommandQueue.play_card(cmd)
+    start_pose = mission |> unit(cmd) |> Unit.start_pose()
+    segments = CommandQueue.build_segments(deck, start_pose, mission.arena)
+    mission
+    |> push(deck)
+    |> set_segments(segments)
     # find card in hand and remove it from hand
     # extraxt command from the card
     # put card in discard pile
