@@ -8,13 +8,12 @@ defmodule MissionTest do
   test "Issue Command" do
     mission =
       Mission.new()
-      |> Mission.issue_command(CommandIds.new(1, 1, 1))
+      |> Mission.issue_command(CommandIds.new(2, 1, 1))
       |> IO.inspect(label: "mission!")
 
     actual_end_pose =
       mission
-      |> Mission.unit(1)
-      |> Unit.segment(1)
+      |> Mission.segment(1)
       |> Segment.end_pose()
     expected_end_pose = Pose.new(100, 100, 0)
     assert match_numerical_map? expected_end_pose, actual_end_pose

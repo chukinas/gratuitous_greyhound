@@ -30,7 +30,15 @@ defmodule CommandQueue do
   # *** *******************************
   # *** GETTERS
 
+  # TODO rename id
   def get_id(deck), do: deck.id
+  def id(deck), do: deck.id
+
+  def issued_commands(%__MODULE__{issued_commands: commands}) do
+    commands
+    |> Stream.filter(&Command.issued?/1)
+    |> Enum.sort(&Command.sort_by_segment/2)
+  end
 
   # *** *******************************
   # *** API
@@ -52,8 +60,12 @@ defmodule CommandQueue do
   @spec build_segments(t(), Pose.t(), Rect.t()) :: [Segment.t()]
   def build_segments(%__MODULE__{} = command_queue, %Pose{} = start_pose, %Rect{} = arena) do
     starts_inbounds? = get_inbounds_checker(arena)
+    unit_id = CommandQueue.id(command_queue)
+    generate_segments = fn command, start_pose ->
+      Command.generate_segments(command, start_pose, unit_id)
+    end
     command_queue
-    |> Stream.scan(start_pose, &Command.generate_segments/2)
+    |> Stream.scan(start_pose, generate_segments)
     |> Stream.take_while(starts_inbounds?)
     |> Stream.concat()
     |> Enum.to_list()

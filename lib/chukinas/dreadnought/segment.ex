@@ -10,7 +10,9 @@ defmodule Segment do
   use TypedStruct
 
   typedstruct enforce: true do
+    field :unit_id, integer()
     # TODO this really ought to be called soething like number or segment_number
+    # TODO there need to be two ids really, for both the segment num and unit id
     field :id, integer()
     field :start_pose, Pose.t()
     field :end_pose, Pose.t()
@@ -20,8 +22,9 @@ defmodule Segment do
   # *** *******************************
   # *** NEW
 
-  def new(path, segment_number) do
+  def new(path, unit_id, segment_number) do
     %__MODULE__{
+      unit_id: unit_id,
       id: segment_number,
       start_pose: Path.get_start_pose(path),
       end_pose: Path.get_end_pose(path),

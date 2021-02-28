@@ -41,13 +41,17 @@ defmodule Mission do
   def unit(%__MODULE__{} = mission, id), do: get_by_id(mission.units, id)
   def get_unit(%__MODULE__{} = mission, id), do: unit(mission, id)
 
-  def deck(%__MODULE__{} = mission, %CommandIds{unit: id}) do
+  def deck(%__MODULE__{} = mission, %CommandIds{unit: id} = cmd) do
+    IO.inspect(mission, label: "mission!")
+    IO.inspect(cmd, label: "cmd ids!")
     mission.decks |> get_by_id(id)
     |> IO.inspect(label: "Deck getter result")
   end
-  def deck(%__MODULE__{} = mission, id), do: get_by_id(mission.decks, id)
-  def get_deck(%__MODULE__{} = mission, id), do: deck(mission, id)
-  # TODO which syntax to use?
+
+  def segment(%__MODULE__{} = mission, segment_id) do
+    mission.segments
+    |> Enum.find(&(&1.id == segment_id))
+  end
 
   # *** *******************************
   # *** SETTERS
@@ -71,7 +75,7 @@ defmodule Mission do
   def issue_command(%__MODULE__{} = mission, %CommandIds{} = cmd) do
     deck =
       mission
-      |> get_deck(cmd)
+      |> deck(cmd)
       |> IO.inspect(label: "this should be a deck")
     # TODO rename CommandQueue to Deck
       |> CommandQueue.play_card(cmd)
