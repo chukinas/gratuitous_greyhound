@@ -25,7 +25,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
   def handle_event("start_game", _, socket) do
     socket.assigns.mission
     |> Map.put(:state, :playing)
-    |> IO.inspect(label: "after starting game!")
     |> assign_mission(socket)
   end
 
