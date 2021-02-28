@@ -62,7 +62,7 @@ defmodule CommandQueue do
     starts_inbounds? = get_inbounds_checker(arena)
     unit_id = CommandQueue.id(command_queue)
     generate_segments = fn command, start_pose ->
-      Command.generate_segments(command, start_pose, unit_id)
+      Command.generate_segments(command, unit_id, start_pose)
     end
     command_queue
     |> Stream.scan(start_pose, generate_segments)
