@@ -36,7 +36,7 @@
 
   <%# Welcome! %>
   <%= if @mission.state == :pregame do %>
-    <%= DreadnoughtView.message %{socket: @socket, button: %{text: "Start Game", on_click: "start_game"}} do %>
+    <%= DreadnoughtView.message %{socket: @socket, button: %{text: "Start Game", id: "start_game", on_click: "start_game"}} do %>
       <%= DreadnoughtView.render "welcome.html" %>
     <% end %>
   <% end %>
