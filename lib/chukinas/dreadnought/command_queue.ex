@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{CommandQueue, Command, Segment}
+alias Chukinas.Dreadnought.{CommandQueue, Command, Segment, CommandIds}
 alias Chukinas.Geometry.Rect
 defmodule CommandQueue do
 
@@ -9,6 +9,9 @@ defmodule CommandQueue do
 
   typedstruct enforce: true do
     field :id, integer()
+    # TODO rename just `commands`, now that I'm keeping all commands in a single list.
+    # TODO also, that means I have to update the enumerable impl.
+    # TODO convert this from list to map. I'll be accessing commands by id often
     field :issued_commands, [Command.t()], default: []
     field :default_command_builder, (integer() -> Command.t())
   end
@@ -55,8 +58,31 @@ defmodule CommandQueue do
     |> Enum.to_list()
   end
 
-  def play_card(deck, command) do
-    {command, deck}
+  # TODO rename issue_command?
+  @spec play_card(t(), CommandIds.t()) :: {:noop, t()} | {Command.t(), t()}
+  def play_card(
+    %__MODULE__{issued_commands: commands} = current_deck,
+    %CommandIds{segment: segment_id} = cmd
+  ) do
+    match? = fn command ->
+      Command.id(command) == cmd.card and Command.playable?(command)
+    end
+    if Enum.member?(Command, match?) do
+      command =
+        commands
+        |> Enum.find(match?)
+        |> Command.play(segment_id)
+      new_commands =
+        commands
+        |> Enum.reject(match?)
+        |> Enum.concat([command])
+      deck =
+        current_deck
+        |> Map.put(:issued_commands, new_commands)
+      {command, deck}
+    else
+      {:noop, current_deck}
+    end
   end
 
   # *** *******************************

@@ -10,6 +10,7 @@ defmodule Command do
 
   typedstruct enforce: true do
     field :id, integer()
+    field :state, atom(), default: :draw_pile
     # 1..5
     # Each speed rating transforms into a distance travelled.
     field :speed, integer(), default: 3
@@ -39,6 +40,11 @@ defmodule Command do
   end
 
   # *** *******************************
+  # *** GETTERS
+
+  def id(%__MODULE__{id: id}), do: id
+
+  # *** *******************************
   # *** API
 
   def generate_segments(command, previous_segments) when is_list(previous_segments) do
@@ -56,5 +62,18 @@ defmodule Command do
 
   def set_segment_number(command, segment_number) do
     Map.put(command, :segment_number, segment_number)
+  end
+
+  # def playable?(%__MODULE__{state: state} = command, id) when is_integer(id) do
+  #   command.id == id and playable?(command)
+  # end
+  def playable?(%__MODULE__{state: state}) do
+    state not in [:draw_pile]
+  end
+
+  def play(%__MODULE__{} = command, segment_id) do
+    command
+    |> Map.put(:state, :on_path)
+    |> Map.put(:segment_number, segment_id)
   end
 end

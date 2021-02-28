@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Unit, Mission, Guards, CommandQueue, Segment}
+alias Chukinas.Dreadnought.{Unit, Mission, Guards, CommandQueue, Segment, CommandIds}
 alias Chukinas.Geometry.{Rect, Pose}
 
 defmodule Mission do
@@ -37,13 +37,13 @@ defmodule Mission do
   # *** *******************************
   # *** GETTERS
 
-  def unit(mission, %{unit: id}), do: unit(mission, id)
-  def unit(mission, id), do: get_by_id(mission.units, id)
-  def get_unit(mission, id), do: unit(mission, id)
+  def unit(%__MODULE__{} = mission, %CommandIds{unit: id}), do: unit(mission, id)
+  def unit(%__MODULE__{} = mission, id), do: get_by_id(mission.units, id)
+  def get_unit(%__MODULE__{} = mission, id), do: unit(mission, id)
 
-  def deck(mission, %{unit: id}), do: deck(mission, id)
-  def deck(mission, id), do: get_by_id(mission.decks, id)
-  def get_deck(mission, id), do: deck(mission, id)
+  def deck(%__MODULE__{} = mission, %CommandIds{unit: id}), do: deck(mission, id)
+  def deck(%__MODULE__{} = mission, id), do: get_by_id(mission.decks, id)
+  def get_deck(%__MODULE__{} = mission, id), do: deck(mission, id)
   # TODO which syntax to use?
 
   # *** *******************************
@@ -59,8 +59,8 @@ defmodule Mission do
   # *** *******************************
   # *** API
 
-  def issue_command(mission, cmd) do
-    {_played_card, _deck} =
+  def issue_command(%__MODULE__{} = mission, %CommandIds{} = cmd) do
+    {played_card, deck} =
       get_deck(mission, cmd)
       |> CommandQueue.play_card(cmd)
     # find card in hand and remove it from hand
@@ -73,23 +73,23 @@ defmodule Mission do
   # *** *******************************
   # *** PRIVATE
 
-  # defp update_unit_segments(mission) do
+  # defp update_unit_segments(%__MODULE__{} = mission) do
   #   unit_ids =
   #     mission.decks
   #     |> Enum.map(&CommandQueue.get_id/1)
   #   update_unit_segments(mission, unit_ids)
   # end
 
-  # defp update_unit_segments(mission, [id]) do
+  # defp update_unit_segments(%__MODULE__{} = mission, [id]) do
   #   update_unit_segments(mission, id)
   # end
 
-  # defp update_unit_segments(mission, [id | remaining_ids]) do
+  # defp update_unit_segments(%__MODULE__{} = mission, [id | remaining_ids]) do
   #   update_unit_segments(mission, id)
   #   |> update_unit_segments(remaining_ids)
   # end
 
-  # defp update_unit_segments(mission, unit_id) when is_integer(unit_id) do
+  # defp update_unit_segments(%__MODULE__{} = mission, unit_id) when is_integer(unit_id) do
   #   deck = get_deck mission, unit_id
   #   unit = get_unit(mission, unit_id)
   #   start_pose = unit |> Unit.start_pose()
