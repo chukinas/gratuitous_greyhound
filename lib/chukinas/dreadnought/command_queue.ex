@@ -10,8 +10,8 @@ defmodule CommandQueue do
   typedstruct enforce: true do
     field :id, integer()
     field :issued_commands, [Command.t()], default: []
-    field :default_command_builder, (integer() -> Command.t()
-    )  end
+    field :default_command_builder, (integer() -> Command.t())
+  end
 
   # *** *******************************
   # *** NEW
@@ -23,6 +23,11 @@ defmodule CommandQueue do
       default_command_builder: default_builder
     }
   end
+
+  # *** *******************************
+  # *** GETTERS
+
+  def get_id(deck), do: deck.id
 
   # *** *******************************
   # *** API

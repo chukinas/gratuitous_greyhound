@@ -7,7 +7,6 @@ defmodule CommandQueueTest do
   test "Convert a 1-segment straight command into move segments" do
     actual_svg_path_string =
       Command.new(angle: 0, speed: 3)
-      |> IO.inspect()
       |> Command.generate_segments(Pose.origin())
       |> List.first()
       |> Segment.svg_path()
