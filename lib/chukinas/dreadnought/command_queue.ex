@@ -55,6 +55,10 @@ defmodule CommandQueue do
     |> Enum.to_list()
   end
 
+  def play_card(deck, command) do
+    {command, deck}
+  end
+
   # *** *******************************
   # *** PRIVATE
 
