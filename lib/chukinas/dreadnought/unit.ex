@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Unit, CommandQueue, Segment, Guards}
+alias Chukinas.Dreadnought.{Unit, Segment, Guards}
 alias Chukinas.Geometry.{Pose}
 
 defmodule Unit do
@@ -35,5 +35,13 @@ defmodule Unit do
   # *** GETTERS
 
   def id(unit), do: unit.id
+  def start_pose(unit), do: unit.start_pose
   def segment(unit, id), do: unit.segments |> get_by_id(id)
+
+  # *** *******************************
+  # *** API
+
+  def set_segments(unit, segments) do
+    %{unit | segments: segments}
+  end
 end
