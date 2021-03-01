@@ -1,5 +1,4 @@
-alias Chukinas.Dreadnought.{Mission, Unit, Command, CommandQueue, CommandIds}
-alias Chukinas.Geometry.{Pose}
+alias Chukinas.Dreadnought.{MissionBuilder}
 
 defmodule ChukinasWeb.DreadnoughtLive do
   use ChukinasWeb, :live_view
@@ -7,17 +6,10 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    mission =
-      Mission.new()
-    # TODO move all this stuff out into separate module, maybe `MissionBuilder`
-      |> Mission.set_arena(1000, 750)
-      |> Mission.put(Unit.new(2, start_pose: Pose.new(0, 0, 45)))
-      |> Mission.put(CommandQueue.new 2, [Command.new(id: 1, angle: -40, state: :in_hand)])
-      |> Mission.issue_command(CommandIds.new 2, 1, 5)
-    socket =
+   socket =
       socket
       |> assign(page_title: "Dreadnought")
-      |> assign(mission: mission)
+      |> assign(mission: MissionBuilder.demo())
     {:ok, socket}
   end
 
