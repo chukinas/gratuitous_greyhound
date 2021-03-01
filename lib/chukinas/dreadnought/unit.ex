@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Unit, Segment, Guards}
+alias Chukinas.Dreadnought.{Unit, Segment, ById}
 alias Chukinas.Geometry.{Pose}
 
 defmodule Unit do
@@ -6,7 +6,7 @@ defmodule Unit do
   Represents a ship or some other combat unit
   """
 
-  import Guards
+  import ById
 
   # *** *******************************
   # *** TYPES

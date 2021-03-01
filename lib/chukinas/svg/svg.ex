@@ -16,9 +16,8 @@ defmodule Chukinas.Svg do
   """
   def get_path_string(%Straight{} = path) do
     {x0, y0} = get_start_coord(path)
-    # TODO x1 should just be x
-    {x1, y1} = get_end_coord(path)
-    "M #{x0} #{y0} L #{x1} #{y1}"
+    {x, y} = get_end_coord(path)
+    "M #{x0} #{y0} L #{x} #{y}"
   end
   def get_path_string(%Turn{} = path) do
     {x0, y0} = get_start_coord(path)

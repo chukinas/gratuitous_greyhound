@@ -1,11 +1,5 @@
-defmodule Chukinas.Dreadnought.Guards do
-  defguard is_point(point)
-    when is_tuple(point)
-    and tuple_size(point) == 2
-    and is_number(elem(point, 0))
-    and is_number(elem(point, 1))
+defmodule Chukinas.Dreadnought.ById do
 
-  # TODO either rename this module or move this function to new/other mod
   def get_by_id(enum, id) do
     enum
     |> Enum.find(fn item -> id_match?(item, id) end)
