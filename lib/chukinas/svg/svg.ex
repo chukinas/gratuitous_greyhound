@@ -1,13 +1,12 @@
-alias Chukinas.Svg.ViewBox
-alias Chukinas.Geometry.{Path, Position, Rect}
-alias Path.{Straight, Turn}
+alias Chukinas.Util.Precision
+alias Chukinas.Geometry.{Straight, Path, Position, Rect, Turn}
 
 defmodule Chukinas.Svg do
   @moduledoc"""
   This module converts path structs to svg path strings for use in eex templates.
   """
 
-  import Position.Guard
+  require Position
 
   # *** *******************************
   # *** API
@@ -27,13 +26,18 @@ defmodule Chukinas.Svg do
   end
 
   def get_string(%Rect{} = bounding_rect, path_start_point, margin)
-      when has_position(path_start_point)
+      when Position.is(path_start_point)
       and is_number(margin) do
-        ViewBox.to_viewbox_string(bounding_rect, path_start_point, margin)
+    relative_rect_with_margin = bounding_rect
+                                |> Rect.subtract(path_start_point)
+                            |> Rect.apply_margin(margin)
+    position = relative_rect_with_margin |> Rect.get_start_position() |> Precision.values_to_int()
+    size = Rect.get_size(relative_rect_with_margin)
+    "#{position.x} #{position.y} #{round(size.width)} #{size.height |> round()}"
   end
 
   # *** *******************************
-  # *** API
+  # *** PRIVATE
 
   defp get_start_coord(path) do
     path

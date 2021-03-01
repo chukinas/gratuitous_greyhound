@@ -144,4 +144,10 @@ defmodule ChukinasWeb.DreadnoughtLiveTest do
     assert has_element?(view, "#unit--1")
   end
 
+  test "Start game.", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/dreadnought")
+    element(view, "#start_game") |> render_click()
+    assert has_element?(view, "#unit--2")
+  end
+
 end

@@ -1,10 +1,12 @@
-alias Chukinas.Dreadnought.{Unit, CommandQueue, Segments, Command}
+alias Chukinas.Dreadnought.{Unit, Segment, Guards}
 alias Chukinas.Geometry.{Pose}
 
 defmodule Unit do
   @moduledoc """
   Represents a ship or some other combat unit
   """
+
+  import Guards
 
   # *** *******************************
   # *** TYPES
@@ -13,48 +15,33 @@ defmodule Unit do
 
   typedstruct enforce: true do
     # ID must be unique within the world
-    # TODO this maybe should be called `number`. Here and in Segment.
-    # TODO then, whenever i see number, I know it's an integet. id would mean a string like `unit--1`
-    field :id, number()
-
-    # Vector (location and orientation)
+    field :id, integer()
     field :start_pose, Pose.t()
-
-    # Hull and Turrets describe the physical properties of the unit.
-    # field :hull, Hull.t()
-    # field :turrets, [Turret.t()]
-
-    # The deck is self-contained and has containers for cards in various states,
-    # for example in-hand, discarded, and destroyed
-    # field :deck, Deck.t()
-
-    # Commands draw their data from command cards from the deck.
-    # The cards' data is copied to here. Keeps a nice separation of concerns.
-    field :command_queue, CommandQueue.t()
-
-    field :segments, Segments.t()
+    field :segments, [Segment.t()], default: []
   end
 
   # *** *******************************
   # *** NEW
 
-  def new(arena_rect) do
-    start_pose = Pose.new(0, 0, 45)
-    command_queue = build_command_queue()
-    %__MODULE__{
-      id: 2,
-      start_pose: start_pose,
-      command_queue: command_queue,
-      segments: Segments.init(command_queue, start_pose, arena_rect)
-    }
+  def new(id, opts \\ []) do
+    fields =
+      [start_pose: Pose.new(0, 0, 45)]
+      |> Keyword.merge(opts)
+      |> Keyword.merge([id: id])
+    struct(__MODULE__, fields)
   end
 
   # *** *******************************
-  # *** PRIVATE
+  # *** GETTERS
 
-  defp build_command_queue() do
-    CommandQueue.new()
-    |> CommandQueue.add(Command.new(segment_number: 4, speed: 5, angle: -45))
+  def id(unit), do: unit.id
+  def start_pose(unit), do: unit.start_pose
+  def segment(unit, id), do: unit.segments |> get_by_id(id)
+
+  # *** *******************************
+  # *** API
+
+  def set_segments(unit, segments) do
+    %{unit | segments: segments}
   end
-
 end

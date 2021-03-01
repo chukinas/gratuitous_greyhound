@@ -3,13 +3,32 @@ alias Chukinas.Geometry.{Position}
 defmodule Position do
   import Position.Guard
 
+  defguard is(position) when has_position(position)
+
   # *** *******************************
   # *** TYPES
 
-  @type position_tuple() :: {number(), number()}
+  use TypedStruct
+
+  typedstruct enforce: true do
+    field :x, number(), default: 0
+    field :y, number(), default: 0
+  end
+
+  # *** *******************************
+  # *** NEW
+
+  def new(%{x: x, y: y}), do: new(x, y)
+  def new(x, y) do
+    %__MODULE__{x: x, y: y}
+  end
 
   # *** *******************************
   # *** API
+
+  def origin() do
+    new(0, 0)
+  end
 
   def to_tuple(%{x: x, y: y}), do: {x, y}
 
