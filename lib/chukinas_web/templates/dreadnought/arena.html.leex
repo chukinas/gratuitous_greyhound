@@ -17,9 +17,9 @@
       >
         <%= for segment <- @segments do %>
           <path
-            id="drop-target--unit--<%= unit.id %>--segment--<%= segment.id %>" 
+            id="drop-target--unit--<%= unit.id %>--segment--<%= segment.segment_number %>" 
             d="<%= segment.svg_path %>" 
-            data-segment-number="<%= segment.id %>"
+            data-segment-number="<%= segment.segment_number %>"
             data-unit-number="<%= unit.id %>"
             phx-hook="SegmentDroppable"
           />
@@ -38,10 +38,10 @@
       >
         <%= for segment <- @segments do %>
           <path
-            id="unit--<%= unit.id %>--segment--<%= segment.id %>" 
+            id="unit--<%= unit.id %>--segment--<%= segment.segment_number %>" 
             d="<%= segment.svg_path %>" 
             data-segment-display
-            data-segment-number="<%= segment.id %>"
+            data-segment-number="<%= segment.segment_number %>"
             data-unit-number="<%= unit.id %>"
             phx-hook="Segment"
           />

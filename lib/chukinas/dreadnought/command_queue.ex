@@ -106,7 +106,7 @@ defmodule Chukinas.Dreadnought.CommandQueue do
 
   defp get_inbounds_checker(arena) do
     fn segments ->
-      pose = segments |> List.first() |> Segment.get_start_pose()
+      pose = segments |> List.first() |> Segment.start_pose()
       arena |> Rect.contains?(pose)
     end
   end

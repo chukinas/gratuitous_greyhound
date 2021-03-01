@@ -77,11 +77,11 @@ defmodule Command do
   # *** API
 
   def generate_segments(command, unit_id, previous_segments) when is_list(previous_segments) do
-    start_pose = previous_segments |> List.last() |> Segment.get_end_pose()
+    start_pose = previous_segments |> List.last() |> Segment.end_pose()
     generate_segments(command, unit_id, start_pose)
   end
   def generate_segments(%__MODULE__{segment_count: 1} = command, unit_id, %Pose{} = start_pose) do
-    len = Segment.speed_to_distance(command.speed)
+    len = speed_to_distance(command.speed)
     path = case command.angle do
       0 -> Path.new_straight(start_pose, len)
       angle -> Path.new_turn(start_pose, len, angle)
@@ -93,5 +93,16 @@ defmodule Command do
     command
     |> Map.put(:state, :on_path)
     |> Map.put(:segment_number, segment_id)
+  end
+
+  # TODO this should be moved out into configuration
+  def speed_to_distance(speed) when is_integer(speed) do
+    %{
+      1 => 50,
+      2 => 75,
+      3 => 100,
+      4 => 150,
+      5 => 200
+    } |> Map.fetch!(speed)
   end
 end

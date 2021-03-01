@@ -1,3 +1,5 @@
+# TODO maybe segment_number should be step instead?;wa
+
 alias Chukinas.Dreadnought.{Segment}
 alias Chukinas.Svg
 alias Chukinas.Geometry.{Pose, Path}
@@ -11,9 +13,7 @@ defmodule Segment do
 
   typedstruct enforce: true do
     field :unit_id, integer()
-    # TODO this really ought to be called soething like number or segment_number
-    # TODO there need to be two ids really, for both the segment num and unit id
-    field :id, integer()
+    field :segment_number, integer()
     field :start_pose, Pose.t()
     field :end_pose, Pose.t()
     field :svg_path, String.t()
@@ -25,7 +25,7 @@ defmodule Segment do
   def new(path, unit_id, segment_number) do
     %__MODULE__{
       unit_id: unit_id,
-      id: segment_number,
+      segment_number: segment_number,
       start_pose: Path.get_start_pose(path),
       end_pose: Path.get_end_pose(path),
       svg_path: Svg.get_path_string(path),
@@ -35,7 +35,7 @@ defmodule Segment do
   # *** *******************************
   # *** GETTERS
 
-  # TODO these should replace the get_* below
+  def id(%__MODULE__{unit_id: unit_id, segment_number: seg_num}), do: {unit_id, seg_num}
   def start_pose(segment), do: segment.start_pose
   def end_pose(segment), do: segment.end_pose
   def svg_path(segment), do: segment.svg_path
@@ -44,29 +44,6 @@ defmodule Segment do
   # *** BOOLEAN
 
   def match?(%__MODULE__{} = segment, unit_id, segment_id) do
-    (segment.id == segment_id) and (segment.unit_id == unit_id)
+    id(segment) == {unit_id, segment_id}
   end
-
-  # *** *******************************
-  # *** API
-
-  def get_start_pose(segment) do
-    segment.start_pose
-  end
-
-  def get_end_pose(segment) do
-    segment.end_pose
-  end
-
-  # TODO no longer belongs here?
-  def speed_to_distance(speed) when is_integer(speed) do
-    %{
-      1 => 50,
-      2 => 75,
-      3 => 100,
-      4 => 150,
-      5 => 200
-    } |> Map.fetch!(speed)
-  end
-
 end
