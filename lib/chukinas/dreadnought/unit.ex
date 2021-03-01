@@ -6,8 +6,6 @@ defmodule Unit do
   Represents a ship or some other combat unit
   """
 
-  import ById
-
   # *** *******************************
   # *** TYPES
 
@@ -36,7 +34,7 @@ defmodule Unit do
 
   def id(unit), do: unit.id
   def start_pose(unit), do: unit.start_pose
-  def segment(unit, id), do: unit.segments |> get_by_id(id)
+  def segment(unit, id), do: unit.segments |> ById.get(id)
 
   # *** *******************************
   # *** API
