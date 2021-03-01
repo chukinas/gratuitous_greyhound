@@ -20,7 +20,7 @@ defmodule Chukinas.Dreadnought.CommandQueue do
   # *** NEW
 
   def new(id) do
-    default_builder = fn seg_num -> Command.new(segment_number: seg_num) end
+    default_builder = fn seg_num -> Command.new(step_id: seg_num) end
     %__MODULE__{
       id: id,
       default_command_builder: default_builder
@@ -28,7 +28,7 @@ defmodule Chukinas.Dreadnought.CommandQueue do
   end
 
   def new(id, commands) do
-    default_builder = fn seg_num -> Command.new(segment_number: seg_num) end
+    default_builder = fn seg_num -> Command.new(step_id: seg_num) end
     %__MODULE__{
       id: id,
       issued_commands: commands,
@@ -54,14 +54,14 @@ defmodule Chukinas.Dreadnought.CommandQueue do
 
   def add(
     %__MODULE__{} = command_queue,
-    %Command{segment_count: 1, segment_number: segment} = command
+    %Command{segment_count: 1, step_id: segment} = command
   ) do
     {earlier_cmds, later_cmds} =
       command_queue.issued_commands
-      |> Enum.split_while(fn cmd -> cmd.segment_number < segment end)
+      |> Enum.split_while(fn cmd -> cmd.step_id < segment end)
     {_, later_cmds} =
       later_cmds
-      |> Enum.split_while(fn cmd -> cmd.segment_number == segment end)
+      |> Enum.split_while(fn cmd -> cmd.step_id == segment end)
     cmds = Enum.concat([earlier_cmds, [command], later_cmds])
     %{command_queue | issued_commands: cmds}
   end

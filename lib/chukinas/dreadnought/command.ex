@@ -19,7 +19,7 @@ defmodule Command do
     # X  for right turn (e.g. 45)
     # -X for left turn (e.g. -45)
     field :angle, integer(), default: 0
-    field :segment_number, integer(), enforce: false
+    field :step_id, integer(), enforce: false
     field :segment_count, integer(), default: 1
   end
 
@@ -48,15 +48,15 @@ defmodule Command do
   # *** *******************************
   # *** SETTERS
 
-  def set_segment_number(command, segment_number) do
-    Map.put(command, :segment_number, segment_number)
+  def set_step_id(command, step_id) do
+    Map.put(command, :step_id, step_id)
   end
 
   # *** *******************************
   # *** SORT
 
   def sort_by_segment(cmd1, cmd2) do
-    cmd1.segment_number >= cmd2.segment_number
+    cmd1.step_id >= cmd2.step_id
   end
 
   # *** *******************************
@@ -86,13 +86,13 @@ defmodule Command do
       0 -> Path.new_straight(start_pose, len)
       angle -> Path.new_turn(start_pose, len, angle)
     end
-    [Segment.new(path, unit_id, command.segment_number)]
+    [Segment.new(path, unit_id, command.step_id)]
   end
 
   def play(%__MODULE__{} = command, segment_id) when is_integer(segment_id) do
     command
     |> Map.put(:state, :on_path)
-    |> Map.put(:segment_number, segment_id)
+    |> Map.put(:step_id, segment_id)
   end
 
   # TODO this should be moved out into configuration
