@@ -12,7 +12,7 @@ defmodule Chukinas.Dreadnought.CommandQueue do
     # TODO rename just `commands`, now that I'm keeping all commands in a single list.
     # TODO also, that means I have to update the enumerable impl.
     # TODO convert this from list to map. I'll be accessing commands by id often
-    field :issued_commands, [Command.t()], default: []
+    field :commands, [Command.t()], default: []
     field :default_command_builder, (integer() -> Command.t())
   end
 
@@ -31,7 +31,7 @@ defmodule Chukinas.Dreadnought.CommandQueue do
     default_builder = fn seg_num -> Command.new(step_id: seg_num) end
     %__MODULE__{
       id: id,
-      issued_commands: commands,
+      commands: commands,
       default_command_builder: default_builder
     }
   end
@@ -43,7 +43,7 @@ defmodule Chukinas.Dreadnought.CommandQueue do
   def get_id(deck), do: deck.id
   def id(deck), do: deck.id
 
-  def issued_commands(%__MODULE__{issued_commands: commands}) do
+  def commands(%__MODULE__{commands: commands}) do
     commands
     |> Stream.filter(&Command.issued?/1)
     |> Enum.sort(&Command.sort_by_segment/2)
@@ -57,13 +57,13 @@ defmodule Chukinas.Dreadnought.CommandQueue do
     %Command{segment_count: 1, step_id: segment} = command
   ) do
     {earlier_cmds, later_cmds} =
-      command_queue.issued_commands
+      command_queue.commands
       |> Enum.split_while(fn cmd -> cmd.step_id < segment end)
     {_, later_cmds} =
       later_cmds
       |> Enum.split_while(fn cmd -> cmd.step_id == segment end)
     cmds = Enum.concat([earlier_cmds, [command], later_cmds])
-    %{command_queue | issued_commands: cmds}
+    %{command_queue | commands: cmds}
   end
 
   @spec build_segments(t(), Pose.t(), Rect.t()) :: [Segment.t()]
@@ -83,7 +83,7 @@ defmodule Chukinas.Dreadnought.CommandQueue do
   # TODO rename issue_command?
   @spec play_card(t(), CommandIds.t()) :: t()
   def play_card(
-    %__MODULE__{issued_commands: commands} = current_deck,
+    %__MODULE__{commands: commands} = current_deck,
     %CommandIds{segment: segment_id} = cmd
   ) do
     match? = fn command ->
@@ -98,7 +98,7 @@ defmodule Chukinas.Dreadnought.CommandQueue do
       |> Enum.reject(match?)
       |> Enum.concat([command])
     current_deck
-    |> Map.put(:issued_commands, new_commands)
+    |> Map.put(:commands, new_commands)
   end
 
   # *** *******************************

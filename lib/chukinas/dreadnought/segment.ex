@@ -3,6 +3,13 @@ alias Chukinas.Svg
 alias Chukinas.Geometry.{Pose, Path}
 
 defmodule Segment do
+  @moduledoc """
+  A single move path for a unit
+
+  Segments are strung together to fully describe a Unit's movement during the course of a
+  mission.
+  """
+
 
   # *** *******************************
   # *** TYPES
