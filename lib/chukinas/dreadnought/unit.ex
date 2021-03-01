@@ -23,12 +23,12 @@ defmodule Unit do
   # *** *******************************
   # *** NEW
 
-  def new(id) do
-    start_pose = Pose.new(0, 0, 45)
-    %__MODULE__{
-      id: id,
-      start_pose: start_pose,
-    }
+  def new(id, opts \\ []) do
+    fields =
+      [start_pose: Pose.new(0, 0, 45)]
+      |> Keyword.merge(opts)
+      |> Keyword.merge([id: id])
+    struct(__MODULE__, fields)
   end
 
   # *** *******************************

@@ -41,6 +41,13 @@ defmodule Segment do
   def svg_path(segment), do: segment.svg_path
 
   # *** *******************************
+  # *** BOOLEAN
+
+  def match?(%__MODULE__{} = segment, unit_id, segment_id) do
+    (segment.id == segment_id) and (segment.unit_id == unit_id)
+  end
+
+  # *** *******************************
   # *** API
 
   def get_start_pose(segment) do

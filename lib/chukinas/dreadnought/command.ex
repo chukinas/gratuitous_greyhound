@@ -26,6 +26,7 @@ defmodule Command do
   # *** *******************************
   # *** NEW
 
+  # TODO requires an id
   def new(opts \\ []) do
     struct(__MODULE__, opts)
   end
@@ -88,7 +89,7 @@ defmodule Command do
     [Segment.new(path, unit_id, command.segment_number)]
   end
 
-  def play(%__MODULE__{} = command, segment_id) do
+  def play(%__MODULE__{} = command, segment_id) when is_integer(segment_id) do
     command
     |> Map.put(:state, :on_path)
     |> Map.put(:segment_number, segment_id)

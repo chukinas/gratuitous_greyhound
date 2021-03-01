@@ -1,6 +1,6 @@
-alias Chukinas.Dreadnought.{CommandQueue, Command, Segment, CommandIds}
-alias Chukinas.Geometry.{Pose, Rect}
-defmodule CommandQueue do
+defmodule Chukinas.Dreadnought.CommandQueue do
+  alias Chukinas.Dreadnought.{CommandQueue, Command, Segment, CommandIds}
+  alias Chukinas.Geometry.{Pose, Rect}
 
   # *** *******************************
   # *** TYPES
@@ -23,6 +23,15 @@ defmodule CommandQueue do
     default_builder = fn seg_num -> Command.new(segment_number: seg_num) end
     %__MODULE__{
       id: id,
+      default_command_builder: default_builder
+    }
+  end
+
+  def new(id, commands) do
+    default_builder = fn seg_num -> Command.new(segment_number: seg_num) end
+    %__MODULE__{
+      id: id,
+      issued_commands: commands,
       default_command_builder: default_builder
     }
   end

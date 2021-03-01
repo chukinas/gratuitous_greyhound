@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Unit, Mission, Guards, CommandQueue, Segment, CommandIds}
-alias Chukinas.Geometry.{Rect, Pose}
+alias Chukinas.Geometry.{Rect}
 
 defmodule Mission do
   import Guards
@@ -11,7 +11,7 @@ defmodule Mission do
 
   typedstruct enforce: true do
     field :state, atom(), default: :pregame
-    field :arena, Rect.t()
+    field :arena, Rect.t(), enforce: false
     field :units, [Unit.t()], default: []
     field :decks, [CommandQueue.t()], default: []
     field :segments, [Segment.t()], default: []
@@ -20,19 +20,7 @@ defmodule Mission do
   # *** *******************************
   # *** NEW
 
-  def new() do
-    command_queue = CommandQueue.new(2)
-    start_pose = Pose.new(0, 200, 30)
-    mission = %__MODULE__{
-      arena: Rect.new(1000, 750),
-      # TODO need to pass in the unit number here as well
-      # TODO refactor so that I can pass 1 in here instead of 2
-      units: [Unit.new(2)],
-      decks: [command_queue]
-    }
-    segments = CommandQueue.build_segments(command_queue, start_pose, mission.arena)
-    %{mission | segments: segments}
-  end
+  def new(), do: %__MODULE__{}
 
   # *** *******************************
   # *** GETTERS
@@ -41,30 +29,37 @@ defmodule Mission do
   def unit(%__MODULE__{} = mission, id), do: get_by_id(mission.units, id)
   def get_unit(%__MODULE__{} = mission, id), do: unit(mission, id)
 
-  def deck(%__MODULE__{} = mission, %CommandIds{unit: id} = cmd) do
-    IO.inspect(mission, label: "mission!")
-    IO.inspect(cmd, label: "cmd ids!")
+  def deck(%__MODULE__{} = mission, %CommandIds{unit: id}) do
     mission.decks |> get_by_id(id)
-    |> IO.inspect(label: "Deck getter result")
   end
 
-  def segment(%__MODULE__{} = mission, segment_id) do
+  def segment(%__module__{} = mission, unit_id, segment_id) do
     mission.segments
-    |> Enum.find(&(&1.id == segment_id))
+    |> Enum.find(fn seg -> Segment.match?(seg, unit_id, segment_id) end)
   end
+
+  # TODO use the bang on the other getters that need it
+  def arena!(%__MODULE__{arena: nil}), do: raise "Error: no arena has been set!"
+  def arena!(%__MODULE__{arena: arena}), do: arena
 
   # *** *******************************
   # *** SETTERS
 
   # TODO rename put
   # TODO are these private?
+  # TODO it would be easier if these were maps. Units and Decks would be maps; Segments a list
   def push(%__MODULE__{units: units} = mission, %Unit{} = unit) do
-    %{mission | units: replace_by_id(units, unit)}
+    %{mission | units: insert_by_id(units, unit)}
   end
   def push(%__MODULE__{decks: decks} = mission, %CommandQueue{} = deck) do
-    %{mission | decks: replace_by_id(decks, deck)}
+    %{mission | decks: insert_by_id(decks, deck)}
   end
 
+  def put(mission, unit), do: push(mission, unit)
+
+  def set_arena(%__MODULE__{} = mission, %Rect{} = arena) do
+    %{mission | arena: arena}
+  end
   def set_segments(%__MODULE__{} = mission, segments) do
     %{mission | segments: segments}
   end
@@ -76,19 +71,12 @@ defmodule Mission do
     deck =
       mission
       |> deck(cmd)
-      |> IO.inspect(label: "this should be a deck")
-    # TODO rename CommandQueue to Deck
       |> CommandQueue.play_card(cmd)
     start_pose = mission |> unit(cmd) |> Unit.start_pose()
     segments = CommandQueue.build_segments(deck, start_pose, mission.arena)
     mission
     |> push(deck)
     |> set_segments(segments)
-    # find card in hand and remove it from hand
-    # extraxt command from the card
-    # put card in discard pile
-    # draw back up to hand size
-    :noop
   end
 
   # *** *******************************
