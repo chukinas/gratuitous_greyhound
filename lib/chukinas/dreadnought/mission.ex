@@ -57,6 +57,10 @@ defmodule Mission do
 
   def put(mission, unit), do: push(mission, unit)
 
+  def set_arena(%__MODULE__{} = mission, width, height) do
+    %{mission | arena: Rect.new(width, height)}
+  end
+  # TODO get rid of this one
   def set_arena(%__MODULE__{} = mission, %Rect{} = arena) do
     %{mission | arena: arena}
   end
