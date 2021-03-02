@@ -32,7 +32,7 @@ defmodule CommandQueueTest do
     arena = Rect.new(450, 450)
     segments =
       deck()
-      |> CommandQueue.play_card(CommandIds.new(1, 2, 1))
+      |> CommandQueue.issue_command(CommandIds.new(1, 2, 1))
       |> CommandQueue.build_segments(Pose.new(0, 0, 0), arena)
     assert 4 = Enum.count segments
   end

@@ -8,7 +8,7 @@ defmodule Chukinas.Dreadnought.CommandIds do
   typedstruct enforce: true do
     field :unit, integer()
     field :card, integer()
-    field :segment, integer()
+    field :step, integer()
   end
 
   # *** *******************************
@@ -18,7 +18,7 @@ defmodule Chukinas.Dreadnought.CommandIds do
     %__MODULE__{
       unit: unit_id,
       card: card_id,
-      segment: segment_id
+      step: segment_id
     }
   end
 
@@ -27,5 +27,5 @@ defmodule Chukinas.Dreadnought.CommandIds do
 
   def unit(%__MODULE__{unit: unit}), do: unit
   def card(%__MODULE__{card: card}), do: card
-  def segment(%__MODULE__{segment: segment}), do: segment
+  def step(%__MODULE__{step: step}), do: step
 end
