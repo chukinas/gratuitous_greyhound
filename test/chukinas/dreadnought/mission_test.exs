@@ -34,14 +34,4 @@ defmodule MissionTest do
     # expected_discard_ids = [1]
     # assert match_numerical_map? expected_discard_ids, actual_discard_ids
   end
-
-  defp mission() do
-    Mission.new()
-    |> Mission.put(unit())
-    |> Mission.put(deck())
-    |> Mission.set_arena(arena())
-  end
-  defp unit(), do: Unit.new(1, start_pose: Pose.new(0, 500, 0))
-  defp deck(), do: CommandQueue.new 1, [Command.new(id: 1, state: :in_hand)]
-  defp arena(), do: Rect.new(1000, 1000)
 end

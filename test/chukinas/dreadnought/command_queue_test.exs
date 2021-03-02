@@ -31,8 +31,8 @@ defmodule CommandQueueTest do
   test "Command Queue with one long staight produces correct number of segments" do
     arena = Rect.new(450, 450)
     segments =
-      CommandQueue.new(1)
-      |> CommandQueue.add(Command.new(speed: 5, step_id: 2))
+      deck()
+      |> CommandQueue.play_card(CommandIds.new(1, 2, 1))
       |> CommandQueue.build_segments(Pose.new(0, 0, 0), arena)
     assert 4 = Enum.count segments
   end

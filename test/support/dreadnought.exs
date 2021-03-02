@@ -1,3 +1,6 @@
+alias Chukinas.Dreadnought.{CommandQueue, Command, Segments, Mission, Segment, Unit, CommandIds}
+alias Chukinas.Geometry.{Path, Pose, Position, Rect, Straight}
+
 defmodule DreadnoughtHelpers do
   defmacro __using__(_options) do
     quote do
@@ -20,6 +23,22 @@ defmodule DreadnoughtHelpers do
   def get_margin() do
     10
   end
+
+  # *** *******************************
+  # *** BUILDERS
+
+  def mission() do
+    Mission.new()
+    |> Mission.put(unit())
+    |> Mission.put(deck())
+    |> Mission.set_arena(arena())
+  end
+  def unit(), do: Unit.new(1, start_pose: Pose.new(0, 500, 0))
+  def deck(), do: CommandQueue.new 1, [
+    Command.new(id: 1, state: :in_hand),
+    Command.new(id: 2, state: :in_hand, speed: 5),
+  ]
+  def arena(), do: Rect.new(1000, 1000)
 
   # *** *******************************
   # *** PRIVATE

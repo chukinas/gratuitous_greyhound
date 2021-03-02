@@ -69,6 +69,7 @@ defmodule Command do
     state not in [:draw_pile]
   end
 
+  def on_path?(command), do: issued? command
   def issued?(%__MODULE__{state: state}) do
     state == :on_path
   end
