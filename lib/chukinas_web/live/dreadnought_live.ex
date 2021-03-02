@@ -6,10 +6,12 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def mount(_params, _session, socket) do
-   socket =
+    mission = MissionBuilder.demo()
+              |> IOP.inspect()
+    socket =
       socket
       |> assign(page_title: "Dreadnought")
-      |> assign(mission: MissionBuilder.demo())
+      |> assign(mission: mission)
     {:ok, socket}
   end
 

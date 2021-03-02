@@ -106,4 +106,15 @@ defmodule Command do
       5 => 200
     } |> Map.fetch!(speed)
   end
+
+  # *** *******************************
+  # *** IMPLEMENTATIONS
+
+  defimpl Inspect do
+    def inspect(cmd, _opts) do
+      path = "mvr(#{round cmd.speed}, #{round cmd.angle}°)"
+      id = "(#{cmd.id}, #{cmd.state})"
+      "#Command<#{id} #{path} step(#{cmd.step_id}, #{cmd.segment_count})>"
+    end
+  end
 end

@@ -43,4 +43,13 @@ defmodule Pose do
   defp normalize_angle(angle) when angle > 360, do: normalize_angle(angle - 360)
   defp normalize_angle(angle) when angle < -360, do: normalize_angle(angle + 360)
   defp normalize_angle(angle), do: angle
+
+  # *** *******************************
+  # *** IMPLEMENTATIONS
+
+  defimpl Inspect do
+    def inspect(pose, _opts) do
+      "#Pose<#{round pose.x}, #{round pose.y} ∠ #{round pose.angle}°>"
+    end
+  end
 end
