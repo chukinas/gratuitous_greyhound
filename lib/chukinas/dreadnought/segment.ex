@@ -51,4 +51,16 @@ defmodule Segment do
   def match?(%__MODULE__{} = segment, unit_id, step_id) do
     id(segment) == {unit_id, step_id}
   end
+
+  # *** *******************************
+  # *** IMPLEMENTATIONS
+
+  defimpl Inspect do
+    import Inspect.Algebra
+    def inspect(segment, opts) do
+      id = {segment.unit_id, segment.step_id}
+      poses = {segment.start_pose, segment.end_pose}
+      concat ["#Segment<", to_doc([id, poses, segment.svg_path], opts), ">"]
+    end
+  end
 end
