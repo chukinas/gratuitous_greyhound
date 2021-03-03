@@ -1,12 +1,10 @@
-alias Chukinas.Dreadnought.{Unit, Segment, Guards}
+alias Chukinas.Dreadnought.{Unit, Segment, ById}
 alias Chukinas.Geometry.{Pose}
 
 defmodule Unit do
   @moduledoc """
   Represents a ship or some other combat unit
   """
-
-  import Guards
 
   # *** *******************************
   # *** TYPES
@@ -36,7 +34,7 @@ defmodule Unit do
 
   def id(unit), do: unit.id
   def start_pose(unit), do: unit.start_pose
-  def segment(unit, id), do: unit.segments |> get_by_id(id)
+  def segment(unit, id), do: unit.segments |> ById.get(id)
 
   # *** *******************************
   # *** API

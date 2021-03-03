@@ -1,8 +1,7 @@
-alias Chukinas.Dreadnought.{Unit, Mission, Guards, CommandQueue, Segment, CommandIds}
+alias Chukinas.Dreadnought.{Unit, Mission, ById, CommandQueue, Segment, CommandIds}
 alias Chukinas.Geometry.{Rect}
 
 defmodule Mission do
-  import Guards
 
   # *** *******************************
   # *** TYPES
@@ -26,11 +25,11 @@ defmodule Mission do
   # *** GETTERS
 
   def unit(%__MODULE__{} = mission, %CommandIds{unit: id}), do: unit(mission, id)
-  def unit(%__MODULE__{} = mission, id), do: get_by_id(mission.units, id)
+  def unit(%__MODULE__{} = mission, id), do: ById.get(mission.units, id)
   def get_unit(%__MODULE__{} = mission, id), do: unit(mission, id)
 
   def deck(%__MODULE__{} = mission, %CommandIds{unit: id}) do
-    mission.decks |> get_by_id(id)
+    mission.decks |> ById.get(id)
   end
 
   def segment(%__module__{} = mission, unit_id, segment_id) do
@@ -49,10 +48,10 @@ defmodule Mission do
   # TODO are these private?
   # TODO it would be easier if these were maps. Units and Decks would be maps; Segments a list
   def push(%__MODULE__{units: units} = mission, %Unit{} = unit) do
-    %{mission | units: insert_by_id(units, unit)}
+    %{mission | units: ById.insert(units, unit)}
   end
   def push(%__MODULE__{decks: decks} = mission, %CommandQueue{} = deck) do
-    %{mission | decks: insert_by_id(decks, deck)}
+    %{mission | decks: ById.insert(decks, deck)}
   end
 
   def put(mission, unit), do: push(mission, unit)
@@ -75,7 +74,7 @@ defmodule Mission do
     deck =
       mission
       |> deck(cmd)
-      |> CommandQueue.play_card(cmd)
+      |> CommandQueue.issue_command(cmd)
     start_pose = mission |> unit(cmd) |> Unit.start_pose()
     segments = CommandQueue.build_segments(deck, start_pose, mission.arena)
     mission

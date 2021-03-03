@@ -11,7 +11,8 @@ defimpl Enumerable, for: CommandQueue do
   def reduce(%CommandQueue{} = cq, {:cont, acc}, fun) do
     seg_num = 1
     # TODO need a default command builder instead of just a default command
-    enumerable = {cq.issued_commands, cq.default_command_builder, seg_num}
+    commands = cq |> CommandQueue.onpath_commands_as_list
+    enumerable = {commands, cq.default_command_builder, seg_num}
     reduce(enumerable, {:cont, acc}, fun)
   end
   def reduce({[], default, seg_num}, {:cont, acc}, fun) do
@@ -21,7 +22,7 @@ defimpl Enumerable, for: CommandQueue do
     reduce(enumerable, fun.(cmd, acc), fun)
   end
   def reduce({[head | tail] = issued, default, seg_num}, {:cont, acc}, fun) do
-    {cmd, issued} = case head.segment_number do
+    {cmd, issued} = case head.step_id do
       ^seg_num -> {head, tail}
       _ -> {default.(seg_num), issued}
     end
