@@ -1,6 +1,9 @@
 // --------------------------------------------------------
 // CONSTANTS
 
+const gsap = window.gsap;
+let handOfCardsState = "shown"
+
 // --------------------------------------------------------
 // FUNCTIONS
 
@@ -39,6 +42,40 @@ function drop_handler(ev) {
 // --------------------------------------------------------
 // HOOKS
 
+const HandOfCards = {
+  mounted() {
+    const headerBottom = document.getElementById("handOfCardsHeader").getBoundingClientRect().bottom
+    const hide = () => {
+      gsap.to(this.el, {
+        y: document.body.clientHeight - headerBottom,
+        ease: 'back.inOut',
+        duration: 0.2
+      })
+      handOfCardsState = "hidden"
+    }
+    const show = () => {
+      gsap.to(this.el, {
+        y: 0,
+        ease: 'back.inOut',
+        duration: 0.2
+      })
+      handOfCardsState = "shown"
+    }
+    const hideOrShow = () => {
+      if (handOfCardsState == "shown") {
+        hide()
+      } else {
+        show()
+      }
+    }
+    show()
+    this.el.addEventListener("click", hideOrShow)
+    gsap.to(this.el, {
+      opacity: 1,
+    }, 1)
+  }
+}
+
 const CommandCard = {
   mounted() {
     this.el.addEventListener("dragstart", dragstart_handler);
@@ -64,4 +101,4 @@ const SegmentDroppable = {
   },
 }
 
-export default { CommandCard, CommandCardTarget, SegmentDroppable }
+export default { CommandCard, CommandCardTarget, SegmentDroppable, HandOfCards }

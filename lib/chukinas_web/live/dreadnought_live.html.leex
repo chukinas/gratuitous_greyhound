@@ -34,6 +34,11 @@
     </div>
   <% end %>
 
+  <%# Hand of Cards %>
+  <%= if @mission.state == :playing do %>
+    <%= DreadnoughtView.render "hand_of_cards.html" %>
+  <% end %>
+
   <%# Welcome! %>
   <%= if @mission.state == :pregame do %>
     <%= DreadnoughtView.message %{socket: @socket, button: %{text: "Start Game", id: "start_game", on_click: "start_game"}} do %>
