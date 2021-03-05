@@ -16,5 +16,6 @@ defmodule MissionBuilder do
     |> Mission.put(deck)
     |> IOP.inspect("demo mission!!!")
     |> Mission.issue_command(CommandIds.new 2, 1, 5)
+    |> Map.put(:state, :playing)
   end
 end
