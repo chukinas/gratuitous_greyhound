@@ -47,6 +47,13 @@ defmodule Chukinas.Dreadnought.CommandQueue do
   # *** *******************************
   # *** SETTERS
 
+  def add(%__MODULE__{} = deck, [command | []]) do
+    add deck, command
+  end
+  def add(%__MODULE__{} = deck, [command | commands]) do
+    new_deck = add deck, command
+    add new_deck, commands
+  end
   def add( %__MODULE__{} = deck, %Command{} = command) do
     put_in(deck.commands[Command.id(command)], command)
   end
@@ -111,6 +118,18 @@ defmodule Chukinas.Dreadnought.CommandQueue do
       |> Map.put(Command.id(command), command)
     current_deck
     |> Map.put(:commands, commands)
+  end
+
+  def draw(%__MODULE__{} = deck, count) when is_integer(count) do
+    drawn_commands =
+      deck
+      |> commands_as_stream
+      |> Stream.filter(&Command.in_draw_pile?/1)
+      |> Stream.map(&Command.draw/1)
+      |> Stream.take(count)
+      |> Enum.to_list
+      |> IOP.inspect("there should be 5 drawn cards here")
+    add deck, drawn_commands
   end
 
   # *** *******************************

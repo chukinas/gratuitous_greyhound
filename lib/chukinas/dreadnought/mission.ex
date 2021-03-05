@@ -74,6 +74,7 @@ defmodule Mission do
     deck =
       mission
       |> deck(cmd)
+      |> IOP.inspect("mission. should be deck")
       |> CommandQueue.issue_command(cmd)
     start_pose = mission |> unit(cmd) |> Unit.start_pose()
     segments = CommandQueue.build_segments(deck, start_pose, mission.arena)
