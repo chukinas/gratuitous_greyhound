@@ -21,8 +21,10 @@ const DisplaySegment = {
     Commands.applyActiveOrInactiveStyling(this.el)
   },
   updated() {
+    // TODO I don't like that I have to call this.
+    // The better longterm solution is to figure out why the server
+    // is updating segments when a new command is selected
     Commands.applyActiveOrInactiveStyling(this.el)
-    console.log("updated!", this.el)
   }
 }
 

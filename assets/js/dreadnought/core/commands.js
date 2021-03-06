@@ -10,11 +10,9 @@ const active = {
 // FUNCTIONS
 
 function selectStep(stepId) {
-  console.log(active)
   styleInactive(getSegmentEl())
   active.stepId = stepId
   styleActive(getSegmentEl())
-  console.log(active)
 }
 
 function getSegmentEl() {
