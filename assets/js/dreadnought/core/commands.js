@@ -10,9 +10,11 @@ const active = {
 // FUNCTIONS
 
 function selectStep(stepId) {
+  console.log(active)
   styleInactive(getSegmentEl())
   active.stepId = stepId
   styleActive(getSegmentEl())
+  console.log(active)
 }
 
 function getSegmentEl() {
@@ -38,7 +40,17 @@ function addRemoveClass(el, classesToAdd, classesToRemove) {
   })
 }
 
+function applyActiveOrInactiveStyling(el) {
+  const activeSegmentEl = getSegmentEl()
+  const activeSegmentElId = activeSegmentEl ? activeSegmentEl.id : null
+  if (el.id == activeSegmentElId) {
+    styleActive(el)
+  } else {
+    styleInactive(el)
+  }
+}
+
 // --------------------------------------------------------
 // EXPORT
 
-export const Commands = { selectStep, styleInactive }
+export const Commands = { selectStep, applyActiveOrInactiveStyling }

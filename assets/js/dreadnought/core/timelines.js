@@ -3,7 +3,7 @@
 // DATA
 
 const gsap = window.gsap;
-const segmentDuration = 0.3; // seconds
+const segmentDuration = 1; // seconds
 const worldTimeline = gsap.timeline({
   paused: true,
   autoRemoveChildren: true,

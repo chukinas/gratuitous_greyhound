@@ -18,7 +18,11 @@ const DisplaySegment = {
       this.el.dataset.segmentNumber,
       this.el
     )
-    Commands.styleInactive(this.el)
+    Commands.applyActiveOrInactiveStyling(this.el)
+  },
+  updated() {
+    Commands.applyActiveOrInactiveStyling(this.el)
+    console.log("updated!", this.el)
   }
 }
 
