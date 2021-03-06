@@ -10,7 +10,7 @@ const active = {
 // --------------------------------------------------------
 // API
 
-export function selectStep(stepId) {
+function selectStep(stepId) {
   console.table("active prior:", active)
   active.stepId = stepId
   console.table("active after:", active)
@@ -19,3 +19,7 @@ export function selectStep(stepId) {
 // --------------------------------------------------------
 // PRIVATE FUNCTIONS
 
+// --------------------------------------------------------
+// EXPORT
+
+export const Commands = { selectStep }

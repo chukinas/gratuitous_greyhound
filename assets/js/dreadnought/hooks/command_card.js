@@ -1,3 +1,8 @@
+// TODO is the .js necessary?
+import Commands from "../core/commands.js"
+
+// TODO rename file commands.js
+// TODO combine all hooks into single file?
 // --------------------------------------------------------
 // CONSTANTS
 

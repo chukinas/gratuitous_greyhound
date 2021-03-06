@@ -1,4 +1,6 @@
+// TODO export the timeline as a named export
 import * as worldTimeline from "../core/timelines.js";
+import { Commands } from "../core/commands.js"
 
 // --------------------------------------------------------
 // DATA
@@ -21,7 +23,10 @@ const DisplaySegment = {
 
 const SegmentClickTarget = {
   mounted() {
-    console.log("Mounting SegmentClickTarget!", this.el.dataset.stepId)
+    const stepId = parseInt(this.el.dataset.stepId)
+    this.el.addEventListener("click", () => {
+      Commands.selectStep(stepId)
+    })
   }
 }
 
