@@ -22,6 +22,7 @@ let currentState = "notStarted"
 // PUBLIC FUNCTIONS
 
 // TODO maybe rename addUnitSegment
+// TODO deprecated
 export function addTween(unitNumber, vars, segment) {
   getUnitTimeline(unitNumber).to(getUnitTarget(unitNumber), vars, getStartTime(segment))
 }
@@ -63,6 +64,17 @@ export function getUnitTimeline(unitNumber) {
 
 export function getUnitTarget(unitNumber) {
   return "#unit--" + unitNumber
+}
+
+export function animateSegment(unitId, stepId, segmentElement) {
+  getUnitTimeline(unitId).to(getUnitTarget(unitId), {
+    motionPath: {
+      autoRotate: true,
+      path: segmentElement,
+      align: segmentElement,
+      alignOrigin: [0.5, 0.5],
+    },
+  }, getStartTime(stepId))
 }
 
 // --------------------------------------------------------

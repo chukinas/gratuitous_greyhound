@@ -33,16 +33,13 @@ function configurePlayButton(el, state) {
 // --------------------------------------------------------
 // HOOKS
 
-const Segment = {
+const DisplaySegment = {
   mounted() {
-    worldTimeline.addTween(this.el.dataset.unitNumber, {
-      motionPath: {
-        autoRotate: true,
-        path: this.el,
-        align: this.el,
-        alignOrigin: [0.5, 0.5],
-      },
-    }, this.el.dataset.segmentNumber)
+    worldTimeline.animateSegment(
+      this.el.dataset.unitNumber,
+      this.el.dataset.segmentNumber,
+      this.el
+    )
   }
 }
 
@@ -58,4 +55,4 @@ const ToggleWorldPlay = {
   }
 }
 
-export default { Segment, ToggleWorldPlay }
+export default { DisplaySegment, ToggleWorldPlay }

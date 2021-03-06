@@ -42,63 +42,64 @@ function drop_handler(ev) {
 // --------------------------------------------------------
 // HOOKS
 
-const HandOfCards = {
-  mounted() {
-    const headerBottom = document.getElementById("handOfCardsHeader").getBoundingClientRect().bottom
-    const hide = () => {
-      gsap.to(this.el, {
-        y: document.body.clientHeight - headerBottom,
-        ease: 'back.inOut',
-        duration: 0.2
-      })
-      handOfCardsState = "hidden"
-    }
-    const show = () => {
-      gsap.to(this.el, {
-        y: 0,
-        ease: 'back.inOut',
-        duration: 0.2
-      })
-      handOfCardsState = "shown"
-    }
-    const hideOrShow = () => {
-      if (handOfCardsState == "shown") {
-        hide()
-      } else {
-        show()
-      }
-    }
-    show()
-    this.el.addEventListener("click", hideOrShow)
-    gsap.to(this.el, {
-      opacity: 1,
-    }, 1)
-  }
-}
-
-const CommandCard = {
-  mounted() {
-    this.el.addEventListener("dragstart", dragstart_handler);
-  }
-}
-
-const CommandCardTarget = {
-  mounted() {
-    this.el.addEventListener("dragover", dragenter_handler)
-    this.el.addEventListener("drop", drop_handler)
-  }
-}
-
-const SegmentDroppable = {
-  mounted() {
-    this.el.addEventListener("dragover", dragenter_handler)
-    this.el.addEventListener("mouseenter", function(event) {
-      const el = event.target;
-      const segmentNumber = el.dataset.segmentNumber
-      console.table(segmentNumber)
-      get_following_segments(el.dataset.unitNumber, el.dataset.segmentNumber)
-    }); 
-  },
-}
-
-export default { CommandCard, CommandCardTarget, SegmentDroppable, HandOfCards }
+// const HandOfCards = {
+//   mounted() {
+//     const headerBottom = document.getElementById("handOfCardsHeader").getBoundingClientRect().bottom
+//     const hide = () => {
+//       gsap.to(this.el, {
+//         y: document.body.clientHeight - headerBottom,
+//         ease: 'back.inOut',
+//         duration: 0.2
+//       })
+//       handOfCardsState = "hidden"
+//     }
+//     const show = () => {
+//       gsap.to(this.el, {
+//         y: 0,
+//         ease: 'back.inOut',
+//         duration: 0.2
+//       })
+//       handOfCardsState = "shown"
+//     }
+//     const hideOrShow = () => {
+//       if (handOfCardsState == "shown") {
+//         hide()
+//       } else {
+//         show()
+//       }
+//     }
+//     show()
+//     this.el.addEventListener("click", hideOrShow)
+//     gsap.to(this.el, {
+//       opacity: 1,
+//     }, 1)
+//   }
+// }
+// 
+// const CommandCard = {
+//   mounted() {
+//     this.el.addEventListener("dragstart", dragstart_handler);
+//   }
+// }
+// 
+// const CommandCardTarget = {
+//   mounted() {
+//     this.el.addEventListener("dragover", dragenter_handler)
+//     this.el.addEventListener("drop", drop_handler)
+//   }
+// }
+// 
+// const SegmentDroppable = {
+//   mounted() {
+//     this.el.addEventListener("dragover", dragenter_handler)
+//     this.el.addEventListener("mouseenter", function(event) {
+//       const el = event.target;
+//       const segmentNumber = el.dataset.segmentNumber
+//       console.table(segmentNumber)
+//       get_following_segments(el.dataset.unitNumber, el.dataset.segmentNumber)
+//     }); 
+//   },
+// }
+// 
+// export default { CommandCard, CommandCardTarget, SegmentDroppable, HandOfCards }
+export default {}

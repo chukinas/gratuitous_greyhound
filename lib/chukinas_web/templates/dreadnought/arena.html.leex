@@ -5,6 +5,8 @@
 >
   <%= if @state != :game_over do %>
     <%= for unit <- @units do %>
+
+      <%# Step Click Targets %>
       <svg
         version="1.1"
         viewBox="0 0 1000 750"
@@ -21,10 +23,12 @@
             d="<%= segment.svg_path %>" 
             data-segment-number="<%= segment.step_id %>"
             data-unit-number="<%= unit.id %>"
-            phx-hook="SegmentDroppable"
+            phx-hook="SegmentClickTarget"
           />
         <% end %>
       </svg>
+
+      <%# Paths %>
       <svg
         version="1.1"
         viewBox="0 0 1000 750"
@@ -43,12 +47,14 @@
             data-segment-display
             data-segment-number="<%= segment.step_id %>"
             data-unit-number="<%= unit.id %>"
-            phx-hook="Segment"
+            phx-hook="DisplaySegment"
           />
         <% end %>
       </svg>
       <%= render "unit.html", %{unit: unit}%>
     <% end %>
+
+    <%# Units %>
     <%= for unit <- @units do %>
       <%= render "unit.html", %{unit: unit}%>
     <% end %>
