@@ -18,6 +18,7 @@ const DisplaySegment = {
       this.el.dataset.segmentNumber,
       this.el
     )
+    Commands.styleInactive(this.el)
   }
 }
 

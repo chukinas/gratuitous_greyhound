@@ -2,24 +2,43 @@
 // DATA
 
 const active = {
-  unitId: 0,
+  unitId: 2,
   stepId: 0,
-  cmdId: 0
 }
 
 // --------------------------------------------------------
-// API
+// FUNCTIONS
 
 function selectStep(stepId) {
-  console.table("active prior:", active)
+  styleInactive(getSegmentEl())
   active.stepId = stepId
-  console.table("active after:", active)
+  styleActive(getSegmentEl())
 }
 
-// --------------------------------------------------------
-// PRIVATE FUNCTIONS
+function getSegmentEl() {
+  const segmentElId = `segment-${active.unitId}-${active.stepId}`
+  const el = document.getElementById(segmentElId)
+  return el;
+}
+
+function styleInactive(el) {
+  if (el) addRemoveClass(el, el.dataset.classInactive, el.dataset.classActive)
+}
+
+function styleActive(el) {
+  if (el) addRemoveClass(el, el.dataset.classActive, el.dataset.classInactive)
+}
+
+function addRemoveClass(el, classesToAdd, classesToRemove) {
+  classesToRemove.split(" ").forEach(className => {
+    el.classList.remove(className)
+  })
+  classesToAdd.split(" ").forEach(className => {
+    el.classList.add(className)
+  })
+}
 
 // --------------------------------------------------------
 // EXPORT
 
-export const Commands = { selectStep }
+export const Commands = { selectStep, styleInactive }
