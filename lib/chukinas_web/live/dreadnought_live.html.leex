@@ -34,18 +34,16 @@
     </div>
   <% end %>
 
-  <%# Hand of Cards %>
-  <%= if @mission.state == :zzzplaying do %>
-    <%= DreadnoughtView.render "hand_of_cards.html" %>
-  <% end %>
-
-  <%# Command Card %>
-  <%# TODO move this to a template %>
+  <%# Command Cards %>
   <%= if @mission.state == :playing do %>
-    <div class="absolute bottom-2 grid gap-3 grid-cols-3 right-2">
-      <%= for command <- @mission.hand do %>
-        <%= DreadnoughtView.command %{socket: @socket, command: command} %>
-      <% end %>
+    <div class="absolute bottom-0 w-full flex">
+      <div class="flex-1"></div>
+      <div class="flex-1 order-last"></div>
+      <div class="grid gap-4 p-4 grid-cols-4 justify-center ">
+        <%= for command <- @mission.hand do %>
+          <%= DreadnoughtView.command %{socket: @socket, command: command} %>
+        <% end %>
+      </div>
     </div>
   <% end %>
 
@@ -58,7 +56,7 @@
 
   <%# Playing! %>
   <%= if @mission.state == :playing do %> 
-    <div class="absolute left-0 bottom-0 padding-16">
+    <div class="absolute right-0 top-0 padding-16">
       <button
         id="sliderSyncButton"
         class="bg-blue-200 p-2 rounded"
