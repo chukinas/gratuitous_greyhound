@@ -1,7 +1,7 @@
 <div
   id="arena"
   style="width:<%= @arena.end_position.x %>px; height: <%= @arena.end_position.y %>px"
-  class="border-4 border-red-500 border-opacity-50 border-dashed relative"
+  class="border-4 border-yellow-600 border-opacity-50 border-dashed relative"
 >
   <%= if @state != :game_over do %>
     <%= for unit <- @units do %>

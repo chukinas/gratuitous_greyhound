@@ -42,14 +42,33 @@
   <%# Command Card %>
   <%# TODO move this to a template %>
   <%= if @mission.state == :playing do %>
-    <div
-      class="h-32 w-32 bg-red-500 absolute top-32 left-32 grid grid-rows-2 grid-cols-2 gap-2 p-2 place-items-center"
-      style="background-color: rgba(255, 255, 255, 0.1 )"
-    >
-      <img class="w-full h-full" src="<%= Routes.static_path(@socket, "/images/propeller.svg") %>">
-      <div class="text-white text-4xl font-bold text-center">4</div>
-      <img class="w-full h-full" src="<%= Routes.static_path(@socket, "/images/rudder_right.svg") %>">
-      <div class="text-white text-4xl font-bold text-center">30°</div>
+    <div class="absolute top-32 left-32 grid gap-6 grid-cols-3">
+      <div
+        class="h-32 w-32 bg-red-500 grid grid-rows-2 grid-cols-2 gap-2 p-2 place-items-center "
+        style="background-color: rgba(255, 255, 255, 0.1 )"
+      >
+        <img class="w-full h-full" src="<%= Routes.static_path(@socket, "/images/propeller.svg") %>">
+        <div class="text-white text-4xl font-bold text-center">4</div>
+        <img class="w-full h-full" src="<%= Routes.static_path(@socket, "/images/rudder_left4.svg") %>">
+        <div class="text-white text-4xl font-bold text-center">30°</div>
+      </div>
+      <div
+        class="h-32 w-32 bg-red-500 grid grid-rows-2 grid-cols-2 gap-2 p-2 place-items-center "
+        style="background-color: rgba(255, 255, 255, 0.1 )"
+      >
+        <img class="w-full h-full" src="<%= Routes.static_path(@socket, "/images/propeller.svg") %>">
+        <div class="text-white text-4xl font-bold text-center">2</div>
+        <img class="w-full h-full" src="<%= Routes.static_path(@socket, "/images/rudder_right.svg") %>">
+        <div class="text-white text-4xl font-bold text-center">30°</div>
+      </div>
+      <div
+        class="h-32 w-32 bg-yellow-600 grid grid-rows-2 grid-cols-2 gap-2 p-2 place-items-center border-4 border-white"
+      >
+        <img class="w-full h-full" src="<%= Routes.static_path(@socket, "/images/propeller.svg") %>">
+        <div class="text-white text-4xl font-bold text-center">3</div>
+        <img class="w-full h-full" src="<%= Routes.static_path(@socket, "/images/rudder_right.svg") %>">
+        <div class="text-white text-4xl font-bold text-center">90°</div>
+      </div>
     </div>
   <% end %>
 
