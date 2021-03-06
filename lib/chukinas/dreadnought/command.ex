@@ -45,6 +45,7 @@ defmodule Command do
   # *** GETTERS
 
   def id(%__MODULE__{id: id}), do: id
+  def angle(%__MODULE__{angle: angle}), do: angle
 
   # *** *******************************
   # *** SETTERS
