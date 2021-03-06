@@ -3,32 +3,8 @@ import * as worldTimeline from "../core/worldTimeline.js";
 // --------------------------------------------------------
 // DATA
 
-const playBtnConfig = {
-  notStarted: {
-    disabled: false,
-    innerText: "Start",
-  },
-  playing: {
-    disabled: false,
-    innerText: "Pause",
-  },
-  paused: {
-    disabled: false,
-    innerText: "Resume",
-  },
-  complete: {
-    disabled: true,
-    innerText: "Done!",
-  },
-}
-
 // --------------------------------------------------------
 // FUNCTIONS
-
-function configurePlayButton(el, state) {
-  const config = playBtnConfig[state]
-  el.innerText = config.innerText
-}
 
 // --------------------------------------------------------
 // HOOKS
@@ -43,16 +19,19 @@ const DisplaySegment = {
   }
 }
 
-const ToggleWorldPlay = {
+const SegmentClickTarget = {
   mounted() {
-    const el = this.el
-    const stateCallback = (state) => {
-      configurePlayButton(el, state)
-    }
-    stateCallback("notStarted")
-    el.addEventListener("click", worldTimeline.toggle)
-    worldTimeline.subscribeStateChanges(stateCallback)
+    console.log("Mounting SegmentClickTarget!", this.el.dataset.stepId)
   }
 }
 
-export default { DisplaySegment, ToggleWorldPlay }
+const BeginButton = {
+  mounted() {
+    this.el.addEventListener("click", () => {
+      worldTimeline.play()
+      this.el.hidden = true
+    })
+  }
+}
+
+export default { DisplaySegment, BeginButton, SegmentClickTarget }
