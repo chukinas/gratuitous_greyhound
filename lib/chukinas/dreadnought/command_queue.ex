@@ -38,6 +38,10 @@ defmodule Chukinas.Dreadnought.CommandQueue do
 
   def id(deck), do: deck.id
 
+  def command(%__MODULE__{commands: commands}, command_id) do
+    Map.fetch! commands, command_id
+  end
+
   def commands(%__MODULE__{commands: commands}) do
     commands
     |> Stream.filter(&Command.issued?/1)
@@ -52,6 +56,7 @@ defmodule Chukinas.Dreadnought.CommandQueue do
   # *** *******************************
   # *** SETTERS
 
+  # TODO rename 'put'
   def add(%__MODULE__{} = deck, [command | []]) do
     add deck, command
   end
@@ -129,6 +134,16 @@ defmodule Chukinas.Dreadnought.CommandQueue do
       |> Map.put(Command.id(command), command)
     current_deck
     |> Map.put(:commands, commands)
+  end
+
+  def select_command(%__MODULE__{} = deck, command_id) do
+    commands =
+      deck
+      |> commands_as_stream
+      |> Enum.map(fn cmd -> Command.select(cmd, command_id) end)
+    deck
+    |> add(commands)
+    |> IOP.inspect("select command!")
   end
 
   def draw(%__MODULE__{} = deck, count) when is_integer(count) do

@@ -13,6 +13,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
       socket
       |> assign(page_title: "Dreadnought")
       |> assign(mission: mission)
+      |> assign(player_id: 1)
     {:ok, socket}
   end
 
@@ -27,6 +28,13 @@ defmodule ChukinasWeb.DreadnoughtLive do
   def handle_event("start_game", _, socket) do
     socket.assigns.mission
     |> Map.put(:state, :playing)
+    |> assign_mission(socket)
+  end
+
+  @impl true
+  def handle_event("select_command", %{"id" => id}, socket) do
+    socket.assigns.mission
+    |> Mission.select_command(socket.assigns.player_id, String.to_integer(id))
     |> assign_mission(socket)
   end
 

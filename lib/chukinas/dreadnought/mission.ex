@@ -84,6 +84,14 @@ defmodule Mission do
     |> set_segments(segments)
   end
 
+  def select_command(%__MODULE__{decks: [deck]} = mission, _player_id, command_id) when is_integer(command_id) do
+    deck =
+      deck
+      |> CommandQueue.select_command(command_id)
+    mission
+    |> Mission.put(deck)
+  end
+
   def build_view(%__MODULE__{decks: [deck | []]} = mission) do
     %{ mission | hand: deck |> CommandQueue.hand}
   end

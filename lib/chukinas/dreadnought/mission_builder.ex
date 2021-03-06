@@ -14,7 +14,6 @@ defmodule MissionBuilder do
     |> Mission.set_arena(1000, 750)
     |> Mission.put(Unit.new(2, start_pose: Pose.new(0, 0, 45)))
     |> Mission.put(deck)
-    |> IOP.inspect("demo mission!!!")
     |> Mission.issue_command(CommandIds.new 2, 1, 5)
     |> Map.put(:state, :playing)
   end

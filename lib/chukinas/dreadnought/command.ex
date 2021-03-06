@@ -21,6 +21,7 @@ defmodule Command do
     field :angle, integer(), default: 0
     field :step_id, integer(), default: nil
     field :segment_count, integer(), default: 1
+    field :selected?, boolean(), default: false
   end
 
   # *** *******************************
@@ -116,13 +117,26 @@ defmodule Command do
     } |> Map.fetch!(speed)
   end
 
+  def select(%__MODULE__{} = cmd, command_id) do
+    command_id |> IOP.inspect("command id!")
+    selected? = case cmd.id do
+      ^command_id -> true
+      _ -> false
+    end
+    %{ cmd | selected?: selected?}
+  end
+
   # *** *******************************
   # *** IMPLEMENTATIONS
 
   defimpl Inspect do
     def inspect(cmd, _opts) do
+      state = case cmd.selected? do
+        true -> "#{cmd.state}*"
+        _ -> cmd.state
+      end
       path = "mvr(#{round cmd.speed}, #{round cmd.angle}°)"
-      id = "(#{cmd.id}, #{cmd.state})"
+      id = "(#{cmd.id}, #{state})"
       "#Command<#{id} #{path} step(#{cmd.step_id}, #{cmd.segment_count})>"
     end
   end
