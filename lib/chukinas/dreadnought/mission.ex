@@ -14,6 +14,7 @@ defmodule Mission do
     field :units, [Unit.t()], default: []
     field :decks, [CommandQueue.t()], default: []
     field :segments, [Segment.t()], default: []
+    field :hand, [Command.t()], default: []
   end
 
   # *** *******************************
@@ -81,6 +82,10 @@ defmodule Mission do
     mission
     |> push(deck)
     |> set_segments(segments)
+  end
+
+  def build_view(%__MODULE__{decks: [deck | []]} = mission) do
+    %{ mission | hand: deck |> CommandQueue.hand}
   end
 
   # *** *******************************

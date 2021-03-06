@@ -75,6 +75,8 @@ defmodule Command do
     state == :on_path
   end
   def in_draw_pile?(%__MODULE__{state: state}), do: state == :draw_pile
+  # TODO inconsistent state names. Either change :draw_pile to :in_draw_pile or in_hand to hand ?
+  def in_hand?(%__MODULE__{state: state}), do: state == :in_hand
 
   # *** *******************************
   # *** API

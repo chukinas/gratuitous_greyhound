@@ -44,6 +44,11 @@ defmodule Chukinas.Dreadnought.CommandQueue do
     |> Enum.sort(&Command.sort_by_segment/2)
   end
 
+  def hand(%__MODULE__{} = deck) do
+    deck
+    |> commands_as_stream(&Command.in_hand?/1)
+  end
+
   # *** *******************************
   # *** SETTERS
 
@@ -72,9 +77,15 @@ defmodule Chukinas.Dreadnought.CommandQueue do
   # *** *******************************
   # *** FILTERS
 
+  # TODO renamee commands ?
   def commands_as_stream(%__MODULE__{commands: commands}) do
     commands
     |> Stream.map(fn {_id, command} -> command end)
+  end
+  def commands_as_stream(%__MODULE__{} = deck, filter) do
+    deck
+    |> commands_as_stream
+    |> Stream.filter(filter)
   end
 
   def onpath_commands_as_list(%__MODULE__{} = command_queue) do
