@@ -38,7 +38,7 @@
   <%= if @mission.state == :playing do %>
     <div class="absolute bottom-0 w-full flex">
       <div class="flex-1"></div>
-      <div class="flex-1 order-last"></div>
+      <div class="flex-1 order-3"></div>
       <div class="grid gap-4 p-4 grid-cols-4 justify-center ">
         <%= for command <- @mission.hand do %>
           <%= DreadnoughtView.command %{socket: @socket, command: command} %>

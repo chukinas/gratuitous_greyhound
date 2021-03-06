@@ -51,6 +51,7 @@ defmodule Chukinas.Dreadnought.CommandQueue do
   def hand(%__MODULE__{} = deck) do
     deck
     |> commands_as_stream(&Command.in_hand?/1)
+    |> Enum.sort(&(&1.angle <= &2.angle))
   end
 
   # *** *******************************
