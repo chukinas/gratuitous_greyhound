@@ -48,7 +48,11 @@ function applyActiveOrInactiveStyling(el) {
   }
 }
 
+function getStepId() {
+  return active.stepId
+}
+
 // --------------------------------------------------------
 // EXPORT
 
-export const Commands = { selectStep, applyActiveOrInactiveStyling }
+export const Commands = { selectStep, applyActiveOrInactiveStyling, getStepId }

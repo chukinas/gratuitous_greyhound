@@ -46,4 +46,15 @@ const BeginButton = {
   }
 }
 
-export default { DisplaySegment, BeginButton, SegmentClickTarget }
+const IssueCommand = {
+  mounted() {
+    const me = this
+    const issueCommandEvent = () => {
+      const stepId = Commands.getStepId()
+      me.pushEvent("issue_command", {step_id: stepId})
+    }
+    this.el.addEventListener("click", issueCommandEvent)
+  }
+}
+
+export default { DisplaySegment, BeginButton, SegmentClickTarget, IssueCommand }
