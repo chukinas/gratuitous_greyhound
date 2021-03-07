@@ -80,6 +80,8 @@ defmodule Command do
   # TODO inconsistent state names. Either change :draw_pile to :in_draw_pile or in_hand to hand ?
   def in_hand?(%__MODULE__{state: state}), do: state == :in_hand
 
+  def selected?(%__MODULE__{selected?: selected?}), do: selected?
+
   # *** *******************************
   # *** API
 

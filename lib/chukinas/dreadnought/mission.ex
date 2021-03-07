@@ -26,7 +26,7 @@ defmodule Mission do
   # *** GETTERS
 
   def unit(%__MODULE__{} = mission, %CommandIds{unit: id}), do: unit(mission, id)
-  def unit(%__MODULE__{} = mission, id), do: ById.get(mission.units, id)
+  def unit(%__MODULE__{} = mission, id) when is_integer(id), do: ById.get(mission.units, id)
   def get_unit(%__MODULE__{} = mission, id), do: unit(mission, id)
 
   def deck(%__MODULE__{} = mission, %CommandIds{unit: id}) do
@@ -90,6 +90,18 @@ defmodule Mission do
       |> CommandQueue.select_command(command_id)
     mission
     |> Mission.put(deck)
+  end
+
+  def issue_selected_command(%__MODULE__{decks: [deck]} = mission, step_id) when is_integer(step_id) do
+    deck =
+      deck
+      |> IOP.inspect("mission issue sel cmd")
+      |> CommandQueue.issue_selected_command(step_id)
+    start_pose = mission |> unit(2) |> Unit.start_pose()
+    segments = CommandQueue.build_segments(deck, start_pose, mission.arena)
+    mission
+    |> put(deck)
+    |> set_segments(segments)
   end
 
   def build_view(%__MODULE__{decks: [deck | []]} = mission) do

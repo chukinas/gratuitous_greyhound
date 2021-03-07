@@ -57,7 +57,7 @@ defmodule Chukinas.Dreadnought.CommandQueue do
   # *** *******************************
   # *** SETTERS
 
-  # TODO rename 'put'
+  # TODO rename 'put' or push?
   def add(%__MODULE__{} = deck, [command | []]) do
     add deck, command
   end
@@ -117,6 +117,19 @@ defmodule Chukinas.Dreadnought.CommandQueue do
     |> Enum.to_list()
   end
 
+  def issue_selected_command(deck, step_id) do
+    issued_command =
+      deck
+      # TODO rename commands_stream?
+      |> commands_as_stream
+      |> Enum.find(&Command.selected?/1)
+      |> Map.put(:selected?, false)
+    cmd_ids = CommandIds.new deck.id, issued_command.id, step_id
+    deck
+    |> add(issued_command)
+    |> issue_command(cmd_ids)
+  end
+
   @spec issue_command(t(), CommandIds.t()) :: t()
   def issue_command(
     %__MODULE__{id: id, commands: commands} = current_deck,
@@ -144,7 +157,6 @@ defmodule Chukinas.Dreadnought.CommandQueue do
       |> Enum.map(fn cmd -> Command.select(cmd, command_id) end)
     deck
     |> add(commands)
-    |> IOP.inspect("select command!")
   end
 
   def draw(%__MODULE__{} = deck, count) when is_integer(count) do
@@ -155,7 +167,6 @@ defmodule Chukinas.Dreadnought.CommandQueue do
       |> Stream.map(&Command.draw/1)
       |> Stream.take(count)
       |> Enum.to_list
-      |> IOP.inspect("there should be 5 drawn cards here")
     add deck, drawn_commands
   end
 
