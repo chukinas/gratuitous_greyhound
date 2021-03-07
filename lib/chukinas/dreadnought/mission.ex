@@ -75,7 +75,6 @@ defmodule Mission do
     deck =
       mission
       |> deck(cmd)
-      |> IOP.inspect("mission. should be deck")
       |> CommandQueue.issue_command(cmd)
     start_pose = mission |> unit(cmd) |> Unit.start_pose()
     segments = CommandQueue.build_segments(deck, start_pose, mission.arena)
@@ -95,7 +94,6 @@ defmodule Mission do
   def issue_selected_command(%__MODULE__{decks: [deck]} = mission, step_id) when is_integer(step_id) do
     deck =
       deck
-      |> IOP.inspect("mission issue sel cmd")
       |> CommandQueue.issue_selected_command(step_id)
     start_pose = mission |> unit(2) |> Unit.start_pose()
     segments = CommandQueue.build_segments(deck, start_pose, mission.arena)

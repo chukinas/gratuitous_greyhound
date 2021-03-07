@@ -15,6 +15,5 @@ defmodule MissionBuilder do
     |> Mission.put(Unit.new(2, start_pose: Pose.new(0, 0, 45)))
     |> Mission.put(deck)
     |> Mission.issue_command(CommandIds.new 2, 1, 5)
-    |> Map.put(:state, :playing)
   end
 end

@@ -41,7 +41,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
   @impl true
   def handle_event("issue_command", %{"step_id" => step_id}, socket) do
     socket.assigns.mission
-    |> IOP.inspect("live handle event")
     |> Mission.issue_selected_command(step_id)
     |> assign_mission(socket)
   end

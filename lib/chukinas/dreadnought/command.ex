@@ -120,7 +120,6 @@ defmodule Command do
   end
 
   def select(%__MODULE__{} = cmd, command_id) do
-    command_id |> IOP.inspect("command id!")
     selected? = case cmd.id do
       ^command_id -> true
       _ -> false
