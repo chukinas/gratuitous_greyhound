@@ -3,6 +3,7 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     cursor: {
+      pointer: 'pointer',
       grab: 'grab',
     },
     scale: {
@@ -19,6 +20,7 @@ module.exports = {
   },
   variants: {
     extend: {
+      opacity: ['disabled']
     },
   },
   plugins: [],

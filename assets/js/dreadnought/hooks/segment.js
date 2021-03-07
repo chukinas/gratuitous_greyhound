@@ -1,61 +1,60 @@
-import * as worldTimeline from "../core/worldTimeline.js";
+// TODO export the timeline as a named export
+import * as worldTimeline from "../core/timelines.js";
+import { Commands } from "../core/commands.js"
 
 // --------------------------------------------------------
 // DATA
 
-const playBtnConfig = {
-  notStarted: {
-    disabled: false,
-    innerText: "Start",
-  },
-  playing: {
-    disabled: false,
-    innerText: "Pause",
-  },
-  paused: {
-    disabled: false,
-    innerText: "Resume",
-  },
-  complete: {
-    disabled: true,
-    innerText: "Done!",
-  },
-}
-
 // --------------------------------------------------------
 // FUNCTIONS
-
-function configurePlayButton(el, state) {
-  const config = playBtnConfig[state]
-  el.innerText = config.innerText
-}
 
 // --------------------------------------------------------
 // HOOKS
 
-const Segment = {
+const DisplaySegment = {
   mounted() {
-    worldTimeline.addTween(this.el.dataset.unitNumber, {
-      motionPath: {
-        autoRotate: true,
-        path: this.el,
-        align: this.el,
-        alignOrigin: [0.5, 0.5],
-      },
-    }, this.el.dataset.segmentNumber)
+    worldTimeline.animateSegment(
+      this.el.dataset.unitNumber,
+      this.el.dataset.segmentNumber,
+      this.el
+    )
+    Commands.applyActiveOrInactiveStyling(this.el)
+  },
+  updated() {
+    // TODO I don't like that I have to call this.
+    // The better longterm solution is to figure out why the server
+    // is updating segments when a new command is selected
+    Commands.applyActiveOrInactiveStyling(this.el)
   }
 }
 
-const ToggleWorldPlay = {
+const SegmentClickTarget = {
   mounted() {
-    const el = this.el
-    const stateCallback = (state) => {
-      configurePlayButton(el, state)
+    const stepId = parseInt(this.el.dataset.stepId)
+    this.el.addEventListener("click", () => {
+      Commands.selectStep(stepId)
+    })
+  }
+}
+
+const BeginButton = {
+  mounted() {
+    this.el.addEventListener("click", () => {
+      worldTimeline.play()
+      this.el.hidden = true
+    })
+  }
+}
+
+const IssueCommand = {
+  mounted() {
+    const me = this
+    const issueCommandEvent = () => {
+      const stepId = Commands.getStepId()
+      me.pushEvent("issue_command", {step_id: stepId})
     }
-    stateCallback("notStarted")
-    el.addEventListener("click", worldTimeline.toggle)
-    worldTimeline.subscribeStateChanges(stateCallback)
+    this.el.addEventListener("click", issueCommandEvent)
   }
 }
 
-export default { Segment, ToggleWorldPlay }
+export default { DisplaySegment, BeginButton, SegmentClickTarget, IssueCommand }

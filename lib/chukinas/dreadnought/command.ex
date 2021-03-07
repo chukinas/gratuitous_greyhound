@@ -19,8 +19,9 @@ defmodule Command do
     # X  for right turn (e.g. 45)
     # -X for left turn (e.g. -45)
     field :angle, integer(), default: 0
-    field :step_id, integer(), enforce: false
+    field :step_id, integer(), default: nil
     field :segment_count, integer(), default: 1
+    field :selected?, boolean(), default: false
   end
 
   # *** *******************************
@@ -31,9 +32,10 @@ defmodule Command do
     struct(__MODULE__, opts)
   end
 
-  def random() do
+  def random(id) do
     fields =
       [
+        id: id,
         speed: Enum.random(1..5),
         angle: -18..18 |> Enum.map(&(&1 * 5)) |> Enum.random()
       ]
@@ -44,6 +46,7 @@ defmodule Command do
   # *** GETTERS
 
   def id(%__MODULE__{id: id}), do: id
+  def angle(%__MODULE__{angle: angle}), do: angle
 
   # *** *******************************
   # *** SETTERS
@@ -66,13 +69,18 @@ defmodule Command do
   #   command.id == id and playable?(command)
   # end
   def playable?(%__MODULE__{state: state}) do
-    state not in [:draw_pile]
+    state == :in_hand
   end
 
   def on_path?(command), do: issued? command
   def issued?(%__MODULE__{state: state}) do
     state == :on_path
   end
+  def in_draw_pile?(%__MODULE__{state: state}), do: state == :draw_pile
+  # TODO inconsistent state names. Either change :draw_pile to :in_draw_pile or in_hand to hand ?
+  def in_hand?(%__MODULE__{state: state}), do: state == :in_hand
+
+  def selected?(%__MODULE__{selected?: selected?}), do: selected?
 
   # *** *******************************
   # *** API
@@ -88,6 +96,10 @@ defmodule Command do
       angle -> Path.new_turn(start_pose, len, angle)
     end
     [Segment.new(path, unit_id, command.step_id)]
+  end
+
+  def draw(%__MODULE__{} = command) do
+    %{command | state: :in_hand}
   end
 
   def play(%__MODULE__{} = command, segment_id) when is_integer(segment_id) do
@@ -107,13 +119,25 @@ defmodule Command do
     } |> Map.fetch!(speed)
   end
 
+  def select(%__MODULE__{} = cmd, command_id) do
+    selected? = case cmd.id do
+      ^command_id -> true
+      _ -> false
+    end
+    %{ cmd | selected?: selected?}
+  end
+
   # *** *******************************
   # *** IMPLEMENTATIONS
 
   defimpl Inspect do
     def inspect(cmd, _opts) do
+      state = case cmd.selected? do
+        true -> "#{cmd.state}*"
+        _ -> cmd.state
+      end
       path = "mvr(#{round cmd.speed}, #{round cmd.angle}°)"
-      id = "(#{cmd.id}, #{cmd.state})"
+      id = "(#{cmd.id}, #{state})"
       "#Command<#{id} #{path} step(#{cmd.step_id}, #{cmd.segment_count})>"
     end
   end

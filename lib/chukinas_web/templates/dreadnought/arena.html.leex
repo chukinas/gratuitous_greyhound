@@ -1,10 +1,12 @@
 <div
   id="arena"
   style="width:<%= @arena.end_position.x %>px; height: <%= @arena.end_position.y %>px"
-  class="border-4 border-red-500 border-opacity-50 border-dashed relative"
+  class="border-4 border-yellow-600 border-opacity-50 border-dashed relative"
 >
   <%= if @state != :game_over do %>
     <%= for unit <- @units do %>
+
+      <%# Step Click Targets %>
       <svg
         version="1.1"
         viewBox="0 0 1000 750"
@@ -17,38 +19,42 @@
       >
         <%= for segment <- @segments do %>
           <path
-            id="drop-target--unit--<%= unit.id %>--segment--<%= segment.step_id %>" 
+            id="segment-click-target--unit--<%= unit.id %>--segment--<%= segment.step_id %>" 
             d="<%= segment.svg_path %>" 
-            data-segment-number="<%= segment.step_id %>"
-            data-unit-number="<%= unit.id %>"
-            phx-hook="SegmentDroppable"
+            data-unit-id="<%= unit.id %>"
+            data-step-id="<%= segment.step_id %>"
+            phx-hook="SegmentClickTarget"
           />
         <% end %>
       </svg>
+
+      <%# Paths %>
       <svg
         version="1.1"
         viewBox="0 0 1000 750"
         width=1000
         height=750
         stroke-width=10
-        stroke="black"
         fill="none"
-        class="absolute top-0 left-0"
+        class="absolute top-0 left-0 stroke-current"
         style="pointer-events:none"
       >
         <%= for segment <- @segments do %>
           <path
-            id="unit--<%= unit.id %>--segment--<%= segment.step_id %>" 
+            id="segment-<%= unit.id %>-<%= segment.step_id %>" 
             d="<%= segment.svg_path %>" 
             data-segment-display
             data-segment-number="<%= segment.step_id %>"
             data-unit-number="<%= unit.id %>"
-            phx-hook="Segment"
+            data-class-active="text-yellow-600"
+            data-class-inactive="text-black"
+            phx-hook="DisplaySegment"
           />
         <% end %>
       </svg>
-      <%= render "unit.html", %{unit: unit}%>
     <% end %>
+
+    <%# Units %>
     <%= for unit <- @units do %>
       <%= render "unit.html", %{unit: unit}%>
     <% end %>

@@ -21,22 +21,32 @@
   <%# The World %>
   <%= DreadnoughtView.render "world.html", %{socket: @socket, live_action: @live_action, mission: @mission} %>
 
-  <%# Dummy Command Card %>
-  <%# TODO See card and drag_and_drop templates %>
-  <%= if @mission.state == :playing and @live_action == :dev do %>
-    <div 
-     class="height-12 width-12 bg-red-700 text-white p-12 m-8 absolute right-0 bottom-0 cursor-grab"
-     draggable="true"
-     id="somethingridiculous"
-     phx-hook="CommandCard"
-    >
-      Command Card
-    </div>
-  <% end %>
-
-  <%# Hand of Cards %>
+  <%# Command Cards %>
   <%= if @mission.state == :playing do %>
-    <%= DreadnoughtView.render "hand_of_cards.html" %>
+    <div class="absolute bottom-0 w-full">
+      <div class="flex gap-4">
+        <div class="flex-1"></div>
+        <button class="p-2 text-white text-xl font-bold bg-black bg-opacity-20"><<</button>
+        <button
+          id="issueCommand"
+          phx-hook="IssueCommand"
+          class="p-2 text-white text-xl font-bold bg-black bg-opacity-20 disabled:opacity-25"
+        > 
+          Issue Command 
+        </button>
+        <button class="p-2 text-white text-xl font-bold bg-black bg-opacity-20">>></button>
+        <div class="flex-1"></div>
+      </div>
+      <div class="flex">
+        <div class="flex-1"></div>
+        <div class="flex-1 order-3"></div>
+        <div class="grid gap-4 p-4 grid-cols-4 justify-center ">
+          <%= for command <- @mission.hand do %>
+            <%= DreadnoughtView.command %{socket: @socket, command: command} %>
+          <% end %>
+        </div>
+      </div>
+    </div>
   <% end %>
 
   <%# Welcome! %>
@@ -48,13 +58,13 @@
 
   <%# Playing! %>
   <%= if @mission.state == :playing do %> 
-    <div class="absolute left-0 bottom-0 padding-16">
+    <div class="absolute right-0 top-0 padding-16">
       <button
         id="sliderSyncButton"
         class="bg-blue-200 p-2 rounded"
-        phx-hook="ToggleWorldPlay"
+        phx-hook="BeginButton"
       >
-        Play
+        Begin!
       </button>
     </div>
   <% end %>
