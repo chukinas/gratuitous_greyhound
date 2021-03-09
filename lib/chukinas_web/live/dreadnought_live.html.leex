@@ -21,6 +21,11 @@
   <%# The World %>
   <%= DreadnoughtView.render "world.html", %{socket: @socket, live_action: @live_action, mission: @mission} %>
 
+  <%# Command Panel %>
+  <%= if @mission.state == :playing do %>
+    <%= live_component @socket, Dreadnought.CommandPanel, id: :command_panel %>
+  <% end %>
+
   <%# Command Cards %>
   <%= if @mission.state == :playing do %>
     <div class="absolute bottom-0 w-full">
