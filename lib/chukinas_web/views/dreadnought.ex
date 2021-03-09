@@ -12,26 +12,6 @@ defmodule ChukinasWeb.DreadnoughtView do
     render_template("_message.html", assigns, block)
   end
 
-  def command(%{command: %Command{} = command, socket: socket}) do
-    {angle, rudder_svg} = case Command.angle(command) do
-      x when x > 0 -> {"#{x}°", "rudder_right.svg"}
-      x when x < 0 -> {"#{-x}°", "rudder_left4.svg"}
-      _ -> {"-", "rudder.svg"}
-    end
-    bg = case command.selected? do
-      true -> "bg-yellow-600 outline-white"
-      _ -> "bg-black bg-opacity-20"
-    end
-    assigns =
-      command
-      |> Map.from_struct
-      |> Map.put(:speed_icon_path, Routes.static_path(socket, "/images/propeller.svg"))
-      |> Map.put(:angle_icon_path, Routes.static_path(socket, "/images/#{rudder_svg}"))
-      |> Map.put(:angle, angle)
-      |> Map.put(:bg, bg)
-    render_template("_command.html", assigns)
-  end
-
   defp render_template(template, assigns, block) do
     assigns =
       assigns

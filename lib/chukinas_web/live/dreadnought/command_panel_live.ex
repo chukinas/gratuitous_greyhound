@@ -1,3 +1,5 @@
+alias Chukinas.Dreadnought.Command
+alias ChukinasWeb.Router.Helpers
 defmodule ChukinasWeb.Dreadnought.CommandPanel do
   use Phoenix.LiveComponent
 
@@ -26,7 +28,7 @@ defmodule ChukinasWeb.Dreadnought.CommandPanel do
         <div class="flex-1 order-3"></div>
         <div class="grid gap-4 p-4 grid-cols-4 justify-center ">
           <%= for command <- @commands do %>
-            <%= ChukinasWeb.DreadnoughtView.command %{socket: @socket, command: command} %>
+            <%= command_card @socket, command %>
           <% end %>
         </div>
       </div>
@@ -78,4 +80,41 @@ defmodule ChukinasWeb.Dreadnought.CommandPanel do
 
   # defp maybe_incr_val(%{id: id, val: val} = item, item_id) when id == item_id, do: %{ item | val: val + 1 }
   # defp maybe_incr_val(item, _id), do: item
+
+  def command_card(socket, %Command{} = command) do
+    {angle, rudder_svg} = case Command.angle(command) do
+      x when x > 0 -> {"#{x}°", "rudder_right.svg"}
+      x when x < 0 -> {"#{-x}°", "rudder_left4.svg"}
+      _ -> {"-", "rudder.svg"}
+    end
+    bg = case command.selected? do
+      true -> "bg-yellow-600 outline-white"
+      _ -> "bg-black bg-opacity-20"
+    end
+    assigns =
+      command
+      |> Map.from_struct
+      |> Map.put(:speed_icon_path, Helpers.static_path(socket, "/images/propeller.svg"))
+      |> Map.put(:angle_icon_path, Helpers.static_path(socket, "/images/#{rudder_svg}"))
+      |> Map.put(:angle, angle)
+      |> Map.put(:bg, bg)
+
+    ~L"""
+    <%# TODO this should be a button? %>
+    <div
+      class="h-16 w-16 grid grid-rows-2 grid-cols-2 gap-1 p-1 place-items-center cursor-pointer <%= @bg %>"
+      phx-click="select_command"
+      phx-value-id="<%= @id %>"
+    >
+      <img class="w-full h-full" src="<%= @speed_icon_path %>">
+      <div class="text-white text-xl font-bold text-center">
+        <%= @speed %>
+      </div>
+      <img class="w-full h-full" src="<%= @angle_icon_path %>">
+      <div class="text-white text-xl font-bold text-center">
+        <%= @angle %>
+      </div>
+    </div>
+    """
+  end
 end
