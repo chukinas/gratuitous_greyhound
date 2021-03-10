@@ -33,7 +33,6 @@ defmodule IncrementerComponent do
 
   @impl true
   def handle_event("save", _, socket) do
-    socket.assigns |> IOP.inspect
     send self(), {:updated_num_list, socket.assigns.num_list}
     {:noreply, socket}
   end

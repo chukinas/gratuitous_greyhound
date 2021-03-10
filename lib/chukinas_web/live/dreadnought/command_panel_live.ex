@@ -7,7 +7,6 @@ defmodule ChukinasWeb.Dreadnought.CommandPanel do
 
   @impl true
   def render(assigns) do
-    assigns |> IOP.inspect("command panel assigns!")
     ~L"""
     <div class="bg-red-500 opacity-50 fixed inset-x-0 bottom-0">
       <div class="flex gap-4">
@@ -64,7 +63,6 @@ defmodule ChukinasWeb.Dreadnought.CommandPanel do
 
   # @impl true
   # def handle_event("save", _, socket) do
-  #   socket.assigns |> IOP.inspect
   #   send self(), {:updated_num_list, socket.assigns.num_list}
   #   {:noreply, socket}
   # end
@@ -98,11 +96,12 @@ defmodule ChukinasWeb.Dreadnought.CommandPanel do
       |> Map.put(:angle_icon_path, Helpers.static_path(socket, "/images/#{rudder_svg}"))
       |> Map.put(:angle, angle)
       |> Map.put(:bg, bg)
-
     ~L"""
     <%# TODO this should be a button? %>
     <div
+      id="command-<%= @id %>"
       class="h-16 w-16 grid grid-rows-2 grid-cols-2 gap-1 p-1 place-items-center cursor-pointer <%= @bg %>"
+      data-selected="<%= @selected? %>"
       phx-click="select_command"
       phx-value-id="<%= @id %>"
     >

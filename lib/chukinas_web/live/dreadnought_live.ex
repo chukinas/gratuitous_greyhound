@@ -10,7 +10,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
     mission =
       MissionBuilder.demo()
       |> Mission.build_view
-      |> Map.put(:state, :playing)
+    #   |> Map.put(:state, :playing)
     socket =
       socket
       |> assign(page_title: "Dreadnought")

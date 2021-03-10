@@ -32,7 +32,6 @@ defmodule ChukinasWeb.ChangeTrackingTestLive do
 
   @impl true
   def handle_event("reset", _, socket) do
-    socket |> IOP.inspect
     send_update(IncrementerComponent, id: :incr, num_list: socket.assigns.num_list)
     {:noreply, socket}
   end
