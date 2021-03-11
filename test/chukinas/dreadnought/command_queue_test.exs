@@ -29,6 +29,34 @@ defmodule CommandQueueTest do
   end
 
   test "Command Queue with one long staight produces correct number of segments" do
+    len = %{default: 100, explicit: 200}
+    nominal_arena_x_dim = 2 * (len |> Map.values |> Enum.sum)
+    default_command_builder = fn step_id -> Command.new(len.default, step_id: step_id) end
+    explicit_commands =
+      1..2
+      |> Enum.map(&(Command.new(len.explicit, id: &1, state: :in_hand)))
+    deck = CommandQueue.new 1, default_command_builder, explicit_commands
+    # Scenario 1
+    arena = Rect.new(nominal_arena_x_dim - 1, 0)
+    segments =
+      deck
+      |> CommandQueue.issue_command(CommandIds.new(1, 1, 2))
+      |> CommandQueue.issue_command(CommandIds.new(1, 2, 4))
+      |> CommandQueue.build_segments(Pose.origin(), arena)
+    assert 4 = Enum.count segments
+    # Scenario 2
+    arena = Rect.new(nominal_arena_x_dim + 1, 0)
+    segments =
+      deck
+      |> CommandQueue.issue_command(CommandIds.new(1, 1, 4))
+      |> CommandQueue.issue_command(CommandIds.new(1, 2, 2))
+      |> IOP.inspect("command queue!")
+      |> CommandQueue.build_segments(Pose.origin(), arena)
+      |> IOP.inspect("segments!")
+    assert 5 = Enum.count segments
+  end
+
+  test "Build segments with multiple commands" do
     arena = Rect.new(450, 450)
     segments =
       deck()
