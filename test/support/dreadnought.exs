@@ -34,11 +34,12 @@ defmodule DreadnoughtHelpers do
     |> Mission.set_arena(arena())
   end
   def unit(), do: Unit.new(1, start_pose: Pose.new(0, 500, 0))
-  def deck(), do: CommandQueue.new 1, [
+  def deck(), do: CommandQueue.new 1, get_default_command_builder(), [
     Command.new(100, id: 1, state: :in_hand),
     Command.new(200, id: 2, state: :in_hand),
   ]
   def arena(), do: Rect.new(1000, 1000)
+  def get_default_command_builder(), do: fn step_id -> Command.new(100, step_id: step_id) end
 
   # *** *******************************
   # *** PRIVATE

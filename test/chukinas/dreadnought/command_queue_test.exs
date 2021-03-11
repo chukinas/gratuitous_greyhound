@@ -14,7 +14,7 @@ defmodule CommandQueueTest do
   end
 
   test "Command queue enum supplies default commands" do
-    command_queue = CommandQueue.new(1)
+    command_queue = CommandQueue.new(1, get_default_command_builder())
     three_default_commands = command_queue |> Enum.take(3)
     assert 3 = Enum.count(three_default_commands)
     first_default_command = three_default_commands |> List.first()
@@ -22,7 +22,7 @@ defmodule CommandQueueTest do
   end
 
   test "Get movement segments from default command queue" do
-    command_queue = CommandQueue.new(1)
+    command_queue = CommandQueue.new(1, get_default_command_builder())
     arena = Rect.new(450, 450)
     movement_segments = CommandQueue.build_segments(command_queue, Pose.new(0, 0, 0), arena)
     assert 5 = Enum.count(movement_segments)
