@@ -6,7 +6,7 @@ defmodule CommandQueueTest do
 
   test "Convert a 1-segment straight command into move segments" do
     actual_svg_path_string =
-      Command.new(angle: 0, speed: 3)
+      Command.new(100, angle: 0)
       |> Command.generate_segments(1, Pose.origin())
       |> List.first()
       |> Segment.svg_path()
@@ -14,26 +14,43 @@ defmodule CommandQueueTest do
   end
 
   test "Command queue enum supplies default commands" do
-    command_queue = CommandQueue.new(1)
+    command_queue = CommandQueue.new(1, get_default_command_builder())
     three_default_commands = command_queue |> Enum.take(3)
     assert 3 = Enum.count(three_default_commands)
     first_default_command = three_default_commands |> List.first()
-    assert 3 = first_default_command.speed
+    assert 100 = first_default_command.len
   end
 
   test "Get movement segments from default command queue" do
-    command_queue = CommandQueue.new(1)
+    command_queue = CommandQueue.new(1, get_default_command_builder())
     arena = Rect.new(450, 450)
     movement_segments = CommandQueue.build_segments(command_queue, Pose.new(0, 0, 0), arena)
     assert 5 = Enum.count(movement_segments)
   end
 
   test "Command Queue with one long staight produces correct number of segments" do
-    arena = Rect.new(450, 450)
+    len = %{default: 100, explicit: 200}
+    nominal_arena_x_dim = 2 * (len |> Map.values |> Enum.sum)
+    default_command_builder = fn step_id -> Command.new(len.default, step_id: step_id) end
+    explicit_commands =
+      1..2
+      |> Enum.map(&(Command.new(len.explicit, id: &1, state: :in_hand)))
+    deck = CommandQueue.new 1, default_command_builder, explicit_commands
+    # Scenario 1
+    # arena = Rect.new(nominal_arena_x_dim - 1, 0)
+    # segments =
+    #   deck
+    #   |> CommandQueue.issue_command(CommandIds.new(1, 1, 2))
+    #   |> CommandQueue.issue_command(CommandIds.new(1, 2, 4))
+    #   |> CommandQueue.build_segments(Pose.origin(), arena)
+    # assert 4 = Enum.count segments
+    # Scenario 2
+    arena = Rect.new(nominal_arena_x_dim + 1, 0)
     segments =
-      deck()
-      |> CommandQueue.issue_command(CommandIds.new(1, 2, 1))
-      |> CommandQueue.build_segments(Pose.new(0, 0, 0), arena)
-    assert 4 = Enum.count segments
+      deck
+      |> CommandQueue.issue_command(CommandIds.new(1, 1, 4))
+      |> CommandQueue.issue_command(CommandIds.new(1, 2, 2))
+      |> CommandQueue.build_segments(Pose.origin(), arena)
+    assert 5 = Enum.count segments
   end
 end

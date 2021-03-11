@@ -9,17 +9,16 @@ defmodule Command do
   use TypedStruct
 
   typedstruct enforce: true do
-    field :id, integer()
+    field :id, integer(), enforce: false
     field :state, atom(), default: :draw_pile
-    # 1..5
-    # Each speed rating transforms into a distance travelled.
-    field :speed, integer(), default: 3
+    field :len, number()
     # Angle of turn
     # 0 for straight maneuver
     # X  for right turn (e.g. 45)
     # -X for left turn (e.g. -45)
     field :angle, integer(), default: 0
     field :step_id, integer(), default: nil
+    # TODO rename step count or step duration
     field :segment_count, integer(), default: 1
     field :selected?, boolean(), default: false
   end
@@ -27,16 +26,16 @@ defmodule Command do
   # *** *******************************
   # *** NEW
 
-  # TODO requires an id
-  def new(opts \\ []) do
-    struct(__MODULE__, opts)
+  def new(len, opts \\ []) do
+    struct(__MODULE__, opts |> Keyword.put(:len, len))
   end
 
   def random(id) do
     fields =
       [
         id: id,
-        speed: Enum.random(1..5),
+        len: Enum.random([50, 75, 100, 150, 200]),
+        # TODO I don't like how granular the angles are. There's no utility in a 10 degree turn. It's not worth thinking about.
         angle: -18..18 |> Enum.map(&(&1 * 5)) |> Enum.random()
       ]
     struct(__MODULE__, fields)
@@ -89,8 +88,7 @@ defmodule Command do
     start_pose = previous_segments |> List.last() |> Segment.end_pose()
     generate_segments(command, unit_id, start_pose)
   end
-  def generate_segments(%__MODULE__{segment_count: 1} = command, unit_id, %Pose{} = start_pose) do
-    len = speed_to_distance(command.speed)
+  def generate_segments(%__MODULE__{len: len, segment_count: 1} = command, unit_id, %Pose{} = start_pose) do
     path = case command.angle do
       0 -> Path.new_straight(start_pose, len)
       angle -> Path.new_turn(start_pose, len, angle)
@@ -106,17 +104,6 @@ defmodule Command do
     command
     |> Map.put(:state, :on_path)
     |> Map.put(:step_id, segment_id)
-  end
-
-  # TODO this should be moved out into configuration
-  def speed_to_distance(speed) when is_integer(speed) do
-    %{
-      1 => 50,
-      2 => 75,
-      3 => 100,
-      4 => 150,
-      5 => 200
-    } |> Map.fetch!(speed)
   end
 
   def select(%__MODULE__{} = cmd, command_id) do
@@ -136,7 +123,7 @@ defmodule Command do
         true -> "#{cmd.state}*"
         _ -> cmd.state
       end
-      path = "mvr(#{round cmd.speed}, #{round cmd.angle}°)"
+      path = "mvr(#{round cmd.len}, #{round cmd.angle}°)"
       id = "(#{cmd.id}, #{state})"
       "#Command<#{id} #{path} step(#{cmd.step_id}, #{cmd.segment_count})>"
     end

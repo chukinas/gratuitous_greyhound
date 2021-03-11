@@ -3,12 +3,14 @@ alias Chukinas.Dreadnought.{MissionBuilder, Mission}
 defmodule ChukinasWeb.DreadnoughtLive do
   use ChukinasWeb, :live_view
   alias ChukinasWeb.DreadnoughtView
+  alias ChukinasWeb.Dreadnought
 
   @impl true
   def mount(_params, _session, socket) do
     mission =
       MissionBuilder.demo()
       |> Mission.build_view
+    #   |> Map.put(:state, :playing)
     socket =
       socket
       |> assign(page_title: "Dreadnought")

@@ -6,31 +6,12 @@ defmodule ChukinasWeb.DreadnoughtLiveTest do
   # *** *******************************
   # *** ACTIONS
 
-  # defp delay_entry(view) do
-  #   view |> element("#delay_entry") |> render_click()
-  #   view
-  # end
-  # defp end_phase(view) do
-  #   element(view, "#end_phase") |> render_click()
-  #   view
-  # end
-  # defp toggle_fighter(view, fighter_id) do
-  #   element(view, "#fighter_#{fighter_id}") |> render_click()
-  #   view
-  # end
-  # defp select_group(view, group_id) do
-  #   element(view, "#group_#{group_id} .select_group") |> render_click()
-  #   view
-  # end
-  # defp move(view, box_id) do
-  #   view
-  #   |> element("#" <> Box.id_to_uiid(box_id))
-  #   |> render_click()
-  #   view
-  # end
-  # defp attack_bomber(view, x, y) do
-  #   view |> element("#bomber_#{x}_#{y}") |> render_click(); view
-  # end
+  defp click_command(view, unit_id, command_id) do
+    view
+    |> element("#command-#{unit_id}-#{command_id}")
+    |> render_click()
+    view
+  end
 
   # # *** *******************************
   # # *** ASSERTS - GAME HOUSEKEEPING
@@ -148,6 +129,14 @@ defmodule ChukinasWeb.DreadnoughtLiveTest do
     {:ok, view, _html} = live(conn, "/dreadnought")
     element(view, "#start_game") |> render_click()
     assert has_element?(view, "#unit--2")
+  end
+
+  test "Select a command", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/dreadnought")
+    render_click element(view, "#start_game")
+    render_click element(view, "#command-2")
+    assert has_element?(view, "#command-2[data-selected='true']")
+    assert has_element?(view, "#command-3[data-selected='false']")
   end
 
 end

@@ -16,19 +16,10 @@ defmodule Chukinas.Dreadnought.CommandQueue do
   # *** *******************************
   # *** NEW
 
-  def new(id) do
-    default_builder = fn seg_num -> Command.new(step_id: seg_num) end
+  def new(id, default_command_builder, commands \\ []) do
     %__MODULE__{
       id: id,
-      default_command_builder: default_builder
-    }
-  end
-
-  def new(id, commands) do
-    default_builder = fn seg_num -> Command.new(step_id: seg_num) end
-    %__MODULE__{
-      id: id,
-      default_command_builder: default_builder
+      default_command_builder: default_command_builder
     }
     |> set_commands(commands)
   end
@@ -98,6 +89,7 @@ defmodule Chukinas.Dreadnought.CommandQueue do
     command_queue
     |> commands_as_stream
     |> Enum.filter(&Command.on_path?/1)
+    |> Enum.sort(& &1.step_id <= &2.step_id)
   end
 
   # *** *******************************

@@ -23,9 +23,10 @@ defmodule Unit do
 
   def new(id, opts \\ []) do
     fields =
+      # TODO I don't like having a default start pose. Make it explicit.
       [start_pose: Pose.new(0, 0, 45)]
       |> Keyword.merge(opts)
-      |> Keyword.merge([id: id])
+      |> Keyword.put(:id, id)
     struct(__MODULE__, fields)
   end
 
