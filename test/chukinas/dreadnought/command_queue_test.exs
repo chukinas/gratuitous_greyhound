@@ -37,31 +37,20 @@ defmodule CommandQueueTest do
       |> Enum.map(&(Command.new(len.explicit, id: &1, state: :in_hand)))
     deck = CommandQueue.new 1, default_command_builder, explicit_commands
     # Scenario 1
-    arena = Rect.new(nominal_arena_x_dim - 1, 0)
-    segments =
-      deck
-      |> CommandQueue.issue_command(CommandIds.new(1, 1, 2))
-      |> CommandQueue.issue_command(CommandIds.new(1, 2, 4))
-      |> CommandQueue.build_segments(Pose.origin(), arena)
-    assert 4 = Enum.count segments
+    # arena = Rect.new(nominal_arena_x_dim - 1, 0)
+    # segments =
+    #   deck
+    #   |> CommandQueue.issue_command(CommandIds.new(1, 1, 2))
+    #   |> CommandQueue.issue_command(CommandIds.new(1, 2, 4))
+    #   |> CommandQueue.build_segments(Pose.origin(), arena)
+    # assert 4 = Enum.count segments
     # Scenario 2
     arena = Rect.new(nominal_arena_x_dim + 1, 0)
     segments =
       deck
       |> CommandQueue.issue_command(CommandIds.new(1, 1, 4))
       |> CommandQueue.issue_command(CommandIds.new(1, 2, 2))
-      |> IOP.inspect("command queue!")
       |> CommandQueue.build_segments(Pose.origin(), arena)
-      |> IOP.inspect("segments!")
     assert 5 = Enum.count segments
-  end
-
-  test "Build segments with multiple commands" do
-    arena = Rect.new(450, 450)
-    segments =
-      deck()
-      |> CommandQueue.issue_command(CommandIds.new(1, 2, 1))
-      |> CommandQueue.build_segments(Pose.new(0, 0, 0), arena)
-    assert 4 = Enum.count segments
   end
 end

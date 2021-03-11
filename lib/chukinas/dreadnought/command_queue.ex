@@ -89,6 +89,7 @@ defmodule Chukinas.Dreadnought.CommandQueue do
     command_queue
     |> commands_as_stream
     |> Enum.filter(&Command.on_path?/1)
+    |> Enum.sort(& &1.step_id <= &2.step_id)
   end
 
   # *** *******************************

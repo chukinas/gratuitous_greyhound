@@ -8,7 +8,7 @@ defmodule ChukinasWeb.Dreadnought.CommandPanel do
   @impl true
   def render(assigns) do
     ~L"""
-    <div class="bg-red-500 opacity-50 fixed inset-x-0 bottom-0">
+    <div class="opacity-50 fixed inset-x-0 bottom-0">
       <div class="flex gap-4">
         <div class="flex-1"></div>
         <button class="p-2 text-white text-xl font-bold bg-black bg-opacity-20"><<</button>

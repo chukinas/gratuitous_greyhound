@@ -35,6 +35,7 @@ defmodule Command do
       [
         id: id,
         len: Enum.random([50, 75, 100, 150, 200]),
+        # TODO I don't like how granular the angles are. There's no utility in a 10 degree turn. It's not worth thinking about.
         angle: -18..18 |> Enum.map(&(&1 * 5)) |> Enum.random()
       ]
     struct(__MODULE__, fields)
