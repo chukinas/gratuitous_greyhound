@@ -107,7 +107,7 @@ defmodule ChukinasWeb.Dreadnought.CommandPanel do
     >
       <img class="w-full h-full" src="<%= @speed_icon_path %>">
       <div class="text-white text-xl font-bold text-center">
-        <%= @speed %>
+        <%= @len %>
       </div>
       <img class="w-full h-full" src="<%= @angle_icon_path %>">
       <div class="text-white text-xl font-bold text-center">

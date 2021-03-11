@@ -17,18 +17,16 @@ defmodule Chukinas.Dreadnought.CommandQueue do
   # *** NEW
 
   def new(id) do
-    default_builder = fn seg_num -> Command.new(step_id: seg_num) end
     %__MODULE__{
       id: id,
-      default_command_builder: default_builder
+      default_command_builder: get_default_builder()
     }
   end
 
   def new(id, commands) do
-    default_builder = fn seg_num -> Command.new(step_id: seg_num) end
     %__MODULE__{
       id: id,
-      default_command_builder: default_builder
+      default_command_builder: get_default_builder()
     }
     |> set_commands(commands)
   end
@@ -179,4 +177,6 @@ defmodule Chukinas.Dreadnought.CommandQueue do
       arena |> Rect.contains?(pose)
     end
   end
+
+  defp get_default_builder(), do: fn step_id -> Command.new(100, step_id: step_id) end
 end

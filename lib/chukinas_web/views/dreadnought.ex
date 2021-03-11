@@ -1,5 +1,3 @@
-alias Chukinas.Dreadnought.Command
-
 defmodule ChukinasWeb.DreadnoughtView do
   use ChukinasWeb, :view
 

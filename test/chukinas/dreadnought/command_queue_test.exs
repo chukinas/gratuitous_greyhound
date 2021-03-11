@@ -6,7 +6,7 @@ defmodule CommandQueueTest do
 
   test "Convert a 1-segment straight command into move segments" do
     actual_svg_path_string =
-      Command.new(angle: 0, speed: 3)
+      Command.new(100, angle: 0)
       |> Command.generate_segments(1, Pose.origin())
       |> List.first()
       |> Segment.svg_path()
@@ -18,7 +18,7 @@ defmodule CommandQueueTest do
     three_default_commands = command_queue |> Enum.take(3)
     assert 3 = Enum.count(three_default_commands)
     first_default_command = three_default_commands |> List.first()
-    assert 3 = first_default_command.speed
+    assert 100 = first_default_command.len
   end
 
   test "Get movement segments from default command queue" do

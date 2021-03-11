@@ -35,8 +35,8 @@ defmodule DreadnoughtHelpers do
   end
   def unit(), do: Unit.new(1, start_pose: Pose.new(0, 500, 0))
   def deck(), do: CommandQueue.new 1, [
-    Command.new(id: 1, state: :in_hand),
-    Command.new(id: 2, state: :in_hand, speed: 5),
+    Command.new(100, id: 1, state: :in_hand),
+    Command.new(200, id: 2, state: :in_hand),
   ]
   def arena(), do: Rect.new(1000, 1000)
 

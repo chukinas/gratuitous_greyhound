@@ -9,9 +9,6 @@
   </div>
   <div class="absolute top-0 left-0 h-full w-full grid grid-cols-2 grid-rows-2 p-2">
     <div class="row-span-2 grid grid-rows-5 gap-0.5 m-0.5">
-      <%= for speed <- 5..1 do %>
-        <div class="w-1.5 <%= if speed > @card.speed do %>opacity-20<% end %> bg-red-900 "> </div>
-      <% end %>
     </div>
     <div class="row-start-2 col-start-2 text-xs place-self-end align-baseline text-red-900">
       <%= @card.angle %>&deg;

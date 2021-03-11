@@ -25,7 +25,7 @@ defmodule Unit do
     fields =
       [start_pose: Pose.new(0, 0, 45)]
       |> Keyword.merge(opts)
-      |> Keyword.merge([id: id])
+      |> Keyword.put(:id, id)
     struct(__MODULE__, fields)
   end
 
