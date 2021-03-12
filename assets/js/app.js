@@ -34,3 +34,5 @@ liveSocket.connect()
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
 
+// Make the `$` available in the console
+window.$ = window.jQuery = require("jquery");

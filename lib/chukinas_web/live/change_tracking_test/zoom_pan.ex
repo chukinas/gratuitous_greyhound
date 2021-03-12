@@ -4,7 +4,7 @@ defmodule ChukinasWeb.ZoomPanLive do
   @impl true
   def render(assigns) do
     ~L"""
-    <div class="bg-indigo-300">hi</div>
+    <div id="headerthing" class="bg-indigo-300">hi</div>
     <svg
       width="1080"
       height="920"
