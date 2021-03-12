@@ -20,7 +20,7 @@ defmodule ChukinasWeb.Router do
     live "/dreadnought", DreadnoughtLive
     live "/dreadnought/dev", DreadnoughtLive, :dev
     live "/proofofconcept/change_tracking_test", ChangeTrackingTestLive
-    get "/proofofconcept/zoompan", ZoomPanController, :index
+    live "/proofofconcept/zoompan", ZoomPanLive
   end
 
   # Other scopes may use custom stacks.
