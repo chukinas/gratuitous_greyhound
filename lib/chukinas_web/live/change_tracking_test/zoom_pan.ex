@@ -9,15 +9,15 @@ defmodule ChukinasWeb.ZoomPanLive do
       }
     </style>
     <div class="fixed inset-0">
-      <img
-        width="500"
+      <div
+        class="bg-cat w-1/2 h-1/2 bg-cover"
         draggable=false
         id="pannable"
         phx-hook="Pan"
-        src="https://cdn.glitch.com/d824d0c2-e771-4c9f-9fe2-a66b3ac139c5%2Fcats.jpg?1541801135989"
       >
+      </div>
     </div>
-    <h1 class="fixed bg-red-400 bottom-0 inset-x-0 p-8 text-center h-64">Fixed Element</h1>
+    <h1 class="fixed bg-red-400 bottom-8 inset-x-8 p-8 text-center h-64 bg-opacity-50">Fixed Element</h1>
     <div class="bg-blue-300 opacity-50 fixed h-1/3 w-1/3 left-1/3 top-1/3"> </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
     """
