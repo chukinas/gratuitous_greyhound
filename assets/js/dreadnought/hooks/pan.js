@@ -93,6 +93,36 @@ function pointerup_handler(ev) {
   cat.releasePointerCapture(ev.pointerId)
 }
 
+function resize() {
+  // Set scale back to zero
+  const elWorld = document.getElementById("pannable")
+  const elArenaMargin = document.getElementById("arena-margin")
+  const rectArena = elArenaMargin.getBoundingClientRect()
+  window.gsap.set(elWorld, {
+    x: "-=" + rectArena.x,
+    y: "-=" +rectArena.y,
+    scale:1
+  })
+  // ...
+  const windowSize = {x: window.innerWidth, y: window.innerHeight}
+  const windowAspectRatio = windowSize.x / windowSize.y
+  const arenaSize = { x: rectArena.width, y: rectArena.height}
+  const arenaAspectRatio = 1
+  console.log("Resizing!", arenaSize)
+  let scale
+  if (windowAspectRatio > arenaAspectRatio) {
+    // Fit on height
+    scale = windowSize.y / arenaSize.y
+  } else {
+    // Fit on width
+    scale = windowSize.x / arenaSize.x
+  }
+  console.log("scale", rectArena, scale)
+  window.gsap.to(elWorld, {
+    scale: scale
+  })
+}
+
 // --------------------------------------------------------
 // HOOKS
 
@@ -123,4 +153,10 @@ const Pan = {
   }
 }
 
-export default { Pan }
+const RefitArena = {
+  mounted() {
+    this.el.onclick = resize
+  }
+}
+
+export default { Pan, RefitArena }
