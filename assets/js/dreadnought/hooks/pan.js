@@ -85,7 +85,6 @@ function pointermove_handler(ev) {
 }
 
 function pointerup_handler(ev) {
-  pointermove_handler(ev)
   elementCoordAtStartOfPan = elementCoord
   // log(ev.type, ev);
   console.log("UP")
@@ -95,31 +94,44 @@ function pointerup_handler(ev) {
 
 function resize() {
   // Set scale back to zero
-  const elWorld = document.getElementById("pannable")
-  const elArenaMargin = document.getElementById("arena-margin")
-  const rectArena = elArenaMargin.getBoundingClientRect()
-  window.gsap.set(elWorld, {
-    x: "-=" + rectArena.x,
-    y: "-=" +rectArena.y,
-    scale:1
+  window.elWorld = document.getElementById("pannable")
+  window.elArenaMargin = document.getElementById("arena-margin")
+  window.rectArena = elArenaMargin.getBoundingClientRect()
+  window.gsap.set(window.elWorld, {
+  //   x: "-=" + rectArena.x,
+  //   y: "-=" +rectArena.y,
+    scale: 1
   })
+  // window.gsap.set(elWorld, {
+  // //   x: "-=" + rectArena.x,
+  // //   y: "-=" +rectArena.y,
+  //   scale:0.25
+  // })
   // ...
   const windowSize = {x: window.innerWidth, y: window.innerHeight}
   const windowAspectRatio = windowSize.x / windowSize.y
+  rectArena = elArenaMargin.getBoundingClientRect()
   const arenaSize = { x: rectArena.width, y: rectArena.height}
   const arenaAspectRatio = 1
-  console.log("Resizing!", arenaSize)
   let scale
+  console.log("arenaSize", rectArena)
   if (windowAspectRatio > arenaAspectRatio) {
     // Fit on height
     scale = windowSize.y / arenaSize.y
+    
   } else {
     // Fit on width
     scale = windowSize.x / arenaSize.x
   }
-  console.log("scale", rectArena, scale)
+  window.gsap.set(elWorld, {
+    scale,
+    x: 0,
+    y: 0
+  })
+  rectArena = elArenaMargin.getBoundingClientRect()
   window.gsap.to(elWorld, {
-    scale: scale
+    x: "+=" + (-rectArena.x + (window.innerWidth - rectArena.width)/2),
+    y: "+=" + (-rectArena.y + (window.innerHeight - rectArena.height)/2),
   })
 }
 

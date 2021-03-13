@@ -13,7 +13,7 @@ defmodule ChukinasWeb.ZoomPanLive do
     <div class="fixed inset-0">
       <div
         class="bg-cat bg-cover"
-        style="width:1300px;height:1300px;padding:100px"
+        style="width:2100px;height:2000px;padding:500px"
         draggable=false
         id="pannable"
         phx-hook="Pan"
@@ -21,12 +21,12 @@ defmodule ChukinasWeb.ZoomPanLive do
         <div
           id="arena-margin"
           class="bg-green-500 bg-opacity-50"
-          style="width:1100px;height:1000px;padding:50px"
+          style="width:1100px;height:1000px;padding:50px;touch-action:none"
         >
           Arena Margin
           <div
             class="bg-yellow-500 bg-opacity-50"
-            style="height:750px"
+            style="height:750px;touch-action:none"
           >
             Arena
           </div>
