@@ -2,6 +2,7 @@
 // DATA
 
 // Global vars to cache event state
+let cat
 let isPanning = false
 let elementCoord = { x: 0, y: 0 }
 let elementCoordAtStartOfPan = elementCoord
@@ -70,6 +71,7 @@ function pointerdown_handler(ev) {
   isPanning = true
   pointerCoordAtStartOfPan = coordFromEvent(ev)
   // log("start pan", ev);
+  cat.setPointerCapture(ev.pointerId)
   console.log("DOWN")
 }
 
@@ -88,6 +90,7 @@ function pointerup_handler(ev) {
   // log(ev.type, ev);
   console.log("UP")
   isPanning = false
+  cat.releasePointerCapture(ev.pointerId)
 }
 
 // --------------------------------------------------------
@@ -97,6 +100,7 @@ const Pan = {
   mounted() {
     const me = this
     const el = this.el
+    cat = el
     // Install event handlers for the pointer target
     el.onpointerdown = pointerdown_handler;
     el.onpointermove = pointermove_handler;
