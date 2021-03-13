@@ -8,7 +8,7 @@ defmodule ChukinasWeb.ZoomPanLive do
         touch-action:none
       }
     </style>
-    <div id="zoomEl" class="bg-indigo-200" phx-hook="PinchZoom">
+    <div id="zoomEl" class="bg-indigo-200" phx-hook="Pan">
       <svg
         width="1080"
         height="920"
