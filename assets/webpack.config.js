@@ -51,8 +51,7 @@ module.exports = (env, options) => {
       new CopyWebpackPlugin([{ from: 'static/', to: '../' }]),
       //https://stackoverflow.com/questions/34470491/how-to-add-css-js-dependencies-to-phoenix-project
       new webpack.ProvidePlugin({
-        $: "jquery",
-        jQuery: "jquery"
+        pinchZoom: "pinch-zoom-element"
       })
     ]
     .concat(devMode ? [new HardSourceWebpackPlugin()] : [])

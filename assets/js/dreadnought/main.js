@@ -3,10 +3,12 @@ import CommandCardHooks from "./hooks/command_card.js";
 import UnitHooks from "./hooks/unit.js";
 import GsapHooks from "./proofs_of_concept/gsap_experiment.js";
 import SegmentHooks from "./hooks/segment.js";
+import ZoomHooks from "./hooks/pinch_zoom.js";
 
 export default {
   ...CommandCardHooks,
   ...UnitHooks, 
   ...GsapHooks,
   ...SegmentHooks,
+  ...ZoomHooks,
 }

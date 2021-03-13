@@ -14,3 +14,7 @@ This is the project for my personal website. As of Jan 2021, I am using it mainl
 
   * I deploy the application via Gigalixir. Visit the site at [www.chukinas.com](http://www.chukinas.com).
   * The `*buildpack.config` files are required per the docs: https://gigalixir.readthedocs.io/en/latest/getting-started-guide.html#specify-versions
+
+# View app on device on home network
+  * run `ifconfig` in terminal. Note the inet addr.
+  * On device, go to <inet addr>:4000
