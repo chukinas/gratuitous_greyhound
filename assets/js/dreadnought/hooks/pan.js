@@ -4,13 +4,14 @@
 // Global vars to cache event state
 let isPanning = false
 let elementCoord = { x: 0, y: 0 }
+let elementCoordAtStartOfPan = elementCoord
 let pointerCoordAtStartOfPan = null
 
 // --------------------------------------------------------
 // FUNCTIONS BOUND TO MOUNTED ELEMENT
 
 // Event Logger
-let logToElixir = () => {}
+// let logToElixir = () => {}
 
 // Pan Element
 let panElement = null
@@ -18,15 +19,15 @@ let panElement = null
 // --------------------------------------------------------
 // FUNCTIONS
 
-function log(title, ev) {
-  logToElixir({
-    type: title,
-    pointerId: ev.pointerId,
-    pointerType: ev.pointerType,
-    isPrimary: ev.isPrimary,
-    coord: [ev.clientX, ev.clientY]
-  })
-} 
+// function log(title, ev) {
+//   logToElixir({
+//     type: title,
+//     pointerId: ev.pointerId,
+//     pointerType: ev.pointerType,
+//     isPrimary: ev.isPrimary,
+//     coord: [ev.clientX, ev.clientY]
+//   })
+// } 
 
 function coordFromEvent(ev) {
   return {
@@ -36,41 +37,56 @@ function coordFromEvent(ev) {
 }
 
 function coordSubtract(coord1, coord2) {
-  console.log("sub coord1", coord1, coord2)
   const result = {
     x: coord1.x - coord2.x,
     y: coord1.y - coord2.y
   }
-  console.log("sub result", result)
   return result
 }
 
 function coordAdd(coord1, coord2) {
-  console.log("add coord1", coord1)
   return {
     x: coord1.x + coord2.x,
     y: coord1.y + coord2.y
   }
 }
 
+function debounce(func, wait, immediate) {
+  var timeout;
+  return function() {
+    var context = this, args = arguments;
+    var later = function() {
+        timeout = null;
+        if (!immediate) func.apply(context, args);
+    };
+    var callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
+  }
+}
+
 function pointerdown_handler(ev) {
   isPanning = true
   pointerCoordAtStartOfPan = coordFromEvent(ev)
-  console.log("pointer down. coord:", pointerCoordAtStartOfPan)
-  log("start pan", ev);
+  // log("start pan", ev);
+  console.log("DOWN")
 }
 
 function pointermove_handler(ev) {
   if (!isPanning) return;
+  console.log("MOVE")
   const panVector = coordSubtract(coordFromEvent(ev), pointerCoordAtStartOfPan)
-  console.log("pan vector", panVector)
-  elementCoord = coordAdd(elementCoord, panVector)
+  elementCoord = coordAdd(elementCoordAtStartOfPan, panVector)
   panElement(elementCoord)
-  logToElixir("panning!", ev)
+  // logToElixir("panning!", ev)
 }
 
 function pointerup_handler(ev) {
-  log(ev.type, ev);
+  pointermove_handler(ev)
+  elementCoordAtStartOfPan = elementCoord
+  // log(ev.type, ev);
+  console.log("UP")
   isPanning = false
 }
 
@@ -86,17 +102,19 @@ const Pan = {
     el.onpointermove = pointermove_handler;
     // Use same handler for pointer{up,cancel,out,leave} events since
     // the semantics for these events - in this app - are the same.
-    el.onpointerup = pointerup_handler;
-    el.onpointercancel = pointerup_handler;
-    el.onpointerout = pointerup_handler;
-    el.onpointerleave = pointerup_handler;
-    logToElixir = (params) => {
-      me.pushEvent("log", params)
-    }
-    logToElixir({test: "TEST"})
+    const debouncedPointerUpHandler = debounce(pointerup_handler, 250)
+    el.onpointerup = debouncedPointerUpHandler;
+    el.onpointercancel = debouncedPointerUpHandler;
+    el.onpointerout = debouncedPointerUpHandler;
+    el.onpointerleave = debouncedPointerUpHandler;
+    // logToElixir = (params) => {
+    //   const browser = navigator.userAgent
+    //   me.pushEvent("log", { ...params, browser })
+    // }
+    // logToElixir({test: "TEST"})
     panElement = (elementCoord) => {
-      console.log("panning w/ gsap!", el)
-      window.gsap.to(el, { ...elementCoord })
+      console.log("PAN", elementCoord)
+      window.gsap.to(el, { ...elementCoord, duration: .25})
     }
   }
 }
