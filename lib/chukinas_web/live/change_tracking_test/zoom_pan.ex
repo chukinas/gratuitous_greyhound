@@ -15,7 +15,7 @@ defmodule ChukinasWeb.ZoomPanLive do
         class="bg-cat bg-cover"
         style="width:2100px;height:2000px;padding:500px"
         draggable=false
-        id="pannable"
+        id="world"
         phx-hook="Pan"
       >
         <div

@@ -2,7 +2,6 @@
 // DATA
 
 // Global vars to cache event state
-let cat
 let isPanning = false
 let elementCoord = { x: 0, y: 0 }
 let elementCoordAtStartOfPan = elementCoord
@@ -67,54 +66,25 @@ function debounce(func, wait, immediate) {
   }
 }
 
-function pointerdown_handler(ev) {
-  isPanning = true
-  pointerCoordAtStartOfPan = coordFromEvent(ev)
-  // log("start pan", ev);
-  cat.setPointerCapture(ev.pointerId)
-  console.log("DOWN")
-}
-
-function pointermove_handler(ev) {
-  if (!isPanning) return;
-  console.log("MOVE")
-  const panVector = coordSubtract(coordFromEvent(ev), pointerCoordAtStartOfPan)
-  elementCoord = coordAdd(elementCoordAtStartOfPan, panVector)
-  panElement(elementCoord)
-  // logToElixir("panning!", ev)
-}
-
-function pointerup_handler(ev) {
-  elementCoordAtStartOfPan = elementCoord
-  // log(ev.type, ev);
-  console.log("UP")
-  isPanning = false
-  cat.releasePointerCapture(ev.pointerId)
-}
+function getWorld() { return document.getElementById("world") }
+function getWorldRect() { return getWorld().getBoundingClientRect() }
+function getArena() { return document.getElementById("arena-margin") }
+function getArenaRect() { return getArena().getBoundingClientRect() }
 
 function resize() {
   // Set scale back to zero
-  window.elWorld = document.getElementById("pannable")
+  window.elWorld = document.getElementById("world")
   window.elArenaMargin = document.getElementById("arena-margin")
   window.rectArena = elArenaMargin.getBoundingClientRect()
   window.gsap.set(window.elWorld, {
-  //   x: "-=" + rectArena.x,
-  //   y: "-=" +rectArena.y,
     scale: 1
   })
-  // window.gsap.set(elWorld, {
-  // //   x: "-=" + rectArena.x,
-  // //   y: "-=" +rectArena.y,
-  //   scale:0.25
-  // })
-  // ...
   const windowSize = {x: window.innerWidth, y: window.innerHeight}
   const windowAspectRatio = windowSize.x / windowSize.y
   rectArena = elArenaMargin.getBoundingClientRect()
   const arenaSize = { x: rectArena.width, y: rectArena.height}
   const arenaAspectRatio = 1
   let scale
-  console.log("arenaSize", rectArena)
   if (windowAspectRatio > arenaAspectRatio) {
     // Fit on height
     scale = windowSize.y / arenaSize.y
@@ -135,6 +105,53 @@ function resize() {
   })
 }
 
+function limitPan(requestedCoord) {
+  // Prevent user from seeing the body bg color at top-left
+  let coord = {
+    x: Math.min(0, requestedCoord.x),
+    y: Math.min(0, requestedCoord.y)
+  }
+  // Prevent user from seeing the body bg color at bottom-right
+  const rect = getWorldRect()
+  if (rect.width >= window.innerWidth) {
+    coord.x = Math.max(window.innerWidth - rect.width, coord.x)
+  }
+  if (rect.height >= window.innerHeight) {
+    coord.y = Math.max(window.innerHeight - rect.height, coord.y)
+  }
+  return coord
+}
+
+
+// --------------------------------------------------------
+// EVENT HANDLERS
+
+function pointerdown_handler(ev) {
+  isPanning = true
+  const rect = getWorldRect()
+  elementCoordAtStartOfPan = { 
+    x: rect.x,
+    y: rect.y,
+  }
+  pointerCoordAtStartOfPan = coordFromEvent(ev)
+  getWorld().setPointerCapture(ev.pointerId)
+}
+
+function pointermove_handler(ev) {
+  if (!isPanning) return;
+  const panVector = coordSubtract(coordFromEvent(ev), pointerCoordAtStartOfPan)
+  elementCoord = coordAdd(elementCoordAtStartOfPan, panVector)
+  panElement(elementCoord)
+  // logToElixir("panning!", ev)
+}
+
+function pointerup_handler(ev) {
+  elementCoordAtStartOfPan = elementCoord
+  // log(ev.type, ev);
+  isPanning = false
+  getWorld().releasePointerCapture(ev.pointerId)
+}
+
 // --------------------------------------------------------
 // HOOKS
 
@@ -142,7 +159,6 @@ const Pan = {
   mounted() {
     const me = this
     const el = this.el
-    cat = el
     // Install event handlers for the pointer target
     el.onpointerdown = pointerdown_handler;
     el.onpointermove = pointermove_handler;
@@ -153,14 +169,9 @@ const Pan = {
     el.onpointercancel = debouncedPointerUpHandler;
     el.onpointerout = debouncedPointerUpHandler;
     el.onpointerleave = debouncedPointerUpHandler;
-    // logToElixir = (params) => {
-    //   const browser = navigator.userAgent
-    //   me.pushEvent("log", { ...params, browser })
-    // }
-    // logToElixir({test: "TEST"})
     panElement = (elementCoord) => {
-      console.log("PAN", elementCoord)
-      window.gsap.to(el, { ...elementCoord, duration: .25})
+      const coord = limitPan(elementCoord)
+      window.gsap.to(el, { ...coord, duration: .25})
     }
   }
 }
