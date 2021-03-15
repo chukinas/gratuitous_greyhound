@@ -1,0 +1,15 @@
+<div id="horizontal-center" class="bg-blue-200 fixed inset-0 text-lg flex text-indigo-900 text-center">
+  <div class="flex-1"></div>
+  <div id="vertical-center" class="flex flex-col">
+    <div class="flex-1"></div>
+    <div class="">
+  <iframe src="https://open.spotify.com/embed/album/0De5mZbNdVmhgDFE80fHHs" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media" class="text-center"></iframe>
+      <ul class="visited:text-blue-500 underline m-6">
+        <li><%= link "Listen on YouTube", target: "_blank", to: "https://www.youtube.com/watch?v=7lra6W5GnBI&list=OLAK5uy_k8Kwt_6C6DKAms9sh-mcTYfAzVnI-uZyM" %></li>
+        <li><%= link "Watch live performance", target: "_blank", to: "https://www.youtube.com/playlist?list=PLsbO_0Bc-nlW7MCIC8BfwTiHmcXOJQiQR" %></li>
+      </ul>
+    </div>
+    <div class="flex-1"></div>
+  </div>
+  <div class="flex-1"></div>
+</div>
