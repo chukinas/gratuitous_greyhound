@@ -17,6 +17,8 @@ defmodule ChukinasWeb.Router do
   scope "/", ChukinasWeb do
     pipe_through :browser
     get "/", PageController, :index
+    get "/minis", PageController, :minis
+    get "/music", PageController, :music
     live "/dreadnought", DreadnoughtLive
     live "/dreadnought/dev", DreadnoughtLive, :dev
     live "/change_tracking_test", ChangeTrackingTestLive
