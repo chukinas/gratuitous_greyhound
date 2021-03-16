@@ -18,13 +18,14 @@
       <%= @inner_content %>
     </div>
       <%= if @button do %>
-      <button
-        id="<%= @button.id %>"
-        class="bg-white text-black w-full p-4 font-bold text-2xl font-display tracking-widest"
-        phx-click="<%= @button.on_click %>"
-      >
-      <%= @button.text %>
-      </button>
+        <button 
+          id="message-button"
+          class="bg-white text-black w-full p-4 font-bold text-2xl font-display tracking-widest"
+          phx-click="route_to"
+          phx-value-route="<%= @button.route %>"
+        >
+          <%= @button.text %>
+        </button>
     <% end %>
     </div>
     </div>
