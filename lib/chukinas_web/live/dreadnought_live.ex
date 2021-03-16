@@ -28,24 +28,8 @@ defmodule ChukinasWeb.DreadnoughtLive do
   end
 
   @impl true
-  def handle_event("game_over", _, socket) do
-    socket.assigns.mission
-    |> Map.put(:state, :game_over)
-    |> assign_mission(socket)
-  end
-
-  @impl true
-  def handle_event("start_game", _, socket) do
-    socket.assigns.mission
-    |> Map.put(:state, :playing)
-    |> assign_mission(socket)
-  end
-
-  @impl true
-  def handle_event("select_command", %{"id" => id}, socket) do
-    socket.assigns.mission
-    |> Mission.select_command(socket.assigns.player_id, String.to_integer(id))
-    |> assign_mission(socket)
+  def handle_event("route_to", %{"route" => route}, socket) do
+    {:noreply, push_patch(socket, to: route)}
   end
 
   @impl true

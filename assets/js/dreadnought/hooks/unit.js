@@ -9,21 +9,18 @@ const gsap = window.gsap
 // FUNCTIONS
 
 function onUnitOutOfBounds(unitHookObject) {
-  console.log("unit out of bounds")
   // TODO this getunittarget... doesn't feel like it's in the right module
   const unitNumber = unitHookObject.el.dataset.unitNumber
   gsap.to(worldTimeline.getUnitTarget(unitNumber), {
     opacity: 0,
     onComplete: () => {
-      console.log("on complete")
       gameOver(unitHookObject)
     },
   })
 }
 
 function gameOver(unitHookObject) {
-  console.log("game over")
-  unitHookObject.pushEvent("game_over")
+  unitHookObject.pushEvent("route_to", {route: "/dreadnought/gameover"})
 }
 
 // --------------------------------------------------------

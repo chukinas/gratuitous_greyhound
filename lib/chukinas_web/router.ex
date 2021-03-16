@@ -21,6 +21,9 @@ defmodule ChukinasWeb.Router do
     get "/music", PageController, :music
     live "/dreadnought", DreadnoughtLive
     live "/dreadnought/welcome", DreadnoughtLive, :welcome
+    live "/dreadnought/disclaimer", DreadnoughtLive, :disclaimer
+    live "/dreadnought/play", DreadnoughtLive, :play
+    live "/dreadnought/gameover", DreadnoughtLive, :game_over
     live "/dreadnought/dev", DreadnoughtLive, :dev
     live "/change_tracking_test", ChangeTrackingTestLive
   end
