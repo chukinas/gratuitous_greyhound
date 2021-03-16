@@ -7,7 +7,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    # TODO remove?
     mission =
       MissionBuilder.demo
       |> Mission.build_view

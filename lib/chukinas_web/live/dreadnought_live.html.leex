@@ -28,8 +28,15 @@
 
   <%# Welcome! %>
   <%= if @live_action == :welcome do %>
-    <%= DreadnoughtView.message %{socket: @socket, button: %{text: "Start Game", route: "/dreadnought/play"}} do %>
+    <%= DreadnoughtView.message %{socket: @socket, button: %{text: "Start Game", route: "/dreadnought/disclaimer"}} do %>
       <%= DreadnoughtView.render "welcome.html" %>
+    <% end %>
+  <% end %>
+
+  <%# Disclaimer %>
+  <%= if @live_action == :disclaimer do %>
+    <%= DreadnoughtView.message %{socket: @socket, button: %{text: "Start Game", route: "/dreadnought/play"}} do %>
+      <%= DreadnoughtView.render "disclaimer.html" %>
     <% end %>
   <% end %>
 
