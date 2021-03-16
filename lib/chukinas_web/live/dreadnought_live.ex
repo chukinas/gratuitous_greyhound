@@ -8,15 +8,23 @@ defmodule ChukinasWeb.DreadnoughtLive do
   @impl true
   def mount(_params, _session, socket) do
     mission =
-      MissionBuilder.demo()
+      MissionBuilder.demo
       |> Mission.build_view
-    #   |> Map.put(:state, :playing)
     socket =
       socket
       |> assign(page_title: "Dreadnought")
       |> assign(mission: mission)
       |> assign(player_id: 1)
     {:ok, socket}
+  end
+
+  @impl true
+  def handle_params(_params, url, socket) do
+    if String.ends_with?(url, "dreadnought/") or String.ends_with?(url, "dreadnought") do
+      {:noreply, push_patch(socket, to: "/dreadnought/welcome")}
+    else
+      {:noreply, socket}
+    end
   end
 
   @impl true
