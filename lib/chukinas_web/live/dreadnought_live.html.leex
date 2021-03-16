@@ -48,7 +48,7 @@
 
   <%# Game Over! %>
   <%= if @live_action == :game_over do %>
-    <%= DreadnoughtView.message %{socket: @socket} do %>
+    <%= DreadnoughtView.message %{socket: @socket, button: %{text: "Play Again", route: "/dreadnought/play"}} do %>
       <h1 class="text-3xl font-bold font-display text-center uppercase tracking-widest p-16">
         Game Over
       </h1>

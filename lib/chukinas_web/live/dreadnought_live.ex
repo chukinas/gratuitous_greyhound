@@ -7,6 +7,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def mount(_params, _session, socket) do
+    # TODO remove?
     mission =
       MissionBuilder.demo
       |> Mission.build_view
@@ -20,6 +21,10 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def handle_params(_params, url, socket) do
+    socket = case socket.assigns.live_action do
+      :play -> assign(socket, :mission, MissionBuilder.demo |> Mission.build_view)
+      _ -> socket
+    end
     if String.ends_with?(url, "dreadnought/") or String.ends_with?(url, "dreadnought") do
       {:noreply, push_patch(socket, to: "/dreadnought/welcome")}
     else
