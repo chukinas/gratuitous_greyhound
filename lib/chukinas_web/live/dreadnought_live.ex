@@ -37,6 +37,13 @@ defmodule ChukinasWeb.DreadnoughtLive do
   end
 
   @impl true
+  def handle_event("select_command", %{"id" => id}, socket) do
+    socket.assigns.mission
+    |> Mission.select_command(socket.assigns.player_id, String.to_integer(id))
+    |> assign_mission(socket)
+  end
+
+  @impl true
   def handle_event("issue_command", %{"step_id" => step_id}, socket) do
     socket.assigns.mission
     |> Mission.issue_selected_command(step_id)
