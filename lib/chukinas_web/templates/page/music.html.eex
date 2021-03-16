@@ -1,4 +1,4 @@
-<div id="horizontal-center" class="bg-blue-200 fixed inset-0 text-lg flex text-indigo-900 text-center">
+<div id="horizontal-center" class="bg-blue-200 fixed inset-0 text-lg flex text-gray-900 text-center">
   <div class="flex-1"></div>
   <div id="vertical-center" class="flex flex-col">
     <div class="flex-1"></div>
