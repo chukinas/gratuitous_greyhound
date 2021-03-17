@@ -23,19 +23,26 @@
   <%= DreadnoughtView.render "world.html", %{socket: @socket, live_action: @live_action, mission: @mission} %>
 
   <%# Command Panel %>
-  <%= if @mission.state == :playing do %>
+  <%= if @live_action == :play do %>
     <%= live_component @socket, Dreadnought.CommandPanel, id: :command_panel, commands: @mission.hand %>
   <% end %>
 
   <%# Welcome! %>
-  <%= if @mission.state == :pregame do %>
-    <%= DreadnoughtView.message %{socket: @socket, button: %{text: "Start Game", id: "start_game", on_click: "start_game"}} do %>
+  <%= if @live_action == :welcome do %>
+    <%= DreadnoughtView.message %{socket: @socket, button: %{text: "Start Game", route: "/dreadnought/disclaimer"}} do %>
       <%= DreadnoughtView.render "welcome.html" %>
     <% end %>
   <% end %>
 
+  <%# Disclaimer %>
+  <%= if @live_action == :disclaimer do %>
+    <%= DreadnoughtView.message %{socket: @socket, button: %{text: "Start Game", route: "/dreadnought/play"}} do %>
+      <%= DreadnoughtView.render "disclaimer.html" %>
+    <% end %>
+  <% end %>
+
   <%# Playing! %>
-  <%= if @mission.state == :playing do %> 
+  <%= if @live_action == :play do %> 
     <div class="absolute right-0 top-0 padding-16">
       <button
         id="sliderSyncButton"
@@ -48,8 +55,8 @@
   <% end %>
 
   <%# Game Over! %>
-  <%= if @mission.state == :game_over do %>
-    <%= DreadnoughtView.message %{socket: @socket} do %>
+  <%= if @live_action == :game_over do %>
+    <%= DreadnoughtView.message %{socket: @socket, button: %{text: "Play Again", route: "/dreadnought/play"}} do %>
       <h1 class="text-3xl font-bold font-display text-center uppercase tracking-widest p-16">
         Game Over
       </h1>

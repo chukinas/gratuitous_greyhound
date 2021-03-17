@@ -23,7 +23,8 @@ module.exports = {
   },
   variants: {
     extend: {
-      opacity: ['disabled']
+      opacity: ['disabled'],
+      textColor: ['visited']
     },
   },
   plugins: [],

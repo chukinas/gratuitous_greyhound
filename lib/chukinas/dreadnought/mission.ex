@@ -9,7 +9,6 @@ defmodule Mission do
   use TypedStruct
 
   typedstruct enforce: true do
-    field :state, atom(), default: :pregame
     field :arena, Rect.t(), enforce: false
     field :units, [Unit.t()], default: []
     field :decks, [CommandQueue.t()], default: []

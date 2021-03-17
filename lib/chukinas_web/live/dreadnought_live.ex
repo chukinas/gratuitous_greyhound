@@ -8,9 +8,8 @@ defmodule ChukinasWeb.DreadnoughtLive do
   @impl true
   def mount(_params, _session, socket) do
     mission =
-      MissionBuilder.demo()
+      MissionBuilder.demo
       |> Mission.build_view
-    #   |> Map.put(:state, :playing)
     socket =
       socket
       |> assign(page_title: "Dreadnought")
@@ -20,17 +19,21 @@ defmodule ChukinasWeb.DreadnoughtLive do
   end
 
   @impl true
-  def handle_event("game_over", _, socket) do
-    socket.assigns.mission
-    |> Map.put(:state, :game_over)
-    |> assign_mission(socket)
+  def handle_params(_params, url, socket) do
+    socket = case socket.assigns.live_action do
+      :play -> assign(socket, :mission, MissionBuilder.demo |> Mission.build_view)
+      _ -> socket
+    end
+    if String.ends_with?(url, "dreadnought/") or String.ends_with?(url, "dreadnought") do
+      {:noreply, push_patch(socket, to: "/dreadnought/welcome")}
+    else
+      {:noreply, socket}
+    end
   end
 
   @impl true
-  def handle_event("start_game", _, socket) do
-    socket.assigns.mission
-    |> Map.put(:state, :playing)
-    |> assign_mission(socket)
+  def handle_event("route_to", %{"route" => route}, socket) do
+    {:noreply, push_patch(socket, to: route)}
   end
 
   @impl true
