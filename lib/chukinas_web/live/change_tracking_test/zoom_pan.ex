@@ -20,7 +20,7 @@ defmodule ChukinasWeb.ZoomPanLive do
       >
         <div
           id="arena-margin"
-          class="bg-green-500 bg-opacity-50"
+          class="bg-green-500 bg-opacity-50 select-none pointer-events-none"
           style="width:1100px;height:1000px;padding:50px;touch-action:none"
         >
           Arena Margin
@@ -39,6 +39,13 @@ defmodule ChukinasWeb.ZoomPanLive do
       phx-hook="RefitArena"
     >
       Click here to resize the arena
+    </button>
+    <button
+      id="printCoords"
+      class="fixed bg-red-400 bottom-8 right-8 p-8 text-center h-64 bg-opacity-80"
+      phx-hook="PrintCoordinates"
+    >
+      Print Coordinates
     </button>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
     """

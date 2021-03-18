@@ -53,4 +53,11 @@ defmodule ChukinasWeb.DreadnoughtLive do
   defp assign_mission(mission, socket) do
     {:noreply, assign(socket, :mission, mission |> Mission.build_view)}
   end
+
+  def issue_link(title, number) do
+    assigns = %{title: title, number: number}
+    ~L"""
+    <%= @title %> - <a class="underline" href="https://github.com/jonathanchukinas/chukinas/issues/<%= @number %>" target="_blank">issue/<%= @number %></a>
+    """
+  end
 end

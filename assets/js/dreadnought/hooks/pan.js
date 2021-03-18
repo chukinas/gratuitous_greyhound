@@ -164,7 +164,7 @@ const Pan = {
     el.onpointermove = pointermove_handler;
     // Use same handler for pointer{up,cancel,out,leave} events since
     // the semantics for these events - in this app - are the same.
-    const debouncedPointerUpHandler = debounce(pointerup_handler, 250)
+    const debouncedPointerUpHandler = debounce(pointerup_handler, 250, true)
     el.onpointerup = debouncedPointerUpHandler;
     el.onpointercancel = debouncedPointerUpHandler;
     el.onpointerout = debouncedPointerUpHandler;
@@ -182,4 +182,10 @@ const RefitArena = {
   }
 }
 
-export default { Pan, RefitArena }
+const PrintCoordinates = {
+  mounted() {
+    this.el.onclick = () => console.log("testing")
+  }
+}
+
+export default { Pan, RefitArena, PrintCoordinates }
