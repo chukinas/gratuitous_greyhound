@@ -2,10 +2,16 @@
 // DATA
 
 // Global vars to cache event state
+const gsap = window.gsap
 let isPanning = false
 let elementCoord = { x: 0, y: 0 }
 let elementCoordAtStartOfPan = elementCoord
 let pointerCoordAtStartOfPan = null
+const panMultiplier = 1.5
+// TODO move all vars into atPanStart that are calculated only at pan start
+let atPanStart = {
+  scale: null // window size / arena size
+}
 
 // --------------------------------------------------------
 // FUNCTIONS BOUND TO MOUNTED ELEMENT
@@ -51,6 +57,13 @@ function coordAdd(coord1, coord2) {
   }
 }
 
+function coordMultiply(coord, multiplier) {
+  return {
+    x: coord.x * panMultiplier,
+    y: coord.y * panMultiplier
+  }
+}
+
 function debounce(func, wait, immediate) {
   var timeout;
   return function() {
@@ -71,37 +84,32 @@ function getWorldRect() { return getWorld().getBoundingClientRect() }
 function getArena() { return document.getElementById("arena-margin") }
 function getArenaRect() { return getArena().getBoundingClientRect() }
 
-function resize() {
-  // Set scale back to zero
-  window.elWorld = document.getElementById("world")
-  window.elArenaMargin = document.getElementById("arena-margin")
-  window.rectArena = elArenaMargin.getBoundingClientRect()
-  window.gsap.set(window.elWorld, {
-    scale: 1
-  })
+function getScales() {
+  // Basically, how much bigger is the arena/world than the window?
   const windowSize = {x: window.innerWidth, y: window.innerHeight}
-  const windowAspectRatio = windowSize.x / windowSize.y
-  rectArena = elArenaMargin.getBoundingClientRect()
-  const arenaSize = { x: rectArena.width, y: rectArena.height}
-  const arenaAspectRatio = 1
-  let scale
-  if (windowAspectRatio > arenaAspectRatio) {
-    // Fit on height
-    scale = windowSize.y / arenaSize.y
-    
-  } else {
-    // Fit on width
-    scale = windowSize.x / arenaSize.x
+  const arenaRect = getArenaRect()
+  const arenaSize = { x: arenaRect.width, y: arenaRect.height}
+  return {
+    x: windowSize.x / arenaSize.x,
+    y: windowSize.y / arenaSize.y
   }
-  window.gsap.set(elWorld, {
-    scale,
-    x: 0,
-    y: 0
+}
+
+const getScalesAsArray = () => Object.values(getScales())
+const getMinScale = () => Math.min(...getScalesAsArray())
+const getMaxScale = () => Math.max(...getScalesAsArray())
+
+function resize() {
+  const world = getWorld()
+  gsap.set(world, {
+    scale: 1 
   })
-  rectArena = elArenaMargin.getBoundingClientRect()
-  window.gsap.to(elWorld, {
-    x: "+=" + (-rectArena.x + (window.innerWidth - rectArena.width)/2),
-    y: "+=" + (-rectArena.y + (window.innerHeight - rectArena.height)/2),
+  const semiwindow = document.getElementById("semiwindow")
+  const relCoord = MotionPathPlugin.getRelativePosition(semiwindow, getArena(), [0.5, 0.5], [0.5, 0.5])
+  gsap.to(world, {
+    scale: getMinScale(),
+    x: "-=" + relCoord.x,
+    y: "-=" + relCoord.y
   })
 }
 
@@ -140,14 +148,15 @@ function pointerdown_handler(ev) {
 function pointermove_handler(ev) {
   if (!isPanning) return;
   const panVector = coordSubtract(coordFromEvent(ev), pointerCoordAtStartOfPan)
-  elementCoord = coordAdd(elementCoordAtStartOfPan, panVector)
+  const multipliedPanVector = coordMultiply(panVector, panMultiplier)
+  elementCoord = coordAdd(elementCoordAtStartOfPan, multipliedPanVector)
   panElement(elementCoord)
   // logToElixir("panning!", ev)
 }
 
 function pointerup_handler(ev) {
+  if (!isPanning) return;
   elementCoordAtStartOfPan = elementCoord
-  // log(ev.type, ev);
   isPanning = false
   getWorld().releasePointerCapture(ev.pointerId)
 }
@@ -161,14 +170,13 @@ const Pan = {
     const el = this.el
     // Install event handlers for the pointer target
     el.onpointerdown = pointerdown_handler;
-    el.onpointermove = pointermove_handler;
+    el.onpointermove = pointermove_handler
     // Use same handler for pointer{up,cancel,out,leave} events since
     // the semantics for these events - in this app - are the same.
-    const debouncedPointerUpHandler = debounce(pointerup_handler, 250, true)
-    el.onpointerup = debouncedPointerUpHandler;
-    el.onpointercancel = debouncedPointerUpHandler;
-    el.onpointerout = debouncedPointerUpHandler;
-    el.onpointerleave = debouncedPointerUpHandler;
+    el.onpointerup = pointerup_handler;
+    el.onpointercancel = pointerup_handler;
+    el.onpointerout = pointerup_handler;
+    el.onpointerleave = pointerup_handler;
     panElement = (elementCoord) => {
       const coord = limitPan(elementCoord)
       window.gsap.to(el, { ...coord, duration: .25})
