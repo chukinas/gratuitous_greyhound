@@ -127,13 +127,26 @@ function zoomIn() {
 function zoomOut() {
   const currentScale = getCurrentScale()
   const maxZoomOutScale = getScaleToCover(world)
-  const scale = Math.max(maxZoomOutScale, currentScale - scaleStep)
-  gsap.to(world, {
-    scale,
-    duration,
-    ease: 'back',
-    onComplete: coverWorldContainer
-  })
+  const isAlreadyAtMaxZoomOut = currentScale < maxZoomOutScale + 0.001
+  if (isAlreadyAtMaxZoomOut) {
+    gsap.fromTo(world, {
+      scale: maxZoomOutScale * 0.95
+    },{
+      duration,
+      scale: maxZoomOutScale,
+      ease: 'back',
+      onComplete: coverWorldContainer
+    })
+  }
+  else {
+    const scale = Math.max(maxZoomOutScale, currentScale - scaleStep)
+    gsap.to(world, {
+      scale,
+      duration,
+      ease: 'back',
+      onComplete: coverWorldContainer
+    })
+  }
 }
 
 function getScales() {
@@ -182,13 +195,23 @@ function getScaleToCover(element) {
 
 function fitArena() {
   const relCoord = MotionPathPlugin.getRelativePosition(worldContainer, arena, [0.5, 0.5], [0.5, 0.5])
-  gsap.to(world, {
-    scale: getFitScale(arena),
-    x: "-=" + relCoord.x,
-    y: "-=" + relCoord.y,
-    duration,
-    ease: "back"
-  })
+  const scale = getFitScale(arena)
+  console.log({scale, current: getCurrentScale()})
+  const isAlreadyAtFitScale = Math.abs(scale - getCurrentScale()) < 0.001
+  if (isAlreadyAtFitScale) {
+    gsap.from(world, {
+      scale: scale * 0.95,
+      duration
+    })
+  } else {
+    gsap.to(world, {
+      scale,
+      x: "-=" + relCoord.x,
+      y: "-=" + relCoord.y,
+      duration,
+      ease: "back"
+    })
+  }
 }
 
 function pan(onComplete) {
