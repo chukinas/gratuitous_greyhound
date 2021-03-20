@@ -1,12 +1,18 @@
 // --------------------------------------------------------
+// CONFIG
+
+const interval = 100 // pan debounce interval (ms)
+const duration = 0.2 // tween duration (ms)
+const scaleStep = 0.2
+const maxZoomInScale = 0.4
+const panMultiplier = 1.5
+
+// --------------------------------------------------------
 // DATA
 
 // Global vars to cache event state
 const gsap = window.gsap
-const interval = 100 // pan debounce interval (ms)
-const duration = 0.2 // tween duration (ms)
 let panIntervalId
-const panMultiplier = 1.5
 // On PointerDown, save the current world and pointer coords here:
 let atPanStart
 // On PointerMove, save pointer coord here:
@@ -72,7 +78,6 @@ function getCoordAndScale(element) {
   // FROM: https://zellwk.com/blog/css-translate-values-in-javascript/
   const style = window.getComputedStyle(element)
   const matrix = style['transform'] || style.webkitTransform || style.mozTransform
-  console.log({matrix})
   // No transform property. Simply return 0 values.
   if (matrix === 'none' || typeof matrix === 'undefined') {
     return coordOrigin()
@@ -109,19 +114,25 @@ function getCurrentScale() {
 }
 
 function zoomIn() {
-  console.log(coordFromTransformedElement(world))
+  const currentScale = getCurrentScale()
+  const scale = Math.max(maxZoomInScale, currentScale + scaleStep)
   gsap.to(world, {
-    scale: "+=.1",
-    onComplete: () => coordFromTransformedElement(world)
+    scale: "+=" + scaleStep,
+    duration,
+    ease: 'back',
+    onComplete: coverWorldContainer
   })
 }
 
 function zoomOut() {
-  console.log(coordFromTransformedElement(world))
-  //const max
+  const currentScale = getCurrentScale()
+  const maxZoomOutScale = getScaleToCover(world)
+  const scale = Math.max(maxZoomOutScale, currentScale - scaleStep)
   gsap.to(world, {
-    scale: "-=.1",
-    onComplete: () => coordFromTransformedElement(world)
+    scale,
+    duration,
+    ease: 'back',
+    onComplete: coverWorldContainer
   })
 }
 
@@ -145,9 +156,7 @@ const getMaxScale = () => Math.max(...getScalesAsArray())
 function getFitScale(element) {
   const elementRect = element.getBoundingClientRect()
   const worldContainerRect = worldContainer.getBoundingClientRect()
-  console.log({elementRect, worldContainerRect})
   const relWidthScale = worldContainerRect.width / elementRect.width
-  console.log(relWidthScale)
   const relHeightScale = worldContainerRect.height / elementRect.height
   const relScale = Math.min(relWidthScale, relHeightScale)
   const absScale = relScale * getCurrentScale()
@@ -159,13 +168,16 @@ function getElementOrigSize(element) {
   return coordOrigin()
 }
 
+// TODO rename
 function getScaleToCover(element) {
-
-  return 1
-}
-
-function getScaleToFit(element) {
-  return .5
+  // DRYify
+  const elementRect = element.getBoundingClientRect()
+  const worldContainerRect = worldContainer.getBoundingClientRect()
+  const relWidthScale = worldContainerRect.width / elementRect.width
+  const relHeightScale = worldContainerRect.height / elementRect.height
+  const relScale = Math.max(relWidthScale, relHeightScale)
+  const absScale = relScale * getCurrentScale()
+  return absScale
 }
 
 function fitArena() {
