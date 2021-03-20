@@ -5,11 +5,11 @@
 const gsap = window.gsap
 let isPanning = false
 let elementCoord = { x: 0, y: 0 }
-let elementCoordAtStartOfPan = elementCoord
-let pointerCoordAtStartOfPan = null
 const panMultiplier = 1.5
 // TODO move all vars into atPanStart that are calculated only at pan start
 let atPanStart = {
+  elementCoord: null,
+  pointerCoord: null,
   scale: null // window size / arena size
 }
 
@@ -137,26 +137,26 @@ function limitPan(requestedCoord) {
 function pointerdown_handler(ev) {
   isPanning = true
   const rect = getWorldRect()
-  elementCoordAtStartOfPan = { 
+  atPanStart.elementCoord= { 
     x: rect.x,
     y: rect.y,
   }
-  pointerCoordAtStartOfPan = coordFromEvent(ev)
+  atPanStart.pointerCoord= coordFromEvent(ev)
   getWorld().setPointerCapture(ev.pointerId)
 }
 
 function pointermove_handler(ev) {
   if (!isPanning) return;
-  const panVector = coordSubtract(coordFromEvent(ev), pointerCoordAtStartOfPan)
+  const panVector = coordSubtract(coordFromEvent(ev), atPanStart.pointerCoord)
   const multipliedPanVector = coordMultiply(panVector, panMultiplier)
-  elementCoord = coordAdd(elementCoordAtStartOfPan, multipliedPanVector)
+  elementCoord = coordAdd(atPanStart.elementCoord, multipliedPanVector)
   panElement(elementCoord)
   // logToElixir("panning!", ev)
 }
 
 function pointerup_handler(ev) {
   if (!isPanning) return;
-  elementCoordAtStartOfPan = elementCoord
+  atPanStart.elementCoord= elementCoord
   isPanning = false
   getWorld().releasePointerCapture(ev.pointerId)
 }
