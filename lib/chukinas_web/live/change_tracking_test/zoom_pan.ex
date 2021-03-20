@@ -10,17 +10,19 @@ defmodule ChukinasWeb.ZoomPanLive do
     </style>
     <div class="fixed inset-0 bg-black">
     </div>
-    <%# TODO do I really need this extra div? %>
-    <div id="semiwindow" class="fixed inset-0">
+    <div
+      id="worldContainer"
+      class="fixed inset-0"
+      phx-hook="WorldContainerPanZoom"
+    >
       <div
-        class="bg-cat bg-cover"
+        id="world"
+        class="bg-cat bg-cover pointer-events-none"
         style="width:2100px;height:2000px;padding:500px"
         draggable=false
-        id="world"
-        phx-hook="Pan"
       >
         <div
-          id="arena-margin"
+          id="arena"
           class="bg-green-500 bg-opacity-50 select-none pointer-events-none"
           style="width:1100px;height:1000px;padding:50px;touch-action:none"
         >
@@ -40,13 +42,6 @@ defmodule ChukinasWeb.ZoomPanLive do
       phx-hook="RefitArena"
     >
       Click here to resize the arena
-    </button>
-    <button
-      id="printCoords"
-      class="fixed bg-red-400 bottom-8 right-8 p-8 text-center h-64 bg-opacity-80 hidden"
-      phx-hook="PrintCoordinates"
-    >
-      Print Coordinates
     </button>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/MotionPathPlugin.min.js"></script>

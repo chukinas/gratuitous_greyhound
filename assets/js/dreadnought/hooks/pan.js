@@ -14,26 +14,17 @@ let atPanStart = {
 }
 
 // --------------------------------------------------------
-// FUNCTIONS BOUND TO MOUNTED ELEMENT
+// DOM REFERENCES
 
-// Event Logger
-// let logToElixir = () => {}
+let worldContainer
+let world
+let arena
 
-// Pan Element
-let panElement = null
+function getWorldRect() { return world.getBoundingClientRect() }
+function getArenaRect() { return arena.getBoundingClientRect() }
 
 // --------------------------------------------------------
-// FUNCTIONS
-
-// function log(title, ev) {
-//   logToElixir({
-//     type: title,
-//     pointerId: ev.pointerId,
-//     pointerType: ev.pointerType,
-//     isPrimary: ev.isPrimary,
-//     coord: [ev.clientX, ev.clientY]
-//   })
-// } 
+// COORDINATES
 
 function coordFromEvent(ev) {
   return {
@@ -64,6 +55,9 @@ function coordMultiply(coord, multiplier) {
   }
 }
 
+// --------------------------------------------------------
+// FUNCTIONS
+
 function debounce(func, wait, immediate) {
   var timeout;
   return function() {
@@ -78,11 +72,6 @@ function debounce(func, wait, immediate) {
     if (callNow) func.apply(context, args);
   }
 }
-
-function getWorld() { return document.getElementById("world") }
-function getWorldRect() { return getWorld().getBoundingClientRect() }
-function getArena() { return document.getElementById("arena-margin") }
-function getArenaRect() { return getArena().getBoundingClientRect() }
 
 function getScales() {
   // Basically, how much bigger is the arena/world than the window?
@@ -100,17 +89,21 @@ const getMinScale = () => Math.min(...getScalesAsArray())
 const getMaxScale = () => Math.max(...getScalesAsArray())
 
 function resize() {
-  const world = getWorld()
   gsap.set(world, {
     scale: 1 
   })
-  const semiwindow = document.getElementById("semiwindow")
-  const relCoord = MotionPathPlugin.getRelativePosition(semiwindow, getArena(), [0.5, 0.5], [0.5, 0.5])
+  const worldContainer = document.getElementById("worldContainer")
+  const relCoord = MotionPathPlugin.getRelativePosition(worldContainer, arena, [0.5, 0.5], [0.5, 0.5])
   gsap.to(world, {
     scale: getMinScale(),
     x: "-=" + relCoord.x,
     y: "-=" + relCoord.y
   })
+}
+
+function pan(elementCoord) {
+  const coord = limitPan(elementCoord)
+  window.gsap.to(world, { ...coord, duration: .25})
 }
 
 function limitPan(requestedCoord) {
@@ -130,7 +123,6 @@ function limitPan(requestedCoord) {
   return coord
 }
 
-
 // --------------------------------------------------------
 // EVENT HANDLERS
 
@@ -142,58 +134,55 @@ function pointerdown_handler(ev) {
     y: rect.y,
   }
   atPanStart.pointerCoord= coordFromEvent(ev)
-  getWorld().setPointerCapture(ev.pointerId)
+  worldContainer.setPointerCapture(ev.pointerId)
 }
 
 function pointermove_handler(ev) {
   if (!isPanning) return;
+  console.log("move!")
   const panVector = coordSubtract(coordFromEvent(ev), atPanStart.pointerCoord)
   const multipliedPanVector = coordMultiply(panVector, panMultiplier)
   elementCoord = coordAdd(atPanStart.elementCoord, multipliedPanVector)
-  panElement(elementCoord)
-  // logToElixir("panning!", ev)
+  pan(elementCoord)
 }
 
 function pointerup_handler(ev) {
   if (!isPanning) return;
   atPanStart.elementCoord= elementCoord
   isPanning = false
-  getWorld().releasePointerCapture(ev.pointerId)
+  worldContainer.releasePointerCapture(ev.pointerId)
 }
 
 // --------------------------------------------------------
 // HOOKS
 
-const Pan = {
+const WorldContainerPanZoom = {
   mounted() {
-    const me = this
-    const el = this.el
-    // Install event handlers for the pointer target
-    el.onpointerdown = pointerdown_handler;
-    el.onpointermove = pointermove_handler
-    // Use same handler for pointer{up,cancel,out,leave} events since
-    // the semantics for these events - in this app - are the same.
-    el.onpointerup = pointerup_handler;
-    el.onpointercancel = pointerup_handler;
-    el.onpointerout = pointerup_handler;
-    el.onpointerleave = pointerup_handler;
-    panElement = (elementCoord) => {
-      const coord = limitPan(elementCoord)
-      window.gsap.to(el, { ...coord, duration: .25})
-    }
+    // Set DOM references
+    worldContainer = this.el
+    // TODO can I replace document with worldContainer?
+    world = document.getElementById("world")
+    arena = document.getElementById("arena")
+    // Set pointer event handlers
+    worldContainer.onpointerdown = pointerdown_handler;
+    worldContainer.onpointermove = pointermove_handler
+    worldContainer.onpointerup = pointerup_handler;
+    worldContainer.onpointercancel = pointerup_handler;
+    worldContainer.onpointerout = pointerup_handler;
+    worldContainer.onpointerleave = pointerup_handler;
+  },
+  destroyed() {
+    worldContainer = null;
+    world = null;
+    arena = null;
   }
 }
 
+// TODO rename ButtonFitArena
 const RefitArena = {
   mounted() {
     this.el.onclick = resize
   }
 }
 
-const PrintCoordinates = {
-  mounted() {
-    this.el.onclick = () => console.log("testing")
-  }
-}
-
-export default { Pan, RefitArena, PrintCoordinates }
+export default { WorldContainerPanZoom, RefitArena }
