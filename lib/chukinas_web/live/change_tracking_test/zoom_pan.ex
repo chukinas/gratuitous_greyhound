@@ -39,7 +39,7 @@ defmodule ChukinasWeb.ZoomPanLive do
     <button
       id="btnResize"
       class="fixed bg-red-400 bottom-8 inset-x-8 p-8 text-center h-32 bg-opacity-80"
-      phx-hook="RefitArena"
+      phx-hook="ButtonFitArena"
     >
       Click here to resize the arena
     </button>

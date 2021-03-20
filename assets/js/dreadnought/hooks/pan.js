@@ -4,14 +4,12 @@
 // Global vars to cache event state
 const gsap = window.gsap
 let isPanning = false
-let elementCoord = { x: 0, y: 0 }
-const panMultiplier = 1.5
-// TODO move all vars into atPanStart that are calculated only at pan start
-let atPanStart = {
-  elementCoord: null,
-  pointerCoord: null,
-  scale: null // window size / arena size
-}
+// TODO dynamically calculate
+let panMultiplier = 1.5
+// On PointerDown, save the current world and pointer coords here:
+let atPanStart
+// On PointerMove, save pointer coord here:
+let pointerCoord
 
 // --------------------------------------------------------
 // DOM REFERENCES
@@ -25,13 +23,7 @@ function getArenaRect() { return arena.getBoundingClientRect() }
 
 // --------------------------------------------------------
 // COORDINATES
-
-function coordFromEvent(ev) {
-  return {
-    x: ev.clientX,
-    y: ev.clientY
-  }
-}
+// These function each return an object with x, y keys.
 
 function coordSubtract(coord1, coord2) {
   const result = {
@@ -48,10 +40,50 @@ function coordAdd(coord1, coord2) {
   }
 }
 
-function coordMultiply(coord, multiplier) {
+function coordScalarMultiply(coord, multiplier) {
   return {
     x: coord.x * panMultiplier,
     y: coord.y * panMultiplier
+  }
+}
+
+function coordFromEvent(ev) {
+  return {
+    x: ev.clientX,
+    y: ev.clientY
+  }
+}
+
+function coordFromTransformedElement(element) {
+  // FROM: https://zellwk.com/blog/css-translate-values-in-javascript/
+  const style = window.getComputedStyle(element)
+  const matrix = style['transform'] || style.webkitTransform || style.mozTransform
+  // No transform property. Simply return 0 values.
+  if (matrix === 'none' || typeof matrix === 'undefined') {
+    return {
+      x: 0,
+      y: 0,
+    }
+  }
+  // Can either be 2d or 3d transform
+  const matrixType = matrix.includes('3d') ? '3d' : '2d'
+  const matrixValues = matrix.match(/matrix.*\((.+)\)/)[1].split(', ')
+  // 2d matrices have 6 values
+  // Last 2 values are X and Y.
+  // 2d matrices does not have Z value.
+  if (matrixType === '2d') {
+    return {
+      x: Number(matrixValues[4]),
+      y: Number(matrixValues[5]),
+    }
+  }
+  // 3d matrices have 16 values
+  // The 13th, 14th, and 15th values are X, Y, and Z
+  if (matrixType === '3d') {
+    return {
+      x: Number(matrixValues[12]),
+      y: Number(matrixValues[13]),
+    }
   }
 }
 
@@ -88,7 +120,7 @@ const getScalesAsArray = () => Object.values(getScales())
 const getMinScale = () => Math.min(...getScalesAsArray())
 const getMaxScale = () => Math.max(...getScalesAsArray())
 
-function resize() {
+function fitArena() {
   gsap.set(world, {
     scale: 1 
   })
@@ -101,9 +133,13 @@ function resize() {
   })
 }
 
-function pan(elementCoord) {
-  const coord = limitPan(elementCoord)
-  window.gsap.to(world, { ...coord, duration: .25})
+function pan() {
+  let panVector = coordSubtract(pointerCoord, atPanStart.pointerCoord)
+  panVector = coordScalarMultiply(panVector, panMultiplier)
+  const nextWorldCoord = coordAdd(atPanStart.worldCoord, panVector)
+  window.gsap.to(world, {
+    ...nextWorldCoord
+  })
 }
 
 function limitPan(requestedCoord) {
@@ -128,27 +164,22 @@ function limitPan(requestedCoord) {
 
 function pointerdown_handler(ev) {
   isPanning = true
-  const rect = getWorldRect()
-  atPanStart.elementCoord= { 
-    x: rect.x,
-    y: rect.y,
+  atPanStart = {
+    worldCoord: coordFromTransformedElement(world),
+    pointerCoord: coordFromEvent(ev)
   }
-  atPanStart.pointerCoord= coordFromEvent(ev)
   worldContainer.setPointerCapture(ev.pointerId)
 }
 
 function pointermove_handler(ev) {
   if (!isPanning) return;
-  console.log("move!")
-  const panVector = coordSubtract(coordFromEvent(ev), atPanStart.pointerCoord)
-  const multipliedPanVector = coordMultiply(panVector, panMultiplier)
-  elementCoord = coordAdd(atPanStart.elementCoord, multipliedPanVector)
-  pan(elementCoord)
+  pointerCoord = coordFromEvent(ev)
+  pan()
 }
 
 function pointerup_handler(ev) {
   if (!isPanning) return;
-  atPanStart.elementCoord= elementCoord
+  console.log("pointer up!")
   isPanning = false
   worldContainer.releasePointerCapture(ev.pointerId)
 }
@@ -178,11 +209,10 @@ const WorldContainerPanZoom = {
   }
 }
 
-// TODO rename ButtonFitArena
-const RefitArena = {
+const ButtonFitArena = {
   mounted() {
-    this.el.onclick = resize
+    this.el.onclick = fitArena
   }
 }
 
-export default { WorldContainerPanZoom, RefitArena }
+export default { WorldContainerPanZoom, ButtonFitArena }
