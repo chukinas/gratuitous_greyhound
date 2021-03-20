@@ -65,6 +65,7 @@ function coordFromTransformedElement(element) {
   // FROM: https://zellwk.com/blog/css-translate-values-in-javascript/
   const style = window.getComputedStyle(element)
   const matrix = style['transform'] || style.webkitTransform || style.mozTransform
+  console.log({matrix})
   // No transform property. Simply return 0 values.
   if (matrix === 'none' || typeof matrix === 'undefined') {
     return coordOrigin()
@@ -95,11 +96,19 @@ function coordFromTransformedElement(element) {
 // FUNCTIONS
 
 function zoomIn() {
-  console.log("zooming in!")
+  console.log(coordFromTransformedElement(world))
+  gsap.to(world, {
+    scale: "+=.1",
+    onComplete: () => coordFromTransformedElement(world)
+  })
 }
 
 function zoomOut() {
-  console.log("zooming out!")
+  console.log(coordFromTransformedElement(world))
+  gsap.to(world, {
+    scale: "-=.1",
+    onComplete: () => coordFromTransformedElement(world)
+  })
 }
 
 function getScales() {
