@@ -3,9 +3,9 @@
 
 // Global vars to cache event state
 const gsap = window.gsap
+const interval = 100 // pan debounce interval (ms)
 let panIntervalId
-// TODO dynamically calculate
-let panMultiplier = 1.5
+const panMultiplier = 1.5
 // On PointerDown, save the current world and pointer coords here:
 let atPanStart
 // On PointerMove, save pointer coord here:
@@ -24,6 +24,13 @@ function getArenaRect() { return arena.getBoundingClientRect() }
 // --------------------------------------------------------
 // COORDINATES
 // These function each return an object with x, y keys.
+
+function coordOrigin() {
+  return {
+    x: 0,
+    y: 0
+  }
+}
 
 function coordSubtract(coord1, coord2) {
   const result = {
@@ -60,10 +67,7 @@ function coordFromTransformedElement(element) {
   const matrix = style['transform'] || style.webkitTransform || style.mozTransform
   // No transform property. Simply return 0 values.
   if (matrix === 'none' || typeof matrix === 'undefined') {
-    return {
-      x: 0,
-      y: 0,
-    }
+    return coordOrigin()
   }
   // Can either be 2d or 3d transform
   const matrixType = matrix.includes('3d') ? '3d' : '2d'
@@ -133,30 +137,35 @@ function fitArena() {
   })
 }
 
-function pan() {
+function pan(onComplete) {
   let panVector = coordSubtract(pointerCoord, atPanStart.pointerCoord)
   panVector = coordScalarMultiply(panVector, panMultiplier)
   const nextWorldCoord = coordAdd(atPanStart.worldCoord, panVector)
-  window.gsap.to(world, {
-    ...nextWorldCoord
+  gsap.to(world, {
+    ...nextWorldCoord,
+    ease: 'none',
+    duration: .2,
+    onComplete
   })
 }
 
-function limitPan(requestedCoord) {
-  // Prevent user from seeing the body bg color at top-left
-  let coord = {
-    x: Math.min(0, requestedCoord.x),
-    y: Math.min(0, requestedCoord.y)
+function coverWorldContainer() {
+  const worldContainerRect = worldContainer.getBoundingClientRect()
+  const worldRect = getWorldRect()
+  const tooFarRight = Math.min(0, -worldRect.left)
+  const tooFarTop = Math.min(0, -worldRect.top)
+  const tooFarLeft = Math.max(0, worldContainerRect.right - worldRect.right)
+  const tooFarBottom = Math.max(0, worldContainerRect.bottom - worldRect.bottom)
+  const panVector = {
+    x: tooFarRight || tooFarLeft || 0,
+    y: tooFarTop || tooFarBottom || 0,
   }
-  // Prevent user from seeing the body bg color at bottom-right
-  const rect = getWorldRect()
-  if (rect.width >= window.innerWidth) {
-    coord.x = Math.max(window.innerWidth - rect.width, coord.x)
-  }
-  if (rect.height >= window.innerHeight) {
-    coord.y = Math.max(window.innerHeight - rect.height, coord.y)
-  }
-  return coord
+  const currentWorldCoord = coordFromTransformedElement(world)
+  gsap.to(world, {
+    ...coordAdd(currentWorldCoord, panVector),
+    ease: 'back',
+    duration: .2
+  })
 }
 
 // --------------------------------------------------------
@@ -167,7 +176,7 @@ function pointerdown_handler(ev) {
     worldCoord: coordFromTransformedElement(world),
     pointerCoord: coordFromEvent(ev)
   }
-  panIntervalId = window.setInterval(pan, 150)
+  panIntervalId = window.setInterval(pan, interval)
   worldContainer.setPointerCapture(ev.pointerId)
 }
 
@@ -179,7 +188,7 @@ function pointermove_handler(ev) {
 
 function pointerup_handler(ev) {
   if (panIntervalId) {
-    pan()
+    pan(coverWorldContainer)
     // Clear stuff
     clearInterval(panIntervalId)
     panIntervalId = null
