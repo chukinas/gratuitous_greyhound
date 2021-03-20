@@ -3,7 +3,7 @@
 
 // Global vars to cache event state
 const gsap = window.gsap
-let isPanning = false
+let panIntervalId
 // TODO dynamically calculate
 let panMultiplier = 1.5
 // On PointerDown, save the current world and pointer coords here:
@@ -163,25 +163,26 @@ function limitPan(requestedCoord) {
 // EVENT HANDLERS
 
 function pointerdown_handler(ev) {
-  isPanning = true
   atPanStart = {
     worldCoord: coordFromTransformedElement(world),
     pointerCoord: coordFromEvent(ev)
   }
+  panIntervalId = window.setInterval(pan, 150)
   worldContainer.setPointerCapture(ev.pointerId)
 }
 
 function pointermove_handler(ev) {
-  if (!isPanning) return;
-  pointerCoord = coordFromEvent(ev)
-  pan()
+  if (panIntervalId) {
+    pointerCoord = coordFromEvent(ev)
+  }
 }
 
 function pointerup_handler(ev) {
-  if (!isPanning) return;
-  console.log("pointer up!")
-  isPanning = false
-  worldContainer.releasePointerCapture(ev.pointerId)
+  if (panIntervalId) {
+    clearInterval(panIntervalId)
+    pan()
+    worldContainer.releasePointerCapture(ev.pointerId)
+  }
 }
 
 // --------------------------------------------------------
