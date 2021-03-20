@@ -4,6 +4,7 @@
 // Global vars to cache event state
 const gsap = window.gsap
 const interval = 100 // pan debounce interval (ms)
+const duration = 0.2 // tween duration (ms)
 let panIntervalId
 const panMultiplier = 1.5
 // On PointerDown, save the current world and pointer coords here:
@@ -27,6 +28,7 @@ function getArenaRect() { return arena.getBoundingClientRect() }
 
 function coordOrigin() {
   return {
+    scale: 1,
     x: 0,
     y: 0
   }
@@ -62,6 +64,11 @@ function coordFromEvent(ev) {
 }
 
 function coordFromTransformedElement(element) {
+  const coordAndScale = getCoordAndScale(element)
+  return { x: coordAndScale.x, y: coordAndScale.y }
+}
+
+function getCoordAndScale(element) {
   // FROM: https://zellwk.com/blog/css-translate-values-in-javascript/
   const style = window.getComputedStyle(element)
   const matrix = style['transform'] || style.webkitTransform || style.mozTransform
@@ -80,6 +87,7 @@ function coordFromTransformedElement(element) {
     return {
       x: Number(matrixValues[4]),
       y: Number(matrixValues[5]),
+      scale: Number(matrixValues[0]),
     }
   }
   // 3d matrices have 16 values
@@ -88,12 +96,17 @@ function coordFromTransformedElement(element) {
     return {
       x: Number(matrixValues[12]),
       y: Number(matrixValues[13]),
+      scale: Number(matrixValues[0]),
     }
   }
 }
 
 // --------------------------------------------------------
 // FUNCTIONS
+
+function getCurrentScale() {
+  return getCoordAndScale(world).scale
+}
 
 function zoomIn() {
   console.log(coordFromTransformedElement(world))
@@ -105,6 +118,7 @@ function zoomIn() {
 
 function zoomOut() {
   console.log(coordFromTransformedElement(world))
+  //const max
   gsap.to(world, {
     scale: "-=.1",
     onComplete: () => coordFromTransformedElement(world)
@@ -123,19 +137,45 @@ function getScales() {
 }
 
 const getScalesAsArray = () => Object.values(getScales())
+// Min Scale is needed to set a Zoom Out limit
 const getMinScale = () => Math.min(...getScalesAsArray())
+// Max Scale is needed to set a Zoom In limit
 const getMaxScale = () => Math.max(...getScalesAsArray())
 
+function getFitScale(element) {
+  const elementRect = element.getBoundingClientRect()
+  const worldContainerRect = worldContainer.getBoundingClientRect()
+  console.log({elementRect, worldContainerRect})
+  const relWidthScale = worldContainerRect.width / elementRect.width
+  console.log(relWidthScale)
+  const relHeightScale = worldContainerRect.height / elementRect.height
+  const relScale = Math.min(relWidthScale, relHeightScale)
+  const absScale = relScale * getCurrentScale()
+  return absScale
+}
+
+function getElementOrigSize(element) {
+  // TODO temp
+  return coordOrigin()
+}
+
+function getScaleToCover(element) {
+
+  return 1
+}
+
+function getScaleToFit(element) {
+  return .5
+}
+
 function fitArena() {
-  gsap.set(world, {
-    scale: 1 
-  })
-  const worldContainer = document.getElementById("worldContainer")
   const relCoord = MotionPathPlugin.getRelativePosition(worldContainer, arena, [0.5, 0.5], [0.5, 0.5])
   gsap.to(world, {
-    scale: getMinScale(),
+    scale: getFitScale(arena),
     x: "-=" + relCoord.x,
-    y: "-=" + relCoord.y
+    y: "-=" + relCoord.y,
+    duration,
+    ease: "back"
   })
 }
 
@@ -146,7 +186,7 @@ function pan(onComplete) {
   gsap.to(world, {
     ...nextWorldCoord,
     ease: 'none',
-    duration: .2,
+    duration,
     onComplete
   })
 }
@@ -167,7 +207,7 @@ function coverWorldContainer() {
     gsap.to(world, {
       ...coordAdd(currentWorldCoord, panVector),
       ease: 'back',
-      duration: .2
+      duration
     })
   }
 }
