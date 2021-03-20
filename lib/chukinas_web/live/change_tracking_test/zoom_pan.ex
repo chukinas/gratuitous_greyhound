@@ -36,13 +36,29 @@ defmodule ChukinasWeb.ZoomPanLive do
         </div>
       </div>
     </div>
-    <button
-      id="btnResize"
-      class="fixed bg-red-400 bottom-8 inset-x-8 p-8 text-center h-32 bg-opacity-80"
-      phx-hook="ButtonFitArena"
-    >
-      Click here to resize the arena
-    </button>
+    <div class="fixed top-8 right-8 flex flex-col gap-4">
+      <button
+        id="btnZoomIn"
+        class="bg-red-400 text-center bg-opacity-80 p-4"
+        phx-hook="ButtonZoomIn"
+      >
+        Zoom In
+      </button>
+      <button
+        id="btnZoomOut"
+        class="bg-red-400 text-center bg-opacity-80 p-4"
+        phx-hook="ButtonZoomOut"
+      >
+        Zoom Out
+      </button>
+      <button
+        id="btnFit"
+        class="bg-red-400 text-center bg-opacity-80 p-4"
+        phx-hook="ButtonFitArena"
+      >
+        Fit
+      </button>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/MotionPathPlugin.min.js"></script>
     <script>gsap.registerPlugin(MotionPathPlugin);</script>

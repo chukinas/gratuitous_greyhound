@@ -94,6 +94,14 @@ function coordFromTransformedElement(element) {
 // --------------------------------------------------------
 // FUNCTIONS
 
+function zoomIn() {
+  console.log("zooming in!")
+}
+
+function zoomOut() {
+  console.log("zooming out!")
+}
+
 function getScales() {
   // Basically, how much bigger is the arena/world than the window?
   const windowSize = {x: window.innerWidth, y: window.innerHeight}
@@ -191,7 +199,6 @@ const WorldContainerPanZoom = {
   mounted() {
     // Set DOM references
     worldContainer = this.el
-    // TODO can I replace document with worldContainer?
     world = document.getElementById("world")
     arena = document.getElementById("arena")
     // Set pointer event handlers
@@ -215,4 +222,16 @@ const ButtonFitArena = {
   }
 }
 
-export default { WorldContainerPanZoom, ButtonFitArena }
+const ButtonZoomIn = {
+  mounted() {
+    this.el.onclick = zoomIn
+  }
+}
+
+const ButtonZoomOut = {
+  mounted() {
+    this.el.onclick = zoomOut
+  }
+}
+
+export default { WorldContainerPanZoom, ButtonFitArena, ButtonZoomIn, ButtonZoomOut }
