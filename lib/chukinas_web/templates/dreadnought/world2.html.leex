@@ -1,0 +1,33 @@
+<style>
+  body {
+    touch-action:none
+  }
+</style>
+<div class="fixed inset-0 bg-black">
+</div>
+<div
+  id="worldContainer"
+  class="fixed inset-0"
+  phx-hook="WorldContainerPanZoom"
+>
+  <div
+    id="world"
+    class="bg-cat bg-cover pointer-events-none"
+    style="width:2100px;height:2000px;padding:500px"
+    draggable=false
+  >
+    <div
+      id="arena"
+      class="bg-green-500 bg-opacity-50 select-none pointer-events-none"
+      style="width:1100px;height:1000px;padding:50px;touch-action:none"
+    >
+      Arena Margin
+      <div
+        class="bg-yellow-500 bg-opacity-50"
+        style="height:750px;touch-action:none"
+      >
+        Arena
+      </div>
+    </div>
+  </div>
+</div>
