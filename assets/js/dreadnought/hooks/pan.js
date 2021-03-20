@@ -179,9 +179,11 @@ function pointermove_handler(ev) {
 
 function pointerup_handler(ev) {
   if (panIntervalId) {
-    clearInterval(panIntervalId)
     pan()
-    worldContainer.releasePointerCapture(ev.pointerId)
+    // Clear stuff
+    clearInterval(panIntervalId)
+    panIntervalId = null
+    atPanStart = null
   }
 }
 
