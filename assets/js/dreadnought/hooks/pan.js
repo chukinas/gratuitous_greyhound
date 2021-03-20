@@ -94,21 +94,6 @@ function coordFromTransformedElement(element) {
 // --------------------------------------------------------
 // FUNCTIONS
 
-function debounce(func, wait, immediate) {
-  var timeout;
-  return function() {
-    var context = this, args = arguments;
-    var later = function() {
-        timeout = null;
-        if (!immediate) func.apply(context, args);
-    };
-    var callNow = immediate && !timeout;
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-    if (callNow) func.apply(context, args);
-  }
-}
-
 function getScales() {
   // Basically, how much bigger is the arena/world than the window?
   const windowSize = {x: window.innerWidth, y: window.innerHeight}
@@ -160,21 +145,24 @@ function coverWorldContainer() {
     x: tooFarRight || tooFarLeft || 0,
     y: tooFarTop || tooFarBottom || 0,
   }
-  const currentWorldCoord = coordFromTransformedElement(world)
-  gsap.to(world, {
-    ...coordAdd(currentWorldCoord, panVector),
-    ease: 'back',
-    duration: .2
-  })
+  if (panVector.x || panVector.y) {
+    const currentWorldCoord = coordFromTransformedElement(world)
+    gsap.to(world, {
+      ...coordAdd(currentWorldCoord, panVector),
+      ease: 'back',
+      duration: .2
+    })
+  }
 }
 
 // --------------------------------------------------------
 // EVENT HANDLERS
 
 function pointerdown_handler(ev) {
+  pointerCoord = coordFromEvent(ev)
   atPanStart = {
     worldCoord: coordFromTransformedElement(world),
-    pointerCoord: coordFromEvent(ev)
+    pointerCoord
   }
   panIntervalId = window.setInterval(pan, interval)
   worldContainer.setPointerCapture(ev.pointerId)
