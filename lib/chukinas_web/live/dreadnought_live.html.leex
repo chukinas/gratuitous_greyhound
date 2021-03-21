@@ -3,66 +3,56 @@
     height: 0;
   }
   body {
-    background-image: url("<%= Routes.static_path(@socket, "/images/ocean.png") %>");
+    background-color: black;
     touch-action:none;
   }
 </style>
 
-<div class="overflow-hidden h-screen w-screen relative">
-  
-  <%# Let user know they're looking at dev page %>
-  <%= if @live_action == :dev do %> 
-    <div class="absolute top-0 left-0 h-screen w-screen bg-red-500 opacity-20"></div>
-    <div class="absolute top-0 left-0 p-8 text-lg">DEV</div>
-    <div class="absolute top-0 right-0 p-8 text-lg ">DEV</div>
-    <div class="absolute bottom-0 right-0 p-8 text-lg">DEV</div>
-    <div class="absolute bottom-0 left-0 p-8 text-lg">DEV</div>
-  <% end %>
+<%# The World2 %>
+<%= DreadnoughtView.render "world2.html", %{socket: @socket, live_action: @live_action, mission: @mission} %>
 
+<div class="overflow-hidden h-screen w-screen relative">
   <%# The World %>
   <%= DreadnoughtView.render "world.html", %{socket: @socket, live_action: @live_action, mission: @mission} %>
-
-  <%# Command Panel %>
-  <%= if @live_action == :play do %>
-    <%= live_component @socket, Dreadnought.CommandPanel, id: :command_panel, commands: @mission.hand %>
-  <% end %>
-
-  <%# Welcome! %>
-  <%= if @live_action == :welcome do %>
-    <%= DreadnoughtView.message %{socket: @socket, button: %{text: "Start Game", route: "/dreadnought/disclaimer"}} do %>
-      <%= DreadnoughtView.render "welcome.html" %>
-    <% end %>
-  <% end %>
-
-  <%# Disclaimer %>
-  <%= if @live_action == :disclaimer do %>
-    <%= DreadnoughtView.message %{socket: @socket, button: %{text: "Start Game", route: "/dreadnought/play"}} do %>
-      <%= DreadnoughtView.render "disclaimer.html" %>
-    <% end %>
-  <% end %>
-
-  <%# Playing! %>
-  <%= if @live_action == :play do %> 
-    <div class="absolute right-0 top-0 padding-16">
-      <button
-        id="sliderSyncButton"
-        class="bg-blue-200 p-2 rounded"
-        phx-hook="BeginButton"
-      >
-        Begin!
-      </button>
-    </div>
-  <% end %>
-
-  <%# Game Over! %>
-  <%= if @live_action == :game_over do %>
-    <%= DreadnoughtView.message %{socket: @socket, button: %{text: "Play Again", route: "/dreadnought/play"}} do %>
-      <h1 class="text-3xl font-bold font-display text-center uppercase tracking-widest p-16">
-        Game Over
-      </h1>
-    <% end %>
-  <% end %>
 </div>
+
+<%# Welcome! %>
+<%= if @live_action == :welcome do %>
+  <%= DreadnoughtView.message %{socket: @socket, button: %{text: "Start Game", route: "/dreadnought/disclaimer"}} do %>
+    <%= DreadnoughtView.render "welcome.html" %>
+  <% end %>
+<% end %>
+
+<%# Game Over! %>
+<%= if @live_action == :game_over do %>
+  <%= DreadnoughtView.message %{socket: @socket, button: %{text: "Play Again", route: "/dreadnought/play"}} do %>
+    <h1 class="text-3xl font-bold font-display text-center uppercase tracking-widest p-16">
+      Game Over
+    </h1>
+  <% end %>
+<% end %>
+
+<%# Command Panel %>
+<%= if @live_action == :play do %>
+  <div class="absolute right-0 top-0 padding-16">
+    <button
+      id="sliderSyncButton"
+      class="bg-blue-200 p-2 rounded"
+      phx-hook="BeginButton"
+    >
+      Begin!
+    </button>
+  </div>
+  <%= live_component @socket, Dreadnought.CommandPanel, id: :command_panel, commands: @mission.hand %>
+<% end %>
+
+<%# Disclaimer %>
+<%= if @live_action == :disclaimer do %>
+  <%= DreadnoughtView.message %{socket: @socket, button: %{text: "Start Game", route: "/dreadnought/play"}} do %>
+    <%= DreadnoughtView.render "disclaimer.html" %>
+  <% end %>
+<% end %>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/MotionPathPlugin.min.js"></script>
 <script>gsap.registerPlugin(MotionPathPlugin);</script>
