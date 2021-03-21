@@ -53,57 +53,82 @@
 >
   <div
     id="world"
-    class="bg-cover pointer-events-none"
+    class="bg-cover pointer-events-none relative select-none"
     style="width:2100px;height:2000px;padding:500px"
     draggable=false
   >
-    <div class="select-none">
-      <img 
-        src="<%= Routes.static_path(@socket, "/images/island_top_left.png") %>" 
-        class="absolute top-0 left-0"
-        style="width:800px"
-      >
-      <img 
-        id="islandBottomLeft"
-        src="<%= Routes.static_path(@socket, "/images/island_top_left.png") %>" 
-      >
-      <img 
-        id="islandTopRight"
-        src="<%= Routes.static_path(@socket, "/images/island_top_left.png") %>" 
-      >
-      <img 
-        id="islandBottomRight"
-        src="<%= Routes.static_path(@socket, "/images/island_top_left.png") %>" 
-      >
-      <img 
-        id="islandSideLeft"
-        src="<%= Routes.static_path(@socket, "/images/island_side.png") %>" 
-      > 
-      <img 
-        src="<%= Routes.static_path(@socket, "/images/island_side.png") %>" 
-        class="absolute top-0" 
-        style="left:1000px; width: 600px"
-      > 
-      <img 
-        id="islandMiddle1"
-        src="<%= Routes.static_path(@socket, "/images/island_middle.png") %>" 
-      > 
-      <img 
-        id="islandMiddle2"
-        src="<%= Routes.static_path(@socket, "/images/island_middle.png") %>" 
-      > 
-      <%= render "ship.html", %{socket: @socket} %>
-    </div>
+    <img 
+      id="islandBottomRight"
+      src="<%= Routes.static_path(@socket, "/images/island_top_left.png") %>" 
+    >
+    <img 
+      src="<%= Routes.static_path(@socket, "/images/island_top_left.png") %>" 
+      class="absolute top-0 left-0"
+      style="width:800px"
+    >
+    <img 
+      id="islandBottomLeft"
+      src="<%= Routes.static_path(@socket, "/images/island_top_left.png") %>" 
+    >
+    <img 
+      id="islandTopRight"
+      src="<%= Routes.static_path(@socket, "/images/island_top_left.png") %>" 
+    >
+    <img 
+      id="islandSideLeft"
+      src="<%= Routes.static_path(@socket, "/images/island_side.png") %>" 
+    > 
+    <img 
+      src="<%= Routes.static_path(@socket, "/images/island_side.png") %>" 
+      class="absolute top-0" 
+      style="left:1000px; width: 600px"
+    > 
+    <img 
+      id="islandMiddle1"
+      src="<%= Routes.static_path(@socket, "/images/island_middle.png") %>" 
+    > 
+    <img 
+      id="islandMiddle2"
+      src="<%= Routes.static_path(@socket, "/images/island_middle.png") %>" 
+    > 
+    <%= render "ship.html", %{socket: @socket} %>
     <div
       id="arena"
       class="bg-green-500 bg-opacity-10 select-none pointer-events-none"
       style="width:1100px;height:1000px;padding:50px;touch-action:none"
     >
-      <div
-        class="bg-yellow-500 bg-opacity-10"
-        style="height:750px;touch-action:none"
-      >
-      </div>
     </div>
+    <svg 
+      class="absolute top-0 left-0"
+      viewBox="0 0 2100 2000"
+      xmlns="http://www.w3.org/2000/svg" 
+      stroke="red" 
+      stroke-width="20"
+      fill="none">
+      <%# Left Side %>
+      <circle cx="50" cy="700" r="4" />
+      <circle cx="50" cy="1450" r="4" />
+      <%# Right Side %>
+      <circle cx="2050" cy="650" r="4" />
+      <circle cx="2050" cy="1100" r="4" stroke="green"/>
+      <%# Top Side %>
+      <circle cx="900" cy="50" r="4" />
+      <circle cx="1700" cy="50" r="4" />
+      <%# Bottom Side %>
+      <circle cx="500" cy="1900" r="4" />
+      <circle cx="1000" cy="1900" r="4" />
+      <%# Internal Points %>
+      <circle cx="1300" cy="800" r="4" />
+      <circle cx="1000" cy="1200" r="4" />
+      <circle cx="1850" cy="1500" r="4" stroke="green"/>
+      <circle cx="1560" cy="1550" r="4"stroke="green" />
+      <circle cx="700" cy="1500" r="4" />
+      <circle cx="400" cy="900" r="4" />
+      <circle cx="700" cy="400" r="4" />
+      <circle cx="1100" cy="350" r="4" />
+      <circle cx="1800" cy="700" r="4" />
+      <path id="welcomePathTopLeft" d="M -64.637057,709.88102 C 329.70156,600.49149 346.41714,604.95741 571.10957,468.79178 795.80201,332.62615 1027.8174,259.95501 942.16969,-44.31738" />
+      <path id="welcomePathTopRight" d="m 1698.1582,-100 c -58.2671,367.545788 -21.8363,275.258918 -13.2271,442.873908 8.6091,167.61496 -435.9387,446.16892 -589.8071,719.47234 -153.86812,273.3034 436.0481,664.0676 731.0938,444.9329 295.0458,-219.1346 520.8073,-585.34661 520.8073,-585.34661" />
+    </svg>
   </div>
 </div>
