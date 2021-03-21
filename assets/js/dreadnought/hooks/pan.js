@@ -300,11 +300,11 @@ const WorldContainerPanZoom = {
     worldContainer.onpointercancel = pointerup_handler;
     worldContainer.onpointerout = pointerup_handler;
     worldContainer.onpointerleave = pointerup_handler;
-    fitArena({zeroDuration: true})
+    //fitArena({zeroDuration: true})
   },
   updated() {
     console.log("world updated!")
-    fitArena({zeroDuration: true})
+    //fitArena({zeroDuration: true})
   },
   destroyed() {
     worldContainer = null;

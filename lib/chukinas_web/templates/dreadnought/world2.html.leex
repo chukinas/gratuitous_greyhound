@@ -16,6 +16,27 @@
     style="width:2100px;height:2000px;padding:500px"
     draggable=false
   >
+    <%# Welcome Screen Demo %>
+    <%= if @live_action == :welcome do %>
+    <div class="">
+      <img 
+        src="<%= Routes.static_path(@socket, "/images/island_top_left.png") %>" 
+        class="absolute top-0 left-0"
+        style="width:800px"
+      >
+      <img 
+        src="<%= Routes.static_path(@socket, "/images/island_side.png") %>" 
+        class="absolute top-0" 
+        style="left:1000px; width: 600px"
+      > 
+      <img 
+        src="<%= Routes.static_path(@socket, "/images/island_middle.png") %>" 
+        class="absolute" 
+        style="top:500px;left:500px; width: 900px"
+      > 
+      <%= render "ship.html", %{socket: @socket} %>
+    </div>
+    <% end %>
     <div
       id="arena"
       class="bg-green-500 bg-opacity-50 select-none pointer-events-none"
