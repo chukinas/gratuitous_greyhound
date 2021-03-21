@@ -29,6 +29,14 @@ function gameOver(unitHookObject) {
 const pathIds =[
   "#welcomePathTopLeft",
   "#welcomePathTopRight",
+  "#path856",
+  "#path858",
+  "#path860",
+  "#path862",
+  "#path864",
+  "#path866",
+  "#path868",
+  "#path870",
 ]
 
 function getRandItemFromArray(items) {
@@ -36,7 +44,7 @@ function getRandItemFromArray(items) {
 }
 
 function getDurationFromPath(path) {
-  const speed = 400
+  const speed = 700
   const len = MotionPathPlugin.getLength(path)
   return len / speed
 }
