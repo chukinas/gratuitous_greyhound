@@ -91,13 +91,13 @@
       id="islandMiddle2"
       src="<%= Routes.static_path(@socket, "/images/island_middle.png") %>" 
     > 
-    <%= render "ship.html", %{socket: @socket} %>
-    <%= render "ship.html", %{socket: @socket} %>
-    <%= render "ship.html", %{socket: @socket} %>
-    <%= render "ship.html", %{socket: @socket} %>
+    <%= render "ship.html", %{socket: @socket, unit: %{id: 1}} %>
+    <%= render "ship.html", %{socket: @socket, unit: %{id: 2}} %>
+    <%= render "ship.html", %{socket: @socket, unit: %{id: 3}} %>
+    <%= render "ship.html", %{socket: @socket, unit: %{id: 4}} %>
     <div
       id="arena"
-      class="bg-green-500 bg-opacity-10 select-none pointer-events-none"
+      class=" select-none pointer-events-none"
       style="width:1100px;height:1000px;padding:50px;touch-action:none"
     >
     </div>
@@ -106,7 +106,7 @@
       viewBox="0 0 2100 2000"
       xmlns="http://www.w3.org/2000/svg" 
       stroke="none" 
-      stroke-width="20"
+      stroke-width="10"
       fill="none">
       <path id="welcomePathTopLeft" d="M -64,709C 329,600 346,604 571,468 795,332 1027,259 942,-44" />
       <path id="welcomePathTopRight" d="m 1698,-100 c -58,367 -21,275 -13,442 8,167 -435,446 -589,719 -153,273 436,664 731,444 295,-219 520,-585 520,-585" />

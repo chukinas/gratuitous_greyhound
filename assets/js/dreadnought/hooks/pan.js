@@ -195,9 +195,7 @@ function getScaleToCover(element) {
 
 function fitArena(opts = {zeroDuration: false}) {
   const relCoord = MotionPathPlugin.getRelativePosition(worldContainer, arena, [0.5, 0.5], [0.5, 0.5])
-  console.log("relCoord", relCoord)
-  const scale = getFitScale(arena)
-  console.log({scale, current: getCurrentScale()})
+  const scale = Math.max(getFitScale(arena), getScaleToCover(world))
   const isAlreadyAtFitScale = Math.abs(scale - getCurrentScale()) < 0.001
   if (opts.zeroDuration) {
     gsap.set(world, {
@@ -301,7 +299,7 @@ const WorldContainerPanZoom = {
     worldContainer.onpointercancel = pointerup_handler;
     worldContainer.onpointerout = pointerup_handler;
     worldContainer.onpointerleave = pointerup_handler;
-    //fitArena({zeroDuration: true})
+    fitArena({zeroDuration: true})
   },
   updated() {
     console.log("world updated!")
