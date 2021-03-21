@@ -1,0 +1,141 @@
+<style>
+  body {
+    touch-action:none
+  }
+  #world {
+    background-image:url("<%= Routes.static_path @socket, "/images/ocean.png" %>")
+  }
+  #islandBottomLeft {
+    transform-origin:top left;
+    transform:rotate(-90deg) scale(2, 2);
+    position: absolute;
+    left: 0;
+    bottom: -185px;
+  }
+  #islandTopRight {
+    transform-origin:top left;
+    transform:rotate(90deg) scale(3, 3);
+    position: absolute;
+    right: -250px;
+    top: -150px;
+  }
+  #islandBottomRight {
+    transform-origin:top left;
+    transform:rotate(-180deg) scale(4, 4);
+    position: absolute;
+    right: -250px;
+    bottom: -185px;
+  }
+  #islandSideLeft {
+    transform-origin:top left;
+    transform: rotate(-90deg) scale(2, 2);
+    position: absolute;
+    left: 0;
+    bottom: 300px;
+  }
+  #islandMiddle1 {
+    position: absolute;
+    top: 300px;
+    left: 300px; 
+    width: 900px;
+  }
+  #islandMiddle2 {
+    transform: scale(-4, 4) rotate(90deg) ;
+    position: absolute;
+    bottom: 800px;
+    right: 400px; 
+  }
+</style>
+<div
+  id="worldContainer"
+  class="fixed inset-0"
+  phx-hook="WorldContainerPanZoom"
+>
+  <div
+    id="world"
+    class="bg-cover pointer-events-none relative select-none"
+    style="width:2100px;height:2000px;padding:500px"
+    draggable=false
+  >
+    <img 
+      id="islandBottomRight"
+      src="<%= Routes.static_path(@socket, "/images/island_top_left.png") %>" 
+    >
+    <img 
+      src="<%= Routes.static_path(@socket, "/images/island_top_left.png") %>" 
+      class="absolute top-0 left-0"
+      style="width:800px"
+    >
+    <img 
+      id="islandBottomLeft"
+      src="<%= Routes.static_path(@socket, "/images/island_top_left.png") %>" 
+    >
+    <img 
+      id="islandTopRight"
+      src="<%= Routes.static_path(@socket, "/images/island_top_left.png") %>" 
+    >
+    <img 
+      id="islandSideLeft"
+      src="<%= Routes.static_path(@socket, "/images/island_side.png") %>" 
+    > 
+    <img 
+      src="<%= Routes.static_path(@socket, "/images/island_side.png") %>" 
+      class="absolute top-0" 
+      style="left:1000px; width: 600px"
+    > 
+    <img 
+      id="islandMiddle1"
+      src="<%= Routes.static_path(@socket, "/images/island_middle.png") %>" 
+    > 
+    <img 
+      id="islandMiddle2"
+      src="<%= Routes.static_path(@socket, "/images/island_middle.png") %>" 
+    > 
+    <%= render "ship.html", %{socket: @socket, unit: %{id: 1}} %>
+    <%= render "ship.html", %{socket: @socket, unit: %{id: 2}} %>
+    <%= render "ship.html", %{socket: @socket, unit: %{id: 3}} %>
+    <%= render "ship.html", %{socket: @socket, unit: %{id: 4}} %>
+    <div
+      id="arena"
+      class=" select-none pointer-events-none"
+      style="width:1100px;height:1000px;padding:50px;touch-action:none"
+    >
+    </div>
+    <svg 
+      class="absolute top-0 left-0"
+      viewBox="0 0 2100 2000"
+      xmlns="http://www.w3.org/2000/svg" 
+      stroke="none" 
+      stroke-width="10"
+      fill="none">
+      <path id="welcomePathTopLeft" d="M -64,709C 329,600 346,604 571,468 795,332 1027,259 942,-44" />
+      <path id="welcomePathTopRight" d="m 1698,-100 c -58,367 -21,275 -13,442 8,167 -435,446 -589,719 -153,273 436,664 731,444 295,-219 520,-585 520,-585" />
+      <path id="welcomePath" d="m 1698,-100 c -58,367 -21,275 -13,442 8,167 -435,446 -589,719 -153,273 436,664 731,444 295,-219 520,-585 520,-585" />
+     <path
+       d="M 2289,658 C 1948,662 1668,646 1417,825 1167,1003 753,1879 1016,2057"
+       id="path856" /> 
+    <path
+       d="m -259.91423,1473.5657 c 529.00803,42.6038 962.66523,131.1924 811.45962,684.3432"
+       id="path858" />
+    <path
+       d="M 831.61141,-163.26233 C 1009.5472,424.62823 1277.7935,723.95411 2273.0226,753.1367"
+       id="path860" />
+    <path
+       d="M -245.28703,576.72929 C 802.6654,920.69466 1298.7866,1557.9865 248.44228,2160.6579"
+       id="path862"
+        />
+    <path
+       d="M 660.81762,-181.83502 C 1235.2318,395.87492 1509.4042,845.46085 1119.7213,1169.9875 730.03834,1494.514 239.64985,1532.0316 -155.8841,1494.3562"
+       id="path864" />
+    <path
+       d="M 1520.1886,-165.2752 C 1779.3468,188.18484 1899.3619,451.67474 883.02655,411.09902 -133.30871,370.52333 424.23996,1118.4797 597.78118,1235.4094 771.32237,1352.339 1269.4705,1017.6495 1447.6638,750.35399 1625.8573,483.05843 2272.7739,1171.5976 1913.9443,1502.693 1555.1147,1833.7883 1212.4115,1215.59 946.99477,1686.2664 681.57793,2156.9429 576.56676,2311.569 576.56676,2311.569"
+       id="path866" />
+    <path
+       d="m 1802.3476,-303.78562 c -82.0376,544.5731 -166.4259,956.88088 375.5247,1266.71428 71.7647,83.27064 335.8428,75.68874 335.8428,75.68874"
+       id="path868" />
+    <path
+       d="m 2266.4853,933.15066 c -372.1471,324.18404 -230.0524,671.76774 -619.7265,666.22384 -389.6741,-5.544 -797.40034,-13.3852 -499.614,484.6574"
+       id="path870" />
+    </svg>
+  </div>
+</div>

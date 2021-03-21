@@ -25,7 +25,8 @@ defmodule ChukinasWeb.Router do
     live "/dreadnought/play", DreadnoughtLive, :play
     live "/dreadnought/gameover", DreadnoughtLive, :game_over
     live "/dreadnought/dev", DreadnoughtLive, :dev
-    live "/change_tracking_test", ChangeTrackingTestLive
+    live "/proofofconcept/change_tracking_test", ChangeTrackingTestLive
+    live "/proofofconcept/zoompan", ZoomPanLive
   end
 
   # Other scopes may use custom stacks.
