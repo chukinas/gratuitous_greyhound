@@ -3,7 +3,7 @@
     touch-action:none
   }
 </style>
-<div class="fixed inset-0 bg-blue-500">
+<div class="fixed inset-0 bg-gray-900">
 </div>
 <div
   id="worldContainer"
@@ -18,7 +18,7 @@
   >
     <%# Welcome Screen Demo %>
     <%= if @live_action == :welcome do %>
-    <div class="">
+    <div class="select-none">
       <img 
         src="<%= Routes.static_path(@socket, "/images/island_top_left.png") %>" 
         class="absolute top-0 left-0"
