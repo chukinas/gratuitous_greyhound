@@ -44,7 +44,7 @@ function getRandItemFromArray(items) {
 }
 
 function getDurationFromPath(path) {
-  const speed = 700
+  const speed = 200
   const len = MotionPathPlugin.getLength(path)
   return len / speed
 }
