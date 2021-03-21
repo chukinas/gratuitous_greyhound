@@ -1,0 +1,109 @@
+<style>
+  body {
+    touch-action:none
+  }
+  #world {
+    background-image:url("<%= Routes.static_path @socket, "/images/ocean.png" %>")
+  }
+  #islandBottomLeft {
+    transform-origin:top left;
+    transform:rotate(-90deg) scale(2, 2);
+    position: absolute;
+    left: 0;
+    bottom: -185px;
+  }
+  #islandTopRight {
+    transform-origin:top left;
+    transform:rotate(90deg) scale(3, 3);
+    position: absolute;
+    right: -250px;
+    top: -150px;
+  }
+  #islandBottomRight {
+    transform-origin:top left;
+    transform:rotate(-180deg) scale(4, 4);
+    position: absolute;
+    right: -250px;
+    bottom: -185px;
+  }
+  #islandSideLeft {
+    transform-origin:top left;
+    transform: rotate(-90deg) scale(2, 2);
+    position: absolute;
+    left: 0;
+    bottom: 300px;
+  }
+  #islandMiddle1 {
+    position: absolute;
+    top: 300px;
+    left: 300px; 
+    width: 900px;
+  }
+  #islandMiddle2 {
+    transform: scale(-4, 4) rotate(90deg) ;
+    position: absolute;
+    bottom: 800px;
+    right: 400px; 
+  }
+</style>
+<div
+  id="worldContainer"
+  class="fixed inset-0"
+  phx-hook="WorldContainerPanZoom"
+>
+  <div
+    id="world"
+    class="bg-cover pointer-events-none"
+    style="width:2100px;height:2000px;padding:500px"
+    draggable=false
+  >
+    <div class="select-none">
+      <img 
+        src="<%= Routes.static_path(@socket, "/images/island_top_left.png") %>" 
+        class="absolute top-0 left-0"
+        style="width:800px"
+      >
+      <img 
+        id="islandBottomLeft"
+        src="<%= Routes.static_path(@socket, "/images/island_top_left.png") %>" 
+      >
+      <img 
+        id="islandTopRight"
+        src="<%= Routes.static_path(@socket, "/images/island_top_left.png") %>" 
+      >
+      <img 
+        id="islandBottomRight"
+        src="<%= Routes.static_path(@socket, "/images/island_top_left.png") %>" 
+      >
+      <img 
+        id="islandSideLeft"
+        src="<%= Routes.static_path(@socket, "/images/island_side.png") %>" 
+      > 
+      <img 
+        src="<%= Routes.static_path(@socket, "/images/island_side.png") %>" 
+        class="absolute top-0" 
+        style="left:1000px; width: 600px"
+      > 
+      <img 
+        id="islandMiddle1"
+        src="<%= Routes.static_path(@socket, "/images/island_middle.png") %>" 
+      > 
+      <img 
+        id="islandMiddle2"
+        src="<%= Routes.static_path(@socket, "/images/island_middle.png") %>" 
+      > 
+      <%= render "ship.html", %{socket: @socket} %>
+    </div>
+    <div
+      id="arena"
+      class="bg-green-500 bg-opacity-10 select-none pointer-events-none"
+      style="width:1100px;height:1000px;padding:50px;touch-action:none"
+    >
+      <div
+        class="bg-yellow-500 bg-opacity-10"
+        style="height:750px;touch-action:none"
+      >
+      </div>
+    </div>
+  </div>
+</div>

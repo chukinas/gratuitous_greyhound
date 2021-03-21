@@ -8,8 +8,15 @@
   }
 </style>
 
+<%# Welcome! %>
+<%= if @live_action == :welcome do %>
+<%= DreadnoughtView.render "welcome_animation.html", %{socket: @socket} %>
+<% end %>
+
 <%# The World2 %>
+<%= if false do %>
 <%= DreadnoughtView.render "world2.html", %{socket: @socket, live_action: @live_action, mission: @mission} %>
+<% end %>
 
 <%= if false do %>
 <div class="overflow-hidden h-screen w-screen relative">
