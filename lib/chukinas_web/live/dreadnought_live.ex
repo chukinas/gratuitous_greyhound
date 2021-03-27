@@ -17,7 +17,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
       |> assign(page_title: "Dreadnought")
       |> assign(mission: mission)
       |> assign(player_id: 1)
-      |> assign(feedback: nil)
     {:ok, socket}
   end
 
@@ -32,12 +31,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
     else
       {:noreply, socket}
     end
-  end
-
-  @impl true
-  def handle_event("submit_feedback", %{"feedback" => feedback}, socket) do
-    IO.puts(feedback)
-    {:noreply, socket}
   end
 
   @impl true
