@@ -10,13 +10,14 @@ defmodule ChukinasWeb.DreadnoughtLive do
     mission =
       MissionBuilder.demo
       |> Mission.build_view
-    Chukinas.Email.test_email()
-    |> Chukinas.Mailer.deliver_now!()
+    # Chukinas.Email.test_email()
+    # |> Chukinas.Mailer.deliver_now!()
     socket =
       socket
       |> assign(page_title: "Dreadnought")
       |> assign(mission: mission)
       |> assign(player_id: 1)
+      |> assign(feedback: nil)
     {:ok, socket}
   end
 
@@ -31,6 +32,12 @@ defmodule ChukinasWeb.DreadnoughtLive do
     else
       {:noreply, socket}
     end
+  end
+
+  @impl true
+  def handle_event("submit_feedback", %{"feedback" => feedback}, socket) do
+    IO.puts(feedback)
+    {:noreply, socket}
   end
 
   @impl true
