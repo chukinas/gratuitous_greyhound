@@ -60,7 +60,7 @@ defmodule Chukinas.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "cmd npm install --prefix assets"]
+      setup: ["deps.get", "cd assets && yarn"]
     ]
   end
 end
