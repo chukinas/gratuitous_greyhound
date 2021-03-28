@@ -4,13 +4,19 @@ defmodule ChukinasWeb.Dreadnought.MenuBarComponent do
   @impl true
   def render(assigns) do
     ~L"""
-    <div class="fixed inset-x-0 bottom-0 bg-black bg-opacity-30 overflow-x-auto whitespace-nowrap flex space-x-4 pb-2">
+    <div
+      id="menuBar"
+      x-data="{ tab: null }"
+      class="fixed inset-x-0 bottom-0 bg-black bg-opacity-30 overflow-x-auto whitespace-nowrap flex space-x-4 pb-2"
+    >
       <div class="flex-grow"></div>
       <%= for button <- @buttons do %>
       <button
         id="<%= button.id %>"
-        class="py-1 text-yellow-500 font-bold border-b-4 border-yellow-500 hover:bg-yellow-500 hover:bg-opacity-20"
+        class="py-1 border-yellow-500 text-yellow-500 font-bold  hover:bg-yellow-500 hover:bg-opacity-20"
         phx-hook="<%= button.hook %>"
+        x-bind:class="{ 'border-b-4': tab === '<%= button.id %>'  }"
+        @click="tab = '<%= button.id %>'"
       >
         <%= button.name %>
       </button>
