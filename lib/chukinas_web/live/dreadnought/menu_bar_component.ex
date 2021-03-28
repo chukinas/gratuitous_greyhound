@@ -5,25 +5,36 @@ defmodule ChukinasWeb.Dreadnought.MenuBarComponent do
   def render(assigns) do
     ~L"""
     <div
-      id="menuBar"
-      class="fixed inset-x-0 bottom-0 bg-black bg-opacity-30 overflow-x-auto whitespace-nowrap flex space-x-4 pb-2"
-      x-data="{ tab: null }"
+      class="fixed inset-0  flex flex-col pointer-events-none"
     >
-      <div class="flex-grow"></div>
-      <%= for button <- @buttons do %>
-      <button
-        id="<%= button.id %>"
-        class="py-1 border-transparent text-yellow-500 font-bold  hover:bg-yellow-500 hover:bg-opacity-20 border-b-4"
-        phx-hook="<%= button.hook %>"
-        x-bind:class="{ 'border-current': tab === '<%= button.id %>'  }"
-        @click="tab = '<%= button.id %>'"
+      <div
+        id="menuTabArea"
+        class="bg-black bg-opacity-0 flex-grow"
       >
-        <%= button.name %>
-      </button>
-      <% end %>
-      <div class="flex-grow relative">
-        <div class="bg-green-400 absolute right-0 invisible text-xs">Force right-gap on last button. See link below.</div>
-        <%# https://web.archive.org/web/20170707053030/http://www.brunildo.org/test/overscrollback.html %>
+      </div>
+      <div
+        id="menuBar"
+        class=" bg-black bg-opacity-30 overflow-x-auto whitespace-nowrap flex space-x-4 pointer-events-auto"
+        x-data="{ tab: null }"
+      >
+        <div class="flex-grow"></div>
+        <%= for button <- @buttons do %>
+        <button
+          id="<%= button.id %>"
+          class="py-1 border-transparent text-yellow-500 font-bold  hover:bg-yellow-500 hover:bg-opacity-20 border-b-8"
+          phx-hook="<%= button.hook %>"
+          <%= if button.stateful? do %>
+          x-bind:class="{ 'border-current': tab === '<%= button.id %>'  }"
+          @click="tab = '<%= button.id %>'"
+          <% end %>
+        >
+          <%= button.name %>
+        </button>
+        <% end %>
+        <div class="flex-grow relative">
+          <div class="bg-green-400 absolute right-0 invisible text-xs">Force right-gap on last button. See link below.</div>
+          <%# https://web.archive.org/web/20170707053030/http://www.brunildo.org/test/overscrollback.html %>
+        </div>
       </div>
     </div>
     """
@@ -32,11 +43,11 @@ defmodule ChukinasWeb.Dreadnought.MenuBarComponent do
   @impl true
   def mount(socket) do
     buttons = [
-      %{id: "zoomIn", name: "Zoom In", hook: "ButtonZoomIn"},
-      %{id: "zoomOut", name: "Zoom Out", hook: "ButtonZoomOut"},
-      %{id: "center", name: "Center", hook: "ButtonFitArena"},
-      %{id: "feedback", name: "Feedback", hook: "ButtonFitArena"},
-      %{id: "about", name: "About", hook: "ButtonFitArena"},
+      %{id: "zoomIn", name: "Zoom In", hook: "ButtonZoomIn", stateful?: false},
+      %{id: "zoomOut", name: "Zoom Out", hook: "ButtonZoomOut", stateful?: false},
+      %{id: "center", name: "Center", hook: "ButtonFitArena", stateful?: false},
+      %{id: "feedback", name: "Feedback", hook: "ButtonFitArena", stateful?: true},
+      %{id: "about", name: "About", hook: "ButtonFitArena", stateful?: true},
     ]
     {:ok, assign(socket, buttons: buttons)}
   end
