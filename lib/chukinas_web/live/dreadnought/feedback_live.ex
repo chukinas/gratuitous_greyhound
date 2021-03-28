@@ -21,7 +21,7 @@ defmodule ChukinasWeb.Dreadnought.FeedbackComponent do
   end
 
   @impl true
-  def handle_event("submit", %{"feedback" => feedback, "browser" => browser} = params, socket) do
+  def handle_event("submit", %{"feedback" => _feedback, "browser" => _browser} = params, socket) do
     IOP.inspect params
     {:noreply, socket}
   end

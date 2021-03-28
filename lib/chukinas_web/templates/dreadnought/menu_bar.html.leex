@@ -1,0 +1,15 @@
+<div class="fixed inset-x-0 bottom-0 bg-black bg-opacity-50 overflow-x-auto ">
+  <div class="whitespace-nowrap flex space-x-4 ">
+    <div class="flex-grow"></div>
+    <%= for item <- ~w(play jonathan fit center howdy doody chukinas) do %>
+      <button class="py-2 text-yellow-500 font-bold border-b-4 border-yellow-500 hover:bg-yellow-500 hover:bg-opacity-20">
+        <%= item %>
+      </button>
+    <% end %>
+    <div class="flex-grow relative">
+      <div class="bg-green-400 absolute right-0 invisible text-xs">Force right-gap on last button. See link below.</div>
+    </div>
+  </div>
+</div>
+<%# https://web.archive.org/web/20170707053030/http://www.brunildo.org/test/overscrollback.html %>
+<%# Some (all?) browsers have a bug where the far side (here: the right side) doesn't correctly show whitespace %>
