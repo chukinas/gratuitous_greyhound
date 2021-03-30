@@ -4,12 +4,18 @@ defmodule ChukinasWeb.Dreadnought.FeedbackComponent do
   @impl true
   def render(assigns) do
     ~L"""
-    <div class="fixed inset-0 bg-black bg-opacity-75" x-data="{browser:navigator.userAgent}">
+    <div id="feedbackForm" class="pointer-events-auto" x-data="{browser:navigator.userAgent}">
      <form phx-submit="submit" phx-target="<%= @myself %>">
-       <label for="feedback" class="text-white">Your Feedback:</label>
-       <textarea id="feedback" name="feedback">Just some stuff...</textarea>
-       <input x-bind:value="browser" name="browser" type="hidden">
-       <input type="submit" value="Submit">
+       <label for="feedback" class="text-white hidden">Your Feedback:</label>
+       <textarea id="feedback" name="feedback" class="block"></textarea>
+       <input x-bind:value="browser" name="browser" type="hidden" value="hello">
+       <input
+         id="feedbackSubmit"
+         type="submit"
+         value="Submit"
+         class="p-4 pl-0 font-bold uppercase bg-transparent"
+         @click=" tab = null "
+       >
      </form>
     </div>
     """
