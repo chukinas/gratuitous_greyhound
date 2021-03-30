@@ -28,8 +28,10 @@ defmodule ChukinasWeb.Dreadnought.FeedbackComponent do
 
   @impl true
   def handle_event("submit", %{"feedback" => feedback, "browser" => _browser} = _params, socket) do
-    Chukinas.Email.feedback_email(feedback)
-    |> Chukinas.Mailer.deliver_now!()
+    if String.length(String.trim feedback) > 0 do
+      Chukinas.Email.feedback_email(feedback)
+      |> Chukinas.Mailer.deliver_now!()
+    end
     {:noreply, socket}
   end
 
