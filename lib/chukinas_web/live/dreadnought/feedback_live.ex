@@ -4,7 +4,7 @@ defmodule ChukinasWeb.Dreadnought.FeedbackComponent do
   @impl true
   def render(assigns) do
     ~L"""
-    <div id="feedbackForm" class="pointer-events-auto" x-data="{browser:navigator.userAgent}">
+    <div id="feedbackForm" class="pointer-events-auto" x-data="{browser:navigator.userAgent, isSubmitted: false}">
      <form phx-submit="submit" phx-target="<%= @myself %>">
        <label for="feedback" class="text-white hidden">Your Feedback:</label>
        <textarea id="feedback" name="feedback" class="block"></textarea>
@@ -14,7 +14,7 @@ defmodule ChukinasWeb.Dreadnought.FeedbackComponent do
          type="submit"
          value="Submit"
          class="p-4 pl-0 font-bold uppercase bg-transparent"
-         @click=" tab = null "
+         @click=" isSubmitted = true "
        >
      </form>
     </div>
@@ -27,8 +27,8 @@ defmodule ChukinasWeb.Dreadnought.FeedbackComponent do
   end
 
   @impl true
-  def handle_event("submit", %{"feedback" => _feedback, "browser" => _browser} = _params, socket) do
-    Chukinas.Email.test_email()
+  def handle_event("submit", %{"feedback" => feedback, "browser" => _browser} = _params, socket) do
+    Chukinas.Email.feedback_email(feedback)
     |> Chukinas.Mailer.deliver_now!()
     {:noreply, socket}
   end
