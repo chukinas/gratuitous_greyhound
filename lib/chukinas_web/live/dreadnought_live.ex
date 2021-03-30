@@ -10,8 +10,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
     mission =
       MissionBuilder.demo
       |> Mission.build_view
-    # Chukinas.Email.test_email()
-    # |> Chukinas.Mailer.deliver_now!()
     socket =
       socket
       |> assign(page_title: "Dreadnought")
