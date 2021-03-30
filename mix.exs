@@ -48,6 +48,7 @@ defmodule Chukinas.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:typed_struct, "~> 0.2.1"},
       {:dialyxir, "~> 0.5.0", only: [:dev], runtime: false},
+      {:bamboo, "~> 2.0.1"},
     ]
   end
 
@@ -59,7 +60,7 @@ defmodule Chukinas.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "cmd npm install --prefix assets"]
+      setup: ["deps.get", "cd assets && yarn"]
     ]
   end
 end
