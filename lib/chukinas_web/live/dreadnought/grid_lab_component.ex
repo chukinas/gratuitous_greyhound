@@ -7,7 +7,7 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
     <p
       id="world"
       class="bg-blue-400"
-      style="width:<%= @world.end_position.x - @world.start_position.x %>px; height: <%= @world.end_position.y - @world.start_position.y %>px"
+      style="width:<%= @world.width %>px; height: <%= @world.height %>px"
     >
       WORLD
     </p>

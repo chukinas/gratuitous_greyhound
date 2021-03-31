@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Unit, Mission, ById, CommandQueue, Segment, CommandIds}
-alias Chukinas.Geometry.{Rect, Grid}
+alias Chukinas.Geometry.{Rect, Grid, Size}
 
 defmodule Mission do
 
@@ -11,7 +11,7 @@ defmodule Mission do
   typedstruct enforce: true do
     field :arena, Rect.t(), enforce: false
     field :grid, Grid.t(), enforce: false
-    field :world, Rect.t(), enforce: false
+    field :world, Size.t(), enforce: false
     field :units, [Unit.t()], default: []
     field :decks, [CommandQueue.t()], default: []
     field :segments, [Segment.t()], default: []
@@ -73,7 +73,10 @@ defmodule Mission do
     grid = Grid.new(square_size, x_count, y_count)
     grid_size = Grid.size(grid)
     margin = 500
-    world = Rect.new(-margin, -margin, grid_size.width + margin, grid_size.height + margin)
+    world = Size.new(
+      grid_size.width + 2 * margin,
+      grid_size.height + 2 * margin
+    )
     %{mission | grid: grid, world: world}
   end
 
