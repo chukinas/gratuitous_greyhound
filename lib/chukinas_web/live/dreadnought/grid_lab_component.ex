@@ -4,7 +4,13 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
   @impl true
   def render(assigns) do
     ~L"""
-    <p class="bg-blue-400">hello</p>
+    <p
+      id="world"
+      class="bg-blue-400"
+      style="width:<%= @world.end_position.x - @world.start_position.x %>px; height: <%= @world.end_position.y - @world.start_position.y %>px"
+    >
+      WORLD
+    </p>
     """
   end
 

@@ -11,6 +11,7 @@ defmodule Mission do
   typedstruct enforce: true do
     field :arena, Rect.t(), enforce: false
     field :grid, Grid.t(), enforce: false
+    field :world, Rect.t(), enforce: false
     field :units, [Unit.t()], default: []
     field :decks, [CommandQueue.t()], default: []
     field :segments, [Segment.t()], default: []
@@ -69,7 +70,11 @@ defmodule Mission do
   end
 
   def set_grid(mission, square_size, x_count, y_count) do
-    %{mission | grid: Grid.new(square_size, x_count, y_count)}
+    grid = Grid.new(square_size, x_count, y_count)
+    grid_size = Grid.size(grid)
+    margin = 500
+    world = Rect.new(-margin, -margin, grid_size.width + margin, grid_size.height + margin)
+    %{mission | grid: grid, world: world}
   end
 
   # *** *******************************

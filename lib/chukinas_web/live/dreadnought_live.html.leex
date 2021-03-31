@@ -57,7 +57,10 @@
 
 <%# LAB: Grid %>
 <%= if @live_action == :grid do %>
-<%= live_component @socket, Dreadnought.GridLabComponent, id: :grid_lab %>
+<%= live_component @socket, 
+  Dreadnought.GridLabComponent, 
+  id: :grid_lab, 
+  world: @mission.world %>
 <% end %>
 
 <%= live_component @socket, Dreadnought.MenuBarComponent, id: :menu_bar %>
