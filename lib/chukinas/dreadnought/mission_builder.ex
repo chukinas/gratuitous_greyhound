@@ -17,5 +17,17 @@ defmodule MissionBuilder do
     |> Mission.issue_command(CommandIds.new 2, 1, 5)
   end
 
+  def grid_lab do
+    Mission.new()
+    |> Mission.set_grid(50, 20, 15)
+  end
+
+  def from_live_action(live_action) do
+    case live_action do
+      :grid -> grid_lab()
+      _ -> demo()
+    end
+  end
+
   defp get_default_command_builder(), do: fn step_id -> Command.new(100, step_id: step_id) end
 end

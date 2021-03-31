@@ -8,7 +8,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
   @impl true
   def mount(_params, _session, socket) do
     mission =
-      MissionBuilder.demo
+      MissionBuilder.from_live_action(socket.assigns.live_action)
       |> Mission.build_view
     socket =
       socket
