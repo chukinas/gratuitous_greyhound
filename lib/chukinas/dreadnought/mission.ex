@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Unit, Mission, ById, CommandQueue, Segment, CommandIds}
-alias Chukinas.Geometry.{Rect, Grid, GridSquare, Size}
+alias Chukinas.Geometry.{Rect, Grid, GridSquare, Size, Collide}
 
 defmodule Mission do
 
@@ -82,12 +82,20 @@ defmodule Mission do
       grid: grid,
       world: world,
       margin: Size.new(margin, margin),
-      squares: Grid.squares(grid)
     }
   end
 
   # *** *******************************
   # *** API
+
+  # TODO rename set colliding squares?
+  def set_overlapping_squares(mission, shape) do
+    collides? = fn square -> Collide.collide?(shape, square) end
+    colliding_squares =
+      Grid.squares(mission.grid)
+      |> Enum.filter(collides?)
+    %{mission | squares: colliding_squares}
+  end
 
   def issue_command(%__MODULE__{} = mission, %CommandIds{} = cmd) do
     deck =

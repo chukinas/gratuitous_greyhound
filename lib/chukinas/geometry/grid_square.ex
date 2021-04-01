@@ -12,6 +12,7 @@ defmodule GridSquare do
     field :column, integer()
     field :row, integer()
     field :center, Position.t()
+    field :size, number()
   end
 
   # *** *******************************
@@ -22,7 +23,8 @@ defmodule GridSquare do
       id: "#{col}-#{row}",
       column: col,
       row: row,
-      center: Position.new(col/size, row/size)
+      center: Position.new((col - 0.5) * size, (row - 0.5) * size),
+      size: size
     }
   end
 
@@ -35,6 +37,19 @@ defmodule GridSquare do
       width: grid.square_size * grid.x_count,
       height: grid.square_size * grid.y_count
     }
+  end
+
+  # TODO this should be a protocol implementation
+  def to_vertices(square) do
+    half_edge = square.size / 2
+    center = square.center
+    [
+      Position.add(center, -half_edge, -half_edge),
+      Position.add(center, +half_edge, -half_edge),
+      Position.add(center, +half_edge, +half_edge),
+      Position.add(center, -half_edge, +half_edge),
+    ]
+    |> Enum.map(&Position.to_vertex/1)
   end
 
 end
