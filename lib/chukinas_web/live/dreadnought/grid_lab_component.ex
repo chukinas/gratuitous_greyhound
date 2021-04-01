@@ -58,7 +58,7 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
             >
               <div
                 id="gridSquareVisible-<%= square.id %>"
-                class="bg-yellow-400 h-full rounded-sm bg-opacity-40"
+                class="bg-yellow-400 h-full rounded-sm bg-opacity-20"
               >
               </div>
             </button>
@@ -77,7 +77,7 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
 
   @impl true
   def handle_event("select_square", %{"x" =>  x, "y" => y}, socket) do
-    _position = Position.new(String.to_float(x), String.to_float(y)) |> IOP.inspect("select square")
+    _position = Position.new(String.to_float(x), String.to_float(y))
     {:noreply, socket}
   end
 
