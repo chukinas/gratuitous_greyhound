@@ -4,7 +4,8 @@
   class="absolute text-yellow-600"
   style="
     top: <%= @unit.position.y %>px; 
-    left: <%= @unit.position.x %>px
+    left: <%= @unit.position.x %>px;
+    transform: rotate(<%= @unit.pose.angle %>deg);
   "
   data-unit-number="<%= @unit.id %>"
   phx-hook="Unit"
