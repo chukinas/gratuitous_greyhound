@@ -1,9 +1,26 @@
 defmodule ChukinasWeb.Dreadnought.GridLabComponent do
-  use Phoenix.LiveComponent
+  use ChukinasWeb, :live_component
 
   @impl true
   def render(assigns) do
     ~L"""
+    <style>
+      body {
+        touch-action:none
+      }
+      #world {
+        background-image:url("<%= Routes.static_path @socket, "/images/ocean.png" %>")
+      }
+      #arenaGrid {
+        display: grid;
+        grid-template-columns: repeat(20, 50px);
+        grid-template-rows: repeat(15, 50px);
+      }
+      #gridItem {
+        grid-column-start: 20;
+        grid-row-start: 15;
+      }
+    </style>
     <div
       id="worldContainer"
       class="fixed inset-0"
@@ -12,13 +29,12 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
     >
       <div
         id="world"
-        class="bg-blue-400 relative pointer-events-none select-none"
+        class="relative pointer-events-none select-none bg-cover"
         style="width:<%= @world.width %>px; height: <%= @world.height %>px"
       >
-        WORLD
         <div
           id="arena"
-          class="bg-green-300 absolute"
+          class="bg-green-300 absolute bg-opacity-30"
           style="
             left: <%= @margin.width %>px;
             top: <%= @margin.height %>px;
@@ -26,7 +42,18 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
             height: <%= @grid.height %>px
           "
         >
-        ARENA
+          <div
+            id="arenaGrid"
+            style="
+            "
+          >
+            <div
+              id="gridItem"
+              class="bg-yellow-400"
+            >
+              hello
+            </div>
+          </div>
         </div>
       </div>
     </div>
