@@ -14,10 +14,10 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
         id="arena"
         class="bg-green-300 absolute"
         style="
-          left: 500px;
-          top: 500px;
-          width:500px;
-          height: 500px
+          left: <%= @margin.width %>px;
+          top: <%= @margin.height %>px;
+          width:<%= @grid.width %>px;
+          height: <%= @grid.height %>px
         "
       >
       ARENA

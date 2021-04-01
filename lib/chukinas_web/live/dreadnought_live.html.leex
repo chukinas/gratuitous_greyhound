@@ -60,7 +60,7 @@
 <%= live_component @socket, 
   Dreadnought.GridLabComponent, 
   id: :grid_lab, 
-  world: @mission.world %>
+  world: @mission.world, margin: @mission.margin, grid: @mission.grid %>
 <% end %>
 
 <%= live_component @socket, Dreadnought.MenuBarComponent, id: :menu_bar %>

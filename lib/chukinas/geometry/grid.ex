@@ -11,6 +11,8 @@ defmodule Grid do
     field :square_size, integer()
     field :x_count, integer()
     field :y_count, integer()
+    field :width, integer()
+    field :height, integer()
   end
 
   # *** *******************************
@@ -20,7 +22,9 @@ defmodule Grid do
     %__MODULE__{
       square_size: square_size,
       x_count: x_count,
-      y_count: y_count
+      y_count: y_count,
+      width: square_size * x_count,
+      height: square_size * y_count
     }
   end
 

@@ -12,6 +12,7 @@ defmodule Mission do
     field :arena, Rect.t(), enforce: false
     field :grid, Grid.t(), enforce: false
     field :world, Size.t(), enforce: false
+    field :margin, Size.t(), enforce: false
     field :units, [Unit.t()], default: []
     field :decks, [CommandQueue.t()], default: []
     field :segments, [Segment.t()], default: []
@@ -77,7 +78,7 @@ defmodule Mission do
       grid_size.width + 2 * margin,
       grid_size.height + 2 * margin
     )
-    %{mission | grid: grid, world: world}
+    %{mission | grid: grid, world: world, margin: Size.new(margin, margin)}
   end
 
   # *** *******************************
