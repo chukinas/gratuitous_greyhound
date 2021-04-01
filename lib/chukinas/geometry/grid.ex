@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{Grid}
+alias Chukinas.Geometry.{Grid, GridSquare}
 
 defmodule Grid do
   @moduledoc"""
@@ -31,11 +31,25 @@ defmodule Grid do
   # *** *******************************
   # *** API
 
+  # TODO superfluous. remove.
   def size(grid) do
     %{
       width: grid.square_size * grid.x_count,
       height: grid.square_size * grid.y_count
     }
+  end
+
+  def squares(grid) do
+    # TODO use Stream?
+    1..grid.y_count
+    |> Enum.map(&row_of_squares(grid, &1))
+    |> Enum.concat
+  end
+
+  def row_of_squares(grid, row_num) do
+    # TODO rename row_count and col_count
+    1..grid.x_count
+    |> Enum.map(fn col -> GridSquare.new(grid.square_size, col, row_num) end)
   end
 
 end

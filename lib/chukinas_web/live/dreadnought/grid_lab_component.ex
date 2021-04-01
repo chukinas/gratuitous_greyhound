@@ -41,20 +41,22 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
               grid-auto-rows: <%= @grid.square_size %>px;
             "
           >
+            <%= for square <- @squares do %>
             <div
-              id="gridSquareTarget-10-7"
+              id="gridSquareTarget-<%= square.id %>"
               class="p-2 hover:p-1 pointer-events-auto"
               style="
-                grid-column-start: 10;
-                grid-row-start: 7;
+                grid-column-start: <%= square.column %>;
+                grid-row-start: <%= square.row %>;
               "
             >
               <div
-                id="gridSquareVisible-10-7"
+                id="gridSquareVisible-<%= square.id %>"
                 class="bg-yellow-400 h-full rounded-sm bg-opacity-40"
               >
               </div>
             </div>
+            <% end %>
           </div>
         </div>
       </div>
