@@ -14,6 +14,7 @@ defmodule Mission do
     field :squares, [GridSquare.t()], enforce: false
     field :world, Size.t(), enforce: false
     field :margin, Size.t(), enforce: false
+    field :unit, Unit.t(), enforce: false
     field :units, [Unit.t()], default: []
     field :decks, [CommandQueue.t()], default: []
     field :segments, [Segment.t()], default: []
@@ -84,6 +85,8 @@ defmodule Mission do
       margin: Size.new(margin, margin),
     }
   end
+
+  def set_unit(mission, unit), do: %{mission | unit: unit}
 
   # *** *******************************
   # *** API

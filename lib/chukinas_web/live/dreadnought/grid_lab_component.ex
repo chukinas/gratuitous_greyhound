@@ -65,6 +65,7 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
             <% end %>
           </div>
         </div>
+        <%= ChukinasWeb.DreadnoughtView.render "unit.html", %{unit: @unit}%>
       </div>
     </div>
     """

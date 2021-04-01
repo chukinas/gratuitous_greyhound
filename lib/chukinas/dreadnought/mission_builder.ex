@@ -21,6 +21,7 @@ defmodule MissionBuilder do
     Mission.new()
     |> Mission.set_grid(50, 20, 15)
     |> Mission.set_overlapping_squares(Polygon.new [{0, 0}, {200, 0}, {0, 330}])
+    |> Mission.set_unit(Unit.new 1)
   end
 
   def from_live_action(live_action) do
