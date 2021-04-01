@@ -11,15 +11,6 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
       #world {
         background-image:url("<%= Routes.static_path @socket, "/images/ocean.png" %>")
       }
-      #arenaGrid {
-        display: grid;
-        grid-template-columns: repeat(20, 50px);
-        grid-template-rows: repeat(15, 50px);
-      }
-      #gridItem {
-        grid-column-start: 20;
-        grid-row-start: 15;
-      }
     </style>
     <div
       id="worldContainer"
@@ -45,11 +36,18 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
           <div
             id="arenaGrid"
             style="
+              display: grid;
+              grid-template-columns: repeat(20, 50px);
+              grid-template-rows: repeat(15, 50px);
             "
           >
             <div
               id="gridItem"
               class="bg-yellow-400"
+              style="
+                grid-column-start: 20;
+                grid-row-start: 15;
+              "
             >
               hello
             </div>
