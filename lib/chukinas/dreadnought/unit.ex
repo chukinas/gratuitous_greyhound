@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Unit, Segment, ById}
-alias Chukinas.Geometry.{Pose, Size, Position}
+alias Chukinas.Geometry.{Pose, Size, Position, Turn, Straight, Polygon, Path}
 
 defmodule Unit do
   @moduledoc """
@@ -63,5 +63,22 @@ defmodule Unit do
       |> Size.to_position
       |> Position.add(unit.pose)
     %{unit | position: position}
+  end
+
+  def get_motion_range(%__MODULE__{pose: pose}) do
+    max_distance = 300
+    min_distance = 200
+    angle = 30 # deg
+    [
+      Straight.new(pose, min_distance),
+      Turn.new(pose, min_distance, -angle),
+      Turn.new(pose, max_distance, -angle),
+      Straight.new(pose, max_distance),
+      Turn.new(pose, max_distance, angle),
+      Turn.new(pose, min_distance, angle),
+    ]
+    |> Stream.map(&Path.get_end_pose/1)
+    |> Enum.map(&Position.to_tuple/1)
+    |> Polygon.new
   end
 end
