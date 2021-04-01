@@ -1,3 +1,5 @@
+alias Chukinas.Geometry.{Position}
+
 defmodule ChukinasWeb.Dreadnought.GridLabComponent do
   use ChukinasWeb, :live_component
 
@@ -42,20 +44,24 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
             "
           >
             <%= for square <- @squares do %>
-            <div
+            <button
               id="gridSquareTarget-<%= square.id %>"
               class="p-2 hover:p-1 pointer-events-auto"
               style="
                 grid-column-start: <%= square.column %>;
                 grid-row-start: <%= square.row %>;
               "
+              phx-click="select_square"
+              phx-target="<%= @myself %>"
+              phx-value-x="<%= square.center.x %>"
+              phx-value-y="<%= square.center.y %>"
             >
               <div
                 id="gridSquareVisible-<%= square.id %>"
                 class="bg-yellow-400 h-full rounded-sm bg-opacity-40"
               >
               </div>
-            </div>
+            </button>
             <% end %>
           </div>
         </div>
@@ -67,6 +73,12 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
   @impl true
   def mount(socket) do
     {:ok, socket}
+  end
+
+  @impl true
+  def handle_event("select_square", %{"x" =>  x, "y" => y}, socket) do
+    _position = Position.new(String.to_float(x), String.to_float(y)) |> IOP.inspect("select square")
+    {:noreply, socket}
   end
 
 end
