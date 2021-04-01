@@ -56,7 +56,6 @@ defmodule Unit do
   end
 
   def set_position(%__MODULE__{} = unit, %Size{} = margin) do
-    IOP.inspect(@size, "size")
     position =
       margin
       |> Size.subtract(Size.multiply @size, 0.5)
