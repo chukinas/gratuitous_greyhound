@@ -25,7 +25,7 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
       >
         <div
           id="arena"
-          class="bg-green-300 absolute bg-opacity-30"
+          class="absolute"
           style="
             left: <%= @margin.width %>px;
             top: <%= @margin.height %>px;
@@ -42,13 +42,18 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
             "
           >
             <div
-              id="gridItem"
-              class="bg-yellow-400"
+              id="gridSquareTarget-10-7"
+              class="p-2 hover:p-1 pointer-events-auto"
               style="
                 grid-column-start: 10;
-                grid-row-start: 15;
+                grid-row-start: 7;
               "
             >
+              <div
+                id="gridSquareVisible-10-7"
+                class="bg-yellow-400 h-full rounded-sm bg-opacity-40"
+              >
+              </div>
             </div>
           </div>
         </div>
