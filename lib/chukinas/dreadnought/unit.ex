@@ -1,19 +1,23 @@
 alias Chukinas.Dreadnought.{Unit, Segment, ById}
-alias Chukinas.Geometry.{Pose}
+alias Chukinas.Geometry.{Pose, Size, Position}
 
 defmodule Unit do
   @moduledoc """
   Represents a ship or some other combat unit
   """
 
+  @size Size.new 140, 40
+
   # *** *******************************
   # *** TYPES
 
   use TypedStruct
 
-  typedstruct enforce: true do
+  typedstruct do
     # ID must be unique within the world
     field :id, integer()
+    field :pose, Pose.t()
+    field :position, Position.t()
     field :start_pose, Pose.t()
     field :segments, [Segment.t()], default: []
   end
@@ -24,7 +28,10 @@ defmodule Unit do
   def new(id, opts \\ []) do
     fields =
       # TODO I don't like having a default start pose. Make it explicit.
-      [start_pose: Pose.new(0, 0, 45)]
+      [
+        pose: Pose.new(0, 0, 45),
+        start_pose: Pose.new(0, 0, 45)
+      ]
       |> Keyword.merge(opts)
       |> Keyword.put(:id, id)
     struct(__MODULE__, fields)
@@ -42,5 +49,19 @@ defmodule Unit do
 
   def set_segments(unit, segments) do
     %{unit | segments: segments}
+  end
+
+  def set_pose(unit, pose, margin) do
+    %{unit | pose: pose} |> set_position(margin)
+  end
+
+  def set_position(%__MODULE__{} = unit, %Size{} = margin) do
+    IOP.inspect(@size, "size")
+    position =
+      margin
+      |> Size.subtract(Size.multiply @size, 0.5)
+      |> Size.to_position
+      |> Position.add(unit.pose)
+    %{unit | position: position}
   end
 end

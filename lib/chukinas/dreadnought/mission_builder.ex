@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Mission, Unit, Command, CommandQueue, CommandIds, MissionBuilder}
-alias Chukinas.Geometry.{Pose, Polygon}
+alias Chukinas.Geometry.{Pose, Polygon, Size}
 
 defmodule MissionBuilder do
 
@@ -18,10 +18,11 @@ defmodule MissionBuilder do
   end
 
   def grid_lab do
+    margin = Size.new(500, 500)
     Mission.new()
-    |> Mission.set_grid(50, 20, 15)
+    |> Mission.set_grid(50, 20, 15, margin)
     |> Mission.set_overlapping_squares(Polygon.new [{0, 0}, {200, 0}, {0, 330}])
-    |> Mission.set_unit(Unit.new 1)
+    |> Mission.set_unit(Unit.new(1) |> Unit.set_position(margin))
   end
 
   def from_live_action(live_action) do

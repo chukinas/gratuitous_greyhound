@@ -27,7 +27,7 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
       >
         <div
           id="arena"
-          class="absolute"
+          class="absolute bg-green-300 bg-opacity-30"
           style="
             left: <%= @margin.width %>px;
             top: <%= @margin.height %>px;
@@ -65,7 +65,7 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
             <% end %>
           </div>
         </div>
-        <%= ChukinasWeb.DreadnoughtView.render "unit.html", %{unit: @unit}%>
+        <%= ChukinasWeb.DreadnoughtView.render "unit2.html", %{unit: @unit}%>
       </div>
     </div>
     """

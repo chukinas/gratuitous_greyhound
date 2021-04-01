@@ -72,17 +72,16 @@ defmodule Mission do
     %{mission | segments: segments}
   end
 
-  def set_grid(mission, square_size, x_count, y_count) do
+  def set_grid(mission, square_size, x_count, y_count, %Size{} = margin) do
     grid = Grid.new(square_size, x_count, y_count)
-    margin = 500
     world = Size.new(
-      grid.width + 2 * margin,
-      grid.height + 2 * margin
+      grid.width + 2 * margin.width,
+      grid.height + 2 * margin.height
     )
     %{mission |
       grid: grid,
       world: world,
-      margin: Size.new(margin, margin),
+      margin: margin,
     }
   end
 
