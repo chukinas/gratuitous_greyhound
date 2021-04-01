@@ -37,19 +37,18 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
             id="arenaGrid"
             style="
               display: grid;
-              grid-template-columns: repeat(20, 50px);
-              grid-template-rows: repeat(15, 50px);
+              grid-auto-columns: <%= @grid.square_size %>px;
+              grid-auto-rows: <%= @grid.square_size %>px;
             "
           >
             <div
               id="gridItem"
               class="bg-yellow-400"
               style="
-                grid-column-start: 20;
+                grid-column-start: 10;
                 grid-row-start: 15;
               "
             >
-              hello
             </div>
           </div>
         </div>
