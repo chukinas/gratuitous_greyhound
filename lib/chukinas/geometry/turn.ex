@@ -71,12 +71,21 @@ defmodule Turn do
 
   def connecting_path!(start_pose, end_position) do
     abs_angle = Trig.deg_between_points(start_pose, end_position)
-    rel_angle = (abs_angle - start_pose.angle)
+    rel_angle = normalize_angle(abs_angle - start_pose.angle)
     distance = Trig.distance_between_points(start_pose, end_position)
     path_radius = (distance / 2 / Trig.sin(rel_angle))
     path_angle = 2 * rel_angle
     path_length = Trig.arc_length(path_radius, path_angle)
-    new(start_pose, path_length, path_angle)
+    path = new(start_pose, path_length, path_angle)
+    if path.length < 0 do
+      IOP.inspect("OOPS!!!!")
+      IOP.inspect(abs_angle, "abs angle")
+      IOP.inspect(rel_angle, "rel angle")
+      IOP.inspect(distance, "distance")
+      IOP.inspect(path_radius, "path radius")
+    end
+    path
+           |> IOP.inspect("connecting path")
   end
 
   # *** *******************************
@@ -87,6 +96,14 @@ defmodule Turn do
 
   defp radius(length, angle) do
     (length * 360) / (2 * :math.pi() * abs(angle))
+  end
+
+  defp normalize_angle(angle) do
+    cond do
+      angle > +45 -> angle - 360
+      angle < -45 -> angle + 360
+      true        -> angle
+    end
   end
 
   # *** *******************************

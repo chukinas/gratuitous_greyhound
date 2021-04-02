@@ -57,7 +57,6 @@ defmodule Unit do
   end
 
   def move_along_path(unit, path, margin) do
-    path |> IOP.inspect("move along pat")
     unit
     |> set_pose(Path.get_end_pose(path), margin)
     |> Map.put(:path_string, Svg.get_path_string(path))
