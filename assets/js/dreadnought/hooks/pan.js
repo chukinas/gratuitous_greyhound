@@ -317,9 +317,13 @@ const ZoomPanContainer = {
     elZoomPanContainer.onpointercancel = pointerup_handler;
     elZoomPanContainer.onpointerout = pointerup_handler;
     elZoomPanContainer.onpointerleave = pointerup_handler;
+    // TODO rename
+    setTimeout(() => fitArena({zeroDuration: true})) 
+    
   },
   updated() {
     console.log("world updated!")
+    setTimeout(() => fitArena({zeroDuration: true})) 
     //fitArena({zeroDuration: true})
   },
   destroyed() {
@@ -338,8 +342,6 @@ const ZoomPanCover = {
 const ZoomPanFit = {
   mounted() {
     elZoomPanFit = this.el
-    // TODO rename
-    fitArena({zeroDuration: true})
   }
 }
 
