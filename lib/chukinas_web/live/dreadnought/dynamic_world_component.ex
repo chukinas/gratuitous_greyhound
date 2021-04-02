@@ -6,6 +6,8 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
 
   @impl true
   def render(assigns) do
+    # TODO is it a problem that there isn't a single root element here? %>
+    # TODO might be worth having a containing div so I only have to set margin and size once
     ~L"""
     <div
       id="arena"
@@ -49,7 +51,22 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
         <% end %>
       </div>
     </div>
-    <%# TODO is it a problem that there isn't a single root element here? %>
+    <svg
+      id="svg_paths"
+      class="absolute pointer-event-none"
+      viewBox="0 0 <%= @mission.grid.width %> <%= @mission.grid.height %> "
+      style="
+        left: <%= @mission.margin.width %>px;
+        top: <%= @mission.margin.height %>px;
+        width:<%= @mission.grid.width %>px;
+        height: <%= @mission.grid.height %>px
+      "
+    >
+      <path
+        d="<%= @mission.unit.path_string %>"
+        style="stroke-linejoin:round;stroke-width:2.5;stroke:#fff;fill:none"
+      />
+    </svg>
     <%= ChukinasWeb.DreadnoughtView.render "unit2.html", %{unit: @mission.unit}%>
     """
   end
