@@ -18,11 +18,11 @@ defmodule MissionBuilder do
   end
 
   def grid_lab do
-    margin = Size.new(500, 500)
+    margin = Size.new(3000 / 2, 30 * 75 / 2)
     unit = Unit.new(1) |> Unit.set_position(margin)
     motion_range_polygon = Unit.get_motion_range unit
     Mission.new()
-    |> Mission.set_grid(50, 20, 15, margin)
+    |> Mission.set_grid(30, 100, 75, margin)
     |> Mission.set_overlapping_squares(motion_range_polygon)
     |> Mission.set_unit(unit)
   end

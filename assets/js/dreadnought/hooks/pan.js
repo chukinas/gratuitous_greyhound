@@ -117,6 +117,10 @@ function getCoordAndScale(element) {
   }
 }
 
+function isCoordApproxZero(coord) {
+  return Math.abs(coord.x) < 1 & Math.abs(coord.y) < 1
+}
+
 // --------------------------------------------------------
 // FUNCTIONS
 
@@ -204,10 +208,15 @@ function getScaleToCover(element) {
   return absScale
 }
 
+function getRelPosition(elFrom, elTo) {
+  return MotionPathPlugin.getRelativePosition(elFrom, elTo, [0.5, 0.5], [0.5, 0.5])
+}
+
 function fitArena(opts = {zeroDuration: false}) {
-  const relCoord = MotionPathPlugin.getRelativePosition(elZoomPanContainer, elZoomPanFit, [0.5, 0.5], [0.5, 0.5])
+  const relCoord = getRelPosition(elZoomPanContainer, elZoomPanFit)
   const scale = Math.max(getFitScale(elZoomPanFit), getScaleToCover(elZoomPanCover))
   const isAlreadyAtFitScale = Math.abs(scale - getCurrentScale()) < 0.001
+  const isAlreadyCentered = isCoordApproxZero(relCoord)
   if (opts.zeroDuration) {
     gsap.set(elZoomPanCover, {
       scale,
@@ -215,7 +224,7 @@ function fitArena(opts = {zeroDuration: false}) {
       y: "-=" + relCoord.y,
     })
 
-  } else if (isAlreadyAtFitScale) {
+  } else if (isAlreadyAtFitScale & isAlreadyCentered) {
     gsap.from(elZoomPanCover, {
       scale: scale * 0.95,
       duration
@@ -334,8 +343,10 @@ const ZoomPanFit = {
   }
 }
 
+// TODO rename ButtonFit
 const ButtonFitArena = {
   mounted() {
+    // TODO rename fit
     this.el.onclick = fitArena
   }
 }
