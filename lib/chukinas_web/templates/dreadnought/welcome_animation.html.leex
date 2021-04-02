@@ -49,13 +49,14 @@
 <div
   id="worldContainer"
   class="fixed inset-0"
-  phx-hook="WorldContainerPanZoom"
+  phx-hook="ZoomPanContainer"
 >
   <div
     id="world"
     class="bg-cover pointer-events-none relative select-none"
     style="width:2100px;height:2000px;padding:500px"
     draggable=false
+    phx-hook="ZoomPanCover"
   >
     <img 
       id="islandBottomRight"
@@ -99,6 +100,7 @@
       id="arena"
       class=" select-none pointer-events-none"
       style="width:1100px;height:1000px;padding:50px;touch-action:none"
+      phx-hook="ZoomPanFit"
     >
     </div>
     <svg 

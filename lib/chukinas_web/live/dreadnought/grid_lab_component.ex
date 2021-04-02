@@ -18,13 +18,13 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
     <div
       id="worldContainer"
       class="fixed inset-0"
-      phx-hook="WorldContainerPanZoom"
-      style="width:<%= @mission.world.width %>px; height: <%= @mission.world.height %>px"
+      phx-hook="ZoomPanContainer"
     >
       <div
         id="world"
         class="relative pointer-events-none select-none bg-cover"
         style="width:<%= @mission.world.width %>px; height: <%= @mission.world.height %>px"
+        phx-hook="ZoomPanCover"
       >
         <div
           id="arena"
@@ -35,6 +35,7 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
             width:<%= @mission.grid.width %>px;
             height: <%= @mission.grid.height %>px
           "
+          phx-hook="ZoomPanFit"
         >
           <div
             id="arenaGrid"

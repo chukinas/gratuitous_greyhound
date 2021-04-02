@@ -11,18 +11,20 @@
 <div
   id="worldContainer"
   class="fixed inset-0"
-  phx-hook="WorldContainerPanZoom"
+  phx-hook="ZoomPanContainer"
 >
   <div
     id="world"
     class="bg-cover pointer-events-none"
     style="width:2100px;height:2000px;padding:500px"
     draggable=false
+    phx-hook="ZoomPanCover"
   >
     <div
       id="arena"
       class="bg-green-500 bg-opacity-10 select-none pointer-events-none"
       style="width:1100px;height:1000px;padding:50px;touch-action:none"
+      phx-hook="ZoomPanFit"
     >
       <div
         class="bg-yellow-500 bg-opacity-10"

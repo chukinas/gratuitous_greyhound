@@ -297,15 +297,10 @@ function pointerup_handler(ev) {
 // --------------------------------------------------------
 // HOOKS
 
-// TODO rename PanZoomContainer
-const WorldContainerPanZoom = {
+const ZoomPanContainer = {
   mounted() {
-    // Set DOM references
+    // Set DOM reference
     elZoomPanContainer = this.el
-    // TODO replace with hook?
-    elZoomPanCover = document.getElementById("world")
-    // TODO replace with hook?
-    elZoomPanFit = document.getElementById("arena")
     // Set pointer event handlers
     elZoomPanContainer.onpointerdown = pointerdown_handler;
     elZoomPanContainer.onpointermove = pointermove_handler
@@ -313,7 +308,6 @@ const WorldContainerPanZoom = {
     elZoomPanContainer.onpointercancel = pointerup_handler;
     elZoomPanContainer.onpointerout = pointerup_handler;
     elZoomPanContainer.onpointerleave = pointerup_handler;
-    fitArena({zeroDuration: true})
   },
   updated() {
     console.log("world updated!")
@@ -323,6 +317,20 @@ const WorldContainerPanZoom = {
     elZoomPanContainer = null;
     elZoomPanCover = null;
     elZoomPanFit = null;
+  }
+}
+
+const ZoomPanCover = {
+  mounted() {
+    elZoomPanCover = this.el
+  }
+}
+
+const ZoomPanFit = {
+  mounted() {
+    elZoomPanFit = this.el
+    // TODO rename
+    fitArena({zeroDuration: true})
   }
 }
 
@@ -343,5 +351,5 @@ const ButtonZoomOut = {
     this.el.onclick = zoomOut
   }
 }
-
-export default { WorldContainerPanZoom, ButtonFitArena, ButtonZoomIn, ButtonZoomOut }
+// TODO rename file zoomPan.js
+export default { ZoomPanContainer, ZoomPanCover, ZoomPanFit, ButtonFitArena, ButtonZoomIn, ButtonZoomOut }
