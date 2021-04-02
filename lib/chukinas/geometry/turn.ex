@@ -54,10 +54,6 @@ defmodule Turn do
 
   def get_radius(path), do: path.radius
 
-  def get_angle_radians(path) do
-    path.angle * :math.pi() / 180
-  end
-
   def split(%__MODULE__{angle: angle_orig} = path, angle) when angle_orig > angle do
     ratio = angle / angle_orig
     path1 = new(
@@ -74,12 +70,12 @@ defmodule Turn do
   end
 
   def connecting_path!(start_pose, end_position) do
-    abs_angle = Trig.deg_between_points(start_pose, end_position) #|> IOP.inspect("abs angle")
-    rel_angle = (abs_angle - start_pose.angle) #|> IOP.inspect("rel angle")
-    distance = Trig.distance_between_points(start_pose, end_position) #|> IOP.inspect("AB distance")
-    path_radius = (distance / 2 / Trig.sin(rel_angle)) #|> IOP.inspect("radius")
+    abs_angle = Trig.deg_between_points(start_pose, end_position)
+    rel_angle = (abs_angle - start_pose.angle)
+    distance = Trig.distance_between_points(start_pose, end_position)
+    path_radius = (distance / 2 / Trig.sin(rel_angle))
     path_angle = 2 * rel_angle
-    path_length = Trig.arc_length(path_radius, path_angle)# |> IOP.inspect("arc len")
+    path_length = Trig.arc_length(path_radius, path_angle)
     new(start_pose, path_length, path_angle)
   end
 

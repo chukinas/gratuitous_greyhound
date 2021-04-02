@@ -93,4 +93,13 @@ defmodule Position do
   defp sanitize_translation(value) when is_number(value), do: %{x: value, y: value}
   defp sanitize_translation({x, y}), do: %{x: x, y: y}
 
+
+  # *** *******************************
+  # *** IMPLEMENTATIONS
+
+  defimpl Inspect do
+    def inspect(position, _opts) do
+      "#Position<#{round position.x}, #{round position.y}>"
+    end
+  end
 end

@@ -82,4 +82,15 @@ defmodule Unit do
     |> Enum.map(&Position.to_tuple/1)
     |> Polygon.new
   end
+
+  # *** *******************************
+  # *** IMPLEMENTATIONS
+
+  defimpl Inspect do
+    import Inspect.Algebra
+    def inspect(unit, opts) do
+      unit_map = unit |> Map.take([:id, :pose])
+      concat ["#Unit<", to_doc(unit_map, opts), ">"]
+    end
+  end
 end

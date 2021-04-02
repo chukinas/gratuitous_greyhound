@@ -6,12 +6,12 @@ defmodule ChukinasWeb.DreadnoughtLiveTest do
   # *** *******************************
   # *** ACTIONS
 
-  defp click_command(view, unit_id, command_id) do
-    view
-    |> element("#command-#{unit_id}-#{command_id}")
-    |> render_click()
-    view
-  end
+  # defp click_command(view, unit_id, command_id) do
+  #   view
+  #   |> element("#command-#{unit_id}-#{command_id}")
+  #   |> render_click()
+  #   view
+  # end
 
   # # *** *******************************
   # # *** ASSERTS - GAME HOUSEKEEPING

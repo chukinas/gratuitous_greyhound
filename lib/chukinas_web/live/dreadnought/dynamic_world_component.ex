@@ -60,8 +60,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
 
   @impl true
   def handle_event("select_square", %{"x" =>  x, "y" => y}, socket) do
-    socket.assigns |> Map.keys |> IOP.inspect("assigns")
-    position = Position.new(String.to_float(x), String.to_float(y)) |> IOP.inspect
+    position = Position.new(String.to_float(x), String.to_float(y)) |> IOP.inspect("command")
     {:noreply, update(socket, :mission, &Mission.move_unit_to(&1, position))}
   end
 

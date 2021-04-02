@@ -23,9 +23,14 @@ defmodule Chukinas.Geometry.Trig do
     {opposite, adjacent} = opposite_and_adjacent a, b
     vertical? = adjacent * 1.0 == 0.0
     cond do
-      not vertical? -> :math.atan(opposite / adjacent) |> rad_to_deg
-      opposite > 0 -> 90
-      true -> 270
+      vertical? and opposite > 0 ->
+        90
+      vertical? ->
+        -90
+      _in_right_quadrants = adjacent > 0 ->
+        :math.atan(opposite / adjacent) |> rad_to_deg |> normalize_angle
+      true ->
+        :math.atan(opposite / adjacent) |> rad_to_deg |> add_180 |> normalize_angle
     end
   end
 
@@ -33,6 +38,17 @@ defmodule Chukinas.Geometry.Trig do
 
   def arc_length(radius, angle) do
     2 * radius * :math.pi() * angle / 360
+  end
+
+  def normalize_angle(angle) do
+    cond do
+      angle < 0 ->
+        normalize_angle(angle + 360)
+      angle >= 360 ->
+        normalize_angle(angle - 360)
+      true ->
+        angle
+    end
   end
 
   # *** *******************************
@@ -45,5 +61,5 @@ defmodule Chukinas.Geometry.Trig do
     adjacent = b.x - a.x
     {opposite, adjacent}
   end
-
+  defp add_180(angle), do: angle + 180
 end
