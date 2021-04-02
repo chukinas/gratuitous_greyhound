@@ -138,7 +138,8 @@ defmodule Mission do
   def move_unit_to(%__MODULE__{} = mission, position) do
     path = Path.get_connecting_path(mission.unit.pose, position)
     new_pose = Path.get_end_pose path
-    unit = %{mission.unit | pose: new_pose}
+    unit = Unit.set_pose(mission.unit, new_pose, mission.margin)
+           |> IOP.inspect
     motion_range_polygon = Unit.get_motion_range unit
     mission
     |> Mission.set_unit(unit)

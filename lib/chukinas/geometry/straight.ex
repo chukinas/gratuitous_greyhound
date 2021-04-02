@@ -1,5 +1,4 @@
 alias Chukinas.Geometry.{Polar, Pose, PathLike, Rect, Straight, Position, Trig}
-alias Chukinas.Util.Precision
 
 defmodule Straight do
 
