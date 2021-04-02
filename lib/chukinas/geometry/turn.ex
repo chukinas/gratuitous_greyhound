@@ -17,9 +17,9 @@ defmodule Turn do
   def new(%Pose{} = start_pose, len, angle) do
     %__MODULE__{
       pose: start_pose,
-      length: len,
-      angle: angle,
-      radius: radius(len, angle)
+      length: round(len),
+      angle: round(angle),
+      radius: round(radius(len, angle))
     }
   end
   def new(x, y, angle, len, angle) do

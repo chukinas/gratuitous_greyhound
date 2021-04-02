@@ -49,6 +49,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
         <% end %>
       </div>
     </div>
+    <%# TODO is it a problem that there isn't a single root element here? %>
     <%= ChukinasWeb.DreadnoughtView.render "unit2.html", %{unit: @mission.unit}%>
     """
   end
