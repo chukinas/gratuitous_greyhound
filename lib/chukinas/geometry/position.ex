@@ -1,4 +1,5 @@
 alias Chukinas.Geometry.{Position}
+alias Chukinas.Util.Precision
 
 defmodule Position do
   import Position.Guard
@@ -79,6 +80,10 @@ defmodule Position do
 
   def get(position) do
     position |> Map.take([:x, :y])
+  end
+
+  def approx_equal(a, b) do
+    Precision.approx_equal(a.x, b.x) and Precision.approx_equal(a.y, b.y)
   end
 
   # *** *******************************

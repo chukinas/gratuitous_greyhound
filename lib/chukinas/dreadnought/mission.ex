@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Unit, Mission, ById, CommandQueue, Segment, CommandIds}
-alias Chukinas.Geometry.{Rect, Grid, GridSquare, Size, Collide}
+alias Chukinas.Geometry.{Rect, Grid, GridSquare, Size, Collide, Path}
 
 defmodule Mission do
 
@@ -134,6 +134,16 @@ defmodule Mission do
     %{ mission | hand: deck |> CommandQueue.hand}
   end
   def build_view(%__MODULE__{} = mission), do: mission
+
+  def move_unit_to(%__MODULE__{} = mission, position) do
+    path = Path.get_connecting_path(mission.unit.pose, position)
+    new_pose = Path.get_end_pose path
+    unit = %{mission.unit | pose: new_pose}
+    motion_range_polygon = Unit.get_motion_range unit
+    mission
+    |> Mission.set_unit(unit)
+    |> Mission.set_overlapping_squares(motion_range_polygon)
+  end
 
   # *** *******************************
   # *** PRIVATE

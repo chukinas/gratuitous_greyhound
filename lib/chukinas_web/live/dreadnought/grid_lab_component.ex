@@ -1,3 +1,4 @@
+alias Chukinas.Dreadnought.Mission
 alias Chukinas.Geometry.{Position}
 
 defmodule ChukinasWeb.Dreadnought.GridLabComponent do
@@ -18,32 +19,32 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
       id="worldContainer"
       class="fixed inset-0"
       phx-hook="WorldContainerPanZoom"
-      style="width:<%= @world.width %>px; height: <%= @world.height %>px"
+      style="width:<%= @mission.world.width %>px; height: <%= @mission.world.height %>px"
     >
       <div
         id="world"
         class="relative pointer-events-none select-none bg-cover"
-        style="width:<%= @world.width %>px; height: <%= @world.height %>px"
+        style="width:<%= @mission.world.width %>px; height: <%= @mission.world.height %>px"
       >
         <div
           id="arena"
           class="absolute bg-green-300 bg-opacity-30"
           style="
-            left: <%= @margin.width %>px;
-            top: <%= @margin.height %>px;
-            width:<%= @grid.width %>px;
-            height: <%= @grid.height %>px
+            left: <%= @mission.margin.width %>px;
+            top: <%= @mission.margin.height %>px;
+            width:<%= @mission.grid.width %>px;
+            height: <%= @mission.grid.height %>px
           "
         >
           <div
             id="arenaGrid"
             style="
               display: grid;
-              grid-auto-columns: <%= @grid.square_size %>px;
-              grid-auto-rows: <%= @grid.square_size %>px;
+              grid-auto-columns: <%= @mission.grid.square_size %>px;
+              grid-auto-rows: <%= @mission.grid.square_size %>px;
             "
           >
-            <%= for square <- @squares do %>
+            <%= for square <- @mission.squares do %>
             <button
               id="gridSquareTarget-<%= square.id %>"
               class="p-2 hover:p-1 pointer-events-auto"
@@ -65,7 +66,7 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
             <% end %>
           </div>
         </div>
-        <%= ChukinasWeb.DreadnoughtView.render "unit2.html", %{unit: @unit}%>
+        <%= ChukinasWeb.DreadnoughtView.render "unit2.html", %{unit: @mission.unit}%>
       </div>
     </div>
     """
@@ -78,8 +79,9 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
 
   @impl true
   def handle_event("select_square", %{"x" =>  x, "y" => y}, socket) do
-    _position = Position.new(String.to_float(x), String.to_float(y))
-    {:noreply, socket}
+    socket.assigns |> Map.keys |> IOP.inspect("assigns")
+    position = Position.new(String.to_float(x), String.to_float(y)) |> IOP.inspect
+    {:noreply, update(socket, :mission, &Mission.move_unit_to(&1, position))}
   end
 
 end

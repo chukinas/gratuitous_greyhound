@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Mission, Unit, Command, CommandQueue, CommandIds, MissionBuilder}
-alias Chukinas.Geometry.{Pose, Polygon, Size}
+alias Chukinas.Geometry.{Pose, Size}
 
 defmodule MissionBuilder do
 

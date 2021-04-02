@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{Pose, Position, PathLike, Rect, Straight, Turn}
+alias Chukinas.Geometry.{Pose, Position, PathLike, Rect, Straight, Turn, Trig}
 
 defmodule Turn do
 
@@ -73,6 +73,16 @@ defmodule Turn do
     {path1, path2}
   end
 
+  def connecting_path!(start_pose, end_position) do
+    abs_angle = Trig.deg_between_points start_pose, end_position
+    rel_angle = abs_angle - start_pose.angle
+    distance = Trig.distance_between_points start_pose, end_position
+    radius = distance / 2 / Trig.sin(rel_angle)
+    path_length = arc_length radius, rel_angle
+    path_angle = 2 * rel_angle
+    new(start_pose, path_length, path_angle)
+  end
+
   # *** *******************************
   # *** PRIVATE
 
@@ -81,6 +91,10 @@ defmodule Turn do
 
   defp radius(length, angle) do
     (length * 360) / (2 * :math.pi() * abs(angle))
+  end
+
+  defp arc_length(radius, angle) do
+    2 * radius * :math.pi() * angle / 360
   end
 
   # *** *******************************

@@ -1,4 +1,5 @@
-alias Chukinas.Geometry.{Polar, Pose, PathLike, Rect, Straight}
+alias Chukinas.Geometry.{Polar, Pose, PathLike, Rect, Straight, Position, Trig}
+alias Chukinas.Util.Precision
 
 defmodule Straight do
 
@@ -45,6 +46,25 @@ defmodule Straight do
     {xmin, xmax} = Enum.min_max([start.x, final.x])
     {ymin, ymax} = Enum.min_max([start.y, final.y])
     Rect.new(xmin, ymin, xmax, ymax)
+  end
+
+  # *** *******************************
+  # *** API
+
+  @doc"""
+  Returns a straight path if end_position lies upon path in front of start_pose.
+  Otherwise, returns nil.
+  """
+  def get_connecting_path(start_pose, end_position) do
+    # Calculate the angle b/w start and end position.
+    # Then compare that to the actual start angle to see if there's a match.
+    distance = Trig.distance_between_points start_pose, end_position
+    proposed_path = new(start_pose, distance)
+    if proposed_path |> end_pose |> Position.approx_equal(end_position) do
+      proposed_path
+    else
+      nil
+    end
   end
 
   # *** *******************************
