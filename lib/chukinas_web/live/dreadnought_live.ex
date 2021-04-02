@@ -60,4 +60,10 @@ defmodule ChukinasWeb.DreadnoughtLive do
     <%= @title %> - <a class="underline" href="https://github.com/jonathanchukinas/chukinas/issues/<%= @number %>" target="_blank">issue/<%= @number %></a>
     """
   end
+
+  @impl true
+  def handle_info({:flash, message}, socket) do
+    IOP.inspect "FLASH!!!"
+    {:noreply, put_flash(socket, :info, message)}
+  end
 end

@@ -53,7 +53,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
     </div>
     <svg
       id="svg_paths"
-      class="absolute pointer-event-none opacity-50"
+      class="absolute pointer-event-none opacity-20"
       viewBox="0 0 <%= @mission.grid.width %> <%= @mission.grid.height %> "
       style="
         left: <%= @mission.margin.width %>px;
@@ -65,7 +65,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
       <path
         id="lastPath"
         d="<%= @mission.unit.path_string %>"
-        style="stroke-linejoin:round;stroke-width:5;stroke:#fff;fill:none"
+        style="stroke-linejoin:round;stroke-width:20;stroke:#fff;fill:none"
       />
     </svg>
     <%= ChukinasWeb.DreadnoughtView.render "unit2.html", %{unit: @mission.unit}%>
@@ -81,6 +81,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
   @impl true
   def handle_event("select_square", %{"x" =>  x, "y" => y}, socket) do
     position = Position.new(String.to_float(x), String.to_float(y)) |> IOP.inspect("command")
+    send self(), {:flash, "This is an info flash!"}
     {:noreply, update(socket, :mission, &Mission.move_unit_to(&1, position))}
   end
 
