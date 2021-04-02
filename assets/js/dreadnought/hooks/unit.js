@@ -113,4 +113,31 @@ const Unit = {
   },
 }
 
-export default { WelcomeCardShip, WelcomeCardShipFwdTurret, WelcomeCardShipRearTurret, Unit }
+const TurnBasedUnit = {
+  mounted() {
+    console.log("unit mounted!")
+    // Nothing yet...
+  },
+  beforeUpdate() {
+    console.log("unit element before update!")
+    const path = document.getElementById("lastPath")
+    gsap.to(this.el, {
+      motionPath: {
+        autoRotate: true,
+        alignOrigin: [0.5, 0.5],
+        align: path,
+        path,
+      },
+      ease: "power1.in",
+      duration: 1
+    })
+  },
+  update() {
+    console.log("unit element updated!")
+  },
+  destroyed() {
+    console.log("unit element destroyed!")
+  },
+}
+
+export default { WelcomeCardShip, WelcomeCardShipFwdTurret, WelcomeCardShipRearTurret, Unit, TurnBasedUnit }

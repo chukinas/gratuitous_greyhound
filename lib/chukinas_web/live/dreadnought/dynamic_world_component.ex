@@ -53,7 +53,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
     </div>
     <svg
       id="svg_paths"
-      class="absolute pointer-event-none"
+      class="absolute pointer-event-none opacity-50"
       viewBox="0 0 <%= @mission.grid.width %> <%= @mission.grid.height %> "
       style="
         left: <%= @mission.margin.width %>px;
@@ -63,13 +63,15 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
       "
     >
       <path
+        id="lastPath"
         d="<%= @mission.unit.path_string %>"
-        style="stroke-linejoin:round;stroke-width:2.5;stroke:#fff;fill:none"
+        style="stroke-linejoin:round;stroke-width:5;stroke:#fff;fill:none"
       />
     </svg>
     <%= ChukinasWeb.DreadnoughtView.render "unit2.html", %{unit: @mission.unit}%>
     """
   end
+  # TODO svg path as hook?
 
   @impl true
   def mount(socket) do

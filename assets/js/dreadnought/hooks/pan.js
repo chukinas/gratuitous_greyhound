@@ -277,7 +277,6 @@ function coverWorldContainer() {
 // EVENT HANDLERS
 
 function pointerdown_handler(ev) {
-  console.log("pointer dwn")
   pointerCoord = coordFromEvent(ev)
   atPanStart = {
     worldCoord: coordFromTransformedElement(elZoomPanCover),
