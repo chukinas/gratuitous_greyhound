@@ -31,6 +31,10 @@ defmodule Chukinas.Geometry.Trig do
 
   def asin(value), do: :math.asin(value) |> rad_to_deg
 
+  def arc_length(radius, angle) do
+    2 * radius * :math.pi() * angle / 360
+  end
+
   # *** *******************************
   # *** PRIVATE
 

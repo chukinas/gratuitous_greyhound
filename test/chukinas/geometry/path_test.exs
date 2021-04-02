@@ -31,4 +31,29 @@ defmodule Chukinas.Geometry.PathTest do
     expected_rect = Rect.new(0, 0, 1, 1)
     assert match_numerical_map? expected_rect, actual_rect
   end
+
+  test "arc length" do
+    radius = 100
+    angle = 180
+    expected_length = radius * :math.pi()
+    actual_length = Trig.arc_length radius, angle
+    assert expected_length = actual_length
+  end
+
+  test "get connecting (turn) path" do
+    start_pose = Pose.origin()
+    # desired values
+    radius = 100
+    angle = 90
+    length = Trig.arc_length radius, angle
+    path = Path.new_turn start_pose, length, angle
+    end_pose =
+      Path.get_end_pose(path)
+    # Actual Values
+    actual_end_pose =
+      Path.get_connecting_path(start_pose, end_pose)
+      |> Path.get_end_pose
+    # Test
+    assert match_numerical_map? end_pose, actual_end_pose
+  end
 end

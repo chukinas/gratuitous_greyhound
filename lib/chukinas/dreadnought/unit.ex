@@ -17,6 +17,8 @@ defmodule Unit do
     # ID must be unique within the world
     field :id, integer()
     field :pose, Pose.t()
+    # TODO rename world position
+    # This places the svg on the correct spot within the World
     field :position, Position.t()
     field :start_pose, Pose.t()
     field :segments, [Segment.t()], default: []
