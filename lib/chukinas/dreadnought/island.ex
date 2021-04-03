@@ -28,7 +28,7 @@ defmodule Chukinas.Dreadnought.Island do
         Position.new(-100, -100),
         Position.new( 100, -100),
       ],
-      position: Position.new(500, 500)
+      position: Position.new(300, 300)
     }
   end
 end

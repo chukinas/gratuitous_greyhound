@@ -38,15 +38,17 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
             height="<%= @mission.grid.height %>"
             style="fill:none;"
           />
+          <%= for island <- @mission.islands do %>
           <polygon
             points="
-            <%= for point <- @mission.island.relative_vertices do %>
-            <%= point.x + @mission.island.position.x %>
-            <%= point.y + @mission.island.position.y %>
-            <% end %>
+              <%= for point <- island.relative_vertices do %>
+              <%= point.x + island.position.x %>
+              <%= point.y + island.position.y %>
+              <% end %>
             "
             style="fill:green;"
           />
+          <% end %>
         </svg>
         <div
           id="fit"

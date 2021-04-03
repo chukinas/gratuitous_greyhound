@@ -16,7 +16,7 @@ defmodule Mission do
     field :margin, Size.t()
     field :unit, Unit.t()
     field :game_over?, boolean(), default: false
-    field :island, Island.t(), default: Island.new(1)
+    field :islands, [Island.t()], default: [Island.new(1)]
     # Unused. maybe delete later
     field :units, [Unit.t()], default: []
     field :decks, [CommandQueue.t()], default: []
