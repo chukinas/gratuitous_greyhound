@@ -1,18 +1,11 @@
 defmodule ChukinasWeb.Dreadnought.GridLabComponent do
   use ChukinasWeb, :live_component
 
-  # TODO This is now a rather aenemic little component which should be downgraded to a simple template
+  # Note: this live component is actually necessary, because I never want its state to getupdated
+
   @impl true
   def render(assigns) do
     ~L"""
-    <style>
-      body {
-        touch-action:none
-      }
-      #world {
-        background-image:url("<%= Routes.static_path @socket, "/images/ocean.png" %>")
-      }
-    </style>
     <div
       id="worldContainer"
       class="fixed inset-0"
