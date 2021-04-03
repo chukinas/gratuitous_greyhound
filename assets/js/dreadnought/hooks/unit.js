@@ -114,11 +114,8 @@ const Unit = {
 }
 
 const TurnBasedUnit = {
-  mounted() {
-    console.log("unit mounted!")
-    // Nothing yet...
-  },
   beforeUpdate() {
+    const el = this.el
     console.log("unit element before update!")
     const path = document.getElementById("lastPath")
     gsap.to(this.el, {
@@ -129,14 +126,16 @@ const TurnBasedUnit = {
         path,
       },
       ease: "power1.in",
-      duration: 1
+      duration: 1,
+      onComplete: () => {
+        console.log(el.dataset.gameover)
+        console.log(!!el.dataset.testbool)
+        if (el.dataset.gameover) {
+          console.log("game over!")
+          //this.pushEvent("game_over")
+        }
+      }
     })
-  },
-  update() {
-    console.log("unit element updated!")
-  },
-  destroyed() {
-    console.log("unit element destroyed!")
   },
 }
 

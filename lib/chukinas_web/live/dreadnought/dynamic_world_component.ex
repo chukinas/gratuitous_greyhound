@@ -68,7 +68,9 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
         style="stroke-linejoin:round;stroke-width:20;stroke:#fff;fill:none"
       />
     </svg>
-    <%= ChukinasWeb.DreadnoughtView.render "unit2.html", %{unit: @mission.unit}%>
+    <%= ChukinasWeb.DreadnoughtView.render "unit2.html",
+      unit: @mission.unit,
+      game_over?: @mission.game_over? %>
     """
   end
   # TODO svg path as hook?
@@ -81,14 +83,11 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
   @impl true
   def handle_event("select_square", %{"x" =>  x, "y" => y}, socket) do
     position = Position.new(String.to_float(x), String.to_float(y)) |> IOP.inspect("command")
-    mission = socket.assigns.mission |> Mission.move_unit_to(position)
-    if Mission.game_over?(mission) do
-      send self(), {:flash, "You drove off the board! Play again."}
-      send self(), :reset_mission
-      {:noreply, socket}
-    else
-      {:noreply, assign(socket, :mission, mission)}
-    end
+    mission =
+      socket.assigns.mission
+      |> Mission.move_unit_to(position)
+      |> Mission.calc_game_over
+    {:noreply, socket |> assign(mission: mission)}
   end
 
 end

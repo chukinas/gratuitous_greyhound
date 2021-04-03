@@ -1,14 +1,14 @@
 <%# Unit Template %>
 <div
-  id="unit--<%= @unit.id %>"
+  id="unit-<%= @unit.id %>"
   class="absolute text-yellow-600"
   style="
     top: <%= @unit.position.y %>px; 
     left: <%= @unit.position.x %>px;
     transform: rotate(<%= @unit.pose.angle %>deg);
   "
-  data-unit-number="<%= @unit.id %>"
   phx-hook="TurnBasedUnit"
+  <%= if @game_over?, do: "data-gameover=true" %>
 >
   <svg
     width="140"

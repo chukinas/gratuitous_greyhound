@@ -15,6 +15,8 @@ defmodule Mission do
     field :world, Size.t(), enforce: false
     field :margin, Size.t(), enforce: false
     field :unit, Unit.t(), enforce: false
+    field :game_over?, boolean(), default: false
+    # Unused. maybe delete later
     field :units, [Unit.t()], default: []
     field :decks, [CommandQueue.t()], default: []
     field :segments, [Segment.t()], default: []
@@ -146,6 +148,8 @@ defmodule Mission do
   end
 
   def game_over?(mission), do: Enum.empty? mission.squares
+
+  def calc_game_over(mission), do: %{mission | game_over?: game_over? mission}
 
   # *** *******************************
   # *** PRIVATE

@@ -61,12 +61,26 @@ defmodule ChukinasWeb.DreadnoughtLive do
     """
   end
 
+  # TODO delete
   @impl true
   def handle_info({:flash, message}, socket) do
     IOP.inspect "FLASH!!!"
     {:noreply, put_flash(socket, :info, message)}
   end
 
+  @impl true
+  def handle_event("game_over", _, socket) do
+    socket =
+      socket
+      |> put_flash(:info, "You drove off the board! Play again.")
+    mission =
+      MissionBuilder.from_live_action(socket.assigns.live_action)
+      |> Mission.build_view
+    send_update Dreadnought.DynamicWorldComponent, id: :dynamic_world, mission: mission
+    {:noreply, socket}
+  end
+
+  # TODO delete
   @impl true
   def handle_info(:reset_mission, socket) do
     mission =
