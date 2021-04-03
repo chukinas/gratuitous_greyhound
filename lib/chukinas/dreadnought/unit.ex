@@ -83,17 +83,17 @@ defmodule Unit do
     %{unit | position: position}
   end
 
-  def get_motion_range(%__MODULE__{pose: pose}) do
+  def get_motion_range(%__MODULE__{pose: pose}, trim_angle \\ 0) do
     max_distance = 400
     min_distance = 200
-    angle = 45 # deg
+    angle = 45
     [
       Straight.new(pose, min_distance),
-      Turn.new(pose, min_distance, -angle),
-      Turn.new(pose, max_distance, -angle),
+      Turn.new(pose, min_distance, trim_angle - angle),
+      Turn.new(pose, max_distance, trim_angle - angle),
       Straight.new(pose, max_distance),
-      Turn.new(pose, max_distance, angle),
-      Turn.new(pose, min_distance, angle),
+      Turn.new(pose, max_distance, trim_angle + angle),
+      Turn.new(pose, min_distance, trim_angle + angle),
     ]
     |> Stream.map(&Path.get_end_pose/1)
     |> Enum.map(&Position.to_tuple/1)

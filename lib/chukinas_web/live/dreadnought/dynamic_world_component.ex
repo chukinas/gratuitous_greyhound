@@ -40,6 +40,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
           phx-target="<%= @myself %>"
           phx-value-x="<%= square.center.x %>"
           phx-value-y="<%= square.center.y %>"
+          phx-value-type="<%= square.path_type %>"
         >
           <div
             id="gridSquareVisible-<%= square.id %>"
@@ -87,11 +88,12 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
   end
 
   @impl true
-  def handle_event("select_square", %{"x" =>  x, "y" => y}, socket) do
+  def handle_event("select_square", %{"x" =>  x, "y" => y, "type" => path_type}, socket) do
+    path_type = path_type |> String.to_atom
     position = Position.new(String.to_float(x), String.to_float(y))
     mission =
       socket.assigns.mission
-      |> Mission.move_unit_to(position)
+      |> Mission.move_unit_to(position, path_type)
       |> Mission.calc_game_over
     {:noreply, socket |> assign(mission: mission)}
   end
