@@ -7,7 +7,7 @@
     left: <%= @unit.position.x %>px;
     transform: rotate(<%= @unit.pose.angle %>deg);
   "
-  phx-hook="TurnBasedUnit"
+  phx-hook="Unit"
   <%= if @game_over?, do: "data-gameover=true" %>
 >
   <svg

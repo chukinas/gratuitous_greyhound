@@ -1,5 +1,3 @@
-import * as worldTimeline from "../core/timelines.js";
-
 // --------------------------------------------------------
 // CONSTANTS
 
@@ -7,21 +5,6 @@ const gsap = window.gsap
 
 // --------------------------------------------------------
 // FUNCTIONS
-
-function onUnitOutOfBounds(unitHookObject) {
-  // TODO this getunittarget... doesn't feel like it's in the right module
-  const unitNumber = unitHookObject.el.dataset.unitNumber
-  gsap.to(worldTimeline.getUnitTarget(unitNumber), {
-    opacity: 0,
-    onComplete: () => {
-      gameOver(unitHookObject)
-    },
-  })
-}
-
-function gameOver(unitHookObject) {
-  unitHookObject.pushEvent("route_to", {route: "/dreadnought/gameover"})
-}
 
 // --------------------------------------------------------
 // WELCOME SHIP PATHS
@@ -94,31 +77,16 @@ const WelcomeCardShipRearTurret = {
 }
 
 const Unit = {
-  mounted() {
-    const unitHookObject = this;
-    const unitNumber = this.el.dataset.unitNumber
-    const tl = worldTimeline.getUnitTimeline(unitNumber)
-    tl.eventCallback("onComplete", () => {
-      onUnitOutOfBounds(unitHookObject)
-    })
-  },
   beforeUpdate() {
-    console.log("unit element before update!")
-  },
-  update() {
-    console.log("unit element updated!")
-  },
-  destroyed() {
-    console.log("unit element destroyed!")
-  },
-}
-
-const TurnBasedUnit = {
-  beforeUpdate() {
+    const me = this
     const el = this.el
-    console.log("unit element before update!")
+    const gameOver = function() {
+      me.pushEvent("game_over")
+    }
+    const pushEvent = this.pushEvent
+    console.log("unit element before update!", el.dataset.gameover)
     const path = document.getElementById("lastPath")
-    gsap.to(this.el, {
+    gsap.to(el, {
       motionPath: {
         autoRotate: true,
         alignOrigin: [0.5, 0.5],
@@ -128,15 +96,13 @@ const TurnBasedUnit = {
       ease: "power1.in",
       duration: 1,
       onComplete: () => {
-        console.log(el.dataset.gameover)
-        console.log(!!el.dataset.testbool)
         if (el.dataset.gameover) {
           console.log("game over!")
-          //this.pushEvent("game_over")
+          setTimeout(gameOver, 2000)
         }
       }
     })
   },
 }
 
-export default { WelcomeCardShip, WelcomeCardShipFwdTurret, WelcomeCardShipRearTurret, Unit, TurnBasedUnit }
+export default { WelcomeCardShip, WelcomeCardShipFwdTurret, WelcomeCardShipRearTurret, Unit }
