@@ -67,5 +67,14 @@ defmodule ChukinasWeb.DreadnoughtLive do
     {:noreply, put_flash(socket, :info, message)}
   end
 
-  def template(template, assigns), do: ChukinasWeb.DreadnoughtView.render template, assigns
+  @impl true
+  def handle_info(:reset_mission, socket) do
+    mission =
+      MissionBuilder.from_live_action(socket.assigns.live_action)
+      |> Mission.build_view
+    send_update Dreadnought.DynamicWorldComponent, id: :dynamic_world, mission: mission
+    {:noreply, socket}
+  end
+
+  def template(template, assigns), do: DreadnoughtView.render template, assigns
 end

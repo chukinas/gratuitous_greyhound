@@ -19,7 +19,7 @@ defmodule MissionBuilder do
 
   def grid_lab do
     margin = Size.new(3000 / 2, 30 * 75 / 2)
-    unit = Unit.new(1) |> Unit.set_position(margin)
+    unit = Unit.new(1, pose: Pose.new(100, 100, 45)) |> Unit.set_position(margin)
     motion_range_polygon = Unit.get_motion_range unit
     Mission.new()
     |> Mission.set_grid(30, 100, 75, margin)

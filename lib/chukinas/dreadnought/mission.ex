@@ -145,6 +145,8 @@ defmodule Mission do
     |> Mission.set_overlapping_squares(motion_range_polygon)
   end
 
+  def game_over?(mission), do: Enum.empty? mission.squares
+
   # *** *******************************
   # *** PRIVATE
 

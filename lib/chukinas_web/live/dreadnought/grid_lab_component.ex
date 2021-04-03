@@ -1,6 +1,7 @@
 defmodule ChukinasWeb.Dreadnought.GridLabComponent do
   use ChukinasWeb, :live_component
 
+  # TODO rename StaticWorldComponent
   # Note: this live component is actually necessary, because I never want its state to getupdated
 
   @impl true

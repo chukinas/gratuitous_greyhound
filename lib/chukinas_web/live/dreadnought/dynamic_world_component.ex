@@ -81,8 +81,14 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
   @impl true
   def handle_event("select_square", %{"x" =>  x, "y" => y}, socket) do
     position = Position.new(String.to_float(x), String.to_float(y)) |> IOP.inspect("command")
-    send self(), {:flash, "This is an info flash!"}
-    {:noreply, update(socket, :mission, &Mission.move_unit_to(&1, position))}
+    mission = socket.assigns.mission |> Mission.move_unit_to(position)
+    if Mission.game_over?(mission) do
+      send self(), {:flash, "You drove off the board! Play again."}
+      send self(), :reset_mission
+      {:noreply, socket}
+    else
+      {:noreply, assign(socket, :mission, mission)}
+    end
   end
 
 end
