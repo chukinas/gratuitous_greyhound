@@ -11,15 +11,14 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
     ~L"""
     <div
       id="arena"
-      class="absolute bg-green-300 bg-opacity-30"
+      class="absolute rounded-3xl"
       style="
+        box-shadow: inset 10px 10px 50px, 2px 2px 10px aquamarine;
         left: <%= @mission.margin.width %>px;
         top: <%= @mission.margin.height %>px;
         width:<%= @mission.grid.width %>px;
         height: <%= @mission.grid.height %>px
       "
-      phx-hook="ZoomPanFit"
-      phx-update="replace"
     >
       <div
         id="arenaGrid"

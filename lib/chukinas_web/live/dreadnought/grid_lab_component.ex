@@ -18,6 +18,18 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
         style="width:<%= @mission.world.width %>px; height: <%= @mission.world.height %>px"
         phx-hook="ZoomPanCover"
       >
+        <div
+          id="fit"
+          class="absolute"
+          style="
+            left: <%= @mission.margin.width - 50 %>px;
+            top: <%= @mission.margin.height - 50 %>px;
+            width:<%= @mission.grid.width + 100 %>px;
+            height: <%= @mission.grid.height + 100 %>px
+          "
+          phx-hook="ZoomPanFit"
+        >
+        </div>
         <%= live_component @socket,
           ChukinasWeb.Dreadnought.DynamicWorldComponent,
           id: :dynamic_world,
