@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Unit, Mission, ById, CommandQueue, Segment, CommandIds}
+alias Chukinas.Dreadnought.{Unit, Mission, ById, CommandQueue, Segment, CommandIds, Island}
 alias Chukinas.Geometry.{Rect, Grid, GridSquare, Size, Collide, Path}
 
 defmodule Mission do
@@ -8,14 +8,15 @@ defmodule Mission do
 
   use TypedStruct
 
-  typedstruct enforce: true do
-    field :arena, Rect.t(), enforce: false
-    field :grid, Grid.t(), enforce: false
-    field :squares, [GridSquare.t()], enforce: false
-    field :world, Size.t(), enforce: false
-    field :margin, Size.t(), enforce: false
-    field :unit, Unit.t(), enforce: false
+  typedstruct do
+    field :arena, Rect.t()
+    field :grid, Grid.t()
+    field :squares, [GridSquare.t()]
+    field :world, Size.t()
+    field :margin, Size.t()
+    field :unit, Unit.t()
     field :game_over?, boolean(), default: false
+    field :island, Island.t(), default: Island.new(1)
     # Unused. maybe delete later
     field :units, [Unit.t()], default: []
     field :decks, [CommandQueue.t()], default: []

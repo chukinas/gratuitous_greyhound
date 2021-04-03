@@ -18,6 +18,21 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
         style="width:<%= @mission.world.width %>px; height: <%= @mission.world.height %>px"
         phx-hook="ZoomPanCover"
       >
+        <svg
+          id="svg_islands"
+          class="absolute"
+          viewBox="-<%= @mission.margin.width %> -<%= @mission.margin.height %> <%= @mission.grid.width + @mission.margin.width %> <%= @mission.grid.height + @mission.margin.height %> "
+          style="
+            width:<%= @mission.world.width %>px;
+            height: <%= @mission.world.height %>px
+          "
+        >
+          <path
+            id="island-<%= @mission.island.id %>"
+            d="M 200, 200 L 200 400 L 400 400 L 400 200 Z"
+            style="stroke-linejoin:round;stroke-width:20;stroke:#fff;fill:green"
+          />
+        </svg>
         <div
           id="fit"
           class="absolute"
