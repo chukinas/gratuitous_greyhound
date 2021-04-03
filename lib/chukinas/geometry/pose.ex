@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{Pose, Position}
+alias Chukinas.Geometry.{Pose, Position, Trig}
 defmodule Pose do
 
   require Position
@@ -24,7 +24,7 @@ defmodule Pose do
     %__MODULE__{
       x: x,
       y: y,
-      angle: angle,
+      angle: Trig.normalize_angle(angle),
     }
   end
 
@@ -34,15 +34,26 @@ defmodule Pose do
   def origin(), do: new(0, 0, 0)
 
   def rotate(%__MODULE__{} = pose, angle) do
-    %{pose | angle: normalize_angle(pose.angle + angle)}
+    %{pose | angle: Trig.normalize_angle(pose.angle + angle)}
   end
 
-  # *** *******************************
-  # *** PRIVATE
+  def straight(pose, length) do
+    dx = length * Trig.cos(pose.angle)
+    dy = length * Trig.sin(pose.angle)
+    new(pose.x + dx, pose.y + dy, pose.angle)
+  end
 
-  defp normalize_angle(angle) when angle > 360, do: normalize_angle(angle - 360)
-  defp normalize_angle(angle) when angle < -360, do: normalize_angle(angle + 360)
-  defp normalize_angle(angle), do: angle
+  def left(pose, length) do
+    pose
+    |> rotate(-90)
+    |> straight(length)
+  end
+
+  def right(pose, length) do
+    pose
+    |> rotate(90)
+    |> straight(length)
+  end
 
   # *** *******************************
   # *** IMPLEMENTATIONS

@@ -1,5 +1,5 @@
-alias Chukinas.Dreadnought.{Unit, Mission, ById, CommandQueue, Segment, CommandIds}
-alias Chukinas.Geometry.{Rect, Grid, GridSquare, Size, Collide}
+alias Chukinas.Dreadnought.{Unit, Mission, ById, CommandQueue, Segment, CommandIds, Island}
+alias Chukinas.Geometry.{Rect, Grid, GridSquare, Size, Collide, Path}
 
 defmodule Mission do
 
@@ -8,12 +8,16 @@ defmodule Mission do
 
   use TypedStruct
 
-  typedstruct enforce: true do
-    field :arena, Rect.t(), enforce: false
-    field :grid, Grid.t(), enforce: false
-    field :squares, [GridSquare.t()], enforce: false
-    field :world, Size.t(), enforce: false
-    field :margin, Size.t(), enforce: false
+  typedstruct do
+    field :arena, Rect.t()
+    field :grid, Grid.t()
+    field :squares, [GridSquare.t()]
+    field :world, Size.t()
+    field :margin, Size.t()
+    field :unit, Unit.t()
+    field :game_over?, boolean(), default: false
+    field :islands, [Island.t()], default: []
+    # Unused. maybe delete later
     field :units, [Unit.t()], default: []
     field :decks, [CommandQueue.t()], default: []
     field :segments, [Segment.t()], default: []
@@ -71,29 +75,38 @@ defmodule Mission do
     %{mission | segments: segments}
   end
 
-  def set_grid(mission, square_size, x_count, y_count) do
+  def set_grid(mission, square_size, x_count, y_count, %Size{} = margin) do
     grid = Grid.new(square_size, x_count, y_count)
-    margin = 500
     world = Size.new(
-      grid.width + 2 * margin,
-      grid.height + 2 * margin
+      grid.width + 2 * margin.width,
+      grid.height + 2 * margin.height
     )
     %{mission |
       grid: grid,
       world: world,
-      margin: Size.new(margin, margin),
+      margin: margin,
     }
   end
+
+  def set_unit(mission, unit), do: %{mission | unit: unit}
 
   # *** *******************************
   # *** API
 
   # TODO rename set colliding squares?
-  def set_overlapping_squares(mission, shape) do
-    collides? = fn square -> Collide.collide?(shape, square) end
+  def set_overlapping_squares(mission, command_zone) do
+    first_island = List.first mission.islands
+    collides_with_island? = fn sq ->
+      not(Collide.collide?(sq, first_island))
+    end
     colliding_squares =
-      Grid.squares(mission.grid)
-      |> Enum.filter(collides?)
+      mission.grid
+      |> Grid.squares
+      |> Stream.filter(&Collide.collide?(&1, command_zone))
+      |> Stream.filter(collides_with_island?)
+      |> Stream.map(&GridSquare.calc_path(&1, mission.unit.pose))
+      |> Stream.filter(&Collide.avoids?(&1.path, mission.islands))
+      |> Enum.to_list
     %{mission | squares: colliding_squares}
   end
 
@@ -133,32 +146,24 @@ defmodule Mission do
   end
   def build_view(%__MODULE__{} = mission), do: mission
 
-  # *** *******************************
-  # *** PRIVATE
+  def move_unit_to(%__MODULE__{} = mission, position, path_type \\ :straight) do
+    path = Path.get_connecting_path(mission.unit.pose, position)
+    unit = Unit.move_along_path(mission.unit, path, mission.margin)
+    trim_angle = cond do
+      path_type == :sharp_turn and path.angle > 0
+        -> 30
+      path_type == :sharp_turn
+        -> -30
+      true
+        -> 0
+    end
+    motion_range_polygon = Unit.get_motion_range(unit, trim_angle)
+    mission
+    |> Mission.set_unit(unit)
+    |> Mission.set_overlapping_squares(motion_range_polygon)
+  end
 
-  # defp update_unit_segments(%__MODULE__{} = mission) do
-  #   unit_ids =
-  #     mission.decks
-  #     |> Enum.map(&CommandQueue.get_id/1)
-  #   update_unit_segments(mission, unit_ids)
-  # end
+  def game_over?(mission), do: Enum.empty? mission.squares
 
-  # defp update_unit_segments(%__MODULE__{} = mission, [id]) do
-  #   update_unit_segments(mission, id)
-  # end
-
-  # defp update_unit_segments(%__MODULE__{} = mission, [id | remaining_ids]) do
-  #   update_unit_segments(mission, id)
-  #   |> update_unit_segments(remaining_ids)
-  # end
-
-  # defp update_unit_segments(%__MODULE__{} = mission, unit_id) when is_integer(unit_id) do
-  #   deck = get_deck mission, unit_id
-  #   unit = get_unit(mission, unit_id)
-  #   start_pose = unit |> Unit.start_pose()
-  #   arena = mission.arena
-  #   segments = CommandQueue.build_segments deck, start_pose, arena
-  #   unit = Unit.set_segments(unit, segments)
-  #   push(mission, unit)
-  # end
+  def calc_game_over(mission), do: %{mission | game_over?: game_over? mission}
 end

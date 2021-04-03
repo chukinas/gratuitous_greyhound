@@ -1,70 +1,71 @@
-alias Chukinas.Geometry.{Position}
-
 defmodule ChukinasWeb.Dreadnought.GridLabComponent do
   use ChukinasWeb, :live_component
+
+  # TODO rename StaticWorldComponent
+  # Note: this live component is actually necessary, because I never want its state to getupdated
 
   @impl true
   def render(assigns) do
     ~L"""
-    <style>
-      body {
-        touch-action:none
-      }
-      #world {
-        background-image:url("<%= Routes.static_path @socket, "/images/ocean.png" %>")
-      }
-    </style>
     <div
       id="worldContainer"
       class="fixed inset-0"
-      phx-hook="WorldContainerPanZoom"
-      style="width:<%= @world.width %>px; height: <%= @world.height %>px"
+      phx-hook="ZoomPanContainer"
     >
       <div
         id="world"
         class="relative pointer-events-none select-none bg-cover"
-        style="width:<%= @world.width %>px; height: <%= @world.height %>px"
+        style="width:<%= @mission.world.width %>px; height: <%= @mission.world.height %>px"
+        phx-hook="ZoomPanCover"
       >
-        <div
-          id="arena"
-          class="absolute"
+        <svg
+          id="svg_islands"
+          viewBox="
+            <%= -@mission.margin.width %>
+            <%= -@mission.margin.height %>
+            <%=  @mission.world.width %>
+            <%=  @mission.world.height %>
+          "
           style="
-            left: <%= @margin.width %>px;
-            top: <%= @margin.height %>px;
-            width:<%= @grid.width %>px;
-            height: <%= @grid.height %>px
+            width:<%=  @mission.world.width  %>px;
+            height:<%= @mission.world.height %>px
           "
         >
-          <div
-            id="arenaGrid"
-            style="
-              display: grid;
-              grid-auto-columns: <%= @grid.square_size %>px;
-              grid-auto-rows: <%= @grid.square_size %>px;
+          <rect
+            x="0"
+            y="0"
+            width="<%= @mission.grid.width %>"
+            height="<%= @mission.grid.height %>"
+            style="fill:none;"
+          />
+          <%= for island <- @mission.islands do %>
+          <polygon
+            points="
+              <%= for point <- island.relative_vertices do %>
+              <%= point.x + island.position.x %>
+              <%= point.y + island.position.y %>
+              <% end %>
             "
-          >
-            <%= for square <- @squares do %>
-            <button
-              id="gridSquareTarget-<%= square.id %>"
-              class="p-2 hover:p-1 pointer-events-auto"
-              style="
-                grid-column-start: <%= square.column %>;
-                grid-row-start: <%= square.row %>;
-              "
-              phx-click="select_square"
-              phx-target="<%= @myself %>"
-              phx-value-x="<%= square.center.x %>"
-              phx-value-y="<%= square.center.y %>"
-            >
-              <div
-                id="gridSquareVisible-<%= square.id %>"
-                class="bg-yellow-400 h-full rounded-sm bg-opacity-20"
-              >
-              </div>
-            </button>
-            <% end %>
-          </div>
+            style="fill:green;"
+          />
+          <% end %>
+        </svg>
+        <div
+          id="fit"
+          class="absolute"
+          style="
+            left: <%= @mission.margin.width - 50 %>px;
+            top: <%= @mission.margin.height - 50 %>px;
+            width:<%= @mission.grid.width + 100 %>px;
+            height: <%= @mission.grid.height + 100 %>px
+          "
+          phx-hook="ZoomPanFit"
+        >
         </div>
+        <%= live_component @socket,
+          ChukinasWeb.Dreadnought.DynamicWorldComponent,
+          id: :dynamic_world,
+          mission: @mission %>
       </div>
     </div>
     """
@@ -73,12 +74,6 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
   @impl true
   def mount(socket) do
     {:ok, socket}
-  end
-
-  @impl true
-  def handle_event("select_square", %{"x" =>  x, "y" => y}, socket) do
-    _position = Position.new(String.to_float(x), String.to_float(y))
-    {:noreply, socket}
   end
 
 end

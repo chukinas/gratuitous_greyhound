@@ -1,0 +1,29 @@
+<%# Unit Template %>
+<div
+  id="unit-<%= @unit.id %>"
+  class="absolute text-yellow-600"
+  style="
+    top: <%= @unit.position.y %>px; 
+    left: <%= @unit.position.x %>px;
+    transform: rotate(<%= @unit.pose.angle %>deg);
+  "
+  phx-hook="Unit"
+  <%= if @game_over?, do: "data-gameover=true" %>
+>
+  <svg
+    width="140"
+    height="40"
+    version="1.1"
+    viewBox="0 0 140 40"
+    xmlns="http://www.w3.org/2000/svg"
+    class="fill-current "
+  >
+    <path
+      d="m46 7.2c-26 0-42 13-42 13s16 13 42 13c26 0 43-7.5 52-13-9.2-5.3-26-13-52-13z"
+      style="stroke-linejoin:round;stroke-width:2.5;stroke:#fff"
+    />
+  </svg>
+  <%= render "turret.html", %{x: 55, angle: 0} %>
+  <%= render "turret.html", %{x: 35, angle: 0} %>
+  <%= render "turret.html", %{x: 5, angle: 180} %>
+</div>

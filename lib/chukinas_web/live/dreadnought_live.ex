@@ -50,6 +50,18 @@ defmodule ChukinasWeb.DreadnoughtLive do
     |> assign_mission(socket)
   end
 
+  @impl true
+  def handle_event("game_over", _, socket) do
+    socket =
+      socket
+      |> put_flash(:info, "You have no available moves! Play again.")
+    mission =
+      MissionBuilder.from_live_action(socket.assigns.live_action)
+      |> Mission.build_view
+    send_update Dreadnought.DynamicWorldComponent, id: :dynamic_world, mission: mission
+    {:noreply, socket}
+  end
+
   defp assign_mission(mission, socket) do
     {:noreply, assign(socket, :mission, mission |> Mission.build_view)}
   end
@@ -60,4 +72,22 @@ defmodule ChukinasWeb.DreadnoughtLive do
     <%= @title %> - <a class="underline" href="https://github.com/jonathanchukinas/chukinas/issues/<%= @number %>" target="_blank">issue/<%= @number %></a>
     """
   end
+
+  # TODO delete
+  @impl true
+  def handle_info({:flash, message}, socket) do
+    {:noreply, put_flash(socket, :info, message)}
+  end
+
+  # TODO delete
+  @impl true
+  def handle_info(:reset_mission, socket) do
+    mission =
+      MissionBuilder.from_live_action(socket.assigns.live_action)
+      |> Mission.build_view
+    send_update Dreadnought.DynamicWorldComponent, id: :dynamic_world, mission: mission
+    {:noreply, socket}
+  end
+
+  def template(template, assigns), do: DreadnoughtView.render template, assigns
 end

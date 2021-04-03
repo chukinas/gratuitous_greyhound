@@ -1,12 +1,36 @@
-alias Chukinas.Geometry.{GridSquare, Collide, Polygon}
+alias Chukinas.Geometry.{Collide, CollidableShape}
+alias Collision.{Detection, Polygon}
 
 defmodule Collide do
 
-  def collide?(polygon, square) do
-    Collision.Detection.SeparatingAxis.collision?(
-      Collision.Polygon.from_vertices(Polygon.to_vertices polygon),
-      Collision.Polygon.from_vertices(GridSquare.to_vertices square)
+  def collide?(a, b) do
+    Detection.SeparatingAxis.collision?(
+      to_poly(a),
+      to_poly(b)
     )
+  end
+
+  def any?(a, shapes) when is_list(shapes) and not is_list(a) do
+    main_polygon = Polygon.from_vertices(CollidableShape.to_vertices a)
+    shapes
+    |> Stream.map(&CollidableShape.to_vertices/1)
+    |> Stream.map(&Polygon.from_vertices/1)
+    |> Enum.any?(fn polygon ->
+      Detection.SeparatingAxis.collision?(main_polygon, polygon)
+    end)
+  end
+
+  def avoids?(a, shapes) when is_list(shapes) and not is_list(a) do
+    not any?(a, shapes)
+  end
+
+  # *** *******************************
+  # *** PRIVATE
+
+  defp to_poly(shape) do
+    shape
+    |> CollidableShape.to_vertices
+    |> Polygon.from_vertices
   end
 
 end

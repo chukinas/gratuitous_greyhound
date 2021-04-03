@@ -1,5 +1,3 @@
-import * as worldTimeline from "../core/timelines.js";
-
 // --------------------------------------------------------
 // CONSTANTS
 
@@ -7,21 +5,6 @@ const gsap = window.gsap
 
 // --------------------------------------------------------
 // FUNCTIONS
-
-function onUnitOutOfBounds(unitHookObject) {
-  // TODO this getunittarget... doesn't feel like it's in the right module
-  const unitNumber = unitHookObject.el.dataset.unitNumber
-  gsap.to(worldTimeline.getUnitTarget(unitNumber), {
-    opacity: 0,
-    onComplete: () => {
-      gameOver(unitHookObject)
-    },
-  })
-}
-
-function gameOver(unitHookObject) {
-  unitHookObject.pushEvent("route_to", {route: "/dreadnought/gameover"})
-}
 
 // --------------------------------------------------------
 // WELCOME SHIP PATHS
@@ -94,22 +77,31 @@ const WelcomeCardShipRearTurret = {
 }
 
 const Unit = {
-  mounted() {
-    const unitHookObject = this;
-    const unitNumber = this.el.dataset.unitNumber
-    const tl = worldTimeline.getUnitTimeline(unitNumber)
-    tl.eventCallback("onComplete", () => {
-      onUnitOutOfBounds(unitHookObject)
-    })
-  },
   beforeUpdate() {
-    console.log("unit element before update!")
-  },
-  update() {
-    console.log("unit element updated!")
-  },
-  destroyed() {
-    console.log("unit element destroyed!")
+    const me = this
+    const el = this.el
+    const gameOver = function() {
+      me.pushEvent("game_over")
+    }
+    const pushEvent = this.pushEvent
+    console.log("unit element before update!", el.dataset.gameover)
+    const path = document.getElementById("lastPath")
+    gsap.to(el, {
+      motionPath: {
+        autoRotate: true,
+        alignOrigin: [0.5, 0.5],
+        align: path,
+        path,
+      },
+      ease: "power1.in",
+      duration: 1,
+      onComplete: () => {
+        if (el.dataset.gameover) {
+          console.log("game over!")
+          setTimeout(gameOver, 2000)
+        }
+      }
+    })
   },
 }
 

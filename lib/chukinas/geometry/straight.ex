@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{Polar, Pose, PathLike, Rect, Straight}
+alias Chukinas.Geometry.{Polar, Pose, PathLike, Rect, Straight, Position, Trig, CollidableShape}
 
 defmodule Straight do
 
@@ -34,6 +34,7 @@ defmodule Straight do
   def start_pose(straight), do: straight.start
   def length(straight), do: straight.len
   def end_pose(path) do
+    # TODO replace with call to Pose.straight
     %{x: x0, y: y0, angle: angle} = start_pose(path)
     %{x: dx, y: dy} = Polar.new(path.len, angle)
     |> Polar.to_cartesian()
@@ -48,6 +49,25 @@ defmodule Straight do
   end
 
   # *** *******************************
+  # *** API
+
+  @doc"""
+  Returns a straight path if end_position lies upon path in front of start_pose.
+  Otherwise, returns nil.
+  """
+  def get_connecting_path(start_pose, end_position) do
+    # Calculate the angle b/w start and end position.
+    # Then compare that to the actual start angle to see if there's a match.
+    distance = Trig.distance_between_points start_pose, end_position
+    proposed_path = new(start_pose, distance)
+    if proposed_path |> end_pose |> Position.approx_equal(end_position) do
+      proposed_path
+    else
+      nil
+    end
+  end
+
+  # *** *******************************
   # *** IMPLEMENTATIONS
 
   defimpl PathLike do
@@ -55,5 +75,19 @@ defmodule Straight do
     def pose_end(path), do: Straight.end_pose(path)
     def len(path), do: Straight.length(path)
     def get_bounding_rect(path), do: Straight.bounding_rect(path)
+    def exceeds_angle(straight, _angle), do: false
+    def deceeds_angle(straight, _angle), do: true
+  end
+
+  defimpl CollidableShape do
+    def to_vertices(straight) do
+      [
+        straight |> PathLike.pose_start |> Pose.left(20),
+        straight |> PathLike.pose_start |> Pose.right(20),
+        straight |> PathLike.pose_end   |> Pose.right(20),
+        straight |> PathLike.pose_end   |> Pose.left(20)
+      ]
+      |> Enum.map(&Position.to_vertex/1)
+    end
   end
 end

@@ -13,7 +13,7 @@ const panMultiplier = 1.5
 // Global vars to cache event state
 const gsap = window.gsap
 let panIntervalId
-// On PointerDown, save the current world and pointer coords here:
+// On PointerDown, save the current elZoomPanCover and pointer coords here:
 let atPanStart
 // On PointerMove, save pointer coord here:
 let pointerCoord
@@ -21,12 +21,23 @@ let pointerCoord
 // --------------------------------------------------------
 // DOM REFERENCES
 
-let worldContainer
-let world
-let arena
+// elZoomPanContainer must be a fixed element sized to the viewport.
+let elZoomPanContainer
+// elZoomPanCover is a child element of elZoomPanContainer.
+// This element will always cover the viewport.
+// In other words, it will never be allows to pan 
+// so far that the background is visible behind it.
+// Note: currently, the user is actually able to pan beyond this point, 
+// but it snaps back to full cover when the pointer lifts off.
+let elZoomPanCover
+// elZoomPanFit is also a child of elZoomPanContainer (and optionally
+// also of elZoomPanCover). It is smaller than elZoomPanCover and fits within it.
+// This element's bounding rect is where most of the app's action occurs. 
+// For Dreadnought, this element is almost synonymous with the arena.
+let elZoomPanFit
 
-function getWorldRect() { return world.getBoundingClientRect() }
-function getArenaRect() { return arena.getBoundingClientRect() }
+function getWorldRect() { return elZoomPanCover.getBoundingClientRect() }
+function getArenaRect() { return elZoomPanFit.getBoundingClientRect() }
 
 // --------------------------------------------------------
 // COORDINATES
@@ -106,17 +117,21 @@ function getCoordAndScale(element) {
   }
 }
 
+function isCoordApproxZero(coord) {
+  return Math.abs(coord.x) < 1 & Math.abs(coord.y) < 1
+}
+
 // --------------------------------------------------------
 // FUNCTIONS
 
 function getCurrentScale() {
-  return getCoordAndScale(world).scale
+  return getCoordAndScale(elZoomPanCover).scale
 }
 
 function zoomIn() {
   const currentScale = getCurrentScale()
   const scale = Math.max(maxZoomInScale, currentScale + scaleStep)
-  gsap.to(world, {
+  gsap.to(elZoomPanCover, {
     scale: "+=" + scaleStep,
     duration,
     ease: 'back',
@@ -126,10 +141,10 @@ function zoomIn() {
 
 function zoomOut() {
   const currentScale = getCurrentScale()
-  const maxZoomOutScale = getScaleToCover(world)
+  const maxZoomOutScale = getScaleToCover(elZoomPanCover)
   const isAlreadyAtMaxZoomOut = currentScale < maxZoomOutScale + 0.001
   if (isAlreadyAtMaxZoomOut) {
-    gsap.fromTo(world, {
+    gsap.fromTo(elZoomPanCover, {
       scale: maxZoomOutScale * 0.95
     },{
       duration,
@@ -140,7 +155,7 @@ function zoomOut() {
   }
   else {
     const scale = Math.max(maxZoomOutScale, currentScale - scaleStep)
-    gsap.to(world, {
+    gsap.to(elZoomPanCover, {
       scale,
       duration,
       ease: 'back',
@@ -150,7 +165,7 @@ function zoomOut() {
 }
 
 function getScales() {
-  // Basically, how much bigger is the arena/world than the window?
+  // Basically, how much bigger is the elZoomPanFit/elZoomPanCover than the window?
   const windowSize = {x: window.innerWidth, y: window.innerHeight}
   const arenaRect = getArenaRect()
   const arenaSize = { x: arenaRect.width, y: arenaRect.height}
@@ -168,7 +183,7 @@ const getMaxScale = () => Math.max(...getScalesAsArray())
 
 function getFitScale(element) {
   const elementRect = element.getBoundingClientRect()
-  const worldContainerRect = worldContainer.getBoundingClientRect()
+  const worldContainerRect = elZoomPanContainer.getBoundingClientRect()
   const relWidthScale = worldContainerRect.width / elementRect.width
   const relHeightScale = worldContainerRect.height / elementRect.height
   const relScale = Math.min(relWidthScale, relHeightScale)
@@ -185,7 +200,7 @@ function getElementOrigSize(element) {
 function getScaleToCover(element) {
   // DRYify
   const elementRect = element.getBoundingClientRect()
-  const worldContainerRect = worldContainer.getBoundingClientRect()
+  const worldContainerRect = elZoomPanContainer.getBoundingClientRect()
   const relWidthScale = worldContainerRect.width / elementRect.width
   const relHeightScale = worldContainerRect.height / elementRect.height
   const relScale = Math.max(relWidthScale, relHeightScale)
@@ -193,24 +208,29 @@ function getScaleToCover(element) {
   return absScale
 }
 
+function getRelPosition(elFrom, elTo) {
+  return MotionPathPlugin.getRelativePosition(elFrom, elTo, [0.5, 0.5], [0.5, 0.5])
+}
+
 function fitArena(opts = {zeroDuration: false}) {
-  const relCoord = MotionPathPlugin.getRelativePosition(worldContainer, arena, [0.5, 0.5], [0.5, 0.5])
-  const scale = Math.max(getFitScale(arena), getScaleToCover(world))
+  const relCoord = getRelPosition(elZoomPanContainer, elZoomPanFit)
+  const scale = Math.max(getFitScale(elZoomPanFit), getScaleToCover(elZoomPanCover))
   const isAlreadyAtFitScale = Math.abs(scale - getCurrentScale()) < 0.001
+  const isAlreadyCentered = isCoordApproxZero(relCoord)
   if (opts.zeroDuration) {
-    gsap.set(world, {
+    gsap.set(elZoomPanCover, {
       scale,
       x: "-=" + relCoord.x,
       y: "-=" + relCoord.y,
     })
 
-  } else if (isAlreadyAtFitScale) {
-    gsap.from(world, {
+  } else if (isAlreadyAtFitScale & isAlreadyCentered) {
+    gsap.from(elZoomPanCover, {
       scale: scale * 0.95,
       duration
     })
   } else {
-    gsap.to(world, {
+    gsap.to(elZoomPanCover, {
       scale,
       x: "-=" + relCoord.x,
       y: "-=" + relCoord.y,
@@ -224,7 +244,7 @@ function pan(onComplete) {
   let panVector = coordSubtract(pointerCoord, atPanStart.pointerCoord)
   panVector = coordScalarMultiply(panVector, panMultiplier)
   const nextWorldCoord = coordAdd(atPanStart.worldCoord, panVector)
-  gsap.to(world, {
+  gsap.to(elZoomPanCover, {
     ...nextWorldCoord,
     ease: 'none',
     duration,
@@ -233,7 +253,7 @@ function pan(onComplete) {
 }
 
 function coverWorldContainer() {
-  const worldContainerRect = worldContainer.getBoundingClientRect()
+  const worldContainerRect = elZoomPanContainer.getBoundingClientRect()
   const worldRect = getWorldRect()
   const tooFarRight = Math.min(0, -worldRect.left)
   const tooFarTop = Math.min(0, -worldRect.top)
@@ -244,8 +264,8 @@ function coverWorldContainer() {
     y: tooFarTop || tooFarBottom || 0,
   }
   if (panVector.x || panVector.y) {
-    const currentWorldCoord = coordFromTransformedElement(world)
-    gsap.to(world, {
+    const currentWorldCoord = coordFromTransformedElement(elZoomPanCover)
+    gsap.to(elZoomPanCover, {
       ...coordAdd(currentWorldCoord, panVector),
       ease: 'back',
       duration
@@ -257,14 +277,13 @@ function coverWorldContainer() {
 // EVENT HANDLERS
 
 function pointerdown_handler(ev) {
-  console.log("pointer dwn")
   pointerCoord = coordFromEvent(ev)
   atPanStart = {
-    worldCoord: coordFromTransformedElement(world),
+    worldCoord: coordFromTransformedElement(elZoomPanCover),
     pointerCoord
   }
   panIntervalId = window.setInterval(pan, interval)
-  worldContainer.setPointerCapture(ev.pointerId)
+  elZoomPanContainer.setPointerCapture(ev.pointerId)
 }
 
 function pointermove_handler(ev) {
@@ -286,34 +305,49 @@ function pointerup_handler(ev) {
 // --------------------------------------------------------
 // HOOKS
 
-const WorldContainerPanZoom = {
+const ZoomPanContainer = {
   mounted() {
-    // Set DOM references
-    worldContainer = this.el
-    world = document.getElementById("world")
-    arena = document.getElementById("arena")
+    // Set DOM reference
+    elZoomPanContainer = this.el
     // Set pointer event handlers
-    worldContainer.onpointerdown = pointerdown_handler;
-    worldContainer.onpointermove = pointermove_handler
-    worldContainer.onpointerup = pointerup_handler;
-    worldContainer.onpointercancel = pointerup_handler;
-    worldContainer.onpointerout = pointerup_handler;
-    worldContainer.onpointerleave = pointerup_handler;
-    fitArena({zeroDuration: true})
+    elZoomPanContainer.onpointerdown = pointerdown_handler;
+    elZoomPanContainer.onpointermove = pointermove_handler
+    elZoomPanContainer.onpointerup = pointerup_handler;
+    elZoomPanContainer.onpointercancel = pointerup_handler;
+    elZoomPanContainer.onpointerout = pointerup_handler;
+    elZoomPanContainer.onpointerleave = pointerup_handler;
+    // TODO rename
+    setTimeout(() => fitArena({zeroDuration: true})) 
+    
   },
   updated() {
     console.log("world updated!")
+    setTimeout(() => fitArena({zeroDuration: true})) 
     //fitArena({zeroDuration: true})
   },
   destroyed() {
-    worldContainer = null;
-    world = null;
-    arena = null;
+    elZoomPanContainer = null;
+    elZoomPanCover = null;
+    elZoomPanFit = null;
   }
 }
 
+const ZoomPanCover = {
+  mounted() {
+    elZoomPanCover = this.el
+  }
+}
+
+const ZoomPanFit = {
+  mounted() {
+    elZoomPanFit = this.el
+  }
+}
+
+// TODO rename ButtonFit
 const ButtonFitArena = {
   mounted() {
+    // TODO rename fit
     this.el.onclick = fitArena
   }
 }
@@ -329,5 +363,5 @@ const ButtonZoomOut = {
     this.el.onclick = zoomOut
   }
 }
-
-export default { WorldContainerPanZoom, ButtonFitArena, ButtonZoomIn, ButtonZoomOut }
+// TODO rename file zoomPan.js
+export default { ZoomPanContainer, ZoomPanCover, ZoomPanFit, ButtonFitArena, ButtonZoomIn, ButtonZoomOut }

@@ -1,4 +1,5 @@
 alias Chukinas.Geometry.{Position}
+alias Chukinas.Util.Precision
 
 defmodule Position do
   import Position.Guard
@@ -81,6 +82,15 @@ defmodule Position do
     position |> Map.take([:x, :y])
   end
 
+  def approx_equal(a, b) do
+    Precision.approx_equal(a.x, b.x) and Precision.approx_equal(a.y, b.y)
+  end
+
+  def shake(position, radius \\ 100) do
+    range = -radius..radius
+    add position, Enum.random(range), Enum.random(range)
+  end
+
   # *** *******************************
   # *** PRIVATE
 
@@ -88,4 +98,13 @@ defmodule Position do
   defp sanitize_translation(value) when is_number(value), do: %{x: value, y: value}
   defp sanitize_translation({x, y}), do: %{x: x, y: y}
 
+
+  # *** *******************************
+  # *** IMPLEMENTATIONS
+
+  defimpl Inspect do
+    def inspect(position, _opts) do
+      "#Position<#{round position.x}, #{round position.y}>"
+    end
+  end
 end

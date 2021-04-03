@@ -1,5 +1,5 @@
 alias Chukinas.Util.Precision
-alias Chukinas.Geometry.{Straight, Path, Position, Rect, Turn}
+alias Chukinas.Geometry.{Straight, Path, Position, Rect, Turn, Trig}
 
 defmodule Chukinas.Svg do
   @moduledoc"""
@@ -52,7 +52,7 @@ defmodule Chukinas.Svg do
 
   defp get_quadratic_curve(%Turn{angle: angle} = path) when abs(angle) <= 90 do
     radius = Turn.get_radius path
-    half_angle_rad = abs(Turn.get_angle_radians(path)) / 2
+    half_angle_rad = abs(Trig.deg_to_rad(angle)) / 2
     length_to_intercept = radius * :math.tan(half_angle_rad)
     {dx, dy} =
       path

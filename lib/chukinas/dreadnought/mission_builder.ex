@@ -1,5 +1,5 @@
-alias Chukinas.Dreadnought.{Mission, Unit, Command, CommandQueue, CommandIds, MissionBuilder}
-alias Chukinas.Geometry.{Pose, Polygon}
+alias Chukinas.Dreadnought.{Mission, Unit, Command, CommandQueue, CommandIds, MissionBuilder, Island}
+alias Chukinas.Geometry.{Pose, Size, Position}
 
 defmodule MissionBuilder do
 
@@ -18,9 +18,30 @@ defmodule MissionBuilder do
   end
 
   def grid_lab do
+    # Config
+    square_size = 30
+    arena = %{
+      width: 3000,
+      height: 2500
+    }
+    margin = Size.new(arena.height, arena.width)
+    unit = Unit.new(Enum.random(1..1000), pose: Pose.new(100, 155, 75)) |> Unit.set_position(margin)
+    motion_range_polygon = Unit.get_motion_range unit
+    islands = [
+      Position.new(500, 500),
+      Position.new(2500, 1200),
+      Position.new(1500, 1800),
+    ]
+    |> Enum.with_index
+    |> Enum.map(fn {position, index} ->
+      position = Position.shake position
+      Island.random(index, position)
+    end)
     Mission.new()
-    |> Mission.set_grid(50, 20, 15)
-    |> Mission.set_overlapping_squares(Polygon.new [{0, 0}, {200, 0}, {0, 330}])
+    |> Mission.set_grid(square_size, round(arena.width / square_size), round(arena.height / square_size), margin)
+    |> Map.put(:islands, islands)
+    |> Mission.set_unit(unit)
+    |> Mission.set_overlapping_squares(motion_range_polygon)
   end
 
   def from_live_action(live_action) do

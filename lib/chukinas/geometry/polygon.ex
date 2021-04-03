@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{Polygon, Position}
+alias Chukinas.Geometry.{Polygon, Position, CollidableShape}
 
 defmodule Polygon do
   @moduledoc"""
@@ -25,6 +25,13 @@ defmodule Polygon do
   def to_vertices(polygon) do
     polygon.vertices
     |> Enum.map(&Position.to_vertex/1)
+  end
+
+  # *** *******************************
+  # *** IMPLEMENTATIONS
+
+  defimpl CollidableShape do
+    def to_vertices(polygon), do: Polygon.to_vertices(polygon)
   end
 
 end

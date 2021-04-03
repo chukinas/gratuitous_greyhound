@@ -6,64 +6,24 @@
     background-color: black;
     touch-action:none;
   }
+  #world {
+    background-image:url("<%= Routes.static_path @socket, "/images/ocean.png" %>")
+  }
 </style>
 
-<%# Welcome! %>
-<%= if @live_action == :welcome do %>
-<%= DreadnoughtView.render "welcome_animation.html", %{socket: @socket} %>
-<% end %>
+<%# World: Welcome Demo Screen %>
+<%= if @live_action == :welcome, do: 
+  template "welcome_animation.html", socket: @socket %>
 
-<%# The World2 %>
-<%= if false do %>
-<%= DreadnoughtView.render "world2.html", %{socket: @socket, live_action: @live_action, mission: @mission} %>
-<% end %>
-
-<%= if false do %>
-<div class="overflow-hidden h-screen w-screen relative">
-  <%# The World %>
-  <%= DreadnoughtView.render "world.html", %{socket: @socket, live_action: @live_action, mission: @mission} %>
-</div>
-
-<%# Welcome! %>
-<%= if @live_action == :welcome do %>
-  <%= DreadnoughtView.message %{socket: @socket, button: %{text: "Start Game", route: "/dreadnought/disclaimer"}} do %>
-    <%= DreadnoughtView.render "welcome.html" %>
-  <% end %>
-<% end %>
-
-<%# Game Over! %>
-<%= if @live_action == :game_over do %>
-  <%= DreadnoughtView.message %{socket: @socket, button: %{text: "Play Again", route: "/dreadnought/play"}} do %>
-    <h1 class="text-3xl font-bold font-display text-center uppercase tracking-widest p-16">
-      Game Over
-    </h1>
-  <% end %>
-<% end %>
-
-<%# Command Panel %>
-<%= if @live_action == :play do %>
-<%= live_component @socket, Dreadnought.CommandPanel, id: :command_panel, commands: @mission.hand %>
-<% end %>
-
-<%# Disclaimer %>
-<%= if @live_action == :disclaimer do %>
-  <%= DreadnoughtView.message %{socket: @socket, button: %{text: "Start Game", route: "/dreadnought/play"}} do %>
-    <%= DreadnoughtView.render "disclaimer.html" %>
-  <% end %>
-<% end %>
-
-
-<% end %>
-
-<%# LAB: Grid %>
-<%= if @live_action == :grid do %>
-<%= live_component @socket, 
+<%# World: Actual Play %>
+<%= if @live_action == :grid, do: live_component @socket, 
   Dreadnought.GridLabComponent, 
   id: :grid_lab, 
-  world: @mission.world, margin: @mission.margin, grid: @mission.grid, squares: @mission.squares %>
-<% end %>
+  mission: @mission %>
 
 <%= live_component @socket, Dreadnought.MenuBarComponent, id: :menu_bar %>
+<%= template "flash.html", flash: @flash %>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/MotionPathPlugin.min.js"></script>
 <script>gsap.registerPlugin(MotionPathPlugin);</script>

@@ -16,4 +16,8 @@ defmodule Chukinas.Util.Precision do
     map |> Map.merge(map_overrides)
   end
 
+  def approx_equal(a, b) do
+    abs(a - b) < 1
+  end
+
 end
