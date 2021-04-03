@@ -14,7 +14,7 @@ defmodule GridSquare do
     field :center, Position.t()
     field :size, number()
     field :path, Path.t(), enforce: false
-    field :tags, [atom()], default: []
+    field :path_type, atom(), enforce: false
   end
 
   # *** *******************************
@@ -56,12 +56,12 @@ defmodule GridSquare do
 
   def calc_path(square, start_pose) do
     path = Path.get_connecting_path start_pose, square.center
-    tags = cond do
-      Path.exceeds_angle(path, 30) -> [:sharp_turn]
-      Path.deceeds_angle(path, 10) -> [:straight]
-      true -> []
+    path_type = cond do
+      Path.exceeds_angle(path, 30) -> :sharp_turn
+      Path.deceeds_angle(path, 10) -> :straight
+      true -> :turn
     end
-    %{square | path: path, tags: tags}
+    %{square | path: path, path_type: path_type}
   end
 
   # *** *******************************

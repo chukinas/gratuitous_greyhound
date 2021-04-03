@@ -44,14 +44,11 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
           <div
             id="gridSquareVisible-<%= square.id %>"
             class="
-              <%= cond do %>
-                <% :sharp_turn in square.tags -> %>
-                bg-red-400
-                <% :straight in square.tags -> %>
-                bg-green-400
-                <% true -> %>
-                bg-yellow-400
-              <% end %>
+              <%= case square.path_type do
+                :sharp_turn -> "bg-red-400"
+                :straight -> "bg-green-400"
+                _ -> "bg-yellow-400"
+              end %>
               h-full rounded-sm bg-opacity-20
             "
           >
