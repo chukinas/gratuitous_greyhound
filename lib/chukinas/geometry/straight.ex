@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{Polar, Pose, PathLike, Rect, Straight, Position, Trig}
+alias Chukinas.Geometry.{Polar, Pose, PathLike, Rect, Straight, Position, Trig, CollidableShape}
 
 defmodule Straight do
 
@@ -74,5 +74,17 @@ defmodule Straight do
     def pose_end(path), do: Straight.end_pose(path)
     def len(path), do: Straight.length(path)
     def get_bounding_rect(path), do: Straight.bounding_rect(path)
+  end
+
+  defimpl CollidableShape do
+    def to_vertices(straight) do
+      [
+        straight |> PathLike.pose_start |> Pose.left(20),
+        straight |> PathLike.pose_start |> Pose.right(20),
+        straight |> PathLike.pose_end   |> Pose.right(20),
+        straight |> PathLike.pose_end   |> Pose.left(20)
+      ]
+      |> Enum.map(&Position.to_vertex/1)
+    end
   end
 end

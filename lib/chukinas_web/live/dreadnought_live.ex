@@ -54,7 +54,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
   def handle_event("game_over", _, socket) do
     socket =
       socket
-      |> put_flash(:info, "You drove off the board! Play again.")
+      |> put_flash(:info, "You have no available moves! Play again.")
     mission =
       MissionBuilder.from_live_action(socket.assigns.live_action)
       |> Mission.build_view

@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{Pose, Position, PathLike, Rect, Straight, Turn, Trig}
+alias Chukinas.Geometry.{Pose, Position, PathLike, Rect, Straight, Turn, Trig, CollidableShape}
 
 defmodule Turn do
 
@@ -54,7 +54,7 @@ defmodule Turn do
 
   def get_radius(path), do: path.radius
 
-  def split(%__MODULE__{angle: angle_orig} = path, angle) when angle_orig > angle do
+  def split(%__MODULE__{angle: angle_orig} = path, angle) when abs(angle_orig) > abs(angle) do
     ratio = angle / angle_orig
     path1 = new(
       path.pose,
@@ -113,6 +113,18 @@ defmodule Turn do
     def pose_end(path), do: Turn.end_pose(path)
     def len(path), do: path.length
     def get_bounding_rect(path), do: Turn.bounding_rect(path)
+  end
+
+  defimpl CollidableShape do
+    def to_vertices(turn) do
+      {_first, second} = turn |> Turn.split(turn.angle/2)
+      [
+        turn.pose,
+        second.pose,
+        turn |> Turn.end_pose
+      ]
+      |> Enum.map(&Position.to_vertex/1)
+    end
   end
 end
 

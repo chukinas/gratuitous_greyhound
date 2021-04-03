@@ -7,7 +7,13 @@ defmodule Unit do
   Represents a ship or some other combat unit
   """
 
+  # Remove redundancy
   @size Size.new 140, 40
+  @dims %{
+    to_bow: 30,
+    to_stern: 70,
+    beam: 40
+  }
 
   # *** *******************************
   # *** TYPES

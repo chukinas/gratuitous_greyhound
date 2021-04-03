@@ -95,16 +95,17 @@ defmodule Mission do
 
   # TODO rename set colliding squares?
   def set_overlapping_squares(mission, command_zone) do
-    IOP.inspect(mission, "mission - has unit?")
     first_island = List.first mission.islands
+    collides_with_island? = fn sq ->
+      not(Collide.collide?(sq, first_island))
+    end
     colliding_squares =
       mission.grid
       |> Grid.squares
       |> Stream.filter(&Collide.collide?(&1, command_zone))
-      |> Stream.filter(fn sq ->
-        not(Collide.collide?(sq, first_island))
-      end)
+      |> Stream.filter(collides_with_island?)
       |> Stream.map(&GridSquare.calc_path(&1, mission.unit.pose))
+      |> Stream.filter(fn sq -> not Collide.collide?(sq.path, first_island) end)
       |> Enum.to_list
       |> IOP.inspect("squares")
     %{mission | squares: colliding_squares}
