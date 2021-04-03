@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{Position, CollidableShape}
+alias Chukinas.Geometry.{Position, CollidableShape, Pose}
 
 defmodule Chukinas.Dreadnought.Island do
   @moduledoc"""
@@ -26,6 +26,21 @@ defmodule Chukinas.Dreadnought.Island do
       relative_vertices: points,
       position: position
     }
+  end
+
+  def random(id) do
+    radius = 250
+    sides = 6
+    angle = 360 / sides
+    points =
+      0..(sides - 1)
+      |> Stream.map(fn i ->
+        Pose.origin()
+        |> Pose.rotate(i * angle)
+        |> Pose.straight(radius)
+        |> Position.new
+      end)
+    new(id, Position.new(500, 500), points)
   end
 
   # *** *******************************

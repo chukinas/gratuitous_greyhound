@@ -21,11 +21,7 @@ defmodule MissionBuilder do
     margin = Size.new(3000 / 2, 2000)
     unit = Unit.new(Enum.random(1..1000), pose: Pose.new(100, 155, 75)) |> Unit.set_position(margin)
     motion_range_polygon = Unit.get_motion_range unit
-    island = Island.new(1, Position.new(800, 750), [
-      Position.new( 100,  100),
-      Position.new(-100, -100),
-      Position.new( 100, -100)
-    ])
+    island = Island.random(1)
     Mission.new()
     |> Mission.set_grid(30, 100, 75, margin)
     |> Map.put(:islands, [island])

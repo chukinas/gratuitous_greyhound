@@ -34,6 +34,7 @@ defmodule Straight do
   def start_pose(straight), do: straight.start
   def length(straight), do: straight.len
   def end_pose(path) do
+    # TODO replace with call to Pose.straight
     %{x: x0, y: y0, angle: angle} = start_pose(path)
     %{x: dx, y: dy} = Polar.new(path.len, angle)
     |> Polar.to_cartesian()
