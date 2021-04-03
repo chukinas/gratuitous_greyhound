@@ -86,6 +86,11 @@ defmodule Position do
     Precision.approx_equal(a.x, b.x) and Precision.approx_equal(a.y, b.y)
   end
 
+  def shake(position, radius \\ 100) do
+    range = -radius..radius
+    add position, Enum.random(range), Enum.random(range)
+  end
+
   # *** *******************************
   # *** PRIVATE
 
