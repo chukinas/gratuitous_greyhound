@@ -66,4 +66,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
     IOP.inspect "FLASH!!!"
     {:noreply, put_flash(socket, :info, message)}
   end
+
+  def template(template, assigns), do: ChukinasWeb.DreadnoughtView.render template, assigns
 end
