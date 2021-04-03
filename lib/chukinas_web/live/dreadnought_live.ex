@@ -52,7 +52,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def handle_event("game_over", _, socket) do
-    IOP.inspect "GAME OVER@@@@"
     socket =
       socket
       |> put_flash(:info, "You drove off the board! Play again.")
@@ -77,7 +76,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
   # TODO delete
   @impl true
   def handle_info({:flash, message}, socket) do
-    IOP.inspect "FLASH!!!"
     {:noreply, put_flash(socket, :info, message)}
   end
 

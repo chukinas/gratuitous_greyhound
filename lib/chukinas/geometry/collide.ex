@@ -5,10 +5,9 @@ defmodule Collide do
 
   def collide?(a, b) do
     Detection.SeparatingAxis.collision?(
-      to_poly(a) |> IOP.inspect("square as poly"),
-      to_poly(b) |> IOP.inspect("island as ploy")
+      to_poly(a),
+      to_poly(b)
     )
-    |> IOP.inspect("overlaps")
   end
 
   def any?(a, shapes) when is_list(shapes) and not is_list(a) do
@@ -17,14 +16,12 @@ defmodule Collide do
     |> Stream.map(&CollidableShape.to_vertices/1)
     |> Stream.map(&Polygon.from_vertices/1)
     |> Enum.any?(fn polygon ->
-      IOP.inspect(polygon, "island")
       Detection.SeparatingAxis.collision?(main_polygon, polygon)
-      |> IOP.inspect("collides with island?")
     end)
   end
 
   def none?(a, shapes) when is_list(shapes) and not is_list(a) do
-    not any?(a, shapes) |> IOP.inspect("doesn't overlap island")
+    not any?(a, shapes)
   end
 
   # *** *******************************

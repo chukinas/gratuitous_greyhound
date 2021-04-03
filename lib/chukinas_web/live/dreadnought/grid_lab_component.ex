@@ -36,7 +36,7 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
             y="0"
             width="<%= @mission.grid.width %>"
             height="<%= @mission.grid.height %>"
-            style="fill:red;"
+            style="fill:none;"
           />
           <%= for island <- @mission.islands do %>
           <polygon

@@ -101,8 +101,7 @@ defmodule Mission do
       |> Grid.squares
       #|> Stream.filter(&Collide.collide?(&1, command_zone))
       |> Enum.filter(fn sq ->
-        IOP.inspect(sq, "\nabout to check againt island")
-        not(Collide.collide?(sq, first_island)) |> IOP.inspect("no collision?")
+        not(Collide.collide?(sq, first_island))
       end)
       |> Enum.to_list
     %{mission | squares: colliding_squares}
@@ -147,7 +146,6 @@ defmodule Mission do
   def move_unit_to(%__MODULE__{} = mission, position) do
     path = Path.get_connecting_path(mission.unit.pose, position)
     unit = Unit.move_along_path(mission.unit, path, mission.margin)
-           |> IOP.inspect
     motion_range_polygon = Unit.get_motion_range unit
     mission
     |> Mission.set_unit(unit)
