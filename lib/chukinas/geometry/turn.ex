@@ -85,7 +85,6 @@ defmodule Turn do
       IOP.inspect(path_radius, "path radius")
     end
     path
-           |> IOP.inspect("connecting path")
   end
 
   # *** *******************************

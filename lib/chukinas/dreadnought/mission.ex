@@ -99,11 +99,10 @@ defmodule Mission do
     colliding_squares =
       mission.grid
       |> Grid.squares
-      #|> Stream.filter(&Collide.collide?(&1, command_zone))
+      |> Stream.filter(&Collide.collide?(&1, command_zone))
       |> Enum.filter(fn sq ->
         not(Collide.collide?(sq, first_island))
       end)
-      |> Enum.to_list
     %{mission | squares: colliding_squares}
   end
 
