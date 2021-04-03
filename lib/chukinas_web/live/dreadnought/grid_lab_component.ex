@@ -20,17 +20,23 @@ defmodule ChukinasWeb.Dreadnought.GridLabComponent do
       >
         <svg
           id="svg_islands"
-          class="absolute"
-          viewBox="-<%= @mission.margin.width %> -<%= @mission.margin.height %> <%= @mission.grid.width + @mission.margin.width %> <%= @mission.grid.height + @mission.margin.height %> "
+          viewBox="
+            <%= -@mission.margin.width %>
+            <%= -@mission.margin.height %>
+            <%=  @mission.world.width %>
+            <%=  @mission.world.height %>
+          "
           style="
             width:<%= @mission.world.width %>px;
-            height: <%= @mission.world.height %>px
+            height:<%=  @mission.world.height %>px
           "
         >
-          <path
-            id="island-<%= @mission.island.id %>"
-            d="M 200, 200 L 200 400 L 400 400 L 400 200 Z"
-            style="stroke-linejoin:round;stroke-width:20;stroke:#fff;fill:green"
+          <rect
+            x="0"
+            y="0"
+            width="<%= @mission.grid.width %>"
+            height="<%= @mission.grid.height %>"
+            style="fill:green;"
           />
         </svg>
         <div
