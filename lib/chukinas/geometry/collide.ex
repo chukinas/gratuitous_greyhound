@@ -20,7 +20,7 @@ defmodule Collide do
     end)
   end
 
-  def none?(a, shapes) when is_list(shapes) and not is_list(a) do
+  def avoids?(a, shapes) when is_list(shapes) and not is_list(a) do
     not any?(a, shapes)
   end
 

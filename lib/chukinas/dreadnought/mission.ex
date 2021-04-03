@@ -105,7 +105,7 @@ defmodule Mission do
       |> Stream.filter(&Collide.collide?(&1, command_zone))
       |> Stream.filter(collides_with_island?)
       |> Stream.map(&GridSquare.calc_path(&1, mission.unit.pose))
-      |> Stream.filter(fn sq -> not Collide.collide?(sq.path, first_island) end)
+      |> Stream.filter(&Collide.avoids?(&1.path, mission.islands))
       |> Enum.to_list
       |> IOP.inspect("squares")
     %{mission | squares: colliding_squares}

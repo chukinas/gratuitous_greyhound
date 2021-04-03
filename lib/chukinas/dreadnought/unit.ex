@@ -9,11 +9,11 @@ defmodule Unit do
 
   # Remove redundancy
   @size Size.new 140, 40
-  @dims %{
-    to_bow: 30,
-    to_stern: 70,
-    beam: 40
-  }
+  # @dims %{
+  #   to_bow: 30,
+  #   to_stern: 70,
+  #   beam: 40
+  # }
 
   # *** *******************************
   # *** TYPES
@@ -84,9 +84,9 @@ defmodule Unit do
   end
 
   def get_motion_range(%__MODULE__{pose: pose}) do
-    max_distance = 300
+    max_distance = 400
     min_distance = 200
-    angle = 30 # deg
+    angle = 45 # deg
     [
       Straight.new(pose, min_distance),
       Turn.new(pose, min_distance, -angle),
