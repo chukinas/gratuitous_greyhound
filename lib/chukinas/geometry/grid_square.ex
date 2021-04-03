@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{GridSquare, Position}
+alias Chukinas.Geometry.{GridSquare, Position, CollidableShape}
 
 defmodule GridSquare do
   @moduledoc"""
@@ -52,4 +52,10 @@ defmodule GridSquare do
     |> Enum.map(&Position.to_vertex/1)
   end
 
+  # *** *******************************
+  # *** IMPLEMENTATIONS
+
+  defimpl CollidableShape do
+    def to_vertices(grid_square), do: GridSquare.to_vertices(grid_square)
+  end
 end

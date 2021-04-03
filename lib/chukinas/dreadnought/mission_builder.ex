@@ -1,5 +1,5 @@
-alias Chukinas.Dreadnought.{Mission, Unit, Command, CommandQueue, CommandIds, MissionBuilder}
-alias Chukinas.Geometry.{Pose, Size}
+alias Chukinas.Dreadnought.{Mission, Unit, Command, CommandQueue, CommandIds, MissionBuilder, Island}
+alias Chukinas.Geometry.{Pose, Size, Position}
 
 defmodule MissionBuilder do
 
@@ -19,10 +19,17 @@ defmodule MissionBuilder do
 
   def grid_lab do
     margin = Size.new(3000 / 2, 2000)
-    unit = Unit.new(Enum.random(1..1000), pose: Pose.new(100, 100, 45)) |> Unit.set_position(margin)
+    unit = Unit.new(Enum.random(1..1000), pose: Pose.new(100, 155, 75)) |> Unit.set_position(margin)
     motion_range_polygon = Unit.get_motion_range unit
+    island = Island.new(1, Position.new(800, 750), [
+      Position.new( 100,  100),
+      Position.new(-100, -100),
+      Position.new( 100, -100)
+    ])
     Mission.new()
-    |> Mission.set_grid(30, 100, 75, margin)
+    #|> Mission.set_grid(30, 100, 75, margin)
+    |> Mission.set_grid(450, 2, 2, margin)
+    |> Map.put(:islands, [island])
     |> Mission.set_overlapping_squares(motion_range_polygon)
     |> Mission.set_unit(unit)
   end

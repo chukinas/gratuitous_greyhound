@@ -16,7 +16,7 @@ defmodule Mission do
     field :margin, Size.t()
     field :unit, Unit.t()
     field :game_over?, boolean(), default: false
-    field :islands, [Island.t()], default: [Island.new(1)]
+    field :islands, [Island.t()], default: []
     # Unused. maybe delete later
     field :units, [Unit.t()], default: []
     field :decks, [CommandQueue.t()], default: []
@@ -94,11 +94,17 @@ defmodule Mission do
   # *** API
 
   # TODO rename set colliding squares?
-  def set_overlapping_squares(mission, shape) do
-    collides? = fn square -> Collide.collide?(shape, square) end
+  def set_overlapping_squares(mission, command_zone) do
+    first_island = List.first mission.islands
     colliding_squares =
-      Grid.squares(mission.grid)
-      |> Enum.filter(collides?)
+      mission.grid
+      |> Grid.squares
+      #|> Stream.filter(&Collide.collide?(&1, command_zone))
+      |> Enum.filter(fn sq ->
+        IOP.inspect(sq, "\nabout to check againt island")
+        not(Collide.collide?(sq, first_island)) |> IOP.inspect("no collision?")
+      end)
+      |> Enum.to_list
     %{mission | squares: colliding_squares}
   end
 

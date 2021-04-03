@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.Position
+alias Chukinas.Geometry.{Position, CollidableShape}
 
 defmodule Chukinas.Dreadnought.Island do
   @moduledoc"""
@@ -20,15 +20,22 @@ defmodule Chukinas.Dreadnought.Island do
   # *** *******************************
   # *** NEW
 
-  def new(id) do
+  def new(id, position, points) do
     %__MODULE__{
       id: id,
-      relative_vertices: [
-        Position.new( 100,  100),
-        Position.new(-100, -100),
-        Position.new( 100, -100),
-      ],
-      position: Position.new(300, 300)
+      relative_vertices: points,
+      position: position
     }
+  end
+
+  # *** *******************************
+  # *** IMPLEMENTATIONS
+
+  defimpl CollidableShape do
+    def to_vertices(island) do
+      island.relative_vertices
+      |> Stream.map(&Position.add(&1, island.position))
+      |> Enum.map(&Position.to_vertex/1)
+    end
   end
 end
