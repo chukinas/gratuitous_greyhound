@@ -31,7 +31,7 @@ defmodule Chukinas.Dreadnought.Island do
   # *** *******************************
   # *** RANDOMIZER
 
-  def random(id) do
+  def random(id, position) do
     radius = 250
     sides = 7
     angle = 360 / sides
@@ -45,7 +45,7 @@ defmodule Chukinas.Dreadnought.Island do
       end)
       |> remove_inner_points
       |> Enum.to_list
-    new(id, Position.new(500, 500), points)
+    new(id, position, points)
   end
 
   def remove_inner_points(points) do

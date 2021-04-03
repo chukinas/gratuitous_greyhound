@@ -18,13 +18,28 @@ defmodule MissionBuilder do
   end
 
   def grid_lab do
-    margin = Size.new(3000 / 2, 2000)
+    # Config
+    square_size = 30
+    arena = %{
+      width: 3000,
+      height: 2500
+    }
+    margin = Size.new(arena.height, arena.width)
     unit = Unit.new(Enum.random(1..1000), pose: Pose.new(100, 155, 75)) |> Unit.set_position(margin)
     motion_range_polygon = Unit.get_motion_range unit
-    island = Island.random(1)
+    islands = [
+      Position.new(500, 500),
+      Position.new(2500, 1200),
+      Position.new(1500, 1800),
+    ]
+    |> Enum.with_index
+    |> Enum.map(fn {position, index} ->
+      position = Position.shake position
+      Island.random(index, position)
+    end)
     Mission.new()
-    |> Mission.set_grid(30, 100, 75, margin)
-    |> Map.put(:islands, [island])
+    |> Mission.set_grid(square_size, round(arena.width / square_size), round(arena.height / square_size), margin)
+    |> Map.put(:islands, islands)
     |> Mission.set_unit(unit)
     |> Mission.set_overlapping_squares(motion_range_polygon)
   end
