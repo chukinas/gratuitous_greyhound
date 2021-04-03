@@ -49,6 +49,7 @@ defmodule Chukinas.MixProject do
       {:typed_struct, "~> 0.2.1"},
       {:dialyxir, "~> 0.5.0", only: [:dev], runtime: false},
       {:bamboo, "~> 2.0.1"},
+      {:collision, "~> 0.3.1"},
     ]
   end
 

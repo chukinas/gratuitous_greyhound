@@ -125,18 +125,18 @@ defmodule ChukinasWeb.DreadnoughtLiveTest do
     # {:ok, view, _html} = live(conn, "/dreadnought")
     # assert has_element?(view, "#unit--1")
   end
+  #
+  #   test "Start game.", %{conn: conn} do
+  #     {:ok, view, _html} = live(conn, "/dreadnought/disclaimer")
+  #     element(view, "#message-button") |> render_click()
+  #     assert has_element?(view, "#unit--2")
+  #   end
 
-  test "Start game.", %{conn: conn} do
-    {:ok, view, _html} = live(conn, "/dreadnought/disclaimer")
-    element(view, "#message-button") |> render_click()
-    assert has_element?(view, "#unit--2")
-  end
-
-  test "Select a command", %{conn: conn} do
-    {:ok, view, _html} = live(conn, "/dreadnought/play")
-    render_click element(view, "#command-2")
-    assert has_element?(view, "#command-2[data-selected='true']")
-    assert has_element?(view, "#command-3[data-selected='false']")
-  end
+  # test "Select a command", %{conn: conn} do
+  #   {:ok, view, _html} = live(conn, "/dreadnought/play")
+  #   render_click element(view, "#command-2")
+  #   assert has_element?(view, "#command-2[data-selected='true']")
+  #   assert has_element?(view, "#command-3[data-selected='false']")
+  # end
 
 end

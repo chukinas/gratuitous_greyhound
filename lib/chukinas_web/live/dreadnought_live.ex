@@ -8,7 +8,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
   @impl true
   def mount(_params, _session, socket) do
     mission =
-      MissionBuilder.demo
+      MissionBuilder.from_live_action(socket.assigns.live_action)
       |> Mission.build_view
     socket =
       socket
@@ -55,7 +55,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
   end
 
   def issue_link(title, number) do
-    assigns = %{title: title, number: number}
+    assigns = %{title: title, number: number, __changed__: nil}
     ~L"""
     <%= @title %> - <a class="underline" href="https://github.com/jonathanchukinas/chukinas/issues/<%= @number %>" target="_blank">issue/<%= @number %></a>
     """

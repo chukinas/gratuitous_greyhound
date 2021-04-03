@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Unit, Mission, ById, CommandQueue, Segment, CommandIds}
-alias Chukinas.Geometry.{Rect}
+alias Chukinas.Geometry.{Rect, Grid, GridSquare, Size, Collide}
 
 defmodule Mission do
 
@@ -10,6 +10,10 @@ defmodule Mission do
 
   typedstruct enforce: true do
     field :arena, Rect.t(), enforce: false
+    field :grid, Grid.t(), enforce: false
+    field :squares, [GridSquare.t()], enforce: false
+    field :world, Size.t(), enforce: false
+    field :margin, Size.t(), enforce: false
     field :units, [Unit.t()], default: []
     field :decks, [CommandQueue.t()], default: []
     field :segments, [Segment.t()], default: []
@@ -67,8 +71,31 @@ defmodule Mission do
     %{mission | segments: segments}
   end
 
+  def set_grid(mission, square_size, x_count, y_count) do
+    grid = Grid.new(square_size, x_count, y_count)
+    margin = 500
+    world = Size.new(
+      grid.width + 2 * margin,
+      grid.height + 2 * margin
+    )
+    %{mission |
+      grid: grid,
+      world: world,
+      margin: Size.new(margin, margin),
+    }
+  end
+
   # *** *******************************
   # *** API
+
+  # TODO rename set colliding squares?
+  def set_overlapping_squares(mission, shape) do
+    collides? = fn square -> Collide.collide?(shape, square) end
+    colliding_squares =
+      Grid.squares(mission.grid)
+      |> Enum.filter(collides?)
+    %{mission | squares: colliding_squares}
+  end
 
   def issue_command(%__MODULE__{} = mission, %CommandIds{} = cmd) do
     deck =
@@ -104,6 +131,7 @@ defmodule Mission do
   def build_view(%__MODULE__{decks: [deck | []]} = mission) do
     %{ mission | hand: deck |> CommandQueue.hand}
   end
+  def build_view(%__MODULE__{} = mission), do: mission
 
   # *** *******************************
   # *** PRIVATE

@@ -19,6 +19,7 @@ defmodule Position do
   # *** NEW
 
   def new(%{x: x, y: y}), do: new(x, y)
+  def new({x, y}), do: new(x, y)
   def new(x, y) do
     %__MODULE__{x: x, y: y}
   end
@@ -34,6 +35,12 @@ defmodule Position do
 
   def to_int_tuple(positionable), do: positionable |> round_to_int() |> to_tuple()
 
+  def to_vertex(position) do
+    position
+    |> to_tuple
+    |> Collision.Polygon.Vertex.from_tuple
+  end
+
   def translate(positionable, addend) when has_position(positionable) do
     addend_map = addend |> sanitize_translation()
     positionable
@@ -42,6 +49,7 @@ defmodule Position do
   end
 
   def add(augend, addend), do: translate(augend, addend)
+  def add(augend, x, y), do: translate(augend, {x, y})
 
   def subtract(position, x, y), do: translate(position, {-x, -y})
   def subtract(position, number) when is_number(number) do
