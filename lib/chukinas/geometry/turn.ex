@@ -113,6 +113,8 @@ defmodule Turn do
     def pose_end(path), do: Turn.end_pose(path)
     def len(path), do: path.length
     def get_bounding_rect(path), do: Turn.bounding_rect(path)
+    def exceeds_angle(turn, angle), do: abs(turn.angle) > abs(angle)
+    def deceeds_angle(turn, angle), do: abs(turn.angle) < abs(angle)
   end
 
   defimpl CollidableShape do

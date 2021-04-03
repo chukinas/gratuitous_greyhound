@@ -22,6 +22,8 @@ defmodule Path do
   defdelegate get_start_pose(path), to: PathLike, as: :pose_start
   defdelegate get_end_pose(path), to: PathLike, as: :pose_end
   defdelegate get_bounding_rect(path), to: PathLike, as: :get_bounding_rect
+  defdelegate exceeds_angle(path, angle), to: PathLike, as: :exceeds_angle
+  defdelegate deceeds_angle(path, angle), to: PathLike, as: :deceeds_angle
 
   def get_connecting_path(start_pose, final_position) do
     possible_straight_path = Straight.get_connecting_path start_pose, final_position
