@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{GridSquare, Position, CollidableShape}
+alias Chukinas.Geometry.{GridSquare, Position, CollidableShape, Path}
 
 defmodule GridSquare do
   @moduledoc"""
@@ -13,6 +13,7 @@ defmodule GridSquare do
     field :row, integer()
     field :center, Position.t()
     field :size, number()
+    field :path, Path.t(), enforce: false
   end
 
   # *** *******************************
@@ -50,6 +51,11 @@ defmodule GridSquare do
       Position.add(center, -half_edge, +half_edge),
     ]
     |> Enum.map(&Position.to_vertex/1)
+  end
+
+  def calc_path(square, start_pose) do
+    path = Path.get_connecting_path start_pose, square.center
+    %{square | path: path}
   end
 
   # *** *******************************

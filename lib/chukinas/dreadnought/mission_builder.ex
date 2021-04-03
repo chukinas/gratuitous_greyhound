@@ -29,8 +29,8 @@ defmodule MissionBuilder do
     Mission.new()
     |> Mission.set_grid(30, 100, 75, margin)
     |> Map.put(:islands, [island])
-    |> Mission.set_overlapping_squares(motion_range_polygon)
     |> Mission.set_unit(unit)
+    |> Mission.set_overlapping_squares(motion_range_polygon)
   end
 
   def from_live_action(live_action) do

@@ -95,14 +95,18 @@ defmodule Mission do
 
   # TODO rename set colliding squares?
   def set_overlapping_squares(mission, command_zone) do
+    IOP.inspect(mission, "mission - has unit?")
     first_island = List.first mission.islands
     colliding_squares =
       mission.grid
       |> Grid.squares
       |> Stream.filter(&Collide.collide?(&1, command_zone))
-      |> Enum.filter(fn sq ->
+      |> Stream.filter(fn sq ->
         not(Collide.collide?(sq, first_island))
       end)
+      |> Stream.map(&GridSquare.calc_path(&1, mission.unit.pose))
+      |> Enum.to_list
+      |> IOP.inspect("squares")
     %{mission | squares: colliding_squares}
   end
 
@@ -154,33 +158,4 @@ defmodule Mission do
   def game_over?(mission), do: Enum.empty? mission.squares
 
   def calc_game_over(mission), do: %{mission | game_over?: game_over? mission}
-
-  # *** *******************************
-  # *** PRIVATE
-
-  # defp update_unit_segments(%__MODULE__{} = mission) do
-  #   unit_ids =
-  #     mission.decks
-  #     |> Enum.map(&CommandQueue.get_id/1)
-  #   update_unit_segments(mission, unit_ids)
-  # end
-
-  # defp update_unit_segments(%__MODULE__{} = mission, [id]) do
-  #   update_unit_segments(mission, id)
-  # end
-
-  # defp update_unit_segments(%__MODULE__{} = mission, [id | remaining_ids]) do
-  #   update_unit_segments(mission, id)
-  #   |> update_unit_segments(remaining_ids)
-  # end
-
-  # defp update_unit_segments(%__MODULE__{} = mission, unit_id) when is_integer(unit_id) do
-  #   deck = get_deck mission, unit_id
-  #   unit = get_unit(mission, unit_id)
-  #   start_pose = unit |> Unit.start_pose()
-  #   arena = mission.arena
-  #   segments = CommandQueue.build_segments deck, start_pose, arena
-  #   unit = Unit.set_segments(unit, segments)
-  #   push(mission, unit)
-  # end
 end
