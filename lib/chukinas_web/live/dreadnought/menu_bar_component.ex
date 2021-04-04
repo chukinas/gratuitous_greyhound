@@ -65,7 +65,7 @@ defmodule ChukinasWeb.Dreadnought.MenuBarComponent do
     buttons = [
       %{id: "zoomIn", name: "Zoom In", hook: "ButtonZoomIn", stateful?: false},
       %{id: "zoomOut", name: "Zoom Out", hook: "ButtonZoomOut", stateful?: false},
-      %{id: "center", name: "Center", hook: "ButtonFitArena", stateful?: false},
+      %{id: "fullScreen", name: "View Map", hook: "ButtonFitArena", stateful?: false},
       %{id: "feedbackBtn", name: "Feedback", hook: nil, stateful?: true},
       # %{id: "about", name: "About", hook: "ButtonFitArena", stateful?: true},
     ]

@@ -11,9 +11,6 @@ defmodule Grid do
   typedstruct enforce: true do
     field :square_size, integer()
     # Row/Cols are 1-indexed
-    # TODO remove these four in favor of the following four
-    field :x_count, integer()
-    field :y_count, integer()
     field :start, Position.t()
     field :count, Position.t()
     # Calculated Values:
@@ -24,11 +21,12 @@ defmodule Grid do
   # *** *******************************
   # *** NEW
 
+  def new(square_size, %Position{} = count, %Position{} = start) do
+    new(square_size, count.x, count.y, {start.x, start.y})
+  end
   def new(square_size, x_count, y_count, {x_start, y_start} \\ {1, 1}) do
     %__MODULE__{
       square_size: square_size,
-      x_count: x_count,
-      y_count: y_count,
       start: Position.new(x_start, y_start),
       count: Position.new(x_count, y_count),
       width: square_size * x_count,
@@ -52,7 +50,7 @@ defmodule Grid do
       [include: nil, exclude: nil]
       |> Keyword.merge(opts)
       |> Map.new
-    1..grid.y_count
+    1..grid.count.y
     |> Stream.map(&row_of_squares(grid, &1))
     |> Stream.concat
     |> exclude(opts.exclude)
@@ -73,7 +71,25 @@ defmodule Grid do
     |> Stream.filter(&Collide.avoids?(&1, obstacles))
   end
 
-  def halve(grid) do
-    grid
+  def split_grid(grid) do
+    split_axis = if grid.count.x > grid.count.y, do: :x, else: :y
+    {first_split_count, second_split_count} = split_integer(grid.count[split_axis])
+    first_count =
+      grid.count
+      |> Map.put(split_axis, first_split_count)
+    second_count =
+      grid.count
+      |> Map.put(split_axis, second_split_count)
+    second_start =
+      grid.start
+      |> Map.update!(split_axis, &(&1 + first_split_count))
+    first_half = new(grid.square_size, first_count, grid.start)
+    second_half = new(grid.square_size, second_count, second_start)
+    {first_half, second_half}
+  end
+
+  def split_integer(number) do
+    half = round(number / 2)
+    {half, number - half}
   end
 end
