@@ -10,8 +10,12 @@ defmodule Grid do
 
   typedstruct enforce: true do
     field :square_size, integer()
+    # Row/Cols are 1-indexed
+    field :x_start, integer()
+    field :y_start, integer()
     field :x_count, integer()
     field :y_count, integer()
+    # Calculated Values:
     field :width, integer()
     field :height, integer()
   end
@@ -19,9 +23,11 @@ defmodule Grid do
   # *** *******************************
   # *** NEW
 
-  def new(square_size, x_count, y_count) do
+  def new(square_size, x_count, y_count, {x_start, y_start} \\ {1, 1}) do
     %__MODULE__{
       square_size: square_size,
+      x_start: x_start,
+      y_start: y_start,
       x_count: x_count,
       y_count: y_count,
       width: square_size * x_count,
