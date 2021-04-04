@@ -19,7 +19,7 @@ defmodule MissionBuilder do
 
   def grid_lab do
     # Config
-    square_size = 30
+    square_size = 50
     arena = %{
       width: 3000,
       height: 2500

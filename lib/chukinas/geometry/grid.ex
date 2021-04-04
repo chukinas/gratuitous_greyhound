@@ -1,5 +1,6 @@
-alias Chukinas.Geometry.{Grid, GridSquare}
+alias Chukinas.Geometry.{Grid, GridSquare, Collide}
 
+# TODO rename CommandGrid?
 defmodule Grid do
   @moduledoc"""
   Represents the square chess-like board the game is played on
@@ -39,17 +40,30 @@ defmodule Grid do
     }
   end
 
-  def squares(grid) do
-    # TODO use Stream?
+  def squares(grid, opts \\ []) do
+    opts =
+      [include: nil, exclude: nil]
+      |> Keyword.merge(opts)
+      |> Map.new
     1..grid.y_count
-    |> Enum.map(&row_of_squares(grid, &1))
-    |> Enum.concat
+    |> Stream.map(&row_of_squares(grid, &1))
+    |> Stream.concat
+    |> exclude(opts.exclude)
   end
 
   def row_of_squares(grid, row_num) do
     # TODO rename row_count and col_count
     1..grid.x_count
     |> Enum.map(fn col -> GridSquare.new(grid.square_size, col, row_num) end)
+  end
+
+  # *** *******************************
+  # *** PRIVATE
+
+  def exclude(squares, nil), do: squares
+  def exclude(squares, obstacles) when is_list(obstacles) do
+    squares
+    |> Stream.filter(&Collide.avoids?(&1, obstacles))
   end
 
 end
