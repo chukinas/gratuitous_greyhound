@@ -89,24 +89,24 @@ defmodule Grid do
 
   defp include(grid, nil, _threshold), do: all_squares(grid)
   defp include(grid, collidable, threshold) when not is_function(collidable) do
-    IOP.inspect collidable, "The target"
+    #IOP.inspect collidable, "The target"
     filter = Collide.generate_include_filter(collidable)
     wrapped_filter = fn grid_or_square ->
       grid_or_square
-      |> IOP.inspect("grid or square")
+      #|> IOP.inspect("grid or square")
       |> filter.()
-      |> IOP.inspect("above grid/sq collides w/ target")
+      #|> IOP.inspect("above grid/sq collides w/ target")
     end
     include(grid, wrapped_filter, threshold)
   end
   defp include(grid, filter, threshold) when (grid.count.x * grid.count.y) <= threshold do
-    IOP.inspect "small count"
+    #IOP.inspect "small count"
     grid
     |> all_squares
     |> Stream.filter(filter)
   end
   defp include(grid, filter, threshold) do
-    IOP.inspect "large count"
+    #IOP.inspect "large count"
     grid
     |> split_grid
     |> Stream.filter(filter)

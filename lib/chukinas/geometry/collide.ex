@@ -27,14 +27,14 @@ defmodule Collide do
   def generate_include_filter(target) do
     target_polygon =
       to_poly(target)
-      |> IOP.inspect("This is the command zone")
+      #|> IOP.inspect("This is the command zone")
     fn shape ->
-      IOP.inspect target_polygon.vertices, "target vertices"
+      #IOP.inspect target_polygon.vertices, "target vertices"
       shape
       |> to_poly
-      |> IOP.inspect("This object...")
+      #|> IOP.inspect("This object...")
       |> Detection.SeparatingAxis.collision?(target_polygon)
-      |> IOP.inspect("collided?")
+      #|> IOP.inspect("collided?")
     end
   end
 

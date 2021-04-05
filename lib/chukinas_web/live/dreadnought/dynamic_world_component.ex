@@ -89,16 +89,12 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
 
   @impl true
   def handle_event("select_square", %{"x" =>  x, "y" => y, "type" => path_type}, socket) do
-    start_time = Time.utc_now()
     path_type = path_type |> String.to_atom
     position = Position.new(String.to_float(x), String.to_float(y))
     mission =
       socket.assigns.mission
       |> Mission.move_unit_to(position, path_type)
       |> Mission.calc_game_over
-    Time.utc_now()
-    |> Time.diff(start_time, :millisecond)
-    |> IOP.inspect("duration, ms")
     {:noreply, socket |> assign(mission: mission)}
   end
 

@@ -69,11 +69,11 @@ defmodule Rect do
     size = get_size rect
     [
       rect.start_position,
-      rect.start_position |> Position.add(size.width, 0),
+      rect.start_position |> Position.add_x(size.width),
       rect.end_position,
-      rect.start_position |> Position.add(size.height, 0),
+      rect.end_position |> Position.add_x(-size.width),
     ]
-    |> IOP.inspect("rect points")
+    #|> IOP.inspect("rect points")
     |> Enum.map(&Position.to_vertex/1)
   end
 
