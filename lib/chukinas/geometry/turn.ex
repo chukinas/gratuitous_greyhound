@@ -18,7 +18,7 @@ defmodule Turn do
     %__MODULE__{
       pose: start_pose,
       length: round(len),
-      angle: round(angle),
+      angle: angle,
       radius: round(radius(len, angle))
     }
   end

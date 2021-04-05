@@ -52,12 +52,22 @@ defmodule Position do
   def add(augend, addend), do: translate(augend, addend)
   def add(augend, x, y), do: translate(augend, {x, y})
 
+  def add_x(position, dx), do: add position, dx, 0
+  def add_y(position, dy), do: add position, 0, dy
+
   def subtract(position, x, y), do: translate(position, {-x, -y})
   def subtract(position, number) when is_number(number) do
     subtract(position, number, number)
   end
   def subtract(position, translation) do
     translate(position, {-translation.x, -translation.y})
+  end
+
+  def multiply(position, value) do
+    fun = &(&1 * value)
+    position
+    |> Map.update!(:x, fun)
+    |> Map.update!(:y, fun)
   end
 
   def round_to_int(position) do

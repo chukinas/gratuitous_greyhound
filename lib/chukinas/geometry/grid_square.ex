@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{GridSquare, Position, CollidableShape, Path}
+alias Chukinas.Geometry.{GridSquare, Position, CollidableShape, Path, Rect}
 
 defmodule GridSquare do
   @moduledoc"""
@@ -41,21 +41,8 @@ defmodule GridSquare do
     }
   end
 
-  # TODO this should be a protocol implementation
-  def to_vertices(square) do
-    half_edge = square.size / 2
-    center = square.center
-    [
-      Position.add(center, -half_edge, -half_edge),
-      Position.add(center, +half_edge, -half_edge),
-      Position.add(center, +half_edge, +half_edge),
-      Position.add(center, -half_edge, +half_edge),
-    ]
-    |> Enum.map(&Position.to_vertex/1)
-  end
-
   def calc_path(square, start_pose) do
-    path = Path.get_connecting_path start_pose, square.center
+    path = Path.get_connecting_path(start_pose, square.center)
     path_type = cond do
       Path.exceeds_angle(path, 30) -> :sharp_turn
       Path.deceeds_angle(path, 10) -> :straight
@@ -64,10 +51,22 @@ defmodule GridSquare do
     %{square | path: path, path_type: path_type}
   end
 
+  def to_rect(square) do
+    half_size = square.size / 2
+    Rect.new(
+      square.center |> Position.subtract(half_size),
+      square.center |> Position.add(half_size)
+    )
+  end
+
   # *** *******************************
   # *** IMPLEMENTATIONS
 
   defimpl CollidableShape do
-    def to_vertices(grid_square), do: GridSquare.to_vertices(grid_square)
+    def to_vertices(grid_square) do
+      grid_square
+      |> GridSquare.to_rect
+      |> Rect.list_vertices
+    end
   end
 end

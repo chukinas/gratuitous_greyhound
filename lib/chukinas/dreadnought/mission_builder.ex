@@ -19,10 +19,10 @@ defmodule MissionBuilder do
 
   def grid_lab do
     # Config
-    square_size = 30
+    square_size = 50
     arena = %{
       width: 3000,
-      height: 2500
+      height: 2000
     }
     margin = Size.new(arena.height, arena.width)
     unit = Unit.new(Enum.random(1..1000), pose: Pose.new(100, 155, 75)) |> Unit.set_position(margin)
