@@ -21,16 +21,18 @@ defmodule MissionBuilder do
     # Config
     square_size = 50
     arena = %{
-      width: 3000,
-      height: 2500
+      width: 1000,
+      height: 1000
+      #width: 3000,
+      #height: 2500
     }
     margin = Size.new(arena.height, arena.width)
     unit = Unit.new(Enum.random(1..1000), pose: Pose.new(100, 155, 75)) |> Unit.set_position(margin)
     motion_range_polygon = Unit.get_motion_range unit
     islands = [
-      Position.new(500, 500),
-      Position.new(2500, 1200),
-      Position.new(1500, 1800),
+      # Position.new(500, 500),
+      # Position.new(2500, 1200),
+      # Position.new(1500, 1800),
     ]
     |> Enum.with_index
     |> Enum.map(fn {position, index} ->

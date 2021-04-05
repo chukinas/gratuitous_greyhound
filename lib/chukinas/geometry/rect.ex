@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{Position, Rect}
+alias Chukinas.Geometry.{Position, Rect, CollidableShape}
 
 defmodule Rect do
   @moduledoc"""
@@ -65,4 +65,22 @@ defmodule Rect do
   def get_start_position(%__MODULE__{start_position: start_position}), do: start_position
   def get_end_position(%__MODULE__{end_position: end_position}), do: end_position
 
+  def list_vertices(rect) do
+    size = get_size rect
+    [
+      rect.start_position,
+      rect.start_position |> Position.add(size.width, 0),
+      rect.end_position,
+      rect.start_position |> Position.add(size.height, 0),
+    ]
+    |> IOP.inspect("rect points")
+    |> Enum.map(&Position.to_vertex/1)
+  end
+
+  # *** *******************************
+  # *** IMPLEMENTATIONS
+
+  defimpl CollidableShape do
+    def to_vertices(rect), do: Rect.list_vertices(rect)
+  end
 end

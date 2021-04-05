@@ -24,8 +24,16 @@ defmodule Collide do
     not any?(a, shapes)
   end
 
-  # *** *******************************
-  # *** PRIVATE
+  def generate_include_filter(target) do
+    target_polygon = to_poly target
+    fn shape ->
+      shape
+      |> to_poly
+      |> IOP.inspect("This object...")
+      |> Detection.SeparatingAxis.collision?(target_polygon)
+      |> IOP.inspect("collided?")
+    end
+  end
 
   defp to_poly(shape) do
     shape

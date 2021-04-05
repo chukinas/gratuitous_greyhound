@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{Grid, GridSquare, Collide, Position}
+alias Chukinas.Geometry.{Grid, GridSquare, Collide, Position, CollidableShape, Rect}
 
 # TODO rename CommandGrid?
 defmodule Grid do
@@ -46,34 +46,85 @@ defmodule Grid do
   end
 
   def squares(grid, opts \\ []) do
+    default_opts = [include: nil, exclude: nil, threshold: 9]
+    keys = Keyword.keys default_opts
     opts =
-      [include: nil, exclude: nil]
+      default_opts
       |> Keyword.merge(opts)
       |> Map.new
-    1..grid.count.y
-    |> Stream.map(&row_of_squares(grid, &1))
-    |> Stream.concat
+    if (opts |> Map.drop(keys) |> Enum.count) > 0 do
+      throw "Grid.squares received invalid options!"
+    end
+    grid
+    |> include(opts.include, opts.threshold)
     |> exclude(opts.exclude)
   end
 
-  def row_of_squares(grid, row_num) do
-    # TODO rename row_count and col_count
-    1..grid.count.x
-    |> Enum.map(fn col -> GridSquare.new(grid.square_size, col, row_num) end)
+  def to_rect(grid) do
+    start_position =
+      grid.start
+      |> Position.add(-1)
+      |> Position.multiply(grid.square_size)
+    end_position = Position.add(start_position, grid.width, grid.height)
+    Rect.new(start_position, end_position)
   end
 
   # *** *******************************
   # *** PRIVATE
 
-  def exclude(squares, nil), do: squares
-  def exclude(squares, obstacles) when is_list(obstacles) do
+  defp all_squares(grid) do
+    grid.start.y
+    |> Stream.iterate(&(&1 + 1))
+    |> Stream.take(grid.count.y)
+    |> Stream.map(&row_of_squares(grid, &1))
+    |> Stream.concat
+  end
+
+  defp row_of_squares(grid, row_num) do
+    grid.start.x
+    |> Stream.iterate(&(&1 + 1))
+    |> Stream.take(grid.count.x)
+    |> Stream.map(fn col -> GridSquare.new(grid.square_size, col, row_num) end)
+  end
+
+  defp include(grid, nil, _threshold), do: all_squares(grid)
+  defp include(grid, collidable, threshold) when not is_function(collidable) do
+    IOP.inspect collidable, "The target"
+    filter = Collide.generate_include_filter(collidable)
+    wrapped_filter = fn grid_or_square ->
+      grid_or_square
+      |> IOP.inspect("grid or square")
+      |> filter.()
+      |> IOP.inspect("above grid/sq collides w/ target")
+    end
+    include(grid, wrapped_filter, threshold)
+  end
+  defp include(grid, filter, threshold) when (grid.count.x * grid.count.y) <= threshold do
+    IOP.inspect "small count"
+    grid
+    |> all_squares
+    |> Stream.filter(filter)
+  end
+  defp include(grid, filter, threshold) do
+    IOP.inspect "large count"
+    grid
+    |> split_grid
+    |> Stream.filter(filter)
+    |> Stream.map(&include(&1, filter, threshold))
+    |> Stream.concat
+  end
+
+
+  defp exclude(squares, nil), do: squares
+  defp exclude(squares, obstacles) when is_list(obstacles) do
     squares
     |> Stream.filter(&Collide.avoids?(&1, obstacles))
   end
 
-  def split_grid(grid) do
-    split_axis = if grid.count.x > grid.count.y, do: :x, else: :y
-    {first_split_count, second_split_count} = split_integer(grid.count[split_axis])
+  defp split_grid(grid) do
+    count = Map.from_struct(grid.count)
+    split_axis = if count.x > count.y, do: :x, else: :y
+    {first_split_count, second_split_count} = split_integer(count[split_axis])
     first_count =
       grid.count
       |> Map.put(split_axis, first_split_count)
@@ -85,11 +136,22 @@ defmodule Grid do
       |> Map.update!(split_axis, &(&1 + first_split_count))
     first_half = new(grid.square_size, first_count, grid.start)
     second_half = new(grid.square_size, second_count, second_start)
-    {first_half, second_half}
+    [first_half, second_half]
   end
 
-  def split_integer(number) do
+  defp split_integer(number) do
     half = round(number / 2)
     {half, number - half}
+  end
+
+  # *** *******************************
+  # *** IMPLEMENTATIONS
+
+  defimpl CollidableShape do
+    def to_vertices(grid) do
+      grid
+      |> Grid.to_rect
+      |> Rect.list_vertices
+    end
   end
 end

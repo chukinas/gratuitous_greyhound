@@ -97,8 +97,7 @@ defmodule Mission do
   def set_overlapping_squares(mission, command_zone) do
     colliding_squares =
       mission.grid
-      |> Grid.squares(exclude: mission.islands)
-      |> Stream.filter(&Collide.collide?(&1, command_zone))
+      |> Grid.squares(include: command_zone, exclude: mission.islands)
       |> Stream.map(&GridSquare.calc_path(&1, mission.unit.pose))
       |> Stream.filter(&Collide.avoids?(&1.path, mission.islands))
       |> Enum.to_list

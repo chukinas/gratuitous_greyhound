@@ -60,6 +60,13 @@ defmodule Position do
     translate(position, {-translation.x, -translation.y})
   end
 
+  def multiply(position, value) do
+    fun = &(&1 * value)
+    position
+    |> Map.update!(:x, fun)
+    |> Map.update!(:y, fun)
+  end
+
   def round_to_int(position) do
     position
     |> Map.update!(:x, &round/1)
