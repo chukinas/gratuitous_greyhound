@@ -283,7 +283,6 @@ function pointerdown_handler(ev) {
     pointerCoord
   }
   panIntervalId = window.setInterval(pan, interval)
-  elZoomPanContainer.setPointerCapture(ev.pointerId)
 }
 
 function pointermove_handler(ev) {
@@ -321,7 +320,6 @@ const ZoomPanContainer = {
     
   },
   updated() {
-    console.log("world updated!")
     setTimeout(() => fitArena({zeroDuration: true})) 
     //fitArena({zeroDuration: true})
   },
