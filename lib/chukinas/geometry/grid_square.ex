@@ -42,7 +42,7 @@ defmodule GridSquare do
   end
 
   def calc_path(square, start_pose) do
-    path = Path.get_connecting_path start_pose, square.center
+    path = Path.get_connecting_path(start_pose, square.center)
     path_type = cond do
       Path.exceeds_angle(path, 30) -> :sharp_turn
       Path.deceeds_angle(path, 10) -> :straight
