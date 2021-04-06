@@ -17,7 +17,7 @@ defmodule MissionBuilder do
     |> Mission.issue_command(CommandIds.new 2, 1, 5)
   end
 
-  def grid_lab do
+  def play do
     # Config
     square_size = 50
     arena = %{
@@ -44,11 +44,12 @@ defmodule MissionBuilder do
     |> Mission.set_overlapping_squares(motion_range_polygon)
   end
 
-  def from_live_action(live_action) do
-    case live_action do
-      :grid -> grid_lab()
-      _ -> demo()
-    end
+  def from_live_action(_live_action) do
+    #case live_action do
+    #  :grid -> play()
+    #  _ -> play()
+    #end
+    play()
   end
 
   defp get_default_command_builder(), do: fn step_id -> Command.new(100, step_id: step_id) end

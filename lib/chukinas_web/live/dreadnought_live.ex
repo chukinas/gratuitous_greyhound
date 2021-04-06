@@ -18,18 +18,18 @@ defmodule ChukinasWeb.DreadnoughtLive do
     {:ok, socket}
   end
 
-  @impl true
-  def handle_params(_params, url, socket) do
-    socket = case socket.assigns.live_action do
-      :play -> assign(socket, :mission, MissionBuilder.demo |> Mission.build_view)
-      _ -> socket
-    end
-    if String.ends_with?(url, "dreadnought/") or String.ends_with?(url, "dreadnought") do
-      {:noreply, push_patch(socket, to: "/dreadnought/welcome")}
-    else
-      {:noreply, socket}
-    end
-  end
+  #@impl true
+  #def handle_params(_params, url, socket) do
+  #  socket = case socket.assigns.live_action do
+  #    :play -> assign(socket, :mission, MissionBuilder.demo |> Mission.build_view)
+  #    _ -> socket
+  #  end
+  #  #if String.ends_with?(url, "dreadnought/") or String.ends_with?(url, "dreadnought") do
+  #  #  {:noreply, push_patch(socket, to: "/dreadnought/welcome")}
+  #  #else
+  #  {:noreply, socket}
+  #  #end
+  #end
 
   @impl true
   def handle_event("route_to", %{"route" => route}, socket) do

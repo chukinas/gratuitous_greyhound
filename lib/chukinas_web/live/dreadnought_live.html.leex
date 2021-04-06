@@ -16,7 +16,7 @@
   template "welcome_animation.html", socket: @socket %>
 
 <%# World: Actual Play %>
-<%= if @live_action == :grid do %>
+<%= if @live_action != :welcome do %>
   <%= live_component @socket, Dreadnought.StaticWorldComponent, id: :grid_lab, mission: @mission do %>
     <%= live_component @socket,
       ChukinasWeb.Dreadnought.DynamicWorldComponent,
