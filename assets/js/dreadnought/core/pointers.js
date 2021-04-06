@@ -6,31 +6,38 @@ const initialEvents = new Map();
 // Save the latest event for each pointer id
 const currentEvents = new Map();
 
+let panCallback = () => { console.log("panning!")}
+let pinchZoomCallback = () => { console.log("pinching!!") } 
+
 // --------------------------------------------------------
 // FUNCTIONS
+
+function setPanCallback(callback) { panCallback = callback }
+function setPinchZoomCallback(callback) { pinchZoomCallback = callback }
 
 function down(pointerEvent) {
   const pointerId = pointerEvent.pointerId
   if (pointerId > 1) return;
-  if (!initialEvents.has(pointerId)) {
-    initialEvents.set(pointerId, pointerEvent)
-  }
+  initialEvents.set(pointerId, pointerEvent)
   currentEvents.set(pointerId, pointerEvent)
 }
 
 function move(pointerEvent) {
   const pointerId = pointerEvent.pointerId
-  if (pointerId > 1) return;
-  if (!initialEvents.has(pointerId)) {
-    initialEvents.set(pointerId, pointerEvent)
+  if (initialEvents.has(pointerId)) {
+    currentEvents.set(pointerId, pointerEvent)
   }
-  currentEvents.set(pointerId, pointerEvent)
 }
 
 function up(pointerEvent) {
-  const pointerId = pointerEvent.pointerId
-  initialEvents.delete(pointerId)
-  currentEvents.delete(pointerId)
+  if (pointerEvent.isPrimary) {
+    initialEvents.clear()
+    currentEvents.clear()
+  } else {
+    const pointerId = pointerEvent.pointerId
+    initialEvents.delete(pointerId)
+    currentEvents.delete(pointerId)
+  }
 }
 
 function isActive() {
@@ -39,10 +46,20 @@ function isActive() {
   return result;
 }
 
+function applyCallback() {
+  if (initialEvents.has(1)) {
+    pinchZoomCallback()
+  } else if (initialEvents.has(0)) {
+    panCallback()
+  }
+}
+
 // --------------------------------------------------------
 // API
 
 export const PointerEvents = {
+  setPanCallback,
+  setPinchZoomCallback,
   down,
   move,
   up,
