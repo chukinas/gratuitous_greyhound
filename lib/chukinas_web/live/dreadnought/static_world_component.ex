@@ -1,4 +1,4 @@
-defmodule ChukinasWeb.Dreadnought.GridLabComponent do
+defmodule ChukinasWeb.Dreadnought.StaticWorldComponent do
   use ChukinasWeb, :live_component
 
   # TODO rename StaticWorldComponent

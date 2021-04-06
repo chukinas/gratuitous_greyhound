@@ -17,7 +17,7 @@
 
 <%# World: Actual Play %>
 <%= if @live_action == :grid, do: live_component @socket, 
-  Dreadnought.GridLabComponent, 
+  Dreadnought.StaticWorldComponent, 
   id: :grid_lab, 
   mission: @mission %>
 
