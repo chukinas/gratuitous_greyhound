@@ -1,10 +1,8 @@
 defmodule ChukinasWeb.Dreadnought.StaticWorldComponent do
   use ChukinasWeb, :live_component
 
-  # TODO rename StaticWorldComponent
   # Note: this live component is actually necessary, because I never want its state to getupdated
 
-  @impl true
   def render(assigns) do
     ~L"""
     <div
@@ -56,18 +54,12 @@ defmodule ChukinasWeb.Dreadnought.StaticWorldComponent do
           />
           <% end %>
         </svg>
-        <%= live_component @socket,
-          ChukinasWeb.Dreadnought.DynamicWorldComponent,
-          id: :dynamic_world,
-          mission: @mission %>
+        <%= render_block @inner_block, socket: @socket, mission: @mission %>
       </div>
     </div>
     """
   end
 
-  @impl true
-  def mount(socket) do
-    {:ok, socket}
-  end
+  def mount(socket), do: {:ok, socket}
 
 end

@@ -16,10 +16,14 @@
   template "welcome_animation.html", socket: @socket %>
 
 <%# World: Actual Play %>
-<%= if @live_action == :grid, do: live_component @socket, 
-  Dreadnought.StaticWorldComponent, 
-  id: :grid_lab, 
-  mission: @mission %>
+<%= if @live_action == :grid do %>
+  <%= live_component @socket, Dreadnought.StaticWorldComponent, id: :grid_lab, mission: @mission do %>
+    <%= live_component @socket,
+      ChukinasWeb.Dreadnought.DynamicWorldComponent,
+      id: :dynamic_world,
+      mission: @mission %>
+  <% end %>
+<% end %>
 
 <%= live_component @socket, Dreadnought.MenuBarComponent, id: :menu_bar %>
 
