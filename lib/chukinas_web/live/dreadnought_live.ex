@@ -32,6 +32,12 @@ defmodule ChukinasWeb.DreadnoughtLive do
   #end
 
   @impl true
+  def handle_event("log", params, socket) do
+    IOP.inspect params
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_event("route_to", %{"route" => route}, socket) do
     {:noreply, push_patch(socket, to: route)}
   end

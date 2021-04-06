@@ -1,3 +1,5 @@
+import { PointerEvents } from '../core/pointers.js'
+
 // --------------------------------------------------------
 // CONFIG
 
@@ -273,10 +275,24 @@ function coverWorldContainer() {
   }
 }
 
+// Log events flag
+let logToElixir = () => {}
+function log(description, ev) {
+  logToElixir({
+    description,
+    pointerId: ev.pointerId,
+    pointerType: ev.pointerType,
+    isPrimary: ev.isPrimary,
+    coord: [ev.clientX, ev.clientY]
+  })
+} 
+
 // --------------------------------------------------------
 // EVENT HANDLERS
 
 function pointerdown_handler(ev) {
+  PointerEvents.isActive()
+  log("pointer down", ev)
   pointerCoord = coordFromEvent(ev)
   atPanStart = {
     worldCoord: coordFromTransformedElement(elZoomPanCover),
@@ -306,6 +322,7 @@ function pointerup_handler(ev) {
 
 const ZoomPanContainer = {
   mounted() {
+    const me = this
     // Set DOM reference
     elZoomPanContainer = this.el
     // Set pointer event handlers
@@ -315,9 +332,12 @@ const ZoomPanContainer = {
     elZoomPanContainer.onpointercancel = pointerup_handler;
     elZoomPanContainer.onpointerout = pointerup_handler;
     elZoomPanContainer.onpointerleave = pointerup_handler;
+    logToElixir = (params) => {
+      me.pushEvent("log", params)
+    }
+    logToElixir({test: "TEST"})
     // TODO rename
     setTimeout(() => fitArena({zeroDuration: true})) 
-    
   },
   updated() {
     setTimeout(() => fitArena({zeroDuration: true})) 
