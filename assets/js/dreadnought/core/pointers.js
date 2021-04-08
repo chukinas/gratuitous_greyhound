@@ -1,3 +1,5 @@
+import { Coord } from './coordinates.js'
+
 // --------------------------------------------------------
 // DATA
 
@@ -17,15 +19,18 @@ function setPinchZoomCallback(callback) { pinchZoomCallback = callback }
 
 function down(pointerEvent) {
   const pointerId = pointerEvent.pointerId
-  if (pointerId > 1) return;
+  if (pointerId > 1) return false;
   initialEvents.set(pointerId, pointerEvent)
   currentEvents.set(pointerId, pointerEvent)
+  return pointerEvent.isPrimary;
 }
 
 function move(pointerEvent) {
+  //console.log("move", pointerEvent)
   const pointerId = pointerEvent.pointerId
   if (initialEvents.has(pointerId)) {
     currentEvents.set(pointerId, pointerEvent)
+    applyCallback()
   }
 }
 
@@ -50,7 +55,10 @@ function applyCallback() {
   if (initialEvents.has(1)) {
     pinchZoomCallback()
   } else if (initialEvents.has(0)) {
-    panCallback()
+    panCallback(
+      Coord.fromEvent(initialEvents.get(0)),
+      Coord.fromEvent(currentEvents.get(0))
+    )
   }
 }
 
