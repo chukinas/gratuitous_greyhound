@@ -28,6 +28,7 @@ function multiply(coord, multiplier) {
 }
 
 function fromEvent(ev) {
+  console.log("fromEvent", ev)
   return {
     x: ev.clientX,
     y: ev.clientY

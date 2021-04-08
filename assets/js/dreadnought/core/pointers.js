@@ -8,6 +8,7 @@ const initialEvents = new Map();
 // Save the latest event for each pointer id
 const currentEvents = new Map();
 
+let primaryPointerId
 let panCallback = () => { console.log("panning!")}
 let pinchZoomCallback = () => { console.log("pinching!!") } 
 
@@ -24,11 +25,15 @@ function down(pointerEvent) {
   if (pointerId > 1) return false;
   initialEvents.set(pointerId, pointerEvent)
   currentEvents.set(pointerId, pointerEvent)
-  return pointerEvent.isPrimary;
+  if (pointerEvent.isPrimary) {
+    primaryPointerId = pointerEvent.pointerId
+    return true
+  }
+  return false
 }
 
 function move(pointerEvent) {
-  //console.log("move", pointerEvent)
+  console.log("move", pointerEvent)
   const pointerId = pointerEvent.pointerId
   if (initialEvents.has(pointerId)) {
     currentEvents.set(pointerId, pointerEvent)
@@ -40,6 +45,7 @@ function up(pointerEvent) {
   if (pointerEvent.isPrimary) {
     initialEvents.clear()
     currentEvents.clear()
+    primaryPointerId = null
   } else {
     const pointerId = pointerEvent.pointerId
     initialEvents.delete(pointerId)
@@ -54,12 +60,14 @@ function isActive() {
 }
 
 function applyCallback() {
-  if (initialEvents.has(1)) {
+  const activePointerCount = initialEvents.size
+  // TODO replace with case statement
+  if (activePointerCount == 2) {
     pinchZoomCallback()
-  } else if (initialEvents.has(0)) {
+  } else if (activePointerCount == 1) {
     panCallback(
-      Coord.fromEvent(initialEvents.get(0)),
-      Coord.fromEvent(currentEvents.get(0))
+      Coord.fromEvent(initialEvents.get(primaryPointerId)),
+      Coord.fromEvent(currentEvents.get(primaryPointerId))
     )
   }
 }
