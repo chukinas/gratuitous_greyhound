@@ -3,21 +3,29 @@ import { Coord } from './coordinates.js'
 // --------------------------------------------------------
 // DATA
 
-// Save the pointer down event for each pointer id
-const initialEvents = new Map();
-// Save the latest event for each pointer id
-const currentEvents = new Map();
+let pointerId
+let initialEvents
+let currentEvents
 
-let primaryPointerId
+function resetData() {
+  initialEvents = new Map()
+  currentEvents = new Map()
+  pointerId = {
+    primary: null,
+    secondary: null,
+  }
+}
+resetData()
+
+// --------------------------------------------------------
+// CALLBACKS
+
 let callback = {
   pan: () => console.log("pan callback!!!"),
   pinch: () => console.log("pinch callback!!!"),
   setPositionAndZoom: () => console.log("setPositionAndZoom callback!!!"),
   clearPositionAndZoom: () => console.log("clearPositionAndZoom callback!!!"),
 }
-
-// --------------------------------------------------------
-// FUNCTIONS
 
 function setCallbacks(callbacks) {
   callback = {
@@ -26,57 +34,49 @@ function setCallbacks(callbacks) {
   }
 }
 
-// TODO rename downThenIsPrimary
-function down(pointerEvent) {
-  console.log("Pointer.down")
-  const pointerId = pointerEvent.pointerId
-  if (pointerId > 1) return false;
-  initialEvents.set(pointerId, pointerEvent)
-  currentEvents.set(pointerId, pointerEvent)
-  if (pointerEvent.isPrimary) {
-    primaryPointerId = pointerEvent.pointerId
-    return true
-  }
-  return false
-}
-
-function move(pointerEvent) {
-  console.log("move", pointerEvent)
-  const pointerId = pointerEvent.pointerId
-  if (initialEvents.has(pointerId)) {
-    currentEvents.set(pointerId, pointerEvent)
-    applyCallback()
-  }
-}
-
-function up(pointerEvent) {
-  if (pointerEvent.isPrimary) {
-    initialEvents.clear()
-    currentEvents.clear()
-    primaryPointerId = null
-  } else {
-    const pointerId = pointerEvent.pointerId
-    initialEvents.delete(pointerId)
-    currentEvents.delete(pointerId)
-  }
-}
-
-function isActive() {
-  const result = initialEvents.size > 0
-  console.log("Pointer.isActive =", result)
-  return result;
-}
-
-function applyCallback() {
+function panOrPinch() {
   const activePointerCount = initialEvents.size
   // TODO replace with case statement
   if (activePointerCount == 2) {
     callback.pinch()
   } else if (activePointerCount == 1) {
     callback.pan(
-      Coord.fromEvent(initialEvents.get(primaryPointerId)),
-      Coord.fromEvent(currentEvents.get(primaryPointerId))
+      Coord.fromEvent(initialEvents.get(pointerId.primary)),
+      Coord.fromEvent(currentEvents.get(pointerId.primary))
     )
+  }
+}
+
+// --------------------------------------------------------
+// GESTURES
+
+function down(ev) {
+  console.log("Pointer.down")
+  if (ev.isPrimary) {
+    resetData()
+    pointerId.primary = ev.pointerId
+    callback.setPositionAndZoom()
+  } else if (pointerId.secondary == null) {
+    pointerId.secondary = ev.pointerId
+  } else {
+    return
+  }
+  initialEvents.set(ev.pointerId, ev)
+  currentEvents.set(ev.pointerId, ev)
+}
+
+function move(ev) {
+  console.log("move", ev)
+  if (initialEvents.has(ev.pointerId)) {
+    currentEvents.set(ev.pointerId, ev)
+    panOrPinch()
+  }
+}
+
+function up(ev) {
+  if (initialEvents.has(ev.pointerId)) {
+    resetData()
+    callback.clearPositionAndZoom()
   }
 }
 

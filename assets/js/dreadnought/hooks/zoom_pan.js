@@ -15,11 +15,15 @@ const panMultiplier = 1.5
 
 // Global vars to cache event state
 const gsap = window.gsap
+
 // On PointerDown, save the current elZoomPanCover and pointer coords here:
-const initial = {
-  coord: null,
-  zoom: null
+const initial = { }
+function resetData() {
+  // TODO there's gotta be a better name for this variable
+  initial.coord = null
+  initial.zoom = null
 }
+resetData()
 
 // --------------------------------------------------------
 // DOM REFERENCES
@@ -232,16 +236,15 @@ function log(description, ev) {
   })
 } 
 
-function zoomPanIsTheIntendedAction(ev) {
-  console.log({ev, elZoomPanContainer})
+function gestureIsIntended(ev) {
+  // console.log({ev, elZoomPanContainer})
   return ev.target.id == elZoomPanContainer.id
 }
 
 function onPointerDown(ev) {
-  if (zoomPanIsTheIntendedAction(ev) && PointerEvents.down(ev)) {
-    console.log("I intend to pan!!")
+  if (gestureIsIntended(ev)) {
     elZoomPanContainer.setPointerCapture(ev.pointerId)
-    initial.position = coordFromTransformedElement(elZoomPanCover)
+    PointerEvents.down(ev)
   }
 }
 
@@ -250,10 +253,7 @@ function onPointerDown(ev) {
 
 function setPositionAndZoom() {
   console.log("setting position and zoom!")
-}
-
-function clearPositionAndZoom() {
-  console.log("clearing position and zoom!")
+  initial.position = coordFromTransformedElement(elZoomPanCover)
 }
 
 function pan(initialCoord, currentCoord) {
@@ -281,7 +281,7 @@ const ZoomPanContainer = {
       setPositionAndZoom, 
       pan, 
       pinch, 
-      clearPositionAndZoom,
+      clearPositionAndZoom: resetData
     })
     const me = this
     // Set DOM reference
