@@ -1,4 +1,4 @@
-import { PointerEvents } from '../core/pointers.js'
+import { Gestures } from '../core/gestures.js'
 import { Coord } from '../core/coordinates.js'
 
 // --------------------------------------------------------
@@ -244,7 +244,7 @@ function gestureIsIntended(ev) {
 function onPointerDown(ev) {
   if (gestureIsIntended(ev)) {
     elZoomPanContainer.setPointerCapture(ev.pointerId)
-    PointerEvents.down(ev)
+    Gestures.down(ev)
   }
 }
 
@@ -277,7 +277,7 @@ function pinch() {
 const ZoomPanContainer = {
   mounted() {
     // TODO rename module Gestures
-    PointerEvents.setCallbacks({
+    Gestures.setCallbacks({
       setPositionAndZoom, 
       pan, 
       pinch, 
@@ -288,11 +288,11 @@ const ZoomPanContainer = {
     elZoomPanContainer = this.el
     // Set pointer event handlers
     elZoomPanContainer.onpointerdown = onPointerDown;
-    elZoomPanContainer.onpointermove = PointerEvents.move
-    elZoomPanContainer.onpointerup = PointerEvents.up;
-    elZoomPanContainer.onpointercancel = PointerEvents.up;
-    elZoomPanContainer.onpointerout = PointerEvents.up;
-    elZoomPanContainer.onpointerleave = PointerEvents.up;
+    elZoomPanContainer.onpointermove = Gestures.move
+    elZoomPanContainer.onpointerup = Gestures.up;
+    elZoomPanContainer.onpointercancel = Gestures.up;
+    elZoomPanContainer.onpointerout = Gestures.up;
+    elZoomPanContainer.onpointerleave = Gestures.up;
     logToElixir = (params) => {
       me.pushEvent("log", params)
     }
