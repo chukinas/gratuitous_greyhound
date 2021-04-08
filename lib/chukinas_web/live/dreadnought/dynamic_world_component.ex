@@ -50,7 +50,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
                 :straight -> "bg-green-400"
                 _ -> "bg-yellow-400"
               end %>
-              h-full rounded-sm bg-opacity-20
+              h-full rounded-sm bg-opacity-20 pointer-events-none
             "
           >
           </div>

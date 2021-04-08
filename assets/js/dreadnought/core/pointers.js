@@ -17,7 +17,9 @@ let pinchZoomCallback = () => { console.log("pinching!!") }
 function setPanCallback(callback) { panCallback = callback }
 function setPinchZoomCallback(callback) { pinchZoomCallback = callback }
 
+// TODO rename downThenIsPrimary
 function down(pointerEvent) {
+  console.log("Pointer.down")
   const pointerId = pointerEvent.pointerId
   if (pointerId > 1) return false;
   initialEvents.set(pointerId, pointerEvent)

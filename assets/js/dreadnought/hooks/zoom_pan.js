@@ -243,11 +243,17 @@ function log(description, ev) {
   })
 } 
 
+function zoomPanIsTheIntendedAction(ev) {
+  console.log({ev, elZoomPanContainer})
+  return ev.target.id == elZoomPanContainer.id
+}
+
 function onPointerDown(ev) {
-  if (PointerEvents.down(ev)) {
+  if (zoomPanIsTheIntendedAction(ev) && PointerEvents.down(ev)) {
+    console.log("I intend to pan!!")
+    elZoomPanContainer.setPointerCapture(ev.pointerId)
     initial.position = coordFromTransformedElement(elZoomPanCover)
   }
-  console.log(initial)
 }
 
 // --------------------------------------------------------
@@ -269,7 +275,6 @@ const ZoomPanContainer = {
     logToElixir = (params) => {
       me.pushEvent("log", params)
     }
-    logToElixir({test: "TEST"})
     // TODO rename
     //setTimeout(() => fitArena({zeroDuration: true})) 
   },
