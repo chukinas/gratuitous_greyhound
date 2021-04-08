@@ -40,10 +40,11 @@ function panOrPinch() {
   if (activePointerCount == 2) {
     callback.pinch()
   } else if (activePointerCount == 1) {
-    callback.pan(
-      Coord.fromEvent(initialEvents.get(pointerId.primary)),
-      Coord.fromEvent(currentEvents.get(pointerId.primary))
+    const vector = Coord.subtract(
+      Coord.fromEvent(currentEvents.get(pointerId.primary)),
+      Coord.fromEvent(initialEvents.get(pointerId.primary))
     )
+    callback.pan(vector)
   }
 }
 
@@ -53,10 +54,12 @@ function panOrPinch() {
 function down(ev) {
   console.log("Pointer.down")
   if (ev.isPrimary) {
+    // Pan
     resetData()
     pointerId.primary = ev.pointerId
     callback.setPositionAndZoom()
   } else if (pointerId.secondary == null) {
+    // Pinch
     pointerId.secondary = ev.pointerId
   } else {
     return

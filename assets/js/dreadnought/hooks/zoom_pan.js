@@ -249,19 +249,16 @@ function onPointerDown(ev) {
 }
 
 // --------------------------------------------------------
-// GESTURES CALLBACKS
+// GESTURE CALLBACKS
 
 function setPositionAndZoom() {
   console.log("setting position and zoom!")
   initial.position = coordFromTransformedElement(elZoomPanCover)
 }
 
-function pan(initialCoord, currentCoord) {
-  console.log(initialCoord, currentCoord)
-  let panVector = Coord.subtract(currentCoord, initialCoord)
-  panVector = Coord.multiply(panVector, panMultiplier)
+function pan(vector) {
+  const panVector = Coord.multiply(vector, panMultiplier)
   const nextWorldCoord = Coord.add(initial.position, panVector)
-  console.log({initialCoord, currentCoord, nextWorldCoord, elZoomPanCover})
   gsap.to(elZoomPanCover, {
     ...nextWorldCoord,
   })
