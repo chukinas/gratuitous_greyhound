@@ -9,14 +9,22 @@ const initialEvents = new Map();
 const currentEvents = new Map();
 
 let primaryPointerId
-let panCallback = () => { console.log("panning!")}
-let pinchZoomCallback = () => { console.log("pinching!!") } 
+let callback = {
+  pan: () => console.log("pan callback!!!"),
+  pinch: () => console.log("pinch callback!!!"),
+  setPositionAndZoom: () => console.log("setPositionAndZoom callback!!!"),
+  clearPositionAndZoom: () => console.log("clearPositionAndZoom callback!!!"),
+}
 
 // --------------------------------------------------------
 // FUNCTIONS
 
-function setPanCallback(callback) { panCallback = callback }
-function setPinchZoomCallback(callback) { pinchZoomCallback = callback }
+function setCallbacks(callbacks) {
+  callback = {
+    ...callback,
+    ...callbacks
+  }
+}
 
 // TODO rename downThenIsPrimary
 function down(pointerEvent) {
@@ -63,9 +71,9 @@ function applyCallback() {
   const activePointerCount = initialEvents.size
   // TODO replace with case statement
   if (activePointerCount == 2) {
-    pinchZoomCallback()
+    callback.pinch()
   } else if (activePointerCount == 1) {
-    panCallback(
+    callback.pan(
       Coord.fromEvent(initialEvents.get(primaryPointerId)),
       Coord.fromEvent(currentEvents.get(primaryPointerId))
     )
@@ -76,10 +84,8 @@ function applyCallback() {
 // API
 
 export const PointerEvents = {
-  setPanCallback,
-  setPinchZoomCallback,
+  setCallbacks,
   down,
   move,
   up,
-  isActive,
 }

@@ -199,17 +199,6 @@ function getCoordAndScale(element) {
 //   }
 // }
 
-function pan(initialCoord, currentCoord) {
-  console.log(initialCoord, currentCoord)
-  let panVector = Coord.subtract(currentCoord, initialCoord)
-  panVector = Coord.multiply(panVector, panMultiplier)
-  const nextWorldCoord = Coord.add(initial.position, panVector)
-  console.log({initialCoord, currentCoord, nextWorldCoord, elZoomPanCover})
-  gsap.to(elZoomPanCover, {
-    ...nextWorldCoord,
-  })
-}
-
 function coverWorldContainer() {
   const worldContainerRect = elZoomPanContainer.getBoundingClientRect()
   const worldRect = getWorldRect()
@@ -257,11 +246,43 @@ function onPointerDown(ev) {
 }
 
 // --------------------------------------------------------
+// GESTURES CALLBACKS
+
+function setPositionAndZoom() {
+  console.log("setting position and zoom!")
+}
+
+function clearPositionAndZoom() {
+  console.log("clearing position and zoom!")
+}
+
+function pan(initialCoord, currentCoord) {
+  console.log(initialCoord, currentCoord)
+  let panVector = Coord.subtract(currentCoord, initialCoord)
+  panVector = Coord.multiply(panVector, panMultiplier)
+  const nextWorldCoord = Coord.add(initial.position, panVector)
+  console.log({initialCoord, currentCoord, nextWorldCoord, elZoomPanCover})
+  gsap.to(elZoomPanCover, {
+    ...nextWorldCoord,
+  })
+}
+
+function pinch() {
+  console.log("pinching!!!!")
+}
+
+// --------------------------------------------------------
 // HOOKS
 
 const ZoomPanContainer = {
   mounted() {
-    PointerEvents.setPanCallback(pan)
+    // TODO rename module Gestures
+    PointerEvents.setCallbacks({
+      setPositionAndZoom, 
+      pan, 
+      pinch, 
+      clearPositionAndZoom,
+    })
     const me = this
     // Set DOM reference
     elZoomPanContainer = this.el
