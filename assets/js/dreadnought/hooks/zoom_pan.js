@@ -21,7 +21,7 @@ const initial = { }
 function resetData() {
   // TODO there's gotta be a better name for this variable
   initial.coord = null
-  initial.zoom = null
+  initial.scale = 1
 }
 resetData()
 
@@ -257,15 +257,24 @@ function setPositionAndZoom() {
 }
 
 function pan(vector) {
-  const panVector = Coord.multiply(vector, panMultiplier)
-  const nextWorldCoord = Coord.add(initial.position, panVector)
-  gsap.to(elZoomPanCover, {
-    ...nextWorldCoord,
+  logToElixir({
+    title: "pan!!"
   })
+  pinch(vector)
 }
 
-function pinch(vector) {
-  pan(vector)
+function pinch(vector, zoom = 1) {
+  const panVector = Coord.multiply(vector, panMultiplier)
+  const nextWorldCoord = Coord.add(initial.position, panVector)
+  const scale = initial.scale / zoom
+  logToElixir({
+    title: "pinch!!",
+    scale
+  })
+  gsap.to(elZoomPanCover, {
+    ...nextWorldCoord,
+    //scale
+  })
 }
 
 // --------------------------------------------------------

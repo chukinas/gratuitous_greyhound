@@ -70,10 +70,10 @@ function dispatchGesture() {
   if (activePointerCount == 2) {
     const panVector = Coord.average(primaryVector(), secondaryVector())
     const zoom = currentDistance() / initialDistance()
-    callback.logToElixir({
-      zoom
-    })
-    callback.pan(panVector, zoom)
+    // callback.logToElixir({
+    //   zoom
+    // })
+    callback.pinch(panVector, zoom)
   } else if (activePointerCount == 1) {
     callback.pan(primaryVector())
   }
