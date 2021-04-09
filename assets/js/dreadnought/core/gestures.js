@@ -36,16 +36,43 @@ function setCallbacks(callbacks) {
 
 function panOrPinch() {
   const activePointerCount = initialEvents.size
-  // TODO replace with case statement
   if (activePointerCount == 2) {
-    callback.pinch()
+    pinch()
   } else if (activePointerCount == 1) {
-    const vector = Coord.subtract(
-      Coord.fromEvent(currentEvents.get(pointerId.primary)),
-      Coord.fromEvent(initialEvents.get(pointerId.primary))
-    )
-    callback.pan(vector)
+    pan()
   }
+}
+
+function pan() {
+  const panVector = Coord.subtract(
+    Coord.fromEvent(currentEvents.get(pointerId.primary)),
+    Coord.fromEvent(initialEvents.get(pointerId.primary))
+  )
+  callback.pan(panVector)
+}
+
+function pinch() {
+  const primaryVector = Coord.subtract(
+    Coord.fromEvent(currentEvents.get(pointerId.primary)),
+    Coord.fromEvent(initialEvents.get(pointerId.primary))
+  )
+  const secondaryVector = Coord.subtract(
+    Coord.fromEvent(currentEvents.get(pointerId.secondary)),
+    Coord.fromEvent(initialEvents.get(pointerId.secondary))
+  )
+  // callback.logToElixir({
+  //   title: "call pinch",
+  //   primaryVector,
+  //   secondaryVector
+  // })
+  const panVector = Coord.average(primaryVector, secondaryVector)
+  // callback.logToElixir({
+  //   title: "call pinch 2",
+  //   primaryVector,
+  //   secondaryVector,
+  //   panVector
+  // })
+  callback.pan(panVector)
 }
 
 // --------------------------------------------------------
@@ -54,11 +81,17 @@ function panOrPinch() {
 function down(ev) {
   console.log("Pointer.down")
   if (ev.isPrimary) {
+    callback.logToElixir({
+      title: "primary down!!!!",
+    })
     // Pan
     resetData()
     pointerId.primary = ev.pointerId
     callback.setPositionAndZoom()
   } else if (pointerId.secondary == null) {
+    callback.logToElixir({
+      title: "secondary down!!!!",
+    })
     // Pinch
     pointerId.secondary = ev.pointerId
   } else {

@@ -27,6 +27,13 @@ function multiply(coord, multiplier) {
   }
 }
 
+function average(coord1, coord2) {
+  return {
+    x: ((coord1.x + coord2.x) / 2),
+    y: ((coord1.y + coord2.y) / 2)
+  }
+}
+
 function fromEvent(ev) {
   console.log("fromEvent", ev)
   return {
@@ -47,6 +54,7 @@ export const Coord = {
   add,
   subtract,
   multiply,
+  average,
   fromEvent,
   isApproxZero,
 }

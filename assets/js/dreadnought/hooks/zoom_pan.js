@@ -264,8 +264,8 @@ function pan(vector) {
   })
 }
 
-function pinch() {
-  console.log("pinching!!!!")
+function pinch(vector) {
+  pan(vector)
 }
 
 // --------------------------------------------------------
@@ -273,13 +273,6 @@ function pinch() {
 
 const ZoomPanContainer = {
   mounted() {
-    // TODO rename module Gestures
-    Gestures.setCallbacks({
-      setPositionAndZoom, 
-      pan, 
-      pinch, 
-      clearPositionAndZoom: resetData
-    })
     const me = this
     // Set DOM reference
     elZoomPanContainer = this.el
@@ -293,6 +286,13 @@ const ZoomPanContainer = {
     logToElixir = (params) => {
       me.pushEvent("log", params)
     }
+    Gestures.setCallbacks({
+      logToElixir, 
+      setPositionAndZoom, 
+      pan, 
+      pinch, 
+      clearPositionAndZoom: resetData
+    })
     // TODO rename
     //setTimeout(() => fitArena({zeroDuration: true})) 
   },
