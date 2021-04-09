@@ -16,11 +16,12 @@ const panMultiplier = 1.5
 const gsap = window.gsap
 
 // On PointerDown, save the current elZoomPanCover and pointer coords here:
-const initial = { }
+const initialTransform = { }
 function resetData() {
   // TODO there's gotta be a better name for this variable
-  initial.coord = null
-  initial.scale = 1
+  initialTransform.x = null
+  initialTransform.y = null
+  initialTransform.scale = 1
 }
 resetData()
 
@@ -45,19 +46,13 @@ let elZoomPanFit
 function getWorldRect() { return elZoomPanCover.getBoundingClientRect() }
 function getArenaRect() { return elZoomPanFit.getBoundingClientRect() }
 
-
-function coordFromTransformedElement(element) {
-  const coordAndScale = getCoordAndScale(element)
-  return { x: coordAndScale.x, y: coordAndScale.y }
-}
-
-function getCoordAndScale(element) {
+function getTransform(element) {
   // FROM: https://zellwk.com/blog/css-translate-values-in-javascript/
   const style = window.getComputedStyle(element)
   const matrix = style['transform'] || style.webkitTransform || style.mozTransform
   // No transform property. Simply return 0 values.
   if (matrix === 'none' || typeof matrix === 'undefined') {
-    return Coord.origin()
+    return { ...Coord.origin(), scale: 1 }
   }
   // Can either be 2d or 3d transform
   const matrixType = matrix.includes('3d') ? '3d' : '2d'
@@ -86,121 +81,124 @@ function getCoordAndScale(element) {
 // --------------------------------------------------------
 // FUNCTIONS
 
-// function getCurrentScale() {
-//   return getCoordAndScale(elZoomPanCover).scale
-// }
-// 
-// function zoomIn() {
-//   const currentScale = getCurrentScale()
-//   const scale = Math.max(maxZoomInScale, currentScale + scaleStep)
-//   gsap.to(elZoomPanCover, {
-//     scale: "+=" + scaleStep,
-//     DURATION,
-//     ease: 'back',
-//     onComplete: coverWorldContainer
-//   })
-// }
-// 
-// function zoomOut() {
-//   const currentScale = getCurrentScale()
-//   const maxZoomOutScale = getScaleToCover(elZoomPanCover)
-//   const isAlreadyAtMaxZoomOut = currentScale < maxZoomOutScale + 0.001
-//   if (isAlreadyAtMaxZoomOut) {
-//     gsap.fromTo(elZoomPanCover, {
-//       scale: maxZoomOutScale * 0.95
-//     },{
-//       DURATION,
-//       scale: maxZoomOutScale,
-//       ease: 'back',
-//       onComplete: coverWorldContainer
-//     })
-//   }
-//   else {
-//     const scale = Math.max(maxZoomOutScale, currentScale - scaleStep)
-//     gsap.to(elZoomPanCover, {
-//       scale,
-//       DURATION,
-//       ease: 'back',
-//       onComplete: coverWorldContainer
-//     })
-//   }
-// }
-// 
-// function getScales() {
-//   // Basically, how much bigger is the elZoomPanFit/elZoomPanCover than the window?
-//   const windowSize = {x: window.innerWidth, y: window.innerHeight}
-//   const arenaRect = getArenaRect()
-//   const arenaSize = { x: arenaRect.width, y: arenaRect.height}
-//   return {
-//     x: windowSize.x / arenaSize.x,
-//     y: windowSize.y / arenaSize.y
-//   }
-// }
-// 
-// const getScalesAsArray = () => Object.values(getScales())
-// // Min Scale is needed to set a Zoom Out limit
-// const getMinScale = () => Math.min(...getScalesAsArray())
-// // Max Scale is needed to set a Zoom In limit
-// const getMaxScale = () => Math.max(...getScalesAsArray())
-// 
-// function getFitScale(element) {
-//   const elementRect = element.getBoundingClientRect()
-//   const worldContainerRect = elZoomPanContainer.getBoundingClientRect()
-//   const relWidthScale = worldContainerRect.width / elementRect.width
-//   const relHeightScale = worldContainerRect.height / elementRect.height
-//   const relScale = Math.min(relWidthScale, relHeightScale)
-//   const absScale = relScale * getCurrentScale()
-//   return absScale
-// }
-// 
-// function getElementOrigSize(element) {
-//   // TODO temp
-//   return Coord.origin()
-// }
-// 
-// // TODO rename
-// function getScaleToCover(element) {
-//   // DRYify
-//   const elementRect = element.getBoundingClientRect()
-//   const worldContainerRect = elZoomPanContainer.getBoundingClientRect()
-//   const relWidthScale = worldContainerRect.width / elementRect.width
-//   const relHeightScale = worldContainerRect.height / elementRect.height
-//   const relScale = Math.max(relWidthScale, relHeightScale)
-//   const absScale = relScale * getCurrentScale()
-//   return absScale
-// }
-// 
-// function getRelPosition(elFrom, elTo) {
-//   return MotionPathPlugin.getRelativePosition(elFrom, elTo, [0.5, 0.5], [0.5, 0.5])
-// }
-// 
-// function fitArena(opts = {zeroDuration: false}) {
-//   const relCoord = getRelPosition(elZoomPanContainer, elZoomPanFit)
-//   const scale = Math.max(getFitScale(elZoomPanFit), getScaleToCover(elZoomPanCover))
-//   const isAlreadyAtFitScale = Math.abs(scale - getCurrentScale()) < 0.001
-//   const isAlreadyCentered = Coord.isApproxZero(relCoord)
-//   if (opts.zeroDuration) {
-//     gsap.set(elZoomPanCover, {
-//       scale,
-//       x: "-=" + relCoord.x,
-//       y: "-=" + relCoord.y,
-//     })
-// 
-//   } else if (isAlreadyAtFitScale & isAlreadyCentered) {
-//     gsap.from(elZoomPanCover, {
-//       scale: scale * 0.95,
-//       DURATION
-//     })
-//   } else {
-//     gsap.to(elZoomPanCover, {
-//       scale,
-//       x: "-=" + relCoord.x,
-//       y: "-=" + relCoord.y,
-//       DURATION,
-//       ease: "back"
-//     })
-//   }
-// }
+function getCurrentScale() {
+  console.log(getTransform(elZoomPanCover))
+  const val = getTransform(elZoomPanCover).scale
+  console.log(val)
+  return val 
+}
+
+function zoomIn() {
+  const currentScale = getCurrentScale()
+  const scale = Math.max(maxZoomInScale, currentScale + scaleStep)
+  gsap.to(elZoomPanCover, {
+    scale: "+=" + scaleStep,
+    duration: DURATION,
+    ease: 'back',
+    onComplete: coverWorldContainer
+  })
+}
+
+function zoomOut() {
+  const currentScale = getCurrentScale()
+  const maxZoomOutScale = getScaleToCover(elZoomPanCover)
+  const isAlreadyAtMaxZoomOut = currentScale < maxZoomOutScale + 0.001
+  if (isAlreadyAtMaxZoomOut) {
+    gsap.fromTo(elZoomPanCover, {
+      scale: maxZoomOutScale * 0.95
+    },{
+      duration: DURATION,
+      scale: maxZoomOutScale,
+      ease: 'back',
+      onComplete: coverWorldContainer
+    })
+  }
+  else {
+    const scale = Math.max(maxZoomOutScale, currentScale - scaleStep)
+    gsap.to(elZoomPanCover, {
+      scale,
+      duration: DURATION,
+      ease: 'back',
+      onComplete: coverWorldContainer
+    })
+  }
+}
+
+function getScales() {
+  // Basically, how much bigger is the elZoomPanFit/elZoomPanCover than the window?
+  const windowSize = {x: window.innerWidth, y: window.innerHeight}
+  const arenaRect = getArenaRect()
+  const arenaSize = { x: arenaRect.width, y: arenaRect.height}
+  return {
+    x: windowSize.x / arenaSize.x,
+    y: windowSize.y / arenaSize.y
+  }
+}
+
+const getScalesAsArray = () => Object.values(getScales())
+// Min Scale is needed to set a Zoom Out limit
+const getMinScale = () => Math.min(...getScalesAsArray())
+// Max Scale is needed to set a Zoom In limit
+const getMaxScale = () => Math.max(...getScalesAsArray())
+
+function getFitScale(element) {
+  const elementRect = element.getBoundingClientRect()
+  const worldContainerRect = elZoomPanContainer.getBoundingClientRect()
+  const relWidthScale = worldContainerRect.width / elementRect.width
+  const relHeightScale = worldContainerRect.height / elementRect.height
+  const relScale = Math.min(relWidthScale, relHeightScale)
+  const absScale = relScale * getCurrentScale()
+  return absScale
+}
+
+function getElementOrigSize(element) {
+  // TODO temp
+  return Coord.origin()
+}
+
+// TODO rename
+function getScaleToCover(element) {
+  // DRYify
+  const elementRect = element.getBoundingClientRect()
+  const worldContainerRect = elZoomPanContainer.getBoundingClientRect()
+  const relWidthScale = worldContainerRect.width / elementRect.width
+  const relHeightScale = worldContainerRect.height / elementRect.height
+  const relScale = Math.max(relWidthScale, relHeightScale)
+  const absScale = relScale * getCurrentScale()
+  return absScale
+}
+
+function getRelPosition(elFrom, elTo) {
+  return MotionPathPlugin.getRelativePosition(elFrom, elTo, [0.5, 0.5], [0.5, 0.5])
+}
+
+function fitArena(opts = {zeroDuration: false}) {
+  const relCoord = getRelPosition(elZoomPanContainer, elZoomPanFit)
+  const scale = Math.max(getFitScale(elZoomPanFit), getScaleToCover(elZoomPanCover))
+  const isAlreadyAtFitScale = Math.abs(scale - getCurrentScale()) < 0.001
+  const isAlreadyCentered = Coord.isApproxZero(relCoord)
+  if (opts.zeroDuration) {
+    gsap.set(elZoomPanCover, {
+      scale,
+      x: "-=" + relCoord.x,
+      y: "-=" + relCoord.y,
+    })
+
+  } else if (isAlreadyAtFitScale & isAlreadyCentered) {
+    gsap.from(elZoomPanCover, {
+      scale: scale * 0.95,
+      duration: DURATION
+    })
+  } else {
+    gsap.to(elZoomPanCover, {
+      scale,
+      x: "-=" + relCoord.x,
+      y: "-=" + relCoord.y,
+      duration: DURATION,
+      ease: "back"
+    })
+  }
+}
 
 function coverWorldContainer() {
   const worldContainerRect = elZoomPanContainer.getBoundingClientRect()
@@ -214,11 +212,11 @@ function coverWorldContainer() {
     y: tooFarTop || tooFarBottom || 0,
   }
   if (panVector.x || panVector.y) {
-    const currentWorldCoord = coordFromTransformedElement(elZoomPanCover)
+    const currentWorldCoord = getTransform(elZoomPanCover)
     gsap.to(elZoomPanCover, {
       ...Coord.add(currentWorldCoord, panVector),
       ease: 'back',
-      DURATION
+      duration: DURATION
     })
   }
 }
@@ -251,8 +249,10 @@ function onPointerDown(ev) {
 // GESTURE CALLBACKS
 
 function setPositionAndZoom() {
-  console.log("setting position and zoom!")
-  initial.position = coordFromTransformedElement(elZoomPanCover)
+  const transform = getTransform(elZoomPanCover)
+  initialTransform.x = transform.x
+  initialTransform.y = transform.y
+  initialTransform.scale = transform.scale
 }
 
 function pan(vector) {
@@ -264,8 +264,8 @@ function pan(vector) {
 
 function pinch(vector, zoom = 1) {
   const panVector = Coord.multiply(vector, panMultiplier)
-  const nextWorldCoord = Coord.add(initial.position, panVector)
-  const scale = initial.scale / zoom
+  const nextWorldCoord = Coord.add(initialTransform, panVector)
+  const scale = initialTransform.scale / zoom
   logToElixir({
     title: "pinch!!",
     scale

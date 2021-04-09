@@ -23,12 +23,16 @@ resetData()
 // --------------------------------------------------------
 // GESTURE
 
-const INTERVAL = 300 // pan debounce interval (ms)
+const INTERVAL = 300 // debounce interval (ms)
 
 function startGesture() {
   resetData()
   callback.setPositionAndZoom()
   intervalId = window.setInterval(_dispatchGesture, INTERVAL)
+  // TODO temp for working through pinch
+  // initialEvents.set(99, {clientX: 0, clientY: 0})
+  // currentEvents.set(99, {clientX: 0, clientY: 0})
+  // pointerId.secondary = 99
 }
 
 function stopGesture() {
