@@ -250,6 +250,7 @@ function onPointerDown(ev) {
 
 function setPositionAndZoom() {
   const transform = getTransform(elZoomPanCover)
+  console.log(transform)
   initialTransform.x = transform.x
   initialTransform.y = transform.y
   initialTransform.scale = transform.scale
@@ -265,14 +266,14 @@ function pan(vector) {
 function pinch(vector, zoom = 1) {
   const panVector = Coord.multiply(vector, panMultiplier)
   const nextWorldCoord = Coord.add(initialTransform, panVector)
-  const scale = initialTransform.scale / zoom
+  const scale = initialTransform.scale * zoom
   logToElixir({
     title: "pinch!!",
     scale
   })
   gsap.to(elZoomPanCover, {
     ...nextWorldCoord,
-    //scale
+    scale
   })
 }
 
@@ -331,7 +332,7 @@ const ZoomPanFit = {
 const ButtonFitArena = {
   mounted() {
     // TODO rename fit
-    // this.el.onclick = fitArena
+    this.el.onclick = fitArena
   }
 }
 
