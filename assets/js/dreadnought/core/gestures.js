@@ -18,6 +18,23 @@ function resetData() {
 resetData()
 
 // --------------------------------------------------------
+// COORDINATES
+
+function primaryVector() {
+  return Coord.subtract(
+    Coord.fromEvent(currentEvents.get(pointerId.primary)),
+    Coord.fromEvent(initialEvents.get(pointerId.primary))
+  )
+}
+
+function secondaryVector() {
+  return Coord.subtract(
+    Coord.fromEvent(currentEvents.get(pointerId.secondary)),
+    Coord.fromEvent(initialEvents.get(pointerId.secondary))
+  )
+}
+
+// --------------------------------------------------------
 // CALLBACKS
 
 let callback = {
@@ -34,45 +51,20 @@ function setCallbacks(callbacks) {
   }
 }
 
-function panOrPinch() {
+function dispatchGesture() {
   const activePointerCount = initialEvents.size
   if (activePointerCount == 2) {
-    pinch()
+    const panVector = Coord.average(primaryVector(), secondaryVector())
+    // callback.logToElixir({
+    //   title: "call pinch 2",
+    //   primaryVector,
+    //   secondaryVector,
+    //   panVector
+    // })
+    callback.pan(panVector)
   } else if (activePointerCount == 1) {
-    pan()
+    callback.pan(primaryVector())
   }
-}
-
-function pan() {
-  const panVector = Coord.subtract(
-    Coord.fromEvent(currentEvents.get(pointerId.primary)),
-    Coord.fromEvent(initialEvents.get(pointerId.primary))
-  )
-  callback.pan(panVector)
-}
-
-function pinch() {
-  const primaryVector = Coord.subtract(
-    Coord.fromEvent(currentEvents.get(pointerId.primary)),
-    Coord.fromEvent(initialEvents.get(pointerId.primary))
-  )
-  const secondaryVector = Coord.subtract(
-    Coord.fromEvent(currentEvents.get(pointerId.secondary)),
-    Coord.fromEvent(initialEvents.get(pointerId.secondary))
-  )
-  // callback.logToElixir({
-  //   title: "call pinch",
-  //   primaryVector,
-  //   secondaryVector
-  // })
-  const panVector = Coord.average(primaryVector, secondaryVector)
-  // callback.logToElixir({
-  //   title: "call pinch 2",
-  //   primaryVector,
-  //   secondaryVector,
-  //   panVector
-  // })
-  callback.pan(panVector)
 }
 
 // --------------------------------------------------------
@@ -105,7 +97,7 @@ function move(ev) {
   console.log("move", ev)
   if (initialEvents.has(ev.pointerId)) {
     currentEvents.set(ev.pointerId, ev)
-    panOrPinch()
+    dispatchGesture()
   }
 }
 
