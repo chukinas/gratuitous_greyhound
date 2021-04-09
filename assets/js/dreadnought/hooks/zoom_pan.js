@@ -4,7 +4,6 @@ import { Coord } from '../core/coordinates.js'
 // --------------------------------------------------------
 // CONFIG
 
-const interval = 100 // pan debounce interval (ms)
 const DURATION = 0.2 // tween duration (ms)
 const scaleStep = 0.2
 const maxZoomInScale = 0.4

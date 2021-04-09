@@ -6,6 +6,7 @@ import { Coord } from './coordinates.js'
 let pointerId
 let initialEvents
 let currentEvents
+let intervalId
 
 function resetData() {
   initialEvents = new Map()
@@ -14,8 +15,42 @@ function resetData() {
     primary: null,
     secondary: null,
   }
+  intervalId = null
 }
+
 resetData()
+
+// --------------------------------------------------------
+// GESTURE
+
+const INTERVAL = 300 // pan debounce interval (ms)
+
+function startGesture() {
+  resetData()
+  callback.setPositionAndZoom()
+  intervalId = window.setInterval(_dispatchGesture, INTERVAL)
+}
+
+function stopGesture() {
+  clearInterval(intervalId)
+  _dispatchGesture()
+  resetData()
+  callback.clearPositionAndZoom()
+}
+
+function _dispatchGesture() {
+  const activePointerCount = initialEvents.size
+  if (activePointerCount == 2) {
+    const panVector = Coord.average(primaryVector(), secondaryVector())
+    const zoom = currentDistance() / initialDistance()
+    // callback.logToElixir({
+    //   zoom
+    // })
+    callback.pinch(panVector, zoom)
+  } else if (activePointerCount == 1) {
+    callback.pan(primaryVector())
+  }
+}
 
 // --------------------------------------------------------
 // COORDINATES
@@ -65,38 +100,14 @@ function setCallbacks(callbacks) {
   }
 }
 
-function dispatchGesture() {
-  const activePointerCount = initialEvents.size
-  if (activePointerCount == 2) {
-    const panVector = Coord.average(primaryVector(), secondaryVector())
-    const zoom = currentDistance() / initialDistance()
-    // callback.logToElixir({
-    //   zoom
-    // })
-    callback.pinch(panVector, zoom)
-  } else if (activePointerCount == 1) {
-    callback.pan(primaryVector())
-  }
-}
-
 // --------------------------------------------------------
 // EVENT HANDLING
 
 function down(ev) {
-  console.log("Pointer.down")
   if (ev.isPrimary) {
-    callback.logToElixir({
-      title: "primary down!!!!",
-    })
-    // Pan
-    resetData()
+    startGesture()
     pointerId.primary = ev.pointerId
-    callback.setPositionAndZoom()
   } else if (pointerId.secondary == null) {
-    callback.logToElixir({
-      title: "secondary down!!!!",
-    })
-    // Pinch
     pointerId.secondary = ev.pointerId
   } else {
     return
@@ -106,17 +117,14 @@ function down(ev) {
 }
 
 function move(ev) {
-  console.log("move", ev)
   if (initialEvents.has(ev.pointerId)) {
     currentEvents.set(ev.pointerId, ev)
-    dispatchGesture()
   }
 }
 
 function up(ev) {
   if (initialEvents.has(ev.pointerId)) {
-    resetData()
-    callback.clearPositionAndZoom()
+    stopGesture()
   }
 }
 

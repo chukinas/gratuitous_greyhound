@@ -43,7 +43,6 @@ function distance(coord1, coord2) {
 }
 
 function fromEvent(ev) {
-  console.log("fromEvent", ev)
   return {
     x: ev.clientX,
     y: ev.clientY
