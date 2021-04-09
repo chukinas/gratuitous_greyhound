@@ -1,3 +1,10 @@
+function build(x, y) {
+  return {
+    x,
+    y
+  }
+}
+
 function origin() {
   return {
     x: 0,
@@ -53,6 +60,10 @@ function isApproxZero(coord) {
   return Math.abs(coord.x) < 1 & Math.abs(coord.y) < 1
 }
 
+function toString(coord) {
+  return `${coord.x}px ${coord.y}px`
+}
+
 // --------------------------------------------------------
 // API
 
@@ -65,4 +76,6 @@ export const Coord = {
   distance,
   fromEvent,
   isApproxZero,
+  build,
+  toString
 }

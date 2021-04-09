@@ -95,7 +95,7 @@ function zoomIn() {
     scale: "+=" + scaleStep,
     duration: DURATION,
     ease: 'back',
-    onComplete: coverWorldContainer
+    //onComplete: coverWorldContainer
   })
 }
 
@@ -110,7 +110,7 @@ function zoomOut() {
       duration: DURATION,
       scale: maxZoomOutScale,
       ease: 'back',
-      onComplete: coverWorldContainer
+      ////onComplete: coverWorldContainer
     })
   }
   else {
@@ -119,7 +119,7 @@ function zoomOut() {
       scale,
       duration: DURATION,
       ease: 'back',
-      onComplete: coverWorldContainer
+      //onComplete: coverWorldContainer
     })
   }
 }
@@ -240,7 +240,7 @@ function gestureIsIntended(ev) {
 
 function onPointerDown(ev) {
   if (gestureIsIntended(ev)) {
-    elZoomPanContainer.setPointerCapture(ev.pointerId)
+    // elZoomPanContainer.setPointerCapture(ev.pointerId)
     Gestures.down(ev)
   }
 }
@@ -319,6 +319,8 @@ const ZoomPanContainer = {
 const ZoomPanCover = {
   mounted() {
     elZoomPanCover = this.el
+    // TODO temp
+    // elZoomPanCover.onclick = (ev) => console.log(ev)
   }
 }
 
@@ -332,7 +334,7 @@ const ZoomPanFit = {
 const ButtonFitArena = {
   mounted() {
     // TODO rename fit
-    this.el.onclick = fitArena
+    //this.el.onclick = fitArena
   }
 }
 
@@ -342,9 +344,25 @@ const ButtonZoomIn = {
   }
 }
 
+let transformOrigin
 const ButtonZoomOut = {
   mounted() {
-    this.el.onclick = zoomOut
+    const pos = Coord.build(300, 300)
+    const transformOrigin = MotionPathPlugin.getRelativePosition(
+      elZoomPanCover,
+      elZoomPanContainer,
+      Coord.origin(),
+      pos
+    )
+    console.log(elZoomPanContainer, elZoomPanCover)
+    //this.el.onclick = zoomOut
+    this.el.onclick = () => {
+      console.table(transformOrigin)
+      gsap.to(elZoomPanCover, {
+        scale: "-=.1",
+        transformOrigin: Coord.toString(transformOrigin),
+      })
+    }
   }
 }
 // TODO rename file zoomPan.js

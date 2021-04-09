@@ -25,7 +25,7 @@ defmodule MissionBuilder do
       height: 2000
     }
     margin = Size.new(arena.height, arena.width)
-    margin = Size.new(50, 50)
+    margin = Size.new(300, 300)
     unit = Unit.new(Enum.random(1..1000), pose: Pose.new(100, 155, 75)) |> Unit.set_position(margin)
     motion_range_polygon = Unit.get_motion_range unit
     islands = [
