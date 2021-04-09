@@ -34,6 +34,14 @@ function average(coord1, coord2) {
   }
 }
 
+function distance(coord1, coord2) {
+  const diff = subtract(coord1, coord2)
+  return Math.sqrt(
+    diff.x * diff.x,
+    diff.y * diff.y,
+  )
+}
+
 function fromEvent(ev) {
   console.log("fromEvent", ev)
   return {
@@ -55,6 +63,7 @@ export const Coord = {
   subtract,
   multiply,
   average,
+  distance,
   fromEvent,
   isApproxZero,
 }

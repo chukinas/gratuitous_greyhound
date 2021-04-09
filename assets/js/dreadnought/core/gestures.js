@@ -34,6 +34,20 @@ function secondaryVector() {
   )
 }
 
+function initialDistance() {
+  return Coord.distance(
+    Coord.fromEvent(initialEvents.get(pointerId.primary)),
+    Coord.fromEvent(initialEvents.get(pointerId.secondary))
+  )
+}
+
+function currentDistance() {
+  return Coord.distance(
+    Coord.fromEvent(currentEvents.get(pointerId.primary)),
+    Coord.fromEvent(currentEvents.get(pointerId.secondary))
+  )
+}
+
 // --------------------------------------------------------
 // CALLBACKS
 
@@ -55,13 +69,11 @@ function dispatchGesture() {
   const activePointerCount = initialEvents.size
   if (activePointerCount == 2) {
     const panVector = Coord.average(primaryVector(), secondaryVector())
-    // callback.logToElixir({
-    //   title: "call pinch 2",
-    //   primaryVector,
-    //   secondaryVector,
-    //   panVector
-    // })
-    callback.pan(panVector)
+    const zoom = currentDistance() / initialDistance()
+    callback.logToElixir({
+      zoom
+    })
+    callback.pan(panVector, zoom)
   } else if (activePointerCount == 1) {
     callback.pan(primaryVector())
   }
