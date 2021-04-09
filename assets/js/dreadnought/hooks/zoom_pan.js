@@ -335,20 +335,36 @@ const ButtonFitArena = {
   mounted() {
     // TODO rename fit
     //this.el.onclick = fitArena
+    this.el.onclick = () => {
+      gsap.to(elZoomPanCover, {
+        x: "+=25px",
+        y: "+=25px",
+      })
+    }
   }
 }
 
 const ButtonZoomIn = {
   mounted() {
-    this.el.onclick = zoomIn
+    //this.el.onclick = zoomIn
+    this.el.onclick = () => {
+      console.table(transformOrigin)
+      gsap.to(elZoomPanCover, {
+        x: 0,
+        y: 0,
+        scale: "+=.1",
+        transformOrigin: Coord.toString(transformOrigin),
+      })
+    }
   }
 }
 
 let transformOrigin
+
 const ButtonZoomOut = {
   mounted() {
     const pos = Coord.build(300, 300)
-    const transformOrigin = MotionPathPlugin.getRelativePosition(
+    transformOrigin = MotionPathPlugin.getRelativePosition(
       elZoomPanCover,
       elZoomPanContainer,
       Coord.origin(),
@@ -359,6 +375,8 @@ const ButtonZoomOut = {
     this.el.onclick = () => {
       console.table(transformOrigin)
       gsap.to(elZoomPanCover, {
+        x: 300,
+        y: 300,
         scale: "-=.1",
         transformOrigin: Coord.toString(transformOrigin),
       })
