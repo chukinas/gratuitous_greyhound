@@ -76,6 +76,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
       />
     </svg>
     <%= ChukinasWeb.DreadnoughtView.render "unit3.html",
+      socket: @socket,
       unit: @mission.unit,
       game_over?: @mission.game_over? %>
     """
