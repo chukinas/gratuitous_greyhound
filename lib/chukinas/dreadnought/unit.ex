@@ -9,15 +9,6 @@ defmodule Unit do
 
   import Unit.Builder
 
-  # Remove redundancy
-  # TODO no longer needed
-  @size Size.new 140, 40
-  # @dims %{
-  #   to_bow: 30,
-  #   to_stern: 70,
-  #   beam: 40
-  # }
-
   # *** *******************************
   # *** TYPES
 
@@ -27,7 +18,6 @@ defmodule Unit do
     # ID must be unique within the world
     field :id, integer()
     field :pose, Pose.t()
-    field :start_pose, Pose.t()
     field :segments, [Segment.t()], default: []
     # TODO rename eg previous_path_svg_string ... or something shorter
     field :maneuver_svg_string, String.t()
