@@ -75,7 +75,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
         style="stroke-linejoin:round;stroke-width:20;stroke:#fff;fill:none"
       />
     </svg>
-    <%= ChukinasWeb.DreadnoughtView.render "unit2.html",
+    <%= ChukinasWeb.DreadnoughtView.render "unit3.html",
       unit: @mission.unit,
       game_over?: @mission.game_over? %>
     """
