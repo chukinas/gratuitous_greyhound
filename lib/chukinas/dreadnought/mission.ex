@@ -19,7 +19,6 @@ defmodule Mission do
     field :islands, [Island.t()], default: []
     # Unused. maybe delete later
     field :units, [Unit.t()], default: []
-    field :decks, [CommandQueue.t()], default: []
     field :segments, [Segment.t()], default: []
     field :hand, [Command.t()], default: []
   end
@@ -36,27 +35,14 @@ defmodule Mission do
   def unit(%__MODULE__{} = mission, id) when is_integer(id), do: ById.get(mission.units, id)
   def get_unit(%__MODULE__{} = mission, id), do: unit(mission, id)
 
-  def deck(%__MODULE__{} = mission, %CommandIds{unit: id}) do
-    mission.decks |> ById.get(id)
-  end
-
-  # TODO use the bang on the other getters that need it
-  def arena!(%__MODULE__{arena: nil}), do: raise "Error: no arena has been set!"
-  def arena!(%__MODULE__{arena: arena}), do: arena
-
   # *** *******************************
   # *** SETTERS
 
   # TODO rename put
   # TODO are these private?
-  # TODO it would be easier if these were maps. Units and Decks would be maps; Segments a list
   def push(%__MODULE__{units: units} = mission, %Unit{} = unit) do
     %{mission | units: ById.insert(units, unit)}
   end
-  def push(%__MODULE__{decks: decks} = mission, %CommandQueue{} = deck) do
-    %{mission | decks: ById.insert(decks, deck)}
-  end
-
   def put(mission, unit), do: push(mission, unit)
 
   def set_arena(%__MODULE__{} = mission, width, height) do
@@ -99,17 +85,6 @@ defmodule Mission do
     %{mission | squares: colliding_squares}
   end
 
-  def select_command(%__MODULE__{decks: [deck]} = mission, _player_id, command_id) when is_integer(command_id) do
-    deck =
-      deck
-      |> CommandQueue.select_command(command_id)
-    mission
-    |> Mission.put(deck)
-  end
-
-  def build_view(%__MODULE__{decks: [deck | []]} = mission) do
-    %{ mission | hand: deck |> CommandQueue.hand}
-  end
   def build_view(%__MODULE__{} = mission), do: mission
 
   def move_unit_to(%__MODULE__{} = mission, position, path_type \\ :straight) do
