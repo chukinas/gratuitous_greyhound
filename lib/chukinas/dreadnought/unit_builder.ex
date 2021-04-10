@@ -21,7 +21,7 @@ defmodule Builder do
       static_path: "/images/markerAndPencilShips_small.png",
       image_size_x: 122,
       image_size_y: 57,
-      svg_path: "M 73,56 49,56 22,57 2,52 0,38 19,28 l 52,2 20,6 9,7 0,5 z",
+      clip_path: "M 73,56 49,56 22,57 2,52 0,38 19,28 l 52,2 20,6 9,7 0,5 z",
       # These are used merely for getting more useful calculated values?
       # TODO, also, many of these are just good guesses.
       # When I auto-generate this with macros, they'll be exact.
