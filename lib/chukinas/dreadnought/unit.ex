@@ -27,9 +27,6 @@ defmodule Unit do
     # ID must be unique within the world
     field :id, integer()
     field :pose, Pose.t()
-    # TODO rename world position
-    # This places the svg on the correct spot within the World
-    field :position, Position.t()
     field :start_pose, Pose.t()
     field :segments, [Segment.t()], default: []
     # TODO rename eg previous_path_svg_string ... or something shorter
@@ -66,19 +63,14 @@ defmodule Unit do
   end
 
   # TODO can these two be private?
-  def set_pose(unit, pose, margin) do
-    %{unit | pose: pose} |> set_position(margin)
+  def set_pose(unit, pose, _margin) do
+    %{unit | pose: pose}# |> set_position(margin)
   end
 
   # TODO This is no longer needed
   # TODO therefore, 'set pose' above does not need margin?
-  def set_position(%__MODULE__{} = unit, %Size{} = margin) do
-    position =
-      margin
-      |> Size.subtract(Size.multiply @size, 0.5)
-      |> Size.to_position
-      |> Position.add(unit.pose)
-    %{unit | position: position}
+  def set_position(%__MODULE__{} = unit, %Size{} = _margin) do
+    unit
   end
 
   def get_motion_range(%__MODULE__{pose: pose}, trim_angle \\ 0) do
