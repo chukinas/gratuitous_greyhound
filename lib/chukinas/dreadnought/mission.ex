@@ -40,11 +40,6 @@ defmodule Mission do
     mission.decks |> ById.get(id)
   end
 
-  def segment(%__module__{} = mission, unit_id, segment_id) do
-    mission.segments
-    |> Enum.find(fn seg -> Segment.match?(seg, unit_id, segment_id) end)
-  end
-
   # TODO use the bang on the other getters that need it
   def arena!(%__MODULE__{arena: nil}), do: raise "Error: no arena has been set!"
   def arena!(%__MODULE__{arena: arena}), do: arena
@@ -142,7 +137,7 @@ defmodule Mission do
 
   def move_unit_to(%__MODULE__{} = mission, position, path_type \\ :straight) do
     path = Path.get_connecting_path(mission.unit.pose, position)
-    unit = Unit.move_along_path(mission.unit, path, mission.margin)
+    unit = Unit.move_along_path(mission.unit, path)
     trim_angle = cond do
       path_type == :sharp_turn and path.angle > 0
         -> 30

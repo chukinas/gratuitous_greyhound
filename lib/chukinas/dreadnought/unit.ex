@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Unit, ById}
-alias Chukinas.Geometry.{Pose, Size, Position, Turn, Straight, Polygon, Path}
+alias Chukinas.Geometry.{Pose, Position, Turn, Straight, Polygon, Path}
 alias Chukinas.Svg
 
 defmodule Unit do
@@ -18,7 +18,6 @@ defmodule Unit do
     # ID must be unique within the world
     field :id, integer()
     field :pose, Pose.t()
-    # TODO rename eg previous_path_svg_string ... or something shorter
     field :maneuver_svg_string, String.t()
     field :form, any(), default: form("red_ship_2")
   end
@@ -44,22 +43,16 @@ defmodule Unit do
     %{unit | segments: segments}
   end
 
-  def move_along_path(unit, path, margin) do
+  def move_along_path(unit, path) do
     unit
-    |> set_pose(Path.get_end_pose(path), margin)
+    |> set_pose(Path.get_end_pose(path))
     |> Map.put(:maneuver_svg_string, Svg.get_path_string(path))
     # TODO I don't like how nested these are.
   end
 
   # TODO can these two be private?
-  def set_pose(unit, pose, _margin) do
-    %{unit | pose: pose}# |> set_position(margin)
-  end
-
-  # TODO This is no longer needed
-  # TODO therefore, 'set pose' above does not need margin?
-  def set_position(%__MODULE__{} = unit, %Size{} = _margin) do
-    unit
+  def set_pose(unit, pose) do
+    %{unit | pose: pose}
   end
 
   def get_motion_range(%__MODULE__{pose: pose}, trim_angle \\ 0) do
