@@ -1,13 +1,12 @@
 <%# Unit 3 Template %>
+<%# This unit_form should be calculated at game start and included in unit map %>
 <% unit_form = ChukinasWeb.DreadnoughtView.unit "red_ship_2" %>
 <div
   id="unit-<%= @unit.id %>"
   class="absolute"
   style="
-    left: <%= @margin.width - unit_form.rect.half_width %>px;
-    top: <%= @margin.height - unit_form.rect.half_height %>px; 
-    _left: <%= @unit.position.x %>px;
-    _top: <%= @unit.position.y %>px; 
+    left: <%= @margin.width + @unit.pose.x - unit_form.rect.half_width %>px;
+    top: <%= @margin.height + @unit.pose.y - unit_form.rect.half_height %>px; 
     transform: rotate(<%= @unit.pose.angle %>deg);
   "
   phx-hook="Unit"
@@ -25,21 +24,16 @@
       width="<%= unit_form.image_size_x %>"
       src="<%= Routes.static_path @socket, unit_form.static_path %>"
       style="
-             clip-path:url(#unit-<%= @unit.id %>-mask);
-             left:<%= -unit_form.rect.x %>px;
-             top:<%= -unit_form.rect.y %>px;
-             "
-      >
-
+        clip-path:url(#unit-<%= @unit.id %>-mask);
+        left:<%= -unit_form.rect.x %>px;
+        top:<%= -unit_form.rect.y %>px;
+      "
+    >
     <svg width="0" height="0">
       <defs>
         <clipPath id="unit-<%= @unit.id %>-mask">
-          <path
-          <%# TODO remove %>
-             style="stroke:#000000;"
-             d="<%= unit_form.svg_path %>"
-             id="unit-<%= @unit.id %>-mask"
-          />
+        <%# TODO rename clip_path %>
+          <path d="<%= unit_form.svg_path %>" />
         </clipPath>
       </defs>
     </svg>

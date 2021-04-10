@@ -74,6 +74,8 @@ defmodule Unit do
     %{unit | pose: pose} |> set_position(margin)
   end
 
+  # TODO This is no longer needed
+  # TODO therefore, 'set pose' above does not need margin?
   def set_position(%__MODULE__{} = unit, %Size{} = margin) do
     position =
       margin
