@@ -1,18 +1,18 @@
 <%# Unit 3 Template %>
+<% unit_form = ChukinasWeb.DreadnoughtView.unit "red_ship_2" %>
 <div
   id="unit-<%= @unit.id %>"
   class="absolute"
   style="
-    left: <%= @margin.width %>px;
-    top: <%= @margin.height %>px; 
+    left: <%= @margin.width - unit_form.rect.half_width %>px;
+    top: <%= @margin.height - unit_form.rect.half_height %>px; 
     _left: <%= @unit.position.x %>px;
     _top: <%= @unit.position.y %>px; 
-    _transform: rotate(<%= @unit.pose.angle %>deg);
+    transform: rotate(<%= @unit.pose.angle %>deg);
   "
   phx-hook="Unit"
   <%= if @game_over?, do: "data-gameover=true" %>
 >
-  <% unit_form = ChukinasWeb.DreadnoughtView.unit "red_ship_2" %>
   <div 
     class="relative"
     style="
