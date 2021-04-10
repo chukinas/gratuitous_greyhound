@@ -35,7 +35,4 @@ defmodule MissionBuilder do
     |> Mission.set_unit(unit)
     |> Mission.calc_command_squares(motion_range_polygon)
   end
-
-  # TODO no longer needed
-  def from_live_action(_live_action), do: grid_lab()
 end

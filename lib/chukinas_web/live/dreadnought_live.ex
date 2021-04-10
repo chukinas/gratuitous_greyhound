@@ -8,7 +8,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
   @impl true
   def mount(_params, _session, socket) do
     mission =
-      MissionBuilder.from_live_action(socket.assigns.live_action)
+      MissionBuilder.grid_lab()
     socket =
       socket
       |> assign(page_title: "Dreadnought")
@@ -41,7 +41,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
       socket
       |> put_flash(:info, "You have no available moves! Play again.")
     mission =
-      MissionBuilder.from_live_action(socket.assigns.live_action)
+      MissionBuilder.grid_lab()
     send_update Dreadnought.DynamicWorldComponent, id: :dynamic_world, mission: mission
     {:noreply, socket}
   end
@@ -63,7 +63,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
   @impl true
   def handle_info(:reset_mission, socket) do
     mission =
-      MissionBuilder.from_live_action(socket.assigns.live_action)
+      MissionBuilder.grid_lab()
     send_update Dreadnought.DynamicWorldComponent, id: :dynamic_world, mission: mission
     {:noreply, socket}
   end
