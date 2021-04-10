@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Unit, Mission, ById, Segment, CommandIds, Island}
+alias Chukinas.Dreadnought.{Unit, Mission, ById, CommandIds, Island}
 alias Chukinas.Geometry.{Rect, Grid, GridSquare, Size, Collide, Path}
 
 defmodule Mission do
@@ -19,7 +19,6 @@ defmodule Mission do
     field :islands, [Island.t()], default: []
     # Unused. maybe delete later
     field :units, [Unit.t()], default: []
-    field :segments, [Segment.t()], default: []
   end
 
   # *** *******************************
@@ -50,9 +49,6 @@ defmodule Mission do
   # TODO get rid of this one
   def set_arena(%__MODULE__{} = mission, %Rect{} = arena) do
     %{mission | arena: arena}
-  end
-  def set_segments(%__MODULE__{} = mission, segments) do
-    %{mission | segments: segments}
   end
 
   def set_grid(mission, square_size, x_count, y_count, %Size{} = margin) do
