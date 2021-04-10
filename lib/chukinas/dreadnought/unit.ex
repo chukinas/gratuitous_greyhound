@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Unit, Segment, ById}
+alias Chukinas.Dreadnought.{Unit, ById}
 alias Chukinas.Geometry.{Pose, Size, Position, Turn, Straight, Polygon, Path}
 alias Chukinas.Svg
 
@@ -18,7 +18,6 @@ defmodule Unit do
     # ID must be unique within the world
     field :id, integer()
     field :pose, Pose.t()
-    field :segments, [Segment.t()], default: []
     # TODO rename eg previous_path_svg_string ... or something shorter
     field :maneuver_svg_string, String.t()
     field :form, any(), default: form("red_ship_2")
