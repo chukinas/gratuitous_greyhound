@@ -33,7 +33,7 @@ defmodule Unit do
     field :start_pose, Pose.t()
     field :segments, [Segment.t()], default: []
     # TODO rename eg previous_path_svg_string ... or something shorter
-    field :path_string, String.t()
+    field :maneuver_svg_string, String.t()
     field :form, any(), default: form("red_ship_2")
   end
 
@@ -41,15 +41,7 @@ defmodule Unit do
   # *** NEW
 
   def new(id, opts \\ []) do
-    fields =
-      # TODO I don't like having a default start pose. Make it explicit.
-      [
-        pose: Pose.new(0, 0, 45),
-        start_pose: Pose.new(0, 0, 45)
-      ]
-      |> Keyword.merge(opts)
-      |> Keyword.put(:id, id)
-    struct(__MODULE__, fields)
+    struct(__MODULE__, Keyword.put(opts, :id, id))
   end
 
   # *** *******************************
@@ -69,7 +61,7 @@ defmodule Unit do
   def move_along_path(unit, path, margin) do
     unit
     |> set_pose(Path.get_end_pose(path), margin)
-    |> Map.put(:path_string, Svg.get_path_string(path))
+    |> Map.put(:maneuver_svg_string, Svg.get_path_string(path))
     # TODO I don't like how nested these are.
   end
 
@@ -112,7 +104,7 @@ defmodule Unit do
   defimpl Inspect do
     import Inspect.Algebra
     def inspect(unit, opts) do
-      unit_map = unit |> Map.take([:id, :pose, :path_string])
+      unit_map = unit |> Map.take([:id, :pose, :maneuver_svg_string])
       concat ["#Unit<", to_doc(unit_map, opts), ">"]
     end
   end
