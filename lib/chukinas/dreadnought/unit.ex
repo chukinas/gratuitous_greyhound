@@ -7,7 +7,10 @@ defmodule Unit do
   Represents a ship or some other combat unit
   """
 
+  import Unit.Builder
+
   # Remove redundancy
+  # TODO no longer needed
   @size Size.new 140, 40
   # @dims %{
   #   to_bow: 30,
@@ -31,6 +34,7 @@ defmodule Unit do
     field :segments, [Segment.t()], default: []
     # TODO rename eg previous_path_svg_string ... or something shorter
     field :path_string, String.t()
+    field :form, any(), default: form("red_ship_2")
   end
 
   # *** *******************************
