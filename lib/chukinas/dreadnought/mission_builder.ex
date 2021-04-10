@@ -3,8 +3,7 @@ alias Chukinas.Geometry.{Pose, Size, Position}
 
 defmodule MissionBuilder do
 
-  # TODO rename
-  def grid_lab do
+  def build do
     # Config
     square_size = 50
     arena = %{
