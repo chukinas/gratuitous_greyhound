@@ -17,6 +17,61 @@ defmodule ChukinasWeb.DreadnoughtView do
       |> Map.put(:inner_content, block)
     render template, assigns
   end
+
+  def unit("red_ship_2") do
+    mymap = %{
+      mounts: [
+        %{
+          id: 1,
+          type: :turret,
+          x: 70,
+          y: 44
+        },
+        %{
+          id: 2,
+          type: :turret,
+          x: 22,
+          y: 44
+        }
+      ],
+      static_path: "images/markerAndPencilShips_small.png",
+      image_size_x: 122,
+      image_size_y: 57,
+      svg_path: "M 73,56 49,56 22,57 2,52 0,38 19,28 l 52,2 20,6 9,7 0,5 z",
+      center_x: 68,
+      center_y: 44,
+      min_x: 0,
+      max_x: 100,
+      min_y: 20,
+      max_y: 57
+    }
+    add_centered_bounding_rect mymap
+  end
+
+  def add_centered_bounding_rect(item) when is_map(item) do
+    # Returns a box whose center shares the item's center
+    size_x = max(
+      abs(item.center_x - item.min_x),
+      abs(item.center_x - item.max_x)
+    )
+    |> ceil
+    |> double
+    size_y = max(
+      abs(item.center_y - item.min_y),
+      abs(item.center_y - item.max_y)
+    )
+    |> ceil
+    |> double
+    rect = %{
+      x: round(item.center_x - size_x / 2),
+      y: round(item.center_y - size_y / 2),
+      width: size_x,
+      height: size_y
+    }
+    Map.put item, :rect, rect
+  end
+
+  def double(val), do: 2 * val
 end
 
 # https://bernheisel.com/blog/phoenix-liveview-and-views
