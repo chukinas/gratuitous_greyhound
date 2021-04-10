@@ -78,6 +78,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
     <%= ChukinasWeb.DreadnoughtView.render "unit3.html",
       socket: @socket,
       unit: @mission.unit,
+      margin: @mission.margin,
       game_over?: @mission.game_over? %>
     """
   end

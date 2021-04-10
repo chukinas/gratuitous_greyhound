@@ -3,9 +3,11 @@
   id="unit-<%= @unit.id %>"
   class="absolute"
   style="
-    top: <%= @unit.position.y %>px; 
-    left: <%= @unit.position.x %>px;
-    transform: rotate(<%= @unit.pose.angle %>deg);
+    left: <%= @margin.width %>px;
+    top: <%= @margin.height %>px; 
+    _left: <%= @unit.position.x %>px;
+    _top: <%= @unit.position.y %>px; 
+    _transform: rotate(<%= @unit.pose.angle %>deg);
   "
   phx-hook="Unit"
   <%= if @game_over?, do: "data-gameover=true" %>
@@ -13,13 +15,20 @@
   <% unit_form = ChukinasWeb.DreadnoughtView.unit "red_ship_2" %>
   <div 
     class="relative"
-    style="width:667px;height:314px;"
+    style="
+      width:<%= unit_form.rect.width %>px;
+      height:<%= unit_form.rect.height %>px;
+    "
   >
     <img 
       class="absolute shadow"
       width="<%= unit_form.image_size_x %>"
       src="<%= Routes.static_path @socket, unit_form.static_path %>"
-      style="clip-path:url(#unit-<%= @unit.id %>-mask);"
+      style="
+             clip-path:url(#unit-<%= @unit.id %>-mask);
+             left:<%= -unit_form.rect.x %>px;
+             top:<%= -unit_form.rect.y %>px;
+             "
       >
 
     <svg width="0" height="0">
