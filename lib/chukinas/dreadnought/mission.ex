@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Unit, Mission, ById, CommandQueue, Segment, CommandIds, Island}
+alias Chukinas.Dreadnought.{Unit, Mission, ById, Segment, CommandIds, Island}
 alias Chukinas.Geometry.{Rect, Grid, GridSquare, Size, Collide, Path}
 
 defmodule Mission do
@@ -20,7 +20,6 @@ defmodule Mission do
     # Unused. maybe delete later
     field :units, [Unit.t()], default: []
     field :segments, [Segment.t()], default: []
-    field :hand, [Command.t()], default: []
   end
 
   # *** *******************************
