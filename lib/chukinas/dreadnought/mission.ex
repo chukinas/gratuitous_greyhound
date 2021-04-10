@@ -99,35 +99,12 @@ defmodule Mission do
     %{mission | squares: colliding_squares}
   end
 
-  def issue_command(%__MODULE__{} = mission, %CommandIds{} = cmd) do
-    deck =
-      mission
-      |> deck(cmd)
-      |> CommandQueue.issue_command(cmd)
-    start_pose = mission |> unit(cmd) |> Unit.start_pose()
-    segments = CommandQueue.build_segments(deck, start_pose, mission.arena)
-    mission
-    |> push(deck)
-    |> set_segments(segments)
-  end
-
   def select_command(%__MODULE__{decks: [deck]} = mission, _player_id, command_id) when is_integer(command_id) do
     deck =
       deck
       |> CommandQueue.select_command(command_id)
     mission
     |> Mission.put(deck)
-  end
-
-  def issue_selected_command(%__MODULE__{decks: [deck]} = mission, step_id) when is_integer(step_id) do
-    deck =
-      deck
-      |> CommandQueue.issue_selected_command(step_id)
-    start_pose = mission |> unit(2) |> Unit.start_pose()
-    segments = CommandQueue.build_segments(deck, start_pose, mission.arena)
-    mission
-    |> put(deck)
-    |> set_segments(segments)
   end
 
   def build_view(%__MODULE__{decks: [deck | []]} = mission) do

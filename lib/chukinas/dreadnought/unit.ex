@@ -30,29 +30,13 @@ defmodule Unit do
   end
 
   # *** *******************************
-  # *** GETTERS
-
-  def id(unit), do: unit.id
-  def start_pose(unit), do: unit.start_pose
-  def segment(unit, id), do: unit.segments |> ById.get(id)
-
-  # *** *******************************
   # *** API
 
-  def set_segments(unit, segments) do
-    %{unit | segments: segments}
-  end
-
   def move_along_path(unit, path) do
-    unit
-    |> set_pose(Path.get_end_pose(path))
-    |> Map.put(:maneuver_svg_string, Svg.get_path_string(path))
-    # TODO I don't like how nested these are.
-  end
-
-  # TODO can these two be private?
-  def set_pose(unit, pose) do
-    %{unit | pose: pose}
+    %{unit |
+      pose: Path.get_end_pose(path),
+      maneuver_svg_string: Svg.get_path_string(path)
+    }
   end
 
   def get_motion_range(%__MODULE__{pose: pose}, trim_angle \\ 0) do
