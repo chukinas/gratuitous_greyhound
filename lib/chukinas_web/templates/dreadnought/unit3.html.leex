@@ -10,27 +10,41 @@
   phx-hook="Unit"
   <%= if @game_over?, do: "data-gameover=true" %>
 >
-<div 
-  class="relative"
-  style="width:667px;height:314px"
+  <div 
+    class="relative"
+    style="width:667px;height:314px"
   >
     <img 
-       class="absolute"
+      class="absolute shadow"
+      width="667"
+      src="<%= Routes.static_path @socket, "/images/markerAndPencilShips_small.png" %>"
+      style=" clip-path: url(#myClip);"
+      >
 
-       src="<%= Routes.static_path @socket, "/images/markerAndPencilShips_small.png" %>"
-       >
+      <svg width="0" height="0">
+  <defs>
+    <clipPath id="myClip">
+      <path
+         style="stroke:#000000;"
+         d="m 403,308 -133,0 -144,4 -112,-27 -10,-77 108,-54 282,9 109,34 42,36 1,26 z"
+         id="unit-<%= @unit.id %>-mask"
+      />
+    </clipPath>
+  </defs>
+</svg>
+
     <svg
       width="667"
       height="314"
       version="1.1"
       viewBox="0 0 667 314"
       xmlns="http://www.w3.org/2000/svg"
-      class="absolute"
+      class="absolute hidden"
     >
-      <path
-         style="stroke:#000000;"
+      <patsrath
          d="m 403,308 -133,0 -144,4 -112,-27 -10,-77 108,-54 282,9 109,34 42,36 1,26 z"
-         id="shipLarge" />
+         id="unit-<%= @unit.id %>-mask"
+      />
     </svg>
   </div>
 </div>
