@@ -10,41 +10,29 @@
   phx-hook="Unit"
   <%= if @game_over?, do: "data-gameover=true" %>
 >
+  <% unit_form = ChukinasWeb.DreadnoughtView.unit "red_ship_2" %>
   <div 
     class="relative"
     style="width:667px;height:314px;"
   >
     <img 
       class="absolute shadow"
-      width="667"
-      src="<%= Routes.static_path @socket, "/images/markerAndPencilShips_small.png" %>"
-      style=" clip-path: url(#myClip);"
+      width="<%= unit_form.image_size_x %>"
+      src="<%= Routes.static_path @socket, unit_form.static_path %>"
+      style="clip-path:url(#unit-<%= @unit.id %>-mask);"
       >
 
-      <svg width="0" height="0">
-  <defs>
-    <clipPath id="myClip">
-      <path
-         style="stroke:#000000;"
-         d="m 403,308 -133,0 -144,4 -112,-27 -10,-77 108,-54 282,9 109,34 42,36 1,26 z"
-         id="unit-<%= @unit.id %>-mask"
-      />
-    </clipPath>
-  </defs>
-</svg>
-
-    <svg
-      width="667"
-      height="314"
-      version="1.1"
-      viewBox="0 0 667 314"
-      xmlns="http://www.w3.org/2000/svg"
-      class="absolute hidden"
-    >
-      <patsrath
-         d="m 403,308 -133,0 -144,4 -112,-27 -10,-77 108,-54 282,9 109,34 42,36 1,26 z"
-         id="unit-<%= @unit.id %>-mask"
-      />
+    <svg width="0" height="0">
+      <defs>
+        <clipPath id="unit-<%= @unit.id %>-mask">
+          <path
+          <%# TODO remove %>
+             style="stroke:#000000;"
+             d="<%= unit_form.svg_path %>"
+             id="unit-<%= @unit.id %>-mask"
+          />
+        </clipPath>
+      </defs>
     </svg>
   </div>
 </div>
