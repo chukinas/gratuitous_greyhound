@@ -69,18 +69,15 @@ defmodule Mission do
   # *** *******************************
   # *** API
 
-  # TODO rename set colliding squares?
-  def set_overlapping_squares(mission, command_zone) do
-    colliding_squares =
+  def calc_command_squares(mission, command_zone) do
+    command_squares =
       mission.grid
       |> Grid.squares(include: command_zone, exclude: mission.islands)
       |> Stream.map(&GridSquare.calc_path(&1, mission.unit.pose))
       |> Stream.filter(&Collide.avoids?(&1.path, mission.islands))
       |> Enum.to_list
-    %{mission | squares: colliding_squares}
+    %{mission | squares: command_squares}
   end
-
-  def build_view(%__MODULE__{} = mission), do: mission
 
   def move_unit_to(%__MODULE__{} = mission, position, path_type \\ :straight) do
     path = Path.get_connecting_path(mission.unit.pose, position)
@@ -96,7 +93,7 @@ defmodule Mission do
     motion_range_polygon = Unit.get_motion_range(unit, trim_angle)
     mission
     |> Mission.set_unit(unit)
-    |> Mission.set_overlapping_squares(motion_range_polygon)
+    |> Mission.calc_command_squares(motion_range_polygon)
   end
 
   def game_over?(mission), do: Enum.empty? mission.squares

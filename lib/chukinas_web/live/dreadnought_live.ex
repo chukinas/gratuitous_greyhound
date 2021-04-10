@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{MissionBuilder, Mission}
+alias Chukinas.Dreadnought.{MissionBuilder}
 
 defmodule ChukinasWeb.DreadnoughtLive do
   use ChukinasWeb, :live_view
@@ -9,7 +9,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
   def mount(_params, _session, socket) do
     mission =
       MissionBuilder.from_live_action(socket.assigns.live_action)
-      |> Mission.build_view
     socket =
       socket
       |> assign(page_title: "Dreadnought")
@@ -21,7 +20,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
   @impl true
   def handle_params(_params, url, socket) do
     socket = case socket.assigns.live_action do
-      :play -> assign(socket, :mission, MissionBuilder.demo |> Mission.build_view)
+      :play -> assign(socket, :mission, MissionBuilder.grid_lab)
       _ -> socket
     end
     if String.ends_with?(url, "dreadnought/") or String.ends_with?(url, "dreadnought") do
@@ -37,33 +36,14 @@ defmodule ChukinasWeb.DreadnoughtLive do
   end
 
   @impl true
-  def handle_event("select_command", %{"id" => id}, socket) do
-    socket.assigns.mission
-    |> Mission.select_command(socket.assigns.player_id, String.to_integer(id))
-    |> assign_mission(socket)
-  end
-
-  @impl true
-  def handle_event("issue_command", %{"step_id" => step_id}, socket) do
-    socket.assigns.mission
-    |> Mission.issue_selected_command(step_id)
-    |> assign_mission(socket)
-  end
-
-  @impl true
   def handle_event("game_over", _, socket) do
     socket =
       socket
       |> put_flash(:info, "You have no available moves! Play again.")
     mission =
       MissionBuilder.from_live_action(socket.assigns.live_action)
-      |> Mission.build_view
     send_update Dreadnought.DynamicWorldComponent, id: :dynamic_world, mission: mission
     {:noreply, socket}
-  end
-
-  defp assign_mission(mission, socket) do
-    {:noreply, assign(socket, :mission, mission |> Mission.build_view)}
   end
 
   def issue_link(title, number) do
@@ -84,7 +64,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
   def handle_info(:reset_mission, socket) do
     mission =
       MissionBuilder.from_live_action(socket.assigns.live_action)
-      |> Mission.build_view
     send_update Dreadnought.DynamicWorldComponent, id: :dynamic_world, mission: mission
     {:noreply, socket}
   end

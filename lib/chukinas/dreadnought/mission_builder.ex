@@ -3,6 +3,7 @@ alias Chukinas.Geometry.{Pose, Size, Position}
 
 defmodule MissionBuilder do
 
+  # TODO rename
   def grid_lab do
     # Config
     square_size = 50
@@ -32,7 +33,7 @@ defmodule MissionBuilder do
     |> Mission.set_grid(square_size, round(arena.width / square_size), round(arena.height / square_size), margin)
     |> Map.put(:islands, islands)
     |> Mission.set_unit(unit)
-    |> Mission.set_overlapping_squares(motion_range_polygon)
+    |> Mission.calc_command_squares(motion_range_polygon)
   end
 
   # TODO no longer needed
