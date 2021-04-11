@@ -56,6 +56,13 @@ function fromEvent(ev) {
   }
 }
 
+function fromRectPosition(rect) {
+  return {
+    x: rect.x,
+    y: rect.y
+  }
+}
+
 function isApproxZero(coord) {
   return Math.abs(coord.x) < 1 & Math.abs(coord.y) < 1
 }
@@ -77,5 +84,6 @@ export const Coord = {
   fromEvent,
   isApproxZero,
   build,
-  toString
+  toString,
+  fromRectPosition,
 }

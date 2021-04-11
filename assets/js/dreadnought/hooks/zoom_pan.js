@@ -319,6 +319,11 @@ const ZoomPanContainer = {
 const ZoomPanCover = {
   mounted() {
     elZoomPanCover = this.el
+    gsap.set(elZoomPanCover, {
+      x: -90,
+      y: -120,
+      scale: 1.05
+    })
     // TODO temp
     // elZoomPanCover.onclick = (ev) => console.log(ev)
   }
@@ -344,6 +349,40 @@ const ButtonFitArena = {
   }
 }
 
+function getRandScale() {
+  const min = .75
+  const max = 1.2
+  return Math.random() * (max - min) + min
+}
+
+const ButtonRight = {
+  mounted() {
+    this.el.onclick = () => {
+      setRedboxPosition()
+      setTransformOrigin()
+      // gsap.to("#redbox", {
+      //   x: "+=50px",
+      // })
+      const arenaPos = getTransformOrigin()
+      const moveToCorner = Coord.multiply(arenaPos, -1)
+      const fromCornerToRedStart = Coord.add(moveToCorner, getRedboxPosition())
+      const fromRedStartTo50 = Coord.add(fromCornerToRedStart, Coord.build(50,0))
+      console.log(arenaPos)
+      console.log(getRedboxPosition())
+
+      //setRedboxPosition()
+      gsap.to(elZoomPanCover, {
+        ...fromCornerToRedStart,
+        transformOrigin: Coord.toString(arenaPos),
+        //x: -transformOrigin.x + redboxPosition.x + 50,
+        //y: -transformOrigin.y + redboxPosition.y,
+        //scale: getRandScale(),
+        //transformOrigin: Coord.toString(transformOrigin),
+      })
+    }
+  }
+}
+
 const ButtonZoomIn = {
   mounted() {
     this.el.onclick = zoomIn
@@ -361,22 +400,38 @@ const ButtonZoomIn = {
 }
 
 // TODO Pinch
-//let transformOrigin
+// let transformOrigin
+// let redboxPosition
+// 
+// function getRedboxPosition() {
+//   const redboxRect = document.getElementById("redbox")
+//     .getBoundingClientRect()
+//   return Coord.fromRectPosition(redboxRect)
+// }
+// 
+// function setRedboxPosition() {
+//   redboxPosition = getRedboxPosition()
+// }
+// 
+// function getTransformOrigin() {
+//   return MotionPathPlugin.getRelativePosition(
+//     elZoomPanCover,
+//     elZoomPanContainer,
+//     Coord.origin(),
+//     getRedboxPosition()
+//   )
+// }
+// 
+// function setTransformOrigin() {
+//   transformOrigin = getTransformOrigin()
+// }
+
 
 const ButtonZoomOut = {
   mounted() {
     this.el.onclick = zoomOut
-    // TODO Pinch
-    // const pos = Coord.build(300, 300)
-    // transformOrigin = MotionPathPlugin.getRelativePosition(
-    //   elZoomPanCover,
-    //   elZoomPanContainer,
-    //   Coord.origin(),
-    //   pos
-    // )
-    // console.log(elZoomPanContainer, elZoomPanCover)
+    // setTransformOrigin()
     // this.el.onclick = () => {
-    //   console.table(transformOrigin)
     //   gsap.to(elZoomPanCover, {
     //     x: 300,
     //     y: 300,
@@ -386,5 +441,16 @@ const ButtonZoomOut = {
     // }
   }
 }
+
 // TODO rename file zoomPan.js
-export default { ZoomPanContainer, ZoomPanCover, ZoomPanFit, ButtonFitArena, ButtonZoomIn, ButtonZoomOut }
+export default { 
+  ZoomPanContainer, 
+  ZoomPanCover, 
+  ZoomPanFit, 
+  ButtonFitArena, 
+  ButtonZoomIn, 
+  ButtonZoomOut ,
+  ButtonRight,
+  // ButtonUp, ButtonDown, 
+  // ButtonLeft
+}
