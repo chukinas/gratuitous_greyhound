@@ -303,7 +303,7 @@ const ZoomPanContainer = {
       clearPositionAndZoom: resetData
     })
     // TODO rename
-    //setTimeout(() => fitArena({zeroDuration: true})) 
+    setTimeout(() => fitArena({zeroDuration: true})) 
   },
   // updated() {
   //   setTimeout(() => fitArena({zeroDuration: true})) 
@@ -334,28 +334,29 @@ const ZoomPanFit = {
 const ButtonFitArena = {
   mounted() {
     // TODO rename fit
-    //this.el.onclick = fitArena
-    this.el.onclick = () => {
-      gsap.to(elZoomPanCover, {
-        x: "+=25px",
-        y: "+=25px",
-      })
-    }
+    this.el.onclick = fitArena
+    //this.el.onclick = () => {
+    //  gsap.to(elZoomPanCover, {
+    //    x: "+=25px",
+    //    y: "+=25px",
+    //  })
+    //}
   }
 }
 
 const ButtonZoomIn = {
   mounted() {
-    //this.el.onclick = zoomIn
-    this.el.onclick = () => {
-      console.table(transformOrigin)
-      gsap.to(elZoomPanCover, {
-        x: 0,
-        y: 0,
-        scale: "+=.1",
-        transformOrigin: Coord.toString(transformOrigin),
-      })
-    }
+    this.el.onclick = zoomIn
+    // TODO Pinch
+    // this.el.onclick = () => {
+    //   console.table(transformOrigin)
+    //   gsap.to(elZoomPanCover, {
+    //     x: 0,
+    //     y: 0,
+    //     scale: "+=.1",
+    //     transformOrigin: Coord.toString(transformOrigin),
+    //   })
+    // }
   }
 }
 
@@ -363,24 +364,25 @@ let transformOrigin
 
 const ButtonZoomOut = {
   mounted() {
-    const pos = Coord.build(300, 300)
-    transformOrigin = MotionPathPlugin.getRelativePosition(
-      elZoomPanCover,
-      elZoomPanContainer,
-      Coord.origin(),
-      pos
-    )
-    console.log(elZoomPanContainer, elZoomPanCover)
-    //this.el.onclick = zoomOut
-    this.el.onclick = () => {
-      console.table(transformOrigin)
-      gsap.to(elZoomPanCover, {
-        x: 300,
-        y: 300,
-        scale: "-=.1",
-        transformOrigin: Coord.toString(transformOrigin),
-      })
-    }
+    this.el.onclick = zoomOut
+    // TODO Pinch
+    // const pos = Coord.build(300, 300)
+    // transformOrigin = MotionPathPlugin.getRelativePosition(
+    //   elZoomPanCover,
+    //   elZoomPanContainer,
+    //   Coord.origin(),
+    //   pos
+    // )
+    // console.log(elZoomPanContainer, elZoomPanCover)
+    // this.el.onclick = () => {
+    //   console.table(transformOrigin)
+    //   gsap.to(elZoomPanCover, {
+    //     x: 300,
+    //     y: 300,
+    //     scale: "-=.1",
+    //     transformOrigin: Coord.toString(transformOrigin),
+    //   })
+    // }
   }
 }
 // TODO rename file zoomPan.js
