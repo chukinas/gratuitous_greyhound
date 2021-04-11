@@ -11,7 +11,7 @@ defmodule Spritesheet do
     for sprite <- spritesheet.sprites do
       sprite_name = sprite.clip_name
       def unquote(function_name)(unquote(sprite_name)) do
-        unquote(sprite_name)
+        unquote(Macro.escape(sprite))
       end
     end
   end

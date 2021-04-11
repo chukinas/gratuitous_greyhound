@@ -9,6 +9,6 @@ defmodule Chukinas.Dreadnought.SpritesheetTest do
     module = Spritesheet
     func = :test
     assert Keyword.has_key? module.__info__(:functions), func
-    assert "sprite_1" == Spritesheet.test("sprite_1")
+    assert is_map Spritesheet.test("sprite_1")
   end
 end
