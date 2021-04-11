@@ -1,8 +1,10 @@
+import { Gestures } from '../core/gestures.js'
+import { Coord } from '../core/coordinates.js'
+
 // --------------------------------------------------------
 // CONFIG
 
-const interval = 100 // pan debounce interval (ms)
-const duration = 0.2 // tween duration (ms)
+const DURATION = 0.2 // tween duration (ms)
 const scaleStep = 0.2
 const maxZoomInScale = 0.4
 const panMultiplier = 1.5
@@ -12,11 +14,16 @@ const panMultiplier = 1.5
 
 // Global vars to cache event state
 const gsap = window.gsap
-let panIntervalId
+
 // On PointerDown, save the current elZoomPanCover and pointer coords here:
-let atPanStart
-// On PointerMove, save pointer coord here:
-let pointerCoord
+const initialTransform = { }
+function resetData() {
+  // TODO there's gotta be a better name for this variable
+  initialTransform.x = null
+  initialTransform.y = null
+  initialTransform.scale = 1
+}
+resetData()
 
 // --------------------------------------------------------
 // DOM REFERENCES
@@ -39,59 +46,13 @@ let elZoomPanFit
 function getWorldRect() { return elZoomPanCover.getBoundingClientRect() }
 function getArenaRect() { return elZoomPanFit.getBoundingClientRect() }
 
-// --------------------------------------------------------
-// COORDINATES
-// These function each return an object with x, y keys.
-
-function coordOrigin() {
-  return {
-    scale: 1,
-    x: 0,
-    y: 0
-  }
-}
-
-function coordSubtract(coord1, coord2) {
-  const result = {
-    x: coord1.x - coord2.x,
-    y: coord1.y - coord2.y
-  }
-  return result
-}
-
-function coordAdd(coord1, coord2) {
-  return {
-    x: coord1.x + coord2.x,
-    y: coord1.y + coord2.y
-  }
-}
-
-function coordScalarMultiply(coord, multiplier) {
-  return {
-    x: coord.x * panMultiplier,
-    y: coord.y * panMultiplier
-  }
-}
-
-function coordFromEvent(ev) {
-  return {
-    x: ev.clientX,
-    y: ev.clientY
-  }
-}
-
-function coordFromTransformedElement(element) {
-  const coordAndScale = getCoordAndScale(element)
-  return { x: coordAndScale.x, y: coordAndScale.y }
-}
-
-function getCoordAndScale(element) {
+function getTransform(element) {
   // FROM: https://zellwk.com/blog/css-translate-values-in-javascript/
   const style = window.getComputedStyle(element)
   const matrix = style['transform'] || style.webkitTransform || style.mozTransform
   // No transform property. Simply return 0 values.
   if (matrix === 'none' || typeof matrix === 'undefined') {
-    return coordOrigin()
+    return { ...Coord.origin(), scale: 1 }
   }
   // Can either be 2d or 3d transform
   const matrixType = matrix.includes('3d') ? '3d' : '2d'
@@ -117,15 +78,12 @@ function getCoordAndScale(element) {
   }
 }
 
-function isCoordApproxZero(coord) {
-  return Math.abs(coord.x) < 1 & Math.abs(coord.y) < 1
-}
-
 // --------------------------------------------------------
 // FUNCTIONS
 
 function getCurrentScale() {
-  return getCoordAndScale(elZoomPanCover).scale
+  const val = getTransform(elZoomPanCover).scale
+  return val 
 }
 
 function zoomIn() {
@@ -133,9 +91,9 @@ function zoomIn() {
   const scale = Math.max(maxZoomInScale, currentScale + scaleStep)
   gsap.to(elZoomPanCover, {
     scale: "+=" + scaleStep,
-    duration,
+    duration: DURATION,
     ease: 'back',
-    onComplete: coverWorldContainer
+    //onComplete: coverWorldContainer
   })
 }
 
@@ -147,19 +105,19 @@ function zoomOut() {
     gsap.fromTo(elZoomPanCover, {
       scale: maxZoomOutScale * 0.95
     },{
-      duration,
+      duration: DURATION,
       scale: maxZoomOutScale,
       ease: 'back',
-      onComplete: coverWorldContainer
+      ////onComplete: coverWorldContainer
     })
   }
   else {
     const scale = Math.max(maxZoomOutScale, currentScale - scaleStep)
     gsap.to(elZoomPanCover, {
       scale,
-      duration,
+      duration: DURATION,
       ease: 'back',
-      onComplete: coverWorldContainer
+      //onComplete: coverWorldContainer
     })
   }
 }
@@ -193,7 +151,7 @@ function getFitScale(element) {
 
 function getElementOrigSize(element) {
   // TODO temp
-  return coordOrigin()
+  return Coord.origin()
 }
 
 // TODO rename
@@ -216,7 +174,7 @@ function fitArena(opts = {zeroDuration: false}) {
   const relCoord = getRelPosition(elZoomPanContainer, elZoomPanFit)
   const scale = Math.max(getFitScale(elZoomPanFit), getScaleToCover(elZoomPanCover))
   const isAlreadyAtFitScale = Math.abs(scale - getCurrentScale()) < 0.001
-  const isAlreadyCentered = isCoordApproxZero(relCoord)
+  const isAlreadyCentered = Coord.isApproxZero(relCoord)
   if (opts.zeroDuration) {
     gsap.set(elZoomPanCover, {
       scale,
@@ -227,29 +185,17 @@ function fitArena(opts = {zeroDuration: false}) {
   } else if (isAlreadyAtFitScale & isAlreadyCentered) {
     gsap.from(elZoomPanCover, {
       scale: scale * 0.95,
-      duration
+      duration: DURATION
     })
   } else {
     gsap.to(elZoomPanCover, {
       scale,
       x: "-=" + relCoord.x,
       y: "-=" + relCoord.y,
-      duration,
+      duration: DURATION,
       ease: "back"
     })
   }
-}
-
-function pan(onComplete) {
-  let panVector = coordSubtract(pointerCoord, atPanStart.pointerCoord)
-  panVector = coordScalarMultiply(panVector, panMultiplier)
-  const nextWorldCoord = coordAdd(atPanStart.worldCoord, panVector)
-  gsap.to(elZoomPanCover, {
-    ...nextWorldCoord,
-    ease: 'none',
-    duration,
-    onComplete
-  })
 }
 
 function coverWorldContainer() {
@@ -264,42 +210,67 @@ function coverWorldContainer() {
     y: tooFarTop || tooFarBottom || 0,
   }
   if (panVector.x || panVector.y) {
-    const currentWorldCoord = coordFromTransformedElement(elZoomPanCover)
+    const currentWorldCoord = getTransform(elZoomPanCover)
     gsap.to(elZoomPanCover, {
-      ...coordAdd(currentWorldCoord, panVector),
+      ...Coord.add(currentWorldCoord, panVector),
       ease: 'back',
-      duration
+      duration: DURATION
     })
   }
 }
 
+// Log events flag
+let logToElixir = () => {}
+function log(description, ev) {
+  logToElixir({
+    description,
+    pointerId: ev.pointerId,
+    pointerType: ev.pointerType,
+    isPrimary: ev.isPrimary,
+    coord: [ev.clientX, ev.clientY]
+  })
+} 
+
+function gestureIsIntended(ev) {
+  return ev.target.id == elZoomPanContainer.id
+}
+
+function onPointerDown(ev) {
+  if (gestureIsIntended(ev)) {
+    // elZoomPanContainer.setPointerCapture(ev.pointerId)
+    Gestures.down(ev)
+  }
+}
+
 // --------------------------------------------------------
-// EVENT HANDLERS
+// GESTURE CALLBACKS
 
-function pointerdown_handler(ev) {
-  pointerCoord = coordFromEvent(ev)
-  atPanStart = {
-    worldCoord: coordFromTransformedElement(elZoomPanCover),
-    pointerCoord
-  }
-  panIntervalId = window.setInterval(pan, interval)
-  elZoomPanContainer.setPointerCapture(ev.pointerId)
+function setPositionAndZoom() {
+  const transform = getTransform(elZoomPanCover)
+  initialTransform.x = transform.x
+  initialTransform.y = transform.y
+  initialTransform.scale = transform.scale
 }
 
-function pointermove_handler(ev) {
-  if (panIntervalId) {
-    pointerCoord = coordFromEvent(ev)
-  }
+function pan(vector) {
+  logToElixir({
+    title: "pan!!"
+  })
+  pinch(vector)
 }
 
-function pointerup_handler(ev) {
-  if (panIntervalId) {
-    pan(coverWorldContainer)
-    // Clear stuff
-    clearInterval(panIntervalId)
-    panIntervalId = null
-    atPanStart = null
-  }
+function pinch(vector, zoom = 1) {
+  const panVector = Coord.multiply(vector, panMultiplier)
+  const nextWorldCoord = Coord.add(initialTransform, panVector)
+  const scale = initialTransform.scale * zoom
+  logToElixir({
+    title: "pinch!!",
+    scale
+  })
+  gsap.to(elZoomPanCover, {
+    ...nextWorldCoord,
+    scale
+  })
 }
 
 // --------------------------------------------------------
@@ -307,34 +278,48 @@ function pointerup_handler(ev) {
 
 const ZoomPanContainer = {
   mounted() {
+    const me = this
     // Set DOM reference
     elZoomPanContainer = this.el
     // Set pointer event handlers
-    elZoomPanContainer.onpointerdown = pointerdown_handler;
-    elZoomPanContainer.onpointermove = pointermove_handler
-    elZoomPanContainer.onpointerup = pointerup_handler;
-    elZoomPanContainer.onpointercancel = pointerup_handler;
-    elZoomPanContainer.onpointerout = pointerup_handler;
-    elZoomPanContainer.onpointerleave = pointerup_handler;
+    elZoomPanContainer.onpointerdown = onPointerDown;
+    elZoomPanContainer.onpointermove = Gestures.move
+    elZoomPanContainer.onpointerup = Gestures.up;
+    elZoomPanContainer.onpointercancel = Gestures.up;
+    elZoomPanContainer.onpointerout = Gestures.up;
+    elZoomPanContainer.onpointerleave = Gestures.up;
+    logToElixir = (params) => {
+      me.pushEvent("log", params)
+    }
+    Gestures.setCallbacks({
+      logToElixir, 
+      setPositionAndZoom, 
+      pan, 
+      pinch, 
+      clearPositionAndZoom: resetData
+    })
     // TODO rename
     setTimeout(() => fitArena({zeroDuration: true})) 
-    
   },
-  updated() {
-    console.log("world updated!")
-    setTimeout(() => fitArena({zeroDuration: true})) 
-    //fitArena({zeroDuration: true})
-  },
-  destroyed() {
-    elZoomPanContainer = null;
-    elZoomPanCover = null;
-    elZoomPanFit = null;
-  }
+  // updated() {
+  //   setTimeout(() => fitArena({zeroDuration: true})) 
+  //   //fitArena({zeroDuration: true})
+  // },
+  // destroyed() {
+  //   elZoomPanContainer = null;
+  //   elZoomPanCover = null;
+  //   elZoomPanFit = null;
+  // }
 }
 
 const ZoomPanCover = {
   mounted() {
     elZoomPanCover = this.el
+    gsap.set(elZoomPanCover, {
+      x: -90,
+      y: -120,
+      scale: 1.05
+    })
   }
 }
 
@@ -349,19 +334,114 @@ const ButtonFitArena = {
   mounted() {
     // TODO rename fit
     this.el.onclick = fitArena
+    //this.el.onclick = () => {
+    //  gsap.to(elZoomPanCover, {
+    //    x: "+=25px",
+    //    y: "+=25px",
+    //  })
+    //}
+  }
+}
+
+function getRandScale() {
+  const min = .75
+  const max = 1.2
+  return Math.random() * (max - min) + min
+}
+
+const ButtonRight = {
+  mounted() {
+    this.el.onclick = () => {
+      setRedboxPosition()
+      setTransformOrigin()
+      // gsap.to("#redbox", {
+      //   x: "+=50px",
+      // })
+      const arenaPos = getTransformOrigin()
+      const moveToCorner = Coord.multiply(arenaPos, -1)
+      const fromCornerToRedStart = Coord.add(moveToCorner, getRedboxPosition())
+      const fromRedStartTo50 = Coord.add(fromCornerToRedStart, Coord.build(50,0))
+
+      //setRedboxPosition()
+      gsap.to(elZoomPanCover, {
+        ...fromCornerToRedStart,
+        transformOrigin: Coord.toString(arenaPos),
+        //x: -transformOrigin.x + redboxPosition.x + 50,
+        //y: -transformOrigin.y + redboxPosition.y,
+        //scale: getRandScale(),
+        //transformOrigin: Coord.toString(transformOrigin),
+      })
+    }
   }
 }
 
 const ButtonZoomIn = {
   mounted() {
     this.el.onclick = zoomIn
+    // TODO Pinch
+    // this.el.onclick = () => {
+    //   gsap.to(elZoomPanCover, {
+    //     x: 0,
+    //     y: 0,
+    //     scale: "+=.1",
+    //     transformOrigin: Coord.toString(transformOrigin),
+    //   })
+    // }
   }
 }
+
+// TODO Pinch
+// let transformOrigin
+// let redboxPosition
+// 
+// function getRedboxPosition() {
+//   const redboxRect = document.getElementById("redbox")
+//     .getBoundingClientRect()
+//   return Coord.fromRectPosition(redboxRect)
+// }
+// 
+// function setRedboxPosition() {
+//   redboxPosition = getRedboxPosition()
+// }
+// 
+// function getTransformOrigin() {
+//   return MotionPathPlugin.getRelativePosition(
+//     elZoomPanCover,
+//     elZoomPanContainer,
+//     Coord.origin(),
+//     getRedboxPosition()
+//   )
+// }
+// 
+// function setTransformOrigin() {
+//   transformOrigin = getTransformOrigin()
+// }
+
 
 const ButtonZoomOut = {
   mounted() {
     this.el.onclick = zoomOut
+    // setTransformOrigin()
+    // this.el.onclick = () => {
+    //   gsap.to(elZoomPanCover, {
+    //     x: 300,
+    //     y: 300,
+    //     scale: "-=.1",
+    //     transformOrigin: Coord.toString(transformOrigin),
+    //   })
+    // }
   }
 }
+
 // TODO rename file zoomPan.js
-export default { ZoomPanContainer, ZoomPanCover, ZoomPanFit, ButtonFitArena, ButtonZoomIn, ButtonZoomOut }
+export default { 
+  ZoomPanContainer, 
+  ZoomPanCover, 
+  ZoomPanFit, 
+  ButtonFitArena, 
+  ButtonZoomIn, 
+  ButtonZoomOut ,
+  ButtonRight,
+  // ButtonUp, ButtonDown, 
+  // ButtonLeft
+}

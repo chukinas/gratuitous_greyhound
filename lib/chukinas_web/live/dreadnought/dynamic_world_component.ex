@@ -50,7 +50,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
                 :straight -> "bg-green-400"
                 _ -> "bg-yellow-400"
               end %>
-              h-full rounded-sm bg-opacity-20
+              h-full rounded-sm bg-opacity-20 pointer-events-none
             "
           >
           </div>
@@ -60,7 +60,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
     </div>
     <svg
       id="svg_paths"
-      class="absolute pointer-event-none opacity-20"
+      class="absolute opacity-20"
       viewBox="0 0 <%= @mission.grid.width %> <%= @mission.grid.height %> "
       style="
         left: <%= @mission.margin.width %>px;

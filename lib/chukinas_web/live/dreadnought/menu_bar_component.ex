@@ -65,8 +65,12 @@ defmodule ChukinasWeb.Dreadnought.MenuBarComponent do
     buttons = [
       %{id: "zoomIn", name: "Zoom In", hook: "ButtonZoomIn", stateful?: false},
       %{id: "zoomOut", name: "Zoom Out", hook: "ButtonZoomOut", stateful?: false},
+      #%{id: "right", name: "Right", hook: "ButtonRight", stateful?: false},
+      # %{id: "down", name: "Down", hook: "ButtonDown", stateful?: false},
+      # %{id: "left", name: "Left", hook: "ButtonLeft", stateful?: false},
+      # %{id: "up", name: "Up", hook: "ButtonUp", stateful?: false},
       %{id: "fullScreen", name: "View Map", hook: "ButtonFitArena", stateful?: false},
-      %{id: "feedbackBtn", name: "Feedback", hook: nil, stateful?: true},
+      #%{id: "feedbackBtn", name: "Feedback", hook: nil, stateful?: true},
       # %{id: "about", name: "About", hook: "ButtonFitArena", stateful?: true},
     ]
     {:ok, assign(socket, buttons: buttons)}
