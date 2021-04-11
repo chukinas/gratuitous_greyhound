@@ -1,7 +1,7 @@
 ExUnit.start()
 
-# TODO rename Chukinas.SpritesheetTest?
-defmodule SpritesheetTest do
+defmodule Chukinas.Dreadnought.SpritesheetTest do
+
   use ExUnit.Case, async: true
   use DreadnoughtHelpers
 
@@ -9,5 +9,6 @@ defmodule SpritesheetTest do
     module = Spritesheet
     func = :test
     assert Keyword.has_key? module.__info__(:functions), func
+    assert "sprite_1" == Spritesheet.test("sprite_1")
   end
 end

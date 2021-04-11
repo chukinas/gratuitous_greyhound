@@ -180,17 +180,17 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="2560"
-     inkscape:window-height="1352"
+     inkscape:window-width="1280"
+     inkscape:window-height="669"
      id="namedview4"
      showgrid="false"
      inkscape:zoom="8.4620056"
      inkscape:cx="22.706801"
      inkscape:cy="32.4667"
      inkscape:window-x="2560"
-     inkscape:window-y="51"
+     inkscape:window-y="733"
      inkscape:window-maximized="0"
-     inkscape:current-layer="svg2"
+     inkscape:current-layer="layer10"
      inkscape:document-rotation="0"
      showguides="true"
      inkscape:guide-bbox="true"
@@ -210,13 +210,13 @@
       <image
          sodipodi:absref="/home/jc/projects/chukinas/assets/static/spritesheets/red.png"
          xlink:href="red.png"
-         width="122"
-         height="57"
-         preserveAspectRatio="none"
-         style="image-rendering:optimizeSpeed"
-         id="image1201"
+         y="0"
          x="0"
-         y="0" />
+         id="image1201"
+         style="image-rendering:optimizeSpeed"
+         preserveAspectRatio="none"
+         height="57"
+         width="122" />
     </g>
     <g
        inkscape:groupmode="layer"
@@ -401,18 +401,18 @@
       <image
          sodipodi:absref="/home/jc/projects/chukinas/assets/static/spritesheets/test.png"
          xlink:href="test.png"
-         y="13.903466"
-         x="41.94978"
-         id="image1034"
-         style="image-rendering:optimizeSpeed"
-         preserveAspectRatio="none"
+         width="33.333332"
          height="33.333332"
-         width="33.333332" />
+         preserveAspectRatio="none"
+         style="image-rendering:optimizeSpeed"
+         id="image1034"
+         x="41.94978"
+         y="13.903466" />
     </g>
     <g
        inkscape:groupmode="layer"
        id="layer10"
-       inkscape:label="test_clip_path2"
+       inkscape:label="sprite_2"
        sodipodi:insensitive="true">
       <path
          id="rect5067-2"
@@ -430,7 +430,7 @@
     <g
        inkscape:groupmode="layer"
        id="layer9"
-       inkscape:label="test_clip_path1"
+       inkscape:label="sprite_1"
        sodipodi:insensitive="true">
       <path
          id="rect5067"
