@@ -360,7 +360,8 @@ const ButtonZoomIn = {
   }
 }
 
-let transformOrigin
+// TODO Pinch
+//let transformOrigin
 
 const ButtonZoomOut = {
   mounted() {
