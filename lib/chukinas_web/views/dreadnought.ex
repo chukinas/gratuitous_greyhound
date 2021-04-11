@@ -17,6 +17,7 @@ defmodule ChukinasWeb.DreadnoughtView do
       |> Map.put(:inner_content, block)
     render template, assigns
   end
+
 end
 
 # https://bernheisel.com/blog/phoenix-liveview-and-views
