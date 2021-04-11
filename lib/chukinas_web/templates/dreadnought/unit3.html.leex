@@ -19,8 +19,8 @@
   >
     <img 
       class="absolute shadow"
-      width="<%= @unit.form.image_size_x %>"
-      src="<%= Routes.static_path @socket, @unit.form.static_path %>"
+      width="<%= @unit.form.image.size.width %>"
+      src="<%= Routes.static_path @socket, @unit.form.image.path %>"
       style="
         clip-path:url(#unit-<%= @unit.id %>-mask);
         left:<%= -@unit.form.rect.x %>px;

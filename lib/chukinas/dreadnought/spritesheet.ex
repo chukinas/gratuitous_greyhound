@@ -2,7 +2,7 @@ alias Chukinas.Dreadnought.Spritesheet
 
 defmodule Spritesheet do
 
-  @external_resource "assets/static/spritesheets/sprites.svg"
+  @external_resource "assets/static/images/spritesheets/sprites.svg"
 
   {:ok, svg_content} = File.read(@external_resource)
   svg_map = XmlToMap.naive_map(svg_content)

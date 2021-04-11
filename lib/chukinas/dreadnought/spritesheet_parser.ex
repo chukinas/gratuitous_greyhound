@@ -85,7 +85,7 @@ defmodule Parser do
   defp parse_marker(marker) do
     type = case get_label(marker) do
       "origin" -> %{type: :origin}
-      "mounting_" <> num -> %{type: :mounting, num: num}
+      "mounting_" <> id -> %{type: :mounting, id: id}
     end
     %{
       x: attr(marker, "cx"),
