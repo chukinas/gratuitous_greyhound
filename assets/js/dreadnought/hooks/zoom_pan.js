@@ -82,9 +82,7 @@ function getTransform(element) {
 // FUNCTIONS
 
 function getCurrentScale() {
-  console.log(getTransform(elZoomPanCover))
   const val = getTransform(elZoomPanCover).scale
-  console.log(val)
   return val 
 }
 
@@ -234,7 +232,6 @@ function log(description, ev) {
 } 
 
 function gestureIsIntended(ev) {
-  // console.log({ev, elZoomPanContainer})
   return ev.target.id == elZoomPanContainer.id
 }
 
@@ -250,7 +247,6 @@ function onPointerDown(ev) {
 
 function setPositionAndZoom() {
   const transform = getTransform(elZoomPanCover)
-  console.log(transform)
   initialTransform.x = transform.x
   initialTransform.y = transform.y
   initialTransform.scale = transform.scale
@@ -324,8 +320,6 @@ const ZoomPanCover = {
       y: -120,
       scale: 1.05
     })
-    // TODO temp
-    // elZoomPanCover.onclick = (ev) => console.log(ev)
   }
 }
 
@@ -367,8 +361,6 @@ const ButtonRight = {
       const moveToCorner = Coord.multiply(arenaPos, -1)
       const fromCornerToRedStart = Coord.add(moveToCorner, getRedboxPosition())
       const fromRedStartTo50 = Coord.add(fromCornerToRedStart, Coord.build(50,0))
-      console.log(arenaPos)
-      console.log(getRedboxPosition())
 
       //setRedboxPosition()
       gsap.to(elZoomPanCover, {
@@ -388,7 +380,6 @@ const ButtonZoomIn = {
     this.el.onclick = zoomIn
     // TODO Pinch
     // this.el.onclick = () => {
-    //   console.table(transformOrigin)
     //   gsap.to(elZoomPanCover, {
     //     x: 0,
     //     y: 0,

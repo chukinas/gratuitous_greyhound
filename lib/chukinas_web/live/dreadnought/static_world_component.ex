@@ -12,7 +12,8 @@ defmodule ChukinasWeb.Dreadnought.StaticWorldComponent do
     >
       <div
         id="world"
-        class="relative pointer-events-auto bg-cover TODOpointereventsnone"
+    <%# TODO Pinch %>
+        class="relative pointer-events-none bg-cover"
         style="width:<%= @mission.world.width %>px; height: <%= @mission.world.height %>px"
         phx-hook="ZoomPanCover"
       >
