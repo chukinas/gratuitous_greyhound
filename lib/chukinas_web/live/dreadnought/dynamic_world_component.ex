@@ -71,12 +71,14 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
     >
       <path
         id="lastPath"
-        d="<%= @mission.unit.path_string %>"
+        d="<%= @mission.unit.maneuver_svg_string %>"
         style="stroke-linejoin:round;stroke-width:20;stroke:#fff;fill:none"
       />
     </svg>
-    <%= ChukinasWeb.DreadnoughtView.render "unit2.html",
+    <%= ChukinasWeb.DreadnoughtView.render "unit3.html",
+      socket: @socket,
       unit: @mission.unit,
+      margin: @mission.margin,
       game_over?: @mission.game_over? %>
     """
   end
