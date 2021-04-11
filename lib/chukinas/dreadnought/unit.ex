@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Unit, ById}
+alias Chukinas.Dreadnought.{Unit}
 alias Chukinas.Geometry.{Pose, Position, Turn, Straight, Polygon, Path}
 alias Chukinas.Svg
 

@@ -2,12 +2,13 @@ alias Chukinas.Dreadnought.Spritesheet
 
 defmodule Spritesheet do
 
-  file_path = "assets/static/images/test.svg"
-  {:ok, svg_content} = File.read file_path
+  @external_resource "assets/static/spritesheets/clip_paths.svg"
+
+  {:ok, svg_content} = File.read(@external_resource)
   svg_map = XmlToMap.naive_map(svg_content)
-  for key <- Map.keys(svg_map["svg"]["#content"]["g"]["#content"]["path"]) do
-    def print_this(unquote(key)), do: IOP.inspect(unquote(key))
+  for spritesheet <- Spritesheet.Parser.parse_svg(svg_map) do
+
+    def unquote(spritesheet.image.path.root |> String.to_atom)(), do: :ok
   end
 
-  def test(), do: :ok
 end

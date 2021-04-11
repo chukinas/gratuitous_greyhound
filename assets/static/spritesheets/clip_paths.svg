@@ -74,15 +74,6 @@
     <linearGradient
        inkscape:collect="always"
        xlink:href="#origin_red"
-       id="linearGradient2896"
-       x1="20.562542"
-       y1="16.733143"
-       x2="32.018116"
-       y2="16.733143"
-       gradientUnits="userSpaceOnUse" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#origin_red"
        id="linearGradient2896-3"
        x1="20.562542"
        y1="16.733143"
@@ -169,6 +160,16 @@
        x2="82.730721"
        y2="29.685867"
        gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#origin_red"
+       id="linearGradient2896-3-5-3"
+       x1="20.562542"
+       y1="16.733143"
+       x2="32.018116"
+       y2="16.733143"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(90.861194,-6.96872)" />
   </defs>
   <sodipodi:namedview
      pagecolor="#ffffff"
@@ -183,13 +184,13 @@
      inkscape:window-height="1352"
      id="namedview4"
      showgrid="false"
-     inkscape:zoom="6.0696721"
-     inkscape:cx="49.709127"
-     inkscape:cy="49.057738"
+     inkscape:zoom="8.4620056"
+     inkscape:cx="22.706801"
+     inkscape:cy="32.4667"
      inkscape:window-x="2560"
      inkscape:window-y="51"
      inkscape:window-maximized="0"
-     inkscape:current-layer="g10"
+     inkscape:current-layer="svg2"
      inkscape:document-rotation="0"
      showguides="true"
      inkscape:guide-bbox="true"
@@ -197,23 +198,25 @@
   <g
      inkscape:groupmode="layer"
      id="layer7"
-     inkscape:label="red1"
-     style="display:inline">
+     inkscape:label="red"
+     style="display:inline"
+     sodipodi:insensitive="true">
     <g
        inkscape:groupmode="layer"
        inkscape:label="image"
        id="g10"
-       style="display:inline">
+       style="display:inline"
+       sodipodi:insensitive="true">
       <image
-         sodipodi:absref="/home/jc/projects/chukinas/assets/static/spritesheets/red1.png"
-         xlink:href="red1.png"
-         y="0"
-         x="0"
-         id="image1201"
-         style="image-rendering:optimizeSpeed"
-         preserveAspectRatio="none"
+         sodipodi:absref="/home/jc/projects/chukinas/assets/static/spritesheets/red.png"
+         xlink:href="red.png"
+         width="122"
          height="57"
-         width="122" />
+         preserveAspectRatio="none"
+         style="image-rendering:optimizeSpeed"
+         id="image1201"
+         x="0"
+         y="0" />
     </g>
     <g
        inkscape:groupmode="layer"
@@ -375,17 +378,13 @@
          d="m 40.975524,30.45178 -12.847526,-6.159801 -5.919108,-5.974453 -1.81186,-5.097507 3.633931,-2.00389 3.069987,-8.700887 4.353007,-0.090738 1.300525,3.1341729 5.70062,-2.4245215 4.442273,2.5904048 -3.156236,2.9147956 9.484801,1.0936275 0.825241,3.6017087 -3.739632,1.800635 8.171814,5.111405 -0.03951,3.759412 -2.151496,1.562245 -10.660151,-2.539106 2.282372,5.233472 z"
          id="boom"
          inkscape:label="main" />
-      <a
-         id="a2898"
-         inkscape:label="origin">
-        <circle
-           style="display:inline;fill:url(#linearGradient2896);fill-opacity:1;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;paint-order:fill markers stroke"
-           id="tsrtsratsraa"
-           cx="26.290329"
-           cy="16.733143"
-           r="5.727787"
-           inkscape:label="origin" />
-      </a>
+      <circle
+         style="display:inline;fill:url(#linearGradient2896-3-5-3);fill-opacity:1;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;paint-order:fill markers stroke"
+         id="tsrtsratsraa-7-5-7"
+         cx="27.166124"
+         cy="16.300817"
+         r="5.727787"
+         inkscape:label="origin" />
     </g>
   </g>
   <g
@@ -398,7 +397,18 @@
        inkscape:groupmode="layer"
        id="layer12"
        inkscape:label="image"
-       sodipodi:insensitive="true" />
+       sodipodi:insensitive="true">
+      <image
+         sodipodi:absref="/home/jc/projects/chukinas/assets/static/spritesheets/test.png"
+         xlink:href="test.png"
+         y="13.903466"
+         x="41.94978"
+         id="image1034"
+         style="image-rendering:optimizeSpeed"
+         preserveAspectRatio="none"
+         height="33.333332"
+         width="33.333332" />
+    </g>
     <g
        inkscape:groupmode="layer"
        id="layer10"
@@ -447,8 +457,8 @@
      inkscape:groupmode="layer"
      id="layer11"
      inkscape:label="common_shapes"
-     sodipodi:insensitive="true"
-     style="display:none">
+     style="display:none"
+     sodipodi:insensitive="true">
     <circle
        style="display:inline;fill:url(#linearGradient2896-3-5);fill-opacity:1;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;paint-order:fill markers stroke"
        id="tsrtsratsraa-7-5"
