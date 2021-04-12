@@ -1,5 +1,5 @@
-alias Chukinas.Dreadnought.{Unit}
-alias Chukinas.Geometry.{Pose, Position, Turn, Straight, Polygon, Path, Sprite}
+alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet}
+alias Chukinas.Geometry.{Pose, Position, Turn, Straight, Polygon, Path}
 alias Chukinas.Svg
 
 defmodule Unit do
@@ -7,7 +7,8 @@ defmodule Unit do
   Represents a ship or some other combat unit
   """
 
-  import Unit.Builder
+  # TODO remove. Also remove the module itself
+  # import Unit.Builder
 
   # *** *******************************
   # *** TYPES
@@ -19,7 +20,7 @@ defmodule Unit do
     field :id, integer()
     field :pose, Pose.t()
     field :maneuver_svg_string, String.t()
-    field :sprite, Sprite.t(), default: form("red_ship_2")
+    field :sprite, Sprite.t(), default: Spritesheet.red("ship_large")
   end
 
   # *** *******************************

@@ -24,7 +24,7 @@ defmodule Sprite do
     svg = sprite.clip_path |> Interpret.interpret|> IOP.inspect("svg interp")
     size = Size.from_positions(svg.min, svg.max)
     image = Sprite.Image.new(
-      image_map.path.name,
+      "/images/spritesheets/" <> image_map.path.name,
       image_map.width,
       image_map.height
     )
