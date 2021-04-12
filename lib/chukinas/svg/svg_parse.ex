@@ -69,14 +69,16 @@ defmodule Chukinas.Svg.Parse do
   def coerce_absolute_cmd(["z"], _), do: ["Z"]
   def coerce_absolute_cmd(["Z"], _), do: ["Z"]
   def coerce_absolute_cmd([cmd_group | rest], start_coord) do
-    new_cmd_group = add(cmd_group, start_coord) |> IOP.inspect("new cmd grp")
+    new_cmd_group = add(cmd_group, start_coord)
     new_start_coord = get_end_point(new_cmd_group)
     [new_cmd_group | coerce_absolute_cmd(rest, new_start_coord)]
   end
 
   def add(["z"], {_x, _y}), do: ["Z"]
   def add(["h", dx], {x, y}), do: ["L", x + dx, y]
+  def add(["H", dx], {_x, y}), do: ["L", dx, y]
   def add(["v", dy], {x, y}), do: ["L", x, y + dy]
+  def add(["V", dy], {x, _y}), do: ["L", x, dy]
   def add(["l", dx, dy], {x, y}), do: ["L", x + dx, y + dy]
   def add(["m", dx, dy], {x, y}), do: ["M", x + dx, y + dy]
   #def add([cmd, vals], {x, y}) do

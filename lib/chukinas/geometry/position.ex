@@ -105,9 +105,10 @@ defmodule Position do
   # *** LIST API
 
   def min_max(positions) when is_list(positions) do
-    {xmin, xmax} = Enum.min_max_by(positions, & &1.x)
+  positions |> IOP.inspect("Position.min_max args")
+    {xmin, xmax} = Enum.min_max_by(positions, & &1.x) |> IOP.inspect("min max x")
     {ymin, ymax} = Enum.min_max_by(positions, & &1.y)
-    {Position.new(xmin, ymin), Position.new(xmax, ymax)}
+    {Position.new(xmin.x, ymin.y), Position.new(xmax.x, ymax.y)}
   end
 
   # *** *******************************

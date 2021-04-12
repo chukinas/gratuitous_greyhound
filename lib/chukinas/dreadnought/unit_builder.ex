@@ -14,7 +14,7 @@ defmodule Builder do
   def form("red_ship_2") do
     mymap = %{
       origin: Position.new(68, 44),
-      mounts: [
+      mountings: [
         %{
           id: 1,
           position: Position.new(70, 44)

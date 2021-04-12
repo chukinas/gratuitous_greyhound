@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.Spritesheet
+alias Chukinas.Dreadnought.{Spritesheet, Sprite}
 
 defmodule Spritesheet do
 
@@ -9,6 +9,7 @@ defmodule Spritesheet do
   for spritesheet <- Spritesheet.Parser.parse_svg(svg_map) do
     function_name = spritesheet.image.path.root |> String.to_atom
     for sprite <- spritesheet.sprites do
+      sprite_struct = Sprite.from_parsed_spritesheet(sprite, spritesheet.image)
       sprite_name = sprite.clip_name
       def unquote(function_name)(unquote(sprite_name)) do
         unquote(Macro.escape(sprite))
