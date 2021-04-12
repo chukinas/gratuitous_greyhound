@@ -3,8 +3,8 @@
   id="unit-<%= @unit.id %>"
   class="absolute"
   style="
-    left: <%= @margin.width + @unit.pose.x - @unit.sprite.half_size.width %>px;
-    top: <%= @margin.height + @unit.pose.y - @unit.sprite.half_size.height %>px; 
+    left: <%= @margin.width + @unit.pose.x + @unit.sprite.start_rel.x %>px;
+    top: <%= @margin.height + @unit.pose.y + @unit.sprite.start_rel.y %>px; 
     transform: rotate(<%= @unit.pose.angle %>deg);
   "
   phx-hook="Unit"

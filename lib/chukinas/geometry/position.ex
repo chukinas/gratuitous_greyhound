@@ -22,8 +22,14 @@ defmodule Position do
   def new(%{x: x, y: y}), do: new(x, y)
   def new({x, y}), do: new(x, y)
   def new(x, y) do
-    %__MODULE__{x: x, y: y}
+    %__MODULE__{
+      x: coerce_number(x),
+      y: coerce_number(y)
+    }
   end
+
+  defp coerce_number(val) when is_binary(val), do: String.to_float(val)
+  defp coerce_number(val), do: val
 
   # *** *******************************
   # *** API

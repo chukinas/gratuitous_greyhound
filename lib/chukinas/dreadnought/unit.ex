@@ -27,6 +27,7 @@ defmodule Unit do
 
   def new(id, opts \\ []) do
     struct(__MODULE__, Keyword.put(opts, :id, id))
+    |> IOP.inspect("red ship 2")
   end
 
   # *** *******************************
@@ -59,11 +60,11 @@ defmodule Unit do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl Inspect do
-    import Inspect.Algebra
-    def inspect(unit, opts) do
-      unit_map = unit |> Map.take([:id, :pose, :maneuver_svg_string])
-      concat ["#Unit<", to_doc(unit_map, opts), ">"]
-    end
-  end
+  #defimpl Inspect do
+  #  import Inspect.Algebra
+  #  def inspect(unit, opts) do
+  #    unit_map = unit |> Map.take([:id, :pose, :maneuver_svg_string])
+  #    concat ["#Unit<", to_doc(unit_map, opts), ">"]
+  #  end
+  #end
 end

@@ -4,6 +4,7 @@ defmodule Spritesheet do
 
   @external_resource "assets/static/images/spritesheets/sprites.svg"
 
+  # TODO move to Sprite and delete this file?
   {:ok, svg_content} = File.read(@external_resource)
   svg_map = XmlToMap.naive_map(svg_content)
   for spritesheet <- Spritesheet.Parser.parse_svg(svg_map) do
