@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Unit}
-alias Chukinas.Geometry.{Pose, Position, Turn, Straight, Polygon, Path}
+alias Chukinas.Geometry.{Pose, Position, Turn, Straight, Polygon, Path, Sprite}
 alias Chukinas.Svg
 
 defmodule Unit do
@@ -19,7 +19,7 @@ defmodule Unit do
     field :id, integer()
     field :pose, Pose.t()
     field :maneuver_svg_string, String.t()
-    field :form, any(), default: form("red_ship_2")
+    field :sprite, Sprite.t(), default: form("red_ship_2")
   end
 
   # *** *******************************
