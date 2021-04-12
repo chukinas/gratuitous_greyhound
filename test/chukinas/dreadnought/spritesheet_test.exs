@@ -6,6 +6,7 @@ defmodule Chukinas.Dreadnought.SpritesheetTest do
   use DreadnoughtHelpers
 
   test "Spritesheet has a function called `test`" do
-    assert is_map Spritesheet.test("sprite_1")
+    Spritesheet.test("sprite_1") |> IOP.inspect
+    assert is_struct IOP.inspect(Spritesheet.test("sprite_1")), Sprite
   end
 end

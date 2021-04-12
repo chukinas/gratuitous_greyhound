@@ -4,7 +4,7 @@ alias Chukinas.Geometry.{Path, Pose, Position, Rect, Straight}
 defmodule DreadnoughtHelpers do
   defmacro __using__(_options) do
     quote do
-      alias Chukinas.Dreadnought.{Arena, Mission, Unit, Spritesheet}
+      alias Chukinas.Dreadnought.{Arena, Mission, Unit, Spritesheet, Sprite}
       alias Chukinas.Geometry.{Path, Pose, Position, Rect, Straight, Trig, Polar, Grid}
       alias Chukinas.Svg
       import DreadnoughtHelpers, only: :functions

@@ -12,7 +12,7 @@ defmodule Spritesheet do
       sprite_struct = Sprite.from_parsed_spritesheet(sprite, spritesheet.image)
       sprite_name = sprite.clip_name
       def unquote(function_name)(unquote(sprite_name)) do
-        unquote(Macro.escape(sprite))
+        unquote(Macro.escape(sprite_struct))
       end
     end
   end
