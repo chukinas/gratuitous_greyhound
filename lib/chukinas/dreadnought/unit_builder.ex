@@ -1,4 +1,5 @@
 alias Chukinas.Dreadnought.Unit.Builder
+alias Chukinas.Dreadnought.Sprite
 alias Chukinas.Geometry.{Position, Size}
 
 defmodule Builder do
@@ -37,7 +38,8 @@ defmodule Builder do
       min_y: 20,
       max_y: 57
     }
-    add_centered_bounding_rect mymap
+    add_centered_bounding_rect(mymap)
+    |> Sprite.from_unitbuilder
   end
 
   defp add_centered_bounding_rect(item) when is_map(item) do

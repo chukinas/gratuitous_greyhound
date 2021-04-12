@@ -3,8 +3,8 @@
   id="unit-<%= @unit.id %>"
   class="absolute"
   style="
-    left: <%= @margin.width + @unit.pose.x - @unit.form.rect.half_width %>px;
-    top: <%= @margin.height + @unit.pose.y - @unit.form.rect.half_height %>px; 
+    left: <%= @margin.width + @unit.pose.x - @unit.form.half_size.width %>px;
+    top: <%= @margin.height + @unit.pose.y - @unit.form.half_size.height %>px; 
     transform: rotate(<%= @unit.pose.angle %>deg);
   "
   phx-hook="Unit"
@@ -13,8 +13,8 @@
   <div 
     class="relative"
     style="
-      width:<%= @unit.form.rect.width %>px;
-      height:<%= @unit.form.rect.height %>px;
+      width:<%= @unit.form.size.width %>px;
+      height:<%= @unit.form.size.height %>px;
     "
   >
     <img 
@@ -23,8 +23,8 @@
       src="<%= Routes.static_path @socket, @unit.form.image.path %>"
       style="
         clip-path:url(#unit-<%= @unit.id %>-mask);
-        left:<%= -@unit.form.rect.x %>px;
-        top:<%= -@unit.form.rect.y %>px;
+        left:<%= -@unit.form.start.x %>px;
+        top:<%= -@unit.form.start.x %>px;
       "
     >
     <svg width="0" height="0">

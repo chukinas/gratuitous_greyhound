@@ -1,5 +1,5 @@
 alias Chukinas.Geometry.Position
-alias Chukinas.Svg.{Interpret, Parser}
+alias Chukinas.Svg.{Interpret, Parse}
 
 defmodule Interpret do
   @moduledoc"""
@@ -8,7 +8,7 @@ defmodule Interpret do
 
   def interpret(svg) when is_binary(svg) do
     svg
-    |> Parser.parse
+    |> Parse.parse
     |> interpret
   end
   def interpret(parsed_svg) when is_list(parsed_svg) do
@@ -17,11 +17,11 @@ defmodule Interpret do
       |> Enum.map(&to_position/1)
       |> Position.min_max
     %{
-      path: to_path(parsed_svg)
+      path: to_path(parsed_svg),
       min_x: min.x,
-      max_x: max_x,
-      min_y: min_y,
-      max_y: max_y
+      max_x: max.x,
+      min_y: min.y,
+      max_y: max.y
     }
   end
 
