@@ -16,8 +16,9 @@ defmodule Chukinas.Svg.Parse do
     |> String.split([" ", ","], trim: true)
     |> Stream.flat_map(&separate_terms/1)
     |> Enum.filter(& not is_nil &1)
-    |> IOP.inspect
     |> group_commands
+    |> coerce_absolute_cmd
+    |> coerce_int
   end
 
   # TODO refactor to use head and tails
@@ -37,9 +38,9 @@ defmodule Chukinas.Svg.Parse do
   def group_commands([]), do: []
   def group_commands([command | _] = terms) when command in @commands do
     arg_count = get_arg_count command
-    {cmd_group, rest} = Enum.split(terms, arg_count + 1) |> IOP.inspect
+    {cmd_group, rest} = Enum.split(terms, arg_count + 1)
     rest = cond do
-      not start_with_float(rest) -> rest
+      not start_with_float?(rest) -> rest
       # TODO clean this up
       "M" == command -> ["L" | rest]
       "m" == command -> ["l" | rest]
@@ -47,16 +48,50 @@ defmodule Chukinas.Svg.Parse do
       "l" == command -> ["l" | rest]
       true -> rest
     end
-    [List.to_tuple(cmd_group) | group_commands(rest)]
+    [cmd_group | group_commands(rest)]
   end
 
-  def start_with_float([]), do: false
-  def start_with_float([float | _]), do: is_float(float)
+  def start_with_float?([]), do: false
+  def start_with_float?([float | _]), do: is_float(float)
 
+  # TODO ugly. refactor
   def get_arg_count(command) when command in @command_with_0_arg, do: 0
   def get_arg_count(command) when command in @command_with_1_arg, do: 1
   def get_arg_count(command) when command in @command_with_2_arg, do: 2
   def get_arg_count(command) when command in @command_with_4_arg, do: 4
   def get_arg_count(command) when command in @command_with_6_arg, do: 6
   def get_arg_count(command) when command in @command_with_7_arg, do: 7
+
+  def coerce_absolute_cmd(cmd_groups) do
+    coerce_absolute_cmd(cmd_groups, {0, 0})
+  end
+  def coerce_absolute_cmd([], _), do: []
+  def coerce_absolute_cmd(["z"], _), do: ["Z"]
+  def coerce_absolute_cmd(["Z"], _), do: ["Z"]
+  def coerce_absolute_cmd([cmd_group | rest], start_coord) do
+    new_cmd_group = add(cmd_group, start_coord) |> IOP.inspect("new cmd grp")
+    new_start_coord = get_end_point(new_cmd_group)
+    [new_cmd_group | coerce_absolute_cmd(rest, new_start_coord)]
+  end
+
+  def add(["z"], {_x, _y}), do: ["Z"]
+  def add(["h", dx], {x, y}), do: ["L", x + dx, y]
+  def add(["v", dy], {x, y}), do: ["L", x, y + dy]
+  def add(["l", dx, dy], {x, y}), do: ["L", x + dx, y + dy]
+  def add(["m", dx, dy], {x, y}), do: ["M", x + dx, y + dy]
+  #def add([cmd, vals], {x, y}) do
+  #  new_vals =
+  #    vals
+  #    |> Enum.chunk_every(2)
+  #    |> Enum.flat_map(fn [dx, dy] -> [x + dx, y + dy] end)
+  #  [String.upcase(cmd) | new_vals]
+  #end
+  def add(already_abs, _), do: already_abs
+
+  def get_end_point(["Z"]), do: {0, 0}
+  def get_end_point([_, x, y]), do: {x, y}
+
+  def coerce_int(val) when is_list(val), do: Enum.map(val, &coerce_int/1)
+  def coerce_int(val) when is_binary(val), do: val
+  def coerce_int(val) when is_float(val), do: round val
 end
