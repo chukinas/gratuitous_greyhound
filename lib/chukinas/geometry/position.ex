@@ -102,6 +102,15 @@ defmodule Position do
   end
 
   # *** *******************************
+  # *** LIST API
+
+  def min_max(positions) when is_list(positions) do
+    {xmin, xmax} = Enum.min_max_by(positions, & &1.x)
+    {ymin, ymax} = Enum.min_max_by(positions, & &1.y)
+    {Position.new(xmin, ymin), Position.new(xmax, ymax)}
+  end
+
+  # *** *******************************
   # *** PRIVATE
 
   defp sanitize_translation(value) when has_position(value), do: Map.take(value, [:x, :y])
