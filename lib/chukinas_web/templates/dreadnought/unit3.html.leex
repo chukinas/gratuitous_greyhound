@@ -2,45 +2,13 @@
 <div
   id="unit-<%= @unit.id %>"
   class="absolute"
-  tsratstyle="
+  style="
     left: <%= @margin.width + @unit.pose.x + @unit.sprite.start_rel.x %>px;
     top: <%= @margin.height + @unit.pose.y + @unit.sprite.start_rel.y %>px; 
     transform: rotate(<%= @unit.pose.angle %>deg);
   "
-  tsratsstyle="
-    left: <%= @margin.width + @unit.sprite.start_rel.x %>px;
-    top: <%= @margin.height + @unit.sprite.start_rel.y %>px; 
-  "
-  style="
-    left: <%= @margin.width %>px;
-    top: <%= @margin.height %>px; 
-  "
   phx-hook="Unit"
   <%= if @game_over?, do: "data-gameover=true" %>
 >
-  <div 
-    class="relative"
-    style="
-      width:<%= @unit.sprite.size.width %>px;
-      height:<%= @unit.sprite.size.height %>px;
-    "
-  >
-    <img 
-      class="absolute shadow"
-      width="<%= @unit.sprite.image.size.width %>"
-      src="<%= Routes.static_path @socket, @unit.sprite.image.path %>"
-      style="
-        clip-path:url(#unit-<%= @unit.id %>-mask);
-        left:<%= -@unit.sprite.start.x %>px;
-        top:<%= -@unit.sprite.start.x %>px;
-      "
-    >
-    <svg width="0" height="0">
-      <defs>
-        <clipPath id="unit-<%= @unit.id %>-mask">
-          <path d="<%= @unit.sprite.clip_path %>" />
-        </clipPath>
-      </defs>
-    </svg>
-  </div>
+  <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: @unit.sprite, center_on_origin?: true %>
 </div>
