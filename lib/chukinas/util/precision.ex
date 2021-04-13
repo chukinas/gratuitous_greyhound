@@ -1,5 +1,13 @@
 defmodule Chukinas.Util.Precision do
 
+  def coerce_int(val) when is_list(val), do: Enum.map(val, &coerce_int/1)
+  def coerce_int(val) when is_integer(val), do: val
+  def coerce_int(val) when is_float(val), do: round(val)
+  def coerce_int(val) when is_binary(val) do
+    {float, _} = Float.parse(val)
+    coerce_int(float)
+  end
+
   def values_to_int({key, value}) when is_map(value), do: {key, values_to_int(value)}
   def values_to_int({key, value}) when is_number(value), do: {key, round(value)}
   def values_to_int(struct) when is_struct(struct) do

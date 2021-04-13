@@ -1,10 +1,10 @@
-alias Chukinas.Dreadnought.{CommandQueue, Command, Segments, Mission, Segment, Unit, CommandIds}
+alias Chukinas.Dreadnought.{CommandQueue, Command, Mission, Unit}
 alias Chukinas.Geometry.{Path, Pose, Position, Rect, Straight}
 
 defmodule DreadnoughtHelpers do
   defmacro __using__(_options) do
     quote do
-      alias Chukinas.Dreadnought.{Arena, CommandQueue, Command, Segments, Mission, Segment, Unit, CommandIds}
+      alias Chukinas.Dreadnought.{Arena, Mission, Unit, Spritesheet, Sprite}
       alias Chukinas.Geometry.{Path, Pose, Position, Rect, Straight, Trig, Polar, Grid}
       alias Chukinas.Svg
       import DreadnoughtHelpers, only: :functions

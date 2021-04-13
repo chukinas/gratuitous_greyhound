@@ -50,6 +50,7 @@ defmodule Chukinas.MixProject do
       {:dialyxir, "~> 0.5.0", only: [:dev], runtime: false},
       {:bamboo, "~> 2.0.1"},
       {:collision, "~> 0.3.1"},
+      {:elixir_xml_to_map, "~> 2.0"},
     ]
   end
 

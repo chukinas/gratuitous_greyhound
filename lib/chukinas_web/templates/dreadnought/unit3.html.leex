@@ -3,36 +3,12 @@
   id="unit-<%= @unit.id %>"
   class="absolute"
   style="
-    left: <%= @margin.width + @unit.pose.x - @unit.form.rect.half_width %>px;
-    top: <%= @margin.height + @unit.pose.y - @unit.form.rect.half_height %>px; 
+    left: <%= @margin.width + @unit.pose.x + @unit.sprite.start_rel.x %>px;
+    top: <%= @margin.height + @unit.pose.y + @unit.sprite.start_rel.y %>px; 
     transform: rotate(<%= @unit.pose.angle %>deg);
   "
   phx-hook="Unit"
   <%= if @game_over?, do: "data-gameover=true" %>
 >
-  <div 
-    class="relative"
-    style="
-      width:<%= @unit.form.rect.width %>px;
-      height:<%= @unit.form.rect.height %>px;
-    "
-  >
-    <img 
-      class="absolute shadow"
-      width="<%= @unit.form.image_size_x %>"
-      src="<%= Routes.static_path @socket, @unit.form.static_path %>"
-      style="
-        clip-path:url(#unit-<%= @unit.id %>-mask);
-        left:<%= -@unit.form.rect.x %>px;
-        top:<%= -@unit.form.rect.y %>px;
-      "
-    >
-    <svg width="0" height="0">
-      <defs>
-        <clipPath id="unit-<%= @unit.id %>-mask">
-          <path d="<%= @unit.form.clip_path %>" />
-        </clipPath>
-      </defs>
-    </svg>
-  </div>
+  <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: @unit.sprite, center_on_origin?: true %>
 </div>

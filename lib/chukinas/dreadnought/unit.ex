@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Unit, ById}
+alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet}
 alias Chukinas.Geometry.{Pose, Position, Turn, Straight, Polygon, Path}
 alias Chukinas.Svg
 
@@ -7,7 +7,8 @@ defmodule Unit do
   Represents a ship or some other combat unit
   """
 
-  import Unit.Builder
+  # TODO remove. Also remove the module itself
+  # import Unit.Builder
 
   # *** *******************************
   # *** TYPES
@@ -19,7 +20,7 @@ defmodule Unit do
     field :id, integer()
     field :pose, Pose.t()
     field :maneuver_svg_string, String.t()
-    field :form, any(), default: form("red_ship_2")
+    field :sprite, Sprite.t(), default: Spritesheet.red("ship_large")
   end
 
   # *** *******************************
@@ -27,6 +28,7 @@ defmodule Unit do
 
   def new(id, opts \\ []) do
     struct(__MODULE__, Keyword.put(opts, :id, id))
+    |> IOP.inspect("red ship 2")
   end
 
   # *** *******************************
@@ -59,11 +61,11 @@ defmodule Unit do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl Inspect do
-    import Inspect.Algebra
-    def inspect(unit, opts) do
-      unit_map = unit |> Map.take([:id, :pose, :maneuver_svg_string])
-      concat ["#Unit<", to_doc(unit_map, opts), ">"]
-    end
-  end
+  #defimpl Inspect do
+  #  import Inspect.Algebra
+  #  def inspect(unit, opts) do
+  #    unit_map = unit |> Map.take([:id, :pose, :maneuver_svg_string])
+  #    concat ["#Unit<", to_doc(unit_map, opts), ">"]
+  #  end
+  #end
 end

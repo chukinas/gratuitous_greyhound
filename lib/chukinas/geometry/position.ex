@@ -22,7 +22,18 @@ defmodule Position do
   def new(%{x: x, y: y}), do: new(x, y)
   def new({x, y}), do: new(x, y)
   def new(x, y) do
-    %__MODULE__{x: x, y: y}
+    %__MODULE__{
+      x: x,
+      y: y
+    }
+  end
+
+  def rounded(%{x: x, y: y}), do: rounded(x, y)
+  def rounded(x, y) do
+    %__MODULE__{
+      x: Precision.coerce_int(x),
+      y: Precision.coerce_int(y)
+    }
   end
 
   # *** *******************************
@@ -99,6 +110,16 @@ defmodule Position do
   def shake(position, radius \\ 100) do
     range = -radius..radius
     add position, Enum.random(range), Enum.random(range)
+  end
+
+  # *** *******************************
+  # *** LIST API
+
+  def min_max(positions) when is_list(positions) do
+  positions |> IOP.inspect("Position.min_max args")
+    {xmin, xmax} = Enum.min_max_by(positions, & &1.x) |> IOP.inspect("min max x")
+    {ymin, ymax} = Enum.min_max_by(positions, & &1.y)
+    {Position.new(xmin.x, ymin.y), Position.new(xmax.x, ymax.y)}
   end
 
   # *** *******************************

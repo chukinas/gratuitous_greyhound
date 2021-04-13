@@ -1,4 +1,5 @@
 alias Chukinas.Geometry.{Size, Position}
+alias Chukinas.Util.Precision
 
 defmodule Size do
   @moduledoc"""
@@ -22,6 +23,20 @@ defmodule Size do
     }
   end
 
+  def rounded(width, height) do
+    %__MODULE__{
+      width: Precision.coerce_int(width),
+      height: Precision.coerce_int(height)
+    }
+  end
+
+  def from_positions(a, b) do
+    %__MODULE__{
+      width: abs(a.x - b.x),
+      height: abs(a.y - b.y)
+    }
+  end
+
   # *** *******************************
   # *** API
 
@@ -36,6 +51,13 @@ defmodule Size do
     %__MODULE__{
       width: size1.width - size2.width,
       height: size1.height - size2.height
+    }
+  end
+
+  def halve(size) do
+    %__MODULE__{
+      width: size.width / 2,
+      height: size.height / 2
     }
   end
 
