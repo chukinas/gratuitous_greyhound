@@ -28,14 +28,14 @@ defmodule Sprite do
       image_map.width,
       image_map.height
     )
-    origin = Position.new(sprite.origin)
+    origin = Position.rounded(sprite.origin)
     %__MODULE__{
       # TODO this isn't a Position.t()
       origin: origin,
       start: svg.min,
       start_rel: Position.subtract(svg.min, origin),
       size: size,
-      mountings: sprite.mountings |> Enum.map(& struct(Mount, &1)),
+      mountings: sprite.mountings |> Enum.map(&Mount.new/1),
       image: image,
       clip_path: sprite.clip_path
     }
@@ -49,7 +49,7 @@ defmodule Sprite do
       |> Map.put(:start, Position.new(rect.x, rect.y))
       |> Map.put(:size, Size.new(rect.width, rect.height))
       |> Map.put(:start_rel, Position.new(-rect.half_width, -rect.half_height))
-      |> Map.put(:mountings, map.mountings |> Enum.map(& struct(Mount, &1)))
+      |> Map.put(:mountings, map.mountings |> Enum.map(&Mount.new/1))
       |> Map.put(:image, struct(Sprite.Image, map.image))
     struct(__MODULE__, map)
   end
@@ -61,6 +61,13 @@ defmodule Mount do
   typedstruct do
     field :id, integer()
     field :position, Position.t()
+  end
+  def new(%{id: id, x: x, y: y}), do: new(id, x, y)
+  def new(id, x, y) do
+    %__MODULE__{
+      id: String.to_integer(id),
+      position: Position.new(x, y)
+    }
   end
 end
 

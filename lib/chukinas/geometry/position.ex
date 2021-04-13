@@ -23,13 +23,18 @@ defmodule Position do
   def new({x, y}), do: new(x, y)
   def new(x, y) do
     %__MODULE__{
-      x: coerce_number(x),
-      y: coerce_number(y)
+      x: x,
+      y: y
     }
   end
 
-  defp coerce_number(val) when is_binary(val), do: String.to_float(val)
-  defp coerce_number(val), do: val
+  def rounded(%{x: x, y: y}), do: rounded(x, y)
+  def rounded(x, y) do
+    %__MODULE__{
+      x: Precision.coerce_int(x),
+      y: Precision.coerce_int(y)
+    }
+  end
 
   # *** *******************************
   # *** API
