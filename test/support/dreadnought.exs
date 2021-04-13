@@ -38,6 +38,7 @@ defmodule DreadnoughtHelpers do
   # *** *******************************
   # *** PRIVATE
 
+  # TODO This logic should go into that utility module
   defp set_precision(struct) when is_struct(struct) do
     struct |> Map.from_struct() |> set_precision()
   end
