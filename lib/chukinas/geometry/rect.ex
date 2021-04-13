@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{Position, Rect, CollidableShape}
+alias Chukinas.Geometry.{Position, Rect, CollidableShape, Size}
 
 defmodule Rect do
   @moduledoc"""
@@ -10,6 +10,11 @@ defmodule Rect do
   use TypedStruct
 
   typedstruct enforce: true do
+    field :x, number()
+    field :y, number()
+    field :width, number()
+    field :height, number()
+    # TODO remove:
     field :start_position, Position.t()
     field :end_position, Position.t()
   end
@@ -18,23 +23,40 @@ defmodule Rect do
   # *** NEW
 
   def new(start_x, start_y, end_x, end_y) do
-    %__MODULE__{
+    %{
       start_position: Position.new(start_x, start_y),
       end_position: Position.new(end_x, end_y)
     }
+    |> add_pos_and_size
+    |> to_struct
   end
   def new(start_position, end_position) when Position.is(start_position) and Position.is(end_position) do
-    %__MODULE__{
+    %{
       start_position: start_position,
       end_position: end_position
     }
+    |> add_pos_and_size
+    |> to_struct
   end
   def new(width, height) when is_number(width) and is_number(height) do
-    %__MODULE__{
+    %{
       start_position: Position.origin(),
       end_position: Position.new(width, height)
     }
+    |> add_pos_and_size
+    |> to_struct
   end
+
+  defp add_pos_and_size(rect) do
+    size = Size.from_positions(rect.start_position, rect.end_position)
+    Map.merge rect, %{
+      x: rect.start_position.x,
+      y: rect.start_position.y,
+      width: size.width,
+      height: size.height
+    }
+  end
+  defp to_struct(rect), do: struct(__MODULE__, rect)
 
   # *** *******************************
   # *** API

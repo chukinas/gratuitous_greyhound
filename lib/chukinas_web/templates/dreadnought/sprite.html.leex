@@ -1,19 +1,26 @@
 <%# Sprite Template %>
 <div 
-  class="relative"
+  id="something"
+  class="relative opacity-50 overflow-hidden"
   style="
     width:<%= @rect.width %>px;
     height:<%= @rect.height %>px;
   "
 >
-  <img 
+<div
     class="absolute"
-    width="<%= @image.size.width %>"
-    src="<%= Routes.static_path @socket, @image.path %>"
     style="
-      clip-path: path(<%= @clip_path %>);
+      width: 122px;
+      height: 57px;
       left:<%= -@rect.x %>px;
       top:<%= -@rect.y %>px;
     "
   >
+  <img 
+    style="
+      clip-path: path(<%= @clip_path %>);
+    "
+    src="<%= Routes.static_path @socket, @image.path %>"
+  >
+  </div>
 </div>

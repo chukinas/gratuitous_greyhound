@@ -80,6 +80,12 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
       unit: @mission.unit,
       margin: @mission.margin,
       game_over?: @mission.game_over? %>
+      <div class="absolute" style="
+        left: <%= 50 + @mission.margin.width %>px;
+        top: <%= 300 + @mission.margin.height %>px;
+      ">
+    <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: @mission.unit.sprite, center_on_origin?: false %>
+    </div>
     """
   end
   # TODO svg path as hook?

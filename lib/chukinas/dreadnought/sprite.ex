@@ -14,10 +14,11 @@ defmodule Sprite do
     field :start, Position.t()
     field :start_rel, Position.t()
     field :size, Size.t()
-    # TODO is this useful?
     field :mountings, [Mount.t()]
     field :image, Sprite.Image.t()
     field :clip_path, String.t()
+    field :rect_tight, Rect.t()
+    field :rect_centered, Rect.t()
   end
 
   def from_parsed_spritesheet(sprite, image_map) do
@@ -37,7 +38,10 @@ defmodule Sprite do
       size: size,
       mountings: sprite.mountings |> Enum.map(&Mount.new/1),
       image: image,
-      clip_path: svg.path
+      clip_path: svg.path,
+      rect_tight: svg.rect,
+      # TODO calculate this
+      rect_centered: svg.rect,
     }
   end
 

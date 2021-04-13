@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.Position
+alias Chukinas.Geometry.{Rect, Position}
 alias Chukinas.Svg.{Interpret, Parse}
 
 defmodule Interpret do
@@ -14,13 +14,12 @@ defmodule Interpret do
   def interpret(parsed_svg) when is_list(parsed_svg) do
     {min, max} =
       parsed_svg
-      |> IOP.inspect("svg parsed")
       |> to_positions
-      |> IOP.inspect("svg vertices")
       |> Position.min_max
-      |> IOP.inspect("svg min max")
     %{
       path: to_path(parsed_svg),
+      rect: Rect.new(min, max),
+      # TODO remove (all the info already in rect)
       min: min,
       max: max,
       min_x: min.x,
