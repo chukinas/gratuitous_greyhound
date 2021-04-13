@@ -36,12 +36,14 @@ defmodule Unit do
         # Just replace the list of structs with a single map of positions.
         # I'll wait to do this though until I convince myself
         # that I don't need a struct with any other props.
-        sprite.mountings
-        |> Enum.find(&(&1.id == id))
-        |> Map.fetch!(:position)
-        |> Pose.new(angle)
-        |> Turret.new(Spritesheet.red("turret1"))
+        position =
+          sprite.mountings
+          |> Enum.find(&(&1.id == id))
+          |> Map.fetch!(:position)
+          |> Pose.new(angle)
+        Turret.new(id, position, Spritesheet.red("turret1"))
       end)
+      |> IOP.inspect
     opts =
       opts
       |> Keyword.put_new(:sprite, sprite)

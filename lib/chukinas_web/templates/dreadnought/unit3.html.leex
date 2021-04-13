@@ -10,6 +10,22 @@
   phx-hook="Unit"
   <%= if @game_over?, do: "data-gameover=true" %>
 >
-  <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: @unit.sprite, center_on_origin?: true %>
-
+  <div class="relative">
+    <%# TODO shorten this syntax %>
+    <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: @unit.sprite %>
+    <%= for turret <- @unit.turrets do %>
+      <div 
+       id="unit-<%= @unit.id %>-turret-<%= turret.id %>" 
+       class="absolute top-0 left-0"
+       style="
+         left: <%= @unit.sprite.rect_centered.x + turret.pose.x %>px; 
+         top: <%= @unit.sprite.rect_centered.y + turret.pose.y %>px; 
+         transform: rotate(<%= turret.pose.angle %>deg);
+       "
+       >
+      <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, 
+        sprite: turret.sprite %>
+    </div>
+    <% end %>
+  </div>
 </div>

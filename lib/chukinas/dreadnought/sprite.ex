@@ -30,13 +30,19 @@ defmodule Sprite do
       image_map.height
     )
     origin = Position.rounded(sprite.origin)
+    build_mounting = fn %{id: id, x: x, y: y} ->
+      rel_position =
+        Position.rounded(x, y)
+        |> Position.subtract(origin)
+      Mount.new(id, rel_position)
+    end
     %__MODULE__{
       # TODO this isn't a Position.t()
       origin: origin,
       start: svg.min,
       start_rel: Position.subtract(svg.min, origin),
       size: size,
-      mountings: sprite.mountings |> Enum.map(&Mount.new/1),
+      mountings: sprite.mountings |> Enum.map(build_mounting),
       image: image,
       clip_path: svg.path,
       rect_tight: svg.rect,
@@ -68,9 +74,12 @@ defmodule Mount do
   end
   def new(%{id: id, x: x, y: y}), do: new(id, x, y)
   def new(id, x, y) do
+    new(id, Position.new(x, y))
+  end
+  def new(id, position) do
     %__MODULE__{
       id: String.to_integer(id),
-      position: Position.rounded(x, y)
+      position: position
     }
   end
 end

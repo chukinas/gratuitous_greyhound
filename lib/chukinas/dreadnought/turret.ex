@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Turret, Sprite, Spritesheet}
+alias Chukinas.Dreadnought.{Turret, Sprite}
 alias Chukinas.Geometry.{Pose}
 
 defmodule Turret do
@@ -12,7 +12,8 @@ defmodule Turret do
   use TypedStruct
 
   typedstruct enforce: true do
-    field :rest_pose, Pose.t()
+    field :id, integer()
+    field :pose, Pose.t()
     # TODO sprite should have a name
     field :sprite, Sprite.t()
   end
@@ -20,9 +21,10 @@ defmodule Turret do
   # *** *******************************
   # *** NEW
 
-  def new(rest_pose, sprite) do
+  def new(id, pose, sprite) do
     %__MODULE__{
-      rest_pose: rest_pose,
+      id: id,
+      pose: pose,
       sprite: sprite
     }
   end
