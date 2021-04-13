@@ -21,7 +21,7 @@ defmodule Sprite do
   end
 
   def from_parsed_spritesheet(sprite, image_map) do
-    svg = sprite.clip_path |> Interpret.interpret|> IOP.inspect("svg interp")
+    svg = sprite.clip_path |> Interpret.interpret
     size = Size.from_positions(svg.min, svg.max)
     image = Sprite.Image.new(
       "/images/spritesheets/" <> image_map.path.name,
@@ -47,7 +47,7 @@ defmodule Sprite do
     map =
       map
       |> Map.put(:start, Position.new(rect.x, rect.y))
-      |> Map.put(:size, Size.new(rect.width, rect.height))
+      |> Map.put(:size, Size.rounded(rect.width, rect.height))
       |> Map.put(:start_rel, Position.new(-rect.half_width, -rect.half_height))
       |> Map.put(:mountings, map.mountings |> Enum.map(&Mount.new/1))
       |> Map.put(:image, struct(Sprite.Image, map.image))
@@ -66,7 +66,7 @@ defmodule Mount do
   def new(id, x, y) do
     %__MODULE__{
       id: String.to_integer(id),
-      position: Position.new(x, y)
+      position: Position.rounded(x, y)
     }
   end
 end
@@ -80,7 +80,7 @@ defmodule Sprite.Image do
   def new(path, width, height) do
     %__MODULE__{
       path: path,
-      size: Size.new(width, height)
+      size: Size.rounded(width, height)
     }
   end
 end
