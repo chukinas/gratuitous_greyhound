@@ -16,7 +16,7 @@ defmodule ChukinasWeb.DreadnoughtView do
       clip_path: sprite.clip_path
     ]
     |> IOP.inspect("assigns sprite")
-    render("sprite.html", assigns)
+    render("_sprite.html", assigns)
   end
 
   def message(%{socket: _socket} = assigns, do: block) do
