@@ -75,8 +75,8 @@ defmodule Straight do
     def pose_end(path), do: Straight.end_pose(path)
     def len(path), do: Straight.length(path)
     def get_bounding_rect(path), do: Straight.bounding_rect(path)
-    def exceeds_angle(straight, _angle), do: false
-    def deceeds_angle(straight, _angle), do: true
+    def exceeds_angle(_straight, _angle), do: false
+    def deceeds_angle(_straight, _angle), do: true
   end
 
   defimpl CollidableShape do

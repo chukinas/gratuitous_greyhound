@@ -25,7 +25,6 @@ defmodule Unit do
 
   def new(id, opts \\ []) do
     struct(__MODULE__, Keyword.put(opts, :id, id))
-    |> IOP.inspect("red ship 2")
   end
 
   # *** *******************************
