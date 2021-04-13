@@ -7,9 +7,6 @@ defmodule Unit do
   Represents a ship or some other combat unit
   """
 
-  # TODO remove. Also remove the module itself
-  # import Unit.Builder
-
   # *** *******************************
   # *** TYPES
 
