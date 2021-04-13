@@ -1,7 +1,7 @@
 <%# Sprite Template %>
+<%# TODO Change file name to _sprite... %>
 <div 
-  id="something"
-  class="relative opacity-50 overflow-hidden"
+  class="relative overflow-hidden"
   style="
     width:<%= @rect.width %>px;
     height:<%= @rect.height %>px;
@@ -10,16 +10,14 @@
 <div
     class="absolute"
     style="
-      width: 122px;
-      height: 57px;
+      width: <%= @image.size.width %>px;
+      height: <%= @image.size.height %>px;
       left:<%= -@rect.x %>px;
       top:<%= -@rect.y %>px;
     "
   >
   <img 
-    style="
-      clip-path: path(<%= @clip_path %>);
-    "
+    style="clip-path: path('<%= @clip_path %>');"
     src="<%= Routes.static_path @socket, @image.path %>"
   >
   </div>
