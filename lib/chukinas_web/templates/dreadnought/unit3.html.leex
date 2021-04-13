@@ -2,10 +2,18 @@
 <div
   id="unit-<%= @unit.id %>"
   class="absolute"
-  style="
+  tsratstyle="
     left: <%= @margin.width + @unit.pose.x + @unit.sprite.start_rel.x %>px;
     top: <%= @margin.height + @unit.pose.y + @unit.sprite.start_rel.y %>px; 
     transform: rotate(<%= @unit.pose.angle %>deg);
+  "
+  tsratsstyle="
+    left: <%= @margin.width + @unit.sprite.start_rel.x %>px;
+    top: <%= @margin.height + @unit.sprite.start_rel.y %>px; 
+  "
+  style="
+    left: <%= @margin.width %>px;
+    top: <%= @margin.height %>px; 
   "
   phx-hook="Unit"
   <%= if @game_over?, do: "data-gameover=true" %>

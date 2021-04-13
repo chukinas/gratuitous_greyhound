@@ -1,6 +1,21 @@
 defmodule ChukinasWeb.DreadnoughtView do
   use ChukinasWeb, :view
 
+  def sprite(opts \\ []) do
+    sprite = Keyword.fetch!(opts, :sprite)
+    rect = if Keyword.get(opts, :center_on_origin?, true) do
+      sprite.rect_centered
+    else
+      sprite.rect_tight
+    end
+    render_template("sprite.html",
+      rect: rect,
+      image: sprite.image,
+      socket: Keyword.fetch!(opts, :socket),
+      clip_path: sprite.clip_path,
+    )
+  end
+
   def message(%{socket: _socket} = assigns, do: block) do
     assigns =
       case assigns do

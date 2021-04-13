@@ -1,0 +1,19 @@
+<%# Sprite Template %>
+<div 
+  class="relative"
+  style="
+    width:<%= @rect.width %>px;
+    height:<%= @rect.height %>px;
+  "
+>
+  <img 
+    class="absolute"
+    width="<%= @image.size.width %>"
+    src="<%= Routes.static_path @socket, @image.path %>"
+    style="
+      clip-path: path(<%= @clip_path %>);
+      left:<%= -@rect.x %>px;
+      top:<%= -@rect.y %>px;
+    "
+  >
+</div>
