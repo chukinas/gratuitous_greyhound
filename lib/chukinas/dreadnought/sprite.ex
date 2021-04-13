@@ -37,7 +37,7 @@ defmodule Sprite do
       size: size,
       mountings: sprite.mountings |> Enum.map(&Mount.new/1),
       image: image,
-      clip_path: sprite.clip_path
+      clip_path: svg.path
     }
   end
 
