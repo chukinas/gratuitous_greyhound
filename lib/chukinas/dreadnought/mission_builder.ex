@@ -28,7 +28,7 @@ defmodule MissionBuilder do
     Mission.new()
     |> Mission.set_grid(square_size, round(arena.width / square_size), round(arena.height / square_size), margin)
     |> Map.put(:islands, islands)
-    |> Mission.set_unit(unit)
+    |> Mission.put(unit)
     |> Mission.calc_command_squares(motion_range_polygon)
   end
 end

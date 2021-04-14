@@ -84,8 +84,7 @@ const Unit = {
       me.pushEvent("game_over")
     }
     const pushEvent = this.pushEvent
-    console.log("unit element before update!", el.dataset.gameover)
-    const path = document.getElementById("lastPath")
+    const path = document.getElementById(`${el.id}-lastPath`)
     gsap.to(el, {
       motionPath: {
         autoRotate: true,

@@ -1,5 +1,6 @@
 alias Chukinas.Dreadnought.Mission
 alias Chukinas.Geometry.{Position}
+alias Chukinas.Util.Precision
 
 defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
   use ChukinasWeb, :live_component
@@ -40,6 +41,8 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
           phx-target="<%= @myself %>"
           phx-value-x="<%= square.center.x %>"
           phx-value-y="<%= square.center.y %>"
+          <%# TODO 185 dynamically generate this id %>
+          phx-value-unit_id=1
           phx-value-type="<%= square.path_type %>"
         >
           <div
@@ -69,22 +72,21 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
         height: <%= @mission.grid.height %>px
       "
     >
+      <%= for unit <- @mission.units do %>
       <path
-        id="lastPath"
-        d="<%= @mission.unit.maneuver_svg_string %>"
+        id="unit-<%= unit.id %>-lastPath"
+        d="<%= unit.maneuver_svg_string %>"
         style="stroke-linejoin:round;stroke-width:20;stroke:#fff;fill:none"
       />
+      <% end %>
     </svg>
+    <%= for unit <- @mission.units do %>
     <%= ChukinasWeb.DreadnoughtView.render "unit3.html",
       socket: @socket,
-      unit: @mission.unit,
+      unit: unit,
       margin: @mission.margin,
       game_over?: @mission.game_over? %>
-    <div class="absolute" style="
-      left: <%= 50 + @mission.margin.width %>px;
-      top: <%= 300 + @mission.margin.height %>px;
-    ">
-    </div>
+    <% end %>
     """
   end
   # TODO svg path as hook?
@@ -95,12 +97,15 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
   end
 
   @impl true
-  def handle_event("select_square", %{"x" =>  x, "y" => y, "type" => path_type}, socket) do
+  def handle_event("select_square", %{"x" =>  x, "y" => y, "type" => path_type, "unit_id" => unit_id}, socket) do
     path_type = path_type |> String.to_atom
-    position = Position.new(String.to_float(x), String.to_float(y))
+    [x, y, id] =
+      [x, y, unit_id]
+      |> Enum.map(&Precision.coerce_int/1)
+    position = Position.new(x, y)
     mission =
       socket.assigns.mission
-      |> Mission.move_unit_to(position, path_type)
+      |> Mission.move_unit_to(id, position, path_type)
       |> Mission.calc_game_over
     {:noreply, socket |> assign(mission: mission)}
   end
