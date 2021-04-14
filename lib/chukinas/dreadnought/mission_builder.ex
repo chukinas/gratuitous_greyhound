@@ -13,9 +13,10 @@ defmodule MissionBuilder do
       height: 1000
     }
     margin = Size.new(arena.height, arena.width)
-    unit = Unit.new(1, pose: Pose.new(100, 155, 75))
-    # TODO 185 This does not belong here
-    motion_range_polygon = Unit.get_motion_range unit
+    units = [
+      Unit.new(1, pose: Pose.new(100, 155, 75)),
+      Unit.new(2, pose: Pose.new(500, 155, 75))
+    ]
     islands = [
       Position.new(500, 500),
       Position.new(2500, 1200),
@@ -33,7 +34,7 @@ defmodule MissionBuilder do
     Mission.new()
     |> Mission.put_dimensions(grid, margin)
     |> Map.put(:islands, islands)
-    |> Mission.put(unit)
-    |> Mission.calc_command_squares(motion_range_polygon)
+    |> Mission.put(units)
+    |> Mission.initialize
   end
 end

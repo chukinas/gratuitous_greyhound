@@ -16,6 +16,8 @@ defmodule Unit do
     # ID must be unique within the world
     field :id, integer()
     field :pose, Pose.t()
+    field :cmd_squares, [GridSquare.t()], default: []
+    # TODO rename path?
     field :maneuver_svg_string, String.t(), enforce: false
     field :sprite, Sprite.t()
     field :turrets, [Turret.t()]
@@ -53,8 +55,53 @@ defmodule Unit do
   end
 
   # *** *******************************
+  # *** COMMANDS
+
+  def move_to(unit, %Position{} = position) do
+    put_in(unit.commands.move_to, position)
+  end
+
+  def execute_commands(unit, grid, islands) do
+    unit
+  end
+
+  # *** *******************************
   # *** API
 
+  ## TODO remove path_type?
+  #def move_unit_to(%__MODULE__{} = mission, unit_id, position, path_type \\ :straight) do
+  #  # TODO most of this stuff belongs in unit module
+  #  unit = ById.get!(mission.units, unit_id)
+  #  path = Path.get_connecting_path(unit.pose, position)
+  #  unit = Unit.move_along_path(unit, path)
+  #  trim_angle = cond do
+  #    path_type == :sharp_turn and path.angle > 0
+  #      -> 30
+  #    path_type == :sharp_turn
+  #      -> -30
+  #    true
+  #      -> 0
+  #  end
+  #  motion_range_polygon = Unit.get_motion_range(unit, trim_angle)
+  #  mission
+  #  |> put(unit)
+  #  |> calc_command_squares(motion_range_polygon)
+  #end
+  # TODO make these private where needed
+  def calc_cmd_squares(unit, grid, islands) do
+    # TODO 185 work trim back into the calc
+    cmd_zone = get_motion_range(unit)
+    cmd_squares =
+      grid
+      |> Grid.squares(include: cmd_zone, exclude: islands)
+      |> Stream.map(&GridSquare.calc_path(&1, unit.pose))
+      |> Stream.filter(&Collide.avoids?(&1.path, islands))
+      |> Enum.to_list
+    %{unit | cmd_squares: cmd_squares}
+  end
+
+  # TODO rename apply_path
+  # TODO apply same naming convention to mission
   def move_along_path(unit, path) do
     %{unit |
       pose: Path.get_end_pose(path),

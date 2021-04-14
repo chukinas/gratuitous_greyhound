@@ -11,7 +11,6 @@ defmodule Mission do
   typedstruct do
     field :arena, Rect.t()
     field :grid, Grid.t()
-    field :squares, [GridSquare.t()]
     field :world, Size.t()
     field :margin, Size.t()
     field :game_over?, boolean(), default: false
@@ -27,6 +26,11 @@ defmodule Mission do
   # *** *******************************
   # *** SETTERS
 
+  def put(mission, list) when is_list(list) do
+    Enum.reduce(list, mission, fn item, mission ->
+      put(mission, item)
+    end)
+  end
   def put(mission, %Unit{} = unit) do
     Map.update! mission, :units, fn units ->
       units
@@ -49,36 +53,16 @@ defmodule Mission do
   # *** *******************************
   # *** API
 
-  def calc_command_squares(mission, command_zone) do
-    # TODO 185
-    unit = ById.get(mission.units, 1)
-    command_squares =
-      mission.grid
-      |> Grid.squares(include: command_zone, exclude: mission.islands)
-      |> Stream.map(&GridSquare.calc_path(&1, unit.pose))
-      |> Stream.filter(&Collide.avoids?(&1.path, mission.islands))
-      |> Enum.to_list
-    %{mission | squares: command_squares}
+  def initialize(mission) do
+    mission
   end
 
-  # TODO remove path_type?
-  def move_unit_to(%__MODULE__{} = mission, unit_id, position, path_type \\ :straight) do
-    # TODO most of this stuff belongs in unit module
-    unit = ById.get!(mission.units, unit_id)
-    path = Path.get_connecting_path(unit.pose, position)
-    unit = Unit.move_along_path(unit, path)
-    trim_angle = cond do
-      path_type == :sharp_turn and path.angle > 0
-        -> 30
-      path_type == :sharp_turn
-        -> -30
-      true
-        -> 0
-    end
-    motion_range_polygon = Unit.get_motion_range(unit, trim_angle)
-    mission
-    |> put(unit)
-    |> calc_command_squares(motion_range_polygon)
+  def move_unit_to(mission, unit_id, position, _path_type) do
+    unit =
+      mission.unit
+      |> ById.get!(unit_id)
+      |> Unit.move_to(position)
+    put(mission, unit)
   end
 
   def game_over?(mission), do: Enum.empty? mission.squares

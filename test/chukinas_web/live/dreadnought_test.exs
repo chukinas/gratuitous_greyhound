@@ -122,10 +122,14 @@ defmodule ChukinasWeb.DreadnoughtLiveTest do
 
   test "Ship 1", %{conn: conn} do
     {:error, {:live_redirect, %{to: "/dreadnought/welcome"}}} = live(conn, "/dreadnought")
-    # {:ok, view, _html} = live(conn, "/dreadnought")
-    # assert has_element?(view, "#unit--1")
   end
-  #
+
+  test "Two ships on screen", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/dreadnought/grid")
+    assert has_element?(view, "#unit-1")
+    assert has_element?(view, "#unit-2")
+  end
+
   #   test "Start game.", %{conn: conn} do
   #     {:ok, view, _html} = live(conn, "/dreadnought/disclaimer")
   #     element(view, "#message-button") |> render_click()
