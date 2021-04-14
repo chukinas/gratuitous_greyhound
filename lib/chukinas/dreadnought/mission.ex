@@ -25,19 +25,8 @@ defmodule Mission do
   def new(), do: %__MODULE__{}
 
   # *** *******************************
-  # *** GETTERS
-
-  def unit(%__MODULE__{} = mission, id) when is_integer(id), do: ById.get(mission.units, id)
-  def get_unit(%__MODULE__{} = mission, id), do: unit(mission, id)
-
-  # *** *******************************
   # *** SETTERS
 
-  # TODO rename put
-  # TODO are these private?
-  def push(%__MODULE__{units: units} = mission, %Unit{} = unit) do
-    %{mission | units: ById.insert(units, unit)}
-  end
   def put(mission, %Unit{} = unit) do
     Map.update! mission, :units, fn units ->
       units
@@ -45,17 +34,7 @@ defmodule Mission do
       |> Enum.concat([unit])
     end
   end
-
-  def set_arena(%__MODULE__{} = mission, width, height) do
-    %{mission | arena: Rect.new(width, height)}
-  end
-  # TODO get rid of this one
-  def set_arena(%__MODULE__{} = mission, %Rect{} = arena) do
-    %{mission | arena: arena}
-  end
-
-  def set_grid(mission, square_size, x_count, y_count, %Size{} = margin) do
-    grid = Grid.new(square_size, x_count, y_count)
+  def put_dimensions(mission, %Grid{} = grid, %Size{} = margin) do
     world = Size.new(
       grid.width + 2 * margin.width,
       grid.height + 2 * margin.height

@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Mission, Unit, MissionBuilder, Island}
-alias Chukinas.Geometry.{Pose, Size, Position}
+alias Chukinas.Geometry.{Pose, Size, Position, Grid}
 
 defmodule MissionBuilder do
 
@@ -14,6 +14,7 @@ defmodule MissionBuilder do
     }
     margin = Size.new(arena.height, arena.width)
     unit = Unit.new(1, pose: Pose.new(100, 155, 75))
+    # TODO 185 This does not belong here
     motion_range_polygon = Unit.get_motion_range unit
     islands = [
       Position.new(500, 500),
@@ -25,8 +26,12 @@ defmodule MissionBuilder do
       position = Position.shake position
       Island.random(index, position)
     end)
+    [square_count_x, square_count_y] =
+      [arena.width, arena.height]
+      |> Enum.map(&round(&1 / square_size))
+    grid = Grid.new(square_size, square_count_x, square_count_y)
     Mission.new()
-    |> Mission.set_grid(square_size, round(arena.width / square_size), round(arena.height / square_size), margin)
+    |> Mission.put_dimensions(grid, margin)
     |> Map.put(:islands, islands)
     |> Mission.put(unit)
     |> Mission.calc_command_squares(motion_range_polygon)
