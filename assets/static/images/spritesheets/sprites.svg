@@ -14,7 +14,7 @@
    width="122"
    height="57"
    viewBox="0 0 122 57"
-   sodipodi:docname="clip_paths.svg"
+   sodipodi:docname="sprites.svg"
    inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)">
   <style
      id="style5183" />
@@ -180,17 +180,17 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1280"
-     inkscape:window-height="669"
+     inkscape:window-width="2560"
+     inkscape:window-height="1352"
      id="namedview4"
      showgrid="false"
-     inkscape:zoom="8.4620056"
-     inkscape:cx="22.706801"
-     inkscape:cy="32.4667"
+     inkscape:zoom="9.4472762"
+     inkscape:cx="37.348396"
+     inkscape:cy="42.566043"
      inkscape:window-x="2560"
-     inkscape:window-y="733"
+     inkscape:window-y="51"
      inkscape:window-maximized="0"
-     inkscape:current-layer="layer10"
+     inkscape:current-layer="layer6"
      inkscape:document-rotation="0"
      showguides="true"
      inkscape:guide-bbox="true"
@@ -199,8 +199,7 @@
      inkscape:groupmode="layer"
      id="layer7"
      inkscape:label="red"
-     style="display:inline"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <g
        inkscape:groupmode="layer"
        inkscape:label="image"
@@ -208,15 +207,15 @@
        style="display:inline"
        sodipodi:insensitive="true">
       <image
-         sodipodi:absref="/home/jc/projects/chukinas/assets/static/spritesheets/red.png"
+         sodipodi:absref="/home/jc/projects/chukinas/assets/static/images/spritesheets/red.png"
          xlink:href="red.png"
-         y="0"
-         x="0"
-         id="image1201"
-         style="image-rendering:optimizeSpeed"
-         preserveAspectRatio="none"
+         width="122"
          height="57"
-         width="122" />
+         preserveAspectRatio="none"
+         style="image-rendering:optimizeSpeed"
+         id="image1201"
+         x="0"
+         y="0" />
     </g>
     <g
        inkscape:groupmode="layer"
@@ -274,8 +273,7 @@
        inkscape:groupmode="layer"
        id="layer6"
        inkscape:label="ship_large"
-       style="display:inline"
-       sodipodi:insensitive="true">
+       style="display:inline">
       <path
          style="fill:#86ff00;fill-opacity:0.475486;stroke:none;stroke-width:0.182973px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          d="M 73.421946,56.435023 49.017571,56.430522 22.595,57.259254 1.9272685,52.240661 0.07428334,38.147362 19.923642,28.223722 l 51.781227,1.68658 20.068997,6.291772 7.84248,6.716778 0.228374,4.817948 z"
@@ -291,14 +289,14 @@
       <circle
          style="fill:#0067ff;fill-opacity:0.475486;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;paint-order:fill markers stroke"
          id="mounting2"
-         cx="22"
+         cx="18"
          cy="43.721001"
          r="4.8382006"
          inkscape:label="mounting_2" />
       <circle
          style="fill:#0067ff;fill-opacity:0.475486;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;paint-order:fill markers stroke"
          id="mounting1"
-         cx="70"
+         cx="72"
          cy="43.721001"
          r="3.5795486"
          inkscape:label="mounting_1" />
@@ -399,15 +397,15 @@
        inkscape:label="image"
        sodipodi:insensitive="true">
       <image
-         sodipodi:absref="/home/jc/projects/chukinas/assets/static/spritesheets/test.png"
+         sodipodi:absref="/home/jc/projects/chukinas/assets/static/images/spritesheets/test.png"
          xlink:href="test.png"
-         width="33.333332"
-         height="33.333332"
-         preserveAspectRatio="none"
-         style="image-rendering:optimizeSpeed"
-         id="image1034"
+         y="13.903466"
          x="41.94978"
-         y="13.903466" />
+         id="image1034"
+         style="image-rendering:optimizeSpeed"
+         preserveAspectRatio="none"
+         height="33.333332"
+         width="33.333332" />
     </g>
     <g
        inkscape:groupmode="layer"

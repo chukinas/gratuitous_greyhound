@@ -46,7 +46,6 @@ defmodule Sprite do
       image: image,
       clip_path: svg.path,
       rect_tight: svg.rect,
-      # TODO calculate this
       rect_centered: get_centered_rect(origin, svg.rect),
     }
   end
