@@ -7,10 +7,10 @@ defmodule MissionBuilder do
     # Config
     square_size = 50
     arena = %{
-      width: 500,
-      height: 500
-      #width: 3000,
-      #height: 2000
+      #width: 500,
+      #height: 500
+      width: 1500,
+      height: 1000
     }
     margin = Size.new(arena.height, arena.width)
     unit = Unit.new(1, pose: Pose.new(100, 155, 75))

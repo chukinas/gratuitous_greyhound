@@ -276,9 +276,10 @@
        style="display:inline">
       <path
          style="fill:#86ff00;fill-opacity:0.475486;stroke:none;stroke-width:0.182973px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         d="M 73.421946,56.435023 49.017571,56.430522 22.595,57.259254 1.9272685,52.240661 0.07428334,38.147362 19.923642,28.223722 l 51.781227,1.68658 20.068997,6.291772 7.84248,6.716778 0.228374,4.817948 z"
+         d="M 73.520199,57.29619 49.017571,56.430522 22.595,57.259254 1.9272685,52.240661 0.07428334,38.147362 19.923642,28.223722 l 51.781227,1.68658 20.068997,6.291772 7.84248,6.716778 0.228374,4.817948 z"
          id="main"
-         inkscape:label="main" />
+         inkscape:label="main"
+         sodipodi:nodetypes="ccccccccccc" />
       <circle
          style="fill:#ff007f;fill-opacity:0.475486;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;paint-order:fill markers stroke"
          id="center"
