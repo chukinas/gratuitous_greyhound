@@ -2,7 +2,6 @@ defmodule ChukinasWeb.DreadnoughtView do
   use ChukinasWeb, :view
 
   def sprite(opts \\ []) do
-    IOP.inspect opts, "sprite opts"
     sprite = Keyword.fetch!(opts, :sprite)
     rect = if Keyword.get(opts, :center_on_origin?, true) do
       sprite.rect_centered
@@ -15,7 +14,6 @@ defmodule ChukinasWeb.DreadnoughtView do
       image: sprite.image,
       clip_path: sprite.clip_path
     ]
-    |> IOP.inspect("assigns sprite")
     render("_sprite.html", assigns)
   end
 
@@ -37,7 +35,3 @@ defmodule ChukinasWeb.DreadnoughtView do
   end
 
 end
-
-# https://bernheisel.com/blog/phoenix-liveview-and-views
-# https://www.wyeworks.com/blog/2020/03/03/breaking-up-a-phoenix-live-view/
-# https://fullstackphoenix.com/tutorials/nested-templates-and-layouts-in-phoenix-framework

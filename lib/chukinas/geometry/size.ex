@@ -54,12 +54,8 @@ defmodule Size do
     }
   end
 
-  def halve(size) do
-    %__MODULE__{
-      width: size.width / 2,
-      height: size.height / 2
-    }
-  end
+  def halve(size), do: multiply(size, 0.5)
+  def double(size), do: multiply(size, 2)
 
   def multiply(size, value) do
     %__MODULE__{

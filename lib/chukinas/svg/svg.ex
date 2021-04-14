@@ -24,17 +24,6 @@ defmodule Chukinas.Svg do
     "M #{x0} #{y0} #{get_quadratic_curve(path)}"
   end
 
-  def get_string(%Rect{} = bounding_rect, path_start_point, margin)
-      when Position.is(path_start_point)
-      and is_number(margin) do
-    relative_rect_with_margin = bounding_rect
-                                |> Rect.subtract(path_start_point)
-                            |> Rect.apply_margin(margin)
-    position = relative_rect_with_margin |> Rect.get_start_position() |> Precision.values_to_int()
-    size = Rect.get_size(relative_rect_with_margin)
-    "#{position.x} #{position.y} #{round(size.width)} #{size.height |> round()}"
-  end
-
   # *** *******************************
   # *** PRIVATE
 

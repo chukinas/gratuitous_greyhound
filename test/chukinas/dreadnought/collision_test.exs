@@ -28,14 +28,12 @@ defmodule CollisionTest do
       points
       |> Enum.map(&Position.to_vertex/1)
       |> Collision.Polygon.from_vertices
-      ##|> IOP.inspect("convex_polygon")
     assert convex_polygon.convex
     concave_polygon =
       points
       |> Enum.reverse
       |> Enum.map(&Position.to_vertex/1)
       |> Collision.Polygon.from_vertices
-      #|> IOP.inspect("concave_polygon")
     refute concave_polygon.convex
   end
 end

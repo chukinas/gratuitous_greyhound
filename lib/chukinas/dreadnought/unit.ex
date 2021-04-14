@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet}
+alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret}
 alias Chukinas.Geometry.{Pose, Position, Turn, Straight, Polygon, Path}
 alias Chukinas.Svg
 
@@ -7,28 +7,49 @@ defmodule Unit do
   Represents a ship or some other combat unit
   """
 
-  # TODO remove. Also remove the module itself
-  # import Unit.Builder
-
   # *** *******************************
   # *** TYPES
 
   use TypedStruct
 
-  typedstruct do
+  typedstruct enforce: true do
     # ID must be unique within the world
     field :id, integer()
     field :pose, Pose.t()
-    field :maneuver_svg_string, String.t()
-    field :sprite, Sprite.t(), default: Spritesheet.red("ship_large")
+    field :maneuver_svg_string, String.t(), enforce: false
+    field :sprite, Sprite.t()
+    field :turrets, [Turret.t()]
   end
 
   # *** *******************************
   # *** NEW
 
   def new(id, opts \\ []) do
-    struct(__MODULE__, Keyword.put(opts, :id, id))
-    |> IOP.inspect("red ship 2")
+    sprite = Spritesheet.red("ship_large")
+    turrets =
+      [
+        {1, 0},
+        {2, 180}
+      ]
+      |> Enum.map(fn {id, angle} ->
+        # TODO I don't think I need a mounting struct.
+        # Just replace the list of structs with a single map of positions.
+        # I'll wait to do this though until I convince myself
+        # that I don't need a struct with any other props.
+        position =
+          sprite.mountings
+          |> Enum.find(&(&1.id == id))
+          |> Map.fetch!(:position)
+          |> Pose.new(angle)
+        Turret.new(id, position, Spritesheet.red("turret1"))
+      end)
+      |> IOP.inspect
+    opts =
+      opts
+      |> Keyword.put_new(:sprite, sprite)
+      |> Keyword.put_new(:turrets, turrets)
+      |> Keyword.put(:id, id)
+    struct!(__MODULE__, opts)
   end
 
   # *** *******************************

@@ -35,8 +35,9 @@ defmodule Chukinas.Geometry.PathTest do
 
   test "bounding rect of 45deg straight path" do
     path = Straight.new(0, 0, 45, :math.sqrt(2))
-    actual_rect = path
-    |> Path.get_bounding_rect()
+    actual_rect =
+      path
+      |> Path.get_bounding_rect()
     expected_rect = Rect.new(0, 0, 1, 1)
     assert match_numerical_map? expected_rect, actual_rect
   end

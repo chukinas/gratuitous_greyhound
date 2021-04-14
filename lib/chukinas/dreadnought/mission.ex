@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Unit, Mission, ById, CommandIds, Island}
+alias Chukinas.Dreadnought.{Unit, Mission, ById, Island}
 alias Chukinas.Geometry.{Rect, Grid, GridSquare, Size, Collide, Path}
 
 defmodule Mission do
@@ -29,7 +29,6 @@ defmodule Mission do
   # *** *******************************
   # *** GETTERS
 
-  def unit(%__MODULE__{} = mission, %CommandIds{unit: id}), do: unit(mission, id)
   def unit(%__MODULE__{} = mission, id) when is_integer(id), do: ById.get(mission.units, id)
   def get_unit(%__MODULE__{} = mission, id), do: unit(mission, id)
 
