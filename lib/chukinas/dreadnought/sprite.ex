@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Sprite, Mount}
-alias Chukinas.Geometry.{Position, Size}
+alias Chukinas.Geometry.{Position, Size, Rect}
 alias Chukinas.Svg.Interpret
 
 defmodule Sprite do
@@ -47,21 +47,24 @@ defmodule Sprite do
       clip_path: svg.path,
       rect_tight: svg.rect,
       # TODO calculate this
-      rect_centered: svg.rect,
+      rect_centered: get_centered_rect(origin, svg.rect),
     }
   end
 
-  # TODO delete
-  def from_unitbuilder(map) do
-    rect = map.rect
-    map =
-      map
-      |> Map.put(:start, Position.new(rect.x, rect.y))
-      |> Map.put(:size, Size.rounded(rect.width, rect.height))
-      |> Map.put(:start_rel, Position.new(-rect.half_width, -rect.half_height))
-      |> Map.put(:mountings, map.mountings |> Enum.map(&Mount.new/1))
-      |> Map.put(:image, struct(Sprite.Image, map.image))
-    struct(__MODULE__, map)
+  defp get_centered_rect(origin, rect) do
+    half_width = max(
+      abs(origin.x - rect.x),
+      abs(rect.x + rect.width - origin.x)
+    )
+    half_height = max(
+      abs(origin.y - rect.y),
+      abs(rect.y + rect.height - origin.y)
+    )
+    dist_from_origin = Position.new(half_width, half_height)
+    Rect.new(
+      Position.subtract(origin, dist_from_origin),
+      Position.add(origin, dist_from_origin)
+    )
   end
 end
 

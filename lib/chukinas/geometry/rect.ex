@@ -27,6 +27,14 @@ defmodule Rect do
       height: abs(start_y - end_y)
     }
   end
+  def new(%{x: x, y: y}, %{width: width, height: height}) do
+    %__MODULE__{
+      x: x,
+      y: y,
+      width: width,
+      height: height
+    }
+  end
   def new(start_position, end_position) when Position.is(start_position) and Position.is(end_position) do
     %__MODULE__{
       x: start_position.x,
