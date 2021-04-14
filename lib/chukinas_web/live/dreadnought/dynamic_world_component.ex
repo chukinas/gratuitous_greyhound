@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.Mission
+alias Chukinas.Dreadnought.{Mission, PlayerTurn}
 alias Chukinas.Geometry.{Position}
 alias Chukinas.Util.Precision
 
@@ -29,7 +29,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
           grid-auto-rows: <%= @mission.grid.square_size %>px;
         "
       >
-        <%= for square <- @mission.squares do %>
+        <%= for square <- @player_turn.squares do %>
         <button
           id="gridSquareTarget-<%= square.id %>"
           class="p-0.5 hover:p-0 pointer-events-auto"
@@ -89,10 +89,19 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
     <% end %>
     """
   end
-  # TODO svg path as hook?
 
   @impl true
   def mount(socket) do
+    {:ok, socket}
+  end
+
+  @impl true
+  def update(socket) do
+      socket|> IOP.inspect("dyn comp socket")
+    player_turn = PlayerTurn.new(socket.assigns.mission)
+    socket =
+      socket
+      |> assign(player_turn: player_turn)
     {:ok, socket}
   end
 

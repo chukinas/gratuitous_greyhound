@@ -1,5 +1,6 @@
+# TODO ById should be a utility
 alias Chukinas.Dreadnought.{Unit, Mission, ById, Island}
-alias Chukinas.Geometry.{Rect, Grid, GridSquare, Size, Collide, Path}
+alias Chukinas.Geometry.{Rect, Grid, Size}
 
 defmodule Mission do
 
@@ -13,6 +14,7 @@ defmodule Mission do
     field :grid, Grid.t()
     field :world, Size.t()
     field :margin, Size.t()
+    # TODO get rid of this ... for now
     field :game_over?, boolean(), default: false
     field :islands, [Island.t()], default: []
     field :units, [Unit.t()], default: []
