@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Mission.Player}
+alias Chukinas.Dreadnought.{Mission.Player, Command, Unit}
 
 defmodule Player do
   @moduledoc """
@@ -10,23 +10,60 @@ defmodule Player do
 
   use TypedStruct
 
-  typedstruct enforce: true do
-    field :current_unit, Unit.t(), enforce: false
-    field :my_other_units, [Unit.t()], default: []
-    field :not_my_units, [Unit.t()], default: []
+  typedstruct do
+    field :active_units, [Unit.t()], default: []
+    field :other_units, [Unit.t()], default: []
+    field :commands, [Command.t()], default: []
   end
 
   # *** *******************************
   # *** NEW
 
   def new(units) do
-    {[current_unit], my_other_units} =
-      units
+    %__MODULE__{ other_units: units }
+    |> calc_active_units
+  end
+
+  # *** *******************************
+  # *** API
+
+  def issue_command(mission_player, command) do
+    mission_player
+    |> Map.update!(:commands, & [command | &1])
+    |> calc_active_units
+  end
+
+  # *** *******************************
+  # *** PRIVATE
+
+  defp calc_active_units(player) do
+    complete_unit_ids =
+      player.commands
+      |> Enum.map(& &1.unit_id)
+    {completed_units, incomplete_units} =
+      player.active_units ++ player.other_units
+      |> Enum.split_with(& &1.id in complete_unit_ids)
+    {active_units, other_incomplete_units} =
+      incomplete_units
       |> Enum.split(1)
-    %__MODULE__{
-      current_unit: current_unit,
-      my_other_units: my_other_units
+    %{player |
+      active_units: active_units,
+      other_units: completed_units ++ other_incomplete_units
     }
-    |> IOP.inspect("Mission.Player struct")
+    |> IOP.inspect("calc current unit")
+  end
+
+  # *** *******************************
+  # *** IMPLEMENTATIONS
+
+  defimpl Inspect do
+    import Inspect.Algebra
+    def inspect(player, opts) do
+      summary = %{
+        active_unit_ids: Enum.map(player.active_units, & &1.id),
+        inactive_unit_ids: Enum.map(player.other_units, & &1.id)
+      }
+     concat ["#Player<", to_doc(summary, opts), ">"]
+    end
   end
 end

@@ -1,6 +1,5 @@
-alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret, Command}
-alias Chukinas.Geometry.{Pose, Position, Turn, Straight, Polygon, Path}
-alias Chukinas.Svg
+alias Chukinas.Dreadnought.{Command}
+alias Chukinas.Geometry.{Position}
 
 defmodule Command do
   @moduledoc """
@@ -15,9 +14,15 @@ defmodule Command do
   use TypedStruct
 
   typedstruct do
+    field :unit_id, integer(), enforce: true
     field :move_to, Position.t()
     field :attack, unit_id()
   end
 
+  # *** *******************************
+  # *** NEW
+
   def new(opts \\ []), do: struct!(__MODULE__, opts)
+
+  def move_to(unit_id, position), do: new(unit_id: unit_id, move_to: position)
 end

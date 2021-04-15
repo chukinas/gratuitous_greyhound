@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Mission}
+alias Chukinas.Dreadnought.{Mission.Player, Command}
 alias Chukinas.Geometry.{Position}
 alias Chukinas.Util.Precision
 
@@ -29,7 +29,8 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
           grid-auto-rows: <%= @grid.square_size %>px;
         "
       >
-        <%= for square <- @mission_player.current_unit.cmd_squares do %>
+        <%= for unit <- @mission_player.active_units do %>
+        <%= for square <- unit.cmd_squares do %>
         <button
           id="gridSquareTarget-<%= square.id %>"
           class="p-0.5 hover:p-0 pointer-events-auto"
@@ -41,8 +42,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
           phx-target="<%= @myself %>"
           phx-value-x="<%= square.center.x %>"
           phx-value-y="<%= square.center.y %>"
-          <%# TODO 185 dynamically generate this id %>
-          phx-value-unit_id=1
+          phx-value-unit_id="<%= unit.id %>"
           phx-value-type="<%= square.path_type %>"
         >
           <div
@@ -59,6 +59,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
           </div>
         </button>
         <% end %>
+        <% end %>
       </div>
     </div>
     <svg
@@ -72,7 +73,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
         height: <%= @grid.height %>px
       "
     >
-      <%= for unit <- @mission_player.my_other_units ++ [@mission_player.current_unit] do %>
+      <%= for unit <- @mission_player.active_units ++ @mission_player.other_units do %>
       <path
         id="unit-<%= unit.id %>-lastPath"
         d="<%= unit.maneuver_svg_string %>"
@@ -80,7 +81,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
       />
       <% end %>
     </svg>
-    <%= for unit <- @mission_player.my_other_units ++ [@mission_player.current_unit] do %>
+    <%= for unit <- @mission_player.active_units ++ @mission_player.other_units do %>
     <%= ChukinasWeb.DreadnoughtView.render "unit3.html",
       socket: @socket,
       unit: unit,
@@ -96,16 +97,20 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
   end
 
   @impl true
-  def handle_event("select_square", %{"x" =>  x, "y" => y, "type" => path_type, "unit_id" => unit_id}, socket) do
-    path_type = path_type |> String.to_atom
-    [x, y, id] =
+  def handle_event("select_square", %{
+    "x" =>  x,
+    "y" => y,
+    "unit_id" => unit_id
+  }, socket) do
+    [x, y, unit_id] =
       [x, y, unit_id]
+      # TODO coerce int should accept list as well
       |> Enum.map(&Precision.coerce_int/1)
-    position = Position.new(x, y)
-    mission =
-      socket.assigns.mission
-      |> Mission.move_unit_to(id, position, path_type)
-    {:noreply, socket |> assign(mission: mission)}
+    command = Command.move_to unit_id, Position.new(x, y)
+    mission_player =
+      socket.assigns.mission_player
+      |> Player.issue_command(command)
+    {:noreply, socket |> assign(mission_player: mission_player)}
   end
 
 end
