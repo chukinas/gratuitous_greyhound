@@ -19,9 +19,9 @@ defmodule Player do
   # *** *******************************
   # *** NEW
 
-  def new(mission) do
+  def new(units) do
     {[current_unit], my_other_units} =
-      mission.units
+      units
       |> Enum.split(1)
     %__MODULE__{
       current_unit: current_unit,

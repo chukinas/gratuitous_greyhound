@@ -17,15 +17,19 @@
   template "welcome_animation.html", socket: @socket %>
 
 <%# World: Actual Play %>
+<%# TODO compine this stuff into single tag %>
 <%= if @live_action != :welcome do %>
 <%= live_component @socket, 
     Dreadnought.StaticWorldComponent, 
     id: :grid_lab, 
+    mission_player: @mission_player,
     mission_playing_surface: @mission_playing_surface do %>
   <%# TODO remove the ChukinasWeb %>
   <%= live_component @socket,
       ChukinasWeb.Dreadnought.DynamicWorldComponent,
       id: :dynamic_world,
+      margin: @margin,
+      grid: @grid,
       mission_player: @mission_player %>
 <% end %>
 <% end %>

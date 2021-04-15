@@ -11,7 +11,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
     socket = assign(socket,
       page_title: "Dreadnought",
       mission: mission,
-      mission_playing_surface: Mission.to_playing_surface(mission),
+      mission_playing_surface: Mission.to_playing_surface(mission) |> Map.from_struct,
       mission_player: Mission.to_player(mission)
     )
     {:ok, socket}

@@ -8,7 +8,6 @@
     transform: rotate(<%= @unit.pose.angle %>deg);
   "
   phx-hook="Unit"
-  <%= if @game_over?, do: "data-gameover=true" %>
 >
   <div class="relative">
     <%# TODO shorten this syntax %>

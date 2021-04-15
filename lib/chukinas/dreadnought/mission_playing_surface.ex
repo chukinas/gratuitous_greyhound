@@ -13,6 +13,7 @@ defmodule PlayingSurface do
   typedstruct enforce: true do
     field :world, Size.t()
     field :margin, Size.t()
+    field :grid, Grid.t()
     field :islands, [Island.t()], default: []
   end
 
@@ -22,11 +23,13 @@ defmodule PlayingSurface do
   def new(%{
     world: world,
     margin: margin,
+    grid: grid,
     islands: islands
   }) do
     %__MODULE__{
       world: world,
       margin: margin,
+      grid: grid,
       islands: islands
     }
   end

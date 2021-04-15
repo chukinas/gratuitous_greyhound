@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Mission, PlayerTurn}
+alias Chukinas.Dreadnought.{Mission}
 alias Chukinas.Geometry.{Position}
 alias Chukinas.Util.Precision
 
@@ -15,21 +15,21 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
       class="absolute rounded-3xl"
       style="
         box-shadow: inset 10px 10px 50px, 2px 2px 10px aquamarine;
-        left: <%= @mission.margin.width %>px;
-        top: <%= @mission.margin.height %>px;
-        width:<%= @mission.grid.width %>px;
-        height: <%= @mission.grid.height %>px
+        left: <%= @margin.width %>px;
+        top: <%= @margin.height %>px;
+        width:<%= @grid.width %>px;
+        height: <%= @grid.height %>px
       "
     >
       <div
         id="arenaGrid"
         style="
           display: grid;
-          grid-auto-columns: <%= @mission.grid.square_size %>px;
-          grid-auto-rows: <%= @mission.grid.square_size %>px;
+          grid-auto-columns: <%= @grid.square_size %>px;
+          grid-auto-rows: <%= @grid.square_size %>px;
         "
       >
-        <%= for square <- @player_turn.squares do %>
+        <%= for square <- @mission_player.current_unit.cmd_squares do %>
         <button
           id="gridSquareTarget-<%= square.id %>"
           class="p-0.5 hover:p-0 pointer-events-auto"
@@ -64,15 +64,15 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
     <svg
       id="svg_paths"
       class="absolute opacity-20"
-      viewBox="0 0 <%= @mission.grid.width %> <%= @mission.grid.height %> "
+      viewBox="0 0 <%= @grid.width %> <%= @grid.height %> "
       style="
-        left: <%= @mission.margin.width %>px;
-        top: <%= @mission.margin.height %>px;
-        width:<%= @mission.grid.width %>px;
-        height: <%= @mission.grid.height %>px
+        left: <%= @margin.width %>px;
+        top: <%= @margin.height %>px;
+        width:<%= @grid.width %>px;
+        height: <%= @grid.height %>px
       "
     >
-      <%= for unit <- @mission.units do %>
+      <%= for unit <- @mission_player.my_other_units do %>
       <path
         id="unit-<%= unit.id %>-lastPath"
         d="<%= unit.maneuver_svg_string %>"
@@ -80,28 +80,17 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
       />
       <% end %>
     </svg>
-    <%= for unit <- @mission.units do %>
+    <%= for unit <- @mission_player.my_other_units do %>
     <%= ChukinasWeb.DreadnoughtView.render "unit3.html",
       socket: @socket,
       unit: unit,
-      margin: @mission.margin,
-      game_over?: @mission.game_over? %>
+      margin: @margin %>
     <% end %>
     """
   end
 
   @impl true
   def mount(socket) do
-    {:ok, socket}
-  end
-
-  @impl true
-  def update(socket) do
-      socket|> IOP.inspect("dyn comp socket")
-    player_turn = PlayerTurn.new(socket.assigns.mission)
-    socket =
-      socket
-      |> assign(player_turn: player_turn)
     {:ok, socket}
   end
 
@@ -115,7 +104,6 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
     mission =
       socket.assigns.mission
       |> Mission.move_unit_to(id, position, path_type)
-      |> Mission.calc_game_over
     {:noreply, socket |> assign(mission: mission)}
   end
 
