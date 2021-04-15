@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret}
-alias Chukinas.Geometry.{Pose, Position, Turn, Straight, Polygon, Path}
+alias Chukinas.Geometry.{Pose, Position, Turn, Straight, Polygon, Path, Grid, GridSquare, Collide}
 alias Chukinas.Svg
 
 defmodule Unit do
@@ -61,9 +61,9 @@ defmodule Unit do
     put_in(unit.commands.move_to, position)
   end
 
-  def execute_commands(unit, grid, islands) do
-    unit
-  end
+  #def execute_commands(unit, grid, islands) do
+  #  unit
+  #end
 
   # *** *******************************
   # *** API

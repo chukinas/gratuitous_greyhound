@@ -37,6 +37,7 @@ defmodule Mission do
       |> Enum.concat([unit])
     end
   end
+
   def put_dimensions(mission, %Grid{} = grid, %Size{} = margin) do
     world = Size.new(
       grid.width + 2 * margin.width,
@@ -52,8 +53,11 @@ defmodule Mission do
   # *** *******************************
   # *** API
 
-  def initialize(mission) do
-    mission
+  def initialize(%{grid: grid, islands: islands} = mission) do
+    units =
+      mission.units
+      |> Enum.map(& Unit.calc_cmd_squares &1, grid, islands)
+    %{mission | units: units}
   end
 
   def move_unit_to(mission, unit_id, position, _path_type) do
@@ -63,10 +67,6 @@ defmodule Mission do
       |> Unit.move_to(position)
     put(mission, unit)
   end
-
-  def game_over?(mission), do: Enum.empty? mission.squares
-
-  def calc_game_over(mission), do: %{mission | game_over?: game_over? mission}
 
   def to_playing_surface(mission), do: Mission.PlayingSurface.new(mission)
   def to_player(mission), do: Mission.Player.new(mission.units)

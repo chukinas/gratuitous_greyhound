@@ -91,6 +91,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
 
   @impl true
   def mount(socket) do
+    IOP.inspect socket.assigns, "dyn comp!"
     {:ok, socket}
   end
 
