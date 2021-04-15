@@ -21,7 +21,7 @@
 <%= live_component @socket, 
     Dreadnought.StaticWorldComponent, 
     id: :grid_lab, 
-    mission_static: @mission_static do %>
+    mission_playing_surface: @mission_playing_surface do %>
   <%# TODO remove the ChukinasWeb %>
   <%= live_component @socket,
       ChukinasWeb.Dreadnought.DynamicWorldComponent,

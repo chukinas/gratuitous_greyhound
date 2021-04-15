@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{MissionBuilder}
+alias Chukinas.Dreadnought.{Mission, MissionBuilder}
 
 defmodule ChukinasWeb.DreadnoughtLive do
   use ChukinasWeb, :live_view
@@ -7,13 +7,13 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    mission =
-      MissionBuilder.build()
-    socket =
-      socket
-      |> assign(page_title: "Dreadnought")
-      |> assign(mission: mission)
-      |> assign(player_id: 1)
+    mission = MissionBuilder.build()
+    socket = assign(socket,
+      page_title: "Dreadnought",
+      mission: mission,
+      mission_playing_surface: Mission.to_playing_surface(mission),
+      mission_player: Mission.to_player(mission)
+    )
     {:ok, socket}
   end
 

@@ -1,6 +1,6 @@
 # TODO ById should be a utility
 alias Chukinas.Dreadnought.{Unit, Mission, ById, Island}
-alias Chukinas.Geometry.{Rect, Grid, Size}
+alias Chukinas.Geometry.{Grid, Size}
 
 defmodule Mission do
 
@@ -10,7 +10,6 @@ defmodule Mission do
   use TypedStruct
 
   typedstruct do
-    field :arena, Rect.t()
     field :grid, Grid.t()
     field :world, Size.t()
     field :margin, Size.t()

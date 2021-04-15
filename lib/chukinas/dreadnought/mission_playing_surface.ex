@@ -13,7 +13,6 @@ defmodule PlayingSurface do
   typedstruct enforce: true do
     field :world, Size.t()
     field :margin, Size.t()
-    field :arena, Rect.t()
     field :islands, [Island.t()], default: []
   end
 
@@ -21,11 +20,14 @@ defmodule PlayingSurface do
   # *** NEW
 
   def new(%{
-    world: _world,
-    margin: _margin,
-    arena: _arena,
-    islands: _islands
-  } = playing_surface) do
-    struct!(__MODULE__, playing_surface)
+    world: world,
+    margin: margin,
+    islands: islands
+  }) do
+    %__MODULE__{
+      world: world,
+      margin: margin,
+      islands: islands
+    }
   end
 end
