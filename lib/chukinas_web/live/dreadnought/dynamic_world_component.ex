@@ -72,7 +72,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
         height: <%= @grid.height %>px
       "
     >
-      <%= for unit <- @mission_player.my_other_units do %>
+      <%= for unit <- @mission_player.my_other_units ++ [@mission_player.current_unit] do %>
       <path
         id="unit-<%= unit.id %>-lastPath"
         d="<%= unit.maneuver_svg_string %>"
@@ -80,7 +80,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
       />
       <% end %>
     </svg>
-    <%= for unit <- @mission_player.my_other_units do %>
+    <%= for unit <- @mission_player.my_other_units ++ [@mission_player.current_unit] do %>
     <%= ChukinasWeb.DreadnoughtView.render "unit3.html",
       socket: @socket,
       unit: unit,
