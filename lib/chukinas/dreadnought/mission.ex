@@ -14,8 +14,6 @@ defmodule Mission do
     field :grid, Grid.t()
     field :world, Size.t()
     field :margin, Size.t()
-    # TODO get rid of this ... for now
-    field :game_over?, boolean(), default: false
     field :islands, [Island.t()], default: []
     field :units, [Unit.t()], default: []
   end
@@ -70,4 +68,7 @@ defmodule Mission do
   def game_over?(mission), do: Enum.empty? mission.squares
 
   def calc_game_over(mission), do: %{mission | game_over?: game_over? mission}
+
+  def to_playing_surface(mission), do: Mission.PlayingSurface.new(mission)
+  def to_player(mission), do: Mission.Player.new(mission.units)
 end
