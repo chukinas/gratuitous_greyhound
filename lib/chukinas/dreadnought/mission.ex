@@ -60,6 +60,8 @@ defmodule Mission do
     %{mission | units: units}
   end
 
+  # TODO delete?
+  # TODO private?
   def move_unit_to(mission, unit_id, position, _path_type) do
     unit =
       mission.unit
@@ -70,4 +72,21 @@ defmodule Mission do
 
   def to_playing_surface(mission), do: Mission.PlayingSurface.new(mission)
   def to_player(mission), do: Mission.Player.new(mission.units)
+
+  def complete_player_turn(mission, player_turn) do
+    Enum.reduce(player_turn.commands, mission, fn cmd, mission ->
+      resolve_command(mission, cmd)
+    end)
+  end
+
+  # *** *******************************
+  # *** PRIVATE
+
+  defp resolve_command(mission, command) do
+    unit =
+      mission.units
+      |> Enum.find(& &1.id == command.unit_id)
+      |> Unit.resolve_command(command, mission.grid, mission.islands)
+    put(mission, unit)
+  end
 end

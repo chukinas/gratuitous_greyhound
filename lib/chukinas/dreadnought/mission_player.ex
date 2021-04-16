@@ -12,6 +12,9 @@ defmodule Player do
 
   typedstruct do
     field :active_units, [Unit.t()], default: []
+    # TODO should this just be all units?
+    # That way I don't have to keep concat'ing back and forth
+    # Also, the template is always forced to concat the two.
     field :other_units, [Unit.t()], default: []
     field :commands, [Command.t()], default: []
   end
@@ -32,6 +35,8 @@ defmodule Player do
     |> Map.update!(:commands, & [command | &1])
     |> calc_active_units
   end
+
+  def turn_complete?(mission_player), do: Enum.empty?(mission_player.active_units)
 
   # *** *******************************
   # *** PRIVATE
@@ -62,6 +67,7 @@ defmodule Player do
       summary = %{
         active_unit_ids: Enum.map(player.active_units, & &1.id),
         inactive_unit_ids: Enum.map(player.other_units, & &1.id)
+        # TODO add commands
       }
      concat ["#Player<", to_doc(summary, opts), ">"]
     end

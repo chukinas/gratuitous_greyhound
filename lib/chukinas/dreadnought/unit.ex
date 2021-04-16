@@ -61,19 +61,13 @@ defmodule Unit do
     put_in(unit.commands.move_to, position)
   end
 
-  #def execute_commands(unit, grid, islands) do
-  #  unit
-  #end
-
-  # *** *******************************
-  # *** API
-
-  ## TODO remove path_type?
-  #def move_unit_to(%__MODULE__{} = mission, unit_id, position, path_type \\ :straight) do
-  #  # TODO most of this stuff belongs in unit module
-  #  unit = ById.get!(mission.units, unit_id)
-  #  path = Path.get_connecting_path(unit.pose, position)
-  #  unit = Unit.move_along_path(unit, path)
+  def resolve_command(unit, command, grid, islands) do
+    position = command.move_to
+    # TODO get connecting path should be called from move_along_path
+    path = Path.get_connecting_path(unit.pose, position)
+    unit
+    |> move_along_path(path)
+    |> calc_cmd_squares(grid, islands)
   #  trim_angle = cond do
   #    path_type == :sharp_turn and path.angle > 0
   #      -> 30
@@ -82,7 +76,11 @@ defmodule Unit do
   #    true
   #      -> 0
   #  end
-  #  motion_range_polygon = Unit.get_motion_range(unit, trim_angle)
+  end
+
+  # *** *******************************
+  # *** API
+
   #  mission
   #  |> put(unit)
   #  |> calc_command_squares(motion_range_polygon)
@@ -109,6 +107,7 @@ defmodule Unit do
     }
   end
 
+  # TODO private?
   def get_motion_range(%__MODULE__{pose: pose}, trim_angle \\ 0) do
     max_distance = 400
     min_distance = 200

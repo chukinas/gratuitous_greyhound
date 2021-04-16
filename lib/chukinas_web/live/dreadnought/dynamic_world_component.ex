@@ -106,11 +106,22 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
       [x, y, unit_id]
       # TODO coerce int should accept list as well
       |> Enum.map(&Precision.coerce_int/1)
-    command = Command.move_to unit_id, Position.new(x, y)
+    command = Command.move_to(unit_id, Position.new(x, y))
     mission_player =
       socket.assigns.mission_player
       |> Player.issue_command(command)
-    {:noreply, socket |> assign(mission_player: mission_player)}
+      |> maybe_end_turn
+    socket =
+      socket
+      |> assign(mission_player: mission_player)
+    {:noreply, socket}
+  end
+
+  def maybe_end_turn(mission_player) do
+    if Player.turn_complete?(mission_player) do
+      send self(), {:player_turn_complete, mission_player}
+    end
+    mission_player
   end
 
 end

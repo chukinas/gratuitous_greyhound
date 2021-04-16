@@ -72,18 +72,19 @@ defmodule ChukinasWeb.DreadnoughtLive do
     """
   end
 
-  #@impl true
-  #def handle_info({:flash, message}, socket) do
-  #  {:noreply, put_flash(socket, :info, message)}
-  #end
-
-  #@impl true
-  #def handle_info(:reset_mission, socket) do
-  #  mission =
-  #    MissionBuilder.build()
-  #  send_update Dreadnought.DynamicWorldComponent, id: :dynamic_world, mission: mission
-  #  {:noreply, socket}
-  #end
+  @impl true
+  # TODO rename mission_player to `player_turn` PlayerTurn
+  def handle_info({:player_turn_complete, mission_player}, socket) do
+    mission =
+      socket.assigns.mission
+      |> Mission.complete_player_turn(mission_player)
+    mission_player =
+      mission
+      |> Mission.to_player
+    # TODO use alias to shorten this call..
+    send_update Dreadnought.DynamicWorldComponent, id: :dynamic_world, mission_player: mission_player
+    {:noreply, socket}
+  end
 
   def template(template, assigns), do: DreadnoughtView.render template, assigns
 end
