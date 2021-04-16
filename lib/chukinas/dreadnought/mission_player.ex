@@ -22,13 +22,27 @@ defmodule Player do
   # *** *******************************
   # *** NEW
 
-  def new(units) do
+  def new(%{
+    units: units,
+    grid: grid,
+    islands: islands
+  }) do
+    units =
+      units
+      |> Enum.map(& calc_cmd_squares_if_mine(&1, grid, islands))
     %__MODULE__{ other_units: units }
     |> calc_active_units
   end
 
   # *** *******************************
   # *** API
+
+  def start_turn_sequence(%{grid: grid, islands: islands} = mission) do
+    units =
+      mission.units
+      |> Enum.map(& Unit.calc_cmd_squares &1, grid, islands)
+    %{mission | units: units}
+  end
 
   def issue_command(mission_player, command) do
     mission_player
@@ -40,6 +54,11 @@ defmodule Player do
 
   # *** *******************************
   # *** PRIVATE
+
+  defp calc_cmd_squares_if_mine(unit, grid, islands) do
+    # Currently, all ships are mine, but later they won't be.
+    Unit.calc_cmd_squares(unit, grid, islands)
+  end
 
   defp calc_active_units(player) do
     complete_unit_ids =

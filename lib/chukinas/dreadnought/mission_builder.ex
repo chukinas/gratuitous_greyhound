@@ -31,10 +31,8 @@ defmodule MissionBuilder do
       [arena.width, arena.height]
       |> Enum.map(&round(&1 / square_size))
     grid = Grid.new(square_size, square_count_x, square_count_y)
-    Mission.new()
-    |> Mission.put_dimensions(grid, margin)
+    Mission.new(grid, margin)
     |> Map.put(:islands, islands)
     |> Mission.put(units)
-    |> Mission.initialize
   end
 end

@@ -57,35 +57,24 @@ defmodule Unit do
   # *** *******************************
   # *** COMMANDS
 
-  def move_to(unit, %Position{} = position) do
-    put_in(unit.commands.move_to, position)
-  end
-
-  def resolve_command(unit, command, grid, islands) do
-    position = command.move_to
-    # TODO get connecting path should be called from move_along_path
-    path = Path.get_connecting_path(unit.pose, position)
-    unit
-    |> move_along_path(path)
-    |> calc_cmd_squares(grid, islands)
-  #  trim_angle = cond do
-  #    path_type == :sharp_turn and path.angle > 0
-  #      -> 30
-  #    path_type == :sharp_turn
-  #      -> -30
-  #    true
-  #      -> 0
-  #  end
+  def resolve_command(unit, command) do
+    move_to(unit, command.move_to)
   end
 
   # *** *******************************
-  # *** API
+  # *** MANEUVER EXECUTION
 
-  #  mission
-  #  |> put(unit)
-  #  |> calc_command_squares(motion_range_polygon)
-  #end
-  # TODO make these private where needed
+  def move_to(unit, position) do
+    path = Path.get_connecting_path(unit.pose, position)
+    %{unit |
+      pose: Path.get_end_pose(path),
+      maneuver_svg_string: Svg.get_path_string(path)
+    }
+  end
+
+  # *** *******************************
+  # *** MANEUVER PLANNING
+
   def calc_cmd_squares(unit, grid, islands) do
     # TODO 185 work trim back into the calc
     cmd_zone = get_motion_range(unit)
@@ -98,17 +87,7 @@ defmodule Unit do
     %{unit | cmd_squares: cmd_squares}
   end
 
-  # TODO rename apply_path
-  # TODO apply same naming convention to mission
-  def move_along_path(unit, path) do
-    %{unit |
-      pose: Path.get_end_pose(path),
-      maneuver_svg_string: Svg.get_path_string(path)
-    }
-  end
-
-  # TODO private?
-  def get_motion_range(%__MODULE__{pose: pose}, trim_angle \\ 0) do
+  defp get_motion_range(%__MODULE__{pose: pose}, trim_angle \\ 0) do
     max_distance = 400
     min_distance = 200
     angle = 45

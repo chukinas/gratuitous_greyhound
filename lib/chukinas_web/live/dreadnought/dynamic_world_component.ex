@@ -7,6 +7,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
 
   @impl true
   def render(assigns) do
+    IOP.inspect assigns, "render assigns"
     # TODO is it a problem that there isn't a single root element here? %>
     # TODO might be worth having a containing div so I only have to set margin and size once
     ~L"""
@@ -90,9 +91,15 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
     """
   end
 
+  #@impl true
+  #def update(assigns, socket) do
+  #  IOP.inspect assigns, "update dyn comp!"
+  #  {:ok, socket}
+  #end
+
   @impl true
   def mount(socket) do
-    IOP.inspect socket.assigns, "dyn comp!"
+    IOP.inspect socket.assigns, "mount dyn comp!"
     {:ok, socket}
   end
 
