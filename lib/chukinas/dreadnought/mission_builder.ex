@@ -15,7 +15,7 @@ defmodule MissionBuilder do
     margin = Size.new(arena.height, arena.width)
     units = [
       Unit.new(1, pose: Pose.new(100, 155, 75)),
-      Unit.new(2, pose: Pose.new(800, 155, 75))
+      #Unit.new(2, pose: Pose.new(800, 155, 75))
     ]
     islands = [
       Position.new(500, 500),

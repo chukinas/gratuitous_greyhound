@@ -45,7 +45,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def handle_event("log", params, socket) do
-    IOP.inspect params
+    IOP.inspect(params, "dreadnought live log event")
     {:noreply, socket}
   end
 
@@ -81,8 +81,9 @@ defmodule ChukinasWeb.DreadnoughtLive do
     mission_player =
       mission
       |> Mission.to_player
+      |> Map.from_struct
     # TODO use alias to shorten this call..
-    send_update Dreadnought.DynamicWorldComponent, id: :dynamic_world, mission_player: mission_player
+    send_update Dreadnought.DynamicWorldComponent, mission_player
     {:noreply, socket}
   end
 

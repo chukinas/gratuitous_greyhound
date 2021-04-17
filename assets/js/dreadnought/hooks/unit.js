@@ -1,10 +1,42 @@
+import { subscribeNewTurn } from "./turnNumber.js";
+
 // --------------------------------------------------------
 // CONSTANTS
 
 const gsap = window.gsap
 
 // --------------------------------------------------------
-// FUNCTIONS
+// MANEUVER
+
+const has_already_maneuvered = (function() {
+  const lastTurnNumbers = new Map()
+  return function(el) {
+    const unitId = el.id
+    const turnNumber = document.getElementById("turn-number").dataset.turnNumber
+    const lastTurnNumberExecuted = lastTurnNumbers.get(unitId)
+    if (turnNumber == lastTurnNumberExecuted) {
+      console.log("already mvr'ed")
+      return true
+    }
+    lastTurnNumbers.set(unitId, turnNumber)
+    console.log("not already mvr'ed")
+    return false
+  }
+})()
+
+function maneuver_unit(el) {
+  const path = document.getElementById(`${el.id}-lastPath`)
+  gsap.to(el, {
+    motionPath: {
+      autoRotate: true,
+      alignOrigin: [0.5, 0.5],
+      align: path,
+      path,
+    },
+    ease: "power1.in",
+    duration: 1,
+  })
+}
 
 // --------------------------------------------------------
 // WELCOME SHIP PATHS
@@ -76,24 +108,19 @@ const WelcomeCardShipRearTurret = {
   }
 }
 
-function maneuver_unit(el) {
-  const path = document.getElementById(`${el.id}-lastPath`)
-  gsap.to(el, {
-    motionPath: {
-      autoRotate: true,
-      alignOrigin: [0.5, 0.5],
-      align: path,
-      path,
-    },
-    ease: "power1.in",
-    duration: 1,
-  })
-}
-
 const Unit = {
-  beforeUpdate() {
-    maneuver_unit(this.el)
+  mounted() {
+    subscribeNewTurn(() => maneuver_unit(this.el))
   },
+  //beforeUpdate() {
+  //  console.log("unit before update")
+  //},
+  //updated() {
+  //  console.log("unit updated")
+  //  if (!has_already_maneuvered(this.el)) {
+  //    maneuver_unit(this.el)
+  //  }
+  //},
 }
 
 export default { WelcomeCardShip, WelcomeCardShipFwdTurret, WelcomeCardShipRearTurret, Unit }

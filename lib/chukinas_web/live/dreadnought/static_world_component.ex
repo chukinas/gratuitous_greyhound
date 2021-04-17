@@ -57,7 +57,7 @@ defmodule ChukinasWeb.Dreadnought.StaticWorldComponent do
           />
           <% end %>
         </svg>
-        <%= render_block @inner_block, socket: @socket, mission_player: @mission_player, margin: @mission_playing_surface.margin, grid: @mission_playing_surface.grid %>
+        <%= render_block @inner_block, mission_player: @mission_player %>
       </div>
     </div>
     """

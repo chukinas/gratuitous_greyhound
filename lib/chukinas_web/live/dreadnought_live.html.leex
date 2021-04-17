@@ -22,19 +22,16 @@
 <%= live_component @socket, 
     Dreadnought.StaticWorldComponent, 
     id: :grid_lab, 
+    mission: @mission,
     mission_player: @mission_player,
     mission_playing_surface: @mission_playing_surface do %>
   <%# TODO remove the ChukinasWeb %>
   <%= live_component @socket,
-      ChukinasWeb.Dreadnought.DynamicWorldComponent,
-      id: :dynamic_world,
-      margin: @margin,
-      grid: @grid,
-      mission_player: @mission_player %>
+      ChukinasWeb.Dreadnought.DynamicWorldComponent, @mission_player %>
 <% end %>
 <% end %>
 
-<%= live_component @socket, Dreadnought.MenuBarComponent, id: :menu_bar %>
+<%# live_component @socket, Dreadnought.MenuBarComponent, id: :menu_bar %>
 
 <%# TODO Pinch %>
 <div 

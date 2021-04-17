@@ -1,5 +1,4 @@
-alias Chukinas.Dreadnought.{Mission.Player, Command}
-alias Chukinas.Geometry.{Position}
+alias Chukinas.Dreadnought.{Commands}
 alias Chukinas.Util.Precision
 
 defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
@@ -7,10 +6,11 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
 
   @impl true
   def render(assigns) do
-    inspect_assigns assigns, "render assigns"
+    #inspect_assigns assigns, "render assigns"
     # TODO is it a problem that there isn't a single root element here? %>
     # TODO might be worth having a containing div so I only have to set margin and size once
     ~L"""
+    <div id="turn-number" data-turn-number="<%= @turn_number %>" phx-hook="TurnNumber"></div>
     <div
       id="arena"
       class="absolute rounded-3xl"
@@ -31,7 +31,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
         "
       >
         <%= for unit <- @units do %>
-        <%= if unit.id in @mission_player.active_unit_ids do %>
+        <%= if unit.id in @commands.active_unit_ids do %>
         <%= for square <- unit.cmd_squares do %>
         <button
           id="gridSquareTarget-<%= square.id %>"
@@ -93,19 +93,20 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
     """
   end
 
-  @impl true
-  def update(assigns, socket) do
-    inspect_assigns assigns, "update dyn comp!"
-    socket =
-      socket
-      |> assign(assigns)
-      |> assign(units: assigns.mission_player.units)
-    {:ok, socket}
-  end
+  #@impl true
+  #def update(assigns, socket) do
+  #  IOP.inspect(assigns.turn_number, "update dyn comp")
+  #  inspect_assigns assigns, "update dyn comp!"
+  #  socket =
+  #    socket
+  #    |> assign(assigns)
+  #    |> assign(units: assigns.mission_player.units)
+  #  {:ok, socket}
+  #end
 
   @impl true
   def mount(socket) do
-    inspect_assigns socket.assigns, "mount dyn comp!"
+    #inspect_assigns socket.assigns, "mount dyn comp!"
     {:ok, socket}
   end
 
@@ -119,28 +120,27 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
       [x, y, unit_id]
       # TODO coerce int should accept list as well
       |> Enum.map(&Precision.coerce_int/1)
-    command = Command.move_to(unit_id, Position.new(x, y))
-    mission_player =
-      socket.assigns.mission_player
-      |> Player.issue_command(command)
+    commands =
+      socket.assigns.commands
+      |> Commands.maneuver(unit_id, x, y)
       |> maybe_end_turn
     socket =
       socket
-      |> assign(mission_player: mission_player)
+      |> assign(commands: commands)
     {:noreply, socket}
   end
 
-  def maybe_end_turn(mission_player) do
-    if Player.turn_complete?(mission_player) do
-      send self(), {:player_turn_complete, mission_player}
+  defp maybe_end_turn(commands) do
+    if Commands.turn_complete?(commands) do
+      send self(), {:player_turn_complete, commands}
     end
-    mission_player
+    commands
   end
 
-  def inspect_assigns(assigns, note) do
-    mod_assigns =Map.drop assigns, [:socket, :flash, :grid, :id, :margin, :myself]
-    IOP.inspect mod_assigns, note
-    assigns
-  end
+  #def inspect_assigns(assigns, note) do
+  #  mod_assigns =Map.drop assigns, [:socket, :flash, :grid, :id, :margin, :myself]
+  #  #IOP.inspect mod_assigns, note
+  #  assigns
+  #end
 
 end

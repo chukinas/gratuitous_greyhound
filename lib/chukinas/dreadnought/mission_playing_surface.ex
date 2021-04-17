@@ -1,4 +1,5 @@
-alias Chukinas.Dreadnought.{Mission.PlayingSurface}
+alias Chukinas.Dreadnought.{Mission.PlayingSurface, Island}
+alias Chukinas.Geometry.{Size, Grid}
 
 defmodule PlayingSurface do
   @moduledoc """

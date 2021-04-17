@@ -15,6 +15,7 @@ defmodule Unit do
   typedstruct enforce: true do
     # ID must be unique within the world
     field :id, integer()
+    field :player_id, integer(), default: 1
     field :pose, Pose.t()
     field :cmd_squares, [GridSquare.t()], default: []
     # TODO rename path?
@@ -45,7 +46,6 @@ defmodule Unit do
           |> Pose.new(angle)
         Turret.new(id, position, Spritesheet.red("turret1"))
       end)
-      |> IOP.inspect
     opts =
       opts
       |> Keyword.put_new(:sprite, sprite)

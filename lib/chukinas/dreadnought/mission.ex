@@ -10,6 +10,7 @@ defmodule Mission do
   use TypedStruct
 
   typedstruct do
+    field :turn_number, integer(), default: 1
     field :grid, Grid.t()
     field :world, Size.t()
     field :margin, Size.t()
@@ -48,7 +49,7 @@ defmodule Mission do
   # ***
 
   def to_playing_surface(mission), do: Mission.PlayingSurface.new(mission)
-  def to_player(mission), do: Mission.Player.new(mission)
+  def to_player(mission), do: Mission.Player.map(1, mission)
 
   # *** *******************************
   # *** PLAYER INPUT
@@ -57,6 +58,7 @@ defmodule Mission do
     Enum.reduce(player_turn.commands, mission, fn cmd, mission ->
       resolve_command(mission, cmd)
     end)
+    |> Map.update!(:turn_number, & &1 + 1)
   end
 
   defp resolve_command(mission, command) do
