@@ -7,7 +7,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
 
   @impl true
   def render(assigns) do
-    IOP.inspect assigns, "render assigns"
+    inspect_assigns assigns, "render assigns"
     # TODO is it a problem that there isn't a single root element here? %>
     # TODO might be worth having a containing div so I only have to set margin and size once
     ~L"""
@@ -30,7 +30,8 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
           grid-auto-rows: <%= @grid.square_size %>px;
         "
       >
-        <%= for unit <- @mission_player.active_units do %>
+        <%= for unit <- @units do %>
+        <%= if unit.id in @mission_player.active_unit_ids do %>
         <%= for square <- unit.cmd_squares do %>
         <button
           id="gridSquareTarget-<%= square.id %>"
@@ -61,6 +62,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
         </button>
         <% end %>
         <% end %>
+        <% end %>
       </div>
     </div>
     <svg
@@ -74,7 +76,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
         height: <%= @grid.height %>px
       "
     >
-      <%= for unit <- @mission_player.active_units ++ @mission_player.other_units do %>
+      <%= for unit <- @units do %>
       <path
         id="unit-<%= unit.id %>-lastPath"
         d="<%= unit.maneuver_svg_string %>"
@@ -82,7 +84,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
       />
       <% end %>
     </svg>
-    <%= for unit <- @mission_player.active_units ++ @mission_player.other_units do %>
+    <%= for unit <- @units do %>
     <%= ChukinasWeb.DreadnoughtView.render "unit3.html",
       socket: @socket,
       unit: unit,
@@ -91,15 +93,19 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
     """
   end
 
-  #@impl true
-  #def update(assigns, socket) do
-  #  IOP.inspect assigns, "update dyn comp!"
-  #  {:ok, socket}
-  #end
+  @impl true
+  def update(assigns, socket) do
+    inspect_assigns assigns, "update dyn comp!"
+    socket =
+      socket
+      |> assign(assigns)
+      |> assign(units: assigns.mission_player.units)
+    {:ok, socket}
+  end
 
   @impl true
   def mount(socket) do
-    IOP.inspect socket.assigns, "mount dyn comp!"
+    inspect_assigns socket.assigns, "mount dyn comp!"
     {:ok, socket}
   end
 
@@ -129,6 +135,12 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
       send self(), {:player_turn_complete, mission_player}
     end
     mission_player
+  end
+
+  def inspect_assigns(assigns, note) do
+    mod_assigns =Map.drop assigns, [:socket, :flash, :grid, :id, :margin, :myself]
+    IOP.inspect mod_assigns, note
+    assigns
   end
 
 end

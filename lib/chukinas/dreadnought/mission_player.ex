@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Mission.Player, Command, Unit}
+alias Chukinas.Dreadnought.{Mission.Player, Command, Unit, ById}
 
 defmodule Player do
   @moduledoc """
@@ -11,11 +11,8 @@ defmodule Player do
   use TypedStruct
 
   typedstruct do
-    field :active_units, [Unit.t()], default: []
-    # TODO should this just be all units?
-    # That way I don't have to keep concat'ing back and forth
-    # Also, the template is always forced to concat the two.
-    field :other_units, [Unit.t()], default: []
+    field :active_unit_ids, [integer()], default: []
+    field :units, [Unit.t()], default: []
     field :commands, [Command.t()], default: []
   end
 
@@ -30,19 +27,12 @@ defmodule Player do
     units =
       units
       |> Enum.map(& calc_cmd_squares_if_mine(&1, grid, islands))
-    %__MODULE__{ other_units: units }
+    %__MODULE__{units: units}
     |> calc_active_units
   end
 
   # *** *******************************
   # *** API
-
-  def start_turn_sequence(%{grid: grid, islands: islands} = mission) do
-    units =
-      mission.units
-      |> Enum.map(& Unit.calc_cmd_squares &1, grid, islands)
-    %{mission | units: units}
-  end
 
   def issue_command(mission_player, command) do
     mission_player
@@ -50,7 +40,7 @@ defmodule Player do
     |> calc_active_units
   end
 
-  def turn_complete?(mission_player), do: Enum.empty?(mission_player.active_units)
+  def turn_complete?(mission_player), do: Enum.empty?(mission_player.active_unit_ids)
 
   # *** *******************************
   # *** PRIVATE
@@ -64,17 +54,13 @@ defmodule Player do
     complete_unit_ids =
       player.commands
       |> Enum.map(& &1.unit_id)
-    {completed_units, incomplete_units} =
-      player.active_units ++ player.other_units
+    {_completed_units, incomplete_units} =
+      player.units
       |> Enum.split_with(& &1.id in complete_unit_ids)
-    {active_units, other_incomplete_units} =
+    {active_units, _other_incomplete_units} =
       incomplete_units
       |> Enum.split(1)
-    %{player |
-      active_units: active_units,
-      other_units: completed_units ++ other_incomplete_units
-    }
-    |> IOP.inspect("calc current unit")
+    %{player | active_unit_ids: ById.to_ids(active_units)}
   end
 
   # *** *******************************
@@ -84,9 +70,9 @@ defmodule Player do
     import Inspect.Algebra
     def inspect(player, opts) do
       summary = %{
-        active_unit_ids: Enum.map(player.active_units, & &1.id),
-        inactive_unit_ids: Enum.map(player.other_units, & &1.id)
-        # TODO add commands
+        active_unit_ids: player.active_unit_ids,
+        commands: player.commands,
+        units: player.units
       }
      concat ["#Player<", to_doc(summary, opts), ">"]
     end

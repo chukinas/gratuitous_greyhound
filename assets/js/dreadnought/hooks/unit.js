@@ -76,31 +76,23 @@ const WelcomeCardShipRearTurret = {
   }
 }
 
+function maneuver_unit(el) {
+  const path = document.getElementById(`${el.id}-lastPath`)
+  gsap.to(el, {
+    motionPath: {
+      autoRotate: true,
+      alignOrigin: [0.5, 0.5],
+      align: path,
+      path,
+    },
+    ease: "power1.in",
+    duration: 1,
+  })
+}
+
 const Unit = {
   beforeUpdate() {
-    const me = this
-    const el = this.el
-    const gameOver = function() {
-      me.pushEvent("game_over")
-    }
-    const pushEvent = this.pushEvent
-    const path = document.getElementById(`${el.id}-lastPath`)
-    gsap.to(el, {
-      motionPath: {
-        autoRotate: true,
-        alignOrigin: [0.5, 0.5],
-        align: path,
-        path,
-      },
-      ease: "power1.in",
-      duration: 1,
-      onComplete: () => {
-        if (el.dataset.gameover) {
-          console.log("game over!")
-          setTimeout(gameOver, 2000)
-        }
-      }
-    })
+    maneuver_unit(this.el)
   },
 }
 

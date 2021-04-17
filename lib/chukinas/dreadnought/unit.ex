@@ -107,11 +107,11 @@ defmodule Unit do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  #defimpl Inspect do
-  #  import Inspect.Algebra
-  #  def inspect(unit, opts) do
-  #    unit_map = unit |> Map.take([:id, :pose, :maneuver_svg_string])
-  #    concat ["#Unit<", to_doc(unit_map, opts), ">"]
-  #  end
-  #end
+  defimpl Inspect do
+    import Inspect.Algebra
+    def inspect(unit, opts) do
+      unit_map = unit |> Map.take([:id, :pose, :maneuver_svg_string])
+      concat ["#Unit<", to_doc(unit_map, opts), ">"]
+    end
+  end
 end
