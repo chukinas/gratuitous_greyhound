@@ -6,6 +6,11 @@ defmodule ChukinasWeb.DreadnoughtResourcesLive do
   alias ChukinasWeb.Dreadnought
 
   @impl true
+  def render(assigns) do
+    DreadnoughtView.render("layout.html", assigns)
+  end
+
+  @impl true
   def mount(_params, _session, socket) do
     sprites =
       ~w(ship_large ship_small turret1 turret2 shell1 shell2 muzzle_flash)
