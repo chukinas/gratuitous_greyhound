@@ -1,8 +1,8 @@
-alias Chukinas.Dreadnought.{Command, Commands}
+alias Chukinas.Dreadnought.{Command, ActionSelection}
 alias Chukinas.Geometry.Position
 
 # TODO think up a better name for this
-defmodule Commands do
+defmodule ActionSelection do
 
   # *** *******************************
   # *** TYPES
@@ -31,18 +31,20 @@ defmodule Commands do
   # *** *******************************
   # *** API
 
-  def maneuver(commands, unit_id, x, y) do
+  def maneuver(action_selection, unit_id, x, y) do
     command = Command.move_to(unit_id, Position.new(x, y))
-    issue_command(commands, command)
+    issue_command(action_selection, command)
   end
 
-  defp issue_command(commands, command) do
-    commands
+  defp issue_command(action_selection, command) do
+    action_selection
     |> Map.update!(:commands, & [command | &1])
     |> calc_active_units
   end
 
-  def turn_complete?(commands), do: Enum.empty?(commands.active_unit_ids)
+  def turn_complete?(action_selection) do
+    Enum.empty?(action_selection.active_unit_ids)
+  end
 
   # *** *******************************
   # *** PRIVATE
@@ -53,13 +55,18 @@ defmodule Commands do
     |> Enum.filter(& &1 == player_id)
   end
 
-  defp calc_active_units(commands) do
-    %{commands | active_unit_ids: Enum.take(my_pending_unit_ids(commands), 1)}
+  defp calc_active_units(action_selection) do
+    %{action_selection | active_unit_ids: Enum.take(my_pending_unit_ids(action_selection), 1)}
+    |> IOP.inspect("my pending unit ids")
   end
 
-  defp my_pending_unit_ids(commands) do
-    commands.commands
-    |> Stream.map(& &1.unit_id)
-    |> Stream.filter(& &1 in commands.my_unit_ids)
+  defp my_pending_unit_ids(action_selection) do
+    action_selection.my_unit_ids
+    |> Stream.filter(& &1 not in my_completed_unit_ids(action_selection))
+  end
+
+  defp my_completed_unit_ids(action_selection) do
+      action_selection.commands
+      |> Stream.map(& &1.unit_id)
   end
 end

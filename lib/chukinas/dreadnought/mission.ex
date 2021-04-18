@@ -1,5 +1,5 @@
 # TODO ById should be a utility
-alias Chukinas.Dreadnought.{Unit, Mission, ById, Island}
+alias Chukinas.Dreadnought.{Unit, Mission, ById, Island, ActionSelection}
 alias Chukinas.Geometry.{Grid, Size}
 
 defmodule Mission do
@@ -54,8 +54,8 @@ defmodule Mission do
   # *** *******************************
   # *** PLAYER INPUT
 
-  def complete_player_turn(mission, player_turn) do
-    Enum.reduce(player_turn.commands, mission, fn cmd, mission ->
+  def complete_player_turn(mission, %ActionSelection{commands: commands}) do
+    Enum.reduce(commands, mission, fn cmd, mission ->
       resolve_command(mission, cmd)
     end)
     |> Map.update!(:turn_number, & &1 + 1)

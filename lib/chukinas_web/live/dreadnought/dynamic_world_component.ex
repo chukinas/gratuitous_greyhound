@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Commands}
+alias Chukinas.Dreadnought.{ActionSelection}
 alias Chukinas.Util.Precision
 
 defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
@@ -31,7 +31,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
         "
       >
         <%= for unit <- @units do %>
-        <%= if unit.id in @commands.active_unit_ids do %>
+        <%= if unit.id in @action_selection.active_unit_ids do %>
         <%= for square <- unit.cmd_squares do %>
         <button
           id="gridSquareTarget-<%= square.id %>"
@@ -93,16 +93,15 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
     """
   end
 
-  #@impl true
-  #def update(assigns, socket) do
-  #  IOP.inspect(assigns.turn_number, "update dyn comp")
-  #  inspect_assigns assigns, "update dyn comp!"
-  #  socket =
-  #    socket
-  #    |> assign(assigns)
-  #    |> assign(units: assigns.mission_player.units)
-  #  {:ok, socket}
-  #end
+  @impl true
+  def update(assigns, socket) do
+    IOP.inspect(assigns, "update dyn comp")
+    #inspect_assigns assigns, "update dyn comp!"
+    socket =
+      socket
+      |> assign(assigns)
+    {:ok, socket}
+  end
 
   @impl true
   def mount(socket) do
@@ -120,21 +119,21 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
       [x, y, unit_id]
       # TODO coerce int should accept list as well
       |> Enum.map(&Precision.coerce_int/1)
-    commands =
-      socket.assigns.commands
-      |> Commands.maneuver(unit_id, x, y)
-      |> maybe_end_turn
+    action_selection =
+      socket.assigns.action_selection
+      |> ActionSelection.maneuver(unit_id, x, y)
+      |> maybe_end_turn(socket.assigns.units)
     socket =
       socket
-      |> assign(commands: commands)
+      |> assign(action_selection: action_selection)
     {:noreply, socket}
   end
 
-  defp maybe_end_turn(commands) do
-    if Commands.turn_complete?(commands) do
-      send self(), {:player_turn_complete, commands}
+  defp maybe_end_turn(%ActionSelection{} = action_selection, _units) do
+    if ActionSelection.turn_complete?(action_selection) do
+      send self(), {:player_turn_complete, action_selection}
     end
-    commands
+    action_selection
   end
 
   #def inspect_assigns(assigns, note) do

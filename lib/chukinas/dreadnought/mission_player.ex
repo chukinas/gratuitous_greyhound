@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Mission.Player, Unit, Commands}
+alias Chukinas.Dreadnought.{Mission.Player, Unit, ActionSelection}
 alias Chukinas.Geometry.{Size, Grid}
 
 # TODO better name => Chukinas.Dreadnought.PlayerTurn ?
@@ -21,9 +21,9 @@ defmodule Player do
     field :margin, Size.t(), enforce: true
     field :grid, Grid.t(), enforce: true
     # These are handled locally by the dynamic component:
-    field :commands, Commands.t(), enforce: true
+    field :action_selection, ActionSelection.t(), enforce: true
     # These must be set by the mission each turn:
-    field :turn_number, enforce: true
+    field :turn_number, integer(), enforce: true
     field :units, [Unit.t()], default: [], enforce: true
   end
 
@@ -31,18 +31,21 @@ defmodule Player do
   # *** NEW
 
   def new(player_id, %{
+    turn_number: turn_number,
     units: units,
     grid: grid,
     islands: islands,
     margin: margin
   }) do
     %__MODULE__{
+      turn_number: turn_number,
       units: calc_cmd_squares(units, player_id, grid, islands),
-      commands: Commands.new(units, player_id),
+      action_selection: ActionSelection.new(units, player_id),
       margin: margin,
       grid: grid,
       player_id: player_id
     }
+    |> IOP.inspect("new player turn")
   end
 
   def map(player_id, mission), do: Map.from_struct(new(player_id, mission))
@@ -71,8 +74,7 @@ defmodule Player do
     import Inspect.Algebra
     def inspect(player, opts) do
       summary = %{
-        active_unit_ids: player.active_unit_ids,
-        commands: player.commands,
+        action_selection: player.action_selection,
         units: player.units
       }
      concat ["#Player<", to_doc(summary, opts), ">"]

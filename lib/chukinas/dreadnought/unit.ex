@@ -110,7 +110,7 @@ defmodule Unit do
   defimpl Inspect do
     import Inspect.Algebra
     def inspect(unit, opts) do
-      unit_map = unit |> Map.take([:id, :pose, :maneuver_svg_string])
+      unit_map = unit |> Map.take([:id, :pose, :maneuver_svg_string, :player_id])
       concat ["#Unit<", to_doc(unit_map, opts), ">"]
     end
   end
