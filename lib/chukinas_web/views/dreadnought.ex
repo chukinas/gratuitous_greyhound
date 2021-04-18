@@ -17,15 +17,6 @@ defmodule ChukinasWeb.DreadnoughtView do
     render("_sprite.html", assigns)
   end
 
-  def message(%{socket: _socket} = assigns, do: block) do
-    assigns =
-      case assigns do
-        %{button: _} -> assigns
-        _ -> assigns |> Map.put(:button, false)
-      end
-    render_template("_message.html", assigns, block)
-  end
-
   defp render_template(template, assigns, block) do
     assigns =
       assigns

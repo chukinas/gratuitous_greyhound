@@ -3,7 +3,7 @@
     height: 0;
   }
   body {
-    background-color: black;
+    background-color: darkblue;
     touch-action: none;
   }
   #world {
@@ -13,18 +13,21 @@
 
 <div class="text-white m-8 space-y-8">
   <h1 class="font-xl">Sprites</h1>
+  <input type="checkbox">
   <%= for sprite <- @sprites do %>
-    <div id="<%= sprite.name %>">
-      <%= sprite.name %>
-      <div 
-        class="bg-blue-400 bg-opacity-30 origin-top-left transform scale-200"
-        style="
-          
-        "
-      >
-        <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: sprite %>
-      </div>
+  <div 
+    id="<%= sprite.name %>"
+    style="
+      height:<%= sprite.rect_tight.height * 4 %>px
+    "
+  >
+    <%= sprite.name %>
+    <div 
+      class="bg-blue-400 bg-opacity-30 origin-top-left transform scale-400"
+    >
+      <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: sprite, center_on_origin?: false %>
     </div>
+  </div>
   <% end %>
 </div>
 

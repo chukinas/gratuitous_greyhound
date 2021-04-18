@@ -11,7 +11,7 @@ module.exports = {
       '50': '.50',
       '75': '.75',
       '100': '1',
-      '200': '2',
+      '400': '4',
     },
     extend: {
       backgroundImage: theme => ({
