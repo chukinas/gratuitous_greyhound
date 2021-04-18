@@ -25,9 +25,10 @@
   >
     <%= sprite.name %>
     <div 
-      class="bg-blue-400 bg-opacity-30 origin-top-left transform scale-400"
+      class="bg-blue-400 bg-opacity-30 origin-top-left transform scale-400 relative"
     >
-      <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: sprite, center_on_origin?: false %>
+      <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: sprite, center_on_origin?: @show_markers? %>
+      <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center sprite.origin.x - sprite.rect_centered.x, sprite.origin.y- sprite.rect_centered.y %>
     </div>
   </div>
   <% end %>

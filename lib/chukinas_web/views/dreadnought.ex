@@ -17,6 +17,12 @@ defmodule ChukinasWeb.DreadnoughtView do
     render("_sprite.html", assigns)
   end
 
+  def center(x, y) do
+    size = 14
+    assigns = [x: x, y: y, size: size, left: x - size/2, top: y - size/2]
+    render("_center.html", assigns)
+  end
+
   def button(opts \\ []) do
     assigns =
       opts

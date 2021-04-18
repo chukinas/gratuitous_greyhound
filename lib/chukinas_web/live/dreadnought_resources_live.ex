@@ -12,7 +12,7 @@ defmodule ChukinasWeb.DreadnoughtResourcesLive do
       |> Enum.map(&Spritesheet.red/1)
     socket = assign(socket,
       page_title: "Dreadnought Resources",
-      show_markers?: false,
+      show_markers?: true,
       sprites: sprites
     )
     {:ok, socket}
