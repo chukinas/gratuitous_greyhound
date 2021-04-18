@@ -62,6 +62,11 @@ defmodule Unit do
   end
 
   # *** *******************************
+  # *** BOOLEANS
+
+  def belongs_to?(unit, player_id), do: unit.player_id == player_id
+
+  # *** *******************************
   # *** MANEUVER EXECUTION
 
   def move_to(unit, position) do

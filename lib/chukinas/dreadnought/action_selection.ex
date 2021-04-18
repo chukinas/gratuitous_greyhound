@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Command, ActionSelection}
+alias Chukinas.Dreadnought.{Command, ActionSelection, Unit}
 alias Chukinas.Geometry.Position
 
 # TODO think up a better name for this
@@ -51,13 +51,12 @@ defmodule ActionSelection do
 
   defp get_list_my_unit_ids(units, player_id) do
     units
-    |> Stream.map(& &1.player_id)
-    |> Enum.filter(& &1 == player_id)
+    |> Enum.filter(&Unit.belongs_to?(&1, player_id))
+    |> Enum.map(& &1.id)
   end
 
   defp calc_active_units(action_selection) do
     %{action_selection | active_unit_ids: Enum.take(my_pending_unit_ids(action_selection), 1)}
-    |> IOP.inspect("my pending unit ids")
   end
 
   defp my_pending_unit_ids(action_selection) do

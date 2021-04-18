@@ -7,19 +7,21 @@ defmodule MissionBuilder do
     # Config
     square_size = 50
     arena = %{
-      #width: 500,
-      #height: 500
-      width: 1500,
-      height: 750
+      width: 2000,
+      height: 1000
     }
+    #arena = %{
+    #  width: 500,
+    #  height: 500
+    #}
     margin = Size.new(arena.height, arena.width)
-    margin = Size.new(200, 100)
+    #margin = Size.new(200, 100)
     units = [
       Unit.new(1, pose: Pose.new(100, 155, 75)),
-      #Unit.new(2, pose: Pose.new(800, 155, 75))
+      Unit.new(2, pose: Pose.new(800, 155, 75))
     ]
     islands = [
-      #Position.new(500, 500),
+      Position.new(500, 500),
       #Position.new(2500, 1200),
       #Position.new(1500, 1800),
     ]

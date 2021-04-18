@@ -46,7 +46,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def handle_event("log", params, socket) do
-    IOP.inspect(params, "dreadnought live log event")
+    #IOP.inspect(params, "dreadnought live log event")
     {:noreply, socket}
   end
 

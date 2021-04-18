@@ -95,7 +95,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
 
   @impl true
   def update(assigns, socket) do
-    IOP.inspect(assigns, "update dyn comp")
+    #IOP.inspect(assigns, "update dyn comp")
     #inspect_assigns assigns, "update dyn comp!"
     socket =
       socket
