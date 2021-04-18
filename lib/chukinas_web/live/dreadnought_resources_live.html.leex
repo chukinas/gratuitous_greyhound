@@ -11,12 +11,19 @@
   }
 </style>
 
-<div class="text-white">
-  Sprites
+<div class="text-white m-8 space-y-8">
+  <h1 class="font-xl">Sprites</h1>
   <%= for sprite <- @sprites do %>
-    <div>
+    <div id="<%= sprite.name %>">
       <%= sprite.name %>
-      <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: sprite %>
+      <div 
+        class="bg-blue-400 bg-opacity-30 origin-top-left transform scale-200"
+        style="
+          
+        "
+      >
+        <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: sprite %>
+      </div>
     </div>
   <% end %>
 </div>
