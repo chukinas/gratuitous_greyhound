@@ -1,28 +1,20 @@
-# TODO rename
 alias Chukinas.Dreadnought.{Spritesheet}
+alias ChukinasWeb.DreadnoughtView
 
-defmodule ChukinasWeb.DreadnoughtResourcesLive do
-  use ChukinasWeb, :live_view
-  alias ChukinasWeb.DreadnoughtView
+defmodule ChukinasWeb.Dreadnought.SpritesComponent do
+  use ChukinasWeb, :live_component
 
   @impl true
   def render(assigns) do
-    DreadnoughtView.render("layout.html", assigns)
-  end
-
-  def render_template(template, assigns) do
-    DreadnoughtView.render(template, assigns)
+    DreadnoughtView.render("sprites.html", assigns)
   end
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(socket) do
     sprites =
       ~w(ship_large ship_small turret1 turret2 shell1 shell2 muzzle_flash)
       |> Enum.map(&Spritesheet.red/1)
     socket = assign(socket,
-      page_title: "Dreadnought Resources",
-      tabs: tabs(),
-      header: "Sprites",
       show_markers?: true,
       sprites: sprites
     )
