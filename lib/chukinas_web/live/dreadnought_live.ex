@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{MissionBuilder}
+alias Chukinas.Dreadnought.{Mission, MissionBuilder, State}
 
 defmodule ChukinasWeb.DreadnoughtLive do
   use ChukinasWeb, :live_view
@@ -7,13 +7,14 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    mission =
-      MissionBuilder.build()
-    socket =
-      socket
-      |> assign(page_title: "Dreadnought")
-      |> assign(mission: mission)
-      |> assign(player_id: 1)
+    {pid, mission} = State.start_link()
+    socket = assign(socket,
+      page_title: "Dreadnought",
+      pid: pid,
+      mission: mission,
+      mission_playing_surface: Mission.to_playing_surface(mission) |> Map.from_struct,
+      mission_player: Mission.to_player(mission)
+    )
     {:ok, socket}
   end
 
@@ -45,7 +46,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def handle_event("log", params, socket) do
-    IOP.inspect params
+    #IOP.inspect(params, "dreadnought live log event")
     {:noreply, socket}
   end
 
@@ -65,25 +66,25 @@ defmodule ChukinasWeb.DreadnoughtLive do
     {:noreply, socket}
   end
 
-  def issue_link(title, number) do
-    assigns = %{title: title, number: number, __changed__: nil}
-    ~L"""
-    <%= @title %> - <a class="underline" href="https://github.com/jonathanchukinas/chukinas/issues/<%= @number %>" target="_blank">issue/<%= @number %></a>
-    """
+  @impl true
+  # TODO rename mission_player to `player_turn` PlayerTurn
+  def handle_info({:player_turn_complete, action_selection}, socket) do
+    #mission =
+    #  socket.assigns.mission
+    #  |> Mission.put(units)
+    #  |> Mission.complete_player_turn(commands)
+    #  |> IOP.inspect("dread live - complete_player_turn")
+    #mission_player =
+    #  mission
+    #  |> Mission.to_player
+    #socket =
+    #  socket
+    #  |> assign(mission: mission)
+    # TODO use alias to shorten this call..
+    mission_player = State.complete_player_turn(socket.assigns.pid, action_selection)
+    send_update Dreadnought.DynamicWorldComponent, mission_player
+    {:noreply, socket}
   end
-
-  #@impl true
-  #def handle_info({:flash, message}, socket) do
-  #  {:noreply, put_flash(socket, :info, message)}
-  #end
-
-  #@impl true
-  #def handle_info(:reset_mission, socket) do
-  #  mission =
-  #    MissionBuilder.build()
-  #  send_update Dreadnought.DynamicWorldComponent, id: :dynamic_world, mission: mission
-  #  {:noreply, socket}
-  #end
 
   def template(template, assigns), do: DreadnoughtView.render template, assigns
 end

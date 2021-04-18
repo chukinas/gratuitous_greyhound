@@ -1,3 +1,5 @@
+# TODO rename Arena?
+
 defmodule ChukinasWeb.Dreadnought.StaticWorldComponent do
   use ChukinasWeb, :live_component
 
@@ -14,17 +16,17 @@ defmodule ChukinasWeb.Dreadnought.StaticWorldComponent do
         id="world"
     <%# TODO Pinch %>
         class="relative pointer-events-none bg-cover"
-        style="width:<%= @mission.world.width %>px; height: <%= @mission.world.height %>px"
+        style="width:<%= @mission_playing_surface.world.width %>px; height: <%= @mission_playing_surface.world.height %>px"
         phx-hook="ZoomPanCover"
       >
         <div
           id="fit"
           class="absolute"
           style="
-            left: <%= @mission.margin.width - 50 %>px;
-            top: <%= @mission.margin.height - 50 %>px;
-            width:<%= @mission.grid.width + 100 %>px;
-            height: <%= @mission.grid.height + 100 %>px
+            left: <%= @mission_playing_surface.margin.width - 50 %>px;
+            top: <%= @mission_playing_surface.margin.height - 50 %>px;
+            width:<%= @mission_playing_surface.grid.width + 100 %>px;
+            height: <%= @mission_playing_surface.grid.height + 100 %>px
           "
           phx-hook="ZoomPanFit"
         >
@@ -32,17 +34,17 @@ defmodule ChukinasWeb.Dreadnought.StaticWorldComponent do
         <svg
           id="svg_islands"
           viewBox="
-            <%= -@mission.margin.width %>
-            <%= -@mission.margin.height %>
-            <%=  @mission.world.width %>
-            <%=  @mission.world.height %>
+            <%= -@mission_playing_surface.margin.width %>
+            <%= -@mission_playing_surface.margin.height %>
+            <%=  @mission_playing_surface.world.width %>
+            <%=  @mission_playing_surface.world.height %>
           "
           style="
-            width:<%=  @mission.world.width  %>px;
-            height:<%= @mission.world.height %>px
+            width:<%=  @mission_playing_surface.world.width  %>px;
+            height:<%= @mission_playing_surface.world.height %>px
           "
         >
-          <%= for island <- @mission.islands do %>
+          <%= for island <- @mission_playing_surface.islands do %>
           <polygon
             id="island-<%= island.id %>"
             points="
@@ -55,7 +57,7 @@ defmodule ChukinasWeb.Dreadnought.StaticWorldComponent do
           />
           <% end %>
         </svg>
-        <%= render_block @inner_block, socket: @socket, mission: @mission %>
+        <%= render_block @inner_block, mission_player: @mission_player %>
       </div>
     </div>
     """

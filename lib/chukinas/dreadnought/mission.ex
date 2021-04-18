@@ -1,5 +1,6 @@
-alias Chukinas.Dreadnought.{Unit, Mission, ById, Island}
-alias Chukinas.Geometry.{Rect, Grid, GridSquare, Size, Collide, Path}
+# TODO ById should be a utility
+alias Chukinas.Dreadnought.{Unit, Mission, ById, Island, ActionSelection}
+alias Chukinas.Geometry.{Grid, Size}
 
 defmodule Mission do
 
@@ -9,93 +10,62 @@ defmodule Mission do
   use TypedStruct
 
   typedstruct do
-    field :arena, Rect.t()
+    field :turn_number, integer(), default: 1
     field :grid, Grid.t()
-    field :squares, [GridSquare.t()]
     field :world, Size.t()
     field :margin, Size.t()
-    field :unit, Unit.t()
-    field :game_over?, boolean(), default: false
     field :islands, [Island.t()], default: []
-    # Unused. maybe delete later
     field :units, [Unit.t()], default: []
   end
 
   # *** *******************************
   # *** NEW
 
-  def new(), do: %__MODULE__{}
-
-  # *** *******************************
-  # *** GETTERS
-
-  def unit(%__MODULE__{} = mission, id) when is_integer(id), do: ById.get(mission.units, id)
-  def get_unit(%__MODULE__{} = mission, id), do: unit(mission, id)
-
-  # *** *******************************
-  # *** SETTERS
-
-  # TODO rename put
-  # TODO are these private?
-  def push(%__MODULE__{units: units} = mission, %Unit{} = unit) do
-    %{mission | units: ById.insert(units, unit)}
-  end
-  def put(mission, unit), do: push(mission, unit)
-
-  def set_arena(%__MODULE__{} = mission, width, height) do
-    %{mission | arena: Rect.new(width, height)}
-  end
-  # TODO get rid of this one
-  def set_arena(%__MODULE__{} = mission, %Rect{} = arena) do
-    %{mission | arena: arena}
-  end
-
-  def set_grid(mission, square_size, x_count, y_count, %Size{} = margin) do
-    grid = Grid.new(square_size, x_count, y_count)
+  def new(%Grid{} = grid, %Size{} = margin) do
     world = Size.new(
       grid.width + 2 * margin.width,
       grid.height + 2 * margin.height
     )
-    %{mission |
-      grid: grid,
+    %__MODULE__{
       world: world,
+      grid: grid,
       margin: margin,
     }
   end
 
-  def set_unit(mission, unit), do: %{mission | unit: unit}
+  # *** *******************************
+  # *** SETTERS
+
+  def put(mission, list) when is_list(list) do
+    Enum.reduce(list, mission, fn item, mission ->
+      put(mission, item)
+    end)
+  end
+  def put(mission, %Unit{} = unit) do
+    Map.update!(mission, :units, & ById.put(&1, unit))
+  end
 
   # *** *******************************
-  # *** API
+  # ***
 
-  def calc_command_squares(mission, command_zone) do
-    command_squares =
-      mission.grid
-      |> Grid.squares(include: command_zone, exclude: mission.islands)
-      |> Stream.map(&GridSquare.calc_path(&1, mission.unit.pose))
-      |> Stream.filter(&Collide.avoids?(&1.path, mission.islands))
-      |> Enum.to_list
-    %{mission | squares: command_squares}
+  def to_playing_surface(mission), do: Mission.PlayingSurface.new(mission)
+  def to_player(mission), do: Mission.Player.map(1, mission)
+
+  # *** *******************************
+  # *** PLAYER INPUT
+
+  def complete_player_turn(mission, %ActionSelection{commands: commands}) do
+    Enum.reduce(commands, mission, fn cmd, mission ->
+      resolve_command(mission, cmd)
+    end)
+    |> Map.update!(:turn_number, & &1 + 1)
   end
 
-  def move_unit_to(%__MODULE__{} = mission, position, path_type \\ :straight) do
-    path = Path.get_connecting_path(mission.unit.pose, position)
-    unit = Unit.move_along_path(mission.unit, path)
-    trim_angle = cond do
-      path_type == :sharp_turn and path.angle > 0
-        -> 30
-      path_type == :sharp_turn
-        -> -30
-      true
-        -> 0
-    end
-    motion_range_polygon = Unit.get_motion_range(unit, trim_angle)
-    mission
-    |> Mission.set_unit(unit)
-    |> Mission.calc_command_squares(motion_range_polygon)
+  defp resolve_command(mission, command) do
+    unit =
+      mission.units
+      |> Enum.find(& &1.id == command.unit_id)
+      |> Unit.resolve_command(command)
+    put(mission, unit)
   end
-
-  def game_over?(mission), do: Enum.empty? mission.squares
-
-  def calc_game_over(mission), do: %{mission | game_over?: game_over? mission}
 end

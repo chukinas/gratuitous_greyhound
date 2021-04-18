@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret}
-alias Chukinas.Geometry.{Pose, Position, Turn, Straight, Polygon, Path}
+alias Chukinas.Geometry.{Pose, Position, Turn, Straight, Polygon, Path, Grid, GridSquare, Collide}
 alias Chukinas.Svg
 
 defmodule Unit do
@@ -15,7 +15,10 @@ defmodule Unit do
   typedstruct enforce: true do
     # ID must be unique within the world
     field :id, integer()
+    field :player_id, integer(), default: 1
     field :pose, Pose.t()
+    field :cmd_squares, [GridSquare.t()], default: []
+    # TODO rename path?
     field :maneuver_svg_string, String.t(), enforce: false
     field :sprite, Sprite.t()
     field :turrets, [Turret.t()]
@@ -43,7 +46,6 @@ defmodule Unit do
           |> Pose.new(angle)
         Turret.new(id, position, Spritesheet.red("turret1"))
       end)
-      |> IOP.inspect
     opts =
       opts
       |> Keyword.put_new(:sprite, sprite)
@@ -53,16 +55,44 @@ defmodule Unit do
   end
 
   # *** *******************************
-  # *** API
+  # *** COMMANDS
 
-  def move_along_path(unit, path) do
+  def resolve_command(unit, command) do
+    move_to(unit, command.move_to)
+  end
+
+  # *** *******************************
+  # *** BOOLEANS
+
+  def belongs_to?(unit, player_id), do: unit.player_id == player_id
+
+  # *** *******************************
+  # *** MANEUVER EXECUTION
+
+  def move_to(unit, position) do
+    path = Path.get_connecting_path(unit.pose, position)
     %{unit |
       pose: Path.get_end_pose(path),
       maneuver_svg_string: Svg.get_path_string(path)
     }
   end
 
-  def get_motion_range(%__MODULE__{pose: pose}, trim_angle \\ 0) do
+  # *** *******************************
+  # *** MANEUVER PLANNING
+
+  def calc_cmd_squares(unit, grid, islands) do
+    # TODO 185 work trim back into the calc
+    cmd_zone = get_motion_range(unit)
+    cmd_squares =
+      grid
+      |> Grid.squares(include: cmd_zone, exclude: islands)
+      |> Stream.map(&GridSquare.calc_path(&1, unit.pose))
+      |> Stream.filter(&Collide.avoids?(&1.path, islands))
+      |> Enum.to_list
+    %{unit | cmd_squares: cmd_squares}
+  end
+
+  defp get_motion_range(%__MODULE__{pose: pose}, trim_angle \\ 0) do
     max_distance = 400
     min_distance = 200
     angle = 45
@@ -82,11 +112,11 @@ defmodule Unit do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  #defimpl Inspect do
-  #  import Inspect.Algebra
-  #  def inspect(unit, opts) do
-  #    unit_map = unit |> Map.take([:id, :pose, :maneuver_svg_string])
-  #    concat ["#Unit<", to_doc(unit_map, opts), ">"]
-  #  end
-  #end
+  defimpl Inspect do
+    import Inspect.Algebra
+    def inspect(unit, opts) do
+      unit_map = unit |> Map.take([:id, :pose, :maneuver_svg_string, :player_id])
+      concat ["#Unit<", to_doc(unit_map, opts), ">"]
+    end
+  end
 end

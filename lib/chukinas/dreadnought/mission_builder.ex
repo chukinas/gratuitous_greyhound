@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Mission, Unit, MissionBuilder, Island}
-alias Chukinas.Geometry.{Pose, Size, Position}
+alias Chukinas.Geometry.{Pose, Size, Position, Grid}
 
 defmodule MissionBuilder do
 
@@ -7,28 +7,35 @@ defmodule MissionBuilder do
     # Config
     square_size = 50
     arena = %{
-      #width: 500,
-      #height: 500
-      width: 1500,
+      width: 2000,
       height: 1000
     }
+    #arena = %{
+    #  width: 500,
+    #  height: 500
+    #}
     margin = Size.new(arena.height, arena.width)
-    unit = Unit.new(1, pose: Pose.new(100, 155, 75))
-    motion_range_polygon = Unit.get_motion_range unit
+    #margin = Size.new(200, 100)
+    units = [
+      Unit.new(1, pose: Pose.new(100, 155, 75)),
+      Unit.new(2, pose: Pose.new(800, 155, 75))
+    ]
     islands = [
       Position.new(500, 500),
-      Position.new(2500, 1200),
-      Position.new(1500, 1800),
+      #Position.new(2500, 1200),
+      #Position.new(1500, 1800),
     ]
     |> Enum.with_index
     |> Enum.map(fn {position, index} ->
       position = Position.shake position
       Island.random(index, position)
     end)
-    Mission.new()
-    |> Mission.set_grid(square_size, round(arena.width / square_size), round(arena.height / square_size), margin)
+    [square_count_x, square_count_y] =
+      [arena.width, arena.height]
+      |> Enum.map(&round(&1 / square_size))
+    grid = Grid.new(square_size, square_count_x, square_count_y)
+    Mission.new(grid, margin)
     |> Map.put(:islands, islands)
-    |> Mission.set_unit(unit)
-    |> Mission.calc_command_squares(motion_range_polygon)
+    |> Mission.put(units)
   end
 end
