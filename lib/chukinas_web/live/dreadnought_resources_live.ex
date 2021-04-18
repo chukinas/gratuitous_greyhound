@@ -17,6 +17,7 @@ defmodule ChukinasWeb.DreadnoughtResourcesLive do
       |> Enum.map(&Spritesheet.red/1)
     socket = assign(socket,
       page_title: "Dreadnought Resources",
+      tabs: tabs(),
       show_markers?: true,
       sprites: sprites
     )
@@ -27,5 +28,13 @@ defmodule ChukinasWeb.DreadnoughtResourcesLive do
   def handle_event("toggle_show_markers", _, socket) do
     socket = assign(socket, show_markers?: !socket.assigns.show_markers?)
     {:noreply, socket}
+  end
+
+  def tabs do
+    [
+      %{title: "Welcome", route: "welcome", current?: false},
+      %{title: "Play", route: "play", current?: false},
+      %{title: "Sprites", route: "sprites", current?: true},
+    ]
   end
 end
