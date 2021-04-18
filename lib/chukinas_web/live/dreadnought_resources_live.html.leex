@@ -30,6 +30,9 @@
       >
         <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: sprite, center_on_origin?: @show_markers? %>
       </div>
+      <%= for mount <- sprite.mountings do %>
+      <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center sprite.origin.x + mount.position.x - sprite.rect_centered.x, sprite.origin.y + mount.position.y- sprite.rect_centered.y, scale: 4, type: :mount %>
+      <% end %>
       <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center sprite.origin.x - sprite.rect_centered.x, sprite.origin.y- sprite.rect_centered.y, scale: 4 %>
     </div>
   </div>

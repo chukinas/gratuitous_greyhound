@@ -19,8 +19,12 @@ defmodule ChukinasWeb.DreadnoughtView do
 
   def center(x, y, opts \\ []) do
     scale = Keyword.get(opts, :scale, 1)
+    color = case Keyword.get(opts, :type, :origin) do
+      :origin -> "pink"
+      :mount -> "blue"
+    end
     size = 20
-    assigns = [size: size, left: x * scale - size / 2, top: y * scale - size / 2]
+    assigns = [size: size, left: x * scale - size / 2, top: y * scale - size / 2, color: color]
     render("_center.html", assigns)
   end
 
