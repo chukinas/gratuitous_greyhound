@@ -26,7 +26,7 @@ defmodule ChukinasWeb.Router do
     live "/dreadnought/gameover", DreadnoughtLive, :game_over
     live "/dreadnought/dev", DreadnoughtLive, :dev
     live "/dreadnought/grid", DreadnoughtLive, :grid
-    live "/dreadnought/resources", DreadnoughtResourcesLive
+    live "/dreadnought/sprites", DreadnoughtResourcesLive
     live "/proofofconcept/change_tracking_test", ChangeTrackingTestLive
     live "/proofofconcept/zoompan", ZoomPanLive
   end
