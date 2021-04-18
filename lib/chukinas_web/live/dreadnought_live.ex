@@ -7,9 +7,10 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    mission = State.start_link()
+    {pid, mission} = State.start_link()
     socket = assign(socket,
       page_title: "Dreadnought",
+      pid: pid,
       mission: mission,
       mission_playing_surface: Mission.to_playing_surface(mission) |> Map.from_struct,
       mission_player: Mission.to_player(mission)
@@ -80,7 +81,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
     #  socket
     #  |> assign(mission: mission)
     # TODO use alias to shorten this call..
-    mission_player = State.complete_player_turn(action_selection)
+    mission_player = State.complete_player_turn(socket.assigns.pid, action_selection)
     send_update Dreadnought.DynamicWorldComponent, mission_player
     {:noreply, socket}
   end

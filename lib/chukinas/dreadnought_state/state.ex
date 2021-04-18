@@ -5,19 +5,16 @@ defmodule Chukinas.Dreadnought.State do
 
   def start_link do
     mission = MissionBuilder.build()
-    Agent.start_link(fn -> mission end, name: __MODULE__)
-    mission
+    {:ok, pid} = Agent.start_link(fn -> mission end)
+    {pid, mission}
   end
 
-  def get do
-    Agent.get(__MODULE__, & &1)
+  def get(pid) do
+    Agent.get(pid, & &1)
   end
 
-  def complete_player_turn(%ActionSelection{} = action_selection) do
-    mission =
-      Agent.get(__MODULE__, & &1)
-      |> Mission.complete_player_turn(action_selection)
-    Agent.update(__MODULE__, fn _ -> mission end)
-    Mission.to_player(mission)
+  def complete_player_turn(pid, %ActionSelection{} = action_selection) do
+    :ok = Agent.update(pid, & Mission.complete_player_turn(&1, action_selection))
+    pid |> get |> Mission.to_player
   end
 end
