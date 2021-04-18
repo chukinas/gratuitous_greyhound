@@ -8,6 +8,7 @@ defmodule Sprite do
 
   # TODO add name
   typedstruct enforce: true do
+    field :name, String.t()
     # Note: `rel` means relative to origin (the sprite's 'center')
     field :origin, Position.t()
     # TODO Rename abs_start
@@ -37,7 +38,7 @@ defmodule Sprite do
       Mount.new(id, rel_position)
     end
     %__MODULE__{
-      # TODO this isn't a Position.t()
+      name: sprite.clip_name,
       origin: origin,
       start: svg.min,
       start_rel: Position.subtract(svg.min, origin),
@@ -67,7 +68,7 @@ defmodule Sprite do
   end
 end
 
-# TODO rename Mounting
+# TODO This is referred to as a mounting in other places. Change those to say 'mount' instead
 defmodule Mount do
   use TypedStruct
   typedstruct do
