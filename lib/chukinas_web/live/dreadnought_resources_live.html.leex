@@ -3,7 +3,7 @@
     height: 0;
   }
   body {
-    background-color: darkblue;
+    background-color: grey;
     touch-action: none;
   }
   #world {
@@ -13,7 +13,9 @@
 
 <div class="text-white m-8 space-y-8">
   <h1 class="font-xl">Sprites</h1>
-  <input type="checkbox">
+  <%= ChukinasWeb.DreadnoughtView.button text: (if @show_markers?, do: "Markers Shown", else: "Markers Hidden"), 
+    phx_click: "toggle_show_markers" 
+  %>
   <%= for sprite <- @sprites do %>
   <div 
     id="<%= sprite.name %>"

@@ -17,12 +17,19 @@ defmodule ChukinasWeb.DreadnoughtView do
     render("_sprite.html", assigns)
   end
 
-  defp render_template(template, assigns, block) do
+  def button(opts \\ []) do
     assigns =
-      assigns
-      |> Map.new()
-      |> Map.put(:inner_content, block)
-    render template, assigns
+      opts
+      #|> Keyword.put_new(:text, "")
+    render("_button.html", assigns)
   end
+
+  #defp render_template(template, assigns, block) do
+  #  assigns =
+  #    assigns
+  #    |> Map.new()
+  #    |> Map.put(:inner_content, block)
+  #  render template, assigns
+  #end
 
 end
