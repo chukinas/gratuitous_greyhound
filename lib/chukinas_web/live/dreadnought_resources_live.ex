@@ -18,6 +18,7 @@ defmodule ChukinasWeb.DreadnoughtResourcesLive do
     socket = assign(socket,
       page_title: "Dreadnought Resources",
       tabs: tabs(),
+      header: "Sprites",
       show_markers?: true,
       sprites: sprites
     )
