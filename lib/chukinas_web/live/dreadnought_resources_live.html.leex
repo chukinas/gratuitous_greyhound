@@ -16,6 +16,7 @@
   <%= for sprite <- @sprites do %>
     <div>
       <%= sprite.name %>
+      <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: sprite %>
     </div>
   <% end %>
 </div>
