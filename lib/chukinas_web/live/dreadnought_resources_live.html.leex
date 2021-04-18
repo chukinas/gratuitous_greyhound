@@ -1,0 +1,20 @@
+<style>
+  iframe {
+    height: 0;
+  }
+  body {
+    background-color: black;
+    touch-action: none;
+  }
+  #world {
+    background-image:url("<%= Routes.static_path @socket, "/images/ocean.png" %>")
+  }
+</style>
+
+<div class="text-white">
+  HI
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/MotionPathPlugin.min.js"></script>
+<script>gsap.registerPlugin(MotionPathPlugin);</script>
