@@ -24,11 +24,13 @@
     "
   >
     <%= sprite.name %>
-    <div 
-      class="bg-blue-400 bg-opacity-30 origin-top-left transform scale-400 relative"
-    >
-      <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: sprite, center_on_origin?: @show_markers? %>
-      <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center sprite.origin.x - sprite.rect_centered.x, sprite.origin.y- sprite.rect_centered.y %>
+    <div class="relative">
+      <div 
+        class="bg-blue-400 bg-opacity-30 origin-top-left transform scale-400"
+      >
+        <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: sprite, center_on_origin?: @show_markers? %>
+      </div>
+      <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center sprite.origin.x - sprite.rect_centered.x, sprite.origin.y- sprite.rect_centered.y, scale: 4 %>
     </div>
   </div>
   <% end %>

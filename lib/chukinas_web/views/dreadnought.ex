@@ -17,9 +17,10 @@ defmodule ChukinasWeb.DreadnoughtView do
     render("_sprite.html", assigns)
   end
 
-  def center(x, y) do
-    size = 14
-    assigns = [x: x, y: y, size: size, left: x - size/2, top: y - size/2]
+  def center(x, y, opts \\ []) do
+    scale = Keyword.get(opts, :scale, 1)
+    size = 20
+    assigns = [size: size, left: x * scale - size / 2, top: y * scale - size / 2]
     render("_center.html", assigns)
   end
 
