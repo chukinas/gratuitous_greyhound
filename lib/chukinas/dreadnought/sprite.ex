@@ -12,18 +12,19 @@ defmodule Sprite do
   # TODO add name
   typedstruct enforce: true do
     field :name, String.t()
-    # Note: `rel` means relative to origin (the sprite's 'center')
-    # Origin is a position relative to top-left corner of spritesheet image
-    field :origin, Position.t()
+    # tight - uses smallest bounting rect that contains the clip path
+    # centered - uses smallest bounting rect that contains the clip path and is also centered on the origin point
+    field :sizing, :tight | :centered
     field :start_rel, Position.t()
     field :mountings, [Mount.t()]
     field :image_path, String.t()
     field :image_size, Size.t()
-    # Svg path string; located rel to spritesheet tl-corner
+    # All these are located relative to spritesheet top-left corner
+    field :origin, Position.t()
     field :clip_path, String.t()
-    # Smallest bounding rect around the clip path; located rel to spritesheet tl-corner
+    field :rect, Rect.t()
+    # TODO remove these
     field :rect_tight, Rect.t()
-    # Smallest rect that has the origin at its center; located rel to spritesheet tl-corner
     field :rect_centered, Rect.t()
   end
 
@@ -42,6 +43,7 @@ defmodule Sprite do
     end
     %__MODULE__{
       name: sprite.clip_name,
+      sizing: :tight,
       origin: origin,
       start_rel: Position.subtract(svg.rect, origin),
       mountings: sprite.mountings |> Enum.map(build_mounting),
@@ -50,6 +52,7 @@ defmodule Sprite do
       clip_path: svg.path,
       rect_tight: svg.rect,
       rect_centered: get_centered_rect(origin, svg.rect),
+      rect: svg.rect,
     }
   end
 
@@ -60,6 +63,17 @@ defmodule Sprite do
     sprite
     |> Map.update!(:image_size, & Size.multiply(&1, scale))
     |> Map.update!(:origin, & Position.multiply(&1, scale))
+    #|> Map.update!(:clip_path, & Svg.scale(&1, scale))
+    #|> Map.update!(:rect, & Rect.scale(&1, scale))
+  end
+
+  def center(%{sizing: :centered} = sprite), do: sprite
+  def center(%{sizing: :tight} = sprite) do
+    sprite
+    |> Map.put(:sizing, :centered)
+    #|> Map.update!(:origin, & Position.multiply(&1, scale))
+    #|> Map.update!(:clip_path, & Svg.scale(&1, scale))
+    #|> Map.update!(:rect, & Rect.scale(&1, scale))
   end
 
   # *** *******************************
