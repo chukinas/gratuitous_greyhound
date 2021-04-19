@@ -7,9 +7,9 @@ defmodule Sprite do
   # *** *******************************
   # *** TYPES
 
-  use TypedStruct
+  @type margin_id() :: integer()
 
-  # TODO add name
+  use TypedStruct
   typedstruct enforce: true do
     field :name, String.t()
     # tight - uses smallest bounting rect that contains the clip path
@@ -24,10 +24,10 @@ defmodule Sprite do
     field :__rect_tight, Rect.t()
     # Located relative to rect's top-left corner
     # TODO rename relative_mounts
-    field :mounts, [Position.t()]
-    # TODO rename relative_origin
+    field :mounts, %{margin_id() => Position.t()}
+    # TODO delete?
     field :start_rel, Position.t()
-    # TODO delete
+# TODO delete
     field :mountings, [Mount.t()]
   end
 
@@ -48,7 +48,7 @@ defmodule Sprite do
       sizing: :tight,
       origin: origin,
       start_rel: Position.subtract(rect, origin),
-      mounts: Enum.map(sprite.mountings, & change_coord_sys(&1, Position.origin(), rect)),
+      mounts: build_mounts(sprite.mountings, rect),
       mountings: sprite.mountings |> Enum.map(build_mounting),
       image_path: "/images/spritesheets/" <> image_map.path.name,
       image_size: Size.new(image_map),
@@ -108,11 +108,13 @@ defmodule Sprite do
     )
   end
 
-  defp change_coord_sys(position, before_relative_to, after_relative_to) do
-    position
-    |> Position.subtract(before_relative_to)
-    |> Position.add(after_relative_to)
+  defp build_mounts(parsed_mounts, rect) do
+    Enum.reduce(parsed_mounts, %{}, fn %{id: id, x: x, y: y}, mounts_map ->
+      position = Position.new(x, y) |> Position.change_coord_sys(rect)
+      mounts_map |> Map.put(id, position)
+    end)
   end
+
 end
 
 # TODO This is referred to as a mounting in other places. Change those to say 'mount' instead

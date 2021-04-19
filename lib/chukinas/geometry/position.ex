@@ -112,6 +112,12 @@ defmodule Position do
     add position, Enum.random(range), Enum.random(range)
   end
 
+  def change_coord_sys(position, before_relative_to \\ Position.origin(), after_relative_to) do
+    position
+    |> Position.subtract(before_relative_to)
+    |> Position.add(after_relative_to)
+  end
+
   # *** *******************************
   # *** LIST API
 
