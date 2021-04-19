@@ -15,10 +15,7 @@ defmodule Sprite do
     # Note: `rel` means relative to origin (the sprite's 'center')
     # Origin is a position relative to top-left corner of spritesheet image
     field :origin, Position.t()
-    # TODO Rename abs_start
-    field :start, Position.t()
     field :start_rel, Position.t()
-    field :size, Size.t()
     field :mountings, [Mount.t()]
     field :image_path, String.t()
     field :image_size, Size.t()
@@ -35,7 +32,7 @@ defmodule Sprite do
 
   def from_parsed_spritesheet(sprite, image_map) do
     svg = sprite.clip_path |> Interpret.interpret
-    size = Size.from_positions(svg.min, svg.max)
+    #size = Size.from_positions(svg.min, svg.max)
     origin = Position.rounded(sprite.origin)
     build_mounting = fn %{id: id, x: x, y: y} ->
       rel_position =
@@ -46,9 +43,7 @@ defmodule Sprite do
     %__MODULE__{
       name: sprite.clip_name,
       origin: origin,
-      start: svg.min,
-      start_rel: Position.subtract(svg.min, origin),
-      size: size,
+      start_rel: Position.subtract(svg.rect, origin),
       mountings: sprite.mountings |> Enum.map(build_mounting),
       image_path: "/images/spritesheets/" <> image_map.path.name,
       image_size: Size.new(image_map),
@@ -63,7 +58,8 @@ defmodule Sprite do
 
   def scale(sprite, scale) do
     sprite
-    |> update_in([:image, :size], & Size.multiply(&1, scale))
+    |> Map.update!(:image_size, & Size.multiply(&1, scale))
+    |> Map.update!(:origin, & Position.multiply(&1, scale))
   end
 
   # *** *******************************

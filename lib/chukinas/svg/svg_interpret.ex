@@ -20,12 +20,12 @@ defmodule Interpret do
       path: to_path(parsed_svg),
       rect: Rect.new(min, max),
       # TODO remove (all the info already in rect)
-      min: min,
-      max: max,
-      min_x: min.x,
-      max_x: max.x,
-      min_y: min.y,
-      max_y: max.y
+      #min: min,
+      #max: max,
+      #min_x: min.x,
+      #max_x: max.x,
+      #min_y: min.y,
+      #max_y: max.y
     }
   end
 
