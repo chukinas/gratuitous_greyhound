@@ -16,6 +16,13 @@ defmodule Size do
   # *** *******************************
   # *** NEW
 
+  def new(%{width: width, height: height}) do
+    %__MODULE__{
+      width: width,
+      height: height
+    }
+  end
+
   def new(width, height) do
     %__MODULE__{
       width: width,

@@ -4,32 +4,38 @@ alias Chukinas.Svg.Interpret
 
 defmodule Sprite do
 
+  # *** *******************************
+  # *** TYPES
+
   use TypedStruct
 
   # TODO add name
   typedstruct enforce: true do
     field :name, String.t()
     # Note: `rel` means relative to origin (the sprite's 'center')
+    # Origin is a position relative to top-left corner of spritesheet image
     field :origin, Position.t()
     # TODO Rename abs_start
     field :start, Position.t()
     field :start_rel, Position.t()
     field :size, Size.t()
     field :mountings, [Mount.t()]
-    field :image, Sprite.Image.t()
+    field :image_path, String.t()
+    field :image_size, Size.t()
+    # Svg path string; located rel to spritesheet tl-corner
     field :clip_path, String.t()
+    # Smallest bounding rect around the clip path; located rel to spritesheet tl-corner
     field :rect_tight, Rect.t()
+    # Smallest rect that has the origin at its center; located rel to spritesheet tl-corner
     field :rect_centered, Rect.t()
   end
+
+  # *** *******************************
+  # *** NEW
 
   def from_parsed_spritesheet(sprite, image_map) do
     svg = sprite.clip_path |> Interpret.interpret
     size = Size.from_positions(svg.min, svg.max)
-    image = Sprite.Image.new(
-      "/images/spritesheets/" <> image_map.path.name,
-      image_map.width,
-      image_map.height
-    )
     origin = Position.rounded(sprite.origin)
     build_mounting = fn %{id: id, x: x, y: y} ->
       rel_position =
@@ -44,12 +50,24 @@ defmodule Sprite do
       start_rel: Position.subtract(svg.min, origin),
       size: size,
       mountings: sprite.mountings |> Enum.map(build_mounting),
-      image: image,
+      image_path: "/images/spritesheets/" <> image_map.path.name,
+      image_size: Size.new(image_map),
       clip_path: svg.path,
       rect_tight: svg.rect,
       rect_centered: get_centered_rect(origin, svg.rect),
     }
   end
+
+  # *** *******************************
+  # *** API
+
+  def scale(sprite, scale) do
+    sprite
+    |> update_in([:image, :size], & Size.multiply(&1, scale))
+  end
+
+  # *** *******************************
+  # *** PRIVATE
 
   defp get_centered_rect(origin, rect) do
     half_width = max(
@@ -83,20 +101,6 @@ defmodule Mount do
     %__MODULE__{
       id: String.to_integer(id),
       position: position
-    }
-  end
-end
-
-defmodule Sprite.Image do
-  use TypedStruct
-  typedstruct do
-    field :path, String.t()
-    field :size, Size.t()
-  end
-  def new(path, width, height) do
-    %__MODULE__{
-      path: path,
-      size: Size.rounded(width, height)
     }
   end
 end

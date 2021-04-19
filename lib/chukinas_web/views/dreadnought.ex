@@ -11,7 +11,8 @@ defmodule ChukinasWeb.DreadnoughtView do
     assigns = [
       socket: Keyword.fetch!(opts, :socket),
       rect: rect,
-      image: sprite.image,
+      image_path: sprite.image_path,
+      image_size: sprite.image_size,
       clip_path: sprite.clip_path
     ]
     render("_sprite.html", assigns)
