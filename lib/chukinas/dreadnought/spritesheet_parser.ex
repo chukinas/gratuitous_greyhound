@@ -1,4 +1,5 @@
 alias Chukinas.Dreadnought.Spritesheet.Parser
+alias Chukinas.Util.Precision
 
 defmodule Parser do
 
@@ -85,17 +86,18 @@ defmodule Parser do
   defp parse_marker(marker) do
     type = case get_label(marker) do
       "origin" -> %{type: :origin}
-      "mounting_" <> id -> %{type: :mounting, id: id}
+      "mounting_" <> id -> %{type: :mounting, id: Precision.coerce_int(id)}
     end
     %{
-      x: attr(marker, "cx"),
-      y: attr(marker, "cy")
+      x: attr_int(marker, "cx"),
+      y: attr_int(marker, "cy")
     }
     |> Map.merge(type)
   end
 
   # XmlToMap appends a dash in front of tag attributes
   defp attr(map, attr), do: map["-" <> attr]
+  defp attr_int(map, attr), do: attr(map, attr) |> Precision.coerce_int
 
   # Some of the Inkscape attributes are rather lengthy.
   # These utilities allow me to access those attributes more easily.

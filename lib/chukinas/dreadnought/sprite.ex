@@ -15,23 +15,27 @@ defmodule Sprite do
     # tight - uses smallest bounting rect that contains the clip path
     # centered - uses smallest bounting rect that contains the clip path and is also centered on the origin point
     field :sizing, :tight | :centered
-    field :start_rel, Position.t()
-    field :mountings, [Mount.t()]
     field :image_path, String.t()
     field :image_size, Size.t()
-    # All these are located relative to spritesheet top-left corner
+    # Located relative to spritesheet top-left corner
     field :origin, Position.t()
     field :clip_path, String.t()
     field :rect, Rect.t()
     field :__rect_tight, Rect.t()
+    # Located relative to rect's top-left corner
+    # TODO rename relative_mounts
+    field :mounts, [Position.t()]
+    # TODO rename relative_origin
+    field :start_rel, Position.t()
+    # TODO delete
+    field :mountings, [Mount.t()]
   end
 
   # *** *******************************
   # *** NEW
 
   def from_parsed_spritesheet(sprite, image_map) do
-    svg = sprite.clip_path |> Interpret.interpret
-    #size = Size.from_positions(svg.min, svg.max)
+    %{path: clip_path, rect: rect} = sprite.clip_path |> Interpret.interpret
     origin = Position.rounded(sprite.origin)
     build_mounting = fn %{id: id, x: x, y: y} ->
       rel_position =
@@ -43,13 +47,14 @@ defmodule Sprite do
       name: sprite.clip_name,
       sizing: :tight,
       origin: origin,
-      start_rel: Position.subtract(svg.rect, origin),
+      start_rel: Position.subtract(rect, origin),
+      mounts: Enum.map(sprite.mountings, & change_coord_sys(&1, Position.origin(), rect)),
       mountings: sprite.mountings |> Enum.map(build_mounting),
       image_path: "/images/spritesheets/" <> image_map.path.name,
       image_size: Size.new(image_map),
-      clip_path: svg.path,
-      rect: svg.rect,
-      __rect_tight: svg.rect
+      clip_path: clip_path,
+      rect: rect,
+      __rect_tight: rect
     }
   end
 
@@ -102,6 +107,12 @@ defmodule Sprite do
       Position.add(origin, dist_from_origin)
     )
   end
+
+  defp change_coord_sys(position, before_relative_to, after_relative_to) do
+    position
+    |> Position.subtract(before_relative_to)
+    |> Position.add(after_relative_to)
+  end
 end
 
 # TODO This is referred to as a mounting in other places. Change those to say 'mount' instead
@@ -117,7 +128,7 @@ defmodule Mount do
   end
   def new(id, position) do
     %__MODULE__{
-      id: String.to_integer(id),
+      id: id,
       position: position
     }
   end
