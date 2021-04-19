@@ -23,8 +23,7 @@ defmodule Sprite do
     field :origin, Position.t()
     field :clip_path, String.t()
     field :rect, Rect.t()
-    # TODO remove these
-    field :rect_centered, Rect.t()
+    field :__rect_tight, Rect.t()
   end
 
   # *** *******************************
@@ -49,8 +48,8 @@ defmodule Sprite do
       image_path: "/images/spritesheets/" <> image_map.path.name,
       image_size: Size.new(image_map),
       clip_path: svg.path,
-      rect_centered: get_centered_rect(origin, svg.rect),
       rect: svg.rect,
+      __rect_tight: svg.rect
     }
   end
 
@@ -69,17 +68,17 @@ defmodule Sprite do
   # TODO implement:
   def fit(%{sizing: :centered} = sprite) do
     %{sprite |
-      sizing: :centered,
-      rect: sprite.rect_centered
+      sizing: :tight,
+      rect: sprite.__rect_tight
     }
   end
 
   def center(%{sizing: :centered} = sprite), do: sprite
   def center(%{sizing: :tight} = sprite) do
     %{sprite |
-      rect: sprite.rect_centered
+      sizing: :centered,
+      rect: get_centered_rect(sprite.origin, sprite.rect)
     }
-    |> Map.put(:sizing, :centered)
     #|> Map.update!(:origin, & Position.multiply(&1, scale))
     #|> Map.update!(:clip_path, & Svg.scale(&1, scale))
     #|> Map.update!(:rect, & Rect.scale(&1, scale))

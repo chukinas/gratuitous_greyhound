@@ -27,9 +27,9 @@
         <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: sprite, center_on_origin?: @show_markers? %>
       </div>
       <%= for mount <- sprite.mountings do %>
-      <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center sprite.origin.x + mount.position.x - sprite.rect_centered.x, sprite.origin.y + mount.position.y- sprite.rect_centered.y, type: :mount %>
+      <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center sprite.origin.x + mount.position.x - sprite.rect.x, sprite.origin.y + mount.position.y- sprite.rect.y, type: :mount %>
       <% end %>
-      <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center sprite.origin.x - sprite.rect_centered.x, sprite.origin.y- sprite.rect_centered.y %>
+      <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center sprite.origin.x - sprite.rect.x, sprite.origin.y- sprite.rect.y %>
     </div>
     <div class="flex-1 min-w-0">
       <a href="#" class="focus:outline-none">
@@ -71,9 +71,9 @@
         <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: sprite, center_on_origin?: @show_markers? %>
       </div>
       <%= for mount <- sprite.mountings do %>
-      <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center sprite.origin.x + mount.position.x - sprite.rect_centered.x, sprite.origin.y + mount.position.y- sprite.rect_centered.y, type: :mount %>
+      <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center sprite.origin.x + mount.position.x - sprite.rect.x, sprite.origin.y + mount.position.y- sprite.rect.y, type: :mount %>
       <% end %>
-      <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center sprite.origin.x - sprite.rect_centered.x, sprite.origin.y- sprite.rect_centered.y %>
+      <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center sprite.origin.x - sprite.rect.x, sprite.origin.y- sprite.rect.y %>
     </div>
   </div>
   <% end %>
