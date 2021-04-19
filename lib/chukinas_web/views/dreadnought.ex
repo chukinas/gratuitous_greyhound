@@ -1,13 +1,17 @@
+alias Chukinas.Dreadnought.Sprite
+
 defmodule ChukinasWeb.DreadnoughtView do
   use ChukinasWeb, :view
 
   def sprite(opts \\ []) do
+    center? = Keyword.get(opts, :center_on_origin?, true)
     sprite = Keyword.fetch!(opts, :sprite)
-    rect = if Keyword.get(opts, :center_on_origin?, true) do
-      sprite.rect_centered
+    sprite = if center? do
+      Sprite.center(sprite)
     else
-      sprite.rect_tight
+      Sprite.fit(sprite)
     end
+    rect = sprite.rect
     assigns = [
       socket: Keyword.fetch!(opts, :socket),
       rect: rect,

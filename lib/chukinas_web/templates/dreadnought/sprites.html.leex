@@ -13,7 +13,7 @@
 
 
 <%# grid %>
-<%# based on horizontal link cards - https://tailwindui.com/components/application-ui/lists/grid-lists#component-08e8555b844010db1f30cbafc8be6222 %>
+<%# based on horizontal link cards %>
 <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
 
   <%= for sprite <- @sprites do %>
@@ -22,17 +22,14 @@
 
     <div class="relative">
       <div 
-        class="origin-top-left transform scale-400 inline-block overflow-hidden"
+        class="origin-top-left inline-block overflow-hidden"
       >
         <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: sprite, center_on_origin?: @show_markers? %>
       </div>
       <%= for mount <- sprite.mountings do %>
-      <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center sprite.origin.x + mount.position.x - sprite.rect_centered.x, sprite.origin.y + mount.position.y- sprite.rect_centered.y, scale: 4, type: :mount %>
+      <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center sprite.origin.x + mount.position.x - sprite.rect_centered.x, sprite.origin.y + mount.position.y- sprite.rect_centered.y, type: :mount %>
       <% end %>
-      <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center sprite.origin.x - sprite.rect_centered.x, sprite.origin.y- sprite.rect_centered.y, scale: 4 %>
-    </div>
-    <div class="flex-shrink-0">
-      <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixqx=ds9UhSEn3r&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+      <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center sprite.origin.x - sprite.rect_centered.x, sprite.origin.y- sprite.rect_centered.y %>
     </div>
     <div class="flex-1 min-w-0">
       <a href="#" class="focus:outline-none">
@@ -62,21 +59,21 @@
   <div 
     id="<%= sprite.name %>"
     style="
-      height:<%= sprite.rect_tight.height * 4 %>px
+      height:<%= sprite.rect.height * 1 %>px
     "
   >
     <h4 class="font-bold text-yellow-800"><%= sprite.name %></h4>
     <%# TODO this is causing width issues... %>
     <div class="relative">
       <div 
-        class="origin-top-left transform scale-400 inline-block overflow-hidden"
+        class="origin-top-left inline-block overflow-hidden"
       >
         <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: sprite, center_on_origin?: @show_markers? %>
       </div>
       <%= for mount <- sprite.mountings do %>
-      <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center sprite.origin.x + mount.position.x - sprite.rect_centered.x, sprite.origin.y + mount.position.y- sprite.rect_centered.y, scale: 4, type: :mount %>
+      <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center sprite.origin.x + mount.position.x - sprite.rect_centered.x, sprite.origin.y + mount.position.y- sprite.rect_centered.y, type: :mount %>
       <% end %>
-      <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center sprite.origin.x - sprite.rect_centered.x, sprite.origin.y- sprite.rect_centered.y, scale: 4 %>
+      <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center sprite.origin.x - sprite.rect_centered.x, sprite.origin.y- sprite.rect_centered.y %>
     </div>
   </div>
   <% end %>

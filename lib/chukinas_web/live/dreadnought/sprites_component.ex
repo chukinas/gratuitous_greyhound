@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Spritesheet}
+alias Chukinas.Dreadnought.{Spritesheet, Sprite}
 alias ChukinasWeb.DreadnoughtView
 
 defmodule ChukinasWeb.Dreadnought.SpritesComponent do
@@ -14,10 +14,10 @@ defmodule ChukinasWeb.Dreadnought.SpritesComponent do
     sprites =
       ~w(ship_large ship_small turret1 turret2 shell1 shell2 muzzle_flash)
       |> Enum.map(&Spritesheet.red/1)
-    socket = assign(socket,
-      show_markers?: true,
-      sprites: sprites
-    )
+    socket =
+      socket
+      |> assign(sprites: sprites)
+      |> set_marker_visibility(false)
     {:ok, socket}
   end
 
@@ -33,5 +33,20 @@ defmodule ChukinasWeb.Dreadnought.SpritesComponent do
       %{title: "Play", route: "play", current?: false},
       %{title: "Sprites", route: "sprites", current?: true},
     ]
+  end
+
+  defp set_marker_visibility(socket, show_markers?) do
+    sprites =
+      socket.assigns.sprites
+      |> fit_or_center_sprites(show_markers?)
+    assign(socket,
+      sprites: sprites,
+      show_markers?: show_markers?
+    )
+  end
+
+  defp fit_or_center_sprites(sprites, centered?) do
+    fun = if centered?, do: :center, else: :fit
+    Enum.map(sprites, & apply(Sprite, fun, [&1]))
   end
 end
