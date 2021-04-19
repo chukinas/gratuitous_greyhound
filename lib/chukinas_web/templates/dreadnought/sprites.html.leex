@@ -1,11 +1,13 @@
-<%= ChukinasWeb.DreadnoughtView.toggle(
-label: (if @show_markers?, do: "Markers Shown", else: "Markers Hidden"),
-is_enabled?: @show_markers?,
-phx_click: "toggle_show_markers",
-phx_target: @myself
-)%>
+<div class="my-4">
+  <%= ChukinasWeb.DreadnoughtView.toggle("toggle_show_markers",
+  label: (if @show_markers?, do: "Markers Shown", else: "Markers Hidden"),
+  is_enabled?: @show_markers?,
+  phx_click: "toggle_show_markers",
+  phx_target: @myself
+  )%>
+</div>
 
-<div class="space-y-8">
+<div class="space-y-16 mt-8 mb-64">
   <%#  phx_click: "toggle_show_markers" %>
 
   <%= for sprite <- @sprites do %>
@@ -15,10 +17,11 @@ phx_target: @myself
       height:<%= sprite.rect_tight.height * 4 %>px
     "
   >
-    <%= sprite.name %>
+    <h4 class="font-bold text-yellow-800"><%= sprite.name %></h4>
+    <%# TODO this is causing width issues... %>
     <div class="relative">
       <div 
-        class="origin-top-left transform scale-400"
+        class="origin-top-left transform scale-400 inline-block overflow-hidden"
       >
         <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: sprite, center_on_origin?: @show_markers? %>
       </div>

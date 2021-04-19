@@ -35,13 +35,16 @@ defmodule ChukinasWeb.DreadnoughtView do
     render("_button.html", assigns)
   end
 
-  def toggle(opts \\ []) do
+  def toggle(id, opts \\ []) do
     assigns =
-      opts
-      |> Keyword.put_new(:label, nil)
-      |> Keyword.put_new(:phx_click, nil)
-      |> Keyword.put_new(:phx_target, nil)
-      |> Keyword.put_new(:is_enabled?, false)
+      [
+        label: nil,
+        phx_click: nil,
+        phx_target: nil,
+        is_enabled?: false
+      ]
+      |> Keyword.merge(opts)
+      |> Keyword.put(:id, id)
     render("_toggle.html", assigns)
   end
 
