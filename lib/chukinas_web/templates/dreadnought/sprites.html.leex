@@ -1,8 +1,13 @@
-<div class="text-white m-8 space-y-8">
-  <h1 class="font-xl">Sprites</h1>
-  <%= ChukinasWeb.DreadnoughtView.button text: (if @show_markers?, do: "Markers Shown", else: "Markers Hidden"), 
-    phx_click: "toggle_show_markers" 
-  %>
+<%= ChukinasWeb.DreadnoughtView.toggle(
+label: (if @show_markers?, do: "Markers Shown", else: "Markers Hidden"),
+is_enabled?: @show_markers?,
+phx_click: "toggle_show_markers",
+phx_target: @myself
+)%>
+
+<div class="space-y-8">
+  <%#  phx_click: "toggle_show_markers" %>
+
   <%= for sprite <- @sprites do %>
   <div 
     id="<%= sprite.name %>"
@@ -13,7 +18,7 @@
     <%= sprite.name %>
     <div class="relative">
       <div 
-        class="bg-blue-400 bg-opacity-30 origin-top-left transform scale-400"
+        class="origin-top-left transform scale-400"
       >
         <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: sprite, center_on_origin?: @show_markers? %>
       </div>
