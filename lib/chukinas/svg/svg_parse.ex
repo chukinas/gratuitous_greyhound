@@ -14,7 +14,7 @@ defmodule Chukinas.Svg.Parse do
   @commands ~w(M m L l H h V v Z z C c S s Q q T t A a)
 
   def parse(svg_string, opts \\ []) do
-    opts = Opts.merge!(opts, [coerce_int: true, scale: 1])
+    opts = Opts.merge! opts, coerce_int: true, scale: 1
     svg_string
     |> String.split([" ", ","], trim: true)
     |> Stream.flat_map(&separate_terms/1)

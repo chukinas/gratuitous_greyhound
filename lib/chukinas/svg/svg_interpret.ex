@@ -6,23 +6,13 @@ defmodule Interpret do
   Analyze output of Svg.Parse to determine e.g. min x and y..
   """
 
-  def interpret(svg) when is_binary(svg) do
+  def interpret(svg, opts \\ []) when is_binary(svg) do
     svg
-    |> Parse.parse
-    |> interpret
-  end
-  def interpret(parsed_svg) when is_list(parsed_svg) do
-    {min, max} =
-      parsed_svg
-      |> to_positions
-      |> Position.min_max
-    %{
-      path: to_path(parsed_svg),
-      rect: Rect.new(min, max),
-    }
+    |> Parse.parse(opts)
+    |> _interpret
   end
 
-  def interpret(parsed_svg) when is_list(parsed_svg) do
+  defp _interpret(parsed_svg) when is_list(parsed_svg) do
     {min, max} =
       parsed_svg
       |> to_positions

@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{Position, Rect, CollidableShape}
+alias Chukinas.Geometry.{Position, Rect, CollidableShape, Size}
 
 defmodule Rect do
   @moduledoc"""
@@ -81,6 +81,12 @@ defmodule Rect do
       Position.add_y(position, height)
     ]
     |> Enum.map(&Position.to_vertex/1)
+  end
+
+  def scale(rect, scale) do
+    rect
+    |> Position.multiply(scale)
+    |> Size.multiply(scale)
   end
 
   # *** *******************************

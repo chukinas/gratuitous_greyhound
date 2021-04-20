@@ -1,6 +1,5 @@
-alias Chukinas.Util.Precision
-alias Chukinas.Geometry.{Straight, Path, Position, Rect, Turn, Trig}
-alias Chukinas.Svg.{Interpret, Parse}
+alias Chukinas.Geometry.{Straight, Path, Position, Turn, Trig}
+alias Chukinas.Svg.{Interpret}
 
 defmodule Chukinas.Svg do
   @moduledoc"""
@@ -26,9 +25,8 @@ defmodule Chukinas.Svg do
   end
 
   def scale(svg_path, scale) when is_binary(svg_path) and is_integer(scale) do
-    svg_path
-    |> Parse.parse
-    |> Interpret.to_positions
+    %{path: new_svg_path} = Interpret.interpret(svg_path, scale: scale)
+    new_svg_path
   end
 
   # *** *******************************
