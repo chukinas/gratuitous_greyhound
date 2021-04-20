@@ -27,6 +27,5 @@ defmodule Turret do
       pose: pose,
       sprite: sprite
     }
-    |> IOP.inspect("turret")
   end
 end

@@ -1,6 +1,7 @@
 alias Chukinas.Dreadnought.{Sprite}
 alias Chukinas.Geometry.{Position, Size, Rect}
-alias Chukinas.Svg.Interpret
+alias Chukinas.Svg.{Interpret}
+alias Chukinas.Svg
 
 defmodule Sprite do
 
@@ -52,21 +53,22 @@ defmodule Sprite do
   # *** *******************************
   # *** API
 
-  def scale(%{rect: old_rect} = sprite, scale) do
-    new_rect = Rect.scale(sprite.rect, scale)
+  def scale(sprite, scale) do
+    maybe_io_put sprite
     %{sprite |
       image_size: Size.multiply(sprite.image_size, scale),
       origin: Position.multiply(sprite.origin, scale),
       clip_path: Svg.scale(sprite.clip_path, scale),
-      rect: new_rect,
-      __rect: Rect.scale(sprite.__rect, scale),
+      rect: Rect.scale(sprite.rect, scale),
+      __rect_tight: Rect.scale(sprite.__rect_tight, scale),
       relative_origin: Position.multiply(sprite.relative_origin, scale),
-      mounts: modify_mounts(sprite.mounts, old_rect, new_rect)
+      mounts: scale_mounts(sprite.mounts, scale)
     }
-    sprite
-    #|> Map.update!(:clip_path, & Svg.scale(&1, scale))
-    #|> Map.update!(:rect, & Rect.scale(&1, scale))
+    |> maybe_io_put
   end
+
+  defp maybe_io_put(%{name: "ship_large"} = sprite), do: IOP.inspect(sprite)
+  defp maybe_io_put(sprite), do: sprite
 
   def fit(%{sizing: :tight} = sprite), do: sprite
   # TODO implement:
@@ -107,6 +109,16 @@ defmodule Sprite do
         |> Position.subtract(before_coord_sys)
         |> Position.add(after_coord_sys)
       map |> Map.put(id, position)
+    end)
+  end
+
+  defp scale_mounts(mounts_map, scale) do
+    map_values(mounts_map, &Position.multiply(&1, scale))
+  end
+
+  defp map_values(%{} = map, fun) do
+    Enum.reduce(map, %{}, fn {key, value}, new_map ->
+      Map.put(new_map, key, fun.(value))
     end)
   end
 end

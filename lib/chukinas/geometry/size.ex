@@ -45,31 +45,31 @@ defmodule Size do
   end
 
   # *** *******************************
-  # *** API
+  # *** API FOR ACTING ON WIDTH/HEIGHT KEYS
 
-  def add(size1, size2) do
-    %__MODULE__{
-      width: size1.width + size2.width,
-      height: size1.height + size2.height
-    }
+  def add(a, b) do
+    Enum.reduce([:width, :height], a, fn key, new_size ->
+      Map.update!(new_size, key, & &1 + b[key])
+    end)
   end
 
-  def subtract(size1, size2) do
-    %__MODULE__{
-      width: size1.width - size2.width,
-      height: size1.height - size2.height
-    }
+  def subtract(a, b) do
+    Enum.reduce([:width, :height], a, fn key, new_size ->
+      Map.update!(new_size, key, & &1 - b[key])
+    end)
   end
 
   def halve(size), do: multiply(size, 0.5)
   def double(size), do: multiply(size, 2)
 
   def multiply(size, value) do
-    %__MODULE__{
-      width: size.width * value,
-      height: size.height * value
-    }
+    Enum.reduce([:width, :height], size, fn key, new_size ->
+      Map.update!(new_size, key, & &1 * value)
+    end)
   end
+
+  # *** *******************************
+  # *** CONVERSIONS
 
   def to_position(size) do
     Position.new size.width, size.height

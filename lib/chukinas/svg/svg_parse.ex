@@ -22,7 +22,7 @@ defmodule Chukinas.Svg.Parse do
     |> group_commands
     |> coerce_absolute_cmd
     |> coerce_int(Keyword.fetch! opts, :coerce_int)
-    |> multiply(Keyword.fetch! opts, :scale)
+    |> Enum.map(&multiply(&1, Keyword.fetch!(opts, :scale)))
   end
 
   # TODO refactor to use head and tails

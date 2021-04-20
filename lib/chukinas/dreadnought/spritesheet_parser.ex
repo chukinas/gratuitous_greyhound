@@ -49,10 +49,10 @@ defmodule Parser do
         extension: Path.extname(pathname),
         root: Path.rootname(pathname)
       },
-      x: image["-x"],
-      y: image["-y"],
-      width: image["-width"],
-      height: image["-height"]
+      x: attr_number(image, "x"),
+      y: attr_number(image, "y"),
+      width: attr_number(image, "width"),
+      height: attr_number(image, "height")
     }
   end
   defp parse_sublayer(%{
@@ -98,6 +98,7 @@ defmodule Parser do
   # XmlToMap appends a dash in front of tag attributes
   defp attr(map, attr), do: map["-" <> attr]
   defp attr_int(map, attr), do: attr(map, attr) |> Precision.coerce_int
+  defp attr_number(map, attr), do: attr(map, attr) |> Precision.coerce_number!
 
   # Some of the Inkscape attributes are rather lengthy.
   # These utilities allow me to access those attributes more easily.

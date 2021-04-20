@@ -14,6 +14,7 @@ defmodule ChukinasWeb.Dreadnought.SpritesComponent do
     sprites =
       ~w(ship_large ship_small turret1 turret2 shell1 shell2 muzzle_flash)
       |> Enum.map(&Spritesheet.red/1)
+      |> Enum.map(& Sprite.scale(&1, 2))
     socket =
       socket
       |> assign(sprites: sprites)
