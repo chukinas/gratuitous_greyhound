@@ -40,7 +40,7 @@ defmodule Sprite do
       sizing: :tight,
       origin: origin,
       start_rel: Position.subtract(rect, origin),
-      mounts: build_mounts(sprite.mountings, rect),
+      mounts: build_mounts(sprite.mounts, rect),
       image_path: "/images/spritesheets/" <> image_map.path.name,
       image_size: Size.new(image_map),
       clip_path: clip_path,

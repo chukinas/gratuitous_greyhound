@@ -32,7 +32,7 @@ defmodule Parser do
 
   # Each sublayer in the Inkscape file is either a link to the
   # spritesheet image (only 1 per layer) or a collection of svg shapes
-  # describing the clip path, origin, and mountings (zero, one or many)
+  # describing the clip path, origin, and mounts (zero, one or many)
   # of a single sprite from that spritesheet.
   defp parse_sublayer(nil) do
     %{
@@ -78,7 +78,7 @@ defmodule Parser do
       |> Map.put_new(:mounting, [])
     %{
       origin: List.first(marker_map.origin),
-      mountings: marker_map.mounting
+      mounts: marker_map.mounting
     }
   end
 
