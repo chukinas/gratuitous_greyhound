@@ -110,7 +110,7 @@ defmodule Sprite do
 
   defp build_mounts(parsed_mounts, rect) do
     Enum.reduce(parsed_mounts, %{}, fn %{id: id, x: x, y: y}, mounts_map ->
-      position = Position.new(x, y) |> Position.change_coord_sys(rect)
+      position = Position.new(x, y) |> Position.subtract(rect)
       mounts_map |> Map.put(id, position)
     end)
   end

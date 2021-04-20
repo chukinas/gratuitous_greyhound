@@ -40,9 +40,7 @@ defmodule Unit do
         # I'll wait to do this though until I convince myself
         # that I don't need a struct with any other props.
         position =
-          sprite.mountings
-          |> Enum.find(&(&1.id == id))
-          |> Map.fetch!(:position)
+          sprite.mounts[id]
           |> Pose.new(angle)
         Turret.new(id, position, Spritesheet.red("turret1") |> Sprite.center)
       end)

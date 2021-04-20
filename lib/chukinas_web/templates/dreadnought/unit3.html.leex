@@ -17,8 +17,8 @@
        id="unit-<%= @unit.id %>-turret-<%= turret.id %>" 
        class="absolute top-0 left-0"
        style="
-         left: <%= (@unit.sprite.rect.width - turret.sprite.rect.width) / 2 + turret.pose.x %>px; 
-         top: <%= (@unit.sprite.rect.height - turret.sprite.rect.height) / 2 + turret.pose.y %>px; 
+         left: <%= turret.pose.x - turret.sprite.rect.width / 2 %>px; 
+         top: <%= turret.pose.y - turret.sprite.rect.height / 2 %>px; 
          transform: rotate(<%= 45 +turret.pose.angle %>deg);
        "
        >
