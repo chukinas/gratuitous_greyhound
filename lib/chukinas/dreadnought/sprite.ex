@@ -27,8 +27,6 @@ defmodule Sprite do
     field :mounts, %{margin_id() => Position.t()}
     # TODO delete?
     field :start_rel, Position.t()
-# TODO delete
-    field :mountings, [Mount.t()]
   end
 
   # *** *******************************
@@ -37,19 +35,12 @@ defmodule Sprite do
   def from_parsed_spritesheet(sprite, image_map) do
     %{path: clip_path, rect: rect} = sprite.clip_path |> Interpret.interpret
     origin = Position.rounded(sprite.origin)
-    build_mounting = fn %{id: id, x: x, y: y} ->
-      rel_position =
-        Position.rounded(x, y)
-        |> Position.subtract(origin)
-      Mount.new(id, rel_position)
-    end
     %__MODULE__{
       name: sprite.clip_name,
       sizing: :tight,
       origin: origin,
       start_rel: Position.subtract(rect, origin),
       mounts: build_mounts(sprite.mountings, rect),
-      mountings: sprite.mountings |> Enum.map(build_mounting),
       image_path: "/images/spritesheets/" <> image_map.path.name,
       image_size: Size.new(image_map),
       clip_path: clip_path,

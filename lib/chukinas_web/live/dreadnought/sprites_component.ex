@@ -17,7 +17,7 @@ defmodule ChukinasWeb.Dreadnought.SpritesComponent do
     socket =
       socket
       |> assign(sprites: sprites)
-      |> set_marker_visibility(false)
+      |> set_marker_visibility(true)
     {:ok, socket}
   end
 
