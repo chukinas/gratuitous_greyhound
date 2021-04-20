@@ -34,4 +34,11 @@ defmodule Chukinas.Util.Precision do
     abs(a - b) < 1
   end
 
+  # TODO move this to a better-named module
+  # TODO use this in the several places in sprite.ex
+  def apply_to_each_val(%{} = map, fun) do
+    map
+    |> Stream.map(fn {key, val} -> {key, fun.(val)} end)
+    |> Enum.into(%{})
+  end
 end

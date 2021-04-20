@@ -1,3 +1,5 @@
+alias Chukinas.Util.Opts
+
 defmodule Chukinas.Svg.Parse do
   @moduledoc"""
   Parse svg strings
@@ -11,14 +13,16 @@ defmodule Chukinas.Svg.Parse do
   @command_with_7_arg ~w(A a)
   @commands ~w(M m L l H h V v Z z C c S s Q q T t A a)
 
-  def parse(svg_string) do
+  def parse(svg_string, opts \\ []) do
+    opts = Opts.merge!(opts, [coerce_int: true, scale: 1])
     svg_string
     |> String.split([" ", ","], trim: true)
     |> Stream.flat_map(&separate_terms/1)
     |> Enum.filter(& not is_nil &1)
     |> group_commands
     |> coerce_absolute_cmd
-    |> coerce_int
+    |> coerce_int(Keyword.fetch! opts, :coerce_int)
+    |> multiply(Keyword.fetch! opts, :scale)
   end
 
   # TODO refactor to use head and tails
@@ -93,7 +97,15 @@ defmodule Chukinas.Svg.Parse do
   def get_end_point(["Z"]), do: {0, 0}
   def get_end_point([_, x, y]), do: {x, y}
 
+  def coerce_int(val, true), do: coerce_int(val)
+  def coerce_int(val, false), do: val
   def coerce_int(val) when is_list(val), do: Enum.map(val, &coerce_int/1)
   def coerce_int(val) when is_binary(val), do: val
   def coerce_int(val) when is_float(val), do: round val
+
+  def multiply(list, 1), do: list
+  def multiply([letter | numbers], scale) do
+    numbers = Enum.map(numbers, & &1 * scale)
+    [letter | numbers]
+  end
 end

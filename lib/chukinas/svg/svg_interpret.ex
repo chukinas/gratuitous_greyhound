@@ -19,13 +19,17 @@ defmodule Interpret do
     %{
       path: to_path(parsed_svg),
       rect: Rect.new(min, max),
-      # TODO remove (all the info already in rect)
-      #min: min,
-      #max: max,
-      #min_x: min.x,
-      #max_x: max.x,
-      #min_y: min.y,
-      #max_y: max.y
+    }
+  end
+
+  def interpret(parsed_svg) when is_list(parsed_svg) do
+    {min, max} =
+      parsed_svg
+      |> to_positions
+      |> Position.min_max
+    %{
+      path: to_path(parsed_svg),
+      rect: Rect.new(min, max),
     }
   end
 

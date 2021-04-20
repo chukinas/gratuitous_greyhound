@@ -52,10 +52,18 @@ defmodule Sprite do
   # *** *******************************
   # *** API
 
-  def scale(sprite, scale) do
+  def scale(%{rect: old_rect} = sprite, scale) do
+    new_rect = Rect.scale(sprite.rect, scale)
+    %{sprite |
+      image_size: Size.multiply(sprite.image_size, scale),
+      origin: Position.multiply(sprite.origin, scale),
+      clip_path: Svg.scale(sprite.clip_path, scale),
+      rect: new_rect,
+      __rect: Rect.scale(sprite.__rect, scale),
+      relative_origin: Position.multiply(sprite.relative_origin, scale),
+      mounts: modify_mounts(sprite.mounts, old_rect, new_rect)
+    }
     sprite
-    |> Map.update!(:image_size, & Size.multiply(&1, scale))
-    |> Map.update!(:origin, & Position.multiply(&1, scale))
     #|> Map.update!(:clip_path, & Svg.scale(&1, scale))
     #|> Map.update!(:rect, & Rect.scale(&1, scale))
   end
