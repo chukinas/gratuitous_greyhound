@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Sprite, Mount}
+alias Chukinas.Dreadnought.{Sprite}
 alias Chukinas.Geometry.{Position, Size, Rect}
 alias Chukinas.Svg.Interpret
 
@@ -23,10 +23,10 @@ defmodule Sprite do
     field :rect, Rect.t()
     field :__rect_tight, Rect.t()
     # Located relative to rect's top-left corner
+    # TODO can I name this/these better?
+    field :relative_origin, Position.t()
     # TODO rename relative_mounts
     field :mounts, %{margin_id() => Position.t()}
-    # TODO delete?
-    field :start_rel, Position.t()
   end
 
   # *** *******************************
@@ -38,14 +38,14 @@ defmodule Sprite do
     %__MODULE__{
       name: sprite.clip_name,
       sizing: :tight,
-      origin: origin,
-      start_rel: Position.subtract(rect, origin),
-      mounts: build_mounts(sprite.mounts, rect),
       image_path: "/images/spritesheets/" <> image_map.path.name,
       image_size: Size.new(image_map),
+      origin: origin,
       clip_path: clip_path,
       rect: rect,
-      __rect_tight: rect
+      __rect_tight: rect,
+      relative_origin: origin |> Position.subtract(rect),
+      mounts: build_mounts(sprite.mounts, rect)
     }
   end
 
@@ -62,42 +62,28 @@ defmodule Sprite do
 
   def fit(%{sizing: :tight} = sprite), do: sprite
   # TODO implement:
-  def fit(%{sizing: :centered} = sprite) do
+  def fit(%{sizing: :centered, __rect_tight: new_rect, rect: old_rect} = sprite) do
     %{sprite |
       sizing: :tight,
-      rect: sprite.__rect_tight
+      rect: new_rect,
+      relative_origin: sprite.origin |> Position.subtract(new_rect),
+      mounts: modify_mounts(sprite.mounts, old_rect, new_rect)
     }
   end
 
   def center(%{sizing: :centered} = sprite), do: sprite
-  def center(%{sizing: :tight} = sprite) do
+  def center(%{sizing: :tight, origin: origin, __rect_tight: old_rect} = sprite) do
+    new_rect = Rect.get_centered_rect(origin, old_rect)
     %{sprite |
       sizing: :centered,
-      rect: get_centered_rect(sprite.origin, sprite.rect)
+      rect: new_rect,
+      relative_origin: origin |> Position.subtract(new_rect),
+      mounts: modify_mounts(sprite.mounts, old_rect, new_rect)
     }
-    #|> Map.update!(:origin, & Position.multiply(&1, scale))
-    #|> Map.update!(:clip_path, & Svg.scale(&1, scale))
-    #|> Map.update!(:rect, & Rect.scale(&1, scale))
   end
 
   # *** *******************************
   # *** PRIVATE
-
-  defp get_centered_rect(origin, rect) do
-    half_width = max(
-      abs(origin.x - rect.x),
-      abs(rect.x + rect.width - origin.x)
-    )
-    half_height = max(
-      abs(origin.y - rect.y),
-      abs(rect.y + rect.height - origin.y)
-    )
-    dist_from_origin = Position.new(half_width, half_height)
-    Rect.new(
-      Position.subtract(origin, dist_from_origin),
-      Position.add(origin, dist_from_origin)
-    )
-  end
 
   defp build_mounts(parsed_mounts, rect) do
     Enum.reduce(parsed_mounts, %{}, fn %{id: id, x: x, y: y}, mounts_map ->
@@ -106,23 +92,13 @@ defmodule Sprite do
     end)
   end
 
-end
-
-# TODO This is referred to as a mounting in other places. Change those to say 'mount' instead
-defmodule Mount do
-  use TypedStruct
-  typedstruct do
-    field :id, integer()
-    field :position, Position.t()
-  end
-  def new(%{id: id, x: x, y: y}), do: new(id, x, y)
-  def new(id, x, y) do
-    new(id, Position.new(x, y))
-  end
-  def new(id, position) do
-    %__MODULE__{
-      id: id,
-      position: position
-    }
+  defp modify_mounts(mounts_map, before_coord_sys, after_coord_sys) do
+    Enum.reduce(mounts_map, %{}, fn {id, position}, map ->
+      position =
+        position
+        |> Position.subtract(before_coord_sys)
+        |> Position.add(after_coord_sys)
+      map |> Map.put(id, position)
+    end)
   end
 end
