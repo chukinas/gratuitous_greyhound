@@ -12,8 +12,7 @@ defmodule ChukinasWeb.Dreadnought.SpritesComponent do
   @impl true
   def mount(socket) do
     sprites =
-      ~w(ship_large ship_small turret1 turret2 shell1 shell2 muzzle_flash)
-      |> Enum.map(&Spritesheet.red/1)
+      Spritesheet.all()
       |> Enum.map(& Sprite.scale(&1, 2))
     socket =
       socket

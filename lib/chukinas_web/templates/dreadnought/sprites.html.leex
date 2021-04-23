@@ -18,7 +18,7 @@
 
   <%= for sprite <- @sprites do %>
   <%# single sprite card %>
-  <div class="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-yellow-500">
+  <div class="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex flex-col items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-yellow-500">
 
     <div class="relative">
       <div 
@@ -35,41 +35,9 @@
       <a href="#" class="focus:outline-none">
         <span class="absolute inset-0" aria-hidden="true"></span>
         <p class="text-sm font-medium text-gray-900">
-          Leslie Alexander
-        </p>
-        <p class="text-sm text-gray-500 truncate">
-          Co-Founder / CEO
+          <%= sprite.name %>
         </p>
       </a>
-    </div>
-  </div>
-  <% end %>
-
-  <!-- More people... -->
-</div>
-
-
-
-
-
-<div class="space-y-16 mt-8 mb-64">
-  <%#  phx_click: "toggle_show_markers" %>
-
-  <%= for sprite <- @sprites do %>
-  <div 
-    id="<%= sprite.name %>"
-    style="
-      height:<%= sprite.rect.height * 1 %>px
-    "
-  >
-    <h4 class="font-bold text-yellow-800"><%= sprite.name %></h4>
-    <%# TODO this is causing width issues... %>
-    <div class="relative">
-      <div 
-        class="origin-top-left inline-block overflow-hidden"
-      >
-        <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: sprite, center_on_origin?: @show_markers? %>
-      </div>
     </div>
   </div>
   <% end %>

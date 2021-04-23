@@ -54,7 +54,6 @@ defmodule Sprite do
   # *** API
 
   def scale(sprite, scale) do
-    maybe_io_put sprite
     %{sprite |
       image_size: Size.multiply(sprite.image_size, scale),
       origin: Position.multiply(sprite.origin, scale),
@@ -64,11 +63,7 @@ defmodule Sprite do
       relative_origin: Position.multiply(sprite.relative_origin, scale),
       mounts: scale_mounts(sprite.mounts, scale)
     }
-    |> maybe_io_put
   end
-
-  defp maybe_io_put(%{name: "ship_large"} = sprite), do: IOP.inspect(sprite)
-  defp maybe_io_put(sprite), do: sprite
 
   def fit(%{sizing: :tight} = sprite), do: sprite
   # TODO implement:
@@ -103,13 +98,12 @@ defmodule Sprite do
   end
 
   defp modify_mounts(mounts_map, before_coord_sys, after_coord_sys) do
-    Enum.reduce(mounts_map, %{}, fn {id, position}, map ->
-      position =
-        position
-        |> Position.subtract(before_coord_sys)
-        |> Position.add(after_coord_sys)
-      map |> Map.put(id, position)
-    end)
+    fun = fn position ->
+      position
+      |> Position.subtract(before_coord_sys)
+      |> Position.add(after_coord_sys)
+    end
+    map_values(mounts_map, fun)
   end
 
   defp scale_mounts(mounts_map, scale) do
