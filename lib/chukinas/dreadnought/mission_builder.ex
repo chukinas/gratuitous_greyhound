@@ -32,7 +32,7 @@ defmodule MissionBuilder do
     grid = Grid.new(square_size, square_count_x, square_count_y)
     units = [
       Unit.new(1, pose: Pose.new(100, 155, 75)),
-      Unit.new(2, pose: Pose.new(800, 155, 75)),
+      #Unit.new(2, pose: Pose.new(800, 155, 75)),
       Unit.new(3, pose: Pose.new(Position.from_size(grid), 225), player_id: 2)
     ]
     players = [
@@ -43,5 +43,6 @@ defmodule MissionBuilder do
     |> Map.put(:islands, islands)
     |> Mission.put(units)
     |> Mission.put(players)
+    |> Mission.start
   end
 end

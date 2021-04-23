@@ -39,9 +39,10 @@ defmodule Mission do
 
   def players(mission), do: Map.values(mission.players)
   defp commands(mission) do
-    mission.players
-    |> Enum.flat_map(& &1.action_selection.commands)
-    |> IOP.inspect("commands")
+    mission
+    |> players
+    |> Enum.flat_map(&Player.commands/1)
+    |> IOP.inspect("all commands")
   end
 
   def ai_player_ids(mission) do
@@ -65,6 +66,12 @@ defmodule Mission do
   def put(mission, %Player{id: player_id} = player) do
     Map.update!(mission, :players, &Map.put(&1, player_id, player))
   end
+  def put(mission, %ActionSelection{player_id: player_id} = action_selection) do
+    players =
+      mission.players
+      |> Map.update!(player_id, &Player.put_commands(&1, action_selection.commands))
+    %{mission | players: players}
+  end
 
   # *** *******************************
   # *** API
@@ -74,27 +81,30 @@ defmodule Mission do
 
   def calc_ai_commands(mission) do
     Enum.reduce(ai_player_ids(mission), mission, fn player_id, mission ->
-      action_selection =
-        ActionSelection.new(mission.units, player_id)
+      new_action_selection = ActionSelection.new(mission.units, player_id)
+      complete_action_selection =
+        new_action_selection
         |> ArtificialIntelligence.calc_commands(mission.units, mission.grid, mission.islands)
-      complete_player_turn(mission, action_selection)
+      mission |> put(complete_action_selection)
     end)
+  end
+
+  def start(mission) do
+    mission
+    |> calc_ai_commands
   end
 
   # *** *******************************
   # *** PLAYER INPUT
 
-  def complete_player_turn(mission, %ActionSelection{player_id: player_id} = action_selection) do
-    players =
-      mission.players
-      |> Map.update!(player_id, &Player.put_commands(&1, action_selection.commands))
-    # TODO use put it
-    mission =
-      %{mission | players: players}
+  def complete_player_turn(mission, %ActionSelection{} = action_selection) do
+    IO.puts "complete player turn"
+    mission = mission |> put(action_selection)
     if turn_complete?(mission) do
       mission
       |> resolve_commands
       |> increment_turn_number
+      |> calc_ai_commands
     else
       mission
     end
@@ -104,6 +114,7 @@ defmodule Mission do
     mission
     |> players
     |> Enum.all?(&Player.turn_complete?/1)
+    |> IOP.inspect("turn complete?")
   end
 
   defp increment_turn_number(mission), do: Map.update!(mission, :turn_number, & &1 + 1)
