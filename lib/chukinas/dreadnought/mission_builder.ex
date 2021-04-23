@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Mission, Unit, MissionBuilder, Island}
+alias Chukinas.Dreadnought.{Mission, Unit, MissionBuilder, Island, Player}
 alias Chukinas.Geometry.{Pose, Size, Position, Grid}
 
 defmodule MissionBuilder do
@@ -35,8 +35,13 @@ defmodule MissionBuilder do
       Unit.new(2, pose: Pose.new(800, 155, 75)),
       Unit.new(3, pose: Pose.new(Position.from_size(grid), 225), player_id: 2)
     ]
+    players = [
+      Player.new(1, :human),
+      Player.new(2, :ai)
+    ]
     Mission.new(grid, margin)
     |> Map.put(:islands, islands)
     |> Mission.put(units)
+    |> Mission.put(players)
   end
 end

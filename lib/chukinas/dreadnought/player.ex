@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Player, ActionSelection}
+alias Chukinas.Dreadnought.{Player, Command}
 
 defmodule Player do
 
@@ -10,7 +10,8 @@ defmodule Player do
   typedstruct enforce: true do
     field :id, integer()
     field :type, :human | :ai
-    field :action_selection, ActionSelection.t(), enforce: false, default: []
+    field :commands, [Command.t()], default: []
+    field :turn_complete?, boolean, default: false
   end
 
   # *** *******************************
@@ -23,14 +24,21 @@ defmodule Player do
     }
   end
 
+  def clear(%__MODULE__{id: id, type: type}), do: new(id, type)
+
   # *** *******************************
-  # *** API
+  # *** GETTERS
 
-  def put(player, %ActionSelection{} = action_selection) do
-    %{player | action_selection: action_selection}
-  end
+  def commands(%__MODULE__{commands: commands}), do: commands
+  def turn_complete?(%__MODULE__{turn_complete?: turn_complete?}), do: turn_complete?
 
-  def clear(player) do
-    %{player | action_selection: nil}
+  # *** *******************************
+  # *** SETTERS
+
+  def put_commands(%__MODULE__{} = player, commands) when is_list(commands) do
+    %{player |
+      commands: commands,
+      turn_complete?: true
+    }
   end
 end
