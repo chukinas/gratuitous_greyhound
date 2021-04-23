@@ -14,12 +14,14 @@ defmodule ActionSelection do
     field :active_unit_ids, [integer()], default: []
     field :commands, [Command.t()], default: []
     # For internal reference only (probably)
+    # TODO think of better name
     field :my_unit_ids, [integer()], enforce: true
   end
 
   # *** *******************************
   # *** NEW
 
+  # TODO refactor - player id comes first
   def new(units, player_id) do
     %__MODULE__{
       player_id: player_id,
@@ -29,17 +31,26 @@ defmodule ActionSelection do
   end
 
   # *** *******************************
+  # *** SETTERS
+
+  def put_commands(%__MODULE__{} = action_selection, commands) do
+    %{action_selection | commands: commands}
+    |> calc_active_units
+  end
+
+  # TODO rename put_command
+  defp issue_command(action_selection, command) do
+    action_selection
+    |> Map.update!(:commands, & [command | &1])
+    |> calc_active_units
+  end
+
+  # *** *******************************
   # *** API
 
   def maneuver(action_selection, unit_id, x, y) do
     command = Command.move_to(unit_id, Position.new(x, y))
     issue_command(action_selection, command)
-  end
-
-  defp issue_command(action_selection, command) do
-    action_selection
-    |> Map.update!(:commands, & [command | &1])
-    |> calc_active_units
   end
 
   def turn_complete?(action_selection) do

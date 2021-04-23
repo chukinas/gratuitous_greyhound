@@ -16,7 +16,7 @@ defmodule Command do
   typedstruct do
     field :unit_id, integer(), enforce: true
     field :move_to, Position.t()
-    field :attack, unit_id()
+    #field :attack, unit_id()
   end
 
   # *** *******************************

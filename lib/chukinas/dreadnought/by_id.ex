@@ -3,6 +3,10 @@ defmodule Chukinas.Dreadnought.ById do
   # *** *******************************
   # *** API
 
+  def get!(items, ids) when is_list(ids) do
+    ids
+    |> Enum.map(& get!(items, &1))
+  end
   def get!(enum, id) when is_integer(id) do
     case Enum.find(enum, :not_found, & &1.id == round(id)) do
       :not_found -> raise "\n\n!!!\n\nId of #{id} not found in #{inspect enum}\n\n!!!\n\n"
