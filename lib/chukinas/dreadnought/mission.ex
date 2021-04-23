@@ -67,6 +67,17 @@ defmodule Mission do
   def to_player(mission), do: Mission.Player.map(1, mission)
 
   def calc_ai_commands(mission) do
+    ai_action_selections =
+      mission
+      |> players
+      |> Stream.filter(&Player.is_ai/1)
+      |> Stream.map(&Player.id/1)
+      |> Enum.reduce([], fn player_id, action_selections ->
+        action_selection = ActionSelection.new(mission.units, player_id)
+        [action_selection | action_selections]
+      end)
+
+    ai_player_turn = to_player(mission)
     mission
   end
 

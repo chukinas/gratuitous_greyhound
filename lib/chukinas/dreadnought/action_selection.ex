@@ -14,6 +14,7 @@ defmodule ActionSelection do
     field :active_unit_ids, [integer()], default: []
     field :commands, [Command.t()], default: []
     # For internal reference only (probably)
+    # TODO think of better name
     field :my_unit_ids, [integer()], enforce: true
   end
 
