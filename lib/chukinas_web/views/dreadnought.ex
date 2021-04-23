@@ -1,37 +1,64 @@
+alias Chukinas.Dreadnought.Sprite
+
 defmodule ChukinasWeb.DreadnoughtView do
   use ChukinasWeb, :view
 
   def sprite(opts \\ []) do
+    center? = Keyword.get(opts, :center_on_origin?, true)
     sprite = Keyword.fetch!(opts, :sprite)
-    rect = if Keyword.get(opts, :center_on_origin?, true) do
-      sprite.rect_centered
+    sprite = if center? do
+      Sprite.center(sprite)
     else
-      sprite.rect_tight
+      Sprite.fit(sprite)
     end
+    rect = sprite.rect
     assigns = [
       socket: Keyword.fetch!(opts, :socket),
       rect: rect,
-      image: sprite.image,
+      image_path: sprite.image_path,
+      image_size: sprite.image_size,
       clip_path: sprite.clip_path
     ]
     render("_sprite.html", assigns)
   end
 
-  def message(%{socket: _socket} = assigns, do: block) do
-    assigns =
-      case assigns do
-        %{button: _} -> assigns
-        _ -> assigns |> Map.put(:button, false)
-      end
-    render_template("_message.html", assigns, block)
+  def center(x, y, opts \\ []) do
+    scale = Keyword.get(opts, :scale, 1)
+    color = case Keyword.get(opts, :type, :origin) do
+      :origin -> "pink"
+      :mount -> "blue"
+    end
+    size = 20
+    assigns = [size: size, left: x * scale - size / 2, top: y * scale - size / 2, color: color]
+    render("_center.html", assigns)
   end
 
-  defp render_template(template, assigns, block) do
+  def button(opts \\ []) do
     assigns =
-      assigns
-      |> Map.new()
-      |> Map.put(:inner_content, block)
-    render template, assigns
+      opts
+      #|> Keyword.put_new(:text, "")
+    render("_button.html", assigns)
   end
+
+  def toggle(id, opts \\ []) do
+    assigns =
+      [
+        label: nil,
+        phx_click: nil,
+        phx_target: nil,
+        is_enabled?: false
+      ]
+      |> Keyword.merge(opts)
+      |> Keyword.put(:id, id)
+    render("_toggle.html", assigns)
+  end
+
+  #defp render_template(template, assigns, block) do
+  #  assigns =
+  #    assigns
+  #    |> Map.new()
+  #    |> Map.put(:inner_content, block)
+  #  render template, assigns
+  #end
 
 end

@@ -40,15 +40,13 @@ defmodule Unit do
         # I'll wait to do this though until I convince myself
         # that I don't need a struct with any other props.
         position =
-          sprite.mountings
-          |> Enum.find(&(&1.id == id))
-          |> Map.fetch!(:position)
+          sprite.mounts[id]
           |> Pose.new(angle)
-        Turret.new(id, position, Spritesheet.red("turret1"))
+        Turret.new(id, position, Spritesheet.red("turret1") |> Sprite.center)
       end)
     opts =
       opts
-      |> Keyword.put_new(:sprite, sprite)
+      |> Keyword.put_new(:sprite, sprite |> Sprite.center)
       |> Keyword.put_new(:turrets, turrets)
       |> Keyword.put(:id, id)
     struct!(__MODULE__, opts)

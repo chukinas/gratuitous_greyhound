@@ -1,5 +1,5 @@
-alias Chukinas.Util.Precision
-alias Chukinas.Geometry.{Straight, Path, Position, Rect, Turn, Trig}
+alias Chukinas.Geometry.{Straight, Path, Position, Turn, Trig}
+alias Chukinas.Svg.{Interpret}
 
 defmodule Chukinas.Svg do
   @moduledoc"""
@@ -22,6 +22,11 @@ defmodule Chukinas.Svg do
   def get_path_string(%Turn{} = path) do
     {x0, y0} = get_start_coord(path)
     "M #{x0} #{y0} #{get_quadratic_curve(path)}"
+  end
+
+  def scale(svg_path, scale) when is_binary(svg_path) and is_integer(scale) do
+    %{path: new_svg_path} = Interpret.interpret(svg_path, scale: scale)
+    new_svg_path
   end
 
   # *** *******************************

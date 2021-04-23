@@ -1,6 +1,6 @@
 <%# Sprite Template %>
 <div 
-  class="relative overflow-hidden"
+  class="relative overflow-hidden __dreadnought_sprite__"
   style="
     width:<%= @rect.width %>px;
     height:<%= @rect.height %>px;
@@ -9,15 +9,15 @@
 <div
     class="absolute"
     style="
-      width: <%= @image.size.width %>px;
-      height: <%= @image.size.height %>px;
+      width: <%= @image_size.width %>px;
+      height: <%= @image_size.height %>px;
       left:<%= -@rect.x %>px;
       top:<%= -@rect.y %>px;
     "
   >
   <img 
     style="clip-path: path('<%= @clip_path %>');"
-    src="<%= Routes.static_path @socket, @image.path %>"
+    src="<%= Routes.static_path @socket, @image_path %>"
   >
   </div>
 </div>

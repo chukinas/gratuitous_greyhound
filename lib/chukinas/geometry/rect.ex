@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{Position, Rect, CollidableShape}
+alias Chukinas.Geometry.{Position, Rect, CollidableShape, Size}
 
 defmodule Rect do
   @moduledoc"""
@@ -55,6 +55,23 @@ defmodule Rect do
   # *** *******************************
   # *** API
 
+  # This returns the smallest rect that contains the origin rect and is centered on the origin
+  def get_centered_rect(origin, rect) do
+    half_width = max(
+      abs(origin.x - rect.x),
+      abs(rect.x + rect.width - origin.x)
+    )
+    half_height = max(
+      abs(origin.y - rect.y),
+      abs(rect.y + rect.height - origin.y)
+    )
+    dist_from_origin = Position.new(half_width, half_height)
+    Rect.new(
+      Position.subtract(origin, dist_from_origin),
+      Position.add(origin, dist_from_origin)
+    )
+  end
+
   def list_vertices(%{x: x, y: y, width: width, height: height}) do
     position = Position.new(x, y)
     [
@@ -64,6 +81,12 @@ defmodule Rect do
       Position.add_y(position, height)
     ]
     |> Enum.map(&Position.to_vertex/1)
+  end
+
+  def scale(rect, scale) do
+    rect
+    |> Position.multiply(scale)
+    |> Size.multiply(scale)
   end
 
   # *** *******************************

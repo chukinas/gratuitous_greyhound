@@ -1,0 +1,44 @@
+<%# 'show markers' toggle %>
+<div class="my-4">
+  <%= ChukinasWeb.DreadnoughtView.toggle("toggle_show_markers",
+  label: (if @show_markers?, do: "Markers Shown", else: "Markers Hidden"),
+  is_enabled?: @show_markers?,
+  phx_click: "toggle_show_markers",
+  phx_target: @myself
+  )%>
+</div>
+
+
+
+
+
+<%# grid %>
+<%# based on horizontal link cards %>
+<div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+
+  <%= for sprite <- @sprites do %>
+  <%# single sprite card %>
+  <div class="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex flex-col items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-yellow-500">
+
+    <div class="relative">
+      <div 
+        class="origin-top-left inline-block overflow-hidden border-4 border-dashed border-yellow-400"
+      >
+        <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: sprite, center_on_origin?: @show_markers? %>
+      </div>
+      <%= for {_id, mount} <- sprite.mounts do %>
+      <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center mount.x, mount.y, type: :mount %>
+      <% end %>
+      <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center sprite.origin.x - sprite.rect.x, sprite.origin.y- sprite.rect.y %>
+    </div>
+    <div class="flex-1 min-w-0">
+      <a href="#" class="focus:outline-none">
+        <span class="absolute inset-0" aria-hidden="true"></span>
+        <p class="text-sm font-medium text-gray-900">
+          <%= sprite.name %>
+        </p>
+      </a>
+    </div>
+  </div>
+  <% end %>
+</div>
