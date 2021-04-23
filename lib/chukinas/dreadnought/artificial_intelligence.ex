@@ -1,9 +1,23 @@
-alias Chukinas.Dreadnought.{ArtificialIntelligence, Unit, Command, ActionSelection, ById}
+alias Chukinas.Dreadnought.{ArtificialIntelligence, Unit, Command, ActionSelection, ById, PotentialPath}
 
 defmodule ArtificialIntelligence do
   @moduledoc """
   Capable of navigating a ship around without crashing
   """
+
+  # *** *******************************
+  # *** TYPES
+
+  use TypedStruct
+
+  typedstruct enforce: true do
+    field :original_square, GridSquare.t()
+    field :current_square, GridSquare.t()
+    field :current_unit, Unit.t()
+    field :current_depth, integer()
+    field :target_depth, integer()
+    field :get_squares, (Unit.t() -> [GridSquare.t()])
+  end
 
   # *** *******************************
   # *** MANEUVER EXECUTION
@@ -15,10 +29,13 @@ defmodule ArtificialIntelligence do
   end
 
   defp get_command(%Unit{} = unit, grid, islands) do
-    cmd_square =
-      Unit.get_cmd_squares(unit, grid, islands)
-      |> Enum.random
-      |> IOP.inspect("ai rand command")
-    Command.move_to(unit.id, cmd_square.center)
+    position =
+      unit
+      |> PotentialPath.get_stream(grid, islands, 10)
+      |> Enum.take(1)
+      |> List.first
+      |> PotentialPath.position
+    # TODO must handle for empty list
+    Command.move_to(unit.id, position)
   end
 end
