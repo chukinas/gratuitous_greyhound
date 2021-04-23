@@ -79,15 +79,16 @@ defmodule Unit do
   # *** MANEUVER PLANNING
 
   def calc_cmd_squares(unit, grid, islands) do
-    # TODO 185 work trim back into the calc
+    %{unit | cmd_squares: get_cmd_squares(unit, grid, islands)}
+  end
+
+  def get_cmd_squares(unit, grid, islands) do
     cmd_zone = get_motion_range(unit)
-    cmd_squares =
-      grid
-      |> Grid.squares(include: cmd_zone, exclude: islands)
-      |> Stream.map(&GridSquare.calc_path(&1, unit.pose))
-      |> Stream.filter(&Collide.avoids?(&1.path, islands))
-      |> Enum.to_list
-    %{unit | cmd_squares: cmd_squares}
+    grid
+    |> Grid.squares(include: cmd_zone, exclude: islands)
+    |> Stream.map(&GridSquare.calc_path(&1, unit.pose))
+    |> Stream.filter(&Collide.avoids?(&1.path, islands))
+    |> Enum.to_list
   end
 
   defp get_motion_range(%__MODULE__{pose: pose}, trim_angle \\ 0) do

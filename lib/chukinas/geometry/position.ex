@@ -36,6 +36,8 @@ defmodule Position do
     }
   end
 
+  def from_size(%{width: x, height: y}), do: new(x, y)
+
   # *** *******************************
   # *** API
 
