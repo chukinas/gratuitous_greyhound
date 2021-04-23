@@ -56,4 +56,15 @@ defmodule PotentialPath do
       }
     end)
   end
+
+  # *** *******************************
+  # *** IMPLEMENTATIONS
+
+  defimpl Inspect do
+    import Inspect.Algebra
+    def inspect(path, opts) do
+      unit_map = path |> Map.take([:id, :pose, :maneuver_svg_string, :player_id])
+      concat ["#PotPath<", to_doc(unit_map, opts), ">"]
+    end
+  end
 end

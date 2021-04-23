@@ -31,11 +31,23 @@ defmodule ArtificialIntelligence do
   defp get_command(%Unit{} = unit, grid, islands) do
     position =
       unit
-      |> PotentialPath.get_stream(grid, islands, 10)
+      |> PotentialPath.get_stream(grid, islands, 6)
+      |> print_count
       |> Enum.take(1)
       |> List.first
       |> PotentialPath.position
     # TODO must handle for empty list
     Command.move_to(unit.id, position)
+  end
+
+  #defp get_straightest_cmd(potential_paths, current_pose) do
+  #  potential_paths
+  #  |> Stream.map(&PotentialPath.position/1)
+  #  |> Stream.dedup
+  #end
+
+  defp print_count(paths) do
+    IOP.inspect Enum.count(paths), "path count"
+    paths
   end
 end
