@@ -21,6 +21,7 @@ defmodule ActionSelection do
   # *** *******************************
   # *** NEW
 
+  # TODO refactor - player id comes first
   def new(units, player_id) do
     %__MODULE__{
       player_id: player_id,

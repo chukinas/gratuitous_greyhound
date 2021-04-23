@@ -1,5 +1,5 @@
 # TODO ById should be a utility
-alias Chukinas.Dreadnought.{Unit, Mission, ById, Island, ActionSelection, Player}
+alias Chukinas.Dreadnought.{Unit, Mission, ById, Island, ActionSelection, Player, ArtificialIntelligence}
 alias Chukinas.Geometry.{Grid, Size}
 
 defmodule Mission do
@@ -44,6 +44,12 @@ defmodule Mission do
     |> IOP.inspect("commands")
   end
 
+  def ai_player_ids(mission) do
+    mission
+    |> players
+    |> Stream.filter(&Player.ai?/1)
+    |> Stream.map(&Player.id/1)
+  end
 
   # *** *******************************
   # *** SETTERS
@@ -67,18 +73,12 @@ defmodule Mission do
   def to_player(mission), do: Mission.Player.map(1, mission)
 
   def calc_ai_commands(mission) do
-    ai_action_selections =
-      mission
-      |> players
-      |> Stream.filter(&Player.is_ai/1)
-      |> Stream.map(&Player.id/1)
-      |> Enum.reduce([], fn player_id, action_selections ->
-        action_selection = ActionSelection.new(mission.units, player_id)
-        [action_selection | action_selections]
-      end)
-
-    ai_player_turn = to_player(mission)
-    mission
+    Enum.reduce(ai_player_ids(mission), mission, fn player_id, mission ->
+      action_selection =
+        ActionSelection.new(mission.units, player_id)
+        |> ArtificialIntelligence.calc_commands(mission.units, mission.grid, mission.islands)
+      complete_player_turn(mission, action_selection)
+    end)
   end
 
   # *** *******************************
