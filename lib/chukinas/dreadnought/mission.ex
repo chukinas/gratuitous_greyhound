@@ -16,6 +16,7 @@ defmodule Mission do
     field :margin, Size.t()
     field :islands, [Island.t()], default: []
     field :units, [Unit.t()], default: []
+    field :players, [Player.t()], default: []
   end
 
   # *** *******************************
