@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Command, Unit}
+alias Chukinas.Dreadnought.{Command}
 alias Chukinas.Geometry.{Position, Collide, Grid, Polygon, Position, Straight, Turn, GridSquare, Path}
 
 defmodule Command do
@@ -12,11 +12,9 @@ defmodule Command do
   @type unit_id() :: integer()
 
   use TypedStruct
-
   typedstruct do
-    field :unit_id, integer(), enforce: true
-    field :move_to, Position.t()
-    #field :attack, unit_id()
+    field :unit_id, unit_id(), enforce: true
+    field :commands, [:exit_or_run_aground | {:move_to, Position.t()}]
   end
 
   # *** *******************************
@@ -24,22 +22,25 @@ defmodule Command do
 
   def new(opts \\ []), do: struct!(__MODULE__, opts)
 
-  def move_to(unit_id, position), do: new(unit_id: unit_id, move_to: position)
-  #def (unit_id, position), do: new(unit_id: unit_id, move_to: position)
+  def move_to(unit_id, position), do: new(unit_id: unit_id, commands: [{:move_to, position}])
+  def exit_or_run_aground(unit_id), do: new(unit_id: unit_id, commands: [:exit_or_run_aground])
 
   # *** *******************************
   # *** MANEUVER PLANNING
 
-  def get_cmd_squares(%Unit{pose: pose} = unit, grid, islands) do
+  # def get_cmd_squares(unit, grid) do
+  #   get_cmd_squares(unit, grid, [])
+  # end
+
+  def get_cmd_squares(%{pose: pose} = unit, grid, islands) do
     cmd_zone = get_motion_range(unit)
     grid
     |> Grid.squares(include: cmd_zone, exclude: islands)
     |> Stream.map(&GridSquare.calc_path(&1, pose))
     |> Stream.filter(&Collide.avoids?(&1.path, islands))
-    |> Enum.to_list
   end
 
-  defp get_motion_range(%Unit{pose: pose}, trim_angle \\ 0) do
+  defp get_motion_range(%{pose: pose}, trim_angle \\ 0) do
     max_distance = 400
     min_distance = 200
     angle = 45

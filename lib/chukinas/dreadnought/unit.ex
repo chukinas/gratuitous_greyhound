@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret}
-alias Chukinas.Geometry.{Pose, Position, Turn, Straight, Polygon, Path, Grid, GridSquare, Collide}
+alias Chukinas.Geometry.{Pose, Path, GridSquare}
 alias Chukinas.Svg
 
 defmodule Unit do
@@ -56,14 +56,17 @@ defmodule Unit do
   # *** SETTERS
 
   def put_cmd_squares(unit, cmd_squares) do
-    %{unit | cmd_squares: cmd_squares}
+    %{unit | cmd_squares: cmd_squares |> Enum.to_list}
   end
 
   # *** *******************************
   # *** COMMANDS
 
-  def resolve_command(unit, command) do
-    move_to(unit, command.move_to)
+  def resolve_command(_unit, :exit_or_run_aground) do
+    raise "Implement this!"
+  end
+  def resolve_command(unit, {:move_to, position}) do
+    move_to(unit, position)
   end
 
   # *** *******************************

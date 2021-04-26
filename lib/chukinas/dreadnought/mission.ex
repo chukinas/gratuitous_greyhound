@@ -129,7 +129,9 @@ defmodule Mission do
     unit =
       mission.units
       |> Enum.find(& &1.id == command.unit_id)
-      |> Unit.resolve_command(command)
+    unit = Enum.reduce(command.commands, unit, fn command, unit ->
+      Unit.resolve_command(unit, command)
+    end)
     put(mission, unit)
   end
 end
