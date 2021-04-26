@@ -94,12 +94,15 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
   end
 
   @impl true
+  # the assigns are a map of Mission.Player
   def update(assigns, socket) do
     #IOP.inspect(assigns, "update dyn comp")
     #inspect_assigns assigns, "update dyn comp!"
+    IOP.inspect(assigns.turn_number, "new turn")
     socket =
       socket
       |> assign(assigns)
+    maybe_end_turn(assigns.action_selection)
     {:ok, socket}
   end
 
@@ -122,15 +125,17 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
     action_selection =
       socket.assigns.action_selection
       |> ActionSelection.maneuver(unit_id, x, y)
-      |> maybe_end_turn(socket.assigns.units)
+      |> maybe_end_turn
     socket =
       socket
       |> assign(action_selection: action_selection)
     {:noreply, socket}
   end
 
-  defp maybe_end_turn(%ActionSelection{} = action_selection, _units) do
+  defp maybe_end_turn(%ActionSelection{} = action_selection) do
+    IO.puts "maybe end turn"
     if ActionSelection.turn_complete?(action_selection) do
+      IO.puts "yes, end turn"
       send self(), {:player_turn_complete, action_selection}
     end
     action_selection

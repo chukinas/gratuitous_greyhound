@@ -61,7 +61,8 @@ defmodule ActionSelection do
   # *** BOOLEAN
 
   def turn_complete?(action_selection) do
-    Enum.empty?(action_selection.active_unit_ids)
+    IOP.inspect action_selection, "turn complet?"
+    Enum.empty?(action_selection.active_unit_ids) |> IOP.inspect("turn complete?")
   end
 
   # *** *******************************

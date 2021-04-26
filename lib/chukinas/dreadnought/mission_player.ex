@@ -47,7 +47,7 @@ defmodule Player do
       grid: grid,
       player_id: player_id
     }
-    #|> IOP.inspect("new player turn")
+    |> resolve_exiting_units
   end
 
   def map(player_id, mission), do: Map.from_struct(new(player_id, mission))
