@@ -53,6 +53,13 @@ defmodule Unit do
   end
 
   # *** *******************************
+  # *** SETTERS
+
+  def put_cmd_squares(unit, cmd_squares) do
+    %{unit | cmd_squares: cmd_squares}
+  end
+
+  # *** *******************************
   # *** COMMANDS
 
   def resolve_command(unit, command) do
@@ -73,39 +80,6 @@ defmodule Unit do
       pose: Path.get_end_pose(path),
       maneuver_svg_string: Svg.get_path_string(path)
     }
-  end
-
-  # *** *******************************
-  # *** MANEUVER PLANNING
-
-  def calc_cmd_squares(unit, grid, islands) do
-    %{unit | cmd_squares: get_cmd_squares(unit, grid, islands)}
-  end
-
-  def get_cmd_squares(unit, grid, islands) do
-    cmd_zone = get_motion_range(unit)
-    grid
-    |> Grid.squares(include: cmd_zone, exclude: islands)
-    |> Stream.map(&GridSquare.calc_path(&1, unit.pose))
-    |> Stream.filter(&Collide.avoids?(&1.path, islands))
-    |> Enum.to_list
-  end
-
-  defp get_motion_range(%__MODULE__{pose: pose}, trim_angle \\ 0) do
-    max_distance = 400
-    min_distance = 200
-    angle = 45
-    [
-      Straight.new(pose, min_distance),
-      Turn.new(pose, min_distance, trim_angle - angle),
-      Turn.new(pose, max_distance, trim_angle - angle),
-      Straight.new(pose, max_distance),
-      Turn.new(pose, max_distance, trim_angle + angle),
-      Turn.new(pose, min_distance, trim_angle + angle),
-    ]
-    |> Stream.map(&Path.get_end_pose/1)
-    |> Enum.map(&Position.to_tuple/1)
-    |> Polygon.new
   end
 
   # *** *******************************

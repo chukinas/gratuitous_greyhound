@@ -1,4 +1,5 @@
 alias Chukinas.Dreadnought.{ArtificialIntelligence, Unit, Command, ActionSelection, ById, PotentialPath}
+alias Chukinas.Geometry.{GridSquare}
 
 defmodule ArtificialIntelligence do
   @moduledoc """

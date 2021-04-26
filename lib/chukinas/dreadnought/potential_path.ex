@@ -1,4 +1,5 @@
-alias Chukinas.Dreadnought.{PotentialPath, Unit}
+alias Chukinas.Dreadnought.{PotentialPath, Unit, Command}
+alias Chukinas.Geometry.{GridSquare}
 
 defmodule PotentialPath do
 
@@ -19,7 +20,7 @@ defmodule PotentialPath do
   def position(%__MODULE__{original_square: square}), do: square.center
 
   def get_stream(unit, grid, islands, target_depth) do
-    get_squares = fn unit -> Unit.get_cmd_squares(unit, grid, islands) |> Enum.shuffle end
+    get_squares = fn unit -> Command.get_cmd_squares(unit, grid, islands) |> Enum.shuffle end
     original_squares = get_squares.(unit)
     initial_tokens = Stream.map(original_squares, fn square ->
       %__MODULE__{
