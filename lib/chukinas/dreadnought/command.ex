@@ -32,6 +32,7 @@ defmodule Command do
   #   get_cmd_squares(unit, grid, [])
   # end
 
+  # TODO does this belong in PotentialPath?
   def get_cmd_squares(%{pose: pose} = unit, grid, islands) do
     cmd_zone = get_motion_range(unit)
     grid
@@ -40,6 +41,7 @@ defmodule Command do
     |> Stream.filter(&Collide.avoids?(&1.path, islands))
   end
 
+  # TODO does this belong in Unit?
   defp get_motion_range(%{pose: pose}, trim_angle \\ 0) do
     max_distance = 400
     min_distance = 200
