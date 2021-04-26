@@ -38,20 +38,27 @@ defmodule ActionSelection do
     |> calc_active_units
   end
 
-  # TODO rename put_command
-  defp issue_command(action_selection, command) do
+  defp put_command(action_selection, command) do
     action_selection
     |> Map.update!(:commands, & [command | &1])
     |> calc_active_units
   end
 
   # *** *******************************
-  # *** API
+  # *** COMMANDS
 
   def maneuver(action_selection, unit_id, x, y) do
     command = Command.move_to(unit_id, Position.new(x, y))
-    issue_command(action_selection, command)
+    put_command(action_selection, command)
   end
+
+  def exit_or_run_aground(action_selection, unit_id) do
+    command = Command.exit_or_run_aground(unit_id)
+    put_command(action_selection, command)
+  end
+
+  # *** *******************************
+  # *** BOOLEAN
 
   def turn_complete?(action_selection) do
     Enum.empty?(action_selection.active_unit_ids)

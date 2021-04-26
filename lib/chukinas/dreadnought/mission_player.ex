@@ -6,6 +6,8 @@ alias Chukinas.Geometry.{Size, Grid}
 defmodule Player do
   @moduledoc """
   Holds the information needed to a single player taking his turn
+
+  It is regenerated for each new turn.
   """
 
   # *** *******************************
@@ -67,6 +69,16 @@ defmodule Player do
     end)
   end
 
+  defp resolve_exiting_units(%__MODULE__{
+    units: units,
+    action_selection: action_selection
+  } = player_turn) do
+    exiting_units = Stream.filter(units, &Unit.no_cmd_squares?/1)
+    action_selection = Enum.reduce(exiting_units, action_selection, fn unit, action_selection ->
+      ActionSelection.exit_or_run_aground(action_selection, unit.id)
+    end)
+    %{player_turn | action_selection: action_selection}
+  end
 
   # *** *******************************
   # *** IMPLEMENTATIONS

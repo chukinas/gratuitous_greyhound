@@ -74,6 +74,7 @@ defmodule Unit do
   # *** BOOLEANS
 
   def belongs_to?(unit, player_id), do: unit.player_id == player_id
+  def no_cmd_squares?(unit), do: Enum.empty?(unit.cmd_squares)
 
   # *** *******************************
   # *** MANEUVER
