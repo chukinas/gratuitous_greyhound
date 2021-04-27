@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Player, Command}
+alias Chukinas.Dreadnought.{Player, UnitOrders}
 
 defmodule Player do
 
@@ -10,7 +10,7 @@ defmodule Player do
   typedstruct enforce: true do
     field :id, integer()
     field :type, :human | :ai
-    field :commands, [Command.t()], default: []
+    field :commands, [UnitOrders.t()], default: []
     field :turn_complete?, boolean, default: false
   end
 

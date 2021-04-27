@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{ArtificialIntelligence, Unit, Command, PlayerActions, ById, PotentialPath}
+alias Chukinas.Dreadnought.{ArtificialIntelligence, Unit, UnitOrders, PlayerActions, ById, PotentialPath}
 
 defmodule ArtificialIntelligence do
   @moduledoc """
@@ -21,8 +21,8 @@ defmodule ArtificialIntelligence do
       |> print_count
       |> Enum.take(1)
     case rand_cmd_square do
-      [] -> Command.exit_or_run_aground(unit_id)
-      [%PotentialPath{} = pot_path] -> Command.move_to(unit_id, PotentialPath.position(pot_path))
+      [] -> UnitOrders.exit_or_run_aground(unit_id)
+      [%PotentialPath{} = pot_path] -> UnitOrders.move_to(unit_id, PotentialPath.position(pot_path))
     end
   end
 

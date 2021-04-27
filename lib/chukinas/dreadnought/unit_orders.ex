@@ -1,7 +1,7 @@
-alias Chukinas.Dreadnought.{Command, Unit}
+alias Chukinas.Dreadnought.{UnitOrders, Unit}
 alias Chukinas.Geometry.{Position, Collide, Grid, Position, GridSquare}
 
-defmodule Command do
+defmodule UnitOrders do
   @moduledoc """
   Represents the actions a unit will take at the end of the turn
   """
