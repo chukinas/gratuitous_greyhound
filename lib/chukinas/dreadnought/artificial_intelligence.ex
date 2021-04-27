@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{ArtificialIntelligence, Unit, Command, ActionSelection, ById, PotentialPath}
+alias Chukinas.Dreadnought.{ArtificialIntelligence, Unit, Command, PlayerActions, ById, PotentialPath}
 
 defmodule ArtificialIntelligence do
   @moduledoc """
@@ -8,10 +8,10 @@ defmodule ArtificialIntelligence do
   # *** *******************************
   # *** MANEUVER EXECUTION
 
-  def calc_commands(%ActionSelection{my_unit_ids: unit_ids} = action_selection, units, grid, islands) do
+  def calc_commands(%PlayerActions{my_unit_ids: unit_ids} = player_actions, units, grid, islands) do
     player_units = ById.get!(units, unit_ids)
     commands = Enum.map(player_units, &get_command(&1, grid, islands))
-    ActionSelection.put_commands(action_selection, commands)
+    PlayerActions.put_commands(player_actions, commands)
   end
 
   defp get_command(%Unit{id: unit_id} = unit, grid, islands) do

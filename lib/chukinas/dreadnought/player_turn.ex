@@ -1,9 +1,9 @@
-alias Chukinas.Dreadnought.{Mission.Player, Unit, ActionSelection, Command}
+alias Chukinas.Dreadnought.{PlayerTurn, Unit, PlayerActions, Command}
 alias Chukinas.Geometry.{Size, Grid}
 
 # TODO better name => Chukinas.Dreadnought.PlayerTurn ?
 # TODO this name should match that of the Dyn World comp. Change this one or both to match
-defmodule Player do
+defmodule PlayerTurn do
   @moduledoc """
   Holds the information needed to a single player taking his turn
 
@@ -23,7 +23,7 @@ defmodule Player do
     field :margin, Size.t(), enforce: true
     field :grid, Grid.t(), enforce: true
     # These are handled locally by the dynamic component:
-    field :action_selection, ActionSelection.t(), enforce: true
+    field :player_actions, PlayerActions.t(), enforce: true
     # These must be set by the mission each turn:
     field :turn_number, integer(), enforce: true
     field :units, [Unit.t()], default: [], enforce: true
@@ -42,7 +42,7 @@ defmodule Player do
     %__MODULE__{
       turn_number: turn_number,
       units: calc_cmd_squares(units, player_id, grid, islands),
-      action_selection: ActionSelection.new(units, player_id),
+      player_actions: PlayerActions.new(units, player_id),
       margin: margin,
       grid: grid,
       player_id: player_id
@@ -72,16 +72,16 @@ defmodule Player do
   defp resolve_exiting_units(%__MODULE__{
     units: units,
     player_id: player_id,
-    action_selection: action_selection
+    player_actions: player_actions
   } = player_turn) do
     exiting_units =
       units
       |> Stream.filter(&Unit.belongs_to?(&1, player_id))
       |> Stream.filter(&Unit.no_cmd_squares?/1)
-    action_selection = Enum.reduce(exiting_units, action_selection, fn unit, action_selection ->
-      ActionSelection.exit_or_run_aground(action_selection, unit.id)
+    player_actions = Enum.reduce(exiting_units, player_actions, fn unit, player_actions ->
+      PlayerActions.exit_or_run_aground(player_actions, unit.id)
     end)
-    %{player_turn | action_selection: action_selection}
+    %{player_turn | player_actions: player_actions}
   end
 
   # *** *******************************
@@ -91,7 +91,7 @@ defmodule Player do
     import Inspect.Algebra
     def inspect(player, opts) do
       summary = %{
-        action_selection: player.action_selection,
+        player_actions: player.player_actions,
         units: player.units
       }
      concat ["#Player<", to_doc(summary, opts), ">"]

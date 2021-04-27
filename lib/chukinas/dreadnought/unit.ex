@@ -73,7 +73,6 @@ defmodule Unit do
   # *** COMMANDS
 
   def resolve_command(_unit, :exit_or_run_aground) do
-    IO.puts "exiting or running agrount!"
     raise "Implement this!"
   end
   def resolve_command(unit, {:move_to, position}) do

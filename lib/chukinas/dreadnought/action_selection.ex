@@ -1,8 +1,8 @@
-alias Chukinas.Dreadnought.{Command, ActionSelection, Unit}
+alias Chukinas.Dreadnought.{Command, PlayerActions, Unit}
 alias Chukinas.Geometry.Position
 
 # TODO think up a better name for this
-defmodule ActionSelection do
+defmodule PlayerActions do
 
   # *** *******************************
   # *** TYPES
@@ -33,13 +33,13 @@ defmodule ActionSelection do
   # *** *******************************
   # *** SETTERS
 
-  def put_commands(%__MODULE__{} = action_selection, commands) do
-    %{action_selection | commands: commands ++ action_selection.commands}
+  def put_commands(%__MODULE__{} = player_actions, commands) do
+    %{player_actions | commands: commands ++ player_actions.commands}
     |> calc_active_units
   end
 
-  defp put_command(action_selection, command) do
-    action_selection
+  defp put_command(player_actions, command) do
+    player_actions
     |> Map.update!(:commands, & [command | &1])
     |> calc_active_units
   end
@@ -47,21 +47,21 @@ defmodule ActionSelection do
   # *** *******************************
   # *** COMMANDS
 
-  def maneuver(action_selection, unit_id, x, y) do
+  def maneuver(player_actions, unit_id, x, y) do
     command = Command.move_to(unit_id, Position.new(x, y))
-    put_command(action_selection, command)
+    put_command(player_actions, command)
   end
 
-  def exit_or_run_aground(action_selection, unit_id) do
+  def exit_or_run_aground(player_actions, unit_id) do
     command = Command.exit_or_run_aground(unit_id)
-    put_command(action_selection, command)
+    put_command(player_actions, command)
   end
 
   # *** *******************************
   # *** BOOLEAN
 
-  def turn_complete?(action_selection) do
-    Enum.empty?(action_selection.active_unit_ids)
+  def turn_complete?(player_actions) do
+    Enum.empty?(player_actions.active_unit_ids)
   end
 
   # *** *******************************
@@ -73,17 +73,17 @@ defmodule ActionSelection do
     |> Enum.map(& &1.id)
   end
 
-  defp calc_active_units(action_selection) do
-    %{action_selection | active_unit_ids: Enum.take(my_pending_unit_ids(action_selection), 1)}
+  defp calc_active_units(player_actions) do
+    %{player_actions | active_unit_ids: Enum.take(my_pending_unit_ids(player_actions), 1)}
   end
 
-  defp my_pending_unit_ids(action_selection) do
-    action_selection.my_unit_ids
-    |> Stream.filter(& &1 not in my_completed_unit_ids(action_selection))
+  defp my_pending_unit_ids(player_actions) do
+    player_actions.my_unit_ids
+    |> Stream.filter(& &1 not in my_completed_unit_ids(player_actions))
   end
 
-  defp my_completed_unit_ids(action_selection) do
-      action_selection.commands
+  defp my_completed_unit_ids(player_actions) do
+      player_actions.commands
       |> Stream.map(& &1.unit_id)
   end
 end

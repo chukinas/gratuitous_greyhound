@@ -45,7 +45,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
   end
 
   @impl true
-  def handle_event("log", params, socket) do
+  def handle_event("log", _params, socket) do
     #IOP.inspect(params, "dreadnought live log event")
     {:noreply, socket}
   end
@@ -68,7 +68,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   # TODO rename mission_player to `player_turn` PlayerTurn
-  def handle_info({:player_turn_complete, action_selection}, socket) do
+  def handle_info({:player_turn_complete, player_actions}, socket) do
     #mission =
     #  socket.assigns.mission
     #  |> Mission.put(units)
@@ -81,7 +81,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
     #  socket
     #  |> assign(mission: mission)
     # TODO use alias to shorten this call..
-    mission_player = State.complete_player_turn(socket.assigns.pid, action_selection)
+    mission_player = State.complete_player_turn(socket.assigns.pid, player_actions)
     send_update Dreadnought.DynamicWorldComponent, mission_player
     {:noreply, socket}
   end

@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{ActionSelection}
+alias Chukinas.Dreadnought.{PlayerActions}
 alias Chukinas.Util.Precision
 
 defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
@@ -31,7 +31,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
         "
       >
         <%= for unit <- @units do %>
-        <%= if unit.id in @action_selection.active_unit_ids do %>
+        <%= if unit.id in @player_actions.active_unit_ids do %>
         <%= for square <- unit.cmd_squares do %>
         <button
           id="gridSquareTarget-<%= square.id %>"
@@ -102,7 +102,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
     socket =
       socket
       |> assign(assigns)
-    maybe_end_turn(assigns.action_selection)
+    maybe_end_turn(assigns.player_actions)
     {:ok, socket}
   end
 
@@ -122,23 +122,23 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
       [x, y, unit_id]
       # TODO coerce int should accept list as well
       |> Enum.map(&Precision.coerce_int/1)
-    action_selection =
-      socket.assigns.action_selection
-      |> ActionSelection.maneuver(unit_id, x, y)
+    player_actions =
+      socket.assigns.player_actions
+      |> PlayerActions.maneuver(unit_id, x, y)
       |> maybe_end_turn
     socket =
       socket
-      |> assign(action_selection: action_selection)
+      |> assign(player_actions: player_actions)
     {:noreply, socket}
   end
 
-  defp maybe_end_turn(%ActionSelection{} = action_selection) do
+  defp maybe_end_turn(%PlayerActions{} = player_actions) do
     IO.puts "maybe end turn"
-    if ActionSelection.turn_complete?(action_selection) do
+    if PlayerActions.turn_complete?(player_actions) do
       IO.puts "yes, end turn"
-      send self(), {:player_turn_complete, action_selection}
+      send self(), {:player_turn_complete, player_actions}
     end
-    action_selection
+    player_actions
   end
 
   #def inspect_assigns(assigns, note) do

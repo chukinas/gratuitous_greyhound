@@ -1,5 +1,5 @@
 # TODO ById should be a utility
-alias Chukinas.Dreadnought.{Unit, Mission, ById, Island, ActionSelection, Player, ArtificialIntelligence}
+alias Chukinas.Dreadnought.{Unit, Mission, ById, Island, PlayerActions, Player, PlayerTurn, ArtificialIntelligence}
 alias Chukinas.Geometry.{Grid, Size}
 
 defmodule Mission do
@@ -66,10 +66,10 @@ defmodule Mission do
   def put(mission, %Player{id: player_id} = player) do
     Map.update!(mission, :players, &Map.put(&1, player_id, player))
   end
-  def put(mission, %ActionSelection{player_id: player_id} = action_selection) do
+  def put(mission, %PlayerActions{player_id: player_id} = player_actions) do
     players =
       mission.players
-      |> Map.update!(player_id, &Player.put_commands(&1, action_selection.commands))
+      |> Map.update!(player_id, &Player.put_commands(&1, player_actions.commands))
     %{mission | players: players}
   end
 
@@ -77,15 +77,15 @@ defmodule Mission do
   # *** API
 
   def to_playing_surface(mission), do: Mission.PlayingSurface.new(mission)
-  def to_player(mission), do: Mission.Player.map(1, mission)
+  def to_player(mission), do: PlayerTurn.map(1, mission)
 
   def calc_ai_commands(mission) do
     Enum.reduce(ai_player_ids(mission), mission, fn player_id, mission ->
-      new_action_selection = ActionSelection.new(mission.units, player_id)
-      complete_action_selection =
-        new_action_selection
+      new_player_actions = PlayerActions.new(mission.units, player_id)
+      complete_player_actions =
+        new_player_actions
         |> ArtificialIntelligence.calc_commands(mission.units, mission.grid, mission.islands)
-      mission |> put(complete_action_selection)
+      mission |> put(complete_player_actions)
     end)
   end
 
@@ -97,9 +97,9 @@ defmodule Mission do
   # *** *******************************
   # *** PLAYER INPUT
 
-  def complete_player_turn(mission, %ActionSelection{} = action_selection) do
+  def complete_player_turn(mission, %PlayerActions{} = player_actions) do
     IO.puts "complete player turn"
-    mission = mission |> put(action_selection)
+    mission = mission |> put(player_actions)
     if turn_complete?(mission) do
       mission
       |> resolve_commands
