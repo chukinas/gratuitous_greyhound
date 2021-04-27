@@ -71,9 +71,13 @@ defmodule Player do
 
   defp resolve_exiting_units(%__MODULE__{
     units: units,
+    player_id: player_id,
     action_selection: action_selection
   } = player_turn) do
-    exiting_units = Stream.filter(units, &Unit.no_cmd_squares?/1)
+    exiting_units =
+      units
+      |> Stream.filter(&Unit.belongs_to?(&1, player_id))
+      |> Stream.filter(&Unit.no_cmd_squares?/1)
     action_selection = Enum.reduce(exiting_units, action_selection, fn unit, action_selection ->
       ActionSelection.exit_or_run_aground(action_selection, unit.id)
     end)

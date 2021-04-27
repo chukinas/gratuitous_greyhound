@@ -16,12 +16,15 @@ defmodule Unit do
     # ID must be unique within the world
     field :id, integer()
     field :player_id, integer(), default: 1
+    field :sprite, Sprite.t()
+    field :turrets, [Turret.t()]
+    # Varies from game turn to game turn
     field :pose, Pose.t()
+    field :path, Path.t(), enforce: false
     field :cmd_squares, [GridSquare.t()], default: []
     # TODO rename path?
     field :maneuver_svg_string, String.t(), enforce: false
-    field :sprite, Sprite.t()
-    field :turrets, [Turret.t()]
+    field :exiting?, boolean(), default: false
   end
 
   # *** *******************************
@@ -58,6 +61,13 @@ defmodule Unit do
   def put_cmd_squares(unit, cmd_squares) do
     %{unit | cmd_squares: cmd_squares |> Enum.to_list}
   end
+  def put_path(unit, path) do
+    %{unit |
+      pose: Path.get_end_pose(path),
+      path: path,
+      maneuver_svg_string: Svg.get_path_string(path)
+    }
+  end
 
   # *** *******************************
   # *** COMMANDS
@@ -81,10 +91,13 @@ defmodule Unit do
 
   def move_to(unit, position) do
     path = Path.get_connecting_path(unit.pose, position)
-    %{unit |
-      pose: Path.get_end_pose(path),
-      maneuver_svg_string: Svg.get_path_string(path)
-    }
+    put_path(unit, path)
+  end
+
+  def exit_or_run_aground(unit) do
+    path = Path.put_pose(unit.path, unit.pose)
+    put_path(unit, path)
+    |> Map.put(:exiting?, true)
   end
 
   def get_maneuver_polygon(%__MODULE__{pose: pose}, trim_angle \\ 0) do

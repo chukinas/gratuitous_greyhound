@@ -25,7 +25,7 @@ defmodule ActionSelection do
   def new(units, player_id) do
     %__MODULE__{
       player_id: player_id,
-      my_unit_ids: get_list_my_unit_ids(units, player_id)
+      my_unit_ids: player_unit_ids(units, player_id)
     }
     |> calc_active_units
   end
@@ -34,7 +34,7 @@ defmodule ActionSelection do
   # *** SETTERS
 
   def put_commands(%__MODULE__{} = action_selection, commands) do
-    %{action_selection | commands: commands}
+    %{action_selection | commands: commands ++ action_selection.commands}
     |> calc_active_units
   end
 
@@ -61,14 +61,13 @@ defmodule ActionSelection do
   # *** BOOLEAN
 
   def turn_complete?(action_selection) do
-    IOP.inspect action_selection, "turn complet?"
-    Enum.empty?(action_selection.active_unit_ids) |> IOP.inspect("turn complete?")
+    Enum.empty?(action_selection.active_unit_ids)
   end
 
   # *** *******************************
   # *** PRIVATE
 
-  defp get_list_my_unit_ids(units, player_id) do
+  def player_unit_ids(units, player_id) do
     units
     |> Enum.filter(&Unit.belongs_to?(&1, player_id))
     |> Enum.map(& &1.id)
