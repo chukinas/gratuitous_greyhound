@@ -57,7 +57,6 @@
 
 
 <%# Unit Maneuvers %>
-<%= if @turn_number > 1 do %>
 <svg
   id="svg_paths"
   class="absolute opacity-20"
@@ -70,20 +69,22 @@
   "
 >
   <%= for unit <- @units do %>
+  <%= for maneuver_path <- unit.maneuver_paths do %>
   <path
     id="unit-<%= unit.id %>-<%= @turn_number %>-1"
-    d="<%= unit.maneuver_svg_string %>"
+    d="<%= maneuver_path.svg_path %>"
     data-maneuvering-el-id="unit-<%= unit.id %>"
-    data-start="0"
-    data-duration="1"
+    data-start="<%= maneuver_path.fractional_start_time %>"
+    data-duration="<%= maneuver_path.fractional_duration %>"
     style="stroke-linejoin:round;stroke-width:20;stroke:#fff;fill:none"
     phx-hook="PartialPath"
   />
   <% end %>
+  <% end %>
 </svg>
-<% end %>
 
 
+<%# Units %>
 <%= for unit <- @units do %>
 <%= ChukinasWeb.DreadnoughtView.render "unit3.html",
   socket: @socket,
