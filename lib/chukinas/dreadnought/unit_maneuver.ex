@@ -1,7 +1,10 @@
-alias Chukinas.Dreadnought.{PotentialPath, Unit, UnitOrders}
+alias Chukinas.Dreadnought.{UnitManeuver, Unit, UnitOrders}
 alias Chukinas.Geometry.{GridSquare}
 
-defmodule PotentialPath do
+defmodule UnitManeuver do
+  @moduledoc """
+  Logic for calculating the maneuver options available to a unit
+  """
 
   # *** *******************************
   # *** TYPES
