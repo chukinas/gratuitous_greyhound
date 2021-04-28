@@ -72,21 +72,25 @@
     style="stroke-linejoin:round;stroke-width:20;stroke:#fff;fill:none"
   />
   <% end %>
+  <% pos_after = 100 * @turn_number %>
+  <% pos_before = pos_after - 100 %>
   <path
     id="testdiv-<%= @turn_number %>-1"
-    d="M 0 0 h 100"
-    data-maneuvering-element-id="testdiv"
+    d="M <%= pos_before %> <%= pos_before %> h 100"
+    data-maneuvering-el-id="testdiv"
     data-start="0"
     data-duration="0.5"
     style="stroke-linejoin:round;stroke-width:20;stroke:#fff;fill:none"
+    phx-hook="PartialPath"
   />
   <path
     id="testdiv-<%= @turn_number %>-2"
-    d="M 100 0 v 100"
-    data-maneuvering-element-id="testdiv"
+    d="M <%= pos_after %> <%= pos_before %> v 100"
+    data-maneuvering-el-id="testdiv"
     data-start="0.5"
     data-duration="0.5"
     style="stroke-linejoin:round;stroke-width:20;stroke:#fff;fill:none"
+    phx-hook="PartialPath"
   />
 </svg>
 <%= for unit <- @units do %>
@@ -96,7 +100,7 @@
   margin: @margin %>
 <% end %>
 <div id="testdiv"
-    class="bg-red-400 bg-opacity-50 p-8 absolute"
+    class="bg-red-400 bg-opacity-50 p-8 absolute text-3xl"
      style="
     left: <%= @margin.width + @turn_number * 100 %>px;
     top: <%= @margin.height + @turn_number * 100 %>px; 

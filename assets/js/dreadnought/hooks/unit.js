@@ -4,6 +4,7 @@ import { subscribeNewTurn } from "./turnNumber.js";
 // CONSTANTS
 
 const gsap = window.gsap
+const ANIMATIONDURATION = 2 // second
 
 // --------------------------------------------------------
 // MANEUVER
@@ -38,8 +39,8 @@ function partialManeuver(maneuveringEl, fractionalStartTime, fractionalDuration,
       path: pathEl,
     },
     ease: "none",
-    delay: fractionalStartTime,
-    duration: fractionalDuration,
+    delay: fractionalStartTime * ANIMATIONDURATION,
+    duration: fractionalDuration * ANIMATIONDURATION,
   })
 }
 
@@ -130,19 +131,13 @@ const Unit = {
 
 const PartialPath = {
   mounted() {
-    // I only have to worry about mounting. The path mounts,
-    // I schedule the move
-    subscribeNewTurn(() => maneuver_unit(this.el))
+    const maneuveringEl = document.getElementById(this.el.dataset.maneuveringElId)
+    const pathEl = this.el
+    const fractionalStartTime = this.el.dataset.start
+    const fractionalDuration = this.el.dataset.duration
+    console.log(this.el.dataset)
+    partialManeuver(maneuveringEl, fractionalStartTime, fractionalDuration, pathEl)
   },
-  //beforeUpdate() {
-  //  console.log("unit before update")
-  //},
-  //updated() {
-  //  console.log("unit updated")
-  //  if (!has_already_maneuvered(this.el)) {
-  //    maneuver_unit(this.el)
-  //  }
-  //},
 }
 
 export default { WelcomeCardShip, WelcomeCardShipFwdTurret, WelcomeCardShipRearTurret, Unit, PartialPath }
