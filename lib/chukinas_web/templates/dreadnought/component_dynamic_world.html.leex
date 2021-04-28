@@ -54,6 +54,10 @@
     <% end %>
   </div>
 </div>
+
+
+<%# Unit Maneuvers %>
+<%= if @turn_number > 1 do %>
 <svg
   id="svg_paths"
   class="absolute opacity-20"
@@ -67,44 +71,22 @@
 >
   <%= for unit <- @units do %>
   <path
-    id="unit-<%= unit.id %>-lastPath"
+    id="unit-<%= unit.id %>-<%= @turn_number %>-1"
     d="<%= unit.maneuver_svg_string %>"
+    data-maneuvering-el-id="unit-<%= unit.id %>"
+    data-start="0"
+    data-duration="1"
     style="stroke-linejoin:round;stroke-width:20;stroke:#fff;fill:none"
+    phx-hook="PartialPath"
   />
   <% end %>
-  <% pos_after = 100 * @turn_number %>
-  <% pos_before = pos_after - 100 %>
-  <path
-    id="testdiv-<%= @turn_number %>-1"
-    d="M <%= pos_before %> <%= pos_before %> h 100"
-    data-maneuvering-el-id="testdiv"
-    data-start="0"
-    data-duration="0.5"
-    style="stroke-linejoin:round;stroke-width:20;stroke:#fff;fill:none"
-    phx-hook="PartialPath"
-  />
-  <path
-    id="testdiv-<%= @turn_number %>-2"
-    d="M <%= pos_after %> <%= pos_before %> v 100"
-    data-maneuvering-el-id="testdiv"
-    data-start="0.5"
-    data-duration="0.5"
-    style="stroke-linejoin:round;stroke-width:20;stroke:#fff;fill:none"
-    phx-hook="PartialPath"
-  />
 </svg>
+<% end %>
+
+
 <%= for unit <- @units do %>
 <%= ChukinasWeb.DreadnoughtView.render "unit3.html",
   socket: @socket,
   unit: unit,
   margin: @margin %>
 <% end %>
-<div id="testdiv"
-    class="bg-red-400 bg-opacity-50 p-8 absolute text-3xl"
-     style="
-    left: <%= @margin.width + @turn_number * 100 %>px;
-    top: <%= @margin.height + @turn_number * 100 %>px; 
-    "
-  >
-  turn number: <%= @turn_number %>
-</div>
