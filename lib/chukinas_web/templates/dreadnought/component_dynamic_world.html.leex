@@ -72,6 +72,22 @@
     style="stroke-linejoin:round;stroke-width:20;stroke:#fff;fill:none"
   />
   <% end %>
+  <path
+    id="testdiv-<%= @turn_number %>-1"
+    d="M 0 0 h 100"
+    data-maneuvering-element-id="testdiv"
+    data-start="0"
+    data-duration="0.5"
+    style="stroke-linejoin:round;stroke-width:20;stroke:#fff;fill:none"
+  />
+  <path
+    id="testdiv-<%= @turn_number %>-2"
+    d="M 100 0 v 100"
+    data-maneuvering-element-id="testdiv"
+    data-start="0.5"
+    data-duration="0.5"
+    style="stroke-linejoin:round;stroke-width:20;stroke:#fff;fill:none"
+  />
 </svg>
 <%= for unit <- @units do %>
 <%= ChukinasWeb.DreadnoughtView.render "unit3.html",
@@ -79,3 +95,12 @@
   unit: unit,
   margin: @margin %>
 <% end %>
+<div id="testdiv"
+    class="bg-red-400 bg-opacity-50 p-8 absolute"
+     style="
+    left: <%= @margin.width + @turn_number * 100 %>px;
+    top: <%= @margin.height + @turn_number * 100 %>px; 
+    "
+  >
+  turn number: <%= @turn_number %>
+</div>

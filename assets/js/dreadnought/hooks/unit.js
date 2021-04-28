@@ -24,17 +24,22 @@ const has_already_maneuvered = (function() {
   }
 })()
 
-function maneuver_unit(el) {
-  const path = document.getElementById(`${el.id}-lastPath`)
-  gsap.to(el, {
+function maneuver_unit(maneuveringEl) {
+  const path = document.getElementById(`${maneuveringEl.id}-lastPath`)
+  partialManeuver(maneuveringEl, 0, 1, path)
+}
+
+function partialManeuver(maneuveringEl, fractionalStartTime, fractionalDuration, pathEl) {
+  gsap.to(maneuveringEl, {
     motionPath: {
       autoRotate: true,
       alignOrigin: [0.5, 0.5],
-      align: path,
-      path,
+      align: pathEl,
+      path: pathEl,
     },
-    ease: "power1.in",
-    duration: 1,
+    ease: "none",
+    delay: fractionalStartTime,
+    duration: fractionalDuration,
   })
 }
 
@@ -123,4 +128,21 @@ const Unit = {
   //},
 }
 
-export default { WelcomeCardShip, WelcomeCardShipFwdTurret, WelcomeCardShipRearTurret, Unit }
+const PartialPath = {
+  mounted() {
+    // I only have to worry about mounting. The path mounts,
+    // I schedule the move
+    subscribeNewTurn(() => maneuver_unit(this.el))
+  },
+  //beforeUpdate() {
+  //  console.log("unit before update")
+  //},
+  //updated() {
+  //  console.log("unit updated")
+  //  if (!has_already_maneuvered(this.el)) {
+  //    maneuver_unit(this.el)
+  //  }
+  //},
+}
+
+export default { WelcomeCardShip, WelcomeCardShipFwdTurret, WelcomeCardShipRearTurret, Unit, PartialPath }
