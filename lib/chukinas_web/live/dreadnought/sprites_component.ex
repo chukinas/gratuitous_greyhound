@@ -6,7 +6,7 @@ defmodule ChukinasWeb.Dreadnought.SpritesComponent do
 
   @impl true
   def render(assigns) do
-    DreadnoughtView.render("sprites.html", assigns)
+    DreadnoughtView.render("component_sprites.html", assigns)
   end
 
   @impl true
