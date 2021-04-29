@@ -1,6 +1,8 @@
-alias Chukinas.Dreadnought.{UnitManeuverPath}
+alias Chukinas.Dreadnought.{PathPartial}
+alias Chukinas.Geometry.Path
+alias Chukinas.Svg
 
-defmodule UnitManeuverPath do
+defmodule PathPartial do
   @moduledoc """
   Fully qualifies a portion of a unit's path
 
@@ -14,14 +16,18 @@ defmodule UnitManeuverPath do
   use TypedStruct
 
   typedstruct enforce: true do
+    field :geo_path, Path.t()
     field :svg_path, String.t()
     field :fractional_start_time, number(), default: 0
     field :fractional_duration, number(), default: 1
   end
 
-  def new(svg_path) do
-    %__MODULE__{svg_path: svg_path}
+  def new(geo_path) do
+    %__MODULE__{
+      geo_path: geo_path,
+      svg_path: Svg.get_path_string(geo_path)
+    }
   end
 
-  def new_list(svg_path), do: [new(svg_path)]
+  def new_list(geo_path), do: [new(geo_path)]
 end

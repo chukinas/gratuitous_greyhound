@@ -1,6 +1,5 @@
-alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret, UnitManeuverPath}
+alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret, PathPartial}
 alias Chukinas.Geometry.{Pose, Path, GridSquare, Straight, Turn, Polygon, Position}
-alias Chukinas.Svg
 
 defmodule Unit do
   @moduledoc """
@@ -20,9 +19,8 @@ defmodule Unit do
     field :turrets, [Turret.t()]
     # Varies from game turn to game turn
     field :pose, Pose.t()
-    field :path, Path.t(), enforce: false
     field :cmd_squares, [GridSquare.t()], default: []
-    field :maneuver_paths, [UnitManeuverPath.t()], default: []
+    field :compound_path, [PathPartial.t()], default: []
     field :exiting?, boolean(), default: false
   end
 
@@ -60,11 +58,10 @@ defmodule Unit do
   def put_cmd_squares(unit, cmd_squares) do
     %{unit | cmd_squares: cmd_squares |> Enum.to_list}
   end
-  def put_path(unit, path) do
+  def put_path(unit, geo_path) do
     %{unit |
-      pose: Path.get_end_pose(path),
-      path: path,
-      maneuver_paths: UnitManeuverPath.new_list(Svg.get_path_string(path))
+      pose: Path.get_end_pose(geo_path),
+      compound_path: PathPartial.new_list(geo_path)
     }
   end
 

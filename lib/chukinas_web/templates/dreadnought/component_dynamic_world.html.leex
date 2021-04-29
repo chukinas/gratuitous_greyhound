@@ -69,7 +69,7 @@
   "
 >
   <%= for unit <- @units do %>
-  <%= for maneuver_path <- unit.maneuver_paths do %>
+  <%= for maneuver_path <- unit.compound_path do %>
   <path
     id="unit-<%= unit.id %>-<%= @turn_number %>-1"
     d="<%= maneuver_path.svg_path %>"
