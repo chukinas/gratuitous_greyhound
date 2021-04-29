@@ -16,7 +16,7 @@ defmodule Mission do
     field :margin, Size.t()
     field :islands, [Island.t()], default: []
     field :units, [Unit.t()], default: []
-    field :players, %{integer() => Player.t()}, default: %{}
+    field :players, [Player.t()], default: []
   end
 
   # *** *******************************
@@ -37,7 +37,7 @@ defmodule Mission do
   # *** *******************************
   # *** GETTERS
 
-  def players(mission), do: Map.values(mission.players)
+  def players(mission), do: mission.players
   defp commands(mission) do
     mission
     |> players
@@ -63,14 +63,16 @@ defmodule Mission do
   def put(mission, %Unit{} = unit) do
     Map.update!(mission, :units, & ById.put(&1, unit))
   end
-  def put(mission, %Player{id: player_id} = player) do
-    Map.update!(mission, :players, &Map.put(&1, player_id, player))
+  def put(mission, %Player{} = player) do
+    Map.update!(mission, :players, &ById.put(&1, player))
   end
   def put(mission, %PlayerActions{player_id: player_id} = player_actions) do
-    players =
-      mission.players
-      |> Map.update!(player_id, &Player.put_commands(&1, player_actions.commands))
-    %{mission | players: players}
+    player =
+      ById.get!(mission.players, player_id)
+      |> Player.put_commands(player_actions.commands)
+    mission
+    |> put(player)
+    |> maybe_end_turn
   end
 
   # *** *******************************
@@ -95,19 +97,28 @@ defmodule Mission do
   end
 
   # *** *******************************
-  # *** PLAYER INPUT
+  # *** PRIVATE
 
-  def complete_player_turn(mission, %PlayerActions{} = player_actions) do
-    IO.puts "complete player turn"
-    mission = mission |> put(player_actions)
+  defp maybe_end_turn(mission) do
     if turn_complete?(mission) do
       mission
+      # Resolve current turn
       |> resolve_commands
+      # New turn prep
+      |> clear_player_actions
       |> increment_turn_number
       |> calc_ai_commands
     else
       mission
     end
+  end
+
+  defp clear_player_actions(mission) do
+    players =
+      mission
+      |> players
+      |> Enum.map(&Player.clear/1)
+    put mission, players
   end
 
   defp turn_complete?(mission) do

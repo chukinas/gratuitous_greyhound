@@ -15,25 +15,22 @@ defmodule Chukinas.Dreadnought.ById do
   end
 
   def put(enum, item) when is_list(enum) do
-    #[item | Enum.reject(enum, fn list_item ->
-    #  _match?(item, list_item)
-    #end)]
     replace(enum, item)
   end
 
   def replace(enum, item) when is_list(enum) do
-    {non_matches1, non_matches2} =
-      Enum.split_while(enum, fn x -> not _match?(x, item) end)
-    Enum.concat(non_matches1, case non_matches2 do
-      [] -> [item]
-      [_match | non_matches3] -> [item | non_matches3]
-    end)
+    case Enum.split_while(enum, &_not_match?(&1, item)) do
+      {non_matches1, [_match | non_matches2]} ->
+        non_matches1 ++ [item | non_matches2]
+      {non_matches1, []} ->
+        [item | non_matches1]
+    end
   end
 
   def replace!(enum, item) when is_list(enum) do
     {non_matches1, [_match | non_matches2]} =
-      Enum.split_while(enum, fn x -> not _match?(x, item) end)
-    Enum.concat(non_matches1, [item, non_matches2])
+      Enum.split_while(enum, &_not_match?(&1, item))
+    Enum.concat(non_matches1, [item | non_matches2])
   end
 
   def to_ids(enum) when is_list(enum) do
@@ -45,4 +42,6 @@ defmodule Chukinas.Dreadnought.ById do
 
   defp _match?(%{id: id1}, %{id: id2}), do: id1 == id2
   defp _match?(%{id: id}, sought_id), do: id == sought_id
+
+  defp _not_match?(a, b), do: not _match?(a, b)
 end

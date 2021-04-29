@@ -14,7 +14,7 @@ defmodule Chukinas.Dreadnought.State do
   end
 
   def complete_player_turn(pid, %PlayerActions{} = player_actions) do
-    :ok = Agent.update(pid, & Mission.complete_player_turn(&1, player_actions))
+    :ok = Agent.update(pid, & Mission.put(&1, player_actions))
     pid |> get |> Mission.to_player
   end
 end

@@ -10,6 +10,7 @@ defmodule Player do
   typedstruct enforce: true do
     field :id, integer()
     field :type, :human | :ai
+    # TODO there is no need for these. Flatten. Put in Mission
     field :commands, [UnitOrders.t()], default: []
     field :turn_complete?, boolean, default: false
   end
