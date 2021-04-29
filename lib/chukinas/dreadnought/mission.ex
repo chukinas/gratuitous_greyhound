@@ -1,6 +1,6 @@
 # TODO ById should be a utility
-alias Chukinas.Dreadnought.{Unit, Mission, ById, Island, PlayerActions, Player, PlayerTurn, ArtificialIntelligence}
-alias Chukinas.Geometry.{Grid, Size}
+alias Chukinas.Dreadnought.{Unit, Mission, ById, Island, PlayerActions, Player, PlayerTurn, ArtificialIntelligence, UnitAction, UnitOrders}
+alias Chukinas.Geometry.{Grid, Size, Position}
 
 defmodule Mission do
 
@@ -39,8 +39,14 @@ defmodule Mission do
   # *** GETTERS
 
   def players(mission), do: mission.players
+  # TODO rename unit_actions
   defp commands(%__MODULE__{player_actions: actions}) do
     Enum.flat_map(actions, &PlayerActions.commands/1)
+  end
+  defp maneuver_actions(%__MODULE__{} = mission) do
+    mission
+    |> commands
+    |> UnitAction.List.maneuevers
   end
   def player_ids(mission), do: ById.to_ids(mission.players)
   def completed_player_ids(mission) do
@@ -52,6 +58,7 @@ defmodule Mission do
     |> Stream.filter(&Player.ai?/1)
     |> Stream.map(&Player.id/1)
   end
+  def units(%{units: units}), do: units
 
   # *** *******************************
   # *** SETTERS
@@ -122,11 +129,14 @@ defmodule Mission do
     MapSet.equal?(player_ids, completed_player_ids)
   end
 
-  defp increment_turn_number(mission), do: Map.update!(mission, :turn_number, & &1 + 1)
+  defp increment_turn_number(mission) do
+    Map.update!(mission, :turn_number, & &1 + 1)
+  end
 
   defp put_tentative_maneuvers(mission) do
-    Enum.reduce(commands(mission), mission, fn cmd, mission ->
-      resolve_command(mission, cmd)
+    Enum.reduce(maneuver_actions(mission), mission, fn maneuver, mission ->
+      # TODO rename apply_...?
+      calc_tentative_maneuver(mission, maneuver)
     end)
   end
 
@@ -134,11 +144,11 @@ defmodule Mission do
     mission
   end
 
-  defp resolve_command(mission, command) do
-    unit = ById.get!(mission.units, command.unit_id)
-    unit = Enum.reduce(command.commands, unit, fn command, unit ->
-      Unit.resolve_command(unit, command)
-    end)
-    put(mission, unit)
+  defp calc_tentative_maneuver(mission, maneuver_action) do
+    unit = mission |> units |> ById.get!(maneuver_action.unit_id)
+    unit = case UnitOrders.value(maneuver_action) do
+      %Position{} = pos -> Unit.move_to unit, pos
+    end
+    mission |> put(unit)
   end
 end

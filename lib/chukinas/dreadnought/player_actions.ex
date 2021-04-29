@@ -33,16 +33,19 @@ defmodule PlayerActions do
   # *** *******************************
   # *** GETTERS
 
+  # TODO rename unit_actions
   def commands(%__MODULE__{commands: commands}), do: commands
 
   # *** *******************************
   # *** SETTERS
 
+  # TODO delete
   def put_commands(%__MODULE__{} = player_actions, commands) do
     %{player_actions | commands: commands ++ player_actions.commands}
     |> calc_active_units
   end
 
+  # TODO rename put
   defp put_command(player_actions, command) do
     player_actions
     |> Map.update!(:commands, & [command | &1])
@@ -52,11 +55,13 @@ defmodule PlayerActions do
   # *** *******************************
   # *** COMMANDS
 
+  # TODO delete
   def maneuver(player_actions, unit_id, x, y) do
     command = UnitOrders.move_to(unit_id, Position.new(x, y))
     put_command(player_actions, command)
   end
 
+  # TODO delete
   def exit_or_run_aground(player_actions, unit_id) do
     command = UnitOrders.exit_or_run_aground(unit_id)
     put_command(player_actions, command)
@@ -72,6 +77,7 @@ defmodule PlayerActions do
   # *** *******************************
   # *** PRIVATE
 
+  # TODO move to Unit.List
   def player_unit_ids(units, player_id) do
     units
     |> Enum.filter(&Unit.belongs_to?(&1, player_id))
@@ -82,11 +88,13 @@ defmodule PlayerActions do
     %{player_actions | active_unit_ids: Enum.take(my_pending_unit_ids(player_actions), 1)}
   end
 
+  # TODO rename pending_player_unit_ids
   defp my_pending_unit_ids(player_actions) do
     player_actions.my_unit_ids
     |> Stream.filter(& &1 not in my_completed_unit_ids(player_actions))
   end
 
+  # TODO rename completed_player_unit_ids
   defp my_completed_unit_ids(player_actions) do
       player_actions.commands
       |> Stream.map(& &1.unit_id)

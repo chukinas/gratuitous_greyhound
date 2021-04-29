@@ -1,9 +1,10 @@
-alias Chukinas.Dreadnought.{UnitOrders, Unit}
-alias Chukinas.Geometry.{Position, Collide, Grid, Position, GridSquare}
+alias Chukinas.Dreadnought.{UnitOrders, UnitAction}
+alias Chukinas.Geometry.{Position}
 
+# TODO rename UnitAction
 defmodule UnitOrders do
   @moduledoc """
-  Represents the actions a unit will take at the end of the turn
+  Represents one action a unit will take at the end of the turn
   """
 
   # *** *******************************
@@ -15,14 +16,38 @@ defmodule UnitOrders do
   typedstruct do
     field :unit_id, unit_id(), enforce: true
     field :type, :maneuver | :combat
-    field :commands, [:exit_or_run_aground | {:move_to, Position.t()}]
+    field :value, :exit_or_run_aground | Position.t()
   end
 
   # *** *******************************
   # *** NEW
 
-  def new(opts \\ []), do: struct!(__MODULE__, opts)
+  defp new(unit_id, type, value) do
+    %__MODULE__{
+      unit_id: unit_id,
+      type: type,
+      value: value
+    }
+  end
 
-  def move_to(unit_id, position), do: new(unit_id: unit_id, commands: [{:move_to, position}])
-  def exit_or_run_aground(unit_id), do: new(unit_id: unit_id, commands: [:exit_or_run_aground])
+  def move_to(unit_id, position) do
+    new(unit_id, :maneuver, position)
+  end
+  def exit_or_run_aground(unit_id) do
+    new(unit_id, :maneuver, :exit_or_run_aground)
+  end
+
+  # *** *******************************
+  # *** GETTERS
+
+  def is_maneuver?(action), do: action.type == :maneuver
+  def value(action), do: action.value
+
+end
+
+
+defmodule UnitAction.List do
+  def maneuevers(actions) when is_list(actions) do
+    Stream.filter actions, &UnitOrders.is_maneuver?/1
+  end
 end
