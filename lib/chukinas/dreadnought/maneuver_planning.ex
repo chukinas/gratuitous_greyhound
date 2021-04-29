@@ -1,8 +1,7 @@
-alias Chukinas.Dreadnought.{UnitManeuver, Unit}
+alias Chukinas.Dreadnought.{ManeuverPlanning, Unit}
 alias Chukinas.Geometry.{GridSquare, Grid, Collide, Path}
 
-# TODO rename ManeuverPlanning
-defmodule UnitManeuver do
+defmodule ManeuverPlanning do
   @moduledoc """
   Logic for calculating the maneuver options available to a unit
   """

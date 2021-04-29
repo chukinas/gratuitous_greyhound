@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{ArtificialIntelligence, Unit, UnitAction, PlayerActions, ById, UnitManeuver}
+alias Chukinas.Dreadnought.{ArtificialIntelligence, Unit, UnitAction, PlayerActions, ById, ManeuverPlanning}
 
 defmodule ArtificialIntelligence do
   @moduledoc """
@@ -17,18 +17,18 @@ defmodule ArtificialIntelligence do
   defp get_command(%Unit{id: unit_id} = unit, grid, islands) do
     rand_cmd_square =
       unit
-      |> UnitManeuver.get_stream(grid, islands, 1)
+      |> ManeuverPlanning.get_stream(grid, islands, 1)
       |> print_count
       |> Enum.take(1)
     case rand_cmd_square do
       [] -> UnitAction.exit_or_run_aground(unit_id)
-      [%UnitManeuver{} = pot_path] -> UnitAction.move_to(unit_id, UnitManeuver.position(pot_path))
+      [%ManeuverPlanning{} = pot_path] -> UnitAction.move_to(unit_id, ManeuverPlanning.position(pot_path))
     end
   end
 
   #defp get_straightest_cmd(potential_paths, current_pose) do
   #  potential_paths
-  #  |> Stream.map(&UnitManeuver.position/1)
+  #  |> Stream.map(&ManeuverPlanning.position/1)
   #  |> Stream.dedup
   #end
 

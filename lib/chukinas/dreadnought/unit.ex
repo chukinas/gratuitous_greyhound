@@ -61,13 +61,14 @@ defmodule Unit do
   end
 
   # *** *******************************
-  # *** BOOLEANS
+  # *** GETTERS
 
   def belongs_to?(unit, player_id), do: unit.player_id == player_id
 
   # *** *******************************
   # *** MANEUVER
 
+  # TODO move to ManeuverPlanning module (currently named ManeuverPlanning)
   def get_maneuver_polygon(%__MODULE__{pose: pose}, trim_angle \\ 0) do
     max_distance = 400
     min_distance = 200
