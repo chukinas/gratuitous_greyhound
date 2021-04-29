@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{UnitOrders, PlayerActions, Unit}
+alias Chukinas.Dreadnought.{UnitAction, PlayerActions, Unit}
 alias Chukinas.Geometry.Position
 
 # TODO think up a better name for this
@@ -12,7 +12,7 @@ defmodule PlayerActions do
   typedstruct do
     field :player_id, integer(), enforce: true
     field :active_unit_ids, [integer()], default: []
-    field :commands, [UnitOrders.t()], default: []
+    field :commands, [UnitAction.t()], default: []
     # For internal reference only (probably)
     # TODO think of better name
     field :my_unit_ids, [integer()], enforce: true
@@ -57,13 +57,13 @@ defmodule PlayerActions do
 
   # TODO delete
   def maneuver(player_actions, unit_id, x, y) do
-    command = UnitOrders.move_to(unit_id, Position.new(x, y))
+    command = UnitAction.move_to(unit_id, Position.new(x, y))
     put_command(player_actions, command)
   end
 
   # TODO delete
   def exit_or_run_aground(player_actions, unit_id) do
-    command = UnitOrders.exit_or_run_aground(unit_id)
+    command = UnitAction.exit_or_run_aground(unit_id)
     put_command(player_actions, command)
   end
 

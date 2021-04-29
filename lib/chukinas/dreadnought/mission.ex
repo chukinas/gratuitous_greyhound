@@ -1,5 +1,5 @@
 # TODO ById should be a utility
-alias Chukinas.Dreadnought.{Unit, Mission, ById, Island, PlayerActions, Player, PlayerTurn, ArtificialIntelligence, UnitAction, UnitOrders}
+alias Chukinas.Dreadnought.{Unit, Mission, ById, Island, PlayerActions, Player, PlayerTurn, ArtificialIntelligence, UnitAction}
 alias Chukinas.Geometry.{Grid, Size, Position}
 
 defmodule Mission do
@@ -146,7 +146,7 @@ defmodule Mission do
 
   defp calc_tentative_maneuver(mission, maneuver_action) do
     unit = mission |> units |> ById.get!(maneuver_action.unit_id)
-    unit = case UnitOrders.value(maneuver_action) do
+    unit = case UnitAction.value(maneuver_action) do
       %Position{} = pos -> Unit.move_to unit, pos
     end
     mission |> put(unit)

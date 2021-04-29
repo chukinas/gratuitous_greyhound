@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Player, UnitOrders}
+alias Chukinas.Dreadnought.{Player}
 
 defmodule Player do
 

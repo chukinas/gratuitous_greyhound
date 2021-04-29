@@ -1,8 +1,7 @@
-alias Chukinas.Dreadnought.{UnitOrders, UnitAction}
+alias Chukinas.Dreadnought.{UnitAction}
 alias Chukinas.Geometry.{Position}
 
-# TODO rename UnitAction
-defmodule UnitOrders do
+defmodule UnitAction do
   @moduledoc """
   Represents one action a unit will take at the end of the turn
   """
@@ -48,6 +47,6 @@ end
 
 defmodule UnitAction.List do
   def maneuevers(actions) when is_list(actions) do
-    Stream.filter actions, &UnitOrders.is_maneuver?/1
+    Stream.filter actions, &UnitAction.is_maneuver?/1
   end
 end
