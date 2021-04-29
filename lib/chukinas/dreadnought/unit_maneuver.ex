@@ -1,5 +1,5 @@
-alias Chukinas.Dreadnought.{UnitManeuver, Unit, UnitOrders}
-alias Chukinas.Geometry.{GridSquare}
+alias Chukinas.Dreadnought.{UnitManeuver, Unit}
+alias Chukinas.Geometry.{GridSquare, Grid, Collide}
 
 defmodule UnitManeuver do
   @moduledoc """
@@ -22,8 +22,20 @@ defmodule UnitManeuver do
 
   def position(%__MODULE__{original_square: square}), do: square.center
 
+  # *** *******************************
+  # *** API
+
+  def get_cmd_squares(%{pose: pose} = unit, grid, islands) do
+    maneuver_polygon = Unit.get_maneuver_polygon(unit)
+    grid
+    |> Grid.squares(include: maneuver_polygon, exclude: islands)
+    |> Stream.map(&GridSquare.calc_path(&1, pose))
+    |> Stream.filter(&Collide.avoids?(&1.path, islands))
+    |> Stream.map(&%GridSquare{&1 | unit_id: unit.id})
+  end
+
   def get_stream(unit, grid, islands, target_depth) do
-    get_squares = fn unit -> UnitOrders.get_cmd_squares(unit, grid, islands) |> Enum.shuffle end
+    get_squares = fn unit -> get_cmd_squares(unit, grid, islands) |> Enum.shuffle end
     original_squares = get_squares.(unit)
     initial_tokens = Stream.map(original_squares, fn square ->
       %__MODULE__{
