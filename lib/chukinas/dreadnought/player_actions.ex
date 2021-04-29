@@ -31,6 +31,11 @@ defmodule PlayerActions do
   end
 
   # *** *******************************
+  # *** GETTERS
+
+  def commands(%__MODULE__{commands: commands}), do: commands
+
+  # *** *******************************
   # *** SETTERS
 
   def put_commands(%__MODULE__{} = player_actions, commands) do

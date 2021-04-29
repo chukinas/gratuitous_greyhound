@@ -17,6 +17,7 @@ defmodule Mission do
     field :islands, [Island.t()], default: []
     field :units, [Unit.t()], default: []
     field :players, [Player.t()], default: []
+    field :player_actions, [PlayerActions.t()], default: []
   end
 
   # *** *******************************
@@ -38,13 +39,13 @@ defmodule Mission do
   # *** GETTERS
 
   def players(mission), do: mission.players
-  defp commands(mission) do
-    mission
-    |> players
-    |> Enum.flat_map(&Player.commands/1)
-    |> IOP.inspect("all commands")
+  defp commands(%__MODULE__{player_actions: actions}) do
+    Enum.flat_map(actions, &PlayerActions.commands/1)
   end
-
+  def player_ids(mission), do: ById.to_ids(mission.players)
+  def completed_player_ids(mission) do
+    ById.to_ids(mission.player_actions, :player_id)
+  end
   def ai_player_ids(mission) do
     mission
     |> players
@@ -66,12 +67,9 @@ defmodule Mission do
   def put(mission, %Player{} = player) do
     Map.update!(mission, :players, &ById.put(&1, player))
   end
-  def put(mission, %PlayerActions{player_id: player_id} = player_actions) do
-    player =
-      ById.get!(mission.players, player_id)
-      |> Player.put_commands(player_actions.commands)
+  def put(mission, %PlayerActions{} = player_actions) do
     mission
-    |> put(player)
+    |> Map.update!(:player_actions, &ById.put(&1, player_actions, :player_id))
     |> maybe_end_turn
   end
 
@@ -114,18 +112,13 @@ defmodule Mission do
   end
 
   defp clear_player_actions(mission) do
-    players =
-      mission
-      |> players
-      |> Enum.map(&Player.clear/1)
-    put mission, players
+    %__MODULE__{mission | player_actions: []}
   end
 
   defp turn_complete?(mission) do
-    mission
-    |> players
-    |> Enum.all?(&Player.turn_complete?/1)
-    |> IOP.inspect("turn complete?")
+    player_ids = mission |> player_ids |> MapSet.new
+    completed_player_ids = mission |> completed_player_ids |> MapSet.new
+    MapSet.equal?(player_ids, completed_player_ids)
   end
 
   defp increment_turn_number(mission), do: Map.update!(mission, :turn_number, & &1 + 1)
