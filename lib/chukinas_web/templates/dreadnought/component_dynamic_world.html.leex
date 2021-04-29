@@ -19,9 +19,8 @@
       grid-auto-rows: <%= @grid.square_size %>px;
     "
   >
-    <%= for unit <- @units do %>
-    <%= if unit.id in @player_actions.active_unit_ids do %>
-    <%= for square <- unit.cmd_squares do %>
+    <%= for square <- @cmd_squares do %>
+    <%= if square.unit_id in @player_actions.active_unit_ids do %>
     <button
       id="gridSquareTarget-<%= square.id %>"
       class="p-0.5 hover:p-0 pointer-events-auto"
@@ -33,7 +32,7 @@
       phx-target="<%= @myself %>"
       phx-value-x="<%= square.center.x %>"
       phx-value-y="<%= square.center.y %>"
-      phx-value-unit_id="<%= unit.id %>"
+      phx-value-unit_id="<%= square.unit_id %>"
       phx-value-type="<%= square.path_type %>"
     >
       <div
@@ -49,7 +48,6 @@
       >
       </div>
     </button>
-    <% end %>
     <% end %>
     <% end %>
   </div>

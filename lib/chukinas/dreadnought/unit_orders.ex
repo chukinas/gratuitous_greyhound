@@ -39,5 +39,6 @@ defmodule UnitOrders do
     |> Grid.squares(include: maneuver_polygon, exclude: islands)
     |> Stream.map(&GridSquare.calc_path(&1, pose))
     |> Stream.filter(&Collide.avoids?(&1.path, islands))
+    |> Stream.map(&%GridSquare{&1 | unit_id: unit.id})
   end
 end

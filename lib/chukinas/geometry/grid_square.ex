@@ -9,6 +9,7 @@ defmodule GridSquare do
 
   typedstruct enforce: true do
     field :id, String.t()
+    field :unit_id, integer(), enforce: false
     field :column, integer()
     field :row, integer()
     field :center, Position.t()

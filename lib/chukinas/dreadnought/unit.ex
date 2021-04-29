@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret, PathPartial}
-alias Chukinas.Geometry.{Pose, Path, GridSquare, Straight, Turn, Polygon, Position}
+alias Chukinas.Geometry.{Pose, Path, Straight, Turn, Polygon, Position}
 
 defmodule Unit do
   @moduledoc """
@@ -19,7 +19,6 @@ defmodule Unit do
     field :turrets, [Turret.t()]
     # Varies from game turn to game turn
     field :pose, Pose.t()
-    field :cmd_squares, [GridSquare.t()], default: []
     field :compound_path, [PathPartial.t()], default: []
     field :exiting?, boolean(), default: false
   end
@@ -55,9 +54,6 @@ defmodule Unit do
   # *** *******************************
   # *** SETTERS
 
-  def put_cmd_squares(unit, cmd_squares) do
-    %{unit | cmd_squares: cmd_squares |> Enum.to_list}
-  end
   def put_path(unit, geo_path) do
     %{unit |
       pose: Path.get_end_pose(geo_path),
@@ -68,9 +64,11 @@ defmodule Unit do
   # *** *******************************
   # *** COMMANDS
 
+  # TODO extract this to mission
   def resolve_command(_unit, :exit_or_run_aground) do
     raise "Implement this!"
   end
+  # TODO extract this to mission
   def resolve_command(unit, {:move_to, position}) do
     move_to(unit, position)
   end
@@ -79,16 +77,17 @@ defmodule Unit do
   # *** BOOLEANS
 
   def belongs_to?(unit, player_id), do: unit.player_id == player_id
-  def no_cmd_squares?(unit), do: Enum.empty?(unit.cmd_squares)
 
   # *** *******************************
   # *** MANEUVER
 
+  # TODO extract this to mission
   def move_to(unit, position) do
     path = Path.get_connecting_path(unit.pose, position)
     put_path(unit, path)
   end
 
+  # TODO extract this to mission
   def exit_or_run_aground(unit) do
     path = Path.put_pose(unit.path, unit.pose)
     put_path(unit, path)

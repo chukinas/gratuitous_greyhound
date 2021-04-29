@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{PlayerTurn, Unit, PlayerActions, UnitOrders}
-alias Chukinas.Geometry.{Size, Grid}
+alias Chukinas.Geometry.{Size, Grid, GridSquare}
 
 # TODO better name => Chukinas.Dreadnought.PlayerTurn ?
 # TODO this name should match that of the Dyn World comp. Change this one or both to match
@@ -15,18 +15,19 @@ defmodule PlayerTurn do
 
   use TypedStruct
 
-  typedstruct do
+  typedstruct enforce: true do
     # These never change throughout the mission
     field :id, atom(), default: :dynamic_world
     # TODO needed?
-    field :player_id, integer(), enforce: true
-    field :margin, Size.t(), enforce: true
-    field :grid, Grid.t(), enforce: true
+    field :player_id, integer()
+    field :margin, Size.t()
+    field :grid, Grid.t()
     # These are handled locally by the dynamic component:
-    field :player_actions, PlayerActions.t(), enforce: true
+    field :player_actions, PlayerActions.t()
     # These must be set by the mission each turn:
-    field :turn_number, integer(), enforce: true
-    field :units, [Unit.t()], default: [], enforce: true
+    field :turn_number, integer()
+    field :units, [Unit.t()], default: []
+    field :cmd_squares, [GridSquare.t()], default: []
   end
 
   # *** *******************************
@@ -41,7 +42,8 @@ defmodule PlayerTurn do
   }) do
     %__MODULE__{
       turn_number: turn_number,
-      units: calc_cmd_squares(units, player_id, grid, islands),
+      units: units,
+      cmd_squares: cmd_squares(units, player_id, grid, islands),
       player_actions: PlayerActions.new(units, player_id),
       margin: margin,
       grid: grid,
@@ -58,26 +60,30 @@ defmodule PlayerTurn do
   # *** *******************************
   # *** PRIVATE
 
-  defp calc_cmd_squares(units, player_id, grid, islands) do
-    Enum.map(units, fn unit ->
+  defp cmd_squares(units, player_id, grid, islands) do
+    Enum.flat_map(units, fn unit ->
       if unit.player_id == player_id do
-        cmd_squares = UnitOrders.get_cmd_squares(unit, grid, islands)
-        Unit.put_cmd_squares(unit, cmd_squares)
+        UnitOrders.get_cmd_squares(unit, grid, islands)
       else
-        unit
+        []
       end
     end)
   end
 
   defp resolve_exiting_units(%__MODULE__{
+    cmd_squares: cmd_squares,
     units: units,
     player_id: player_id,
     player_actions: player_actions
   } = player_turn) do
+    unit_ids_that_have_cmd_squares = MapSet.new(cmd_squares, & &1.unit_id)
+    unit_has_no_cmd_squares? = fn unit ->
+      not MapSet.member?(unit_ids_that_have_cmd_squares, unit.id)
+    end
     exiting_units =
       units
       |> Stream.filter(&Unit.belongs_to?(&1, player_id))
-      |> Stream.filter(&Unit.no_cmd_squares?/1)
+      |> Stream.filter(unit_has_no_cmd_squares?)
     player_actions = Enum.reduce(exiting_units, player_actions, fn unit, player_actions ->
       PlayerActions.exit_or_run_aground(player_actions, unit.id)
     end)
