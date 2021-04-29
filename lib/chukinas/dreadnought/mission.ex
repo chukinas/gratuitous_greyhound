@@ -101,7 +101,8 @@ defmodule Mission do
     if turn_complete?(mission) do
       mission
       # Resolve current turn
-      |> resolve_commands
+      |> put_tentative_maneuvers
+      |> resolve_island_collisions
       # New turn prep
       |> clear_player_actions
       |> increment_turn_number
@@ -123,16 +124,18 @@ defmodule Mission do
 
   defp increment_turn_number(mission), do: Map.update!(mission, :turn_number, & &1 + 1)
 
-  defp resolve_commands(mission) do
+  defp put_tentative_maneuvers(mission) do
     Enum.reduce(commands(mission), mission, fn cmd, mission ->
       resolve_command(mission, cmd)
     end)
   end
 
+  defp resolve_island_collisions(mission) do
+    mission
+  end
+
   defp resolve_command(mission, command) do
-    unit =
-      mission.units
-      |> Enum.find(& &1.id == command.unit_id)
+    unit = ById.get!(mission.units, command.unit_id)
     unit = Enum.reduce(command.commands, unit, fn command, unit ->
       Unit.resolve_command(unit, command)
     end)
