@@ -20,7 +20,6 @@ defmodule Unit do
     # Varies from game turn to game turn
     field :pose, Pose.t()
     field :compound_path, [PathPartial.t()], default: []
-    field :exiting?, boolean(), default: false
   end
 
   # *** *******************************
@@ -54,7 +53,7 @@ defmodule Unit do
   # *** *******************************
   # *** SETTERS
 
-  def put_path(unit, geo_path) do
+  defp put_path(%__MODULE__{} = unit, geo_path) do
     %{unit |
       pose: Path.get_end_pose(geo_path),
       compound_path: PathPartial.new_list(geo_path)
@@ -85,13 +84,6 @@ defmodule Unit do
   def move_to(unit, position) do
     path = Path.get_connecting_path(unit.pose, position)
     put_path(unit, path)
-  end
-
-  # TODO extract this to mission
-  def exit_or_run_aground(unit) do
-    path = Path.put_pose(unit.path, unit.pose)
-    put_path(unit, path)
-    |> Map.put(:exiting?, true)
   end
 
   def get_maneuver_polygon(%__MODULE__{pose: pose}, trim_angle \\ 0) do
