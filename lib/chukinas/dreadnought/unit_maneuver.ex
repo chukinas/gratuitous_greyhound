@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{UnitManeuver, Unit}
-alias Chukinas.Geometry.{GridSquare, Grid, Collide}
+alias Chukinas.Geometry.{GridSquare, Grid, Collide, Path}
 
 # TODO rename ManeuverPlanning
 defmodule UnitManeuver do
@@ -42,7 +42,7 @@ defmodule UnitManeuver do
       %__MODULE__{
         original_square: square,
         current_square: square,
-        current_unit: Unit.move_to(unit, square.center),
+        current_unit: move_to(unit, square.center),
         current_depth: 1,
         target_depth: target_depth,
         get_squares: get_squares
@@ -51,6 +51,11 @@ defmodule UnitManeuver do
     Stream.flat_map(initial_tokens, fn token ->
       expand_token(token)
     end)
+  end
+
+  def move_to(unit, pos) do
+    path = Path.get_connecting_path(unit.pose, pos)
+    Unit.put_path(unit, path)
   end
 
   # Return list of tokens
@@ -68,7 +73,7 @@ defmodule UnitManeuver do
     get_squares.(unit) |> Stream.map(fn square ->
       %{token |
         current_square: square,
-        current_unit: Unit.move_to(unit, square.center),
+        current_unit: move_to(unit, square.center),
         current_depth: 1 + current_depth,
       }
     end)

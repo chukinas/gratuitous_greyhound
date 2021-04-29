@@ -53,23 +53,11 @@ defmodule Unit do
   # *** *******************************
   # *** SETTERS
 
-  defp put_path(%__MODULE__{} = unit, geo_path) do
+  def put_path(%__MODULE__{} = unit, geo_path) do
     %{unit |
       pose: Path.get_end_pose(geo_path),
       compound_path: PathPartial.new_list(geo_path)
     }
-  end
-
-  # *** *******************************
-  # *** COMMANDS
-
-  # TODO extract this to mission
-  def resolve_command(_unit, :exit_or_run_aground) do
-    raise "Implement this!"
-  end
-  # TODO extract this to mission
-  def resolve_command(unit, {:move_to, position}) do
-    move_to(unit, position)
   end
 
   # *** *******************************
@@ -79,12 +67,6 @@ defmodule Unit do
 
   # *** *******************************
   # *** MANEUVER
-
-  # TODO extract this to mission
-  def move_to(unit, position) do
-    path = Path.get_connecting_path(unit.pose, position)
-    put_path(unit, path)
-  end
 
   def get_maneuver_polygon(%__MODULE__{pose: pose}, trim_angle \\ 0) do
     max_distance = 400

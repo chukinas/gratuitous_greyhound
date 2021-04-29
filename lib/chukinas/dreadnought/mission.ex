@@ -1,5 +1,5 @@
 # TODO ById should be a utility
-alias Chukinas.Dreadnought.{Unit, Mission, ById, Island, PlayerActions, Player, PlayerTurn, ArtificialIntelligence, UnitAction}
+alias Chukinas.Dreadnought.{Unit, Mission, ById, Island, PlayerActions, Player, PlayerTurn, ArtificialIntelligence, UnitAction, UnitManeuver}
 alias Chukinas.Geometry.{Grid, Size, Position}
 
 defmodule Mission do
@@ -41,7 +41,7 @@ defmodule Mission do
   def players(mission), do: mission.players
   # TODO rename unit_actions
   defp commands(%__MODULE__{player_actions: actions}) do
-    Enum.flat_map(actions, &PlayerActions.commands/1)
+    Stream.flat_map(actions, &PlayerActions.commands/1)
   end
   defp maneuver_actions(%__MODULE__{} = mission) do
     mission
@@ -147,7 +147,7 @@ defmodule Mission do
   defp calc_tentative_maneuver(mission, maneuver_action) do
     unit = mission |> units |> ById.get!(maneuver_action.unit_id)
     unit = case UnitAction.value(maneuver_action) do
-      %Position{} = pos -> Unit.move_to unit, pos
+      %Position{} = pos -> UnitManeuver.move_to(unit, pos)
     end
     mission |> put(unit)
   end

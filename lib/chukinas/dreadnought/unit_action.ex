@@ -45,8 +45,9 @@ defmodule UnitAction do
 end
 
 
+# TODO rename .Coll or .Enum
 defmodule UnitAction.List do
-  def maneuevers(actions) when is_list(actions) do
+  def maneuevers(actions) do
     Stream.filter actions, &UnitAction.is_maneuver?/1
   end
 end
