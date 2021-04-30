@@ -54,13 +54,13 @@ defmodule PlayerTurn do
       player_type: player_type
     }
     |> calc_cmd_squares(islands)
+    |> maneuver_trapped_units
+    |> if_ai_calc_commands
+    |> determine_show_end_turn_btn
     # TODO make us of this terminology elsewhere
     # 'trapped' means the unit would normally be allowed to receive a move-to action,
     # but in this case it's jammed up against the side of the board or an island and will
     # leave the game next turn
-    |> maneuver_trapped_units
-    |> if_ai_calc_commands
-    |> determine_show_end_turn_btn
   end
 
   def map(player_id, player_type, mission) do
@@ -87,7 +87,7 @@ defmodule PlayerTurn do
           |> GridSquare.position
         UnitAction.move_to(unit_id, position)
       end)
-      Map.update!(token, :player_actions, &PlayerActions.put_commands(&1, unit_maneuvers))
+      Map.update!(token, :player_actions, &PlayerActions.put(&1, unit_maneuvers))
     else
       token
     end
@@ -114,13 +114,13 @@ defmodule PlayerTurn do
     trapped_unit_id? = fn id when is_integer(id) ->
       !MapSet.member?(unit_ids_that_have_cmd_squares, id)
     end
-    trapped_unit_ids =
-      PlayerActions.pending_player_unit_ids(player_actions)
+    unit_actions =
+      player_actions
+      |> PlayerActions.pending_player_unit_ids
       |> Stream.filter(trapped_unit_id?)
-    player_actions = Enum.reduce(trapped_unit_ids, player_actions, fn unit_id, player_actions ->
-      PlayerActions.exit_or_run_aground(player_actions, unit_id)
-    end)
-    %{player_turn | player_actions: player_actions}
+      |> Enum.map(&UnitAction.exit_or_run_aground/1)
+    Map.update!(player_turn, :player_actions, &PlayerActions.put(&1, unit_actions))
+      |> IOP.inspect("player turn")
   end
 
   defp determine_show_end_turn_btn(%__MODULE__{} = player_turn) do

@@ -10,13 +10,6 @@ defmodule ArtificialIntelligence do
   # *** *******************************
   # *** MANEUVER EXECUTION
 
-  # TODO none of these funcs are currently being used
-  def calc_commands(%PlayerActions{player_active_unit_ids: unit_ids} = player_actions, units, grid, islands) do
-    player_units = ById.get!(units, unit_ids)
-    commands = Enum.map(player_units, &get_command(&1, grid, islands))
-    PlayerActions.put_commands(player_actions, commands)
-  end
-
   defp get_command(%Unit{id: unit_id} = unit, grid, islands) do
     rand_cmd_square =
       unit

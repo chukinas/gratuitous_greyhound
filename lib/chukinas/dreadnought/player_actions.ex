@@ -42,49 +42,36 @@ defmodule PlayerActions do
     player_actions.player_active_unit_ids
     |> Stream.filter(& &1 not in my_completed_unit_ids(player_actions))
   end
-
+  def turn_complete?(player_actions) do
+    Enum.empty?(player_actions.active_unit_ids)
+  end
 
   # *** *******************************
   # *** SETTERS
 
-  # TODO delete
-  def put_commands(%__MODULE__{} = player_actions, commands) do
-    %{player_actions | commands: commands ++ player_actions.commands}
-    |> calc_active_units
+  def put(%__MODULE__{} = player_actions, list) when is_list(list) do
+    Enum.reduce(list, player_actions, fn item, player_actions ->
+      player_actions |> put(item)
+    end)
   end
-
-  # TODO rename put
-  defp put_command(player_actions, command) do
+  def put(%__MODULE__{} = player_actions, %UnitAction{} = command) do
     player_actions
     |> Map.update!(:commands, & [command | &1])
     |> calc_active_units
   end
 
   # *** *******************************
-  # *** COMMANDS
+  # *** PLAYER-ISSUED COMMANDS
 
-  # TODO delete
   def maneuver(player_actions, unit_id, x, y) do
     command = UnitAction.move_to(unit_id, Position.new(x, y))
-    put_command(player_actions, command)
-  end
-
-  # TODO delete
-  def exit_or_run_aground(player_actions, unit_id) do
-    command = UnitAction.exit_or_run_aground(unit_id)
-    put_command(player_actions, command)
-  end
-
-  # *** *******************************
-  # *** BOOLEAN
-
-  def turn_complete?(player_actions) do
-    Enum.empty?(player_actions.active_unit_ids)
+    put(player_actions, command)
   end
 
   # *** *******************************
   # *** PRIVATE
 
+  # TODO private?
   def calc_active_units(player_actions) do
     %{player_actions | active_unit_ids: Enum.take(pending_player_unit_ids(player_actions), 1)}
   end
