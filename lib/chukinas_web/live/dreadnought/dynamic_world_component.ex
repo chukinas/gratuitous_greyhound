@@ -20,7 +20,6 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
     socket =
       socket
       |> assign(assigns)
-    #maybe_end_turn(assigns.player_actions)
     {:ok, socket}
   end
 
@@ -50,10 +49,14 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
     {:noreply, socket}
   end
 
+  @impl true
+  def handle_event("end_turn", _, socket) do
+    maybe_end_turn(socket.assigns.player_actions)
+    {:noreply, socket}
+  end
+
   defp maybe_end_turn(%PlayerActions{} = player_actions) do
-    IO.puts "maybe end turn"
     if PlayerActions.turn_complete?(player_actions) do
-      IO.puts "yes, end turn"
       send self(), {:player_turn_complete, player_actions}
     end
     player_actions
