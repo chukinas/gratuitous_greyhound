@@ -54,7 +54,11 @@ defmodule PlayerTurn do
       player_type: player_type
     }
     |> calc_cmd_squares(islands)
-    |> resolve_exiting_units
+    # TODO make us of this terminology elsewhere
+    # 'trapped' means the unit would normally be allowed to receive a move-to action,
+    # but in this case it's jammed up against the side of the board or an island and will
+    # leave the game next turn
+    |> maneuver_trapped_units
     |> if_ai_calc_commands
     |> determine_show_end_turn_btn
   end
@@ -100,24 +104,21 @@ defmodule PlayerTurn do
     %__MODULE__{token | cmd_squares: squares}
   end
 
-  defp resolve_exiting_units(%__MODULE__{
+  defp maneuver_trapped_units(%__MODULE__{
     cmd_squares: cmd_squares,
     units: units,
     player_id: player_id,
     player_actions: player_actions
   } = player_turn) do
     unit_ids_that_have_cmd_squares = MapSet.new(cmd_squares, & &1.unit_id)
-    IOP.inspect unit_ids_that_have_cmd_squares, "unit ids w sq"
-    unit_has_no_cmd_squares? = fn id ->
-      IOP.inspect id
-      not MapSet.member?(unit_ids_that_have_cmd_squares, id)
+    trapped_unit_id? = fn id when is_integer(id) ->
+      !MapSet.member?(unit_ids_that_have_cmd_squares, id)
     end
-    exiting_units =
-      units
-      |> Unit.Enum.active_player_unit_ids(player_id)
-      |> Stream.filter(unit_has_no_cmd_squares?)
-    player_actions = Enum.reduce(exiting_units, player_actions, fn unit, player_actions ->
-      PlayerActions.exit_or_run_aground(player_actions, unit.id)
+    trapped_unit_ids =
+      PlayerActions.pending_player_unit_ids(player_actions)
+      |> Stream.filter(trapped_unit_id?)
+    player_actions = Enum.reduce(trapped_unit_ids, player_actions, fn unit_id, player_actions ->
+      PlayerActions.exit_or_run_aground(player_actions, unit_id)
     end)
     %{player_turn | player_actions: player_actions}
   end
