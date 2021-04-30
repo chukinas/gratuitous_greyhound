@@ -53,10 +53,24 @@ defmodule Unit do
   # *** *******************************
   # *** SETTERS
 
+  # TODO delete
   def put_path(%__MODULE__{} = unit, geo_path) do
     %{unit |
       pose: Path.get_end_pose(geo_path),
       compound_path: PathPartial.new_list(geo_path)
+    }
+  end
+
+  # TODO rename put_maneuver
+  def put_compound_path(unit, compound_path) when is_list(compound_path) do
+    pose =
+      compound_path
+      |> Enum.max(PathPartial)
+      |> PathPartial.end_pose
+    %__MODULE__{unit |
+      pose: pose,
+      # TODO rename maneuver
+      compound_path: compound_path
     }
   end
 
@@ -68,11 +82,11 @@ defmodule Unit do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl Inspect do
-    import Inspect.Algebra
-    def inspect(unit, opts) do
-      unit_map = unit |> Map.take([:id, :pose, :maneuver_svg_string, :player_id])
-      concat ["#Unit<", to_doc(unit_map, opts), ">"]
-    end
-  end
+  #defimpl Inspect do
+  #  import Inspect.Algebra
+  #  def inspect(unit, opts) do
+  #    unit_map = unit |> Map.take([:id, :pose, :maneuver_svg_string, :player_id])
+  #    concat ["#Unit<", to_doc(unit_map, opts), ">"]
+  #  end
+  #end
 end

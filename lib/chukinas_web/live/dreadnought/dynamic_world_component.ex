@@ -20,7 +20,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
     socket =
       socket
       |> assign(assigns)
-    maybe_end_turn(assigns.player_actions)
+    #maybe_end_turn(assigns.player_actions)
     {:ok, socket}
   end
 
