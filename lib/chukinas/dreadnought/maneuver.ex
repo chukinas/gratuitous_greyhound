@@ -21,7 +21,7 @@ defmodule Maneuver do
       %Position{} = pos -> move_to(unit, pos)
       :exit_or_run_aground ->
         unit
-        |> repeat_last_maneuver_twice
+        |> put_trapped_maneuver
         |> Unit.put_final_turn(turn_number + 1)
     end
   end
@@ -34,8 +34,7 @@ defmodule Maneuver do
   # *** *******************************
   # *** PRIVATE
 
-  # TODO rename to be explicitly a trapped maneuver
-  defp repeat_last_maneuver_twice(%Unit{
+  defp put_trapped_maneuver(%Unit{
     compound_path: [path_partial],
     pose: pose1
   } = unit) do
@@ -43,13 +42,8 @@ defmodule Maneuver do
     geo_path1 =
       last_round_path
       |> Path.put_pose(pose1)
-    pose2 = Path.get_end_pose(geo_path1)
-    geo_path2 =
-      last_round_path
-      |> Path.put_pose(pose2)
     manuever = [
-      ManeuverPartial.new(geo_path1),
-      ManeuverPartial.new(geo_path2, fractional_start_time: 1, fadeout: true)
+      ManeuverPartial.new(geo_path1, fadeout: true),
     ]
     unit |> Unit.put_compound_path(manuever)
   end
