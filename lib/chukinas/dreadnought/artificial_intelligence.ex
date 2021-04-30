@@ -1,4 +1,5 @@
 alias Chukinas.Dreadnought.{ArtificialIntelligence, Unit, UnitAction, PlayerActions, ById, ManeuverPlanning}
+alias Chukinas.Geometry.GridSquare
 
 defmodule ArtificialIntelligence do
   @moduledoc """
@@ -17,23 +18,11 @@ defmodule ArtificialIntelligence do
   defp get_command(%Unit{id: unit_id} = unit, grid, islands) do
     rand_cmd_square =
       unit
-      |> ManeuverPlanning.get_stream(grid, islands, 1)
-      |> print_count
+      |> ManeuverPlanning.get_cmd_squares(grid, islands, 2)
       |> Enum.take(1)
     case rand_cmd_square do
       [] -> UnitAction.exit_or_run_aground(unit_id)
-      [%ManeuverPlanning{} = pot_path] -> UnitAction.move_to(unit_id, ManeuverPlanning.position(pot_path))
+      [%GridSquare{} = square] -> UnitAction.move_to(unit_id, GridSquare.position(square))
     end
-  end
-
-  #defp get_straightest_cmd(potential_paths, current_pose) do
-  #  potential_paths
-  #  |> Stream.map(&ManeuverPlanning.position/1)
-  #  |> Stream.dedup
-  #end
-
-  defp print_count(paths) do
-    IOP.inspect Enum.count(paths), "path count"
-    paths
   end
 end

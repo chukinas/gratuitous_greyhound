@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{ManeuverPlanning, Unit}
-alias Chukinas.Geometry.{GridSquare, Grid, Collide, Path}
+alias Chukinas.Geometry.{GridSquare, Grid, Collide, Path, Straight, Turn, Position, Polygon}
 
 defmodule ManeuverPlanning do
   @moduledoc """
@@ -7,49 +7,27 @@ defmodule ManeuverPlanning do
   """
 
   # *** *******************************
-  # *** TYPES
-
-  use TypedStruct
-
-  typedstruct enforce: true do
-    field :original_square, GridSquare.t()
-    field :current_square, GridSquare.t()
-    field :current_unit, Unit.t()
-    field :current_depth, integer()
-    field :target_depth, integer()
-    field :get_squares, (Unit.t() -> [GridSquare.t()])
-  end
-
-  def position(%__MODULE__{original_square: square}), do: square.center
-
-  # *** *******************************
   # *** API
 
-  def get_cmd_squares(%{pose: pose} = unit, grid, islands) do
-    maneuver_polygon = Unit.get_maneuver_polygon(unit)
+  def get_cmd_squares(unit, grid, islands, foresight \\ 1)
+  def get_cmd_squares(%{pose: pose} = unit, grid, islands, 1) do
+    maneuver_polygon = get_maneuver_polygon(unit)
     grid
     |> Grid.squares(include: maneuver_polygon, exclude: islands)
     |> Stream.map(&GridSquare.calc_path(&1, pose))
     |> Stream.filter(&Collide.avoids?(&1.path, islands))
     |> Stream.map(&%GridSquare{&1 | unit_id: unit.id})
   end
-
-  def get_stream(unit, grid, islands, target_depth) do
+  def get_cmd_squares(unit, grid, islands, target_depth) do
+    alias ManeuverPlanning.Token
     get_squares = fn unit -> get_cmd_squares(unit, grid, islands) |> Enum.shuffle end
     original_squares = get_squares.(unit)
     initial_tokens = Stream.map(original_squares, fn square ->
-      %__MODULE__{
-        original_square: square,
-        current_square: square,
-        current_unit: move_to(unit, square.center),
-        current_depth: 1,
-        target_depth: target_depth,
-        get_squares: get_squares
-      }
+      Token.new(unit, square, get_squares, target_depth, &move_to/2)
     end)
-    Stream.flat_map(initial_tokens, fn token ->
-      expand_token(token)
-    end)
+    initial_tokens
+    |> Stream.flat_map(&Token.expand/1)
+    |> Stream.map(&Token.square/1)
   end
 
   def move_to(unit, pos) do
@@ -57,35 +35,34 @@ defmodule ManeuverPlanning do
     Unit.put_path(unit, path)
   end
 
-  # Return list of tokens
-  defp expand_token(%{
-    target_depth: target,
-    current_depth: current
-  } = token) when target == current do
-    [token]
-  end
-  defp expand_token(%__MODULE__{
-    current_unit: unit,
-    current_depth: current_depth,
-    get_squares: get_squares
-  } = token) do
-    get_squares.(unit) |> Stream.map(fn square ->
-      %{token |
-        current_square: square,
-        current_unit: move_to(unit, square.center),
-        current_depth: 1 + current_depth,
-      }
-    end)
+  # *** *******************************
+  # *** PRIVATE
+
+  defp get_maneuver_polygon(%Unit{pose: pose}, trim_angle \\ 0) do
+    max_distance = 400
+    min_distance = 200
+    angle = 45
+    [
+      Straight.new(pose, min_distance),
+      Turn.new(pose, min_distance, trim_angle - angle),
+      Turn.new(pose, max_distance, trim_angle - angle),
+      Straight.new(pose, max_distance),
+      Turn.new(pose, max_distance, trim_angle + angle),
+      Turn.new(pose, min_distance, trim_angle + angle),
+    ]
+    |> Stream.map(&Path.get_end_pose/1)
+    |> Enum.map(&Position.to_tuple/1)
+    |> Polygon.new
   end
 
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl Inspect do
-    import Inspect.Algebra
-    def inspect(path, opts) do
-      unit_map = path |> Map.take([:id, :pose, :maneuver_svg_string, :player_id])
-      concat ["#PotPath<", to_doc(unit_map, opts), ">"]
-    end
-  end
+  #defimpl Inspect do
+  #  import Inspect.Algebra
+  #  def inspect(path, opts) do
+  #    unit_map = path |> Map.take([:id, :pose, :maneuver_svg_string, :player_id])
+  #    concat ["#PotPath<", to_doc(unit_map, opts), ">"]
+  #  end
+  #end
 end

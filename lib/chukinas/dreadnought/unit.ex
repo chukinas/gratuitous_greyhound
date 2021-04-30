@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret, PathPartial}
-alias Chukinas.Geometry.{Pose, Path, Straight, Turn, Polygon, Position}
+alias Chukinas.Geometry.{Pose, Path}
 
 defmodule Unit do
   @moduledoc """
@@ -64,27 +64,6 @@ defmodule Unit do
   # *** GETTERS
 
   def belongs_to?(unit, player_id), do: unit.player_id == player_id
-
-  # *** *******************************
-  # *** MANEUVER
-
-  # TODO move to ManeuverPlanning module (currently named ManeuverPlanning)
-  def get_maneuver_polygon(%__MODULE__{pose: pose}, trim_angle \\ 0) do
-    max_distance = 400
-    min_distance = 200
-    angle = 45
-    [
-      Straight.new(pose, min_distance),
-      Turn.new(pose, min_distance, trim_angle - angle),
-      Turn.new(pose, max_distance, trim_angle - angle),
-      Straight.new(pose, max_distance),
-      Turn.new(pose, max_distance, trim_angle + angle),
-      Turn.new(pose, min_distance, trim_angle + angle),
-    ]
-    |> Stream.map(&Path.get_end_pose/1)
-    |> Enum.map(&Position.to_tuple/1)
-    |> Polygon.new
-  end
 
   # *** *******************************
   # *** IMPLEMENTATIONS
