@@ -34,6 +34,7 @@ defmodule Maneuver do
   # *** *******************************
   # *** PRIVATE
 
+  # TODO rename to be explicitly a trapped maneuver
   defp repeat_last_maneuver_twice(%Unit{
     compound_path: [path_partial],
     pose: pose1
@@ -48,7 +49,7 @@ defmodule Maneuver do
       |> Path.put_pose(pose2)
     manuever = [
       ManeuverPartial.new(geo_path1),
-      ManeuverPartial.new(geo_path2, fractional_start_time: 1)
+      ManeuverPartial.new(geo_path2, fractional_start_time: 1, fadeout: true)
     ]
     unit |> Unit.put_compound_path(manuever)
   end

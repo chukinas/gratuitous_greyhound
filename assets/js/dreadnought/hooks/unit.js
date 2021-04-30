@@ -27,10 +27,16 @@ const has_already_maneuvered = (function() {
 
 function maneuver_unit(maneuveringEl) {
   const path = document.getElementById(`${maneuveringEl.id}-lastPath`)
-  partialManeuver(maneuveringEl, 0, 1, path)
+  partialManeuver(maneuveringEl, path)
 }
 
-function partialManeuver(maneuveringEl, fractionalStartTime, fractionalDuration, pathEl) {
+function partialManeuver(maneuveringEl, pathEl, opts = {}) {
+  opts = {
+    fractionalStartTime: 0,
+    fractionalDuration: 1,
+    fadeout: false,
+    ...opts
+  }
   gsap.to(maneuveringEl, {
     motionPath: {
       autoRotate: true,
@@ -38,10 +44,20 @@ function partialManeuver(maneuveringEl, fractionalStartTime, fractionalDuration,
       align: pathEl,
       path: pathEl,
     },
+    opacity: opts.fadeout ? 0 : 1,
     ease: "none",
-    delay: fractionalStartTime * ANIMATIONDURATION,
-    duration: fractionalDuration * ANIMATIONDURATION,
+    delay: opts.fractionalStartTime * ANIMATIONDURATION,
+    duration: opts.fractionalDuration * ANIMATIONDURATION,
   })
+}
+
+function parse_dom_string(string) {
+  switch(string) {
+    case "true":
+      return true;
+    case "false":
+      return false;
+  }
 }
 
 // --------------------------------------------------------
@@ -133,10 +149,14 @@ const PartialPath = {
   mounted() {
     const maneuveringEl = document.getElementById(this.el.dataset.maneuveringElId)
     const pathEl = this.el
-    const fractionalStartTime = this.el.dataset.start
-    const fractionalDuration = this.el.dataset.duration
+    const opts = {
+      fractionalStartTime: this.el.dataset.start,
+      fractionalDuration: this.el.dataset.duration,
+      fadeout: parse_dom_string(this.el.dataset.fadeout)
+    }
     console.log(this.el.dataset)
-    partialManeuver(maneuveringEl, fractionalStartTime, fractionalDuration, pathEl)
+    console.log(opts)
+    partialManeuver(maneuveringEl, pathEl, opts)
   },
 }
 
