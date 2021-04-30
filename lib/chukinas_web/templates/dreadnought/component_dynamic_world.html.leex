@@ -54,6 +54,30 @@
 </div>
 
 
+<%# Test div %>
+<div
+  class="absolute bg-green-400 bg-opacity-40"
+  style="
+    left: <%= @margin.width %>px;
+    top: <%= @margin.height %>px;
+    width:<%= @grid.width %>px;
+    height: <%= @grid.height %>px
+  "
+>
+<div class="relative border-4 border-white w-full h-full"
+  >
+  <div class="absolute"
+  style="
+    left: -100px;
+    top: -100px;
+  "
+    >
+      hi
+    </div>
+  </div>
+</div>
+
+
 <%# Unit Maneuvers %>
 <svg
   id="svg_paths"
