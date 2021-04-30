@@ -1,4 +1,4 @@
-defmodule Chukinas.Dreadnought.ById do
+defmodule Chukinas.Util.ById do
 
   # *** *******************************
   # *** API

@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret, ManeuverPartial}
+alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret, ManeuverPartial, Maneuver}
 alias Chukinas.Geometry.{Pose, Path}
 
 defmodule Unit do
@@ -19,7 +19,7 @@ defmodule Unit do
     field :turrets, [Turret.t()]
     # Varies from game turn to game turn
     field :pose, Pose.t()
-    field :compound_path, [ManeuverPartial.t()], default: []
+    field :compound_path, Maneuver.t(), default: []
   end
 
   # *** *******************************

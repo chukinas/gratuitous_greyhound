@@ -1,5 +1,6 @@
-alias Chukinas.Dreadnought.{ArtificialIntelligence, Unit, UnitAction, PlayerActions, ById, ManeuverPlanning}
+alias Chukinas.Dreadnought.{ArtificialIntelligence, Unit, UnitAction, PlayerActions, ManeuverPlanning}
 alias Chukinas.Geometry.GridSquare
+alias Chukinas.Util.ById
 
 defmodule ArtificialIntelligence do
   @moduledoc """

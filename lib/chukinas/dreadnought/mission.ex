@@ -1,6 +1,6 @@
-# TODO ById should be a utility
-alias Chukinas.Dreadnought.{Unit, Mission, ById, Island, PlayerActions, Player, PlayerTurn, ArtificialIntelligence, UnitAction, ManeuverPlanning}
+alias Chukinas.Dreadnought.{Unit, Mission, Island, PlayerActions, Player, PlayerTurn, ArtificialIntelligence, UnitAction, Maneuver}
 alias Chukinas.Geometry.{Grid, Size}
+alias Chukinas.Util.ById
 
 defmodule Mission do
 
@@ -135,7 +135,7 @@ defmodule Mission do
 
   defp put_tentative_maneuvers(mission) do
     Enum.reduce(maneuver_actions(mission), mission, fn maneuver, mission ->
-      %Unit{} = unit = ManeuverPlanning.get_unit_with_tentative_maneuver(mission.units, maneuver)
+      %Unit{} = unit = Maneuver.get_unit_with_tentative_maneuver(mission.units, maneuver)
       mission |> put(unit)
     end)
   end
