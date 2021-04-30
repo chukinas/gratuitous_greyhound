@@ -1,0 +1,21 @@
+<div
+  class="absolute  text-4xl text-white"
+  style="
+    left: <%= @unit.selection_box_position.x - 100 %>px;
+    top: <%= @unit.selection_box_position.y - 100 %>px; 
+  "
+>
+  <div
+    id="unit-<%= @unit.id %>-select"
+    class="bg-yellow-400 animate-pulse border-4 border-white pointer-events-auto cursor-pointer"
+    style="
+      width: 200px;
+      height: 200px;
+    "
+    phx-click="select_gunnery_target"
+    phx-value-unit_id="<%= @unit.id %>"
+    phx-target="<%= @myself %>"
+  >
+  </div>
+  <%= @unit.name %>
+</div>

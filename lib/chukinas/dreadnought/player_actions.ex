@@ -16,6 +16,7 @@ defmodule PlayerActions do
     field :commands, [UnitAction.t()], default: []
     # For internal reference only (probably)
     field :player_active_unit_ids, [integer()], enforce: true
+    field :gunnery_targets, [integer()], default: [2, 3]
   end
 
   # *** *******************************

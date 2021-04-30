@@ -68,12 +68,16 @@
 
 <%# Units and their selectin boxes %>
 <%= for unit <- @units do %>
-<%= if unit.render? do %>
-<%= ChukinasWeb.DreadnoughtView.render "unit3.html",
-  socket: @socket,
-  myself: @myself,
-  unit: unit %>
-<% end %>
+  <%= if unit.id in @player_actions.gunnery_targets do %>
+    <%= ChukinasWeb.DreadnoughtView.render "unit_selection_box.html",
+      myself: @myself,
+      unit: unit %>
+  <% end %>
+  <%= if unit.render? do %>
+    <%= ChukinasWeb.DreadnoughtView.render "unit3.html",
+      socket: @socket,
+      unit: unit %>
+  <% end %>
 <% end %>
 
 
