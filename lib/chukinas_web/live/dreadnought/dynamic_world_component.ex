@@ -14,9 +14,6 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
   @impl true
   # the assigns are a map of Mission.Player
   def update(assigns, socket) do
-    #IOP.inspect(assigns, "update dyn comp")
-    #inspect_assigns assigns, "update dyn comp!"
-    IOP.inspect(assigns.turn_number, "new turn")
     socket =
       socket
       |> assign(assigns)
@@ -25,7 +22,6 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
 
   @impl true
   def mount(socket) do
-    #inspect_assigns socket.assigns, "mount dyn comp!"
     {:ok, socket}
   end
 

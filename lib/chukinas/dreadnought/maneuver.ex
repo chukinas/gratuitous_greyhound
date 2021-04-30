@@ -19,10 +19,11 @@ defmodule Maneuver do
     unit = units |> ById.get!(maneuver_action.unit_id)
     case UnitAction.value(maneuver_action) do
       %Position{} = pos -> move_to(unit, pos)
+        # TODO rename :trapped
       :exit_or_run_aground ->
         unit
         |> put_trapped_maneuver
-        |> Unit.put_final_turn(turn_number + 1)
+        |> Unit.put_final_turn(turn_number)
     end
   end
 

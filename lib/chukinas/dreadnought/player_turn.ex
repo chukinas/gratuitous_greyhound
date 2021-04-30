@@ -120,7 +120,6 @@ defmodule PlayerTurn do
       |> Stream.filter(trapped_unit_id?)
       |> Enum.map(&UnitAction.exit_or_run_aground/1)
     Map.update!(player_turn, :player_actions, &PlayerActions.put(&1, unit_actions))
-      |> IOP.inspect("player turn")
   end
 
   defp determine_show_end_turn_btn(%__MODULE__{} = player_turn) do

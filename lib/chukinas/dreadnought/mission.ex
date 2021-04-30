@@ -144,9 +144,13 @@ defmodule Mission do
   end
 
   defp calc_unit_active(mission) do
+    IOP.inspect mission.turn_number, "turn num"
     units =
       mission.units
       |> Enum.map(&Unit.calc_active(&1, mission.turn_number))
+    units
+    |> Enum.map(&Map.take(&1, [:id, :active?, :final_turn, :render?]))
+    |> IOP.inspect("units after active calc")
     %__MODULE__{mission | units: units}
   end
 
