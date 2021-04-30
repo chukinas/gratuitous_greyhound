@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret, ManeuverPartial, Maneuver}
-alias Chukinas.Geometry.{Pose, Path}
+alias Chukinas.Geometry.{Pose, Path, Position}
 
 defmodule Unit do
   @moduledoc """
@@ -13,11 +13,13 @@ defmodule Unit do
 
   typedstruct enforce: true do
     field :id, integer()
+    field :name, String.t()
     field :player_id, integer(), default: 1
     field :sprite, Sprite.t()
     field :turrets, [Turret.t()]
     # Varies from game turn to game turn
     field :pose, Pose.t()
+    field :selection_box_position, Position.t(), enforce: false
     field :compound_path, Maneuver.t(), default: []
     # rename :turn_destroyed
     field :final_turn, integer(), enforce: false
@@ -52,6 +54,7 @@ defmodule Unit do
       |> Keyword.put_new(:turrets, turrets)
       |> Keyword.put(:id, id)
     struct!(__MODULE__, opts)
+    |> calc_selection_box_position
   end
 
   # *** *******************************
@@ -63,6 +66,7 @@ defmodule Unit do
       pose: Path.get_end_pose(geo_path),
       compound_path: [ManeuverPartial.new(geo_path)]
     }
+    |> calc_selection_box_position
   end
 
   # TODO rename put_maneuver
@@ -76,10 +80,20 @@ defmodule Unit do
       # TODO rename maneuver
       compound_path: compound_path
     }
+    |> calc_selection_box_position
   end
 
   def put_final_turn(unit, final_turn) do
     %__MODULE__{unit | final_turn: final_turn}
+  end
+
+  # TODO This 50 is just a guess. Need actual logic here.
+  def calc_selection_box_position(unit) do
+    position =
+      unit.pose
+      |> Pose.straight(-20)
+      |> Position.new
+    %__MODULE__{unit | selection_box_position: position}
   end
 
   def calc_active(unit, turn_number) do
