@@ -3,8 +3,8 @@
   id="unit-<%= @unit.id %>"
   class="absolute"
   style="
-    left: <%= @margin.width + @unit.pose.x - @unit.sprite.origin.x %>px;
-    top: <%= @margin.height + @unit.pose.y - @unit.sprite.origin.y %>px; 
+    left: <%= @unit.pose.x - @unit.sprite.origin.x %>px;
+    top: <%= @unit.pose.y - @unit.sprite.origin.y %>px; 
     transform: rotate(<%= @unit.pose.angle %>deg);
   "
 >

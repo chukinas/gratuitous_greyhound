@@ -56,7 +56,7 @@
 
 <%# Test div %>
 <div
-  class="absolute bg-green-400 bg-opacity-40"
+  class="absolute"
   style="
     left: <%= @margin.width %>px;
     top: <%= @margin.height %>px;
@@ -64,75 +64,55 @@
     height: <%= @grid.height %>px
   "
 >
-<div class="relative border-4 border-white w-full h-full"
-  >
-  <div class="absolute"
-  style="
-    left: -100px;
-    top: -100px;
-  "
+  <div class="relative border-4 border-white w-full h-full">
+
+
+    <%# Unit Maneuvers %>
+    <svg
+      id="svg_paths"
+      class="absolute opacity-20 inset-0"
+      viewBox="0 0 <%= @grid.width %> <%= @grid.height %> "
     >
-      hi
+      <%= for unit <- @units do %>
+      <%= if unit.render? do %>
+      <%= for maneuver_path <- unit.compound_path do %>
+      <path
+        id="unit-<%= unit.id %>-<%= @turn_number %>-1"
+        d="<%= maneuver_path.svg_path %>"
+        data-maneuvering-el-id="unit-<%= unit.id %>"
+        data-start="<%= maneuver_path.fractional_start_time %>"
+        data-duration="<%= maneuver_path.fractional_duration %>"
+        data-fadeout="<%= maneuver_path.fadeout %>"
+        style="stroke-linejoin:round;stroke-width:20;stroke:#fff;fill:none"
+        phx-hook="PartialPath"
+      />
+      <% end %>
+      <% end %>
+      <% end %>
+    </svg>
+
+
+    <%# Units %>
+    <%= for unit <- @units do %>
+    <%= if unit.render? do %>
+    <%= ChukinasWeb.DreadnoughtView.render "unit3.html",
+      socket: @socket,
+      unit: unit %>
+    <% end %>
+    <% end %>
+
+
+    <%# End Turn Button %>
+    <div class="absolute pointer-events-auto text-9xl text-white font-bold top-0 left-0" >
+      <%= @turn_number %>
+      <%= if @show_end_turn_btn? do %>
+      <%= ChukinasWeb.DreadnoughtView.button(
+          text: "End Turn", 
+          phx_target: @myself, 
+          phx_click: "end_turn") %>
+      <% end %>
     </div>
+
+
   </div>
-</div>
-
-
-<%# Unit Maneuvers %>
-<svg
-  id="svg_paths"
-  class="absolute opacity-20"
-  viewBox="0 0 <%= @grid.width %> <%= @grid.height %> "
-  style="
-    left: <%= @margin.width %>px;
-    top: <%= @margin.height %>px;
-    width:<%= @grid.width %>px;
-    height: <%= @grid.height %>px
-  "
->
-  <%= for unit <- @units do %>
-  <%= if unit.render? do %>
-  <%= for maneuver_path <- unit.compound_path do %>
-  <path
-    id="unit-<%= unit.id %>-<%= @turn_number %>-1"
-    d="<%= maneuver_path.svg_path %>"
-    data-maneuvering-el-id="unit-<%= unit.id %>"
-    data-start="<%= maneuver_path.fractional_start_time %>"
-    data-duration="<%= maneuver_path.fractional_duration %>"
-    data-fadeout="<%= maneuver_path.fadeout %>"
-    style="stroke-linejoin:round;stroke-width:20;stroke:#fff;fill:none"
-    phx-hook="PartialPath"
-  />
-  <% end %>
-  <% end %>
-  <% end %>
-</svg>
-
-
-<%# Units %>
-<%= for unit <- @units do %>
-<%= if unit.render? do %>
-<%= ChukinasWeb.DreadnoughtView.render "unit3.html",
-  socket: @socket,
-  unit: unit,
-  margin: @margin %>
-<% end %>
-<% end %>
-
-
-<%# End Turn Button %>
-<div 
-    class="fixed top-4 right-4 pointer-events-auto text-9xl text-white font-bold"
-  style="
-    left: <%= @margin.width %>px;
-    top: <%= @margin.height %>px;
-  "
-  >
-  <%= @turn_number %>
-  <%= if @show_end_turn_btn? do %>
-  <%= ChukinasWeb.DreadnoughtView.button(
-      text: "End Turn", 
-      phx_target: @myself, 
-      phx_click: "end_turn") %>
-  <% end %>
 </div>
