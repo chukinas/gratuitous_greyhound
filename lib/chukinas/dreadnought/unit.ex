@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret, PathPartial}
+alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret, ManeuverPartial}
 alias Chukinas.Geometry.{Pose, Path}
 
 defmodule Unit do
@@ -19,7 +19,7 @@ defmodule Unit do
     field :turrets, [Turret.t()]
     # Varies from game turn to game turn
     field :pose, Pose.t()
-    field :compound_path, [PathPartial.t()], default: []
+    field :compound_path, [ManeuverPartial.t()], default: []
   end
 
   # *** *******************************
@@ -57,7 +57,7 @@ defmodule Unit do
   def put_path(%__MODULE__{} = unit, geo_path) do
     %{unit |
       pose: Path.get_end_pose(geo_path),
-      compound_path: PathPartial.new_list(geo_path)
+      compound_path: [ManeuverPartial.new(geo_path)]
     }
   end
 
@@ -65,8 +65,8 @@ defmodule Unit do
   def put_compound_path(unit, compound_path) when is_list(compound_path) do
     pose =
       compound_path
-      |> Enum.max(PathPartial)
-      |> PathPartial.end_pose
+      |> Enum.max(ManeuverPartial)
+      |> ManeuverPartial.end_pose
     %__MODULE__{unit |
       pose: pose,
       # TODO rename maneuver

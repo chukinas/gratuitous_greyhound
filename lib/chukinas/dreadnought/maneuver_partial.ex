@@ -1,12 +1,10 @@
-alias Chukinas.Dreadnought.{PathPartial}
+alias Chukinas.Dreadnought.{ManeuverPartial}
 alias Chukinas.Geometry.Path
 alias Chukinas.Svg
 
-# TODO rename ManeuverPartial
-# TODO from now on, draw a distinction b/w path (pure geometry) and maneuver (the course a unit cuts thru the sea)
-defmodule PathPartial do
+defmodule ManeuverPartial do
   @moduledoc """
-  Fully qualifies a portion of a unit's path
+  Fully qualifies a portion of a unit's maneuver
 
   A list of these (or even none or just one) is used by the frontend
   to render a series of motion animations.
@@ -24,6 +22,9 @@ defmodule PathPartial do
     field :fractional_duration, number()
   end
 
+  # *** *******************************
+  # *** NEW
+
   def new(geo_path, opts \\ []) do
     fields = Chukinas.Util.Opts.merge!(opts,
       fractional_start_time: 0,
@@ -36,9 +37,15 @@ defmodule PathPartial do
     struct!(__MODULE__, fields)
   end
 
+  # *** *******************************
+  # *** GETTERS
+
   def end_pose(%{geo_path: path}) do
     Path.get_end_pose(path)
   end
+
+  # *** *******************************
+  # *** STRUCT COMPARE
 
   def compare(%{fractional_start_time: a}, %{fractional_start_time: b}) do
     cond do
@@ -47,7 +54,4 @@ defmodule PathPartial do
       a == b -> :eq
     end
   end
-
-  # TODO delete or make part of Maneuver module
-  def new_list(geo_path), do: [new(geo_path)]
 end

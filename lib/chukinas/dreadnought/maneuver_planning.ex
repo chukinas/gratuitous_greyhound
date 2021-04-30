@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{ManeuverPlanning, Unit, UnitAction, ById, PathPartial}
+alias Chukinas.Dreadnought.{ManeuverPlanning, Unit, UnitAction, ById, ManeuverPartial}
 alias Chukinas.Geometry.{GridSquare, Grid, Collide, Path, Straight, Turn, Position, Polygon}
 
 defmodule ManeuverPlanning do
@@ -31,7 +31,6 @@ defmodule ManeuverPlanning do
   end
 
   # TODO move these to a new module Maneuver
-  # TODO rename PathPartial to ManeuverPartial
   # TODO Maneuver.t() :: [ManeuverPartial.t()]
   def move_to(unit, pos) do
     path = Path.get_connecting_path(unit.pose, pos)
@@ -42,7 +41,7 @@ defmodule ManeuverPlanning do
     compound_path: [path_partial],
     pose: pose1
   } = unit) do
-    %PathPartial{geo_path: last_round_path} = path_partial
+    %ManeuverPartial{geo_path: last_round_path} = path_partial
     geo_path1 =
       last_round_path
       |> Path.put_pose(pose1)
@@ -51,8 +50,8 @@ defmodule ManeuverPlanning do
       last_round_path
       |> Path.put_pose(pose2)
     manuever = [
-      PathPartial.new(geo_path1),
-      PathPartial.new(geo_path2, fractional_start_time: 1)
+      ManeuverPartial.new(geo_path1),
+      ManeuverPartial.new(geo_path2, fractional_start_time: 1)
     ]
     unit |> Unit.put_compound_path(manuever)
   end
