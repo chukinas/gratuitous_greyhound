@@ -28,14 +28,11 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
   @impl true
   def handle_event("select_gunnery_target", %{
     "unit_id" => unit_id,
-    "target_unit_id" => target_unit_id
   }, socket) do
-    [target_unit_id, unit_id] =
-      [target_unit_id, unit_id]
-      |> Precision.coerce_int
+    IO.puts unit_id
     player_actions =
       socket.assigns.player_actions
-      |> PlayerActions.select_gunnery_target(unit_id, target_unit_id)
+      |> PlayerActions.select_gunnery_target(unit_id, Precision.coerce_int(unit_id))
       |> maybe_end_turn
     socket =
       socket
