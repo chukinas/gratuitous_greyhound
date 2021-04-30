@@ -26,15 +26,32 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
   end
 
   @impl true
+  def handle_event("select_gunnery_target", %{
+    "unit_id" => unit_id,
+    "target_unit_id" => target_unit_id
+  }, socket) do
+    [target_unit_id, unit_id] =
+      [target_unit_id, unit_id]
+      |> Precision.coerce_int
+    player_actions =
+      socket.assigns.player_actions
+      |> PlayerActions.select_gunnery_target(unit_id, target_unit_id)
+      |> maybe_end_turn
+    socket =
+      socket
+      |> assign(player_actions: player_actions)
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_event("select_square", %{
+    "unit_id" => unit_id,
     "x" =>  x,
-    "y" => y,
-    "unit_id" => unit_id
+    "y" => y
   }, socket) do
     [x, y, unit_id] =
       [x, y, unit_id]
-      # TODO coerce int should accept list as well
-      |> Enum.map(&Precision.coerce_int/1)
+      |> Precision.coerce_int
     player_actions =
       socket.assigns.player_actions
       |> PlayerActions.maneuver(unit_id, x, y)

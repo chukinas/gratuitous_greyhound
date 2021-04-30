@@ -68,6 +68,11 @@ defmodule PlayerActions do
     put(player_actions, command)
   end
 
+  def select_gunnery_target(player_actions, _unit_id, _target_unit_id) do
+    # TODO implement
+    player_actions
+  end
+
   # *** *******************************
   # *** PRIVATE
 

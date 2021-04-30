@@ -106,8 +106,6 @@ defmodule PlayerTurn do
 
   defp maneuver_trapped_units(%__MODULE__{
     cmd_squares: cmd_squares,
-    units: units,
-    player_id: player_id,
     player_actions: player_actions
   } = player_turn) do
     unit_ids_that_have_cmd_squares = MapSet.new(cmd_squares, & &1.unit_id)
