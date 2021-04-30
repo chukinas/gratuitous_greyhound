@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{PlayerTurn, Unit, PlayerActions, ManeuverPlanning}
+alias Chukinas.Dreadnought.{PlayerTurn, Unit, PlayerActions, ManeuverPlanning, UnitAction}
 alias Chukinas.Geometry.{Size, Grid, GridSquare}
 
 # TODO better name => Chukinas.Dreadnought.PlayerTurn ?
@@ -20,6 +20,9 @@ defmodule PlayerTurn do
     field :id, atom(), default: :dynamic_world
     # TODO needed?
     field :player_id, integer()
+    # TODO be more specific
+    field :player_type, any()
+    field :maneuver_foresight, integer(), default: 1
     field :margin, Size.t()
     field :grid, Grid.t()
     # These are handled locally by the dynamic component:
@@ -34,7 +37,7 @@ defmodule PlayerTurn do
   # *** *******************************
   # *** NEW
 
-  def new(player_id, %{
+  def new(player_id, player_type,  %{
     turn_number: turn_number,
     units: units,
     grid: grid,
@@ -47,14 +50,18 @@ defmodule PlayerTurn do
       player_actions: PlayerActions.new(units, player_id),
       margin: margin,
       grid: grid,
-      player_id: player_id
+      player_id: player_id,
+      player_type: player_type
     }
     |> calc_cmd_squares(islands)
     |> resolve_exiting_units
+    |> if_ai_calc_commands
     |> determine_show_end_turn_btn
   end
 
-  def map(player_id, mission), do: Map.from_struct(new(player_id, mission))
+  def map(player_id, player_type, mission) do
+    Map.from_struct(new(player_id, player_type, mission))
+  end
 
   # *** *******************************
   # *** API
@@ -62,10 +69,30 @@ defmodule PlayerTurn do
   # *** *******************************
   # *** PRIVATE
 
+  # TODO move the bulk of this out to the AI module
+  defp if_ai_calc_commands(token) do
+    if token.player_type == :ai do
+      pending_unit_ids =
+        token.player_actions
+        |> PlayerActions.pending_player_unit_ids
+      unit_maneuvers = Enum.map(pending_unit_ids, fn unit_id ->
+        position =
+          token.cmd_squares
+          |> Stream.filter(fn %GridSquare{unit_id: id} -> id == unit_id end)
+          |> Enum.random
+          |> GridSquare.position
+        UnitAction.move_to(unit_id, position)
+      end)
+      Map.update!(token, :player_actions, &PlayerActions.put_commands(&1, unit_maneuvers))
+    else
+      token
+    end
+  end
+
   defp calc_cmd_squares(token, islands) do
     squares = Enum.flat_map(token.units, fn unit ->
       if (unit.active?) and (unit.player_id == token.player_id) do
-        ManeuverPlanning.get_cmd_squares(unit, token.grid, islands)
+        ManeuverPlanning.get_cmd_squares(unit, token.grid, islands, token.maneuver_foresight)
       else
         []
       end

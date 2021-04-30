@@ -84,15 +84,12 @@ defmodule Mission do
   # *** API
 
   def to_playing_surface(mission), do: Mission.PlayingSurface.new(mission)
-  def to_player(mission), do: PlayerTurn.map(1, mission)
+  def to_player(mission), do: PlayerTurn.map(1, :human,  mission)
 
   def calc_ai_commands(mission) do
     Enum.reduce(ai_player_ids(mission), mission, fn player_id, mission ->
-      new_player_actions = PlayerActions.new(mission.units, player_id)
-      complete_player_actions =
-        new_player_actions
-        |> ArtificialIntelligence.calc_commands(mission.units, mission.grid, mission.islands)
-      mission |> put(complete_player_actions)
+      %PlayerTurn{player_actions: actions} = PlayerTurn.new(player_id, :ai, mission)
+      mission |> put(actions)
     end)
   end
 

@@ -9,13 +9,13 @@ defmodule PlayerActions do
 
   use TypedStruct
 
+  # TODO enforce: true
   typedstruct do
     field :player_id, integer(), enforce: true
     field :active_unit_ids, [integer()], default: []
     field :commands, [UnitAction.t()], default: []
     # For internal reference only (probably)
-    # TODO rename active_player_unit_ids and rework logic accordingly
-    field :my_unit_ids, [integer()], enforce: true
+    field :player_active_unit_ids, [integer()], enforce: true
   end
 
   # *** *******************************
@@ -25,7 +25,7 @@ defmodule PlayerActions do
   def new(units, player_id) do
     %__MODULE__{
       player_id: player_id,
-      my_unit_ids: Unit.Enum.active_player_unit_ids(units, player_id)
+      player_active_unit_ids: Unit.Enum.active_player_unit_ids(units, player_id)
     }
     |> calc_active_units
   end
@@ -38,6 +38,11 @@ defmodule PlayerActions do
   def actions_available?(actions) do
     !Enum.empty?(actions.active_unit_ids)
   end
+  def pending_player_unit_ids(player_actions) do
+    player_actions.player_active_unit_ids
+    |> Stream.filter(& &1 not in my_completed_unit_ids(player_actions))
+  end
+
 
   # *** *******************************
   # *** SETTERS
@@ -80,14 +85,8 @@ defmodule PlayerActions do
   # *** *******************************
   # *** PRIVATE
 
-  defp calc_active_units(player_actions) do
-    %{player_actions | active_unit_ids: Enum.take(my_pending_unit_ids(player_actions), 1)}
-  end
-
-  # TODO rename pending_player_unit_ids
-  defp my_pending_unit_ids(player_actions) do
-    player_actions.my_unit_ids
-    |> Stream.filter(& &1 not in my_completed_unit_ids(player_actions))
+  def calc_active_units(player_actions) do
+    %{player_actions | active_unit_ids: Enum.take(pending_player_unit_ids(player_actions), 1)}
   end
 
   # TODO rename completed_player_unit_ids

@@ -29,7 +29,7 @@ defmodule UnitAction do
     }
   end
 
-  def move_to(unit_id, position) do
+  def move_to(unit_id, %Position{} = position) do
     new(unit_id, :maneuver, position)
   end
   def exit_or_run_aground(unit_id) do
