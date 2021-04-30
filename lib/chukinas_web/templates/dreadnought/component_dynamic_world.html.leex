@@ -67,6 +67,7 @@
   "
 >
   <%= for unit <- @units do %>
+  <%= if unit.render? do %>
   <%= for maneuver_path <- unit.compound_path do %>
   <path
     id="unit-<%= unit.id %>-<%= @turn_number %>-1"
@@ -79,15 +80,18 @@
   />
   <% end %>
   <% end %>
+  <% end %>
 </svg>
 
 
 <%# Units %>
 <%= for unit <- @units do %>
+<%= if unit.render? do %>
 <%= ChukinasWeb.DreadnoughtView.render "unit3.html",
   socket: @socket,
   unit: unit,
   margin: @margin %>
+<% end %>
 <% end %>
 
 

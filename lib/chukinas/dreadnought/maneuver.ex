@@ -15,14 +15,14 @@ defmodule Maneuver do
   # *** *******************************
   # *** API
 
-  def get_unit_with_tentative_maneuver(units, maneuver_action) do
+  def get_unit_with_tentative_maneuver(units, maneuver_action, turn_number) do
     unit = units |> ById.get!(maneuver_action.unit_id)
     case UnitAction.value(maneuver_action) do
       %Position{} = pos -> move_to(unit, pos)
       :exit_or_run_aground ->
         unit
-        |> IOP.inspect
         |> repeat_last_maneuver_twice
+        |> Unit.put_final_turn(turn_number + 1)
     end
   end
 

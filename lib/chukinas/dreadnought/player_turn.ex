@@ -44,12 +44,12 @@ defmodule PlayerTurn do
     %__MODULE__{
       turn_number: turn_number,
       units: units,
-      cmd_squares: cmd_squares(units, player_id, grid, islands),
       player_actions: PlayerActions.new(units, player_id),
       margin: margin,
       grid: grid,
       player_id: player_id
     }
+    |> calc_cmd_squares(islands)
     |> resolve_exiting_units
     |> determine_show_end_turn_btn
   end
@@ -62,14 +62,15 @@ defmodule PlayerTurn do
   # *** *******************************
   # *** PRIVATE
 
-  defp cmd_squares(units, player_id, grid, islands) do
-    Enum.flat_map(units, fn unit ->
-      if unit.player_id == player_id do
-        ManeuverPlanning.get_cmd_squares(unit, grid, islands)
+  defp calc_cmd_squares(token, islands) do
+    squares = Enum.flat_map(token.units, fn unit ->
+      if (unit.active?) and (unit.player_id == token.player_id) do
+        ManeuverPlanning.get_cmd_squares(unit, token.grid, islands)
       else
         []
       end
     end)
+    %__MODULE__{token | cmd_squares: squares}
   end
 
   defp resolve_exiting_units(%__MODULE__{
@@ -79,12 +80,14 @@ defmodule PlayerTurn do
     player_actions: player_actions
   } = player_turn) do
     unit_ids_that_have_cmd_squares = MapSet.new(cmd_squares, & &1.unit_id)
-    unit_has_no_cmd_squares? = fn unit ->
-      not MapSet.member?(unit_ids_that_have_cmd_squares, unit.id)
+    IOP.inspect unit_ids_that_have_cmd_squares, "unit ids w sq"
+    unit_has_no_cmd_squares? = fn id ->
+      IOP.inspect id
+      not MapSet.member?(unit_ids_that_have_cmd_squares, id)
     end
     exiting_units =
       units
-      |> Stream.filter(&Unit.belongs_to?(&1, player_id))
+      |> Unit.Enum.active_player_unit_ids(player_id)
       |> Stream.filter(unit_has_no_cmd_squares?)
     player_actions = Enum.reduce(exiting_units, player_actions, fn unit, player_actions ->
       PlayerActions.exit_or_run_aground(player_actions, unit.id)

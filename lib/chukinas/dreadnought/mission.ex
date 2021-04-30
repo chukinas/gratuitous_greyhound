@@ -107,12 +107,14 @@ defmodule Mission do
   defp maybe_end_turn(mission) do
     if turn_complete?(mission) do
       mission
-      # Resolve current turn
+      |> increment_turn_number
+      # Part 1: Execute previous turn's planning
       |> put_tentative_maneuvers
       |> resolve_island_collisions
-      # New turn prep
+      |> calc_unit_render
+      # Part 2: Prepare for this turn's planning
+      |> calc_unit_active
       |> clear_player_actions
-      |> increment_turn_number
       |> calc_ai_commands
     else
       mission
@@ -135,12 +137,26 @@ defmodule Mission do
 
   defp put_tentative_maneuvers(mission) do
     Enum.reduce(maneuver_actions(mission), mission, fn maneuver, mission ->
-      %Unit{} = unit = Maneuver.get_unit_with_tentative_maneuver(mission.units, maneuver)
+      %Unit{} = unit = Maneuver.get_unit_with_tentative_maneuver(mission.units, maneuver, mission.turn_number)
       mission |> put(unit)
     end)
   end
 
   defp resolve_island_collisions(mission) do
     mission
+  end
+
+  defp calc_unit_active(mission) do
+    units =
+      mission.units
+      |> Enum.map(&Unit.calc_active(&1, mission.turn_number))
+    %__MODULE__{mission | units: units}
+  end
+
+  defp calc_unit_render(mission) do
+    units =
+      mission.units
+      |> Enum.map(&Unit.calc_render(&1, mission.turn_number))
+    %__MODULE__{mission | units: units}
   end
 end

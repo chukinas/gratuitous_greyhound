@@ -12,7 +12,6 @@ defmodule Unit do
   use TypedStruct
 
   typedstruct enforce: true do
-    # ID must be unique within the world
     field :id, integer()
     field :player_id, integer(), default: 1
     field :sprite, Sprite.t()
@@ -20,6 +19,11 @@ defmodule Unit do
     # Varies from game turn to game turn
     field :pose, Pose.t()
     field :compound_path, Maneuver.t(), default: []
+    # rename :turn_destroyed
+    field :final_turn, integer(), enforce: false
+    # calculated values for frontend
+    field :render?, boolean(), default: true
+    field :active?, boolean(), default: true
   end
 
   # *** *******************************
@@ -74,6 +78,26 @@ defmodule Unit do
     }
   end
 
+  def put_final_turn(unit, final_turn) do
+    %__MODULE__{unit | final_turn: final_turn}
+  end
+
+  def calc_active(unit, turn_number) do
+    %__MODULE__{unit | active?: case unit.final_turn do
+      nil -> true
+      turn when turn_number >= turn -> false
+      _ -> true
+    end}
+  end
+
+  def calc_render(unit, turn_number) do
+    %__MODULE__{unit | render?: case unit.final_turn do
+      nil -> true
+      turn when turn_number > turn -> false
+      _ -> true
+    end}
+  end
+
   # *** *******************************
   # *** GETTERS
 
@@ -89,4 +113,13 @@ defmodule Unit do
   #    concat ["#Unit<", to_doc(unit_map, opts), ">"]
   #  end
   #end
+end
+
+defmodule Unit.Enum do
+  def active_player_unit_ids(units, player_id) do
+    units
+    |> Stream.filter(& &1.active?)
+    |> Stream.filter(&Unit.belongs_to?(&1, player_id))
+    |> Enum.map(& &1.id)
+  end
 end
