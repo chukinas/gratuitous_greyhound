@@ -35,6 +35,9 @@ defmodule PlayerActions do
 
   # TODO rename unit_actions
   def commands(%__MODULE__{commands: commands}), do: commands
+  def actions_available?(actions) do
+    !Enum.empty?(actions.active_unit_ids)
+  end
 
   # *** *******************************
   # *** SETTERS

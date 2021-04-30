@@ -89,3 +89,20 @@
   unit: unit,
   margin: @margin %>
 <% end %>
+
+
+<%# End Turn Button %>
+<%= if @show_end_turn_btn? do %>
+<div 
+  class="fixed top-4 right-4 pointer-events-auto"
+  style="
+    left: <%= @margin.width %>px;
+    top: <%= @margin.height %>px;
+  "
+  >
+  <%= ChukinasWeb.DreadnoughtView.button(
+      text: "End Turn", 
+      phx_target: @myself, 
+      phx_click: "end_turn") %>
+</div>
+<% end %>

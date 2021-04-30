@@ -28,6 +28,7 @@ defmodule PlayerTurn do
     field :turn_number, integer()
     field :units, [Unit.t()], default: []
     field :cmd_squares, [GridSquare.t()], default: []
+    field :show_end_turn_btn?, boolean(), default: false
   end
 
   # *** *******************************
@@ -50,6 +51,7 @@ defmodule PlayerTurn do
       player_id: player_id
     }
     |> resolve_exiting_units
+    |> determine_show_end_turn_btn
   end
 
   def map(player_id, mission), do: Map.from_struct(new(player_id, mission))
@@ -88,6 +90,13 @@ defmodule PlayerTurn do
       PlayerActions.exit_or_run_aground(player_actions, unit.id)
     end)
     %{player_turn | player_actions: player_actions}
+  end
+
+  defp determine_show_end_turn_btn(%__MODULE__{} = player_turn) do
+    hide? =
+      player_turn.player_actions
+      |> PlayerActions.actions_available?
+    %__MODULE__{player_turn | show_end_turn_btn?: !hide?}
   end
 
   # *** *******************************
