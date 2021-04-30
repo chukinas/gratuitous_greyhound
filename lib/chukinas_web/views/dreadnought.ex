@@ -1,4 +1,5 @@
 alias Chukinas.Dreadnought.Sprite
+alias Chukinas.Util.Opts
 
 defmodule ChukinasWeb.DreadnoughtView do
   use ChukinasWeb, :view
@@ -34,9 +35,11 @@ defmodule ChukinasWeb.DreadnoughtView do
   end
 
   def button(opts \\ []) do
-    assigns =
-      opts
-      #|> Keyword.put_new(:text, "")
+    assigns = Opts.merge!(opts,
+      text: "placeholder text",
+      phx_click: nil,
+      phx_target: nil
+    )
     render("_button.html", assigns)
   end
 

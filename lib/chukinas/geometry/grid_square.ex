@@ -9,6 +9,7 @@ defmodule GridSquare do
 
   typedstruct enforce: true do
     field :id, String.t()
+    field :unit_id, integer(), enforce: false
     field :column, integer()
     field :row, integer()
     field :center, Position.t()
@@ -31,15 +32,12 @@ defmodule GridSquare do
   end
 
   # *** *******************************
-  # *** API
+  # *** GETTERS
 
-  # TODO superfluous. remove.
-  def size(grid) do
-    %{
-      width: grid.square_size * grid.x_count,
-      height: grid.square_size * grid.y_count
-    }
-  end
+  def position(%__MODULE__{center: position}), do: position
+
+  # *** *******************************
+  # *** API
 
   def calc_path(square, start_pose) do
     path = Path.get_connecting_path(start_pose, square.center)

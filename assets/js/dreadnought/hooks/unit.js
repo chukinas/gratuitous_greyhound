@@ -4,6 +4,7 @@ import { subscribeNewTurn } from "./turnNumber.js";
 // CONSTANTS
 
 const gsap = window.gsap
+const ANIMATIONDURATION = 2 // second
 
 // --------------------------------------------------------
 // MANEUVER
@@ -24,18 +25,39 @@ const has_already_maneuvered = (function() {
   }
 })()
 
-function maneuver_unit(el) {
-  const path = document.getElementById(`${el.id}-lastPath`)
-  gsap.to(el, {
+function maneuver_unit(maneuveringEl) {
+  const path = document.getElementById(`${maneuveringEl.id}-lastPath`)
+  partialManeuver(maneuveringEl, path)
+}
+
+function partialManeuver(maneuveringEl, pathEl, opts = {}) {
+  opts = {
+    fractionalStartTime: 0,
+    fractionalDuration: 1,
+    fadeout: false,
+    ...opts
+  }
+  gsap.to(maneuveringEl, {
     motionPath: {
       autoRotate: true,
       alignOrigin: [0.5, 0.5],
-      align: path,
-      path,
+      align: pathEl,
+      path: pathEl,
     },
-    ease: "power1.in",
-    duration: 1,
+    opacity: opts.fadeout ? 0 : 1,
+    ease: "none",
+    delay: opts.fractionalStartTime * ANIMATIONDURATION,
+    duration: opts.fractionalDuration * ANIMATIONDURATION,
   })
+}
+
+function parse_dom_string(string) {
+  switch(string) {
+    case "true":
+      return true;
+    case "false":
+      return false;
+  }
 }
 
 // --------------------------------------------------------
@@ -123,4 +145,19 @@ const Unit = {
   //},
 }
 
-export default { WelcomeCardShip, WelcomeCardShipFwdTurret, WelcomeCardShipRearTurret, Unit }
+const PartialPath = {
+  mounted() {
+    const maneuveringEl = document.getElementById(this.el.dataset.maneuveringElId)
+    const pathEl = this.el
+    const opts = {
+      fractionalStartTime: this.el.dataset.start,
+      fractionalDuration: this.el.dataset.duration,
+      fadeout: parse_dom_string(this.el.dataset.fadeout)
+    }
+    console.log(this.el.dataset)
+    console.log(opts)
+    partialManeuver(maneuveringEl, pathEl, opts)
+  },
+}
+
+export default { WelcomeCardShip, WelcomeCardShipFwdTurret, WelcomeCardShipRearTurret, Unit, PartialPath }

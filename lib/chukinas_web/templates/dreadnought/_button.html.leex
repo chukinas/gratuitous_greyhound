@@ -1,6 +1,9 @@
 <button 
   class="p-4 bg-yellow-400 text-black"
+  <%= if @phx_click do %>
   phx-click="<%= @phx_click %>"
+  phx-target="<%= @phx_target %>"
+  <% end %>
 >
     <%= @text %>
   </button>

@@ -2,8 +2,12 @@ alias Chukinas.Dreadnought.{Mission, MissionBuilder, State}
 
 defmodule ChukinasWeb.DreadnoughtLive do
   use ChukinasWeb, :live_view
-  alias ChukinasWeb.DreadnoughtView
   alias ChukinasWeb.Dreadnought
+
+  @impl true
+  def render(assigns) do
+    ChukinasWeb.DreadnoughtView.render "layout_gameplay.html", assigns
+  end
 
   @impl true
   def mount(_params, _session, socket) do
@@ -45,7 +49,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
   end
 
   @impl true
-  def handle_event("log", params, socket) do
+  def handle_event("log", _params, socket) do
     #IOP.inspect(params, "dreadnought live log event")
     {:noreply, socket}
   end
@@ -55,20 +59,20 @@ defmodule ChukinasWeb.DreadnoughtLive do
     {:noreply, push_patch(socket, to: route)}
   end
 
-  @impl true
-  def handle_event("game_over", _, socket) do
-    socket =
-      socket
-      |> put_flash(:info, "You have no available moves! Play again.")
-    mission =
-      MissionBuilder.build()
-    send_update Dreadnought.DynamicWorldComponent, id: :dynamic_world, mission: mission
-    {:noreply, socket}
-  end
+  #@impl true
+  #def handle_event("game_over", _, socket) do
+  #  socket =
+  #    socket
+  #    |> put_flash(:info, "You have no available moves! Play again.")
+  #  mission =
+  #    MissionBuilder.build()
+  #  send_update Dreadnought.DynamicWorldComponent, id: :dynamic_world, mission: mission
+  #  {:noreply, socket}
+  #end
 
   @impl true
   # TODO rename mission_player to `player_turn` PlayerTurn
-  def handle_info({:player_turn_complete, action_selection}, socket) do
+  def handle_info({:player_turn_complete, player_actions}, socket) do
     #mission =
     #  socket.assigns.mission
     #  |> Mission.put(units)
@@ -81,10 +85,8 @@ defmodule ChukinasWeb.DreadnoughtLive do
     #  socket
     #  |> assign(mission: mission)
     # TODO use alias to shorten this call..
-    mission_player = State.complete_player_turn(socket.assigns.pid, action_selection)
+    mission_player = State.complete_player_turn(socket.assigns.pid, player_actions)
     send_update Dreadnought.DynamicWorldComponent, mission_player
     {:noreply, socket}
   end
-
-  def template(template, assigns), do: DreadnoughtView.render template, assigns
 end

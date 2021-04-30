@@ -16,6 +16,8 @@ defmodule Path do
   def new(keyword_list) when is_list(keyword_list) do
     keyword_list |> Enum.into(%{}) |> new()
   end
+  def put_pose(path, pose), do: %{path | pose: pose}
+
   defdelegate new_straight(x, y, angle, length), to: Straight, as: :new
   defdelegate new_straight(start_pose, length), to: Straight, as: :new
   defdelegate new_turn(start_pose, length, angle), to: Turn, as: :new

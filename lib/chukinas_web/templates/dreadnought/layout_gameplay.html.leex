@@ -14,13 +14,13 @@
 <%# TODO delete this and route %>
 <%# World: Welcome Demo Screen %>
 <%= if @live_action == :welcome, do: 
-  template "welcome_animation.html", socket: @socket %>
+  ChukinasWeb.DreadnoughtView.render "welcome_animation.html", socket: @socket %>
 
 <%# World: Actual Play %>
 <%# TODO compine this stuff into single tag %>
 <%= if @live_action != :welcome do %>
 <%= live_component @socket, 
-    Dreadnought.StaticWorldComponent, 
+    ChukinasWeb.Dreadnought.StaticWorldComponent, 
     id: :grid_lab, 
     mission: @mission,
     mission_player: @mission_player,

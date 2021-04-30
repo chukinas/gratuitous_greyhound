@@ -1,6 +1,5 @@
-alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret}
-alias Chukinas.Geometry.{Pose, Position, Turn, Straight, Polygon, Path, Grid, GridSquare, Collide}
-alias Chukinas.Svg
+alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret, ManeuverPartial, Maneuver}
+alias Chukinas.Geometry.{Pose, Path}
 
 defmodule Unit do
   @moduledoc """
@@ -13,15 +12,18 @@ defmodule Unit do
   use TypedStruct
 
   typedstruct enforce: true do
-    # ID must be unique within the world
     field :id, integer()
     field :player_id, integer(), default: 1
-    field :pose, Pose.t()
-    field :cmd_squares, [GridSquare.t()], default: []
-    # TODO rename path?
-    field :maneuver_svg_string, String.t(), enforce: false
     field :sprite, Sprite.t()
     field :turrets, [Turret.t()]
+    # Varies from game turn to game turn
+    field :pose, Pose.t()
+    field :compound_path, Maneuver.t(), default: []
+    # rename :turn_destroyed
+    field :final_turn, integer(), enforce: false
+    # calculated values for frontend
+    field :render?, boolean(), default: true
+    field :active?, boolean(), default: true
   end
 
   # *** *******************************
@@ -53,69 +55,71 @@ defmodule Unit do
   end
 
   # *** *******************************
-  # *** COMMANDS
+  # *** SETTERS
 
-  def resolve_command(unit, command) do
-    move_to(unit, command.move_to)
+  # TODO delete
+  def put_path(%__MODULE__{} = unit, geo_path) do
+    %{unit |
+      pose: Path.get_end_pose(geo_path),
+      compound_path: [ManeuverPartial.new(geo_path)]
+    }
+  end
+
+  # TODO rename put_maneuver
+  def put_compound_path(unit, compound_path) when is_list(compound_path) do
+    pose =
+      compound_path
+      |> Enum.max(ManeuverPartial)
+      |> ManeuverPartial.end_pose
+    %__MODULE__{unit |
+      pose: pose,
+      # TODO rename maneuver
+      compound_path: compound_path
+    }
+  end
+
+  def put_final_turn(unit, final_turn) do
+    %__MODULE__{unit | final_turn: final_turn}
+  end
+
+  def calc_active(unit, turn_number) do
+    %__MODULE__{unit | active?: case unit.final_turn do
+      nil -> true
+      turn when turn_number >= turn -> false
+      _ -> true
+    end}
+  end
+
+  def calc_render(unit, turn_number) do
+    %__MODULE__{unit | render?: case unit.final_turn do
+      nil -> true
+      turn when turn_number > turn -> false
+      _ -> true
+    end}
   end
 
   # *** *******************************
-  # *** BOOLEANS
+  # *** GETTERS
 
   def belongs_to?(unit, player_id), do: unit.player_id == player_id
 
   # *** *******************************
-  # *** MANEUVER EXECUTION
-
-  def move_to(unit, position) do
-    path = Path.get_connecting_path(unit.pose, position)
-    %{unit |
-      pose: Path.get_end_pose(path),
-      maneuver_svg_string: Svg.get_path_string(path)
-    }
-  end
-
-  # *** *******************************
-  # *** MANEUVER PLANNING
-
-  def calc_cmd_squares(unit, grid, islands) do
-    %{unit | cmd_squares: get_cmd_squares(unit, grid, islands)}
-  end
-
-  def get_cmd_squares(unit, grid, islands) do
-    cmd_zone = get_motion_range(unit)
-    grid
-    |> Grid.squares(include: cmd_zone, exclude: islands)
-    |> Stream.map(&GridSquare.calc_path(&1, unit.pose))
-    |> Stream.filter(&Collide.avoids?(&1.path, islands))
-    |> Enum.to_list
-  end
-
-  defp get_motion_range(%__MODULE__{pose: pose}, trim_angle \\ 0) do
-    max_distance = 400
-    min_distance = 200
-    angle = 45
-    [
-      Straight.new(pose, min_distance),
-      Turn.new(pose, min_distance, trim_angle - angle),
-      Turn.new(pose, max_distance, trim_angle - angle),
-      Straight.new(pose, max_distance),
-      Turn.new(pose, max_distance, trim_angle + angle),
-      Turn.new(pose, min_distance, trim_angle + angle),
-    ]
-    |> Stream.map(&Path.get_end_pose/1)
-    |> Enum.map(&Position.to_tuple/1)
-    |> Polygon.new
-  end
-
-  # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl Inspect do
-    import Inspect.Algebra
-    def inspect(unit, opts) do
-      unit_map = unit |> Map.take([:id, :pose, :maneuver_svg_string, :player_id])
-      concat ["#Unit<", to_doc(unit_map, opts), ">"]
-    end
+  #defimpl Inspect do
+  #  import Inspect.Algebra
+  #  def inspect(unit, opts) do
+  #    unit_map = unit |> Map.take([:id, :pose, :maneuver_svg_string, :player_id])
+  #    concat ["#Unit<", to_doc(unit_map, opts), ">"]
+  #  end
+  #end
+end
+
+defmodule Unit.Enum do
+  def active_player_unit_ids(units, player_id) do
+    units
+    |> Stream.filter(& &1.active?)
+    |> Stream.filter(&Unit.belongs_to?(&1, player_id))
+    |> Enum.map(& &1.id)
   end
 end

@@ -7,7 +7,7 @@ defmodule ChukinasWeb.DreadnoughtResourcesLive do
 
   @impl true
   def render(assigns) do
-    DreadnoughtView.render("layout.html", assigns)
+    DreadnoughtView.render("layout_menu.html", assigns)
   end
 
   def render_template(template, assigns) do
