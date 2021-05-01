@@ -68,9 +68,9 @@
 </svg>
 
 
-<%# Units and their selectin boxes %>
+<%# Units and their selection boxes %>
 <%= for unit <- @units do %>
-  <%= if unit.id in @player_actions.gunnery_targets do %>
+  <%= if unit.id in @player_actions.current_target_unit_ids do %>
     <%= ChukinasWeb.DreadnoughtView.render "unit_selection_box.html",
       myself: @myself,
       unit: unit %>

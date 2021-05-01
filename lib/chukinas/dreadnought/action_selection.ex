@@ -12,10 +12,10 @@ defmodule ActionSelection do
     field :player_id, integer()
     field :actions, [UnitAction.t()], default: []
     field :player_active_unit_ids, [integer()]
-    # TODO rename
-    field :gunnery_targets, [integer()]
+    field :enemy_unit_ids, [integer()]
     field :current_unit_id, integer(), enforce: false
     field :current_mode, UnitAction.mode(), enforce: false
+    field :current_target_unit_ids, [integer()], default: []
   end
 
   # *** *******************************
@@ -24,10 +24,10 @@ defmodule ActionSelection do
   def new(player_id, units) do
     %__MODULE__{
       player_id: player_id,
-      gunnery_targets: Unit.Enum.enemy_unit_ids(units, player_id),
+      enemy_unit_ids: Unit.Enum.enemy_unit_ids(units, player_id),
       player_active_unit_ids: Unit.Enum.active_player_unit_ids(units, player_id)
     }
-    |> calc_active_units
+    |> calc_current
     |> IOP.inspect("new player actions", show_if: &(&1.player_id == 1))
   end
 
@@ -35,7 +35,6 @@ defmodule ActionSelection do
   # *** GETTERS
 
   def actions(%__MODULE__{actions: actions}), do: actions
-  def turn_complete?(action_selection), do: action_selection.current_unit_id == nil
   def completed_player_unit_ids(player_actions) do
     player_actions
     |> actions
@@ -72,6 +71,11 @@ defmodule ActionSelection do
   end
   def current_unit_id(%{current_unit_id: id}), do: id
 
+  # Booleans
+  def turn_complete?(action_selection), do: action_selection.current_unit_id == nil
+  def combat?(%{current_mode: :combat}), do: true
+  def combat?(_), do: false
+
   # *** *******************************
   # *** SETTERS
 
@@ -83,7 +87,7 @@ defmodule ActionSelection do
   def put(%__MODULE__{} = player_actions, %UnitAction{} = command) do
     player_actions
     |> Map.update!(:actions, & [command | &1])
-    |> calc_active_units
+    |> calc_current
     |> IOP.inspect("player actions after put", show_if: &(&1.player_id == 1))
   end
 
@@ -104,12 +108,17 @@ defmodule ActionSelection do
   # *** *******************************
   # *** PRIVATE
 
-  defp calc_active_units(player_actions) do
+  defp calc_current(player_actions) do
     {id, mode} = next_pending_action(player_actions)
     %{player_actions |
       current_unit_id: id,
       current_mode: mode
     }
+    |> calc_current_targets
+  end
+  defp calc_current_targets(player_actions) do
+    targets = if combat?(player_actions), do: player_actions.enemy_unit_ids, else: []
+    %__MODULE__{player_actions | current_target_unit_ids: targets}
   end
 
 end
