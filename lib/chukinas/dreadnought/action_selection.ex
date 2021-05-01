@@ -12,7 +12,8 @@ defmodule ActionSelection do
     field :player_id, integer()
     field :actions, [UnitAction.t()], default: []
     field :player_active_unit_ids, [integer()]
-    field :gunnery_targets, [integer()], default: [2, 3]
+    # TODO rename
+    field :gunnery_targets, [integer()]
     field :current_unit_id, integer(), enforce: false
     field :current_mode, UnitAction.mode(), enforce: false
   end
@@ -23,6 +24,7 @@ defmodule ActionSelection do
   def new(player_id, units) do
     %__MODULE__{
       player_id: player_id,
+      gunnery_targets: Unit.Enum.enemy_unit_ids(units, player_id),
       player_active_unit_ids: Unit.Enum.active_player_unit_ids(units, player_id)
     }
     |> calc_active_units

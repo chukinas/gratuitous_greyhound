@@ -21,7 +21,7 @@ defmodule Unit do
     field :pose, Pose.t()
     field :selection_box_position, Position.t(), enforce: false
     field :compound_path, Maneuver.t(), default: []
-    # rename :turn_destroyed
+    # TODO rename :turn_destroyed
     field :final_turn, integer(), enforce: false
     # calculated values for frontend
     field :render?, boolean(), default: true
@@ -130,10 +130,17 @@ defmodule Unit do
 end
 
 defmodule Unit.Enum do
+  # TODO rename player_active_unit_ids
   def active_player_unit_ids(units, player_id) do
     units
     |> Stream.filter(& &1.active?)
     |> Stream.filter(&Unit.belongs_to?(&1, player_id))
+    |> Enum.map(& &1.id)
+  end
+  def enemy_unit_ids(units, player_id) do
+    units
+    #|> Stream.filter(& &1.active?)
+    |> Stream.filter(& !Unit.belongs_to?(&1, player_id))
     |> Enum.map(& &1.id)
   end
 end
