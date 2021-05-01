@@ -10,33 +10,7 @@
   <%= if @player_actions.current_mode == :maneuver do %>
   <%= for square <- @cmd_squares do %>
   <%= if square.unit_id == @player_actions.current_unit_id do %>
-  <button
-    id="gridSquareTarget-<%= square.id %>"
-    class="p-0.5 hover:p-0 pointer-events-auto"
-    style="
-      grid-column-start: <%= square.column %>;
-      grid-row-start: <%= square.row %>;
-    "
-    phx-click="select_square"
-    phx-target="<%= @myself %>"
-    phx-value-x="<%= square.center.x %>"
-    phx-value-y="<%= square.center.y %>"
-    phx-value-unit_id="<%= square.unit_id %>"
-    phx-value-type="<%= square.path_type %>"
-  >
-    <div
-      id="gridSquareVisible-<%= square.id %>"
-      class="
-        <%= case square.path_type do
-          :sharp_turn -> "bg-red-400"
-          :straight -> "bg-green-400"
-          _ -> "bg-yellow-400"
-        end %>
-        h-full rounded-sm bg-opacity-20 pointer-events-none
-      "
-    >
-    </div>
-  </button>
+  <%= ChukinasWeb.DreadnoughtView.render "maneuver_square.html", myself: @myself, square: square %>
   <% end %>
   <% end %>
   <% end %>

@@ -1,0 +1,20 @@
+<button
+  id="gridSquareTarget-<%= @square.id %>"
+  class="p-1 hover:p-0 pointer-events-auto"
+  style="
+    grid-column-start: <%= @square.column %>;
+    grid-row-start: <%= @square.row %>;
+  "
+  phx-click="select_square"
+  phx-target="<%= @myself %>"
+  phx-value-x="<%= @square.center.x %>"
+  phx-value-y="<%= @square.center.y %>"
+  phx-value-unit_id="<%= @square.unit_id %>"
+  phx-value-type="<%= @square.path_type %>"
+>
+  <div
+    id="gridSquareVisible-<%= @square.id %>"
+    class="bg-yellow-400 h-full rounded-sm pointer-events-none animate-pulse"
+  >
+  </div>
+</button>
