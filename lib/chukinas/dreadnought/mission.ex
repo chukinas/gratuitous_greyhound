@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Unit, Mission, Island, PlayerActions, Player, PlayerTurn, UnitAction, Maneuver}
+alias Chukinas.Dreadnought.{Unit, Mission, Island, ActionSelection, Player, PlayerTurn, UnitAction, Maneuver}
 alias Chukinas.Geometry.{Grid, Size}
 alias Chukinas.Util.ById
 
@@ -17,7 +17,7 @@ defmodule Mission do
     field :islands, [Island.t()], default: []
     field :units, [Unit.t()], default: []
     field :players, [Player.t()], default: []
-    field :player_actions, [PlayerActions.t()], default: []
+    field :player_actions, [ActionSelection.t()], default: []
   end
 
   # *** *******************************
@@ -41,7 +41,7 @@ defmodule Mission do
   def players(mission), do: mission.players
   # TODO rename unit_actions
   defp commands(%__MODULE__{player_actions: actions}) do
-    Stream.flat_map(actions, &PlayerActions.actions/1)
+    Stream.flat_map(actions, &ActionSelection.actions/1)
   end
   defp maneuver_actions(%__MODULE__{} = mission) do
     mission
@@ -74,7 +74,7 @@ defmodule Mission do
   def put(mission, %Player{} = player) do
     Map.update!(mission, :players, &ById.put(&1, player))
   end
-  def put(mission, %PlayerActions{} = player_actions) do
+  def put(mission, %ActionSelection{} = player_actions) do
     mission
     |> Map.update!(:player_actions, &ById.put(&1, player_actions, :player_id))
     |> maybe_end_turn

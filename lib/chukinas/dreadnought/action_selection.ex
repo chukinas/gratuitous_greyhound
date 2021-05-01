@@ -1,8 +1,7 @@
-alias Chukinas.Dreadnought.{UnitAction, PlayerActions, Unit}
+alias Chukinas.Dreadnought.{UnitAction, ActionSelection, Unit}
 alias Chukinas.Geometry.Position
 
-# TODO think up a better name for this - ActionSelection again?
-defmodule PlayerActions do
+defmodule ActionSelection do
 
   # *** *******************************
   # *** TYPES
@@ -12,7 +11,6 @@ defmodule PlayerActions do
   typedstruct enforce: true do
     field :player_id, integer()
     field :actions, [UnitAction.t()], default: []
-    # For internal reference only (probably)
     field :player_active_unit_ids, [integer()]
     field :gunnery_targets, [integer()], default: [2, 3]
     field :current_unit_id, integer(), enforce: false
@@ -22,8 +20,7 @@ defmodule PlayerActions do
   # *** *******************************
   # *** NEW
 
-  # TODO refactor - player id comes first
-  def new(units, player_id) do
+  def new(player_id, units) do
     %__MODULE__{
       player_id: player_id,
       player_active_unit_ids: Unit.Enum.active_player_unit_ids(units, player_id)

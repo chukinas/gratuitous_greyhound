@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{ManeuverPlanning, Unit}
-alias Chukinas.Geometry.{GridSquare, Path}
+alias Chukinas.Geometry.{GridSquare, Position}
 
 defmodule ManeuverPlanning.Token do
   @moduledoc """

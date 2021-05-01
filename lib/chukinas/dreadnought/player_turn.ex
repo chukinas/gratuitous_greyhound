@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{PlayerTurn, Unit, PlayerActions, ManeuverPlanning, UnitAction}
+alias Chukinas.Dreadnought.{PlayerTurn, Unit, ActionSelection, ManeuverPlanning, UnitAction}
 alias Chukinas.Geometry.{Size, Grid, GridSquare}
 
 # TODO better name => Chukinas.Dreadnought.PlayerTurn ?
@@ -26,7 +26,7 @@ defmodule PlayerTurn do
     field :margin, Size.t()
     field :grid, Grid.t()
     # These are handled locally by the dynamic component:
-    field :player_actions, PlayerActions.t()
+    field :player_actions, ActionSelection.t()
     # These must be set by the mission each turn:
     field :turn_number, integer()
     field :units, [Unit.t()], default: []
@@ -47,7 +47,7 @@ defmodule PlayerTurn do
     %__MODULE__{
       turn_number: turn_number,
       units: units,
-      player_actions: PlayerActions.new(units, player_id),
+      player_actions: ActionSelection.new(player_id, units),
       margin: margin,
       grid: grid,
       player_id: player_id,
@@ -78,7 +78,7 @@ defmodule PlayerTurn do
     if token.player_type == :ai do
       pending_unit_ids =
         token.player_actions
-        |> PlayerActions.pending_player_unit_ids
+        |> ActionSelection.pending_player_unit_ids
       unit_maneuvers = Enum.map(pending_unit_ids, fn unit_id ->
         position =
           token.cmd_squares
@@ -87,7 +87,7 @@ defmodule PlayerTurn do
           |> GridSquare.position
         UnitAction.move_to(unit_id, position)
       end)
-      Map.update!(token, :player_actions, &PlayerActions.put(&1, unit_maneuvers))
+      Map.update!(token, :player_actions, &ActionSelection.put(&1, unit_maneuvers))
     else
       token
     end
@@ -114,14 +114,14 @@ defmodule PlayerTurn do
     end
     unit_actions =
       player_actions
-      |> PlayerActions.pending_player_unit_ids
+      |> ActionSelection.pending_player_unit_ids
       |> Stream.filter(trapped_unit_id?)
       |> Enum.map(&UnitAction.exit_or_run_aground/1)
-    Map.update!(player_turn, :player_actions, &PlayerActions.put(&1, unit_actions))
+    Map.update!(player_turn, :player_actions, &ActionSelection.put(&1, unit_actions))
   end
 
   defp determine_show_end_turn_btn(%__MODULE__{} = player_turn) do
-    show? = player_turn.player_actions |> PlayerActions.turn_complete?
+    show? = player_turn.player_actions |> ActionSelection.turn_complete?
     %__MODULE__{player_turn | show_end_turn_btn?: show?}
   end
 
