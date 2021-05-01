@@ -137,9 +137,10 @@ defmodule Unit.Enum do
     |> Stream.filter(&Unit.belongs_to?(&1, player_id))
     |> Enum.map(& &1.id)
   end
+  # TODO rename enemy_active_unit_ids
   def enemy_unit_ids(units, player_id) do
     units
-    #|> Stream.filter(& &1.active?)
+    |> Stream.filter(& &1.active?)
     |> Stream.filter(& !Unit.belongs_to?(&1, player_id))
     |> Enum.map(& &1.id)
   end

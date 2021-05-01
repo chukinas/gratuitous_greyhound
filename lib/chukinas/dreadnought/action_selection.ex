@@ -109,16 +109,32 @@ defmodule ActionSelection do
   # *** PRIVATE
 
   defp calc_current(player_actions) do
+    player_actions
+    |> calc_current_action
+    |> calc_current_targets
+  end
+  defp calc_current_action(player_actions) do
     {id, mode} = next_pending_action(player_actions)
     %{player_actions |
       current_unit_id: id,
       current_mode: mode
     }
-    |> calc_current_targets
   end
   defp calc_current_targets(player_actions) do
     targets = if combat?(player_actions), do: player_actions.enemy_unit_ids, else: []
     %__MODULE__{player_actions | current_target_unit_ids: targets}
+  end
+  defp maybe_combat_noop(%{
+    current_target_unit_ids: targets,
+    current_unit_id: unit_id
+  } = player_actions) do
+    if Enum.empty?(targets) and combat?(player_actions) do
+      player_actions
+      |> put(UnitAction.combat_noop(unit_id))
+      |> calc_current
+    else
+      player_actions
+    end
   end
 
 end

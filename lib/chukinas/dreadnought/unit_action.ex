@@ -18,7 +18,8 @@ defmodule UnitAction do
     field :unit_id, unit_id(), enforce: true
     field :mode, mode()
     # TODO rename target?
-    field :value, :exit_or_run_aground | Position.t()
+    # TODO replace :exit_or_run_aground with :noop
+    field :value, :exit_or_run_aground | Position.t() | :noop
   end
 
   # *** *******************************
@@ -41,6 +42,7 @@ defmodule UnitAction do
   def fire_upon(unit_id, target_unit_id) when is_integer(target_unit_id) do
     new(unit_id, :combat, target_unit_id)
   end
+  def combat_noop(unit_id), do: new(unit_id, :combat, :noop)
 
   # *** *******************************
   # *** GETTERS
