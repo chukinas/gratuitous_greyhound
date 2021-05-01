@@ -13,8 +13,16 @@ defmodule IOP do
     ]
   ]
 
-  def inspect(term, label) do
-    IO.inspect(term, Keyword.merge(@opts, label: label))
+  def inspect(term, label, opts \\ []) do
+    show_if = Keyword.get(opts, :show_if, fn _x -> true end)
+    if show_if.(term) do
+      filtered_term = case Keyword.get(opts, :keys, nil) do
+        nil -> term
+        keys -> Map.take(term, keys)
+      end
+      IO.inspect(filtered_term, Keyword.merge(@opts, label: label))
+    end
+    term
   end
 
   def inspect(term) do

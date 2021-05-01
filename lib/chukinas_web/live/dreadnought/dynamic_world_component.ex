@@ -32,7 +32,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
     IO.puts unit_id
     player_actions =
       socket.assigns.player_actions
-      |> PlayerActions.select_gunnery_target(unit_id, Precision.coerce_int(unit_id))
+      |> PlayerActions.select_gunnery_target(Precision.coerce_int(unit_id))
       |> maybe_end_turn
     socket =
       socket

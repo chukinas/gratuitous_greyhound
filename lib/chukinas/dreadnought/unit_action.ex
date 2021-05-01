@@ -9,19 +9,23 @@ defmodule UnitAction do
   # *** *******************************
   # *** TYPES
 
+  @mode [:maneuver, :combat]
   @type unit_id() :: integer()
+  @type mode() :: :maneuver | :combat
 
   use TypedStruct
   typedstruct do
     field :unit_id, unit_id(), enforce: true
-    field :type, :maneuver | :combat
+    # TODO rename mode
+    field :type, mode()
+    # TODO rename target?
     field :value, :exit_or_run_aground | Position.t()
   end
 
   # *** *******************************
   # *** NEW
 
-  defp new(unit_id, type, value) do
+  defp new(unit_id, type, value) when is_integer(unit_id) and type in @mode do
     %__MODULE__{
       unit_id: unit_id,
       type: type,
@@ -35,12 +39,16 @@ defmodule UnitAction do
   def exit_or_run_aground(unit_id) do
     new(unit_id, :maneuver, :exit_or_run_aground)
   end
+  def fire_upon(unit_id, target_unit_id) when is_integer(target_unit_id) do
+    new(unit_id, :combat, target_unit_id)
+  end
 
   # *** *******************************
   # *** GETTERS
 
   def is_maneuver?(action), do: action.type == :maneuver
   def value(action), do: action.value
+  def id_and_mode(%{unit_id: id, type: mode}), do: {id, mode}
 
 end
 
