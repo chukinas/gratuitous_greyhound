@@ -11,8 +11,7 @@ defmodule PlayerActions do
 
   typedstruct enforce: true do
     field :player_id, integer()
-    # TODO rename actions
-    field :commands, [UnitAction.t()], default: []
+    field :actions, [UnitAction.t()], default: []
     # For internal reference only (probably)
     field :player_active_unit_ids, [integer()]
     field :gunnery_targets, [integer()], default: [2, 3]
@@ -36,14 +35,16 @@ defmodule PlayerActions do
   # *** *******************************
   # *** GETTERS
 
-  # TODO rename unit_actions
-  def commands(%__MODULE__{commands: commands}), do: commands
-  # TODO where used?
-  def actions_available?(action_selection), do: action_selection.current_unit_id != nil
+  def actions(%__MODULE__{actions: actions}), do: actions
   def turn_complete?(action_selection), do: action_selection.current_unit_id == nil
+  def completed_player_unit_ids(player_actions) do
+    player_actions
+    |> actions
+    |> Stream.map(& &1.unit_id)
+  end
   def pending_player_unit_ids(player_actions) do
     player_actions.player_active_unit_ids
-    |> Stream.filter(& &1 not in my_completed_unit_ids(player_actions))
+    |> Stream.filter(& &1 not in completed_player_unit_ids(player_actions))
   end
   def count_player_active_units(player_actions) do
     Enum.count(player_actions.player_active_unit_ids)
@@ -56,7 +57,8 @@ defmodule PlayerActions do
   end
   def pending_actions(player_actions) do
     completed_actions =
-      player_actions.commands
+      player_actions
+      |> actions
       |> Enum.map(&UnitAction.id_and_mode/1)
     player_actions
     |> all_required_actions
@@ -81,13 +83,13 @@ defmodule PlayerActions do
   end
   def put(%__MODULE__{} = player_actions, %UnitAction{} = command) do
     player_actions
-    |> Map.update!(:commands, & [command | &1])
+    |> Map.update!(:actions, & [command | &1])
     |> calc_active_units
     |> IOP.inspect("player actions after put", show_if: &(&1.player_id == 1))
   end
 
   # *** *******************************
-  # *** PLAYER-ISSUED COMMANDS
+  # *** PLAYER-ISSUED ACTIONS
 
   def maneuver(player_actions, unit_id, x, y) do
     command = UnitAction.move_to(unit_id, Position.new(x, y))
@@ -111,9 +113,4 @@ defmodule PlayerActions do
     }
   end
 
-  # TODO rename completed_player_unit_ids
-  defp my_completed_unit_ids(player_actions) do
-      player_actions.commands
-      |> Stream.map(& &1.unit_id)
-  end
 end

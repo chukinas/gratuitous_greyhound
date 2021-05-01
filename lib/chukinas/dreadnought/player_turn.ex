@@ -121,10 +121,8 @@ defmodule PlayerTurn do
   end
 
   defp determine_show_end_turn_btn(%__MODULE__{} = player_turn) do
-    hide? =
-      player_turn.player_actions
-      |> PlayerActions.actions_available?
-    %__MODULE__{player_turn | show_end_turn_btn?: !hide?}
+    show? = player_turn.player_actions |> PlayerActions.turn_complete?
+    %__MODULE__{player_turn | show_end_turn_btn?: show?}
   end
 
   # *** *******************************

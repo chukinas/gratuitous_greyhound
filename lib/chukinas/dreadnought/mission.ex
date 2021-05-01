@@ -41,7 +41,7 @@ defmodule Mission do
   def players(mission), do: mission.players
   # TODO rename unit_actions
   defp commands(%__MODULE__{player_actions: actions}) do
-    Stream.flat_map(actions, &PlayerActions.commands/1)
+    Stream.flat_map(actions, &PlayerActions.actions/1)
   end
   defp maneuver_actions(%__MODULE__{} = mission) do
     mission
