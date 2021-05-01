@@ -1,7 +1,7 @@
 alias Chukinas.Dreadnought.{UnitAction, PlayerActions, Unit}
 alias Chukinas.Geometry.Position
 
-# TODO think up a better name for this
+# TODO think up a better name for this - ActionSelection again?
 defmodule PlayerActions do
 
   # *** *******************************
@@ -9,18 +9,15 @@ defmodule PlayerActions do
 
   use TypedStruct
 
-  # TODO enforce: true
-  typedstruct do
-    field :player_id, integer(), enforce: true
+  typedstruct enforce: true do
+    field :player_id, integer()
+    # TODO rename actions
     field :commands, [UnitAction.t()], default: []
     # For internal reference only (probably)
-    field :player_active_unit_ids, [integer()], enforce: true
+    field :player_active_unit_ids, [integer()]
     field :gunnery_targets, [integer()], default: [2, 3]
-    # Next Pending Action
-    # TODO change this to integer?
-    # TODO rename pending_unit_id, pending_mode
-    field :active_unit_ids, [integer()], default: []
-    field :action_mode, UnitAction.mode(), enforce: false
+    field :current_unit_id, integer(), enforce: false
+    field :current_mode, UnitAction.mode(), enforce: false
   end
 
   # *** *******************************
@@ -33,6 +30,7 @@ defmodule PlayerActions do
       player_active_unit_ids: Unit.Enum.active_player_unit_ids(units, player_id)
     }
     |> calc_active_units
+    |> IOP.inspect("new player actions", show_if: &(&1.player_id == 1))
   end
 
   # *** *******************************
@@ -40,15 +38,12 @@ defmodule PlayerActions do
 
   # TODO rename unit_actions
   def commands(%__MODULE__{commands: commands}), do: commands
-  def actions_available?(actions) do
-    !Enum.empty?(actions.active_unit_ids)
-  end
+  # TODO where used?
+  def actions_available?(action_selection), do: action_selection.current_unit_id != nil
+  def turn_complete?(action_selection), do: action_selection.current_unit_id == nil
   def pending_player_unit_ids(player_actions) do
     player_actions.player_active_unit_ids
     |> Stream.filter(& &1 not in my_completed_unit_ids(player_actions))
-  end
-  def turn_complete?(player_actions) do
-    Enum.empty?(player_actions.active_unit_ids)
   end
   def count_player_active_units(player_actions) do
     Enum.count(player_actions.player_active_unit_ids)
@@ -66,7 +61,7 @@ defmodule PlayerActions do
     player_actions
     |> all_required_actions
     |> Stream.filter(& &1 not in completed_actions)
-    |> Stream.concat([nil])
+    |> Stream.concat([{nil, nil}])
   end
   def next_pending_action(player_actions) do
     player_actions
@@ -74,7 +69,7 @@ defmodule PlayerActions do
     |> Enum.take(1)
     |> List.first
   end
-  def current_unit_id(%{active_unit_ids: [unit_id]}), do: unit_id
+  def current_unit_id(%{current_unit_id: id}), do: id
 
   # *** *******************************
   # *** SETTERS
@@ -109,13 +104,10 @@ defmodule PlayerActions do
   # *** PRIVATE
 
   defp calc_active_units(player_actions) do
-    {ids, mode} = case next_pending_action(player_actions) do
-      nil -> {[], nil}
-      {id, mode} -> {[id], mode}
-    end
+    {id, mode} = next_pending_action(player_actions)
     %{player_actions |
-      active_unit_ids: ids,
-      action_mode: mode
+      current_unit_id: id,
+      current_mode: mode
     }
   end
 

@@ -7,9 +7,9 @@
     grid-auto-rows: <%= @grid.square_size %>px;
   "
 >
-  <%= if @player_actions.action_mode == :maneuver do %>
+  <%= if @player_actions.current_mode == :maneuver do %>
   <%= for square <- @cmd_squares do %>
-  <%= if square.unit_id in @player_actions.active_unit_ids do %>
+  <%= if square.unit_id == @player_actions.current_unit_id do %>
   <button
     id="gridSquareTarget-<%= square.id %>"
     class="p-0.5 hover:p-0 pointer-events-auto"
