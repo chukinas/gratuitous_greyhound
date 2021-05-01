@@ -42,6 +42,14 @@
 </svg>
 
 
+<%# Maneuver Actions %>
+<%= for action <- @player_actions.actions do %>
+<%= if action.mode == :maneuver do %>
+<%= ChukinasWeb.DreadnoughtView.render "maneuver_location.html", position: action.value %>
+<% end %>
+<% end %>
+
+
 <%# Units and their selection boxes %>
 <%= for unit <- @units do %>
   <%= if unit.id in @player_actions.current_target_unit_ids do %>
