@@ -3,7 +3,7 @@ alias Chukinas.Geometry.{Position}
 
 defmodule UnitAction do
   @moduledoc """
-  Represents one action a unit will take at the end of the turn
+  Represents one action a unit will take next turn
   """
 
   # *** *******************************
@@ -16,8 +16,7 @@ defmodule UnitAction do
   use TypedStruct
   typedstruct do
     field :unit_id, unit_id(), enforce: true
-    # TODO rename mode
-    field :type, mode()
+    field :mode, mode()
     # TODO rename target?
     field :value, :exit_or_run_aground | Position.t()
   end
@@ -25,10 +24,10 @@ defmodule UnitAction do
   # *** *******************************
   # *** NEW
 
-  defp new(unit_id, type, value) when is_integer(unit_id) and type in @mode do
+  defp new(unit_id, mode, value) when is_integer(unit_id) and mode in @mode do
     %__MODULE__{
       unit_id: unit_id,
-      type: type,
+      mode: mode,
       value: value
     }
   end
@@ -46,15 +45,26 @@ defmodule UnitAction do
   # *** *******************************
   # *** GETTERS
 
-  def is_maneuver?(action), do: action.type == :maneuver
+  def is_maneuver?(action), do: action.mode == :maneuver
   def value(action), do: action.value
-  def id_and_mode(%{unit_id: id, type: mode}), do: {id, mode}
+  def id_and_mode(%{unit_id: id, mode: mode}), do: {id, mode}
+
+  # *** *******************************
+  # *** IMPLEMENTATIONS
+
+  defimpl Inspect do
+    import Inspect.Algebra
+    def inspect(action, opts) do
+      mode = action.mode |> Atom.to_string |> String.capitalize |> String.pad_trailing(8)
+      values = [unit: action.unit_id, target: action.value]
+      concat ["$#{mode}", to_doc(values, opts)]
+    end
+  end
 
 end
 
 
-# TODO rename .Coll or .Enum
-defmodule UnitAction.List do
+defmodule UnitAction.Enum do
   def maneuevers(actions) do
     Stream.filter actions, &UnitAction.is_maneuver?/1
   end

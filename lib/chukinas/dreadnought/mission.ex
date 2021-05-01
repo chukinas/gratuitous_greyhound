@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Unit, Mission, Island, PlayerActions, Player, PlayerTurn, ArtificialIntelligence, UnitAction, Maneuver}
+alias Chukinas.Dreadnought.{Unit, Mission, Island, PlayerActions, Player, PlayerTurn, UnitAction, Maneuver}
 alias Chukinas.Geometry.{Grid, Size}
 alias Chukinas.Util.ById
 
@@ -46,7 +46,7 @@ defmodule Mission do
   defp maneuver_actions(%__MODULE__{} = mission) do
     mission
     |> commands
-    |> UnitAction.List.maneuevers
+    |> UnitAction.Enum.maneuevers
   end
   def player_ids(mission), do: ById.to_ids(mission.players)
   def completed_player_ids(mission) do

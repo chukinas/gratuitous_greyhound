@@ -141,8 +141,10 @@ defmodule Position do
   # *** IMPLEMENTATIONS
 
   defimpl Inspect do
-    def inspect(position, _opts) do
-      "#Position<#{round position.x}, #{round position.y}>"
+    import Inspect.Algebra
+    def inspect(position, opts) do
+      values = [round(position.x), round(position.y)]
+      concat ["$Position", to_doc(values, opts)]
     end
   end
 end
