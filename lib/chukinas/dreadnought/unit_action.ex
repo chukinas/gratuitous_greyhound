@@ -48,6 +48,7 @@ defmodule UnitAction do
   # *** GETTERS
 
   def is_maneuver?(action), do: action.mode == :maneuver
+  def combat?(action), do: action.mode == :combat
   def value(action), do: action.value
   def id_and_mode(%{unit_id: id, mode: mode}), do: {id, mode}
 
@@ -68,6 +69,10 @@ end
 
 defmodule UnitAction.Enum do
   def maneuevers(actions) do
+    # TODO rename maneuver?
     Stream.filter actions, &UnitAction.is_maneuver?/1
+  end
+  def combats(actions) do
+    Stream.filter actions, &UnitAction.combat?/1
   end
 end

@@ -6,23 +6,30 @@ defmodule Unit do
   Represents a ship or some other combat unit
   """
 
+  #@derive {Inspect, only: [:id, :damage]}
+
   # *** *******************************
   # *** TYPES
 
-  use TypedStruct
+  @type damage :: {integer(), integer()} # turn & damage rcv'ed that turn
 
+  use TypedStruct
   typedstruct enforce: true do
     field :id, integer()
     field :name, String.t()
     field :player_id, integer(), default: 1
     field :sprite, Sprite.t()
     field :turrets, [Turret.t()]
+    field :health, damage()
     # Varies from game turn to game turn
     field :pose, Pose.t()
     field :selection_box_position, Position.t(), enforce: false
     field :compound_path, Maneuver.t(), default: []
     # TODO rename :turn_destroyed
     field :final_turn, integer(), enforce: false
+    # Accumulated State
+    # TODO add type
+    field :damage, [damage()], default: []
     # calculated values for frontend
     field :render?, boolean(), default: true
     field :active?, boolean(), default: true
@@ -49,10 +56,13 @@ defmodule Unit do
         Turret.new(id, position, Spritesheet.red("turret1") |> Sprite.center)
       end)
     opts =
-      opts
-      |> Keyword.put_new(:sprite, sprite |> Sprite.center)
-      |> Keyword.put_new(:turrets, turrets)
-      |> Keyword.put(:id, id)
+      [
+        health: 100,
+        sprite: sprite |> Sprite.center,
+        turrets: turrets
+      ]
+      |> Keyword.merge(opts)
+      |> Keyword.merge(id: id)
     struct!(__MODULE__, opts)
     |> calc_selection_box_position
   end
@@ -87,6 +97,10 @@ defmodule Unit do
     %__MODULE__{unit | final_turn: final_turn}
   end
 
+  def put_damage(unit, damage, turn_number) do
+    Map.update!(unit, :damage, & [{turn_number, damage} | &1])
+  end
+
   # TODO This 50 is just a guess. Need actual logic here.
   def calc_selection_box_position(unit) do
     position =
@@ -116,17 +130,37 @@ defmodule Unit do
   # *** GETTERS
 
   def belongs_to?(unit, player_id), do: unit.player_id == player_id
+  def total_damage(%{damage: damages}) do
+    damages
+    |> Stream.map(fn {_turn, damage} -> damage end)
+    |> Enum.sum
+  end
+  def remaining_health(%{health: health} = unit) do
+    (health - total_damage(unit))
+    |> max(0)
+  end
+  def percent_remaining_health(%{health: health} = unit) do
+    (1 - total_damage(unit) / health)
+    |> max(0)
+  end
 
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  #defimpl Inspect do
-  #  import Inspect.Algebra
-  #  def inspect(unit, opts) do
-  #    unit_map = unit |> Map.take([:id, :pose, :maneuver_svg_string, :player_id])
-  #    concat ["#Unit<", to_doc(unit_map, opts), ">"]
-  #  end
-  #end
+  defimpl Inspect do
+    import Inspect.Algebra
+    def inspect(unit, opts) do
+      unit_map =
+        unit
+        |> Map.take([
+          :id,
+          #:pose,
+          :damage
+        ])
+        |> Enum.into([])
+      concat ["$Unit", to_doc(unit_map, opts)]
+    end
+  end
 end
 
 defmodule Unit.Enum do

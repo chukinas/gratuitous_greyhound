@@ -14,10 +14,15 @@ defmodule IOP do
   ]
 
   def inspect(term, label, opts \\ []) do
-    show_if = Keyword.get(opts, :show_if, fn _x -> true end)
-    if show_if.(term) do
-      filtered_term = case Keyword.get(opts, :keys, nil) do
+    opts = Keyword.merge([
+      show_if: fn _x -> true end,
+      only: nil
+      #exclude: nil
+    ], opts)
+    if opts[:show_if].(term) do
+      filtered_term = case opts[:only] do
         nil -> term
+        key when not is_list(key) -> Map.take(term, [key])
         keys -> Map.take(term, keys)
       end
       IO.inspect(filtered_term, Keyword.merge(@opts, label: label))

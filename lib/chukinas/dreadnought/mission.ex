@@ -1,8 +1,9 @@
-alias Chukinas.Dreadnought.{Unit, Mission, Island, ActionSelection, Player, PlayerTurn, UnitAction, Maneuver}
+alias Chukinas.Dreadnought.{Unit, Mission, Island, ActionSelection, Player, PlayerTurn, UnitAction, Maneuver, CombatAction}
 alias Chukinas.Geometry.{Grid, Size}
 alias Chukinas.Util.ById
 
 defmodule Mission do
+  #@derive {Inspect, only: [:units]}
 
   # *** *******************************
   # *** TYPES
@@ -43,6 +44,7 @@ defmodule Mission do
   defp commands(%__MODULE__{player_actions: actions}) do
     Stream.flat_map(actions, &ActionSelection.actions/1)
   end
+  defp actions(mission), do: commands(mission)
   defp maneuver_actions(%__MODULE__{} = mission) do
     mission
     |> commands
@@ -59,6 +61,7 @@ defmodule Mission do
     |> Stream.map(&Player.id/1)
   end
   def units(%{units: units}), do: units
+  def combats(mission), do: mission |> actions |> UnitAction.Enum.combats
 
   # *** *******************************
   # *** SETTERS
@@ -109,10 +112,12 @@ defmodule Mission do
       |> put_tentative_maneuvers
       |> resolve_island_collisions
       |> calc_unit_render
+      |> calc_gunnery
       # Part 2: Prepare for this turn's planning
       |> calc_unit_active
       |> clear_player_actions
       |> calc_ai_commands
+      |> IOP.inspect("mission", only: :units)
     else
       mission
     end
@@ -144,13 +149,13 @@ defmodule Mission do
   end
 
   defp calc_unit_active(mission) do
-    IOP.inspect mission.turn_number, "turn num"
+    #IOP.inspect mission.turn_number, "turn num"
     units =
       mission.units
       |> Enum.map(&Unit.calc_active(&1, mission.turn_number))
     units
     |> Enum.map(&Map.take(&1, [:id, :active?, :final_turn, :render?]))
-    |> IOP.inspect("units after active calc")
+    #|> IOP.inspect("units after active calc")
     %__MODULE__{mission | units: units}
   end
 
@@ -159,5 +164,12 @@ defmodule Mission do
       mission.units
       |> Enum.map(&Unit.calc_render(&1, mission.turn_number))
     %__MODULE__{mission | units: units}
+  end
+
+  defp calc_gunnery(mission) do
+    Enum.reduce(combats(mission), mission, fn combat_action, mission ->
+      units = CombatAction.exec(combat_action, mission)
+      mission |> put(units)
+    end)
   end
 end
