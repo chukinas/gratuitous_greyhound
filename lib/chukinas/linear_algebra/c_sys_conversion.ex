@@ -1,5 +1,6 @@
 alias Chukinas.LinearAlgebra.{Transform, Vector, CSys}
 
+# TODO rename file csys...
 defmodule CSys.Conversion do
   import Vector.Guards
 
@@ -30,9 +31,15 @@ defmodule CSys.Conversion do
     Map.update!(token, :__transforms__, & [transform | &1])
   end
 
-  def exec(%__MODULE__{__transforms__: transforms, __start_point__: vector}) do
+  def get_vector(%__MODULE__{__transforms__: transforms, __start_point__: vector}) do
     transforms
     |> Enum.reverse
     |> Enum.reduce(vector, &Transform.transform/2)
+  end
+
+  def get_angle(conversion) do
+    conversion
+    |> get_vector
+    |> Vector.angle
   end
 end

@@ -57,7 +57,22 @@ defmodule LinearAlgebraTest do
       |> Conversion.new
       |> Conversion.put_inv(unit_tranform)
       |> Conversion.put_inv(mount_tranform)
-      |> Conversion.exec
+      |> Conversion.get_vector
     assert point_wrt_mount == {-7, 9}
+  end
+
+  test "get angle b/w mount and target" do
+    alias CSys.Conversion
+    world_point_of_interest = {2, 4}
+    unit_csys = Transform.new(1, 1, 90)
+    mount_csys = Transform.new(2, 0, 0)
+    turret_angle =
+      world_point_of_interest
+      |> Conversion.new
+      |> Conversion.put_inv(unit_csys)
+      |> Conversion.put_inv(mount_csys)
+      |> Conversion.get_angle
+      |> round
+    assert turret_angle == (360 -45)
   end
 end

@@ -1,4 +1,5 @@
 alias Chukinas.LinearAlgebra.{Vector}
+alias Chukinas.Geometry.Trig
 
 defmodule Vector.Guards do
   defguard is_vector(value)
@@ -8,6 +9,11 @@ defmodule Vector.Guards do
 end
 
 defmodule Vector do
+  import Vector.Guards
+
+  @x {1, 0}
+  #@y {0, 1}
+
   @type t() :: {number(), number()}
   def flip(vector), do: scalar(vector, -1)
   def scalar({a, b}, scalar), do: {a * scalar, b * scalar}
@@ -23,5 +29,14 @@ defmodule Vector do
       a / magnitude,
       b / magnitude
     }
+  end
+  def sign({_, y}), do: Trig.sign(y)
+  def angle(vector) when is_vector(vector) do
+    vector
+    |> normalize
+    |> dot(@x)
+    |> Trig.acos
+    |> Trig.mult(sign(vector))
+    |> Trig.normalize_angle
   end
 end
