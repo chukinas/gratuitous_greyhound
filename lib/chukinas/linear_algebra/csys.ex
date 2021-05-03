@@ -1,8 +1,7 @@
 alias Chukinas.Geometry.{Trig}
-alias Chukinas.LinearAlgebra.{Transform, Vector, Matrix}
+alias Chukinas.LinearAlgebra.{CSys, Vector, Matrix}
 
-# TODO rename CSys
-defmodule Transform do
+defmodule CSys do
 
   use TypedStruct
   typedstruct enforce: true do
@@ -15,6 +14,13 @@ defmodule Transform do
   # *** NEW
 
   def new(%{x: x, y: y, angle: deg}), do: new(x, y, deg)
+  def new(%{x: x, y: y}), do: new(x, y)
+  def new(x, y) do
+    %__MODULE__{
+      position: {x, y},
+      direction: Matrix.identity()
+    }
+  end
   def new(x, y, deg) do
     {sin, cos} = Trig.sin_and_cos(deg)
     dir = {

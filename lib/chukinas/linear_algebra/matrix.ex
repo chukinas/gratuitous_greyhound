@@ -10,6 +10,15 @@ end
 
 defmodule Matrix do
   @type t() :: {Vector.t(), Vector.t()}
+
+  # *** *******************************
+  # *** NEW
+
+  def identity, do: {{1, 0}, {0, 1}}
+
+  # *** *******************************
+  # *** API
+
   def flip({{a, b}, {c, d}}) do
     {{a, -b}, {-c, d}}
   end
