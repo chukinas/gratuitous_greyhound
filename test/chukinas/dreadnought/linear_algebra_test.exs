@@ -3,7 +3,7 @@ ExUnit.start()
 defmodule LinearAlgebraTest do
   use ExUnit.Case, async: true
   use DreadnoughtHelpers
-  alias Chukinas.LinearAlgebra.{Transform, Vector, Matrix, Token}
+  alias Chukinas.LinearAlgebra.{Transform, CSys}
 
   test "get world origin wrt unit" do
     origin_wrt_unit =
@@ -15,22 +15,49 @@ defmodule LinearAlgebraTest do
     assert origin_wrt_unit == {-1, 1}
   end
 
-  test "convex polygons" do
-    points = [
-      Position.new(0, 0),
-      Position.new(1, 0),
-      Position.new(1, 1),
-    ]
-    convex_polygon =
-      points
-      |> Enum.map(&Position.to_vertex/1)
-      |> Collision.Polygon.from_vertices
-    assert convex_polygon.convex
-    concave_polygon =
-      points
-      |> Enum.reverse
-      |> Enum.map(&Position.to_vertex/1)
-      |> Collision.Polygon.from_vertices
-    refute concave_polygon.convex
+  test "get world origin wrt mount" do
+    unit_tranform_reversed =
+      Pose.new(1, 1, 90)
+      |> Transform.new
+      |> Transform.flip
+    mount_tranform_reversed =
+      Pose.new(2, 0, 180)
+      |> Transform.new
+      |> Transform.flip
+    origin_wrt_mount =
+      mount_tranform_reversed
+      |> Transform.transform(Transform.position(unit_tranform_reversed))
+    assert origin_wrt_mount == {3, -1}
+  end
+
+  test "get world {10, 10} wrt mount" do
+    world_point_of_interest = {10, 10}
+    unit_tranform_reversed =
+      Pose.new(1, 1, 90)
+      |> Transform.new
+      |> Transform.flip
+    point_wrt_unit = Transform.transform(unit_tranform_reversed, world_point_of_interest)
+    mount_tranform_reversed =
+      Pose.new(2, 0, 180)
+      |> Transform.new
+      |> Transform.flip
+    point_wrt_mount =
+      mount_tranform_reversed
+      |> Transform.transform(point_wrt_unit)
+    assert point_wrt_mount == {-7, 9}
+  end
+
+  test "get world {10, 10} wrt mount using CSys.Conversion" do
+    alias CSys.Conversion
+    world_point_of_interest = {10, 10}
+    unit_tranform = Transform.new(1, 1, 90)
+    mount_tranform = Transform.new(2, 0, 180)
+    point_wrt_mount =
+      world_point_of_interest
+      |> Conversion.new
+      |> Conversion.put_inv(unit_tranform)
+      |> Conversion.put_inv(mount_tranform)
+      |> Conversion.exec
+    assert point_wrt_mount == {-7, 9}
   end
 end
