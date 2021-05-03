@@ -3,6 +3,16 @@ defmodule Chukinas.Geometry.Trig do
   # *** *******************************
   # *** API
 
+  def sin_and_cos(0), do: {0, 1}
+  def sin_and_cos(90), do: {1, 0}
+  def sin_and_cos(180), do: {0, -1}
+  def sin_and_cos(-90), do: {-1, 0}
+  def sin_and_cos(270), do: {-1, 0}
+  def sin_and_cos(deg) do
+    rad = deg_to_rad(deg)
+    {:math.sin(rad), :math.cos(rad)}
+  end
+
   def sin(degrees) do
     degrees
     |> deg_to_rad()

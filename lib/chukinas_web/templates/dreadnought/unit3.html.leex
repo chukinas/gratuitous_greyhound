@@ -17,7 +17,7 @@
       style="
         left: <%= turret.pose.x - turret.sprite.rect.width / 2 %>px; 
         top: <%= turret.pose.y - turret.sprite.rect.height / 2 %>px; 
-        transform: rotate(<%= 45 +turret.pose.angle %>deg);
+        transform: rotate(<%= turret.pose.angle %>deg);
       "
     >
       <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: turret.sprite %>

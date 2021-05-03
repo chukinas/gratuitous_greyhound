@@ -10,10 +10,10 @@ defmodule MissionBuilder do
       width: 3000,
       height: 2000
     }
-    #arena = %{
-    #  width: 500,
-    #  height: 500
-    #}
+    arena = %{
+      width: 1000,
+      height: 750
+    }
     margin = Size.new(arena.height, arena.width)
     #margin = Size.new(200, 100)
     islands = [
