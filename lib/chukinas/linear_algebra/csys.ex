@@ -6,8 +6,7 @@ defmodule CSys do
   use TypedStruct
   typedstruct enforce: true do
     field :position, Vector.t()
-    # TODO rename rotation?
-    field :direction, Matrix.t()
+    field :rotation, Matrix.t()
   end
 
   # *** *******************************
@@ -18,7 +17,7 @@ defmodule CSys do
   def new(x, y) do
     %__MODULE__{
       position: {x, y},
-      direction: Matrix.identity()
+      rotation: Matrix.identity()
     }
   end
   def new(x, y, deg) do
@@ -29,7 +28,7 @@ defmodule CSys do
     }
     %__MODULE__{
       position: {x, y},
-      direction: dir
+      rotation: dir
     }
   end
 
@@ -42,16 +41,16 @@ defmodule CSys do
   # *** API
 
   # TODO rename reverse?
-  def flip(%__MODULE__{direction: dir, position: pos}) do
+  def flip(%__MODULE__{rotation: dir, position: pos}) do
     matrix = Matrix.flip(dir)
     %__MODULE__{
-      direction: matrix,
+      rotation: matrix,
       position: Matrix.mult(matrix, Vector.flip(pos))
     }
   end
 
   def transform(%__MODULE__{} = trans, vector) do
-    trans.direction
+    trans.rotation
     |> Matrix.mult(vector)
     |> Vector.add(trans.position)
   end
