@@ -28,10 +28,15 @@ defmodule Pose do
     }
   end
 
+  def origin(), do: new(0, 0, 0)
+
+  # *** *******************************
+  # *** SETTERS
+
+  def put_angle(pose, angle), do: %__MODULE__{pose | angle: angle}
+
   # *** *******************************
   # *** API
-
-  def origin(), do: new(0, 0, 0)
 
   def rotate(%__MODULE__{} = pose, angle) do
     %{pose | angle: Trig.normalize_angle(pose.angle + angle)}

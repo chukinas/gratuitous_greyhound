@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Unit, Mission, Island, ActionSelection, Player, PlayerTurn, UnitAction, Maneuver, CombatAction}
+alias Chukinas.Dreadnought.{Unit, Mission, Island, ActionSelection, Player, PlayerTurn, UnitAction, Maneuver, CombatAction, Turret, MountPartial}
 alias Chukinas.Geometry.{Grid, Size}
 alias Chukinas.Util.ById
 
@@ -117,7 +117,9 @@ defmodule Mission do
       |> calc_unit_active
       |> clear_player_actions
       |> calc_ai_commands
-      |> IOP.inspect("mission", only: :units)
+      |> reset_units
+      |> calc_random_mount_orientation
+      #|> IOP.inspect("mission", only: :units)
     else
       mission
     end
@@ -125,6 +127,13 @@ defmodule Mission do
 
   defp clear_player_actions(mission) do
     %__MODULE__{mission | player_actions: []}
+  end
+
+  defp reset_units(mission) do
+    units =
+      mission.units
+      |> Enum.map(&Unit.new_turn_reset/1)
+    %__MODULE__{mission | units: units}
   end
 
   defp turn_complete?(mission) do
@@ -170,6 +179,20 @@ defmodule Mission do
     Enum.reduce(combats(mission), mission, fn combat_action, mission ->
       units = CombatAction.exec(combat_action, mission)
       mission |> put(units)
+    end)
+  end
+
+  defp calc_random_mount_orientation(mission) do
+    Enum.reduce(mission.units, mission, fn unit, mission ->
+      put mission, Enum.reduce(unit.turrets, unit, fn mount, unit ->
+        {_, corrected_angle} = Turret.normalize_desired_angle(
+          mount,
+          Enum.random(0..359))
+        travel = Turret.travel(mount, corrected_angle)
+        unit
+        |> Unit.put(Turret.put_angle(mount, corrected_angle))
+        |> Unit.put(MountPartial.new(mount.id, corrected_angle, travel))
+      end)
     end)
   end
 end

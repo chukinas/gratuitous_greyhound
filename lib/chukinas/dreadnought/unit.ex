@@ -1,5 +1,6 @@
-alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret, ManeuverPartial, Maneuver}
+alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret, ManeuverPartial, Maneuver, MountPartial}
 alias Chukinas.Geometry.{Pose, Path, Position}
+alias Chukinas.Util.ById
 
 defmodule Unit do
   @moduledoc """
@@ -19,7 +20,11 @@ defmodule Unit do
     field :name, String.t()
     field :player_id, integer(), default: 1
     field :sprite, Sprite.t()
+    # TODO rename mounts
+    # TODO should include anything that's positioned relative to the hull
     field :turrets, [Turret.t()]
+    field :mount_actions, [MountPartial.t()], default: []
+    # TODO this is not correct. Should just be an integer?
     field :health, damage()
     # Varies from game turn to game turn
     field :pose, Pose.t()
@@ -69,6 +74,13 @@ defmodule Unit do
 
   # *** *******************************
   # *** SETTERS
+
+  def put(unit, %Turret{} = turret) do
+    Map.update!(unit, :turrets, &ById.put(&1, turret))
+  end
+  def put(unit, %MountPartial{} = mount_action) do
+    Map.update!(unit, :mount_actions, &[mount_action | &1])
+  end
 
   # TODO delete
   def put_path(%__MODULE__{} = unit, geo_path) do
@@ -124,6 +136,12 @@ defmodule Unit do
       turn when turn_number > turn -> false
       _ -> true
     end}
+  end
+
+  # TODO what else should this include?
+  # Where should this be used?
+  def new_turn_reset(unit) do
+    %__MODULE__{unit | mount_actions: []}
   end
 
   # *** *******************************
