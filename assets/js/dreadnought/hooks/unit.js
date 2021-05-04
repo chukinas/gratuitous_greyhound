@@ -30,6 +30,7 @@ function maneuver_unit(maneuveringEl) {
   partialManeuver(maneuveringEl, path)
 }
 
+// TODO rename scheduleManeuver
 function partialManeuver(maneuveringEl, pathEl, opts = {}) {
   opts = {
     fractionalStartTime: 0,
@@ -48,6 +49,21 @@ function partialManeuver(maneuveringEl, pathEl, opts = {}) {
     ease: "none",
     delay: opts.fractionalStartTime * ANIMATIONDURATION,
     duration: opts.fractionalDuration * ANIMATIONDURATION,
+  })
+}
+
+function scheduleRotation(rotatingEl, angleFinal, angleTravel, opts = {}) {
+  console.log("scheduling a rotation")
+  opts = {
+    start: 0.5,
+    duration: 0.5,
+    ...opts
+  }
+  gsap.to(rotatingEl, {
+    rotation: "+=45",
+    ease: "none",
+    delay: opts.start * ANIMATIONDURATION,
+    duration: opts.duration * ANIMATIONDURATION,
   })
 }
 
@@ -145,6 +161,16 @@ const Unit = {
   //},
 }
 
+const RotationPartial = {
+  updated() {
+    scheduleRotation(this.el, 90, 45)
+  },
+  mounted() {
+    scheduleRotation(this.el, 90, 45)
+  }
+}
+
+// TODO rename PathPartial
 const PartialPath = {
   mounted() {
     const maneuveringEl = document.getElementById(this.el.dataset.maneuveringElId)
@@ -160,4 +186,11 @@ const PartialPath = {
   },
 }
 
-export default { WelcomeCardShip, WelcomeCardShipFwdTurret, WelcomeCardShipRearTurret, Unit, PartialPath }
+export default {
+  WelcomeCardShip, 
+  WelcomeCardShipFwdTurret, 
+  WelcomeCardShipRearTurret, 
+  Unit, 
+  PartialPath, 
+  RotationPartial
+}

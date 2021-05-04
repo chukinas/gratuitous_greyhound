@@ -13,13 +13,8 @@ defmodule CSys do
   # *** NEW
 
   def new(%{x: x, y: y, angle: deg}), do: new(x, y, deg)
-  def new(%{x: x, y: y}), do: new(x, y)
-  def new(x, y) do
-    %__MODULE__{
-      position: {x, y},
-      rotation: Matrix.identity()
-    }
-  end
+  def new(%{x: x, y: y}), do: new(x, y, 0)
+  def new(x, y), do: new(x, y, 0)
   def new(x, y, deg) do
     {sin, cos} = Trig.sin_and_cos(deg)
     dir = {

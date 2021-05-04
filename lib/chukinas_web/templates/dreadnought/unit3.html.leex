@@ -12,16 +12,22 @@
     <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: @unit.sprite %>
     <%= for turret <- @unit.turrets do %>
     <div 
-      id="unit-<%= @unit.id %>-turret-<%= turret.id %>" 
+      id="unit-<%= @unit.id %>-mount-<%= turret.id %>" 
       class="absolute"
       style="
         left: <%= turret.pose.x - turret.sprite.rect.width / 2 %>px; 
         top: <%= turret.pose.y - turret.sprite.rect.height / 2 %>px; 
         transform: rotate(<%= turret.pose.angle %>deg);
       "
+      phx-hook="RotationPartial"
+      data-angle="45"
+      data-travel="=+45"
+      data-start=0.5
+      data-duration=0.5
     >
       <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: turret.sprite %>
     </div>
     <% end %>
   </div>
 </div>
+<%#  %>
