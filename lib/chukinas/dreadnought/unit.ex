@@ -1,6 +1,6 @@
 alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret, ManeuverPartial, Maneuver, MountPartial}
 alias Chukinas.Geometry.{Pose, Path, Position}
-alias Chukinas.Util.ById
+alias Chukinas.Util.{Maps}
 
 defmodule Unit do
   @moduledoc """
@@ -75,12 +75,9 @@ defmodule Unit do
   # *** *******************************
   # *** SETTERS
 
-  def put(unit, %Turret{} = turret) do
-    Map.update!(unit, :turrets, &ById.put(&1, turret))
-  end
-  def put(unit, %MountPartial{} = mount_action) do
-    Map.update!(unit, :mount_actions, &[mount_action | &1])
-  end
+  def put(unit, items) when is_list(items), do: Enum.reduce(items, unit, &put(&2, &1))
+  def put(unit, %Turret{} = turret), do: Maps.put_by_id(unit, :turrets, turret)
+  def put(unit, %MountPartial{} = mount_action), do: Maps.put_by_id(unit, :mount_actions, mount_action)
 
   # TODO delete
   def put_path(%__MODULE__{} = unit, geo_path) do
@@ -142,6 +139,19 @@ defmodule Unit do
   # Where should this be used?
   def new_turn_reset(unit) do
     %__MODULE__{unit | mount_actions: []}
+  end
+
+  def calc_random_mount_orientation(unit) do
+    Enum.reduce(unit.turrets, unit, fn mount, unit ->
+      {_, corrected_angle} = Turret.normalize_desired_angle(
+        mount,
+        Enum.random(0..359))
+      travel = Turret.travel(mount, corrected_angle)
+      put(unit, [
+        Turret.put_angle(mount, corrected_angle),
+        MountPartial.new(mount.id, corrected_angle, travel)
+      ])
+    end)
   end
 
   # *** *******************************

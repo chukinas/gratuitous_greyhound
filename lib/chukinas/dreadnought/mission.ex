@@ -1,6 +1,6 @@
-alias Chukinas.Dreadnought.{Unit, Mission, Island, ActionSelection, Player, PlayerTurn, UnitAction, Maneuver, CombatAction, Turret, MountPartial}
+alias Chukinas.Dreadnought.{Unit, Mission, Island, ActionSelection, Player, PlayerTurn, UnitAction, Maneuver, CombatAction}
 alias Chukinas.Geometry.{Grid, Size}
-alias Chukinas.Util.ById
+alias Chukinas.Util.{Maps, ById}
 
 defmodule Mission do
   #@derive {Inspect, only: [:units]}
@@ -66,20 +66,12 @@ defmodule Mission do
   # *** *******************************
   # *** SETTERS
 
-  def put(mission, list) when is_list(list) do
-    Enum.reduce(list, mission, fn item, mission ->
-      put(mission, item)
-    end)
-  end
-  def put(mission, %Unit{} = unit) do
-    Map.update!(mission, :units, & ById.put(&1, unit))
-  end
-  def put(mission, %Player{} = player) do
-    Map.update!(mission, :players, &ById.put(&1, player))
-  end
+  def put(mission, list) when is_list(list), do: Enum.reduce(list, mission, &put(&2, &1))
+  def put(mission, %Unit{} = unit), do: Maps.put_by_id(mission, :units, unit)
+  def put(mission, %Player{} = player), do: Maps.put_by_id(mission, :players, player)
   def put(mission, %ActionSelection{} = player_actions) do
     mission
-    |> Map.update!(:player_actions, &ById.put(&1, player_actions, :player_id))
+    |> Maps.put_by_id(:player_actions, player_actions, :player_id)
     |> maybe_end_turn
   end
 
@@ -183,16 +175,6 @@ defmodule Mission do
   end
 
   defp calc_random_mount_orientation(mission) do
-    Enum.reduce(mission.units, mission, fn unit, mission ->
-      put mission, Enum.reduce(unit.turrets, unit, fn mount, unit ->
-        {_, corrected_angle} = Turret.normalize_desired_angle(
-          mount,
-          Enum.random(0..359))
-        travel = Turret.travel(mount, corrected_angle)
-        unit
-        |> Unit.put(Turret.put_angle(mount, corrected_angle))
-        |> Unit.put(MountPartial.new(mount.id, corrected_angle, travel))
-      end)
-    end)
+    Maps.map_each(mission, :units, &Unit.calc_random_mount_orientation/1)
   end
 end
