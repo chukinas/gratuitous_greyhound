@@ -60,6 +60,7 @@
   <%= if unit.render? do %>
     <%= ChukinasWeb.DreadnoughtView.render "unit3.html",
       socket: @socket,
+      turn_number: @turn_number,
       unit: unit %>
   <% end %>
 <% end %>

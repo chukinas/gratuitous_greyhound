@@ -56,4 +56,18 @@ defmodule MountPartial do
   #    a == b -> :eq
   #  end
   #end
+
+  # *** *******************************
+  # *** IMPLEMENTATIONS
+
+  defimpl Inspect do
+    import Inspect.Algebra
+    def inspect(action, opts) do
+      keywords = [
+        time: {action.start, action.duration},
+        angle: {action.angle_final, action.angle_travel}
+      ]
+      concat ["$Mount-#{action.turret_id}-Action", to_doc(keywords, opts)]
+    end
+  end
 end

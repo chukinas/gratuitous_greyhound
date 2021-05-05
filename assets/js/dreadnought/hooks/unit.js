@@ -162,11 +162,13 @@ const Unit = {
 }
 
 const RotationPartial = {
-  updated() {
-    scheduleRotation(this.el, 90, 45)
-  },
   mounted() {
-    scheduleRotation(this.el, 90, 45)
+    const data = this.el.dataset
+    const rotatingEl = document.getElementById(`unit-${data.unitId}-mount-${data.mountId}`)
+    scheduleRotation(this.el, data.angle, data.travel, {
+      start: data.start,
+      duration: data.duration
+    })
   }
 }
 

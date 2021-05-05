@@ -19,15 +19,29 @@
         top: <%= turret.pose.y - turret.sprite.rect.height / 2 %>px; 
         transform: rotate(<%= turret.pose.angle %>deg);
       "
-      phx-hook="RotationPartial"
-      data-angle="45"
-      data-travel="=+45"
-      data-start=0.5
-      data-duration=0.5
     >
       <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: turret.sprite %>
     </div>
     <% end %>
   </div>
+
+
+  <%# Turret Actions %>
+  <ul class="hidden">
+    <%= for action <- @unit.mount_actions do %>
+    <li
+      id="unit-<%= @unit.id %>-mount-<%= action.turret_id %>-<%= @turn_number %>-<%= action.start %>"
+      phx-hook="RotationPartial"
+      data-unit-id="<%= @unit.id %>"
+      data-mount-id="<%= action.turret_id %>"
+      data-angle="<%= action.angle_final %>"
+      data-travel="<%= action.angle_travel %>"
+      data-start="<%= action.start %>"
+      data-duration="<%= action.duration %>"
+    >
+    <li>
+    <% end %>
+  </ul>
+
+
 </div>
-<%#  %>

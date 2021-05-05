@@ -16,11 +16,13 @@ defmodule Turret do
 
   typedstruct enforce: true do
     field :id, integer()
+    # TODO I need coords relative to the unit's origin. These poses are all relative to top-left of sprite
     field :resting_pose, Pose.t()
-    # TODO this pose should be just a simple angle instead, as the location is fully captured in :resting_pose
+    # TODO this is duplicate information
     field :arc, {start_angle :: integer(), end_angle :: integer()}
     field :min_angle, degrees :: number()
     field :max_travel, positive_degrees :: number()
+    # TODO this pose should be just a simple angle instead, as the location is fully captured in :resting_pose
     field :pose, Pose.t()
     field :sprite, Sprite.t()
   end
@@ -103,5 +105,19 @@ defmodule Turret do
       Trig.normalize_angle(start_angle),
       Trig.normalize_angle(end_angle)
     }
+  end
+
+  # *** *******************************
+  # *** IMPLEMENTATIONS
+
+  defimpl Inspect do
+    import Inspect.Algebra
+    def inspect(turret, opts) do
+      fields = [
+        arc: {turret.min_angle, turret.max_travel, turret.resting_pose},
+        pose: turret.pose
+      ]
+      concat ["#Turret-#{turret.id}", to_doc(fields, opts)]
+    end
   end
 end

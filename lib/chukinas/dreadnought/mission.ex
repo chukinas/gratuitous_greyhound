@@ -111,7 +111,7 @@ defmodule Mission do
       |> calc_ai_commands
       |> reset_units
       |> calc_random_mount_orientation
-      #|> IOP.inspect("mission", only: :units)
+      |> IOP.inspect("mission", only: [:units, :turn_number])
     else
       mission
     end

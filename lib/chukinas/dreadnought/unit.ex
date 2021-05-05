@@ -179,12 +179,11 @@ defmodule Unit do
       unit_map =
         unit
         |> Map.take([
-          :id,
-          #:pose,
-          :damage
+          :turrets,
+          :mount_actions
         ])
         |> Enum.into([])
-      concat ["$Unit", to_doc(unit_map, opts)]
+      concat ["$Unit-#{unit.id}", to_doc(unit_map, opts)]
     end
   end
 end
