@@ -50,7 +50,7 @@ function partialManeuver(maneuveringEl, pathEl, opts = {}) {
   })
 }
 
-function scheduleRotation(rotatingEl, angleFinal, angleTravel, opts = {}) {
+function scheduleRotation(rotatingEl, endAngle, angleTravel, opts = {}) {
   opts = {
     start: 0.5,
     duration: 0.5,
@@ -59,7 +59,7 @@ function scheduleRotation(rotatingEl, angleFinal, angleTravel, opts = {}) {
   gsap.fromTo(rotatingEl, {
     rotation: opts.startAngle
   }, {
-    rotation: `${angleFinal}_${opts.direction}`,
+    rotation: `${endAngle}_${opts.direction}`,
     // rotation: '180_cw',
     ease: "none",
     delay: opts.start * ANIMATIONDURATION,
