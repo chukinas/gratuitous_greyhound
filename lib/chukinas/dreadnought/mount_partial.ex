@@ -1,8 +1,6 @@
 alias Chukinas.Dreadnought.{MountRotation}
 alias Chukinas.Geometry.Trig
 
-# TODO is this the right name for it? How well does this go with turret.ex?
-# TODO is 'MountAction' better?
 defmodule MountRotation do
   @moduledoc """
   Fully qualifies a portion of a unit's mounts's action
@@ -14,7 +12,7 @@ defmodule MountRotation do
   use TypedStruct
 
   typedstruct enforce: true do
-    field :turret_id, integer()
+    field :mount_id, integer()
     # Rotation
     field :angle_final, number()
     field :angle_travel, number()
@@ -30,13 +28,14 @@ defmodule MountRotation do
   # *** *******************************
   # *** NEW
 
-  def new(turret_id, angle_final, angle_travel, opts \\ []) do
+  def new(mount_id, angle_final, angle_travel, opts \\ []) do
+    angle_final = Trig.normalize_angle(angle_final)
     fields = Chukinas.Util.Opts.merge!(opts,
       start: 0.5,
       duration: 0.5
     )
     |> Keyword.merge(
-      turret_id: turret_id,
+      mount_id: mount_id,
       angle_final: angle_final,
       angle_travel: angle_travel,
       direction: (if angle_travel < 0, do: :ccw, else: :cw),
@@ -77,7 +76,7 @@ defmodule MountRotation do
         start_angle: action.start_angle
       ]
       concat [
-        col.("$Mount-#{action.turret_id}-Action"),
+        col.("$Mount-#{action.mount_id}-Action"),
         to_doc(keywords, opts)
       ]
     end

@@ -30,10 +30,10 @@
   <ul class="hidden">
     <%= for action <- @unit.mount_actions do %>
     <li
-      id="unit-<%= @unit.id %>-mount-<%= action.turret_id %>-<%= @turn_number %>-<%= action.start %>"
+      id="unit-<%= @unit.id %>-mount-<%= action.mount_id %>-<%= @turn_number %>-<%= action.start %>"
       phx-hook="RotationPartial"
       data-unit-id="<%= @unit.id %>"
-      data-mount-id="<%= action.turret_id %>"
+      data-mount-id="<%= action.mount_id %>"
       data-angle="<%= action.angle_final %>"
       data-travel="<%= action.angle_travel %>"
       data-start="<%= action.start %>"

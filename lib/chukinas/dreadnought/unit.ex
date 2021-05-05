@@ -77,7 +77,7 @@ defmodule Unit do
 
   def put(unit, items) when is_list(items), do: Enum.reduce(items, unit, &put(&2, &1))
   def put(unit, %Turret{} = turret), do: Maps.put_by_id(unit, :turrets, turret)
-  def put(unit, %MountRotation{} = mount_action), do: Maps.put_by_id(unit, :mount_actions, mount_action, :turret_id)
+  def put(unit, %MountRotation{} = mount_action), do: Maps.put_by_id(unit, :mount_actions, mount_action, :mount_id)
 
   # TODO delete
   def put_path(%__MODULE__{} = unit, geo_path) do
