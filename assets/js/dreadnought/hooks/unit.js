@@ -16,11 +16,9 @@ const has_already_maneuvered = (function() {
     const turnNumber = document.getElementById("turn-number").dataset.turnNumber
     const lastTurnNumberExecuted = lastTurnNumbers.get(unitId)
     if (turnNumber == lastTurnNumberExecuted) {
-      console.log("already mvr'ed")
       return true
     }
     lastTurnNumbers.set(unitId, turnNumber)
-    console.log("not already mvr'ed")
     return false
   }
 })()
@@ -53,14 +51,16 @@ function partialManeuver(maneuveringEl, pathEl, opts = {}) {
 }
 
 function scheduleRotation(rotatingEl, angleFinal, angleTravel, opts = {}) {
-  console.log("scheduling a rotation")
   opts = {
     start: 0.5,
     duration: 0.5,
     ...opts
   }
-  gsap.to(rotatingEl, {
-    rotation: "+=45",
+  gsap.fromTo(rotatingEl, {
+    rotation: opts.startAngle
+  }, {
+    rotation: `${angleFinal}_${opts.direction}`,
+    // rotation: '180_cw',
     ease: "none",
     delay: opts.start * ANIMATIONDURATION,
     duration: opts.duration * ANIMATIONDURATION,
@@ -151,10 +151,8 @@ const Unit = {
     subscribeNewTurn(() => maneuver_unit(this.el))
   },
   //beforeUpdate() {
-  //  console.log("unit before update")
   //},
   //updated() {
-  //  console.log("unit updated")
   //  if (!has_already_maneuvered(this.el)) {
   //    maneuver_unit(this.el)
   //  }
@@ -165,10 +163,10 @@ const RotationPartial = {
   mounted() {
     const data = this.el.dataset
     const rotatingEl = document.getElementById(`unit-${data.unitId}-mount-${data.mountId}`)
-    scheduleRotation(this.el, data.angle, data.travel, {
-      start: data.start,
-      duration: data.duration
-    })
+    scheduleRotation(rotatingEl, data.angle, data.travel, data)
+  },
+  updated() {
+    console.log("mount updated!", this.el)
   }
 }
 
@@ -182,8 +180,6 @@ const PartialPath = {
       fractionalDuration: this.el.dataset.duration,
       fadeout: parse_dom_string(this.el.dataset.fadeout)
     }
-    console.log(this.el.dataset)
-    console.log(opts)
     partialManeuver(maneuveringEl, pathEl, opts)
   },
 }

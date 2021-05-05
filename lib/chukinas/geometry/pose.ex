@@ -66,7 +66,13 @@ defmodule Pose do
   defimpl Inspect do
     import Inspect.Algebra
     def inspect(pose, opts) do
-      concat ["#Pose<", to_doc({round(pose.x), round(pose.y)}, opts), "∠ " , to_doc(round(pose.angle), opts), "°>"]
+      col = fn string -> color(string, :cust_struct, opts) end
+      concat [
+        col.("#Pose<"),
+        to_doc({round(pose.x), round(pose.y)}, opts), "∠ " , to_doc(round(pose.angle), opts),
+        "°",
+        col.(">")
+      ]
     end
   end
 end

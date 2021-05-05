@@ -1,4 +1,5 @@
 alias Chukinas.Dreadnought.{MountPartial}
+alias Chukinas.Geometry.Trig
 
 # TODO is this the right name for it? How well does this go with turret.ex?
 # TODO is 'MountAction' better?
@@ -17,6 +18,9 @@ defmodule MountPartial do
     # Rotation
     field :angle_final, number()
     field :angle_travel, number()
+    # TODO homogenize field names
+    field :start_angle, number()
+    field :direction, :cw | :ccw
     # Time as fractions of turn animation time
     field :start, number()
     field :duration, number()
@@ -28,13 +32,15 @@ defmodule MountPartial do
 
   def new(turret_id, angle_final, angle_travel, opts \\ []) do
     fields = Chukinas.Util.Opts.merge!(opts,
-      start: 0,
-      duration: 1
+      start: 0.5,
+      duration: 0.5
     )
     |> Keyword.merge(
       turret_id: turret_id,
       angle_final: angle_final,
-      angle_travel: angle_travel
+      angle_travel: angle_travel,
+      direction: (if angle_travel < 0, do: :ccw, else: :cw),
+      start_angle: Trig.normalize_angle(angle_final - angle_travel)
     )
     struct!(__MODULE__, fields)
   end
@@ -63,11 +69,17 @@ defmodule MountPartial do
   defimpl Inspect do
     import Inspect.Algebra
     def inspect(action, opts) do
+      col = fn string -> color(string, :cust_struct, opts) end
       keywords = [
         time: {action.start, action.duration},
-        angle: {action.angle_final, action.angle_travel}
+        angle: {action.angle_final, action.angle_travel},
+        direction: action.direction,
+        start_angle: action.start_angle
       ]
-      concat ["$Mount-#{action.turret_id}-Action", to_doc(keywords, opts)]
+      concat [
+        col.("$Mount-#{action.turret_id}-Action"),
+        to_doc(keywords, opts)
+      ]
     end
   end
 end

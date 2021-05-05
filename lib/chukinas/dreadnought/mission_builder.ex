@@ -12,7 +12,7 @@ defmodule MissionBuilder do
     }
     arena = %{
       width: 1000,
-      height: 750
+      height: 850
     }
     margin = Size.new(arena.height, arena.width)
     #margin = Size.new(200, 100)
@@ -33,7 +33,7 @@ defmodule MissionBuilder do
     units = [
       Unit.new(1, pose: Pose.new(0, 0, 0), name: "Prince Eugene"),
       #Unit.new(2, pose: Pose.new(800, 155, 75), name: "Billy"),
-      Unit.new(3, pose: Pose.new(Position.from_size(grid), 225), player_id: 2, name: "Hoodie")
+      #Unit.new(3, pose: Pose.new(Position.from_size(grid), 225), player_id: 2, name: "Hoodie")
     ]
     players = [
       Player.new(1, :human),

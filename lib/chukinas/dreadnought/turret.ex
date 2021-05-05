@@ -113,17 +113,19 @@ defmodule Turret do
   defimpl Inspect do
     import Inspect.Algebra
     def inspect(turret, opts) do
+      col = fn string -> color(string, :cust_struct, opts) end
       fields = [
         rest: turret.resting_pose,
         pose: turret.pose
       ]
       concat [
-        "#Turret-#{turret.id}<",
+        col.("#Turret-#{turret.id}<"),
         to_doc(turret.min_angle, opts),
         "°+",
         to_doc(turret.max_travel, opts),
         " ",
-        to_doc(fields, opts), ">"
+        to_doc(fields, opts),
+        col.(">")
       ]
     end
   end

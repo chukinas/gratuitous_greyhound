@@ -47,8 +47,8 @@ defmodule Unit do
     sprite = Spritesheet.red("ship_large")
     turrets =
       [
-        {1, 0},
-        {2, 180}
+        {1, 0}
+        #{2, 180}
       ]
       |> Enum.map(fn {id, angle} ->
         # TODO I don't think I need a mounting struct.
@@ -176,6 +176,7 @@ defmodule Unit do
   defimpl Inspect do
     import Inspect.Algebra
     def inspect(unit, opts) do
+      col = fn string -> color(string, :cust_struct, opts) end
       unit_map =
         unit
         |> Map.take([
@@ -183,7 +184,9 @@ defmodule Unit do
           :mount_actions
         ])
         |> Enum.into([])
-      concat ["#Unit-#{unit.id}", to_doc(unit_map, opts)]
+      concat [
+        col.("#Unit-#{unit.id}"),
+        to_doc(unit_map, opts)]
     end
   end
 end
