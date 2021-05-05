@@ -77,7 +77,7 @@ defmodule Unit do
 
   def put(unit, items) when is_list(items), do: Enum.reduce(items, unit, &put(&2, &1))
   def put(unit, %Turret{} = turret), do: Maps.put_by_id(unit, :turrets, turret)
-  def put(unit, %MountPartial{} = mount_action), do: Maps.put_by_id(unit, :mount_actions, mount_action)
+  def put(unit, %MountPartial{} = mount_action), do: Maps.put_by_id(unit, :mount_actions, mount_action, :turret_id)
 
   # TODO delete
   def put_path(%__MODULE__{} = unit, geo_path) do
@@ -106,9 +106,7 @@ defmodule Unit do
     %__MODULE__{unit | final_turn: final_turn}
   end
 
-  def put_damage(unit, damage, turn_number) do
-    Map.update!(unit, :damage, & [{turn_number, damage} | &1])
-  end
+  def put_damage(unit, damage, turn_number), do: Maps.push(unit, :damage, {turn_number, damage})
 
   # TODO This 50 is just a guess. Need actual logic here.
   def calc_selection_box_position(unit) do

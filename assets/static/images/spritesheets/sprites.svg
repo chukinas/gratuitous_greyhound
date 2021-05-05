@@ -181,16 +181,16 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="2560"
-     inkscape:window-height="1352"
+     inkscape:window-height="1376"
      id="namedview4"
      showgrid="false"
-     inkscape:zoom="9.4472762"
-     inkscape:cx="37.348396"
-     inkscape:cy="42.566043"
+     inkscape:zoom="5.3808027"
+     inkscape:cx="60.529583"
+     inkscape:cy="31.474943"
      inkscape:window-x="2560"
-     inkscape:window-y="51"
+     inkscape:window-y="27"
      inkscape:window-maximized="0"
-     inkscape:current-layer="layer6"
+     inkscape:current-layer="layer14"
      inkscape:document-rotation="0"
      showguides="true"
      inkscape:guide-bbox="true"
@@ -199,7 +199,8 @@
      inkscape:groupmode="layer"
      id="layer7"
      inkscape:label="red"
-     style="display:inline">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <g
        inkscape:groupmode="layer"
        inkscape:label="image"
@@ -209,13 +210,13 @@
       <image
          sodipodi:absref="/home/jc/projects/chukinas/assets/static/images/spritesheets/red.png"
          xlink:href="red.png"
-         width="122"
-         height="57"
-         preserveAspectRatio="none"
-         style="image-rendering:optimizeSpeed"
-         id="image1201"
+         y="0"
          x="0"
-         y="0" />
+         id="image1201"
+         style="image-rendering:optimizeSpeed"
+         preserveAspectRatio="none"
+         height="57"
+         width="122" />
     </g>
     <g
        inkscape:groupmode="layer"
@@ -400,13 +401,13 @@
       <image
          sodipodi:absref="/home/jc/projects/chukinas/assets/static/images/spritesheets/test.png"
          xlink:href="test.png"
-         y="13.903466"
-         x="41.94978"
-         id="image1034"
-         style="image-rendering:optimizeSpeed"
-         preserveAspectRatio="none"
+         width="33.333332"
          height="33.333332"
-         width="33.333332" />
+         preserveAspectRatio="none"
+         style="image-rendering:optimizeSpeed"
+         id="image1034"
+         x="41.94978"
+         y="13.903466" />
     </g>
     <g
        inkscape:groupmode="layer"
@@ -450,6 +451,26 @@
          cy="39.844872"
          r="4.8382006"
          inkscape:label="mounting_1" />
+    </g>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer13"
+     inkscape:label="20210504">
+    <g
+       inkscape:groupmode="layer"
+       id="layer14"
+       inkscape:label="image">
+      <image
+         sodipodi:absref="/home/jc/projects/chukinas/assets/static/images/spritesheets/20210504.png"
+         xlink:href="20210504.png"
+         y="0"
+         x="0"
+         id="image965"
+         style="opacity:1;image-rendering:optimizeSpeed"
+         preserveAspectRatio="none"
+         height="103.65759"
+         width="189.15617" />
     </g>
   </g>
   <g

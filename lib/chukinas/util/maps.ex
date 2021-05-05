@@ -17,4 +17,8 @@ defmodule Maps do
   def put_by_id(map, key, item, id_key \\ :id) do
     Map.update!(map, key, &ById.put(&1, item, id_key))
   end
+
+  def push(map, key, item) do
+    Map.update!(map, key, &[item | &1])
+  end
 end

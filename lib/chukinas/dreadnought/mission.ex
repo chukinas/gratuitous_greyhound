@@ -121,12 +121,7 @@ defmodule Mission do
     %__MODULE__{mission | player_actions: []}
   end
 
-  defp reset_units(mission) do
-    units =
-      mission.units
-      |> Enum.map(&Unit.new_turn_reset/1)
-    %__MODULE__{mission | units: units}
-  end
+  defp reset_units(mission), do: Maps.map_each(mission, :units, &Unit.new_turn_reset/1)
 
   defp turn_complete?(mission) do
     player_ids = mission |> player_ids |> MapSet.new
@@ -161,10 +156,7 @@ defmodule Mission do
   end
 
   defp calc_unit_render(mission) do
-    units =
-      mission.units
-      |> Enum.map(&Unit.calc_render(&1, mission.turn_number))
-    %__MODULE__{mission | units: units}
+    Maps.map_each(mission, :units, &Unit.calc_render(&1, mission.turn_number))
   end
 
   defp calc_gunnery(mission) do
