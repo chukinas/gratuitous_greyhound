@@ -19,6 +19,21 @@ defmodule Unit.Builder do
     Unit.new(id, fields)
   end
 
+  def red_destroyer(id, opts \\ []) do
+    sprite = Spritesheet.red("ship_small")
+    turrets = build_turrets(sprite, {:red, "turret1"}, [
+      {1, 0}
+    ])
+    fields =
+      [
+        health: 50,
+        sprite: sprite |> Sprite.center,
+        turrets: turrets
+      ]
+      |> Keyword.merge(opts)
+    Unit.new(id, fields)
+  end
+
   # *** *******************************
   # *** PRIVATE
 
