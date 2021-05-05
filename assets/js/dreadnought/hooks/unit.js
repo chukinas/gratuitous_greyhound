@@ -164,9 +164,6 @@ const RotationPartial = {
     const data = this.el.dataset
     const rotatingEl = document.getElementById(`unit-${data.unitId}-mount-${data.mountId}`)
     scheduleRotation(rotatingEl, data.angle, data.travel, data)
-  },
-  updated() {
-    console.log("mount updated!", this.el)
   }
 }
 

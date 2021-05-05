@@ -1,9 +1,9 @@
-alias Chukinas.Dreadnought.{MountPartial}
+alias Chukinas.Dreadnought.{MountRotation}
 alias Chukinas.Geometry.Trig
 
 # TODO is this the right name for it? How well does this go with turret.ex?
 # TODO is 'MountAction' better?
-defmodule MountPartial do
+defmodule MountRotation do
   @moduledoc """
   Fully qualifies a portion of a unit's mounts's action
   """

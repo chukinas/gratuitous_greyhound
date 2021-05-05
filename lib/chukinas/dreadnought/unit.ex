@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret, ManeuverPartial, Maneuver, MountPartial}
+alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret, ManeuverPartial, Maneuver, MountRotation}
 alias Chukinas.Geometry.{Pose, Path, Position}
 alias Chukinas.Util.{Maps}
 
@@ -23,7 +23,7 @@ defmodule Unit do
     # TODO rename mounts
     # TODO should include anything that's positioned relative to the hull
     field :turrets, [Turret.t()]
-    field :mount_actions, [MountPartial.t()], default: []
+    field :mount_actions, [MountRotation.t()], default: []
     # TODO this is not correct. Should just be an integer?
     field :health, damage()
     # Varies from game turn to game turn
@@ -77,7 +77,7 @@ defmodule Unit do
 
   def put(unit, items) when is_list(items), do: Enum.reduce(items, unit, &put(&2, &1))
   def put(unit, %Turret{} = turret), do: Maps.put_by_id(unit, :turrets, turret)
-  def put(unit, %MountPartial{} = mount_action), do: Maps.put_by_id(unit, :mount_actions, mount_action, :turret_id)
+  def put(unit, %MountRotation{} = mount_action), do: Maps.put_by_id(unit, :mount_actions, mount_action, :turret_id)
 
   # TODO delete
   def put_path(%__MODULE__{} = unit, geo_path) do
@@ -147,7 +147,7 @@ defmodule Unit do
       travel = Turret.travel(mount, corrected_angle)
       put(unit, [
         Turret.put_angle(mount, corrected_angle),
-        MountPartial.new(mount.id, corrected_angle, travel)
+        MountRotation.new(mount.id, corrected_angle, travel)
       ])
     end)
   end
