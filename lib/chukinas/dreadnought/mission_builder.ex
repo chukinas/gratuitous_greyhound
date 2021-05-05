@@ -31,9 +31,9 @@ defmodule MissionBuilder do
       |> Enum.map(&round(&1 / square_size))
     grid = Grid.new(square_size, square_count_x, square_count_y)
     units = [
-      Unit.new(1, pose: Pose.new(0, 0, 0), name: "Prince Eugene"),
-      #Unit.new(2, pose: Pose.new(800, 155, 75), name: "Billy"),
-      #Unit.new(3, pose: Pose.new(Position.from_size(grid), 225), player_id: 2, name: "Hoodie")
+      Unit.Builder.red_cruiser(1, pose: Pose.new(0, 0, 0), name: "Prince Eugene"),
+      #Unit.Builder.red_cruiser(2, pose: Pose.new(800, 155, 75), name: "Billy"),
+      Unit.Builder.red_cruiser(3, pose: Pose.new(Position.from_size(grid), 225), player_id: 2, name: "Hoodie")
     ]
     players = [
       Player.new(1, :human),

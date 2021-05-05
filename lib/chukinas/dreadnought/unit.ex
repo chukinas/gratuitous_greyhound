@@ -47,8 +47,8 @@ defmodule Unit do
     sprite = Spritesheet.red("ship_large")
     turrets =
       [
-        {1, 0}
-        #{2, 180}
+        {1, 0},
+        {2, 180}
       ]
       |> Enum.map(fn {id, angle} ->
         # TODO I don't think I need a mounting struct.
