@@ -114,10 +114,17 @@ defmodule Turret do
     import Inspect.Algebra
     def inspect(turret, opts) do
       fields = [
-        arc: {turret.min_angle, turret.max_travel, turret.resting_pose},
+        rest: turret.resting_pose,
         pose: turret.pose
       ]
-      concat ["#Turret-#{turret.id}", to_doc(fields, opts)]
+      concat [
+        "#Turret-#{turret.id}<",
+        to_doc(turret.min_angle, opts),
+        "°+",
+        to_doc(turret.max_travel, opts),
+        " ",
+        to_doc(fields, opts), ">"
+      ]
     end
   end
 end

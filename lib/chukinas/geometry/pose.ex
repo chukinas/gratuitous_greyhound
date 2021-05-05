@@ -64,8 +64,9 @@ defmodule Pose do
   # *** IMPLEMENTATIONS
 
   defimpl Inspect do
-    def inspect(pose, _opts) do
-      "#Pose<#{round pose.x}, #{round pose.y} ∠ #{round pose.angle}°>"
+    import Inspect.Algebra
+    def inspect(pose, opts) do
+      concat ["#Pose<", to_doc({round(pose.x), round(pose.y)}, opts), "∠ " , to_doc(round(pose.angle), opts), "°>"]
     end
   end
 end

@@ -183,7 +183,7 @@ defmodule Unit do
           :mount_actions
         ])
         |> Enum.into([])
-      concat ["$Unit-#{unit.id}", to_doc(unit_map, opts)]
+      concat ["#Unit-#{unit.id}", to_doc(unit_map, opts)]
     end
   end
 end
