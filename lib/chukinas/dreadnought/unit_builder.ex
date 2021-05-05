@@ -3,6 +3,23 @@ alias Chukinas.Geometry.{Pose}
 
 defmodule Unit.Builder do
 
+  def blue_dreadnought(id, opts \\ []) do
+    sprite = Spritesheet.blue("hull_blue_large")
+    turrets = build_turrets(sprite, {:blue, "turret_blue_1"}, [
+      {1, 0},
+      {2, 0},
+      {3, 180}
+    ])
+    fields =
+      [
+        health: 150,
+        sprite: sprite |> Sprite.center,
+        turrets: turrets
+      ]
+      |> Keyword.merge(opts)
+    Unit.new(id, fields)
+  end
+
   def red_cruiser(id, opts \\ []) do
     sprite = Spritesheet.red("ship_large")
     turrets = build_turrets(sprite, {:red, "turret1"}, [
