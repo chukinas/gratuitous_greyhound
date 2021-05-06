@@ -25,10 +25,12 @@ defmodule CombatAction do
       |> CSys.Conversion.put_inv(attacker)
       |> CSys.Conversion.put_inv(turret)
       |> CSys.Conversion.get_angle
+      |> IOP.inspect
     {angle, target} = case Turret.normalize_desired_angle(turret, desired_angle) do
       {:ok, angle} -> {angle, Unit.put_damage(target, 10, turn_number)}
       {_, angle} -> {angle, target}
     end
+    IOP.inspect angle,  "actual angle"
     attacker = Unit.rotate_turret(attacker, turret_id, angle)
     {attacker, target, turn_number}
   end

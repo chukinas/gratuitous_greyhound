@@ -60,13 +60,14 @@ defmodule Vector do
       b / magnitude
     }
   end
+  def sign_between(a, b) do
+    a
+    |> rotate_90
+    |> dot(b)
+    |> Trig.sign
+  end
   def angle_between(a, b) do
-    sign =
-      a
-      |> rotate_90
-      |> dot(b)
-      |> Trig.sign
-    sign * angle_between_abs(a, b) |> Trig.normalize_angle
+    Trig.normalize_angle(sign_between(a, b) * angle_between_abs(a, b))
   end
   def angle_between_abs(a, b) do
     dot(a, b) |> Trig.acos

@@ -31,6 +31,7 @@ defmodule Turret do
   # *** *******************************
   # *** NEW
 
+  # TODO get rid of pose. I should be able to position mounts in unit3 using just the origin.
   def new(id, pose, sprite, vector_position) do
     %__MODULE__{
       id: id,
@@ -51,6 +52,11 @@ defmodule Turret do
   def angle_arc_center(mount) do
     mount.min_angle + (mount.max_travel / 2)
   end
+  def vector_arc_center(mount) do
+    mount
+    |> angle_arc_center
+    |> Vector.from_angle
+  end
   def unit_vector_arc_center(mount) do
     mount
     |> angle_arc_center
@@ -60,6 +66,7 @@ defmodule Turret do
   def current_rel_angle(mount) do
     rel_angle(mount, current_angle(mount))
   end
+  def half_travel(%__MODULE__{max_travel: travel}), do: travel / 2
 
   # *** *******************************
   # *** SETTERS
@@ -73,15 +80,15 @@ defmodule Turret do
 
   def normalize_desired_angle(%__MODULE__{} = mount, angle) do
     vector_desired = Vector.from_angle(angle)
-    vector_arc_center = Vector.from_angle(mount |> angle_arc_center)
-    angle_between = Vector.angle_between(vector_arc_center, vector_desired)
+    vector_arc_center = vector_arc_center(mount)
     cond do
-      angle_between <= (mount.max_travel / 2) -> {:ok, angle}
-      angle_between <= 180 -> {:corrected, max_angle(mount)}
-      true -> {:corrected, mount.min_angle}
+      lies_within_arc?(mount, vector_desired) -> {:ok, angle}
+      Vector.sign_between(vector_arc_center, vector_desired) < 0 -> {:corrected, mount.min_angle}
+      true -> {:corrected, max_angle(mount)}
     end
   end
 
+  # TODO bad name
   def rel_angle(mount, angle) do
     angle = Trig.normalize_angle(angle)
     angle = if angle < mount.min_angle do
@@ -92,6 +99,7 @@ defmodule Turret do
     angle - mount.min_angle
   end
 
+  # TODO also bad name
   def travel(mount, angle) do
     rel_angle(mount, angle) - current_rel_angle(mount)
   end
@@ -107,6 +115,12 @@ defmodule Turret do
       Trig.normalize_angle(start_angle),
       Trig.normalize_angle(end_angle)
     }
+  end
+
+  defp lies_within_arc?(mount, target_unit_vector) do
+    vector_arc_center = vector_arc_center(mount)
+    angle_between = Vector.angle_between_abs(vector_arc_center, target_unit_vector)
+    angle_between <= half_travel(mount)
   end
 
   # *** *******************************
