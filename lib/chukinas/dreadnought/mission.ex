@@ -110,7 +110,7 @@ defmodule Mission do
       |> clear_player_actions
       |> calc_ai_commands
       |> reset_units
-      |> calc_random_mount_orientation
+      |> calc_gunnery
       |> IOP.inspect("mission", only: [:units, :turn_number])
     else
       mission
@@ -166,7 +166,7 @@ defmodule Mission do
     end)
   end
 
-  defp calc_random_mount_orientation(mission) do
-    Maps.map_each(mission, :units, &Unit.calc_random_mount_orientation/1)
-  end
+  #defp calc_random_mount_orientation(mission) do
+  #  Maps.map_each(mission, :units, &Unit.calc_random_mount_orientation/1)
+  #end
 end

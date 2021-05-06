@@ -25,6 +25,8 @@ defmodule Vector do
     {cos, sin}
   end
 
+  def from_position(%{x: x, y: y}), do: {x, y}
+
   # *** *******************************
   # *** GETTERS
 

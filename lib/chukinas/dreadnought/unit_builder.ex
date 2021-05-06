@@ -1,5 +1,6 @@
 alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret}
-alias Chukinas.Geometry.{Pose}
+alias Chukinas.Geometry.{Pose, Position}
+alias Chukinas.LinearAlgebra.Vector
 
 defmodule Unit.Builder do
 
@@ -56,9 +57,13 @@ defmodule Unit.Builder do
 
   defp build_turrets(unit_sprite, {sprite_fun, sprite_name}, turret_tuples) do
     turret_sprite = apply(Spritesheet, sprite_fun, [sprite_name]) |> Sprite.center
-    Enum.map(turret_tuples, fn {pos, orient} ->
-      position = unit_sprite.mounts[pos] |> Pose.new(orient)
-      Turret.new(pos, position, turret_sprite)
+    Enum.map(turret_tuples, fn {mount_id, orient} ->
+      pose = unit_sprite.mounts[mount_id] |> Pose.new(orient)
+      vector_position =
+        pose
+        |> Position.subtract(unit_sprite.rect)
+        |> Vector.from_position
+      Turret.new(mount_id, pose, turret_sprite, vector_position)
     end)
   end
 end

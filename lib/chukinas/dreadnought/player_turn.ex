@@ -22,6 +22,7 @@ defmodule PlayerTurn do
     field :player_id, integer()
     # TODO be more specific
     field :player_type, any()
+    # TODO this is buggy for the human player
     field :maneuver_foresight, integer(), default: 1
     field :margin, Size.t()
     field :grid, Grid.t()
@@ -74,34 +75,35 @@ defmodule PlayerTurn do
   # *** PRIVATE
 
   # TODO move the bulk of this out to the AI module
-  defp if_ai_calc_commands(token) do
-    if token.player_type == :ai do
+  defp if_ai_calc_commands(player_turn) do
+    if player_turn.player_type == :ai do
+      player_turn = Map.put(player_turn, :maneuver_foresight, 4)
       pending_unit_ids =
-        token.player_actions
+        player_turn.player_actions
         |> ActionSelection.pending_player_unit_ids
       unit_maneuvers = Enum.map(pending_unit_ids, fn unit_id ->
         position =
-          token.cmd_squares
+          player_turn.cmd_squares
           |> Stream.filter(fn %GridSquare{unit_id: id} -> id == unit_id end)
           |> Enum.random
           |> GridSquare.position
         UnitAction.move_to(unit_id, position)
       end)
-      Map.update!(token, :player_actions, &ActionSelection.put(&1, unit_maneuvers))
+      Map.update!(player_turn, :player_actions, &ActionSelection.put(&1, unit_maneuvers))
     else
-      token
+      player_turn
     end
   end
 
-  defp calc_cmd_squares(token, islands) do
-    squares = Enum.flat_map(token.units, fn unit ->
-      if (unit.active?) and (unit.player_id == token.player_id) do
-        ManeuverPlanning.get_cmd_squares(unit, token.grid, islands, token.maneuver_foresight)
+  defp calc_cmd_squares(player_turn, islands) do
+    squares = Enum.flat_map(player_turn.units, fn unit ->
+      if (unit.active?) and (unit.player_id == player_turn.player_id) do
+        ManeuverPlanning.get_cmd_squares(unit, player_turn.grid, islands, player_turn.maneuver_foresight)
       else
         []
       end
     end)
-    %__MODULE__{token | cmd_squares: squares}
+    %__MODULE__{player_turn | cmd_squares: squares}
   end
 
   defp maneuver_trapped_units(%__MODULE__{

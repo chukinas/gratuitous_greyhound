@@ -1,5 +1,5 @@
 alias Chukinas.Geometry.{Trig}
-alias Chukinas.LinearAlgebra.{CSys, Vector, Matrix}
+alias Chukinas.LinearAlgebra.{CSys, Vector, Matrix, HasCsys}
 
 defmodule CSys do
 
@@ -14,6 +14,7 @@ defmodule CSys do
 
   def new(%{x: x, y: y, angle: deg}), do: new(x, y, deg)
   def new(%{x: x, y: y}), do: new(x, y, 0)
+  def new({x, y}), do: new(x, y, 0)
   def new(x, y), do: new(x, y, 0)
   def new(x, y, deg) do
     {sin, cos} = Trig.sin_and_cos(deg)
@@ -48,5 +49,14 @@ defmodule CSys do
     trans.rotation
     |> Matrix.mult(vector)
     |> Vector.add(trans.position)
+  end
+
+  # *** *******************************
+  # *** IMPLEMENTATIONS
+
+  defimpl HasCsys do
+    def get_csys(self) do
+      self
+    end
   end
 end

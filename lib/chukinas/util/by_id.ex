@@ -15,7 +15,14 @@ defmodule Chukinas.Util.ById do
     end
   end
 
-  def put(enum, item, key \\ :id) when is_list(enum) do
+  def put(enum, item_or_items, key \\ :id)
+  def put(enum, items, key) when is_tuple(items) do
+    put(enum, Tuple.to_list(items), key)
+  end
+  def put(enum, items, key) when is_list(items) do
+    Enum.reduce(items, enum, fn item, enum -> put(enum, item, key) end)
+  end
+  def put(enum, item, key) when is_list(enum) do
     replace(enum, item, key)
   end
 

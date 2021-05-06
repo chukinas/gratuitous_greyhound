@@ -27,7 +27,7 @@ defmodule MountRotation do
     angle_end = Trig.normalize_angle(angle_end)
     time_duration = case angle_travel do
       0 -> 1
-      trav -> abs(trav) / 360 / 2
+      trav -> Float.round(abs(trav) / 360 / 2.0, 2)
     end
     fields = Chukinas.Util.Opts.merge!(opts,
       time_start: 1 - time_duration,

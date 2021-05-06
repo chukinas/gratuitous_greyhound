@@ -1,3 +1,4 @@
+# TODO This module should no longer be needed now that I have linear algebra?
 alias Chukinas.Geometry.{Polar, Position, Trig}
 
 defmodule Polar do

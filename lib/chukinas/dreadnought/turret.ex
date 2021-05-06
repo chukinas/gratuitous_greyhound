@@ -1,7 +1,7 @@
 
 alias Chukinas.Dreadnought.{Turret, Sprite}
 alias Chukinas.Geometry.{Pose, Trig}
-alias Chukinas.LinearAlgebra.Vector
+alias Chukinas.LinearAlgebra.{HasCsys, CSys, Vector}
 
 # TODO rename Mount
 defmodule Turret do
@@ -17,6 +17,7 @@ defmodule Turret do
   typedstruct enforce: true do
     field :id, integer()
     # TODO I need coords relative to the unit's origin. These poses are all relative to top-left of sprite
+    field :vector_position, Vector.t()
     field :resting_pose, Pose.t()
     # TODO this is duplicate information
     field :arc, {start_angle :: integer(), end_angle :: integer()}
@@ -30,9 +31,10 @@ defmodule Turret do
   # *** *******************************
   # *** NEW
 
-  def new(id, pose, sprite) do
+  def new(id, pose, sprite, vector_position) do
     %__MODULE__{
       id: id,
+      vector_position: vector_position,
       resting_pose: pose,
       arc: default_arc(pose),
       min_angle: Trig.normalize_angle(pose.angle - 135),
@@ -127,6 +129,12 @@ defmodule Turret do
         to_doc(fields, opts),
         col.(">")
       ]
+    end
+  end
+
+  defimpl HasCsys do
+    def get_csys(%{vector_position: vector}) do
+      CSys.new(vector)
     end
   end
 end

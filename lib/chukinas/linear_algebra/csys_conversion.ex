@@ -1,4 +1,4 @@
-alias Chukinas.LinearAlgebra.{Vector, CSys}
+alias Chukinas.LinearAlgebra.{Vector, CSys, HasCsys}
 
 # TODO rename Csys
 defmodule CSys.Conversion do
@@ -24,10 +24,17 @@ defmodule CSys.Conversion do
   # *** *******************************
   # *** API
 
-  def put_inv(%__MODULE__{} = token, %CSys{} = transform) do
-    Map.update!(token, :__transforms__, & [CSys.flip(transform) | &1])
+  def put_inv(%__MODULE__{} = token, item_with_csys) do
+    transform =
+      item_with_csys
+      |> HasCsys.get_csys
+      |> CSys.flip
+    Map.update!(token, :__transforms__, & [transform | &1])
   end
-  def put(%__MODULE__{} = token, %CSys{} = transform) do
+  def put(%__MODULE__{} = token, item_with_csys) do
+    transform =
+      item_with_csys
+      |> HasCsys.get_csys
     Map.update!(token, :__transforms__, & [transform | &1])
   end
 

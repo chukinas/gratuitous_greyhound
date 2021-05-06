@@ -1,6 +1,8 @@
 alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret, ManeuverPartial, Maneuver, MountRotation}
 alias Chukinas.Geometry.{Pose, Path, Position}
-alias Chukinas.Util.{Maps}
+alias Chukinas.Util.{Maps, ById}
+# TODO do I need this dependency?
+alias Chukinas.LinearAlgebra.{HasCsys, CSys, Vector}
 
 defmodule Unit do
   @moduledoc """
@@ -43,28 +45,13 @@ defmodule Unit do
   # *** *******************************
   # *** NEW
 
+  # Refactor now that I have a unit builder module
   def new(id, opts \\ []) do
     sprite = Spritesheet.red("ship_large")
-    turrets =
-      [
-        {1, 0},
-        {2, 180}
-      ]
-      |> Enum.map(fn {id, angle} ->
-        # TODO I don't think I need a mounting struct.
-        # Just replace the list of structs with a single map of positions.
-        # I'll wait to do this though until I convince myself
-        # that I don't need a struct with any other props.
-        position =
-          sprite.mounts[id]
-          |> Pose.new(angle)
-        Turret.new(id, position, Spritesheet.red("turret1") |> Sprite.center)
-      end)
     opts =
       [
         health: 100,
         sprite: sprite |> Sprite.center,
-        turrets: turrets
       ]
       |> Keyword.merge(opts)
       |> Keyword.merge(id: id)
@@ -144,12 +131,18 @@ defmodule Unit do
       {_, corrected_angle} = Turret.normalize_desired_angle(
         mount,
         Enum.random(0..359))
-      travel = Turret.travel(mount, corrected_angle)
-      put(unit, [
-        Turret.put_angle(mount, corrected_angle),
-        MountRotation.new(mount.id, corrected_angle, travel)
-      ])
+      rotate_turret(unit, mount.id, corrected_angle)
     end)
+  end
+
+  def rotate_turret(unit, mount_id, angle) do
+    mount = turret(unit, mount_id)
+    travel = Turret.travel(mount, angle)
+    put(unit, [
+      # TODO validate angle?
+      Turret.put_angle(mount, angle),
+      MountRotation.new(mount.id, angle, travel)
+    ])
   end
 
   # *** *******************************
@@ -169,6 +162,15 @@ defmodule Unit do
     (1 - total_damage(unit) / health)
     |> max(0)
   end
+  def gunnery_target_vector(%{pose: pose}) do
+    Vector.from_position(pose)
+  end
+  def turret(unit, turret_id) do
+    ById.get!(unit.turrets, turret_id)
+  end
+  def all_turret_mount_ids(%__MODULE__{turrets: turrets}) do
+    Enum.map(turrets, & &1.id)
+  end
 
   # *** *******************************
   # *** IMPLEMENTATIONS
@@ -181,12 +183,18 @@ defmodule Unit do
         unit
         |> Map.take([
           :turrets,
-          :mount_actions
         ])
         |> Enum.into([])
+        |> Keyword.put(:health, Unit.percent_remaining_health(unit))
       concat [
         col.("#Unit-#{unit.id}"),
         to_doc(unit_map, opts)]
+    end
+  end
+
+  defimpl HasCsys do
+    def get_csys(%{pose: pose}) do
+      CSys.new(pose)
     end
   end
 end
