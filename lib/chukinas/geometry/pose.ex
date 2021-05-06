@@ -17,9 +17,8 @@ defmodule Pose do
   # *** *******************************
   # *** NEW
 
-  def new(position, angle) when Position.is(position) do
-    new(position.x, position.y, angle)
-  end
+  def new({x, y}, angle), do: new(x, y, angle)
+  def new(%{x: x, y: y}, angle), do: new(x, y, angle)
   def new(x, y, angle) do
     %__MODULE__{
       x: x,
@@ -29,6 +28,11 @@ defmodule Pose do
   end
 
   def origin(), do: new(0, 0, 0)
+
+  # *** *******************************
+  # *** GETTERS
+
+  def angle(%{angle: angle}), do: angle
 
   # *** *******************************
   # *** SETTERS

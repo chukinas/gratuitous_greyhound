@@ -50,20 +50,6 @@ defmodule Chukinas.Geometry.PathTest do
     assert ^expected_length = actual_length
   end
 
-  test "deg between points" do
-    start_position = Position.origin()
-    Stream.iterate(0, &(&1 + 30))
-    |> Stream.take(12)
-    |> Enum.each(fn expected_angle ->
-      radius = 100
-      actual_angle =
-        Polar.new(radius, expected_angle)
-        |> Polar.to_cartesian
-        |> (fn end_position -> Trig.deg_between_points(start_position, end_position) end).()
-      assert_equal expected_angle, actual_angle
-    end)
-  end
-
   test "get connecting paths" do
     [0, 90, 180, 270]
     |> Stream.map(&Pose.new(0, 0, &1))

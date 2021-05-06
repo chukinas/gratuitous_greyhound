@@ -34,6 +34,11 @@ defmodule CSys do
   def position(%__MODULE__{position: pos}), do: pos
 
   # *** *******************************
+  # *** SETTERS
+
+  def put_position(%__MODULE__{position: pos}), do: pos
+
+  # *** *******************************
   # *** API
 
   # TODO rename reverse?
@@ -46,6 +51,12 @@ defmodule CSys do
   end
 
   def transform(%__MODULE__{} = trans, vector) do
+    trans.rotation
+    |> Matrix.mult(vector)
+    |> Vector.add(trans.position)
+  end
+
+  def translate(%__MODULE__{} = trans, vector) do
     trans.rotation
     |> Matrix.mult(vector)
     |> Vector.add(trans.position)
