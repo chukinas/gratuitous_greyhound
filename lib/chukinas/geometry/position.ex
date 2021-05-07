@@ -143,8 +143,13 @@ defmodule Position do
   defimpl Inspect do
     import Inspect.Algebra
     def inspect(position, opts) do
-      values = [round(position.x), round(position.y)]
-      concat ["$Position", to_doc(values, opts)]
+      col = fn string -> color(string, :cust_struct, opts) end
+      values = {round(position.x), round(position.y)}
+      concat [
+        col.("#Position<"),
+        to_doc(values, opts),
+        col.(">")
+      ]
     end
   end
 end

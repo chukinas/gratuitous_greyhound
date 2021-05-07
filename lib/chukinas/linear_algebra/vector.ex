@@ -20,6 +20,7 @@ defmodule Vector do
 
   def new(x, y), do: {x, y}
   def new([x, y]), do: {x, y}
+  def new(%{x: x, y: y}), do: {x, y}
 
   def origin, do: new(0, 0)
 

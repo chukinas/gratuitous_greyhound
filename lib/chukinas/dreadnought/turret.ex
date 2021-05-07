@@ -43,6 +43,12 @@ defmodule Turret do
       pose: pose,
       sprite: sprite
     }
+    |> IOP.inspect("new turret", only: [
+      :vector_position,
+      :resting_pose,
+      :pose,
+      :sprite
+    ])
   end
 
   # *** *******************************
@@ -50,7 +56,7 @@ defmodule Turret do
 
   def max_angle(mount), do: mount.min_angle + mount.max_travel
   def angle_arc_center(mount) do
-    mount.min_angle + (mount.max_travel / 2)
+    Trig.normalize_angle(mount.min_angle + (mount.max_travel / 2))
   end
   def vector_arc_center(mount) do
     mount
@@ -70,6 +76,10 @@ defmodule Turret do
   # TODO implement
   def gun_barrel_length(_mount), do: 2
   def gun_barrel_vector(mount), do: {gun_barrel_length(mount), 0}
+  def pose(%{vector_position: {x, y}, pose: pose}) do
+    Pose.new(x, y, Pose.angle(pose))
+  end
+  def csys(turret), do: turret |> pose |> CSys.new
 
   # *** *******************************
   # *** SETTERS
@@ -147,15 +157,14 @@ defmodule Turret do
     def inspect(turret, opts) do
       col = fn string -> color(string, :cust_struct, opts) end
       fields = [
-        rest: turret.resting_pose,
-        pose: turret.pose
+        pose: Turret.pose(turret)
       ]
       concat [
         col.("#Turret-#{turret.id}<"),
-        to_doc(turret.min_angle, opts),
-        "°+",
-        to_doc(turret.max_travel, opts),
-        " ",
+        to_doc(Turret.angle_arc_center(turret) |> round, opts),
+        "±",
+        to_doc(Turret.half_travel(turret) |> round, opts),
+        "°",
         to_doc(fields, opts),
         col.(">")
       ]
@@ -163,9 +172,7 @@ defmodule Turret do
   end
 
   defimpl HasCsys do
-    def get_csys(%{vector_position: vector}) do
-      CSys.new(vector)
-    end
+    def get_csys(self), do: Turret.csys(self)
     def get_angle(%{pose: pose}), do: Pose.angle(pose)
   end
 end

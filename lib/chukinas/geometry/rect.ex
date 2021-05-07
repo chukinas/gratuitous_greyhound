@@ -1,4 +1,5 @@
 alias Chukinas.Geometry.{Position, Rect, CollidableShape, Size}
+alias Chukinas.LinearAlgebra.Vector
 
 defmodule Rect do
   @moduledoc"""
@@ -91,6 +92,22 @@ defmodule Rect do
 
   # *** *******************************
   # *** IMPLEMENTATIONS
+
+  defimpl Inspect do
+    import Inspect.Algebra
+    def inspect(rect, opts) do
+      col = fn string -> color(string, :cust_struct, opts) end
+      fields = [
+        rect |> Position.new,
+        rect |> Size.new
+      ]
+      concat [
+        col.("#Rect<"),
+        to_doc(fields, opts),
+        col.(">")
+      ]
+    end
+  end
 
   defimpl CollidableShape do
     def to_vertices(rect), do: Rect.list_vertices(rect)

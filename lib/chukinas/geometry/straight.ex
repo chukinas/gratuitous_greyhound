@@ -97,5 +97,8 @@ defmodule Straight do
     def get_csys(%{start: pose}) do
       CSys.new(pose)
     end
+    def get_angle(%{start: pose}) do
+      Pose.angle(pose)
+    end
   end
 end
