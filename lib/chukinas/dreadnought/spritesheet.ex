@@ -22,7 +22,7 @@ defmodule Spritesheet do
 
   def all_grouped_by_function do
     all()
-    |> Enum.group_by(fn %{image_path: path} -> Path.basename(path) end)
+    |> Enum.group_by(&Sprite.base_filename/1)
   end
 
   def all do
