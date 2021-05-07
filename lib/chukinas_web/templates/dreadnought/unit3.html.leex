@@ -2,8 +2,8 @@
   id="unit-<%= @unit.id %>"
   class="absolute"
   style="
-    left: <%= @unit.pose.x - @unit.sprite.relative_origin.x %>px;
-    top: <%= @unit.pose.y - @unit.sprite.relative_origin.y %>px; 
+    left: <%= @unit.pose.x + @unit.sprite.rect.x %>px;
+    top: <%= @unit.pose.y + @unit.sprite.rect.y %>px; 
     transform: rotate(<%= @unit.pose.angle %>deg);
   "
 >

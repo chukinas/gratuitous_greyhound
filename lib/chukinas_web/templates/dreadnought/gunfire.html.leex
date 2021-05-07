@@ -3,8 +3,8 @@
 <div
   class="absolute"
   style="
-    left: <%= @gunfire.pose.x - @gunfire.sprite.relative_origin.x %>px;
-    top: <%= @gunfire.pose.y - @gunfire.sprite.relative_origin.y %>px; 
+    left: <%= @gunfire.pose.x + @gunfire.sprite.rect.x %>px;
+    top: <%= @gunfire.pose.y + @gunfire.sprite.rect.y %>px; 
     transform: rotate(<%= @gunfire.pose.angle %>deg);
   "
 >

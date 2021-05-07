@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret}
-alias Chukinas.Geometry.{Pose, Position}
+alias Chukinas.Geometry.{Pose}
 alias Chukinas.LinearAlgebra.Vector
 
 defmodule Unit.Builder do
@@ -79,7 +79,6 @@ defmodule Unit.Builder do
         |> Pose.new(rest_angle)
       vector_position =
         relative_mount_position
-        |> Position.subtract(unit_sprite.relative_origin)
         |> Vector.new
       Turret.new(mount_id, pose, turret_sprite, vector_position)
     end)

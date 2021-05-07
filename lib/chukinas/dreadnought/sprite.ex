@@ -19,7 +19,6 @@ defmodule Sprite do
     field :image_origin, Position.t()
     field :image_clip_path, String.t()
     field :rect, Rect.t()
-    field :relative_origin, Position.t()
     field :mounts, [Mount.t()]
   end
 
@@ -36,7 +35,6 @@ defmodule Sprite do
       image_clip_path: image_clip_path,
       image_origin: origin,
       rect: rect,
-      relative_origin: origin |> Position.subtract(rect),
       mounts: build_mounts(sprite.mounts, rect)
     }
   end
@@ -60,7 +58,6 @@ defmodule Sprite do
       origin: Position.multiply(sprite.origin, scale),
       image_clip_path: Svg.scale(sprite.image_clip_path, scale),
       rect: Rect.scale(sprite.rect, scale),
-      relative_origin: Position.multiply(sprite.relative_origin, scale),
     }
     |> Maps.map_each(:mounts, &Position.multiply(&1, scale))
   end
