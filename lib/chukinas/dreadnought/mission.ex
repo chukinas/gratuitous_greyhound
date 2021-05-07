@@ -1,9 +1,8 @@
-alias Chukinas.Dreadnought.{Unit, Mission, Island, ActionSelection, Player, PlayerTurn, UnitAction, Maneuver, CombatAction}
+alias Chukinas.Dreadnought.{Unit, Mission, Island, ActionSelection, Player, PlayerTurn, UnitAction, Maneuver, CombatAction, Gunfire}
 alias Chukinas.Geometry.{Grid, Size}
 alias Chukinas.Util.{Maps, ById}
 
 defmodule Mission do
-  #@derive {Inspect, only: [:units]}
 
   # *** *******************************
   # *** TYPES
@@ -17,8 +16,10 @@ defmodule Mission do
     field :margin, Size.t()
     field :islands, [Island.t()], default: []
     field :units, [Unit.t()], default: []
+    # TODO combine players and player_actions?
     field :players, [Player.t()], default: []
     field :player_actions, [ActionSelection.t()], default: []
+    field :gunfire, [Gunfire.t()], default: []
   end
 
   # *** *******************************
@@ -74,6 +75,9 @@ defmodule Mission do
     |> Maps.put_by_id(:player_actions, player_actions, :player_id)
     |> maybe_end_turn
   end
+  def push_gunfire(mission, gunfire) do
+    Maps.push(mission, :gunfire, gunfire)
+  end
 
   # *** *******************************
   # *** API
@@ -100,6 +104,7 @@ defmodule Mission do
     if turn_complete?(mission) do
       mission
       |> increment_turn_number
+      |> clear_gunfire
       # Part 1: Execute previous turn's planning
       |> put_tentative_maneuvers
       |> resolve_island_collisions
@@ -110,6 +115,7 @@ defmodule Mission do
       |> clear_player_actions
       |> calc_ai_commands
       |> reset_units
+      # TODO why are there two of these?
       |> calc_gunnery
       |> IOP.inspect("mission", only: [:units, :turn_number])
     else
@@ -117,6 +123,7 @@ defmodule Mission do
     end
   end
 
+  defp clear_gunfire(mission), do: Maps.clear(mission, :gunfire)
   defp clear_player_actions(mission) do
     %__MODULE__{mission | player_actions: []}
   end
@@ -161,8 +168,10 @@ defmodule Mission do
 
   defp calc_gunnery(mission) do
     Enum.reduce(combats(mission), mission, fn combat_action, mission ->
-      units = CombatAction.exec(combat_action, mission)
-      mission |> put(units)
+      {units, gunfire} = CombatAction.exec(combat_action, mission)
+      mission
+      |> put(units)
+      |> push_gunfire(gunfire)
     end)
   end
 

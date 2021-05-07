@@ -1,3 +1,4 @@
+# TODO rename IdList? If so, move any map refs to other module
 defmodule Chukinas.Util.ById do
 
   # *** *******************************

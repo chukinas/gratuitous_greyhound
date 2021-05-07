@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Unit, CombatAction, Turret}
+alias Chukinas.Dreadnought.{Unit, CombatAction, Turret, Gunfire}
 alias Chukinas.Util.ById
 alias Chukinas.LinearAlgebra.CSys
 
@@ -11,13 +11,13 @@ defmodule CombatAction do
   ) do
     attacker = ById.get!(units, attacker_id)
     target = ById.get!(units, target_id)
-    {attacker, target, _turn_number} =
+    {attacker, target, _turn_number, gunfire} =
       Unit.all_turret_mount_ids(attacker)
-      |> Enum.reduce({attacker, target, turn_number}, &fire_turret/2)
-    ById.put(units, [attacker, target])
+      |> Enum.reduce({attacker, target, turn_number, []}, &fire_turret/2)
+    {ById.put(units, [attacker, target]), gunfire}
   end
 
-  defp fire_turret(turret_id, {attacker, target, turn_number} = _acc) do
+  defp fire_turret(turret_id, {attacker, target, turn_number, gunfires} = _acc) do
     turret = Unit.turret(attacker, turret_id)
     desired_angle =
       Unit.gunnery_target_vector(target)
@@ -25,13 +25,21 @@ defmodule CombatAction do
       |> CSys.Conversion.put_inv(attacker)
       |> CSys.Conversion.put_inv(turret)
       |> CSys.Conversion.get_angle
-      |> IOP.inspect
     {angle, target} = case Turret.normalize_desired_angle(turret, desired_angle) do
       {:ok, angle} -> {angle, Unit.put_damage(target, 10, turn_number)}
       {_, angle} -> {angle, target}
     end
     IOP.inspect angle,  "actual angle"
     attacker = Unit.rotate_turret(attacker, turret_id, angle)
-    {attacker, target, turn_number}
+    gunfire = build_gunfire(attacker, turret_id)
+    {attacker, target, turn_number, [gunfire | gunfires]}
+  end
+
+  defp build_gunfire(attacker, turret_id) do
+    turret = Unit.turret(attacker, turret_id)
+    pose =
+      turret
+      |> Turret.gunfire_pose(attacker)
+    Gunfire.new(pose)
   end
 end

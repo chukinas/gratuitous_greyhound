@@ -196,6 +196,7 @@ defmodule Unit do
     def get_csys(%{pose: pose}) do
       CSys.new(pose)
     end
+    def get_angle(%{pose: pose}), do: Pose.angle(pose)
   end
 end
 

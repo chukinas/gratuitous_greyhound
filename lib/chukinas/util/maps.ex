@@ -10,6 +10,7 @@ defmodule Maps do
     |> Enum.into(%{})
   end
 
+  # TODO rename map_values
   def map_each(map, key, fun) do
     Map.update!(map, key, &Enum.map(&1, fun))
   end
@@ -18,7 +19,13 @@ defmodule Maps do
     Map.update!(map, key, &ById.put(&1, item, id_key))
   end
 
+  def push(map, key, items) when is_list(items) do
+    Map.update!(map, key, & items ++ &1)
+  end
   def push(map, key, item) do
     Map.update!(map, key, &[item | &1])
   end
+
+  def clear(map, key), do: Map.update!(map, key, &__clear__/1)
+  defp __clear__(value) when is_list(value), do: []
 end

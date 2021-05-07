@@ -49,4 +49,11 @@ defmodule CSys.Conversion do
     |> get_vector
     |> Vector.angle
   end
+
+  def sum_angles(a, b), do: sum_angles([a, b])
+  def sum_angles(items_with_csys) do
+    items_with_csys
+    |> Enum.map(&HasCsys.get_angle/1)
+    |> Enum.sum
+  end
 end
