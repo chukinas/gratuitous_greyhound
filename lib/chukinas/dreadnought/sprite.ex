@@ -2,6 +2,7 @@ alias Chukinas.Dreadnought.{Sprite}
 alias Chukinas.Geometry.{Position, Size, Rect}
 alias Chukinas.Svg.{Interpret}
 alias Chukinas.Svg
+alias Chukinas.Util.Maps
 
 defmodule Sprite do
 
@@ -13,20 +14,13 @@ defmodule Sprite do
   use TypedStruct
   typedstruct enforce: true do
     field :name, String.t()
-    # tight - uses smallest bounting rect that contains the clip path
-    # centered - uses smallest bounting rect that contains the clip path and is also centered on the origin point
     field :image_file_path, String.t()
     field :image_size, Size.t()
-    # Located relative to spritesheet/image top-left corner
     field :image_origin, Position.t()
-    # TODO remove
-    field :origin, Position.t()
     field :image_clip_path, String.t()
     field :rect, Rect.t()
-    field :__rect_tight, Rect.t()
-    # Located relative to rect's top-left corner
     field :relative_origin, Position.t()
-    field :relative_mounts, %{margin_id() => Position.t()}
+    field :mounts, %{margin_id() => Position.t()}
     # TODO remove:
     field :sizing, :tight | :centered
   end
@@ -42,20 +36,18 @@ defmodule Sprite do
       sizing: :tight,
       image_file_path: "/images/spritesheets/" <> image_map.path.name,
       image_size: Size.new(image_map),
-      image_origin: origin,
       image_clip_path: image_clip_path,
-      origin: origin,
+      image_origin: origin,
       rect: rect,
-      __rect_tight: rect,
       relative_origin: origin |> Position.subtract(rect),
-      relative_mounts: build_mounts(sprite.mounts, rect)
+      mounts: build_mounts(sprite.mounts, rect)
     }
   end
 
   # *** *******************************
   # *** GETTERS
 
-  def mount(%__MODULE__{relative_mounts: mounts}, mount_id), do: mounts[mount_id]
+  def mount(%__MODULE__{mounts: mounts}, mount_id), do: mounts[mount_id]
   def base_filename(%__MODULE__{image_file_path: path}), do: Path.basename(path)
 
   # *** *******************************
@@ -67,9 +59,8 @@ defmodule Sprite do
       origin: Position.multiply(sprite.origin, scale),
       image_clip_path: Svg.scale(sprite.image_clip_path, scale),
       rect: Rect.scale(sprite.rect, scale),
-      __rect_tight: Rect.scale(sprite.__rect_tight, scale),
       relative_origin: Position.multiply(sprite.relative_origin, scale),
-      relative_mounts: scale_mounts(sprite.mounts, scale)
+      mounts: scale_mounts(sprite.mounts, scale)
     }
   end
 
@@ -84,12 +75,6 @@ defmodule Sprite do
   end
 
   defp scale_mounts(mounts_map, scale) do
-    map_values(mounts_map, &Position.multiply(&1, scale))
-  end
-
-  defp map_values(%{} = map, fun) do
-    Enum.reduce(map, %{}, fn {key, value}, new_map ->
-      Map.put(new_map, key, fun.(value))
-    end)
+    Maps.apply_to_each_val(mounts_map, &Position.multiply(&1, scale))
   end
 end
