@@ -40,3 +40,4 @@ end
 # Control over the order
 # Readability
 # Inspect protocol so you don't have to label as much
+# Note the IOP namespace. This is so that you can use it with minimal typing, no import)

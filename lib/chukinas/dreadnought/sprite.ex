@@ -18,7 +18,7 @@ defmodule Sprite do
     field :sizing, :tight | :centered
     field :image_path, String.t()
     field :image_size, Size.t()
-    # Located relative to spritesheet top-left corner
+    # Located relative to spritesheet/image top-left corner
     field :origin, Position.t()
     field :clip_path, String.t()
     field :rect, Rect.t()
@@ -26,8 +26,7 @@ defmodule Sprite do
     # Located relative to rect's top-left corner
     # TODO can I name this/these better?
     field :relative_origin, Position.t()
-    # TODO rename relative_mounts
-    field :mounts, %{margin_id() => Position.t()}
+    field :relative_mounts, %{margin_id() => Position.t()}
   end
 
   # *** *******************************
@@ -46,9 +45,14 @@ defmodule Sprite do
       rect: rect,
       __rect_tight: rect,
       relative_origin: origin |> Position.subtract(rect),
-      mounts: build_mounts(sprite.mounts, rect)
+      relative_mounts: build_mounts(sprite.mounts, rect)
     }
   end
+
+  # *** *******************************
+  # *** GETTERS
+
+  def mount(%__MODULE__{relative_mounts: mounts}, mount_id), do: mounts[mount_id]
 
   # *** *******************************
   # *** API
@@ -61,7 +65,7 @@ defmodule Sprite do
       rect: Rect.scale(sprite.rect, scale),
       __rect_tight: Rect.scale(sprite.__rect_tight, scale),
       relative_origin: Position.multiply(sprite.relative_origin, scale),
-      mounts: scale_mounts(sprite.mounts, scale)
+      relative_mounts: scale_mounts(sprite.mounts, scale)
     }
   end
 
@@ -72,7 +76,7 @@ defmodule Sprite do
       sizing: :tight,
       rect: new_rect,
       relative_origin: sprite.origin |> Position.subtract(new_rect),
-      mounts: modify_mounts(sprite.mounts, old_rect, new_rect)
+      relative_mounts: modify_mounts(sprite.relative_mounts, old_rect, new_rect)
     }
   end
 
@@ -83,7 +87,7 @@ defmodule Sprite do
       sizing: :centered,
       rect: new_rect,
       relative_origin: origin |> Position.subtract(new_rect),
-      mounts: modify_mounts(sprite.mounts, old_rect, new_rect)
+      relative_mounts: modify_mounts(sprite.relative_mounts, old_rect, new_rect)
     }
   end
 

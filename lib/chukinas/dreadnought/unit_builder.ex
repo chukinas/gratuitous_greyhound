@@ -72,12 +72,15 @@ defmodule Unit.Builder do
 
   defp build_turrets(unit_sprite, {sprite_fun, sprite_name}, turret_tuples) do
     turret_sprite = apply(Spritesheet, sprite_fun, [sprite_name]) |> Sprite.center
-    Enum.map(turret_tuples, fn {mount_id, orient} ->
-      pose = unit_sprite.mounts[mount_id] |> Pose.new(orient)
+    Enum.map(turret_tuples, fn {mount_id, rest_angle} ->
+      relative_mount_position = Sprite.mount(unit_sprite, mount_id)
+      pose =
+        relative_mount_position
+        |> Pose.new(rest_angle)
       vector_position =
-        pose
-        |> Position.subtract(unit_sprite.rect)
-        |> Vector.from_position
+        relative_mount_position
+        |> Position.subtract(unit_sprite.relative_origin)
+        |> Vector.new
       Turret.new(mount_id, pose, turret_sprite, vector_position)
     end)
   end
