@@ -33,27 +33,30 @@ defmodule PlayerTurn do
     field :units, [Unit.t()], default: []
     field :cmd_squares, [GridSquare.t()], default: []
     field :show_end_turn_btn?, boolean(), default: false
+    field :gunfire, [Gunfire.t()]
   end
 
   # *** *******************************
   # *** NEW
 
-  def new(player_id, player_type,  %{
-    turn_number: turn_number,
-    units: units,
-    grid: grid,
+  def new(player_id, player_type, %{
     islands: islands,
-    margin: margin
-  }) do
-    %__MODULE__{
-      turn_number: turn_number,
-      units: units,
-      player_actions: ActionSelection.new(player_id, units),
-      margin: margin,
-      grid: grid,
+    units: units
+  } = mission) do
+    mission
+    |> Map.take([
+      :turn_number,
+      :units,
+      :margin,
+      :grid,
+      :gunfire
+    ])
+    |> Map.merge(%{
       player_id: player_id,
-      player_type: player_type
-    }
+      player_type: player_type,
+      player_actions: ActionSelection.new(player_id, units)
+    })
+    |> build_struct
     |> calc_cmd_squares(islands)
     |> maneuver_trapped_units
     |> if_ai_calc_commands
@@ -67,6 +70,8 @@ defmodule PlayerTurn do
   def map(player_id, player_type, mission) do
     Map.from_struct(new(player_id, player_type, mission))
   end
+
+  defp build_struct(map), do: struct!(__MODULE__, map)
 
   # *** *******************************
   # *** API

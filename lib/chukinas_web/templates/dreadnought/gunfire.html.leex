@@ -1,0 +1,15 @@
+<%# Gunfire Template %>
+<%# TODO this is really similar to unit3. Any chance for consolidation? %>
+<div
+  class="absolute"
+  style="
+    left: <%= @gunfire.pose.x - @gunfire.sprite.relative_origin.x %>px;
+    top: <%= @gunfire.pose.y - @gunfire.sprite.relative_origin.y %>px; 
+    transform: rotate(<%= @gunfire.pose.angle %>deg);
+  "
+>
+  <div class="relative">
+    <%# TODO shorten this syntax %>
+    <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: @gunfire.sprite %>
+  </div>
+</div>

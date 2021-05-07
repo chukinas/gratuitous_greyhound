@@ -1,3 +1,4 @@
+<%# assigns match PlayerTurn struct %>
 <%# Maneuver Squares %>
 <div
   id="arenaGrid"
@@ -10,7 +11,9 @@
   <%= if @player_actions.current_mode == :maneuver do %>
   <%= for square <- @cmd_squares do %>
   <%= if square.unit_id == @player_actions.current_unit_id do %>
-  <%= ChukinasWeb.DreadnoughtView.render "maneuver_square.html", myself: @myself, square: square %>
+  <%= ChukinasWeb.DreadnoughtView.render "maneuver_square.html", 
+    myself: @myself, 
+    square: square %>
   <% end %>
   <% end %>
   <% end %>
@@ -63,6 +66,14 @@
       turn_number: @turn_number,
       unit: unit %>
   <% end %>
+<% end %>
+
+
+<%# Gunfire %>
+<%= for gunfire <- @gunfire do %>
+  <%= ChukinasWeb.DreadnoughtView.render "gunfire.html",
+    socket: @socket,
+    gunfire: gunfire %>
 <% end %>
 
 
