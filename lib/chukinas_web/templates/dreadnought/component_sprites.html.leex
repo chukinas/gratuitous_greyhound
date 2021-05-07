@@ -29,7 +29,7 @@
       <%= for {_id, mount} <- sprite.mounts do %>
       <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center mount.x, mount.y, type: :mount %>
       <% end %>
-      <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center sprite.origin.x - sprite.rect.x, sprite.origin.y- sprite.rect.y %>
+      <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center sprite.image_origin.x - sprite.rect.x, sprite.image_origin.y- sprite.rect.y %>
     </div>
     <div class="flex-1 min-w-0">
       <a href="#" class="focus:outline-none">

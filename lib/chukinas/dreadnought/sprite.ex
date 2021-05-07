@@ -9,8 +9,6 @@ defmodule Sprite do
   # *** *******************************
   # *** TYPES
 
-  @type margin_id() :: integer()
-
   use TypedStruct
   typedstruct enforce: true do
     field :name, String.t()
@@ -26,16 +24,17 @@ defmodule Sprite do
   # *** NEW
 
   def from_parsed_spritesheet(sprite, image_map) do
-    %{path: image_clip_path, rect: rect} = sprite.image_clip_path |> Interpret.interpret
+    %{path: image_clip_path, rect: image_rect} = sprite.image_clip_path |> Interpret.interpret
     origin = Position.rounded(sprite.origin)
+    rect = Position.subtract(image_rect, origin)
     %__MODULE__{
       name: sprite.clip_name,
       image_file_path: "/images/spritesheets/" <> image_map.path.name,
       image_size: Size.new(image_map),
-      image_clip_path: image_clip_path,
       image_origin: origin,
+      image_clip_path: image_clip_path,
       rect: rect,
-      mounts: build_mounts(sprite.mounts, rect)
+      mounts: build_mounts(sprite.mounts, origin)
     }
   end
 
@@ -53,21 +52,20 @@ defmodule Sprite do
   # *** API
 
   def scale(sprite, scale) do
-    %{sprite |
-      image_size: Size.multiply(sprite.image_size, scale),
-      origin: Position.multiply(sprite.origin, scale),
-      image_clip_path: Svg.scale(sprite.image_clip_path, scale),
-      rect: Rect.scale(sprite.rect, scale),
-    }
-    |> Maps.map_each(:mounts, &Position.multiply(&1, scale))
+    sprite
+    |> Map.update!(:image_size, &Size.multiply(&1, scale))
+    |> Map.update!(:image_clip_path, &Svg.scale(&1, scale))
+    |> Map.update!(:image_origin, &Position.multiply(&1, scale))
+    |> Map.update!(:rect, &Rect.scale(&1, scale))
+    |> Maps.map_each(:mounts, &Mount.scale(&1, scale))
   end
 
   # *** *******************************
   # *** PRIVATE
 
-  defp build_mounts(parsed_mounts, rect) do
+  defp build_mounts(parsed_mounts, origin) do
     Enum.reduce(parsed_mounts, [], fn %{id: id, x: x, y: y}, mounts ->
-      position = Position.new(x, y) |> Position.subtract(rect)
+      position = Position.new(x, y) |> Position.subtract(origin)
       [Mount.new(id, position) | mounts]
     end)
   end

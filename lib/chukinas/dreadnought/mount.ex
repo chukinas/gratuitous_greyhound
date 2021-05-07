@@ -23,4 +23,11 @@ defmodule Mount do
   # *** GETTERS
 
   def position(%__MODULE__{position: position}), do: position
+
+  # *** *******************************
+  # *** API
+
+  def scale(%__MODULE__{} = mount, scale) do
+    Map.update!(mount, :position, &Position.multiply(&1, scale))
+  end
 end
