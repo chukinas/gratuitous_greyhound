@@ -21,8 +21,6 @@ defmodule Sprite do
     field :rect, Rect.t()
     field :relative_origin, Position.t()
     field :mounts, [Mount.t()]
-    # TODO remove:
-    field :sizing, :tight | :centered
   end
 
   # *** *******************************
@@ -33,7 +31,6 @@ defmodule Sprite do
     origin = Position.rounded(sprite.origin)
     %__MODULE__{
       name: sprite.clip_name,
-      sizing: :tight,
       image_file_path: "/images/spritesheets/" <> image_map.path.name,
       image_size: Size.new(image_map),
       image_clip_path: image_clip_path,
