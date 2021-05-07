@@ -1,8 +1,8 @@
-alias Chukinas.Dreadnought.{Sprite}
+alias Chukinas.Dreadnought.{Sprite, Mount}
 alias Chukinas.Geometry.{Position, Size, Rect}
 alias Chukinas.Svg.{Interpret}
 alias Chukinas.Svg
-alias Chukinas.Util.Maps
+alias Chukinas.Util.{ById, Maps}
 
 defmodule Sprite do
 
@@ -20,7 +20,7 @@ defmodule Sprite do
     field :image_clip_path, String.t()
     field :rect, Rect.t()
     field :relative_origin, Position.t()
-    field :mounts, %{margin_id() => Position.t()}
+    field :mounts, [Mount.t()]
     # TODO remove:
     field :sizing, :tight | :centered
   end
@@ -47,7 +47,11 @@ defmodule Sprite do
   # *** *******************************
   # *** GETTERS
 
-  def mount(%__MODULE__{mounts: mounts}, mount_id), do: mounts[mount_id]
+  def mount_position(%__MODULE__{mounts: mounts}, mount_id) do
+    mounts
+    |> ById.get!(mount_id)
+    |> Mount.position
+  end
   def base_filename(%__MODULE__{image_file_path: path}), do: Path.basename(path)
 
   # *** *******************************
@@ -60,21 +64,17 @@ defmodule Sprite do
       image_clip_path: Svg.scale(sprite.image_clip_path, scale),
       rect: Rect.scale(sprite.rect, scale),
       relative_origin: Position.multiply(sprite.relative_origin, scale),
-      mounts: scale_mounts(sprite.mounts, scale)
     }
+    |> Maps.map_each(:mounts, &Position.multiply(&1, scale))
   end
 
   # *** *******************************
   # *** PRIVATE
 
   defp build_mounts(parsed_mounts, rect) do
-    Enum.reduce(parsed_mounts, %{}, fn %{id: id, x: x, y: y}, mounts_map ->
+    Enum.reduce(parsed_mounts, [], fn %{id: id, x: x, y: y}, mounts ->
       position = Position.new(x, y) |> Position.subtract(rect)
-      mounts_map |> Map.put(id, position)
+      [Mount.new(id, position) | mounts]
     end)
-  end
-
-  defp scale_mounts(mounts_map, scale) do
-    Maps.apply_to_each_val(mounts_map, &Position.multiply(&1, scale))
   end
 end
