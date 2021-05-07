@@ -31,7 +31,15 @@ defmodule CSys.Conversion do
       |> CSys.flip
     Map.update!(token, :__transforms__, & [transform | &1])
   end
+
   def put(%__MODULE__{} = token, item_with_csys) do
+    transform =
+      item_with_csys
+      |> HasCsys.get_csys
+    Map.update!(token, :__transforms__, & [transform | &1])
+  end
+
+  def put_position(%__MODULE__{} = token, item_with_csys) do
     transform =
       item_with_csys
       |> HasCsys.get_csys

@@ -117,7 +117,7 @@ defmodule Mission do
       |> reset_units
       # TODO why are there two of these?
       |> calc_gunnery
-      |> IOP.inspect("mission", only: [:units, :turn_number])
+      |> IOP.inspect("mission", only: [:gunfire])
     else
       mission
     end

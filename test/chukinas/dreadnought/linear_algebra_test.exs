@@ -75,4 +75,12 @@ defmodule LinearAlgebraTest do
       |> round
     assert turret_angle == (360 -45)
   end
+
+  test "get csys angle" do
+    angles = 0..11 |> Stream.map(& &1 * 30)
+    Enum.each(angles, fn angle ->
+      csys = CSys.new(0, 0, angle)
+      assert round(CSys.angle(csys)) == angle
+    end)
+  end
 end

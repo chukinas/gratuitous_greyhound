@@ -19,11 +19,16 @@ defmodule Vector do
   # *** NEW
 
   def new(x, y), do: {x, y}
+  def new([x, y]), do: {x, y}
+
+  def origin, do: new(0, 0)
 
   def from_angle(degrees) do
     {sin, cos} = Trig.sin_and_cos(degrees)
     {cos, sin}
   end
+
+  def from_sin_and_cos({sin, cos}), do: {cos, sin}
 
   def from_position(%{x: x, y: y}), do: {x, y}
 

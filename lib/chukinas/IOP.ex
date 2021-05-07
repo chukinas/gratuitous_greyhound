@@ -35,3 +35,8 @@ defmodule IOP do
     IO.inspect(term, @opts)
   end
 end
+
+# I prefer to display maps as keyword lists.
+# Control over the order
+# Readability
+# Inspect protocol so you don't have to label as much

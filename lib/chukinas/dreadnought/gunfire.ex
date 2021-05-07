@@ -29,10 +29,8 @@ defmodule Gunfire do
   # *** *******************************
   # *** GETTERS
 
-
   # *** *******************************
   # *** SETTERS
-
 
   # *** *******************************
   # *** API
@@ -40,4 +38,23 @@ defmodule Gunfire do
   # *** *******************************
   # *** PRIVATE
 
+  # *** *******************************
+  # *** IMPLEMENTATIONS
+
+  defimpl Inspect do
+    import Inspect.Algebra
+    def inspect(gunfire, opts) do
+      col = fn string -> color(string, :cust_struct, opts) end
+      unit_map =
+        gunfire
+        |> Map.take([
+          :pose
+        ])
+        |> Enum.into([])
+        #|> Keyword.put(:health, gunfire.percent_remaining_health(gunfire))
+      concat [
+        col.("#Gunfire"),
+        to_doc(unit_map, opts)]
+    end
+  end
 end

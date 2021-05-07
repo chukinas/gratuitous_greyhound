@@ -29,14 +29,16 @@ defmodule CombatAction do
       {:ok, angle} -> {angle, Unit.put_damage(target, 10, turn_number)}
       {_, angle} -> {angle, target}
     end
-    IOP.inspect angle,  "actual angle"
     attacker = Unit.rotate_turret(attacker, turret_id, angle)
+               |> IOP.inspect("unit", only: :pose)
     gunfire = build_gunfire(attacker, turret_id)
+              |> IOP.inspect
     {attacker, target, turn_number, [gunfire | gunfires]}
   end
 
   defp build_gunfire(attacker, turret_id) do
     turret = Unit.turret(attacker, turret_id)
+             |> IOP.inspect("rotated turret")
     pose =
       turret
       |> Turret.gunfire_pose(attacker)

@@ -68,7 +68,7 @@ defmodule Turret do
   end
   def half_travel(%__MODULE__{max_travel: travel}), do: travel / 2
   # TODO implement
-  def gun_barrel_length(_mount), do: 20
+  def gun_barrel_length(_mount), do: 2
   def gun_barrel_vector(mount), do: {gun_barrel_length(mount), 0}
 
   # *** *******************************
@@ -113,8 +113,8 @@ defmodule Turret do
       |> gun_barrel_vector
     # TODO combine these into a new simple API: Csys.Conversion.get_world_vector
       |> CSys.Conversion.new
-      |> CSys.Conversion.put_inv(mount)
-      |> CSys.Conversion.put_inv(unit)
+      |> CSys.Conversion.put(mount)
+      |> CSys.Conversion.put(unit)
       |> CSys.Conversion.get_vector
     angle = CSys.Conversion.sum_angles(mount, unit)
     Pose.new(position_vector, angle)

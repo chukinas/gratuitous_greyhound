@@ -32,6 +32,15 @@ defmodule CSys do
   # *** GETTERS
 
   def position(%__MODULE__{position: pos}), do: pos
+  def angle(%__MODULE__{} = csys) do
+    csys
+    |> sin_and_cos
+    |> Vector.from_sin_and_cos
+    |> Vector.angle
+  end
+  def sin_and_cos(%__MODULE__{rotation: rotation}) do
+    elem(rotation, 1)
+  end
 
   # *** *******************************
   # *** SETTERS
@@ -48,6 +57,14 @@ defmodule CSys do
       rotation: matrix,
       position: Matrix.mult(matrix, Vector.flip(pos))
     }
+  end
+
+  def strip_out_rotation(%__MODULE__{position: position}) do
+    new(position)
+  end
+
+  def strip_out_position(csys) do
+    %__MODULE__{csys | position: Vector.origin()}
   end
 
   def transform(%__MODULE__{} = trans, vector) do
@@ -68,6 +85,9 @@ defmodule CSys do
   defimpl HasCsys do
     def get_csys(self) do
       self
+    end
+    def get_angle(self) do
+      CSys.angle(self)
     end
   end
 end
