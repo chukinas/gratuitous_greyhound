@@ -51,7 +51,7 @@ defmodule Unit do
     opts =
       [
         health: 100,
-        sprite: sprite |> Sprite.center,
+        sprite: sprite,
       ]
       |> Keyword.merge(opts)
       |> Keyword.merge(id: id)

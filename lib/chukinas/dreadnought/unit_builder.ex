@@ -12,7 +12,7 @@ defmodule Unit.Builder do
     fields =
       [
         health: 50,
-        sprite: sprite |> Sprite.center,
+        sprite: sprite,
         turrets: turrets
       ]
       |> Keyword.merge(opts)
@@ -29,7 +29,7 @@ defmodule Unit.Builder do
     fields =
       [
         health: 150,
-        sprite: sprite |> Sprite.center,
+        sprite: sprite,
         turrets: turrets
       ]
       |> Keyword.merge(opts)
@@ -45,7 +45,7 @@ defmodule Unit.Builder do
     fields =
       [
         health: 100,
-        sprite: sprite |> Sprite.center,
+        sprite: sprite,
         turrets: turrets
       ]
       |> Keyword.merge(opts)
@@ -60,7 +60,7 @@ defmodule Unit.Builder do
     fields =
       [
         health: 50,
-        sprite: sprite |> Sprite.center,
+        sprite: sprite,
         turrets: turrets
       ]
       |> Keyword.merge(opts)
@@ -71,7 +71,7 @@ defmodule Unit.Builder do
   # *** PRIVATE
 
   defp build_turrets(unit_sprite, {sprite_fun, sprite_name}, turret_tuples) do
-    turret_sprite = apply(Spritesheet, sprite_fun, [sprite_name]) |> Sprite.center
+    turret_sprite = apply(Spritesheet, sprite_fun, [sprite_name])
     Enum.map(turret_tuples, fn {mount_id, rest_angle} ->
       relative_mount_position = Sprite.mount(unit_sprite, mount_id)
       pose =

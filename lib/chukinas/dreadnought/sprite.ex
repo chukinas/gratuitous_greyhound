@@ -73,28 +73,6 @@ defmodule Sprite do
     }
   end
 
-  def fit(%{sizing: :tight} = sprite), do: sprite
-  # TODO implement:
-  def fit(%{sizing: :centered, __rect_tight: new_rect, rect: old_rect} = sprite) do
-    %{sprite |
-      sizing: :tight,
-      rect: new_rect,
-      relative_origin: sprite.origin |> Position.subtract(new_rect),
-      relative_mounts: modify_mounts(sprite.relative_mounts, old_rect, new_rect)
-    }
-  end
-
-  def center(%{sizing: :centered} = sprite), do: sprite
-  def center(%{sizing: :tight, origin: origin, __rect_tight: old_rect} = sprite) do
-    new_rect = Rect.get_centered_rect(origin, old_rect)
-    %{sprite |
-      sizing: :centered,
-      rect: new_rect,
-      relative_origin: origin |> Position.subtract(new_rect),
-      relative_mounts: modify_mounts(sprite.relative_mounts, old_rect, new_rect)
-    }
-  end
-
   # *** *******************************
   # *** PRIVATE
 
@@ -103,15 +81,6 @@ defmodule Sprite do
       position = Position.new(x, y) |> Position.subtract(rect)
       mounts_map |> Map.put(id, position)
     end)
-  end
-
-  defp modify_mounts(mounts_map, before_coord_sys, after_coord_sys) do
-    fun = fn position ->
-      position
-      |> Position.subtract(before_coord_sys)
-      |> Position.add(after_coord_sys)
-    end
-    map_values(mounts_map, fun)
   end
 
   defp scale_mounts(mounts_map, scale) do
