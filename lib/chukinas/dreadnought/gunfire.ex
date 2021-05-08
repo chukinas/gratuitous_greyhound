@@ -12,6 +12,7 @@ defmodule Gunfire do
   typedstruct do
     field :sprite, Sprite.t()
     field :pose, Pose.t()
+    field :id_string, Pose.t()
     #field :time_start, number()
     #field :time_duration, number()
   end
@@ -35,6 +36,8 @@ defmodule Gunfire do
     %__MODULE__{
       sprite: sprite,
       pose: pose,
+      # TODO replace with a better method. All I need is a unique DOM ID.
+      id_string: "gunfire-#{Enum.random(1..10_000)}"
     }
   end
 

@@ -67,7 +67,7 @@ defmodule Turret do
   end
   def half_travel(%__MODULE__{max_travel: travel}), do: travel / 2
   # TODO implement
-  def gun_barrel_length(_mount), do: 5
+  def gun_barrel_length(_mount), do: 8
   def gun_barrel_vector(mount), do: {gun_barrel_length(mount), 0}
   def pose(%{vector_position: {x, y}, pose: pose}) do
     Pose.new(x, y, Pose.angle(pose))

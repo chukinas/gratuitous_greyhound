@@ -184,11 +184,26 @@ const PartialPath = {
   },
 }
 
+const Gunfire = {
+  mounted() {
+    gsap.set(this.el, {
+      delay: ANIMATIONDURATION,
+      visibility: 'visible'
+    })
+    gsap.to(this.el, {
+      delay: ANIMATIONDURATION,
+      opacity: 0,
+      duration: 0.5
+    })
+  }
+}
+
 export default {
   WelcomeCardShip, 
   WelcomeCardShipFwdTurret, 
   WelcomeCardShipRearTurret, 
   Unit, 
   PartialPath, 
-  RotationPartial
+  RotationPartial,
+  Gunfire
 }
