@@ -6,6 +6,7 @@ defmodule CSys.Conversion do
 
   use TypedStruct
   typedstruct enforce: true do
+    # TODO rename __rotation__ ?
     field :__transforms__, [CSys.t()], default: []
     field :__start_point__, Vector.t()
   end
@@ -23,6 +24,21 @@ defmodule CSys.Conversion do
 
   # *** *******************************
   # *** API
+
+  def convert_to_world_vector(vector, unit) do
+    vector
+    |> CSys.Conversion.new
+    |> CSys.Conversion.put(unit)
+    |> CSys.Conversion.get_vector
+  end
+
+  def convert_to_world_vector(vector, unit, mount) do
+    vector
+    |> CSys.Conversion.new
+    |> CSys.Conversion.put(mount)
+    |> CSys.Conversion.put(unit)
+    |> CSys.Conversion.get_vector
+  end
 
   def put_inv(%__MODULE__{} = token, item_with_csys) do
     transform =

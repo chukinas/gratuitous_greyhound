@@ -24,16 +24,10 @@ defmodule Gunfire do
     position_vector =
       turret
       |> Turret.gun_barrel_vector
-    # TODO combine these into a new simple API: Csys.Conversion.get_world_vector
-      |> CSys.Conversion.new
-      |> CSys.Conversion.put(turret)
-      |> CSys.Conversion.put(unit)
-      |> IOP.inspect("Gunfire new")
-      |> CSys.Conversion.get_vector
-      |> IOP.inspect("Gunfire new")
+      |> CSys.Conversion.convert_to_world_vector(unit, turret)
     angle = CSys.Conversion.sum_angles(turret, unit)
-    pose = Pose.new(position_vector, angle)
-    new(pose)
+    Pose.new(position_vector, angle)
+           |> new
   end
   def new(pose) do
     spritename = "explosion_" <> Enum.random(~w(1 2 3))
