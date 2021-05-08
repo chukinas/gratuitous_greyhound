@@ -1,4 +1,6 @@
-alias Chukinas.Dreadnought.{Gunfire, Spritesheet}
+alias Chukinas.Dreadnought.{Gunfire, Spritesheet, Turret, Unit}
+alias Chukinas.Geometry.Pose
+alias Chukinas.LinearAlgebra.CSys
 
 defmodule Gunfire do
 
@@ -17,6 +19,22 @@ defmodule Gunfire do
   # *** *******************************
   # *** NEW
 
+  def new(unit, turret_id) do
+    turret = Unit.turret(unit, turret_id)
+    position_vector =
+      turret
+      |> Turret.gun_barrel_vector
+    # TODO combine these into a new simple API: Csys.Conversion.get_world_vector
+      |> CSys.Conversion.new
+      |> CSys.Conversion.put(turret)
+      |> CSys.Conversion.put(unit)
+      |> IOP.inspect("Gunfire new")
+      |> CSys.Conversion.get_vector
+      |> IOP.inspect("Gunfire new")
+    angle = CSys.Conversion.sum_angles(turret, unit)
+    pose = Pose.new(position_vector, angle)
+    new(pose)
+  end
   def new(pose) do
     spritename = "explosion_" <> Enum.random(~w(1 2 3))
     sprite = Spritesheet.blue(spritename)

@@ -9,8 +9,6 @@ defmodule Unit do
   Represents a ship or some other combat unit
   """
 
-  #@derive {Inspect, only: [:id, :damage]}
-
   # *** *******************************
   # *** TYPES
 
@@ -142,7 +140,6 @@ defmodule Unit do
       Turret.put_angle(mount, angle),
       MountRotation.new(mount.id, angle, travel)
     ])
-    |> IOP.inspect("Unit rotate_turret")
   end
 
   # *** *******************************
@@ -182,7 +179,8 @@ defmodule Unit do
       unit_map =
         unit
         |> Map.take([
-          #:damage,
+          :pose,
+          :turrets,
           :mount_actions
         ])
         |> Enum.into([])

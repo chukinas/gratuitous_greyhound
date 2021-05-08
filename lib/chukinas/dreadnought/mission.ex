@@ -111,7 +111,6 @@ defmodule Mission do
       |> resolve_island_collisions
       |> calc_unit_render
       |> calc_gunnery
-      |> IOP.inspect("Mission maybe_end_turn after calc_gunnery")
       # Part 2: Prepare for this turn's planning
       |> calc_unit_active
       |> clear_player_actions
@@ -175,4 +174,24 @@ defmodule Mission do
   #defp calc_random_mount_orientation(mission) do
   #  Maps.map_each(mission, :units, &Unit.calc_random_mount_orientation/1)
   #end
+
+  # *** *******************************
+  # *** IMPLEMENTATIONS
+
+  defimpl Inspect do
+    import Inspect.Algebra
+    def inspect(mission, opts) do
+      col = fn string -> color(string, :cust_struct, opts) end
+      fields =
+        mission
+        |> Map.take([
+          :units,
+          :gunfire
+        ])
+        |> Enum.into([])
+      concat [
+        col.("#Mission"),
+        to_doc(fields, opts)]
+    end
+  end
 end

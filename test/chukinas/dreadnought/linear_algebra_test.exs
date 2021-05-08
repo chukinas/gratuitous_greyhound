@@ -1,9 +1,11 @@
 ExUnit.start()
 
+
 defmodule LinearAlgebraTest do
   use ExUnit.Case, async: true
   use DreadnoughtHelpers
   alias Chukinas.LinearAlgebra.{CSys}
+  alias CSys.Conversion
 
   test "get world origin wrt unit" do
     origin_wrt_unit =
@@ -61,7 +63,6 @@ defmodule LinearAlgebraTest do
   end
 
   test "get angle b/w mount and target" do
-    alias CSys.Conversion
     world_point_of_interest = {2, 4}
     unit_csys = CSys.new(1, 1, 90)
     mount_csys = CSys.new(2, 0, 0)
@@ -81,5 +82,19 @@ defmodule LinearAlgebraTest do
       csys = CSys.new(0, 0, angle)
       assert round(CSys.angle(csys)) == angle
     end)
+  end
+
+  test "get world coord for gun barrel" do
+    turret_barrel = {20, 0}
+    turret_csys = CSys.new(20, 0, 90)
+    unit_csys = CSys.new(20, 0, 90)
+    expected_world_coord = {0, 20}
+    actual_coord =
+      turret_barrel
+      |> Conversion.new
+      |> Conversion.put(turret_csys)
+      |> Conversion.put(unit_csys)
+      |> Conversion.get_vector
+    assert expected_world_coord == actual_coord
   end
 end

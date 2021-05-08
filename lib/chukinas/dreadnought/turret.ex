@@ -1,4 +1,3 @@
-
 alias Chukinas.Dreadnought.{Turret, Sprite}
 alias Chukinas.Geometry.{Pose, Trig}
 alias Chukinas.LinearAlgebra.{HasCsys, CSys, Vector}
@@ -68,7 +67,7 @@ defmodule Turret do
   end
   def half_travel(%__MODULE__{max_travel: travel}), do: travel / 2
   # TODO implement
-  def gun_barrel_length(_mount), do: 2
+  def gun_barrel_length(_mount), do: 5
   def gun_barrel_vector(mount), do: {gun_barrel_length(mount), 0}
   def pose(%{vector_position: {x, y}, pose: pose}) do
     Pose.new(x, y, Pose.angle(pose))
@@ -109,19 +108,6 @@ defmodule Turret do
   # TODO also bad name
   def travel(mount, angle) do
     rel_angle(mount, angle) - current_rel_angle(mount)
-  end
-
-  def gunfire_pose(mount, unit) do
-    position_vector =
-      mount
-      |> gun_barrel_vector
-    # TODO combine these into a new simple API: Csys.Conversion.get_world_vector
-      |> CSys.Conversion.new
-      |> CSys.Conversion.put(mount)
-      |> CSys.Conversion.put(unit)
-      |> CSys.Conversion.get_vector
-    angle = CSys.Conversion.sum_angles(mount, unit)
-    Pose.new(position_vector, angle)
   end
 
   # *** *******************************
