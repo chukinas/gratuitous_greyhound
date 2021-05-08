@@ -1,3 +1,4 @@
+alias Chukinas.Geometry.Position
 alias Chukinas.Util.Opts
 
 defmodule ChukinasWeb.DreadnoughtView do
@@ -11,7 +12,8 @@ defmodule ChukinasWeb.DreadnoughtView do
       rect: rect,
       image_file_path: sprite.image_file_path,
       image_size: sprite.image_size,
-      image_clip_path: sprite.image_clip_path
+      image_clip_path: sprite.image_clip_path,
+      transform: sprite.image_origin |> Position.add(sprite.rect) |> Position.multiply(-1)
     ]
     render("_sprite.html", assigns)
   end

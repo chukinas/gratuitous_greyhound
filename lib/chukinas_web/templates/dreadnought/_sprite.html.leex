@@ -1,6 +1,6 @@
 <%# Sprite Template %>
 <div 
-  class="relative overflow-hidden __dreadnought_sprite__"
+  class="relative overflow-hidden"
   style="
     width:<%= @rect.width %>px;
     height:<%= @rect.height %>px;
@@ -11,8 +11,8 @@
     style="
       width: <%= @image_size.width %>px;
       height: <%= @image_size.height %>px;
-      left:<%= -@rect.x %>px;
-      top:<%= -@rect.y %>px;
+      left:<%= @transform.x %>px;
+      top:<%= @transform.y %>px;
     "
   >
   <img 
