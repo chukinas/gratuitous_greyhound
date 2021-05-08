@@ -1,15 +1,16 @@
 <div
+  <%# Position within World %>
   id="unit-<%= @unit.id %>"
   class="absolute"
   style="
-    left: <%= @unit.pose.x + @unit.sprite.rect.x %>px;
-    top: <%= @unit.pose.y + @unit.sprite.rect.y %>px; 
+    left: <%= @unit.pose.x %>px;
+    top: <%= @unit.pose.y %>px; 
     transform: rotate(<%= @unit.pose.angle %>deg);
   "
 >
   <div class="relative">
-    <%# TODO shorten this syntax %>
-    <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: @unit.sprite %>
+    <%= ChukinasWeb.DreadnoughtView.relative_sprite @unit.sprite, @socket %>
+    <%= if false do %>
     <%= for turret <- @unit.turrets do %>
     <div 
       id="unit-<%= @unit.id %>-mount-<%= turret.id %>" 
@@ -23,9 +24,11 @@
       <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: turret.sprite %>
     </div>
     <% end %>
+    <% end %>
   </div>
 
 
+  <%= if false do %>
   <%# Mount Rotations %>
   <ul class="hidden">
     <%= for action <- @unit.mount_actions do %>
@@ -43,6 +46,7 @@
     <li>
     <% end %>
   </ul>
+  <% end %>
 
 
 </div>

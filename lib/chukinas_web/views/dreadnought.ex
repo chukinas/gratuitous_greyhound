@@ -4,6 +4,7 @@ alias Chukinas.Util.Opts
 defmodule ChukinasWeb.DreadnoughtView do
   use ChukinasWeb, :view
 
+  # TODO I don't like this use of 'opts'. The two 'opts' are anything but. They're required.
   def sprite(opts \\ []) do
     sprite = Keyword.fetch!(opts, :sprite)
     rect = sprite.rect
@@ -16,6 +17,19 @@ defmodule ChukinasWeb.DreadnoughtView do
       transform: sprite.image_origin |> Position.add(sprite.rect) |> Position.multiply(-1)
     ]
     render("_sprite.html", assigns)
+  end
+
+  def relative_sprite(sprite, socket, opts \\ []) do
+    assigns = Opts.merge_into_map!(opts, [
+      id_string: false,
+      angle: false
+    ])
+    |> Map.merge(%{
+      sprite: sprite,
+      socket: socket
+    })
+    |> IOP.inspect
+    render("_relative_sprite.html", assigns)
   end
 
   def center(x, y, opts \\ []) do
