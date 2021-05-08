@@ -20,17 +20,34 @@
   <%# single sprite card %>
   <div class="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex flex-col items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-yellow-500">
 
-    <div class="relative">
+
+    <%# SPRITE %>
+    <div 
+      class="bg-gray-400"
+      style="
+        width: <%= sprite.rect.width %>px;
+        height: <%= sprite.rect.height %>px;
+      "
+    >
       <div 
-        class="origin-top-left inline-block overflow-hidden border-4 border-dashed border-yellow-400"
+        class="relative"
+        style="
+          margin-left: <%= -sprite.rect.x %>px;
+          margin-top: <%= -sprite.rect.y %>px;
+        "
       >
-        <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: sprite, center_on_origin?: @show_markers? %>
+        <%= ChukinasWeb.DreadnoughtView.relative_sprite sprite, @socket %>
+        <%= if @show_markers? do %>
+          <%= ChukinasWeb.DreadnoughtView.center %{x: 0, y: 0} %>
+          <%= for mount <- sprite.mounts do %>
+            <%= ChukinasWeb.DreadnoughtView.center mount.position, type: :mount %>
+          <% end %>
+        <% end %>
       </div>
-      <%= for {_id, mount} <- sprite.mounts do %>
-      <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center mount.x, mount.y, type: :mount %>
-      <% end %>
-      <%= if @show_markers?, do: ChukinasWeb.DreadnoughtView.center sprite.image_origin.x - sprite.rect.x, sprite.image_origin.y- sprite.rect.y %>
     </div>
+
+
+    <%# DESCRIPTIVE TEXT %>
     <div class="flex-1 min-w-0">
       <a href="#" class="focus:outline-none">
         <span class="absolute inset-0" aria-hidden="true"></span>

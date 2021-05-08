@@ -41,7 +41,7 @@ defmodule ChukinasWeb.DreadnoughtView do
     render("_relative_sprite.html", assigns)
   end
 
-  def center(x, y, opts \\ []) do
+  def center(%{x: x, y: y}, opts \\ []) do
     scale = Keyword.get(opts, :scale, 1)
     color = case Keyword.get(opts, :type, :origin) do
       :origin -> "pink"
