@@ -74,7 +74,6 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
 
   #def inspect_assigns(assigns, note) do
   #  mod_assigns =Map.drop assigns, [:socket, :flash, :grid, :id, :margin, :myself]
-  #  #IOP.inspect mod_assigns, note
   #  assigns
   #end
 

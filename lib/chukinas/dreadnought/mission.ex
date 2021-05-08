@@ -104,20 +104,19 @@ defmodule Mission do
     if turn_complete?(mission) do
       mission
       |> increment_turn_number
+      |> clear_units
       |> clear_gunfire
       # Part 1: Execute previous turn's planning
       |> put_tentative_maneuvers
       |> resolve_island_collisions
       |> calc_unit_render
       |> calc_gunnery
+      |> IOP.inspect("Mission maybe_end_turn after calc_gunnery")
       # Part 2: Prepare for this turn's planning
       |> calc_unit_active
       |> clear_player_actions
       |> calc_ai_commands
-      |> reset_units
-      # TODO why are there two of these?
-      |> calc_gunnery
-      |> IOP.inspect("mission", only: [:gunfire])
+      |> IOP.inspect("Mission maybe_end_turn")
     else
       mission
     end
@@ -128,7 +127,7 @@ defmodule Mission do
     %__MODULE__{mission | player_actions: []}
   end
 
-  defp reset_units(mission), do: Maps.map_each(mission, :units, &Unit.new_turn_reset/1)
+  defp clear_units(mission), do: Maps.map_each(mission, :units, &Unit.clear/1)
 
   defp turn_complete?(mission) do
     player_ids = mission |> player_ids |> MapSet.new
@@ -152,13 +151,11 @@ defmodule Mission do
   end
 
   defp calc_unit_active(mission) do
-    #IOP.inspect mission.turn_number, "turn num"
     units =
       mission.units
       |> Enum.map(&Unit.calc_active(&1, mission.turn_number))
     units
     |> Enum.map(&Map.take(&1, [:id, :active?, :final_turn, :render?]))
-    #|> IOP.inspect("units after active calc")
     %__MODULE__{mission | units: units}
   end
 

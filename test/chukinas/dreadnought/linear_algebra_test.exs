@@ -10,7 +10,6 @@ defmodule LinearAlgebraTest do
       Pose.new(1, 1, 90)
       |> CSys.new
       |> CSys.flip
-      |> IOP.inspect
       |> CSys.position
     assert origin_wrt_unit == {-1, 1}
   end

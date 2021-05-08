@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.Position
+alias Chukinas.Geometry.{Pose, Position}
 alias Chukinas.Util.Opts
 
 defmodule ChukinasWeb.DreadnoughtView do
@@ -20,15 +20,24 @@ defmodule ChukinasWeb.DreadnoughtView do
   end
 
   def relative_sprite(sprite, socket, opts \\ []) do
-    assigns = Opts.merge_into_map!(opts, [
-      id_string: false,
-      angle: false
-    ])
-    |> Map.merge(%{
+    opts =
+      opts
+      |> Opts.merge!([
+        id_string: false,
+        pose: Pose.origin()
+      ])
+    pose = Keyword.fetch!(opts, :pose)
+    angle = case pose.angle do
+      0 -> false
+      x when is_number(x) -> x
+    end
+    assigns = %{
       sprite: sprite,
-      socket: socket
-    })
-    |> IOP.inspect
+      socket: socket,
+      id_string: Keyword.fetch!(opts, :id_string),
+      position: sprite.rect |> Position.add(pose) |> Position.new,
+      angle: angle
+    }
     render("_relative_sprite.html", assigns)
   end
 

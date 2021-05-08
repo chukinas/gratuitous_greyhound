@@ -50,7 +50,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def handle_event("log", _params, socket) do
-    #IOP.inspect(params, "dreadnought live log event")
     {:noreply, socket}
   end
 
@@ -77,7 +76,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
     #  socket.assigns.mission
     #  |> Mission.put(units)
     #  |> Mission.complete_player_turn(commands)
-    #  |> IOP.inspect("dread live - complete_player_turn")
     #mission_player =
     #  mission
     #  |> Mission.to_player

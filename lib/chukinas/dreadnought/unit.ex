@@ -31,6 +31,7 @@ defmodule Unit do
     # Varies from game turn to game turn
     field :pose, Pose.t()
     field :selection_box_position, Position.t(), enforce: false
+    # TODO should this be handled in .clear()?
     field :compound_path, Maneuver.t(), default: []
     # TODO rename :turn_destroyed
     field :final_turn, integer(), enforce: false
@@ -120,9 +121,7 @@ defmodule Unit do
     end}
   end
 
-  # TODO what else should this include?
-  # Where should this be used?
-  def new_turn_reset(unit) do
+  def clear(unit) do
     %__MODULE__{unit | mount_actions: []}
   end
 
@@ -143,6 +142,7 @@ defmodule Unit do
       Turret.put_angle(mount, angle),
       MountRotation.new(mount.id, angle, travel)
     ])
+    |> IOP.inspect("Unit rotate_turret")
   end
 
   # *** *******************************
@@ -182,7 +182,8 @@ defmodule Unit do
       unit_map =
         unit
         |> Map.take([
-          :damage
+          #:damage,
+          :mount_actions
         ])
         |> Enum.into([])
         #|> Keyword.put(:health, Unit.percent_remaining_health(unit))

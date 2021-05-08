@@ -43,12 +43,6 @@ defmodule Turret do
       pose: pose,
       sprite: sprite
     }
-    |> IOP.inspect("new turret", only: [
-      :vector_position,
-      :resting_pose,
-      :pose,
-      :sprite
-    ])
   end
 
   # *** *******************************

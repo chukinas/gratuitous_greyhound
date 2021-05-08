@@ -28,7 +28,6 @@ defmodule ActionSelection do
       player_active_unit_ids: Unit.Enum.active_player_unit_ids(units, player_id)
     }
     |> calc_current
-    #|> IOP.inspect("new player actions", show_if: &(&1.player_id == 1))
   end
 
   # *** *******************************
@@ -88,7 +87,6 @@ defmodule ActionSelection do
     player_actions
     |> Map.update!(:actions, & [command | &1])
     |> calc_current
-    #|> IOP.inspect("player actions after put", show_if: &(&1.player_id == 1))
   end
 
   # *** *******************************

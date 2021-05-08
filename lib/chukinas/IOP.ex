@@ -1,3 +1,5 @@
+alias Chukinas.Util.Opts
+
 defmodule IOP do
 
   @opts [
@@ -15,12 +17,13 @@ defmodule IOP do
   ]
 
   def inspect(term, label, opts \\ []) do
-    opts = Keyword.merge([
+    opts = Opts.merge!(opts, [
       show_if: fn _x -> true end,
-      only: nil
+      only: nil,
+      disabled: false
       #exclude: nil
-    ], opts)
-    if opts[:show_if].(term) do
+    ])
+    if opts[:show_if].(term) and not opts[:disabled] do
       filtered_term = case opts[:only] do
         nil -> term
         key when not is_list(key) -> Map.take(term, [key])

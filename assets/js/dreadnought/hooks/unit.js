@@ -56,6 +56,7 @@ function scheduleRotation(rotatingEl, endAngle, angleTravel, opts = {}) {
     duration: 0.5,
     ...opts
   }
+  console.log(rotatingEl)
   gsap.fromTo(rotatingEl, {
     rotation: opts.startAngle
   }, {
@@ -162,7 +163,9 @@ const Unit = {
 const RotationPartial = {
   mounted() {
     const data = this.el.dataset
-    const rotatingEl = document.getElementById(`unit-${data.unitId}-mount-${data.mountId}`)
+    const rotatingElId = `unit-${data.unitId}-mount-${data.mountId}`
+    const rotatingEl = document.getElementById(rotatingElId)
+    console.log({data, rotatingEl, rotatingElId})
     scheduleRotation(rotatingEl, data.angle, data.travel, data)
   }
 }
