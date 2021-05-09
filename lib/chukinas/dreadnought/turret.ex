@@ -2,10 +2,14 @@ alias Chukinas.Dreadnought.{Turret, Sprite, Mount}
 alias Chukinas.Geometry.{Pose, Trig, Position, Pose}
 alias Chukinas.LinearAlgebra.{HasCsys, CSys, Vector}
 
-# TODO rename Mount
 defmodule Turret do
   @moduledoc """
   Represents a weapon on a unit (ship, fortification, etc)
+
+  Definitions:
+  ANGLE: orientation of turret relative to ship (e.g. an rear turret at rest has an angle of 180deg).
+  ROTATION: orientation of turret relative to its own maximum CCW angle. Always a positive number.
+  TRAVEL: movement / arc of a turret, where positive numbers are CW and negative are CCW.
   """
 
   # *** *******************************
@@ -16,8 +20,8 @@ defmodule Turret do
   typedstruct enforce: true do
     field :id, integer()
     field :sprite, Sprite.t()
-    field :min_angle, degrees :: number()
-    field :max_travel, positive_degrees :: number()
+    field :max_ccw_angle, degrees :: number()
+    field :max_rotation, positive_degrees :: number()
     field :rest_angle, degrees :: number()
     field :pose, Pose.t()
   end
@@ -30,8 +34,8 @@ defmodule Turret do
     %__MODULE__{
       id: id,
       sprite: sprite,
-      min_angle: Trig.normalize_angle(rest_angle - 135),
-      max_travel: 270,
+      max_ccw_angle: Trig.normalize_angle(rest_angle - 135),
+      max_rotation: 270,
       rest_angle: rest_angle,
       pose: pose
     }
@@ -40,9 +44,9 @@ defmodule Turret do
   # *** *******************************
   # *** GETTERS
 
-  def max_angle(%__MODULE__{min_angle: angle, max_travel: travel}), do: angle + travel
-  def angle_arc_center(%__MODULE__{min_angle: angle, max_travel: travel}) do
-    Trig.normalize_angle(angle + (travel / 2))
+  def max_angle(%__MODULE__{max_ccw_angle: angle, max_rotation: travel}), do: angle + travel
+  def angle_arc_center(%__MODULE__{max_ccw_angle: angle} = turret) do
+    Trig.normalize_angle(angle + half_travel(turret))
   end
   def vector_arc_center(mount) do
     mount
@@ -50,10 +54,10 @@ defmodule Turret do
     |> Vector.from_angle
   end
   def current_angle(%__MODULE__{pose: pose}), do: Pose.angle(pose)
-  def current_rel_angle(mount) do
-    rel_angle(mount, current_angle(mount))
+  def current_rotation(mount) do
+    rotation(mount, current_angle(mount))
   end
-  def half_travel(%__MODULE__{max_travel: travel}), do: travel / 2
+  def half_travel(%__MODULE__{max_rotation: travel}), do: travel / 2
   def gun_barrel_vector(%__MODULE__{sprite: sprite}) do
     %{x: x} =
       sprite
@@ -65,8 +69,7 @@ defmodule Turret do
   def pose(%__MODULE__{pose: pose}), do: pose
   def position(%__MODULE__{pose: pose}), do: Position.new(pose)
   def csys(turret), do: turret |> pose |> CSys.new
-  # TODO is neutral_csys a better name?
-  def inline_csys(turret) do
+  def position_csys(turret) do
     turret
     |> position
     |> CSys.new
@@ -87,33 +90,33 @@ defmodule Turret do
     vector_arc_center = vector_arc_center(mount)
     cond do
       lies_within_arc?(mount, vector_desired) -> {:ok, angle}
-      Vector.sign_between(vector_arc_center, vector_desired) < 0 -> {:corrected, mount.min_angle}
+      Vector.sign_between(vector_arc_center, vector_desired) < 0 -> {:corrected, mount.max_ccw_angle}
       true -> {:corrected, max_angle(mount)}
     end
   end
 
-  # TODO bad name
-  def rel_angle(mount, angle) do
+  def rotation(mount, angle) do
     angle = Trig.normalize_angle(angle)
-    angle = if angle < mount.min_angle do
+    angle = if angle < mount.max_ccw_angle do
       angle + 360
     else
       angle
     end
-    angle - mount.min_angle
+    angle - mount.max_ccw_angle
   end
 
-  # TODO also bad name
-  def travel(mount, angle) do
-    rel_angle(mount, angle) - current_rel_angle(mount)
+  def travel_from_current_angle(mount, angle) do
+    rotation(mount, angle) - current_rotation(mount)
   end
 
   # *** *******************************
   # *** PRIVATE
 
   defp lies_within_arc?(mount, target_unit_vector) do
-    vector_arc_center = vector_arc_center(mount)
-    angle_between = Vector.angle_between_abs(vector_arc_center, target_unit_vector)
+    angle_between =
+      mount
+      |> vector_arc_center
+      |> Vector.angle_between_abs(target_unit_vector)
     angle_between <= half_travel(mount)
   end
 
@@ -141,7 +144,7 @@ defmodule Turret do
   end
 
   defimpl HasCsys do
-    def get_csys(self), do: Turret.csys(self)
-    def get_angle(%{pose: pose}), do: Pose.angle(pose)
+    def get_csys(turret), do: Turret.csys(turret)
+    def get_angle(turret), do: Turret.current_angle(turret)
   end
 end

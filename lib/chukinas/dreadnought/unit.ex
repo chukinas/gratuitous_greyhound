@@ -134,7 +134,7 @@ defmodule Unit do
 
   def rotate_turret(unit, mount_id, angle) do
     mount = turret(unit, mount_id)
-    travel = Turret.travel(mount, angle)
+    travel = Turret.travel_from_current_angle(mount, angle)
     put(unit, [
       # TODO validate angle?
       Turret.put_angle(mount, angle),

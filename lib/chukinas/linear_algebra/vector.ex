@@ -73,9 +73,11 @@ defmodule Vector do
     |> dot(b)
     |> Trig.sign
   end
+  # TODO rename signed_angle_between
   def angle_between(a, b) do
     Trig.normalize_angle(sign_between(a, b) * angle_between_abs(a, b))
   end
+  # TODO rename angle_between
   def angle_between_abs(a, b) do
     dot(a, b) |> Trig.acos
   end
