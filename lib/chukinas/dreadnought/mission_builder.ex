@@ -6,10 +6,10 @@ defmodule MissionBuilder do
   def build do
     # Config
     square_size = 50
-    arena = %{
-      width: 3000,
-      height: 2000
-    }
+    #arena = %{
+    #  width: 3000,
+    #  height: 2000
+    #}
     arena = %{
       width: 700,
       height: 400
@@ -31,9 +31,9 @@ defmodule MissionBuilder do
       |> Enum.map(&round(&1 / square_size))
     grid = Grid.new(square_size, square_count_x, square_count_y)
     units = [
-      Unit.Builder.blue_destroyer(1, pose: Pose.new(0, 0, 0), name: "Prince Eugene"),
+      Unit.Builder.red_destroyer(1, pose: Pose.new(0, 0, 0), name: "Prince Eugene"),
       #Unit.Builder.red_cruiser(2, pose: Pose.new(800, 155, 75), name: "Billy"),
-      Unit.Builder.red_destroyer(3, pose: Pose.new(Position.from_size(grid), 225), player_id: 2, name: "Hoodie")
+      Unit.Builder.blue_merchant(3, pose: Pose.new(Position.from_size(grid), 225), player_id: 2)
     ]
     players = [
       Player.new(1, :human),

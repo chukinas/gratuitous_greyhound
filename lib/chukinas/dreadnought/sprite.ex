@@ -2,7 +2,7 @@ alias Chukinas.Dreadnought.{Sprite, Mount}
 alias Chukinas.Geometry.{Position, Size, Rect}
 alias Chukinas.Svg.{Interpret}
 alias Chukinas.Svg
-alias Chukinas.Util.{ById, Maps}
+alias Chukinas.Util.{IdList, Maps}
 
 defmodule Sprite do
 
@@ -43,7 +43,7 @@ defmodule Sprite do
 
   def mount_position(%__MODULE__{mounts: mounts}, mount_id) do
     mounts
-    |> ById.get!(mount_id)
+    |> IdList.fetch!(mount_id)
     |> Mount.position
   end
   def base_filename(%__MODULE__{image_file_path: path}), do: Path.basename(path)

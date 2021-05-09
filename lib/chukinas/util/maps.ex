@@ -1,4 +1,4 @@
-alias Chukinas.Util.{Maps, ById}
+alias Chukinas.Util.{Maps, IdList}
 
 defmodule Maps do
 
@@ -18,7 +18,7 @@ defmodule Maps do
   end
 
   def put_by_id(map, key, item, id_key \\ :id) do
-    Map.update!(map, key, &ById.put(&1, item, id_key))
+    Map.update!(map, key, &IdList.put(&1, item, id_key))
   end
 
   def push(map, key, items) when is_list(items) do

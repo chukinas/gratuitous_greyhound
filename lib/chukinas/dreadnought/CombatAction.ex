@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Unit, CombatAction, Turret, Gunfire}
-alias Chukinas.Util.ById
+alias Chukinas.Util.IdList
 alias Chukinas.LinearAlgebra.CSys
 
 defmodule CombatAction do
@@ -9,12 +9,12 @@ defmodule CombatAction do
     %{unit_id: attacker_id, value: target_id} = _unit_action,
     %{units: units, turn_number: turn_number} = _mission
   ) do
-    attacker = ById.get!(units, attacker_id)
-    target = ById.get!(units, target_id)
+    attacker = IdList.fetch!(units, attacker_id)
+    target = IdList.fetch!(units, target_id)
     {attacker, target, _turn_number, gunfire} =
       Unit.all_turret_mount_ids(attacker)
       |> Enum.reduce({attacker, target, turn_number, []}, &fire_turret/2)
-    {ById.put(units, [attacker, target]), gunfire}
+    {IdList.put(units, [attacker, target]), gunfire}
   end
 
   defp fire_turret(turret_id, {attacker, target, turn_number, gunfires} = _acc) do

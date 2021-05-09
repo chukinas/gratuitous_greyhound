@@ -1,6 +1,6 @@
 alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret, ManeuverPartial, Maneuver, MountRotation}
 alias Chukinas.Geometry.{Pose, Path, Position}
-alias Chukinas.Util.{Maps, ById}
+alias Chukinas.Util.{Maps, IdList}
 # TODO do I need this dependency?
 alias Chukinas.LinearAlgebra.{HasCsys, CSys, Vector}
 
@@ -54,6 +54,7 @@ defmodule Unit do
       ]
       |> Keyword.merge(opts)
       |> Keyword.merge(id: id)
+      |> IOP.inspect
     struct!(__MODULE__, opts)
     |> calc_selection_box_position
   end
@@ -163,7 +164,7 @@ defmodule Unit do
     Vector.from_position(pose)
   end
   def turret(unit, turret_id) do
-    ById.get!(unit.turrets, turret_id)
+    IdList.fetch!(unit.turrets, turret_id)
   end
   def all_turret_mount_ids(%__MODULE__{turrets: turrets}) do
     Enum.map(turrets, & &1.id)

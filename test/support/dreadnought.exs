@@ -27,11 +27,6 @@ defmodule DreadnoughtHelpers do
   # *** *******************************
   # *** BUILDERS
 
-  def mission() do
-    Mission.new()
-    |> Mission.put(unit())
-    |> Mission.set_arena(arena())
-  end
   def unit(), do: Unit.new(1, start_pose: Pose.new(0, 500, 0))
   def arena(), do: Rect.new(1000, 1000)
 

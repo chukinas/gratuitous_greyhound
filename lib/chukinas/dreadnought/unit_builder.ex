@@ -4,6 +4,18 @@ alias Chukinas.LinearAlgebra.Vector
 
 defmodule Unit.Builder do
 
+  def blue_merchant(id, opts \\ []) do
+    fields =
+      [
+        health: 40,
+        sprite: Spritesheet.blue("hull_blue_merchant"),
+        turrets: [],
+        name: "noname"
+      ]
+      |> Keyword.merge(opts)
+    Unit.new(id, fields)
+  end
+
   def blue_destroyer(id, opts \\ []) do
     sprite = Spritesheet.blue("hull_blue_small")
     turrets = build_turrets(sprite, {:blue, "turret_blue_2"}, [

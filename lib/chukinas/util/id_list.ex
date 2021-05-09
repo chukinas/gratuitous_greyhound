@@ -1,15 +1,14 @@
-# TODO rename IdList? If so, move any map refs to other module
-defmodule Chukinas.Util.ById do
+defmodule Chukinas.Util.IdList do
 
   # *** *******************************
   # *** API
 
-  def get!(items, ids, key \\ :id)
-  def get!(items, ids, key) when is_list(ids) do
+  def fetch!(items, ids, key \\ :id)
+  def fetch!(items, ids, key) when is_list(ids) do
     ids
-    |> Enum.map(& get!(items, &1, key))
+    |> Enum.map(& fetch!(items, &1, key))
   end
-  def get!(enum, id, key) when is_integer(id) do
+  def fetch!(enum, id, key) when is_integer(id) do
     case Enum.find(enum, :not_found, &_match?(&1, id, key)) do
       :not_found -> raise "\n\n!!!\n\nId of #{id} not found in #{inspect enum}\n\n!!!\n\n"
       item -> item
@@ -27,24 +26,8 @@ defmodule Chukinas.Util.ById do
     replace(enum, item, key)
   end
 
-  def replace(enum, item, key \\ :id) when is_list(enum) do
-    case Enum.split_while(enum, &_not_match?(&1, item, key)) do
-      {non_matches1, [_match | non_matches2]} ->
-        non_matches1 ++ [item | non_matches2]
-      {non_matches1, []} ->
-        [item | non_matches1]
-    end
-  end
-
-  def replace!(enum, item, key \\ :id) when is_list(enum) do
-    {non_matches1, [_match | non_matches2]} =
-      Enum.split_while(enum, &_not_match?(&1, item, key))
-    Enum.concat(non_matches1, [item | non_matches2])
-  end
-
-  def to_ids(enum, key \\ :id) when is_list(enum) do
-    # TODO Stream instead?
-    Enum.map(enum, & Map.fetch!(&1, key))
+  def ids(enum, key \\ :id) when is_list(enum) do
+    Stream.map(enum, & Map.fetch!(&1, key))
   end
 
   # *** *******************************
@@ -58,4 +41,13 @@ defmodule Chukinas.Util.ById do
   end
 
   defp _not_match?(a, b, key), do: not _match?(a, b, key)
+
+  defp replace(enum, item, key) when is_list(enum) do
+    case Enum.split_while(enum, &_not_match?(&1, item, key)) do
+      {non_matches1, [_match | non_matches2]} ->
+        non_matches1 ++ [item | non_matches2]
+      {non_matches1, []} ->
+        [item | non_matches1]
+    end
+  end
 end
