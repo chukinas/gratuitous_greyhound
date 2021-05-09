@@ -21,7 +21,6 @@ defmodule CombatAction do
     turret = Unit.turret(attacker, turret_id)
     desired_angle =
       Unit.gunnery_target_vector(target)
-      |> IOP.inspect("CombatAction fire turret - target vector")
       |> CSys.Conversion.convert_from_world_vector(attacker, Turret.position_csys(turret))
       |> Vector.angle
     {angle, target} = case Turret.normalize_desired_angle(turret, desired_angle) do

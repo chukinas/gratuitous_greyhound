@@ -136,4 +136,17 @@ defmodule ActionSelection do
     end
   end
 
+  # *** *******************************
+  # *** IMPLEMENTATIONS
+
+  defimpl Inspect do
+    import Inspect.Algebra
+    def inspect(actionsel, opts) do
+      col = fn string -> color(string, :cust_struct, opts) end
+      concat [
+        col.("#Player-#{actionsel.player_id}-Actions"),
+        to_doc(actionsel.actions, opts),
+      ]
+    end
+  end
 end

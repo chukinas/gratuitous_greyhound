@@ -7,7 +7,7 @@ defmodule Turret do
   Represents a weapon on a unit (ship, fortification, etc)
 
   Definitions:
-  ANGLE: orientation of turret relative to ship (e.g. an rear turret at rest has an angle of 180deg).
+  ANGLE: orientation of turret relative to ship (e.g. a rear turret at rest has an angle of 180deg).
   ROTATION: orientation of turret relative to its own maximum CCW angle. Always a positive number.
   TRAVEL: movement / arc of a turret, where positive numbers are CW and negative are CCW.
   """
@@ -30,7 +30,10 @@ defmodule Turret do
   # *** NEW
 
   def new(id, sprite, pose) do
-    rest_angle = Pose.angle(pose)
+    rest_angle =
+      pose
+      |> Pose.angle
+      |> Trig.normalize_angle
     %__MODULE__{
       id: id,
       sprite: sprite,
@@ -44,7 +47,10 @@ defmodule Turret do
   # *** *******************************
   # *** GETTERS
 
-  def max_angle(%__MODULE__{max_ccw_angle: angle, max_rotation: travel}), do: angle + travel
+  def angle_max_ccw(%__MODULE__{max_ccw_angle: angle}), do: angle
+  def angle_max_cw(%__MODULE__{max_ccw_angle: angle, max_rotation: rotation}) do
+    Trig.normalize_angle(angle + rotation)
+  end
   def angle_arc_center(%__MODULE__{max_ccw_angle: angle} = turret) do
     Trig.normalize_angle(angle + half_travel(turret))
   end
@@ -57,7 +63,7 @@ defmodule Turret do
   def current_rotation(mount) do
     rotation(mount, current_angle(mount))
   end
-  def half_travel(%__MODULE__{max_rotation: travel}), do: travel / 2
+  def half_travel(%__MODULE__{max_rotation: rotation}), do: rotation / 2
   def gun_barrel_vector(%__MODULE__{sprite: sprite}) do
     %{x: x} =
       sprite
@@ -90,8 +96,8 @@ defmodule Turret do
     vector_arc_center = vector_arc_center(mount)
     cond do
       lies_within_arc?(mount, vector_desired) -> {:ok, angle}
-      Vector.sign_between(vector_arc_center, vector_desired) < 0 -> {:corrected, mount.max_ccw_angle}
-      true -> {:corrected, max_angle(mount)}
+      Vector.sign_between(vector_arc_center, vector_desired) < 0 -> {:corrected, angle_max_ccw(mount)}
+      true -> {:corrected, angle_max_cw(mount)}
     end
   end
 
