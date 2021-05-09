@@ -47,6 +47,7 @@ defmodule Sprite do
     |> Mount.position
   end
   def base_filename(%__MODULE__{image_file_path: path}), do: Path.basename(path)
+  def mounts(%__MODULE__{mounts: mounts}), do: mounts
 
   # *** *******************************
   # *** API
