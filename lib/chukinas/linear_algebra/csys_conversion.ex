@@ -21,6 +21,11 @@ defmodule CSys.Conversion do
   def new(starting_point) when is_vector(starting_point) do
     %__MODULE__{__start_point__: starting_point}
   end
+  def new(starting_point) do
+    starting_point
+    |> HasCsys.get_csys
+    |> new
+  end
 
   # *** *******************************
   # *** API

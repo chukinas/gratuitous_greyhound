@@ -6,20 +6,18 @@ defmodule MissionBuilder do
   def build do
     # Config
     square_size = 50
-    #arena = %{
-    #  width: 3000,
-    #  height: 2000
-    #}
     arena = %{
-      width: 700,
-      height: 400
+      width: 3000,
+      height: 2000
+    #  width: 700,
+    #  height: 400
     }
     margin = Size.new(arena.height, arena.width)
     #margin = Size.new(200, 100)
     islands = [
-    #  Position.new(500, 500),
-    #  Position.new(2500, 1200),
-    #  Position.new(1500, 1800),
+      Position.new(500, 500),
+      Position.new(2500, 1200),
+      Position.new(1500, 1800),
     ]
     |> Enum.with_index
     |> Enum.map(fn {position, index} ->

@@ -180,7 +180,7 @@ defmodule Unit do
         unit
         |> Map.take([
           :pose,
-          :turrets,
+          :damage,
           :mount_actions
         ])
         |> Enum.into([])

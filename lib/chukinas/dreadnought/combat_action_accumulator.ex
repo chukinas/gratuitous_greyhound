@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Unit, CombatAction, Gunfire}
+alias Chukinas.Dreadnought.{Unit, CombatAction, Gunfire, Island}
 alias Chukinas.Util.Maps
 
 defmodule CombatAction.Accumulator do
@@ -12,17 +12,19 @@ defmodule CombatAction.Accumulator do
     field :target, Unit.t()
     field :turn_number, integer()
     field :gunfires, [Gunfire.t()]
+    field :islands, [Island.t()]
   end
 
   # *** *******************************
   # *** NEW
 
-  def new(attacker, target, turn_number, gunfires) do
+  def new(attacker, target, turn_number, gunfires, islands) do
     %__MODULE__{
       attacker: attacker,
       target: target,
       turn_number: turn_number,
-      gunfires: gunfires
+      gunfires: gunfires,
+      islands: islands
     }
   end
 
@@ -32,6 +34,7 @@ defmodule CombatAction.Accumulator do
   def attacker(%__MODULE__{attacker: unit}), do: unit
   def target(%__MODULE__{target: unit}), do: unit
   def turn_number(%__MODULE__{turn_number: turn_number}), do: turn_number
+  def islands(%__MODULE__{islands: islands}), do: islands
 
   def to_tuple(%__MODULE__{
     attacker: attacker,

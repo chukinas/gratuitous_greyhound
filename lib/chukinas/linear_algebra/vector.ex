@@ -57,6 +57,7 @@ defmodule Vector do
   def scalar({a, b}, scalar), do: {a * scalar, b * scalar}
   def dot({a, b}, {c, d}), do: a * c + b * d
   def add({a, b}, {c, d}), do: {a + c, b + d}
+  def subtract(a, b), do: b |> flip |> add(a)
   def normalize({a, b}) do
     magnitude =
       [a, b]
