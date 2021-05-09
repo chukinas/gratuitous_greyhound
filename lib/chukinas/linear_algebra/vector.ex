@@ -48,6 +48,7 @@ defmodule Vector do
     |> Trig.normalize_angle
   end
   def rotate_90({x, y}), do: {-y, x}
+  def magnitude({x, y}), do: Trig.hypotenuse(x, y)
 
   # *** *******************************
   # *** API

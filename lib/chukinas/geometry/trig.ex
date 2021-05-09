@@ -33,7 +33,14 @@ defmodule Chukinas.Geometry.Trig do
   end
 
   def distance_between_points(a, b) do
-    :math.sqrt(:math.pow(a.x - b.x, 2) + :math.pow(a.y - b.y, 2))
+    hypotenuse(
+      a.x - b.x,
+      a.y - b.y
+    )
+  end
+
+  def hypotenuse(adjacent, opposite) do
+    :math.sqrt(:math.pow(adjacent, 2) + :math.pow(opposite, 2))
   end
 
   def deg_between_points(a, b) do
