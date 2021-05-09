@@ -7,7 +7,7 @@ defmodule CombatAction do
 
   alias CombatAction.Accumulator, as: Acc
 
-  def exec(%{value: :noop}, %{units: units}), do: units
+  def exec(%{value: :noop}, %{units: units, gunfire: gunfire}), do: {units, gunfire}
   def exec(
     %{unit_id: attacker_id, value: target_id} = _unit_action,
     %{units: units, turn_number: turn_number, gunfire: gunfire, islands: islands} = _mission
@@ -32,7 +32,7 @@ defmodule CombatAction do
     ) do
       fire_turret(acc, turret_id, turret_angle, range, path)
     else
-      {:fail, _reason} -> acc
+      {:fail, _reason} -> move_turret_to_neutral(acc, turret_id)
     end
   end
 
@@ -59,9 +59,7 @@ defmodule CombatAction do
 
   defp path_to_target(%Acc{} = acc, target_vector, turret_id) do
     turret = Acc.turret(acc, turret_id)
-             |> IOP.inspect("path to target = turret")
     attacker = Acc.attacker(acc)
-             |> IOP.inspect("path to target = attacker")
     turret_vector = CSys.Conversion.convert_to_world_vector(turret, attacker)
     path_vector = Vector.subtract(target_vector, turret_vector)
     angle = Vector.angle(path_vector)
@@ -104,5 +102,10 @@ defmodule CombatAction do
       |> Unit.put_damage(10, turn_number)
     gunfire = Gunfire.new(attacker, turret_id)
     Acc.put(acc, attacker, target, gunfire)
+  end
+
+  # TODO implement
+  def move_turret_to_neutral(acc, _turret_id) do
+    acc
   end
 end

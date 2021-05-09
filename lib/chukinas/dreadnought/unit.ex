@@ -186,8 +186,10 @@ defmodule Unit do
         |> Enum.into([])
         #|> Keyword.put(:health, Unit.percent_remaining_health(unit))
       concat [
-        col.("#Unit-#{unit.id}"),
-        to_doc(unit_map, opts)]
+        col.("#Unit-#{unit.id}<"),
+        to_doc(unit_map, opts),
+        col.(">")
+      ]
     end
   end
 

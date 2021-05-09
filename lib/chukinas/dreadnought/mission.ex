@@ -111,12 +111,12 @@ defmodule Mission do
       |> put_tentative_maneuvers
       |> resolve_island_collisions
       |> calc_unit_render
-      |> IOP.inspect("Mission maybe_end_turn pre gunnery calc")
       |> calc_gunnery
       # Part 2: Prepare for this turn's planning
       |> calc_unit_active
       |> clear_player_actions
       |> calc_ai_commands
+      |> IOP.inspect("Mission maybe_end_turn")
     else
       mission
     end
@@ -164,11 +164,9 @@ defmodule Mission do
   end
 
   defp calc_gunnery(mission) do
-    IOP.inspect mission, "Mission calc_gunnery start"
     Enum.reduce(combats(mission), mission, fn combat_action, mission ->
       {units, gunfire} = CombatAction.exec(combat_action, mission)
-      mission
-      |> put(units)
+      %__MODULE__{mission | units: units}
       |> push_gunfire(gunfire)
     end)
   end
@@ -187,6 +185,7 @@ defmodule Mission do
       fields =
         mission
         |> Map.take([
+          :turn_number,
           :units,
           :gunfire,
           :player_actions
