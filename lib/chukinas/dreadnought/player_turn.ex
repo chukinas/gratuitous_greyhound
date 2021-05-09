@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{PlayerTurn, Unit, PlayerActions, ManeuverPlanning, UnitAction}
+alias Chukinas.Dreadnought.{PlayerTurn, Unit, ActionSelection, ManeuverPlanning, UnitAction}
 alias Chukinas.Geometry.{Size, Grid, GridSquare}
 
 # TODO better name => Chukinas.Dreadnought.PlayerTurn ?
@@ -22,37 +22,41 @@ defmodule PlayerTurn do
     field :player_id, integer()
     # TODO be more specific
     field :player_type, any()
+    # TODO this is buggy for the human player
     field :maneuver_foresight, integer(), default: 1
     field :margin, Size.t()
     field :grid, Grid.t()
     # These are handled locally by the dynamic component:
-    field :player_actions, PlayerActions.t()
+    field :player_actions, ActionSelection.t()
     # These must be set by the mission each turn:
     field :turn_number, integer()
     field :units, [Unit.t()], default: []
     field :cmd_squares, [GridSquare.t()], default: []
     field :show_end_turn_btn?, boolean(), default: false
+    field :gunfire, [Gunfire.t()]
   end
 
   # *** *******************************
   # *** NEW
 
-  def new(player_id, player_type,  %{
-    turn_number: turn_number,
-    units: units,
-    grid: grid,
+  def new(player_id, player_type, %{
     islands: islands,
-    margin: margin
-  }) do
-    %__MODULE__{
-      turn_number: turn_number,
-      units: units,
-      player_actions: PlayerActions.new(units, player_id),
-      margin: margin,
-      grid: grid,
+    units: units
+  } = mission) do
+    mission
+    |> Map.take([
+      :turn_number,
+      :units,
+      :margin,
+      :grid,
+      :gunfire
+    ])
+    |> Map.merge(%{
       player_id: player_id,
-      player_type: player_type
-    }
+      player_type: player_type,
+      player_actions: ActionSelection.new(player_id, units)
+    })
+    |> build_struct
     |> calc_cmd_squares(islands)
     |> maneuver_trapped_units
     |> if_ai_calc_commands
@@ -67,6 +71,8 @@ defmodule PlayerTurn do
     Map.from_struct(new(player_id, player_type, mission))
   end
 
+  defp build_struct(map), do: struct!(__MODULE__, map)
+
   # *** *******************************
   # *** API
 
@@ -74,40 +80,39 @@ defmodule PlayerTurn do
   # *** PRIVATE
 
   # TODO move the bulk of this out to the AI module
-  defp if_ai_calc_commands(token) do
-    if token.player_type == :ai do
+  defp if_ai_calc_commands(player_turn) do
+    if player_turn.player_type == :ai do
+      player_turn = Map.put(player_turn, :maneuver_foresight, 4)
       pending_unit_ids =
-        token.player_actions
-        |> PlayerActions.pending_player_unit_ids
+        player_turn.player_actions
+        |> ActionSelection.pending_player_unit_ids
       unit_maneuvers = Enum.map(pending_unit_ids, fn unit_id ->
         position =
-          token.cmd_squares
+          player_turn.cmd_squares
           |> Stream.filter(fn %GridSquare{unit_id: id} -> id == unit_id end)
           |> Enum.random
           |> GridSquare.position
         UnitAction.move_to(unit_id, position)
       end)
-      Map.update!(token, :player_actions, &PlayerActions.put(&1, unit_maneuvers))
+      Map.update!(player_turn, :player_actions, &ActionSelection.put(&1, unit_maneuvers))
     else
-      token
+      player_turn
     end
   end
 
-  defp calc_cmd_squares(token, islands) do
-    squares = Enum.flat_map(token.units, fn unit ->
-      if (unit.active?) and (unit.player_id == token.player_id) do
-        ManeuverPlanning.get_cmd_squares(unit, token.grid, islands, token.maneuver_foresight)
+  defp calc_cmd_squares(player_turn, islands) do
+    squares = Enum.flat_map(player_turn.units, fn unit ->
+      if (unit.active?) and (unit.player_id == player_turn.player_id) do
+        ManeuverPlanning.get_cmd_squares(unit, player_turn.grid, islands, player_turn.maneuver_foresight)
       else
         []
       end
     end)
-    %__MODULE__{token | cmd_squares: squares}
+    %__MODULE__{player_turn | cmd_squares: squares}
   end
 
   defp maneuver_trapped_units(%__MODULE__{
     cmd_squares: cmd_squares,
-    units: units,
-    player_id: player_id,
     player_actions: player_actions
   } = player_turn) do
     unit_ids_that_have_cmd_squares = MapSet.new(cmd_squares, & &1.unit_id)
@@ -116,17 +121,15 @@ defmodule PlayerTurn do
     end
     unit_actions =
       player_actions
-      |> PlayerActions.pending_player_unit_ids
+      |> ActionSelection.pending_player_unit_ids
       |> Stream.filter(trapped_unit_id?)
       |> Enum.map(&UnitAction.exit_or_run_aground/1)
-    Map.update!(player_turn, :player_actions, &PlayerActions.put(&1, unit_actions))
+    Map.update!(player_turn, :player_actions, &ActionSelection.put(&1, unit_actions))
   end
 
   defp determine_show_end_turn_btn(%__MODULE__{} = player_turn) do
-    hide? =
-      player_turn.player_actions
-      |> PlayerActions.actions_available?
-    %__MODULE__{player_turn | show_end_turn_btn?: !hide?}
+    show? = player_turn.player_actions |> ActionSelection.turn_complete?
+    %__MODULE__{player_turn | show_end_turn_btn?: show?}
   end
 
   # *** *******************************

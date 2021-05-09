@@ -1,28 +1,43 @@
-<%# Unit 3 Template %>
 <div
+  <%# Position within World %>
   id="unit-<%= @unit.id %>"
   class="absolute"
   style="
-    left: <%= @margin.width + @unit.pose.x - @unit.sprite.origin.x %>px;
-    top: <%= @margin.height + @unit.pose.y - @unit.sprite.origin.y %>px; 
+    left: <%= @unit.pose.x %>px;
+    top: <%= @unit.pose.y %>px; 
     transform: rotate(<%= @unit.pose.angle %>deg);
   "
 >
+
+
+  <%# Sprites %>
   <div class="relative">
-    <%# TODO shorten this syntax %>
-    <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: @unit.sprite %>
+    <%= ChukinasWeb.DreadnoughtView.relative_sprite @unit.sprite, @socket %>
     <%= for turret <- @unit.turrets do %>
-    <div 
-      id="unit-<%= @unit.id %>-turret-<%= turret.id %>" 
-      class="absolute"
-      style="
-        left: <%= turret.pose.x - turret.sprite.rect.width / 2 %>px; 
-        top: <%= turret.pose.y - turret.sprite.rect.height / 2 %>px; 
-        transform: rotate(<%= 45 +turret.pose.angle %>deg);
-      "
-    >
-      <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: turret.sprite %>
-    </div>
+    <%= ChukinasWeb.DreadnoughtView.relative_sprite turret.sprite, @socket, 
+        id_string: "unit-#{@unit.id}-mount-#{turret.id}", 
+        pose: turret.pose %>
     <% end %>
   </div>
+
+
+  <%# Mount Rotations %>
+  <ul class="hidden">
+    <%= for action <- @unit.mount_actions do %>
+    <li
+      id="unit-<%= @unit.id %>-mount-<%= action.mount_id %>-<%= @turn_number %>-<%= action.time_start %>"
+      phx-hook="RotationPartial"
+      data-unit-id="<%= @unit.id %>"
+      data-mount-id="<%= action.mount_id %>"
+      data-angle="<%= action.angle_end %>"
+      data-start="<%= action.time_start %>"
+      data-duration="<%= action.time_duration %>"
+      data-direction="<%= action.angle_direction %>"
+      data-start-angle="<%= action.angle_start %>"
+    >
+    <li>
+    <% end %>
+  </ul>
+
+
 </div>

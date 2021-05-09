@@ -1,0 +1,16 @@
+<div 
+  <%= if @id_string do %>
+    id="<%= @id_string %>"
+  <% end %>
+  class="absolute"
+  style="
+    left: <%= @position.x %>px; 
+    top: <%= @position.y %>px; 
+    <%= if @angle do %>
+    transform: rotate(<%= @angle %>deg); 
+    <% end %>
+    transform-origin: <%= -@sprite.rect.x %>px <%= -@sprite.rect.y %>px;
+  "
+>
+  <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: @sprite %>
+</div>

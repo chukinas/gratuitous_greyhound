@@ -62,7 +62,7 @@ defmodule Parser do
     %{
       type: :sprite,
       clip_name: get_label(sublayer),
-      clip_path: path["-d"]
+      image_clip_path: path["-d"]
     }
     |> Map.merge(parse_markers(markers))
   end

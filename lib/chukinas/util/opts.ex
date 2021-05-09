@@ -7,4 +7,10 @@ defmodule Opts do
       Keyword.replace! new_opts, key, value
     end)
   end
+
+  def merge_into_map!(opts, default_opts) do
+    opts
+    |> merge!(default_opts)
+    |> Enum.into(%{})
+  end
 end

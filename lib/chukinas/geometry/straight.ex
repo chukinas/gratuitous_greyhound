@@ -1,4 +1,5 @@
-alias Chukinas.Geometry.{Polar, Pose, PathLike, Rect, Straight, Position, Trig, CollidableShape}
+alias Chukinas.Geometry.{Pose, PathLike, Rect, Straight, Position, Trig, CollidableShape}
+alias Chukinas.LinearAlgebra.{HasCsys, CSys}
 
 defmodule Straight do
 
@@ -31,14 +32,13 @@ defmodule Straight do
   # *** *******************************
   # *** GETTERS
 
+  def angle(straight), do: straight.start |> Pose.angle
   def start_pose(straight), do: straight.start
   def length(straight), do: straight.len
-  def end_pose(path) do
-    # TODO replace with call to Pose.straight
-    %{x: x0, y: y0, angle: angle} = start_pose(path)
-    %{x: dx, y: dy} = Polar.new(path.len, angle)
-    |> Polar.to_cartesian()
-    Pose.new(x0 + dx, y0 + dy, angle)
+  def end_pose(%__MODULE__{len: len} = path) do
+    {len, 0}
+    |> CSys.Conversion.convert_to_world_vector(path)
+    |> Pose.new(angle(path))
   end
   def bounding_rect(path) do
     start = path |> start_pose()
@@ -88,6 +88,15 @@ defmodule Straight do
         straight |> PathLike.pose_end   |> Pose.left(20)
       ]
       |> Enum.map(&Position.to_vertex/1)
+    end
+  end
+
+  defimpl HasCsys do
+    def get_csys(%{start: pose}) do
+      CSys.new(pose)
+    end
+    def get_angle(%{start: pose}) do
+      Pose.angle(pose)
     end
   end
 end

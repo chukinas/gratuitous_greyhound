@@ -1,29 +1,47 @@
-alias Chukinas.Dreadnought.Sprite
+alias Chukinas.Geometry.{Pose, Position}
 alias Chukinas.Util.Opts
 
 defmodule ChukinasWeb.DreadnoughtView do
   use ChukinasWeb, :view
 
+  # TODO I don't like this use of 'opts'. The two 'opts' are anything but. They're required.
   def sprite(opts \\ []) do
-    center? = Keyword.get(opts, :center_on_origin?, true)
     sprite = Keyword.fetch!(opts, :sprite)
-    sprite = if center? do
-      Sprite.center(sprite)
-    else
-      Sprite.fit(sprite)
-    end
     rect = sprite.rect
     assigns = [
       socket: Keyword.fetch!(opts, :socket),
       rect: rect,
-      image_path: sprite.image_path,
+      image_file_path: sprite.image_file_path,
       image_size: sprite.image_size,
-      clip_path: sprite.clip_path
+      image_clip_path: sprite.image_clip_path,
+      transform: sprite.image_origin |> Position.add(sprite.rect) |> Position.multiply(-1)
     ]
     render("_sprite.html", assigns)
   end
 
-  def center(x, y, opts \\ []) do
+  def relative_sprite(sprite, socket, opts \\ []) do
+    opts =
+      opts
+      |> Opts.merge!([
+        id_string: false,
+        pose: Pose.origin()
+      ])
+    pose = Keyword.fetch!(opts, :pose)
+    angle = case pose.angle do
+      0 -> false
+      x when is_number(x) -> x
+    end
+    assigns = %{
+      sprite: sprite,
+      socket: socket,
+      id_string: Keyword.fetch!(opts, :id_string),
+      position: sprite.rect |> Position.add(pose) |> Position.new,
+      angle: angle
+    }
+    render("_relative_sprite.html", assigns)
+  end
+
+  def center(%{x: x, y: y}, opts \\ []) do
     scale = Keyword.get(opts, :scale, 1)
     color = case Keyword.get(opts, :type, :origin) do
       :origin -> "pink"

@@ -9,11 +9,9 @@ defmodule MissionBuilder do
     arena = %{
       width: 3000,
       height: 2000
+    #  width: 700,
+    #  height: 400
     }
-    #arena = %{
-    #  width: 500,
-    #  height: 500
-    #}
     margin = Size.new(arena.height, arena.width)
     #margin = Size.new(200, 100)
     islands = [
@@ -31,9 +29,9 @@ defmodule MissionBuilder do
       |> Enum.map(&round(&1 / square_size))
     grid = Grid.new(square_size, square_count_x, square_count_y)
     units = [
-      Unit.new(1, pose: Pose.new(100, 155, 75)),
-      #Unit.new(2, pose: Pose.new(800, 155, 75)),
-      Unit.new(3, pose: Pose.new(Position.from_size(grid), 225), player_id: 2)
+      Unit.Builder.red_destroyer(1, pose: Pose.new(0, 0, 0), name: "Prince Eugene"),
+      #Unit.Builder.red_cruiser(2, pose: Pose.new(800, 155, 75), name: "Billy"),
+      Unit.Builder.blue_merchant(3, pose: Pose.new(Position.from_size(grid), 225), player_id: 2)
     ]
     players = [
       Player.new(1, :human),

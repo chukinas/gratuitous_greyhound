@@ -16,11 +16,9 @@ const has_already_maneuvered = (function() {
     const turnNumber = document.getElementById("turn-number").dataset.turnNumber
     const lastTurnNumberExecuted = lastTurnNumbers.get(unitId)
     if (turnNumber == lastTurnNumberExecuted) {
-      console.log("already mvr'ed")
       return true
     }
     lastTurnNumbers.set(unitId, turnNumber)
-    console.log("not already mvr'ed")
     return false
   }
 })()
@@ -30,6 +28,7 @@ function maneuver_unit(maneuveringEl) {
   partialManeuver(maneuveringEl, path)
 }
 
+// TODO rename scheduleManeuver
 function partialManeuver(maneuveringEl, pathEl, opts = {}) {
   opts = {
     fractionalStartTime: 0,
@@ -48,6 +47,24 @@ function partialManeuver(maneuveringEl, pathEl, opts = {}) {
     ease: "none",
     delay: opts.fractionalStartTime * ANIMATIONDURATION,
     duration: opts.fractionalDuration * ANIMATIONDURATION,
+  })
+}
+
+function scheduleRotation(rotatingEl, endAngle, angleTravel, opts = {}) {
+  opts = {
+    start: 0.5,
+    duration: 0.5,
+    ...opts
+  }
+  console.log(rotatingEl)
+  gsap.fromTo(rotatingEl, {
+    rotation: opts.startAngle
+  }, {
+    rotation: `${endAngle}_${opts.direction}`,
+    // rotation: '180_cw',
+    ease: "none",
+    delay: opts.start * ANIMATIONDURATION,
+    duration: opts.duration * ANIMATIONDURATION,
   })
 }
 
@@ -135,16 +152,25 @@ const Unit = {
     subscribeNewTurn(() => maneuver_unit(this.el))
   },
   //beforeUpdate() {
-  //  console.log("unit before update")
   //},
   //updated() {
-  //  console.log("unit updated")
   //  if (!has_already_maneuvered(this.el)) {
   //    maneuver_unit(this.el)
   //  }
   //},
 }
 
+const RotationPartial = {
+  mounted() {
+    const data = this.el.dataset
+    const rotatingElId = `unit-${data.unitId}-mount-${data.mountId}`
+    const rotatingEl = document.getElementById(rotatingElId)
+    console.log({data, rotatingEl, rotatingElId})
+    scheduleRotation(rotatingEl, data.angle, data.travel, data)
+  }
+}
+
+// TODO rename PathPartial
 const PartialPath = {
   mounted() {
     const maneuveringEl = document.getElementById(this.el.dataset.maneuveringElId)
@@ -154,10 +180,30 @@ const PartialPath = {
       fractionalDuration: this.el.dataset.duration,
       fadeout: parse_dom_string(this.el.dataset.fadeout)
     }
-    console.log(this.el.dataset)
-    console.log(opts)
     partialManeuver(maneuveringEl, pathEl, opts)
   },
 }
 
-export default { WelcomeCardShip, WelcomeCardShipFwdTurret, WelcomeCardShipRearTurret, Unit, PartialPath }
+const Gunfire = {
+  mounted() {
+    gsap.set(this.el, {
+      delay: ANIMATIONDURATION,
+      visibility: 'visible'
+    })
+    gsap.to(this.el, {
+      delay: ANIMATIONDURATION,
+      opacity: 0,
+      duration: 0.5
+    })
+  }
+}
+
+export default {
+  WelcomeCardShip, 
+  WelcomeCardShipFwdTurret, 
+  WelcomeCardShipRearTurret, 
+  Unit, 
+  PartialPath, 
+  RotationPartial,
+  Gunfire
+}

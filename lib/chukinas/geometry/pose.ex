@@ -17,9 +17,8 @@ defmodule Pose do
   # *** *******************************
   # *** NEW
 
-  def new(position, angle) when Position.is(position) do
-    new(position.x, position.y, angle)
-  end
+  def new({x, y}, angle), do: new(x, y, angle)
+  def new(%{x: x, y: y}, angle), do: new(x, y, angle)
   def new(x, y, angle) do
     %__MODULE__{
       x: x,
@@ -28,10 +27,20 @@ defmodule Pose do
     }
   end
 
+  def origin(), do: new(0, 0, 0)
+
+  # *** *******************************
+  # *** GETTERS
+
+  def angle(%{angle: angle}), do: angle
+
+  # *** *******************************
+  # *** SETTERS
+
+  def put_angle(pose, angle), do: %__MODULE__{pose | angle: angle}
+
   # *** *******************************
   # *** API
-
-  def origin(), do: new(0, 0, 0)
 
   def rotate(%__MODULE__{} = pose, angle) do
     %{pose | angle: Trig.normalize_angle(pose.angle + angle)}
@@ -59,8 +68,15 @@ defmodule Pose do
   # *** IMPLEMENTATIONS
 
   defimpl Inspect do
-    def inspect(pose, _opts) do
-      "#Pose<#{round pose.x}, #{round pose.y} ∠ #{round pose.angle}°>"
+    import Inspect.Algebra
+    def inspect(pose, opts) do
+      col = fn string -> color(string, :cust_struct, opts) end
+      concat [
+        col.("#Pose<"),
+        to_doc({round(pose.x), round(pose.y)}, opts), "∠ " , to_doc(round(pose.angle), opts),
+        "°",
+        col.(">")
+      ]
     end
   end
 end

@@ -1,6 +1,6 @@
 alias Chukinas.Dreadnought.{ManeuverPartial, Maneuver, UnitAction, Unit}
 alias Chukinas.Geometry.{Path, Position}
-alias Chukinas.Util.ById
+alias Chukinas.Util.IdList
 
 defmodule Maneuver do
   @moduledoc """
@@ -16,7 +16,7 @@ defmodule Maneuver do
   # *** API
 
   def get_unit_with_tentative_maneuver(units, maneuver_action, turn_number) do
-    unit = units |> ById.get!(maneuver_action.unit_id)
+    unit = units |> IdList.fetch!(maneuver_action.unit_id)
     case UnitAction.value(maneuver_action) do
       %Position{} = pos -> move_to(unit, pos)
         # TODO rename :trapped

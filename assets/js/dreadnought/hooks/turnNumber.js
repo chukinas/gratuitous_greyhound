@@ -4,9 +4,9 @@ const {subscribeNewTurn, triggerNewTurn} = (function() {
     subscriptionCallbacks.push(callback)
   }
   const triggerNewTurn = () => {
-    console.log("triggering new turn!")
+    // console.log("triggering new turn!")
     subscriptionCallbacks.forEach(callback => {
-      console.log("calling a callback")
+      // console.log("calling a callback")
       callback()
     })
   }
@@ -26,7 +26,7 @@ const TurnNumber = {
   //   console.log("turn num mount", getTurnNumber())
   // },
   beforeUpdate() {
-    console.log("turn beforeUpdate")
+    // console.log("turn beforeUpdate")
   },
   updated() {
     triggerNewTurn()

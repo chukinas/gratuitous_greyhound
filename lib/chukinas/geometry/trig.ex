@@ -3,6 +3,23 @@ defmodule Chukinas.Geometry.Trig do
   # *** *******************************
   # *** API
 
+  def mult(a, b), do: a * b
+
+  def sign(value) when value <  0, do: -1
+  def sign(value) when value >= 0, do:  1
+
+  def acos(value), do: :math.acos(value) |> rad_to_deg
+
+  def sin_and_cos(0), do: {0, 1}
+  def sin_and_cos(90), do: {1, 0}
+  def sin_and_cos(180), do: {0, -1}
+  def sin_and_cos(-90), do: {-1, 0}
+  def sin_and_cos(270), do: {-1, 0}
+  def sin_and_cos(deg) do
+    rad = deg_to_rad(deg)
+    {:math.sin(rad), :math.cos(rad)}
+  end
+
   def sin(degrees) do
     degrees
     |> deg_to_rad()
@@ -16,7 +33,14 @@ defmodule Chukinas.Geometry.Trig do
   end
 
   def distance_between_points(a, b) do
-    :math.sqrt(:math.pow(a.x - b.x, 2) + :math.pow(a.y - b.y, 2))
+    hypotenuse(
+      a.x - b.x,
+      a.y - b.y
+    )
+  end
+
+  def hypotenuse(adjacent, opposite) do
+    :math.sqrt(:math.pow(adjacent, 2) + :math.pow(opposite, 2))
   end
 
   def deg_between_points(a, b) do

@@ -83,6 +83,8 @@ defmodule Position do
     |> Map.update!(:y, fun)
   end
 
+  def divide(position, value) when not (value == 0), do: multiply(position, 1/value)
+
   def round_to_int(position) do
     position
     |> Map.update!(:x, &round/1)
@@ -141,8 +143,15 @@ defmodule Position do
   # *** IMPLEMENTATIONS
 
   defimpl Inspect do
-    def inspect(position, _opts) do
-      "#Position<#{round position.x}, #{round position.y}>"
+    import Inspect.Algebra
+    def inspect(position, opts) do
+      col = fn string -> color(string, :cust_struct, opts) end
+      values = {round(position.x), round(position.y)}
+      concat [
+        col.("#Position<"),
+        to_doc(values, opts),
+        col.(">")
+      ]
     end
   end
 end

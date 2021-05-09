@@ -3,28 +3,32 @@ alias Chukinas.Geometry.{Position}
 
 defmodule UnitAction do
   @moduledoc """
-  Represents one action a unit will take at the end of the turn
+  Represents one action a unit will take next turn
   """
 
   # *** *******************************
   # *** TYPES
 
+  @mode [:maneuver, :combat]
   @type unit_id() :: integer()
+  @type mode() :: :maneuver | :combat
 
   use TypedStruct
   typedstruct do
     field :unit_id, unit_id(), enforce: true
-    field :type, :maneuver | :combat
-    field :value, :exit_or_run_aground | Position.t()
+    field :mode, mode()
+    # TODO rename target?
+    # TODO replace :exit_or_run_aground with :noop
+    field :value, :exit_or_run_aground | Position.t() | :noop
   end
 
   # *** *******************************
   # *** NEW
 
-  defp new(unit_id, type, value) do
+  defp new(unit_id, mode, value) when is_integer(unit_id) and mode in @mode do
     %__MODULE__{
       unit_id: unit_id,
-      type: type,
+      mode: mode,
       value: value
     }
   end
@@ -35,19 +39,40 @@ defmodule UnitAction do
   def exit_or_run_aground(unit_id) do
     new(unit_id, :maneuver, :exit_or_run_aground)
   end
+  def fire_upon(unit_id, target_unit_id) when is_integer(target_unit_id) do
+    new(unit_id, :combat, target_unit_id)
+  end
+  def combat_noop(unit_id), do: new(unit_id, :combat, :noop)
 
   # *** *******************************
   # *** GETTERS
 
-  def is_maneuver?(action), do: action.type == :maneuver
+  def is_maneuver?(action), do: action.mode == :maneuver
+  def combat?(action), do: action.mode == :combat
   def value(action), do: action.value
+  def id_and_mode(%{unit_id: id, mode: mode}), do: {id, mode}
+
+  # *** *******************************
+  # *** IMPLEMENTATIONS
+
+  defimpl Inspect do
+    import Inspect.Algebra
+    def inspect(action, opts) do
+      mode = action.mode |> Atom.to_string |> String.capitalize |> String.pad_trailing(8)
+      values = [unit: action.unit_id, target: action.value]
+      concat ["$#{mode}", to_doc(values, opts)]
+    end
+  end
 
 end
 
 
-# TODO rename .Coll or .Enum
-defmodule UnitAction.List do
+defmodule UnitAction.Enum do
   def maneuevers(actions) do
+    # TODO rename maneuver?
     Stream.filter actions, &UnitAction.is_maneuver?/1
+  end
+  def combats(actions) do
+    Stream.filter actions, &UnitAction.combat?/1
   end
 end
