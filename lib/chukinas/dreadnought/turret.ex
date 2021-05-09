@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Turret, Sprite}
-alias Chukinas.Geometry.{Pose, Trig}
+alias Chukinas.Geometry.{Pose, Trig, Position}
 alias Chukinas.LinearAlgebra.{HasCsys, CSys, Vector}
 
 # TODO rename Mount
@@ -69,10 +69,15 @@ defmodule Turret do
   # TODO implement
   def gun_barrel_length(_mount), do: 8
   def gun_barrel_vector(mount), do: {gun_barrel_length(mount), 0}
-  def pose(%{vector_position: {x, y}, pose: pose}) do
-    Pose.new(x, y, Pose.angle(pose))
-  end
+  def pose(%{pose: pose}), do: pose
+  def position(turret), do: turret |> pose |> Position.new
   def csys(turret), do: turret |> pose |> CSys.new
+  # TODO is neutral_csys a better name?
+  def inline_csys(turret) do
+    turret
+    |> position
+    |> CSys.new
+  end
 
   # *** *******************************
   # *** SETTERS
@@ -84,8 +89,10 @@ defmodule Turret do
   # *** *******************************
   # *** API
 
-  def normalize_desired_angle(%__MODULE__{} = mount, angle) do
+  def normalize_desired_angle(%__MODULE__{} = mount, angle) when is_number(angle) do
+                     angle |> IOP.inspect("Turret norm angle - desired angle")
     vector_desired = Vector.from_angle(angle)
+                     |> IOP.inspect("Turret norm angle - desired vector")
     vector_arc_center = vector_arc_center(mount)
     cond do
       lies_within_arc?(mount, vector_desired) -> {:ok, angle}

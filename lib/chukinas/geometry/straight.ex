@@ -37,9 +37,7 @@ defmodule Straight do
   def length(straight), do: straight.len
   def end_pose(%__MODULE__{len: len} = path) do
     {len, 0}
-    |> CSys.Conversion.new
-    |> CSys.Conversion.put(path)
-    |> CSys.Conversion.get_vector
+    |> CSys.Conversion.convert_to_world_vector(path)
     |> Pose.new(angle(path))
   end
   def bounding_rect(path) do

@@ -54,7 +54,6 @@ defmodule Unit do
       ]
       |> Keyword.merge(opts)
       |> Keyword.merge(id: id)
-      |> IOP.inspect
     struct!(__MODULE__, opts)
     |> calc_selection_box_position
   end

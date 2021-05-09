@@ -1,6 +1,6 @@
 alias Chukinas.Dreadnought.{Unit, CombatAction, Turret, Gunfire}
 alias Chukinas.Util.IdList
-alias Chukinas.LinearAlgebra.CSys
+alias Chukinas.LinearAlgebra.{Vector, CSys}
 
 defmodule CombatAction do
 
@@ -21,10 +21,9 @@ defmodule CombatAction do
     turret = Unit.turret(attacker, turret_id)
     desired_angle =
       Unit.gunnery_target_vector(target)
-      |> CSys.Conversion.new
-      |> CSys.Conversion.put_inv(attacker)
-      |> CSys.Conversion.put_inv(turret)
-      |> CSys.Conversion.get_angle
+      |> IOP.inspect("CombatAction fire turret - target vector")
+      |> CSys.Conversion.convert_from_world_vector(attacker, Turret.inline_csys(turret))
+      |> Vector.angle
     {angle, target} = case Turret.normalize_desired_angle(turret, desired_angle) do
       {:ok, angle} -> {angle, Unit.put_damage(target, 10, turn_number)}
       {_, angle} -> {angle, target}

@@ -90,6 +90,16 @@ defmodule Rect do
     |> Size.multiply(scale)
   end
 
+  def center_vector(rect) do
+    relative_center =
+      rect
+      |> Position.from_size
+      |> Position.divide(2)
+    rect
+    |> Position.add(relative_center)
+    |> Vector.new
+  end
+
   # *** *******************************
   # *** IMPLEMENTATIONS
 

@@ -44,3 +44,5 @@ end
 # Readability
 # Inspect protocol so you don't have to label as much
 # Note the IOP namespace. This is so that you can use it with minimal typing, no import)
+# label convention: "Module-name function-name", b/c no need to actually say what it is, typically, since the inspect protocol tells me that.
+# Things I havent't played with yet: turn into a macro that compiles to nothing in PROD

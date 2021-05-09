@@ -31,6 +31,7 @@ defmodule Vector do
 
   def from_sin_and_cos({sin, cos}), do: {cos, sin}
 
+  # TODO remove
   def from_position(%{x: x, y: y}), do: {x, y}
 
   # *** *******************************
