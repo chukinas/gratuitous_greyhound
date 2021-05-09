@@ -30,4 +30,21 @@ defmodule Mount do
   def scale(%__MODULE__{} = mount, scale) do
     Map.update!(mount, :position, &Position.multiply(&1, scale))
   end
+
+  # *** *******************************
+  # *** IMPLEMENTATIONS
+
+  defimpl Inspect do
+    import Inspect.Algebra
+    def inspect(mount, opts) do
+      col = fn string -> color(string, :cust_struct, opts) end
+      concat [
+        col.("#Mount-#{mount.id}<"),
+        to_doc(mount.position.x |> round, opts),
+        ", ",
+        to_doc(mount.position.y |> round, opts),
+        col.(">")
+      ]
+    end
+  end
 end

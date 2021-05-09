@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Turret, Sprite}
+alias Chukinas.Dreadnought.{Turret, Sprite, Mount}
 alias Chukinas.Geometry.{Pose, Trig, Position}
 alias Chukinas.LinearAlgebra.{HasCsys, CSys, Vector}
 
@@ -67,8 +67,11 @@ defmodule Turret do
   end
   def half_travel(%__MODULE__{max_travel: travel}), do: travel / 2
   # TODO implement
-  def gun_barrel_length(_mount), do: 8
-  def gun_barrel_vector(mount), do: {gun_barrel_length(mount), 0}
+  def gun_barrel_vector(mount) do
+    IOP.inspect mount, "Turret barrel len"
+    {x, _y} = mount.sprite.mounts |> List.first |> Mount.position |> Vector.new
+    {x, 0}
+  end
   def pose(%{pose: pose}), do: pose
   def position(turret), do: turret |> pose |> Position.new
   def csys(turret), do: turret |> pose |> CSys.new
@@ -90,9 +93,7 @@ defmodule Turret do
   # *** API
 
   def normalize_desired_angle(%__MODULE__{} = mount, angle) when is_number(angle) do
-                     angle |> IOP.inspect("Turret norm angle - desired angle")
     vector_desired = Vector.from_angle(angle)
-                     |> IOP.inspect("Turret norm angle - desired vector")
     vector_arc_center = vector_arc_center(mount)
     cond do
       lies_within_arc?(mount, vector_desired) -> {:ok, angle}
@@ -144,7 +145,8 @@ defmodule Turret do
     def inspect(turret, opts) do
       col = fn string -> color(string, :cust_struct, opts) end
       fields = [
-        pose: Turret.pose(turret)
+        pose: Turret.pose(turret),
+        mounts: turret.sprite.mounts
       ]
       concat [
         col.("#Turret-#{turret.id}<"),
