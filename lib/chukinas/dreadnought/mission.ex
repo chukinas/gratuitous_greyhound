@@ -118,11 +118,23 @@ defmodule Mission do
   end
 
   defp puts(%__MODULE__{turn_number: turn, units: units} = mission) do
+    opts = [
+      syntax_colors: [
+        number: :light_yellow,
+        atom: :cyan,
+        string: :yellow,
+        boolean: :red,
+        binary: :yellow,
+        tuple: :yellow,
+        map: [:light_cyan, :bright],
+        nil: [:magenta, :bright]
+      ]
+    ]
     IO.puts "\nTurn #{turn}"
     for unit <- units do
       IO.puts "Unit #{unit.id}"
       for turret <- unit.turrets do
-        IO.inspect {turret.id, turret.pose}
+        IO.inspect {turret.id, turret.pose}, opts
       end
     end
     mission
