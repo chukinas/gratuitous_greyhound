@@ -32,6 +32,16 @@ defmodule IOP do
     end
   end
 
+  defmacro struct(title, fields) do
+    quote do
+      Algebra.concat [
+        IOP.color("##{unquote(title)}<"),
+        IOP.doc(unquote(fields)),
+        IOP.color(">")
+      ]
+    end
+  end
+
 #alias Chukinas.Util.Opts
   #def inspect(term, label, opts \\ []) do
   #  opts = Opts.merge!(opts, [
