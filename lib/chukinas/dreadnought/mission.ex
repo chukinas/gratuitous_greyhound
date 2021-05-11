@@ -184,22 +184,40 @@ defmodule Mission do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-#  defimpl Inspect do
-#    import Inspect.Algebra
-#    def inspect(mission, opts) do
-#      col = fn string -> color(string, :cust_struct, opts) end
-#      fields =
-#        mission
-#        |> Map.take([
-#          :turn_number,
-#          :units,
-#          :gunfire,
-#          :player_actions
-#        ])
-#        |> Enum.into([])
-#      concat [
-#        col.("#Mission"),
-#        to_doc(fields, opts)]
-#    end
-#  end
+  #defimpl Inspect do
+  #  import Inspect.Algebra
+  #  def inspect(mission, opts) do
+  #    col = fn string -> color(string, :cust_struct, opts) end
+  #    fields =
+  #      mission
+  #      |> Map.take([
+  #        :turn_number,
+  #        :units,
+  #        :gunfire,
+  #        :player_actions
+  #      ])
+  #      |> Enum.into([])
+  #    concat [
+  #      col.("#Mission"),
+  #      to_doc(fields, opts)]
+  #  end
+  #end
+  defimpl Inspect do
+    import Inspect.Algebra
+    def inspect(mission, opts) do
+      col = fn string -> color(string, :cust_struct, opts) end
+      fields =
+        mission
+        |> Map.take([
+          :turn_number,
+          :units,
+          :gunfire,
+          :player_actions
+        ])
+        |> Enum.into([])
+      concat [
+        col.("#Mission"),
+        to_doc(fields, opts)]
+    end
+  end
 end

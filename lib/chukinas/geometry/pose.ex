@@ -20,9 +20,9 @@ defmodule Pose do
         angle: round(pose.angle)
       ]
       concat [
-        "#Pose<",
+        color("#Pose<", :cust_struct, opts),
         to_doc(fields, opts),
-        ">"
+        color(">", :cust_struct, opts)
       ]
     end
   end
