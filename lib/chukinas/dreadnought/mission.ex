@@ -122,7 +122,7 @@ defmodule Mission do
     for unit <- units do
       IO.puts "Unit #{unit.id}"
       for turret <- unit.turrets do
-        IOP.inspect {turret.id, turret.pose}
+        IOP.inspect turret.pose, "Turret #{turret.id}"
       end
     end
     mission
