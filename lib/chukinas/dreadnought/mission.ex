@@ -111,10 +111,19 @@ defmodule Mission do
       |> calc_unit_active
       |> clear_player_actions
       |> calc_ai_commands
-      |> IO.inspect
+      |> puts
     else
       mission
     end
+  end
+
+  defp puts(%__MODULE__{units: units} = mission) do
+    for unit <- units do
+      for turret <- unit.turrets do
+        IO.inspect {unit.id, turret.pose.angle}
+      end
+    end
+    mission
   end
 
   defp clear_gunfire(mission), do: Maps.clear(mission, :gunfire)
