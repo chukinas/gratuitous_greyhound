@@ -120,7 +120,7 @@ defmodule Mission do
   defp puts(%__MODULE__{units: units} = mission) do
     for unit <- units do
       for turret <- unit.turrets do
-        IO.inspect {unit.id, turret.pose.angle}
+        IO.inspect turret.pose.angle, label: "Turret #{turret.id}"
       end
     end
     mission
