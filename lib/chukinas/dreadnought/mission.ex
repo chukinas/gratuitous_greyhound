@@ -117,10 +117,12 @@ defmodule Mission do
     end
   end
 
-  defp puts(%__MODULE__{units: units} = mission) do
+  defp puts(%__MODULE__{turn_number: turn, units: units} = mission) do
+    IO.puts "\nTurn #{turn}"
     for unit <- units do
+      IO.puts "Unit #{unit.id}"
       for turret <- unit.turrets do
-        IO.inspect {unit.id, turret.pose.angle}
+        IO.inspect {turret.id, turret.pose}
       end
     end
     mission
