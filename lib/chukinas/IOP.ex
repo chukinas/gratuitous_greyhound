@@ -1,5 +1,3 @@
-alias Chukinas.Util.Opts
-
 defmodule IOP do
 
   @opts [
@@ -16,6 +14,11 @@ defmodule IOP do
     ]
   ]
 
+  def inspect(term) do
+    IO.inspect(term, @opts)
+  end
+
+alias Chukinas.Util.Opts
   def inspect(term, label, opts \\ []) do
     opts = Opts.merge!(opts, [
       show_if: fn _x -> true end,
@@ -34,14 +37,9 @@ defmodule IOP do
     term
   end
 
-  def inspect(term) do
-    IO.inspect(term, @opts)
-  end
 end
 
 # I prefer to display maps as keyword lists.
-# Control over the order
-# Readability
 # Inspect protocol so you don't have to label as much
 # Note the IOP namespace. This is so that you can use it with minimal typing, no import)
 # label convention: "Module-name function-name", b/c no need to actually say what it is, typically, since the inspect protocol tells me that.
