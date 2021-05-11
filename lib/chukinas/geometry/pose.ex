@@ -11,6 +11,22 @@ defmodule Pose do
     field :angle, number()
   end
 
+  defimpl Inspect do
+    import Inspect.Algebra
+    def inspect(pose, opts) do
+      fields = [
+        x: round(pose.x),
+        y: round(pose.y),
+        angle: round(pose.angle)
+      ]
+      concat [
+        "#Pose<",
+        to_doc(fields, opts),
+        ">"
+      ]
+    end
+  end
+
   # *** *******************************
   # *** NEW
 
@@ -64,16 +80,16 @@ defmodule Pose do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  #defimpl Inspect do
-  #  import Inspect.Algebra
-  #  def inspect(pose, opts) do
-  #    col = fn string -> color(string, :cust_struct, opts) end
-  #    concat [
-  #      col.("#Pose<"),
-  #      to_doc({round(pose.x), round(pose.y)}, opts), "∠ " , to_doc(round(pose.angle), opts),
-  #      "°",
-  #      col.(">")
-  #    ]
-  #  end
-  #end
+#  defimpl Inspect do
+#    import Inspect.Algebra
+#    def inspect(pose, opts) do
+#      col = fn string -> color(string, :cust_struct, opts) end
+#      concat [
+#        col.("#Pose<"),
+#        to_doc({round(pose.x), round(pose.y)}, opts), "∠ " , to_doc(round(pose.angle), opts),
+#        "°",
+#        col.(">")
+#      ]
+#    end
+#  end
 end
