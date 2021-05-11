@@ -13,6 +13,7 @@ defmodule Pose do
 
   defimpl Inspect do
     import Inspect.Algebra
+    require IOP
     def inspect(pose, opts) do
       fields = [
         x: round(pose.x),
@@ -20,9 +21,9 @@ defmodule Pose do
         angle: round(pose.angle)
       ]
       concat [
-        color("#Pose<", :cust_struct, opts),
-        to_doc(fields, opts),
-        color(">", :cust_struct, opts)
+        IOP.color("#Pose<"),
+        IOP.doc(fields),
+        IOP.color(">")
       ]
     end
   end

@@ -1,5 +1,7 @@
 defmodule IOP do
 
+  alias Inspect.Algebra
+
   @opts [
     syntax_colors: [
       cust_struct: [:light_cyan, :bright],
@@ -16,6 +18,18 @@ defmodule IOP do
 
   def inspect(term, label \\ nil) do
     IO.inspect(term, Keyword.put(@opts, :label, label))
+  end
+
+  defmacro color(term) do
+    quote do
+      Algebra.color(unquote(term), :cust_struct, var!(opts))
+    end
+  end
+
+  defmacro doc(term) do
+    quote do
+      Algebra.to_doc(unquote(term), var!(opts))
+    end
   end
 
 #alias Chukinas.Util.Opts
