@@ -1,13 +1,10 @@
 alias Chukinas.Geometry.{Pose, Position, Trig}
+
 defmodule Pose do
 
   require Position
 
-  # *** *******************************
-  # *** TYPES
-
   use TypedStruct
-
   typedstruct enforce: true do
     field :x, number()
     field :y, number()
@@ -67,16 +64,16 @@ defmodule Pose do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl Inspect do
-    import Inspect.Algebra
-    def inspect(pose, opts) do
-      col = fn string -> color(string, :cust_struct, opts) end
-      concat [
-        col.("#Pose<"),
-        to_doc({round(pose.x), round(pose.y)}, opts), "∠ " , to_doc(round(pose.angle), opts),
-        "°",
-        col.(">")
-      ]
-    end
-  end
+  #defimpl Inspect do
+  #  import Inspect.Algebra
+  #  def inspect(pose, opts) do
+  #    col = fn string -> color(string, :cust_struct, opts) end
+  #    concat [
+  #      col.("#Pose<"),
+  #      to_doc({round(pose.x), round(pose.y)}, opts), "∠ " , to_doc(round(pose.angle), opts),
+  #      "°",
+  #      col.(">")
+  #    ]
+  #  end
+  #end
 end

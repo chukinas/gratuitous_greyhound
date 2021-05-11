@@ -45,20 +45,20 @@ defmodule MountRotation do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl Inspect do
-    import Inspect.Algebra
-    def inspect(action, opts) do
-      col = fn string -> color(string, :cust_struct, opts) end
-      keywords = [
-        time: {action.time_start, action.time_duration},
-        angle_start: action.angle_start,
-        angle_end: action.angle_end,
-        angle_direction: action.angle_direction,
-      ]
-      concat [
-        col.("$Mount-#{action.mount_id}-Action"),
-        to_doc(keywords, opts)
-      ]
-    end
-  end
+#  defimpl Inspect do
+#    import Inspect.Algebra
+#    def inspect(action, opts) do
+#      col = fn string -> color(string, :cust_struct, opts) end
+#      keywords = [
+#        time: {action.time_start, action.time_duration},
+#        angle_start: action.angle_start,
+#        angle_end: action.angle_end,
+#        angle_direction: action.angle_direction,
+#      ]
+#      concat [
+#        col.("$Mount-#{action.mount_id}-Action"),
+#        to_doc(keywords, opts)
+#      ]
+#    end
+#  end
 end

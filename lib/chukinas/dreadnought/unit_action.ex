@@ -55,15 +55,15 @@ defmodule UnitAction do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl Inspect do
-    import Inspect.Algebra
-    def inspect(action, opts) do
-      mode = action.mode |> Atom.to_string |> String.capitalize |> String.pad_trailing(8)
-      values = [unit: action.unit_id, target: action.value]
-      concat ["$#{mode}", to_doc(values, opts)]
-    end
-  end
-
+#  defimpl Inspect do
+#    import Inspect.Algebra
+#    def inspect(action, opts) do
+#      mode = action.mode |> Atom.to_string |> String.capitalize |> String.pad_trailing(8)
+#      values = [unit: action.unit_id, target: action.value]
+#      concat ["$#{mode}", to_doc(values, opts)]
+#    end
+#  end
+#
 end
 
 

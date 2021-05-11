@@ -78,21 +78,21 @@ defmodule Size do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl Inspect do
-    import Inspect.Algebra
-    def inspect(size, opts) do
-      col = fn string -> color(string, :cust_struct, opts) end
-      #fields = [
-      #  position: size |> Vector.from_position,
-      #  size: size |> Position.from_size |> Vector.new
-      #]
-      fields = {size.width, size.height}
-      concat [
-        col.("#Size<"),
-        to_doc(fields, opts),
-        col.(">")
-      ]
-    end
-  end
+#  defimpl Inspect do
+#    import Inspect.Algebra
+#    def inspect(size, opts) do
+#      col = fn string -> color(string, :cust_struct, opts) end
+#      #fields = [
+#      #  position: size |> Vector.from_position,
+#      #  size: size |> Position.from_size |> Vector.new
+#      #]
+#      fields = {size.width, size.height}
+#      concat [
+#        col.("#Size<"),
+#        to_doc(fields, opts),
+#        col.(">")
+#      ]
+#    end
+#  end
 
 end

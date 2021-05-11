@@ -5,14 +5,8 @@ alias Chukinas.Util.{Maps, IdList}
 alias Chukinas.LinearAlgebra.{HasCsys, CSys, Vector}
 
 defmodule Unit do
-  @moduledoc """
-  Represents a ship or some other combat unit
-  """
 
-  # *** *******************************
-  # *** TYPES
-
-  @type damage :: {integer(), integer()} # turn & damage rcv'ed that turn
+  @type damage :: {turn_number :: integer(), damage_rcvd :: integer()}
 
   use TypedStruct
   typedstruct enforce: true do
@@ -20,23 +14,14 @@ defmodule Unit do
     field :name, String.t()
     field :player_id, integer(), default: 1
     field :sprite, Sprite.t()
-    # TODO rename mounts
-    # TODO should include anything that's positioned relative to the hull
     field :turrets, [Turret.t()]
     field :mount_actions, [MountRotation.t()], default: []
-    # TODO this is not correct. Should just be an integer?
-    field :health, damage()
-    # Varies from game turn to game turn
+    field :health, integer()
     field :pose, Pose.t()
     field :selection_box_position, Position.t(), enforce: false
-    # TODO should this be handled in .clear()?
     field :compound_path, Maneuver.t(), default: []
-    # TODO rename :turn_destroyed
     field :final_turn, integer(), enforce: false
-    # Accumulated State
-    # TODO add type
     field :damage, [damage()], default: []
-    # calculated values for frontend
     field :render?, boolean(), default: true
     field :active?, boolean(), default: true
   end
@@ -171,27 +156,27 @@ defmodule Unit do
 
   # *** *******************************
   # *** IMPLEMENTATIONS
-
-  defimpl Inspect do
-    import Inspect.Algebra
-    def inspect(unit, opts) do
-      col = fn string -> color(string, :cust_struct, opts) end
-      unit_map =
-        unit
-        |> Map.take([
-          :pose,
-          :damage,
-          :mount_actions
-        ])
-        |> Enum.into([])
-        #|> Keyword.put(:health, Unit.percent_remaining_health(unit))
-      concat [
-        col.("#Unit-#{unit.id}<"),
-        to_doc(unit_map, opts),
-        col.(">")
-      ]
-    end
-  end
+  #
+  #  defimpl Inspect do
+  #    import Inspect.Algebra
+  #    def inspect(unit, opts) do
+  #      col = fn string -> color(string, :cust_struct, opts) end
+  #      unit_map =
+  #        unit
+  #        |> Map.take([
+  #          :pose,
+  #          :damage,
+  #          :mount_actions
+  #        ])
+  #        |> Enum.into([])
+  #        #|> Keyword.put(:health, Unit.percent_remaining_health(unit))
+  #      concat [
+  #        col.("#Unit-#{unit.id}<"),
+  #        to_doc(unit_map, opts),
+  #        col.(">")
+  #      ]
+  #    end
+  #  end
 
   defimpl HasCsys do
     def get_csys(%{pose: pose}) do
