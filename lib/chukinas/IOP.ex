@@ -2,7 +2,6 @@ defmodule IOP do
 
   @opts [
     syntax_colors: [
-      cust_struct: [:light_cyan, :bright],
       number: :light_yellow,
       atom: :cyan,
       string: :yellow,

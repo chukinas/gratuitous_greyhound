@@ -11,6 +11,8 @@ defmodule Pose do
     field :angle, number()
   end
 
+  # pose.ex
+
   defimpl Inspect do
     import Inspect.Algebra
     def inspect(pose, opts) do
@@ -20,9 +22,9 @@ defmodule Pose do
         angle: round(pose.angle)
       ]
       concat [
-        color("#Pose<", :cust_struct, opts),
+        color("#Pose<", :map, opts),
         to_doc(fields, opts),
-        color(">", :cust_struct, opts)
+        color(">", :map, opts)
       ]
     end
   end
