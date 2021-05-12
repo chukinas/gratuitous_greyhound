@@ -117,6 +117,15 @@ defmodule Turret do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
+  defimpl Inspect do
+    require IOP
+    def inspect(turret, opts) do
+      IOP.struct("Turret-#{turret.id}", [
+        pose: turret.pose
+      ])
+    end
+  end
+
 #  defimpl Inspect do
 #    import Inspect.Algebra
 #    def inspect(turret, opts) do

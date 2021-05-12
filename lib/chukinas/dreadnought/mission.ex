@@ -111,13 +111,13 @@ defmodule Mission do
       |> calc_unit_active
       |> clear_player_actions
       |> calc_ai_commands
-      |> puts
+      |> IOP.inspect
     else
       mission
     end
   end
 
-  defp puts(%__MODULE__{turn_number: turn, units: units} = mission) do
+  def puts(%__MODULE__{turn_number: turn, units: units} = mission) do
     IO.puts "\nTurn #{turn}"
     for unit <- units do
       IO.puts "Unit #{unit.id}"
@@ -184,40 +184,13 @@ defmodule Mission do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  #defimpl Inspect do
-  #  import Inspect.Algebra
-  #  def inspect(mission, opts) do
-  #    col = fn string -> color(string, :cust_struct, opts) end
-  #    fields =
-  #      mission
-  #      |> Map.take([
-  #        :turn_number,
-  #        :units,
-  #        :gunfire,
-  #        :player_actions
-  #      ])
-  #      |> Enum.into([])
-  #    concat [
-  #      col.("#Mission"),
-  #      to_doc(fields, opts)]
-  #  end
-  #end
   defimpl Inspect do
-    import Inspect.Algebra
+    require IOP
     def inspect(mission, opts) do
-      col = fn string -> color(string, :cust_struct, opts) end
-      fields =
-        mission
-        |> Map.take([
-          :turn_number,
-          :units,
-          :gunfire,
-          :player_actions
-        ])
-        |> Enum.into([])
-      concat [
-        col.("#Mission"),
-        to_doc(fields, opts)]
+      IOP.struct("Mission-Turn-#{mission.turn_number}", [
+        units: mission.units,
+        margin: mission.margin
+      ])
     end
   end
 end

@@ -12,13 +12,19 @@ defmodule Pose do
   end
 
   defimpl Inspect do
+    import Inspect.Algebra
     require IOP
     def inspect(pose, opts) do
-      IOP.struct("Pose", [
-        x: round(pose.x),
-        y: round(pose.y),
-        angle: round(pose.angle)
-      ])
+      concat [
+        IOP.color("#Pose<"),
+        IOP.doc(pose.x |> round),
+        ", ",
+        IOP.doc(pose.y |> round),
+        " ∠ ",
+        IOP.doc(round(pose.angle)),
+        "°",
+        IOP.color(">")
+      ]
     end
   end
 

@@ -1,10 +1,10 @@
 defmodule IOP do
 
   alias Inspect.Algebra
+  require Inspect.Algebra
 
   @opts [
     syntax_colors: [
-      cust_struct: [:light_cyan, :bright],
       number: :light_yellow,
       atom: :cyan,
       string: :yellow,
@@ -17,18 +17,25 @@ defmodule IOP do
   ]
 
   def inspect(term, label \\ nil) do
-    IO.inspect(term, Keyword.put(@opts, :label, label))
+    IO.puts ""
+    IO.inspect(term, Keyword.merge(@opts, label: label))
   end
 
   defmacro color(term) do
     quote do
-      Algebra.color(unquote(term), :cust_struct, var!(opts))
+      Algebra.color(unquote(term), :map, var!(opts))
     end
   end
 
   defmacro doc(term) do
     quote do
       Algebra.to_doc(unquote(term), var!(opts))
+    end
+  end
+
+  defmacro comma do
+    quote do
+      IOP.color(",")
     end
   end
 
@@ -39,6 +46,16 @@ defmodule IOP do
         IOP.doc(unquote(fields)),
         IOP.color(">")
       ]
+    end
+  end
+
+  defmacro container(title, inner) when is_binary(title) do
+    quote do
+      IOP.color("##{unquote(title)}<")
+      |> Algebra.glue("", unquote(inner))
+      |> Algebra.nest(2)
+      |> Algebra.glue("", IOP.color(">"))
+      |> Algebra.group
     end
   end
 

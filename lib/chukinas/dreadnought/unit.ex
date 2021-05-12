@@ -156,6 +156,17 @@ defmodule Unit do
 
   # *** *******************************
   # *** IMPLEMENTATIONS
+
+  defimpl Inspect do
+    require IOP
+    def inspect(unit, opts) do
+      IOP.struct("Unit-#{unit.id}", [
+        position: unit.pose |> Position.new,
+        turrets: unit.turrets,
+        sprite_rect: unit.sprite.rect
+      ])
+    end
+  end
   #
   #  defimpl Inspect do
   #    import Inspect.Algebra
