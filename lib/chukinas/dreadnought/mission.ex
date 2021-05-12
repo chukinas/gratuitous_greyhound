@@ -96,6 +96,8 @@ defmodule Mission do
   # *** *******************************
   # *** PRIVATE
 
+  # mission.ex
+
   defp maybe_end_turn(mission) do
     if turn_complete?(mission) do
       mission
@@ -122,7 +124,7 @@ defmodule Mission do
     for unit <- units do
       IO.puts "Unit #{unit.id}"
       for turret <- unit.turrets do
-        IO.inspect {turret.id, turret.pose}
+        IO.inspect turret.pose, label: "Turret #{turret.id}"
       end
     end
     mission
