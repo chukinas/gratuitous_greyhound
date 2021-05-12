@@ -96,6 +96,8 @@ defmodule Mission do
   # *** *******************************
   # *** PRIVATE
 
+  # mission.ex
+
   defp maybe_end_turn(mission) do
     if turn_complete?(mission) do
       mission
@@ -116,6 +118,8 @@ defmodule Mission do
       mission
     end
   end
+
+  # mission.ex
 
   defp puts(%__MODULE__{turn_number: turn, units: units} = mission) do
     IO.puts "\nTurn #{turn}"

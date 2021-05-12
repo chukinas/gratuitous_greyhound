@@ -1,10 +1,11 @@
+# iop.ex
+
 defmodule IOP do
 
   alias Inspect.Algebra
 
   @opts [
     syntax_colors: [
-      cust_struct: [:light_cyan, :bright],
       number: :light_yellow,
       atom: :cyan,
       string: :yellow,
@@ -16,13 +17,13 @@ defmodule IOP do
     ]
   ]
 
-  def inspect(term, label \\ nil) do
-    IO.inspect(term, Keyword.put(@opts, :label, label))
+  def inspect(term, label) do
+    IO.inspect(term, Keyword.merge(@opts, label: label))
   end
 
   defmacro color(term) do
     quote do
-      Algebra.color(unquote(term), :cust_struct, var!(opts))
+      Algebra.color(unquote(term), :map, var!(opts))
     end
   end
 
@@ -43,23 +44,23 @@ defmodule IOP do
   end
 
 #alias Chukinas.Util.Opts
-  #def inspect(term, label, opts \\ []) do
-  #  opts = Opts.merge!(opts, [
-  #    show_if: fn _x -> true end,
-  #    only: nil,
-  #    disabled: false
-  #    #exclude: nil
-  #  ])
-  #  if opts[:show_if].(term) and not opts[:disabled] do
-  #    filtered_term = case opts[:only] do
-  #      nil -> term
-  #      key when not is_list(key) -> Map.take(term, [key])
-  #      keys -> Map.take(term, keys)
-  #    end
-  #    IO.inspect(filtered_term, Keyword.merge(@opts, label: label))
-  #  end
-  #  term
-  #end
+#  def inspect(term, label, opts \\ []) do
+#    opts = Opts.merge!(opts, [
+#      show_if: fn _x -> true end,
+#      only: nil,
+#      disabled: false
+#      #exclude: nil
+#    ])
+#    if opts[:show_if].(term) and not opts[:disabled] do
+#      filtered_term = case opts[:only] do
+#        nil -> term
+#        key when not is_list(key) -> Map.take(term, [key])
+#        keys -> Map.take(term, keys)
+#      end
+#      IO.inspect(filtered_term, Keyword.merge(@opts, label: label))
+#    end
+#    term
+#  end
 
 end
 
