@@ -96,6 +96,8 @@ defmodule Mission do
   # *** *******************************
   # *** PRIVATE
 
+  # mission.ex
+
   defp maybe_end_turn(mission) do
     if turn_complete?(mission) do
       mission
@@ -115,17 +117,6 @@ defmodule Mission do
     else
       mission
     end
-  end
-
-  def puts(%__MODULE__{turn_number: turn, units: units} = mission) do
-    IO.puts "\nTurn #{turn}"
-    for unit <- units do
-      IO.puts "Unit #{unit.id}"
-      for turret <- unit.turrets do
-        IOP.inspect turret.pose, "Turret #{turret.id}"
-      end
-    end
-    mission
   end
 
   defp clear_gunfire(mission), do: Maps.clear(mission, :gunfire)

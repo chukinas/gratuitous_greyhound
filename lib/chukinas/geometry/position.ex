@@ -146,7 +146,6 @@ defmodule Position do
     import Inspect.Algebra
     require IOP
     def inspect(position, opts) do
-      IO.inspect(opts)
       {x, y} = {round(position.x), round(position.y)}
       concat [
         IOP.color("#Position<"),

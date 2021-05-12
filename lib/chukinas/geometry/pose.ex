@@ -1,5 +1,7 @@
 alias Chukinas.Geometry.{Pose, Position, Trig}
 
+# pose.ex
+
 defmodule Pose do
 
   require Position
@@ -10,6 +12,8 @@ defmodule Pose do
     field :y, number()
     field :angle, number()
   end
+
+  # pose.ex
 
   defimpl Inspect do
     import Inspect.Algebra
