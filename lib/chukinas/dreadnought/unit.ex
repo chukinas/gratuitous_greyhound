@@ -5,14 +5,8 @@ alias Chukinas.Util.{Maps, IdList}
 alias Chukinas.LinearAlgebra.{HasCsys, CSys, Vector}
 
 defmodule Unit do
-  @moduledoc """
-  Represents a ship or some other combat unit
-  """
 
-  # *** *******************************
-  # *** TYPES
-
-  @type damage :: {integer(), integer()} # turn & damage rcv'ed that turn
+  @type damage :: {turn_number :: integer(), damage_rcvd :: integer()}
 
   use TypedStruct
   typedstruct enforce: true do
@@ -20,8 +14,6 @@ defmodule Unit do
     field :name, String.t()
     field :player_id, integer(), default: 1
     field :sprite, Sprite.t()
-    # TODO rename mounts
-    # TODO should include anything that's positioned relative to the hull
     field :turrets, [Turret.t()]
     field :mount_actions, [MountRotation.t()], default: []
     # Varies from game turn to game turn
@@ -122,9 +114,8 @@ defmodule Unit do
   end
 
   defimpl Inspect do
-    import Inspect.Algebra
+    require IOP
     def inspect(unit, opts) do
-      col = fn string -> color(string, :cust_struct, opts) end
       unit_map =
         unit
         |> Map.take([
@@ -132,12 +123,8 @@ defmodule Unit do
           :selection_box_position
         ])
         |> Enum.into([])
-        #|> Keyword.put(:health, Unit.percent_remaining_health(unit))
-      concat [
-        col.("#Unit-#{unit.id}<"),
-        to_doc(unit_map, opts),
-        col.(">")
-      ]
+      IOP.struct("Unit-#{unit.id}", unit_map)
     end
   end
+
 end

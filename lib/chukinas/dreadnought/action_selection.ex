@@ -140,17 +140,13 @@ defmodule ActionSelection do
   # *** IMPLEMENTATIONS
 
   defimpl Inspect do
-    import Inspect.Algebra
+    require IOP
     def inspect(actionsel, opts) do
-      col = fn string -> color(string, :cust_struct, opts) end
       fields = [
         actions: actionsel.actions,
         enemies: actionsel.current_target_unit_ids
       ]
-      concat [
-        col.("#Player-#{actionsel.player_id}-Actions"),
-        to_doc(fields, opts),
-      ]
+      IOP.struct("#Player-#{actionsel.player_id}-Actions", fields)
     end
   end
 end

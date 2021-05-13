@@ -5,11 +5,7 @@ alias Chukinas.Util.{Maps, IdList}
 
 defmodule Mission do
 
-  # *** *******************************
-  # *** TYPES
-
   use TypedStruct
-
   typedstruct do
     field :turn_number, integer(), default: 1
     field :grid, Grid.t()
@@ -17,7 +13,6 @@ defmodule Mission do
     field :margin, Size.t()
     field :islands, [Island.t()], default: []
     field :units, [Unit.t()], default: []
-    # TODO combine players and player_actions?
     field :players, [Player.t()], default: []
     field :player_actions, [ActionSelection.t()], default: []
     field :gunfire, [Gunfire.t()], default: []
@@ -101,6 +96,8 @@ defmodule Mission do
   # *** *******************************
   # *** PRIVATE
 
+  # mission.ex
+
   defp maybe_end_turn(mission) do
     if turn_complete?(mission) do
       mission
@@ -117,7 +114,7 @@ defmodule Mission do
       |> calc_unit_active
       |> clear_player_actions
       |> calc_ai_commands
-      |> IOP.inspect("Mission maybe_end_turn")
+      |> IOP.inspect
     else
       mission
     end
@@ -179,21 +176,15 @@ defmodule Mission do
   # *** IMPLEMENTATIONS
 
   defimpl Inspect do
-    import Inspect.Algebra
+    require IOP
     def inspect(mission, opts) do
-      col = fn string -> color(string, :cust_struct, opts) end
       fields =
         mission
         |> Map.take([
-          :turn_number,
           :units,
-          :gunfire,
-          #:player_actions
         ])
         |> Enum.into([])
-      concat [
-        col.("#Mission"),
-        to_doc(fields, opts)]
+      IOP.struct("Mission-Turn-#{mission.turn_number}", fields)
     end
   end
 end

@@ -110,23 +110,21 @@ defmodule Rect do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl Inspect do
-    import Inspect.Algebra
-    def inspect(rect, opts) do
-      col = fn string -> color(string, :cust_struct, opts) end
-      fields = [
-        rect |> Position.new,
-        rect |> Size.new
-      ]
-      concat [
-        col.("#Rect<"),
-        to_doc(fields, opts),
-        col.(">")
-      ]
-    end
-  end
-
   defimpl CollidableShape do
     def to_vertices(rect), do: Rect.list_vertices(rect)
+  end
+
+  defimpl Inspect do
+    import Inspect.Algebra
+    require IOP
+    def inspect(rect, opts) do
+      pos = rect |> Position.new |> IOP.doc
+      size = rect |> Size.new |> IOP.doc
+      contents =
+        pos
+        |> concat(IOP.comma)
+        |> glue(size)
+      IOP.container("Rect", contents)
+    end
   end
 end

@@ -3,20 +3,8 @@ alias Chukinas.Geometry.{Pose, Trig, Position, Pose}
 alias Chukinas.LinearAlgebra.{HasCsys, CSys, Vector}
 
 defmodule Turret do
-  @moduledoc """
-  Represents a weapon on a unit (ship, fortification, etc)
-
-  Definitions:
-  ANGLE: orientation of turret relative to ship (e.g. a rear turret at rest has an angle of 180deg).
-  ROTATION: orientation of turret relative to its own maximum CCW angle. Always a positive number.
-  TRAVEL: movement / arc of a turret, where positive numbers are CW and negative are CCW.
-  """
-
-  # *** *******************************
-  # *** TYPES
 
   use TypedStruct
-
   typedstruct enforce: true do
     field :id, integer()
     field :sprite, Sprite.t()
@@ -129,28 +117,17 @@ defmodule Turret do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl Inspect do
-    import Inspect.Algebra
-    def inspect(turret, opts) do
-      col = fn string -> color(string, :cust_struct, opts) end
-      fields = [
-        pose: Turret.pose(turret),
-        mounts: turret.sprite.mounts
-      ]
-      concat [
-        col.("#Turret-#{turret.id}<"),
-        to_doc(Turret.angle_arc_center(turret) |> round, opts),
-        "±",
-        to_doc(Turret.half_travel(turret) |> round, opts),
-        "°",
-        to_doc(fields, opts),
-        col.(">")
-      ]
-    end
-  end
-
   defimpl HasCsys do
     def get_csys(turret), do: Turret.csys(turret)
     def get_angle(turret), do: Turret.current_angle(turret)
+  end
+
+  defimpl Inspect do
+    require IOP
+    def inspect(turret, opts) do
+      IOP.struct("Turret-#{turret.id}", [
+        pose: turret.pose
+      ])
+    end
   end
 end

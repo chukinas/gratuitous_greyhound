@@ -80,19 +80,15 @@ defmodule Size do
 
   defimpl Inspect do
     import Inspect.Algebra
+    require IOP
     def inspect(size, opts) do
-      col = fn string -> color(string, :cust_struct, opts) end
-      #fields = [
-      #  position: size |> Vector.from_position,
-      #  size: size |> Position.from_size |> Vector.new
-      #]
-      fields = {size.width, size.height}
       concat [
-        col.("#Size<"),
-        to_doc(fields, opts),
-        col.(">")
+        IOP.color("#Size<"),
+        IOP.doc(size.width |> round),
+        ", ",
+        IOP.doc(size.height |> round),
+        IOP.color(">")
       ]
     end
   end
-
 end
