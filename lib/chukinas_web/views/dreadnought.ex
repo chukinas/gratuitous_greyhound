@@ -1,4 +1,7 @@
+alias Chukinas.Dreadnought.Unit
 alias Chukinas.Geometry.{Pose, Position}
+alias Chukinas.LinearAlgebra.CSys.Conversion
+alias Chukinas.LinearAlgebra.Vector
 alias Chukinas.Util.Opts
 
 defmodule ChukinasWeb.DreadnoughtView do
@@ -72,6 +75,26 @@ defmodule ChukinasWeb.DreadnoughtView do
       |> Keyword.merge(opts)
       |> Keyword.put(:id, id)
     render("_toggle.html", assigns)
+  end
+
+  def unit_selection_box(myself, %Unit{} = unit) do
+    box_size = 200
+    box_position =
+      unit
+      |> Unit.center_of_mass
+      |> Vector.new
+      |> Conversion.convert_to_world_vector(unit)
+      |> Position.new
+      |> Position.subtract(box_size / 2)
+    assigns =
+      [
+        unit_id: unit.id,
+        unit_name: unit.name,
+        size: box_size,
+        position: box_position,
+        myself: myself
+      ]
+    render("_unit_selection_box.html", assigns)
   end
 
   #defp render_template(template, assigns, block) do

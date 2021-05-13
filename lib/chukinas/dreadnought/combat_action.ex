@@ -99,7 +99,7 @@ defmodule CombatAction do
     target =
       acc
       |> Acc.target
-      |> Unit.put_damage(10, turn_number)
+      |> Unit.apply_status(&Unit.Status.take_damage(&1, 10, turn_number))
     gunfire = Gunfire.new(attacker, turret_id)
     Acc.put(acc, attacker, target, gunfire)
   end

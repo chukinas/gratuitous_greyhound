@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{PlayerTurn, Unit, ActionSelection, ManeuverPlanning, UnitAction}
+alias Chukinas.Dreadnought.{PlayerTurn, Unit, ActionSelection, ManeuverPlanning, UnitAction, Gunfire}
 alias Chukinas.Geometry.{Size, Grid, GridSquare}
 
 # TODO better name => Chukinas.Dreadnought.PlayerTurn ?
@@ -101,13 +101,10 @@ defmodule PlayerTurn do
   end
 
   defp calc_cmd_squares(player_turn, islands) do
-    squares = Enum.flat_map(player_turn.units, fn unit ->
-      if (unit.active?) and (unit.player_id == player_turn.player_id) do
-        ManeuverPlanning.get_cmd_squares(unit, player_turn.grid, islands, player_turn.maneuver_foresight)
-      else
-        []
-      end
-    end)
+    squares =
+      player_turn.units
+      |> Unit.Enum.active_player_units(player_turn.player_id)
+      |> Enum.flat_map(&ManeuverPlanning.get_cmd_squares(&1, player_turn.grid, islands, player_turn.maneuver_foresight))
     %__MODULE__{player_turn | cmd_squares: squares}
   end
 

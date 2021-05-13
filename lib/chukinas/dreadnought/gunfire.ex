@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Gunfire, Spritesheet, Turret, Unit}
+alias Chukinas.Dreadnought.{Gunfire, Spritesheet, Turret, Unit, Sprite}
 alias Chukinas.Geometry.Pose
 alias Chukinas.LinearAlgebra.CSys
 

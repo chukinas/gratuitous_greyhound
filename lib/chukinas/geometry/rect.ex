@@ -54,9 +54,25 @@ defmodule Rect do
   end
 
   # *** *******************************
+  # *** GETTERS
+
+  def center_position(rect) do
+    relative_center =
+      rect
+      |> Position.from_size
+      |> Position.divide(2)
+    rect
+    |> Position.add(relative_center)
+    |> Position.new
+  end
+  def center_vector(rect), do: center_position(rect) |> Vector.new
+
+
+  # *** *******************************
   # *** API
 
   # This returns the smallest rect that contains the origin rect and is centered on the origin
+  # TODO is this used anymore?
   def get_centered_rect(origin, rect) do
     half_width = max(
       abs(origin.x - rect.x),
@@ -73,6 +89,7 @@ defmodule Rect do
     )
   end
 
+  # TODO move getters to appropriate section
   def list_vertices(%{x: x, y: y, width: width, height: height}) do
     position = Position.new(x, y)
     [
@@ -88,16 +105,6 @@ defmodule Rect do
     rect
     |> Position.multiply(scale)
     |> Size.multiply(scale)
-  end
-
-  def center_vector(rect) do
-    relative_center =
-      rect
-      |> Position.from_size
-      |> Position.divide(2)
-    rect
-    |> Position.add(relative_center)
-    |> Vector.new
   end
 
   # *** *******************************

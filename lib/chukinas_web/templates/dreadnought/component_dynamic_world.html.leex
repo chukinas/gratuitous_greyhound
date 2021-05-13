@@ -27,7 +27,7 @@
   viewBox="0 0 <%= @grid.width %> <%= @grid.height %> "
 >
   <%= for unit <- @units do %>
-  <%= if unit.render? do %>
+  <%= if unit.status.render? do %>
   <%= for maneuver_path <- unit.compound_path do %>
   <path
     id="unit-<%= unit.id %>-<%= @turn_number %>-1"
@@ -56,11 +56,9 @@
 <%# Units and their selection boxes %>
 <%= for unit <- @units do %>
   <%= if unit.id in @player_actions.current_target_unit_ids do %>
-    <%= ChukinasWeb.DreadnoughtView.render "unit_selection_box.html",
-      myself: @myself,
-      unit: unit %>
+    <%= ChukinasWeb.DreadnoughtView.unit_selection_box(@myself, unit)%>
   <% end %>
-  <%= if unit.render? do %>
+  <%= if unit.status.render? do %>
     <%= ChukinasWeb.DreadnoughtView.render "unit3.html",
       socket: @socket,
       turn_number: @turn_number,

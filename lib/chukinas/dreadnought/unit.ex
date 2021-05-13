@@ -1,5 +1,5 @@
-alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret, ManeuverPartial, Maneuver, MountRotation}
-alias Chukinas.Geometry.{Pose, Path, Position}
+alias Chukinas.Dreadnought.{Unit, Sprite, Turret, ManeuverPartial, Maneuver, MountRotation}
+alias Chukinas.Geometry.{Pose, Path, Rect}
 alias Chukinas.Util.{Maps, IdList}
 # TODO do I need this dependency?
 alias Chukinas.LinearAlgebra.{HasCsys, CSys, Vector}
@@ -24,21 +24,11 @@ defmodule Unit do
     # TODO should include anything that's positioned relative to the hull
     field :turrets, [Turret.t()]
     field :mount_actions, [MountRotation.t()], default: []
-    # TODO this is not correct. Should just be an integer?
-    field :health, damage()
     # Varies from game turn to game turn
     field :pose, Pose.t()
-    field :selection_box_position, Position.t(), enforce: false
     # TODO should this be handled in .clear()?
     field :compound_path, Maneuver.t(), default: []
-    # TODO rename :turn_destroyed
-    field :final_turn, integer(), enforce: false
-    # Accumulated State
-    # TODO add type
-    field :damage, [damage()], default: []
-    # calculated values for frontend
-    field :render?, boolean(), default: true
-    field :active?, boolean(), default: true
+    field :status, Unit.Status.t()
   end
 
   # *** *******************************
@@ -46,16 +36,15 @@ defmodule Unit do
 
   # Refactor now that I have a unit builder module
   def new(id, opts \\ []) do
-    sprite = Spritesheet.red("ship_large")
-    opts =
-      [
-        health: 100,
-        sprite: sprite,
-      ]
-      |> Keyword.merge(opts)
+    {max_damage, fields} =
+      opts
       |> Keyword.merge(id: id)
-    struct!(__MODULE__, opts)
-    |> calc_selection_box_position
+      |> Keyword.pop!(:health)
+    unit_status = Unit.Status.new(max_damage)
+    fields = Keyword.merge(fields,
+      status: unit_status
+    )
+    struct!(__MODULE__, fields)
   end
 
   # *** *******************************
@@ -71,7 +60,6 @@ defmodule Unit do
       pose: Path.get_end_pose(geo_path),
       compound_path: [ManeuverPartial.new(geo_path)]
     }
-    |> calc_selection_box_position
   end
 
   # TODO rename put_maneuver
@@ -85,51 +73,10 @@ defmodule Unit do
       # TODO rename maneuver
       compound_path: compound_path
     }
-    |> calc_selection_box_position
-  end
-
-  def put_final_turn(unit, final_turn) do
-    %__MODULE__{unit | final_turn: final_turn}
-  end
-
-  def put_damage(unit, damage, turn_number), do: Maps.push(unit, :damage, {turn_number, damage})
-
-  # TODO This 50 is just a guess. Need actual logic here.
-  def calc_selection_box_position(unit) do
-    position =
-      unit.pose
-      |> Pose.straight(-20)
-      |> Position.new
-    %__MODULE__{unit | selection_box_position: position}
-  end
-
-  def calc_active(unit, turn_number) do
-    %__MODULE__{unit | active?: case unit.final_turn do
-      nil -> true
-      turn when turn_number >= turn -> false
-      _ -> true
-    end}
-  end
-
-  def calc_render(unit, turn_number) do
-    %__MODULE__{unit | render?: case unit.final_turn do
-      nil -> true
-      turn when turn_number > turn -> false
-      _ -> true
-    end}
   end
 
   def clear(unit) do
     %__MODULE__{unit | mount_actions: []}
-  end
-
-  def calc_random_mount_orientation(unit) do
-    Enum.reduce(unit.turrets, unit, fn mount, unit ->
-      {_, corrected_angle} = Turret.normalize_desired_angle(
-        mount,
-        Enum.random(0..359))
-      rotate_turret(unit, mount.id, corrected_angle)
-    end)
   end
 
   def rotate_turret(unit, mount_id, angle) do
@@ -142,23 +89,12 @@ defmodule Unit do
     ])
   end
 
+  def apply_status(unit, function), do: Map.update!(unit, :status, function)
+
   # *** *******************************
   # *** GETTERS
 
   def belongs_to?(unit, player_id), do: unit.player_id == player_id
-  def total_damage(%{damage: damages}) do
-    damages
-    |> Stream.map(fn {_turn, damage} -> damage end)
-    |> Enum.sum
-  end
-  def remaining_health(%{health: health} = unit) do
-    (health - total_damage(unit))
-    |> max(0)
-  end
-  def percent_remaining_health(%{health: health} = unit) do
-    (1 - total_damage(unit) / health)
-    |> max(0)
-  end
   def gunnery_target_vector(%{pose: pose}) do
     Vector.from_position(pose)
   end
@@ -168,9 +104,22 @@ defmodule Unit do
   def all_turret_mount_ids(%__MODULE__{turrets: turrets}) do
     Enum.map(turrets, & &1.id)
   end
+  def center_of_mass(%__MODULE__{sprite: sprite}) do
+    sprite
+    |> Sprite.rect
+    |> Rect.center_position
+  end
+  def status(%__MODULE__{status: status}), do: status
 
   # *** *******************************
   # *** IMPLEMENTATIONS
+
+  defimpl HasCsys do
+    def get_csys(%{pose: pose}) do
+      CSys.new(pose)
+    end
+    def get_angle(%{pose: pose}), do: Pose.angle(pose)
+  end
 
   defimpl Inspect do
     import Inspect.Algebra
@@ -179,9 +128,8 @@ defmodule Unit do
       unit_map =
         unit
         |> Map.take([
-          :pose,
-          :damage,
-          :mount_actions
+          :status,
+          :selection_box_position
         ])
         |> Enum.into([])
         #|> Keyword.put(:health, Unit.percent_remaining_health(unit))
@@ -191,29 +139,5 @@ defmodule Unit do
         col.(">")
       ]
     end
-  end
-
-  defimpl HasCsys do
-    def get_csys(%{pose: pose}) do
-      CSys.new(pose)
-    end
-    def get_angle(%{pose: pose}), do: Pose.angle(pose)
-  end
-end
-
-defmodule Unit.Enum do
-  # TODO rename player_active_unit_ids
-  def active_player_unit_ids(units, player_id) do
-    units
-    |> Stream.filter(& &1.active?)
-    |> Stream.filter(&Unit.belongs_to?(&1, player_id))
-    |> Enum.map(& &1.id)
-  end
-  # TODO rename enemy_active_unit_ids
-  def enemy_unit_ids(units, player_id) do
-    units
-    |> Stream.filter(& &1.active?)
-    |> Stream.filter(& !Unit.belongs_to?(&1, player_id))
-    |> Enum.map(& &1.id)
   end
 end

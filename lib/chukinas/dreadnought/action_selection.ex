@@ -143,9 +143,13 @@ defmodule ActionSelection do
     import Inspect.Algebra
     def inspect(actionsel, opts) do
       col = fn string -> color(string, :cust_struct, opts) end
+      fields = [
+        actions: actionsel.actions,
+        enemies: actionsel.current_target_unit_ids
+      ]
       concat [
         col.("#Player-#{actionsel.player_id}-Actions"),
-        to_doc(actionsel.actions, opts),
+        to_doc(fields, opts),
       ]
     end
   end

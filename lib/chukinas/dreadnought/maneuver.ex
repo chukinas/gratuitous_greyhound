@@ -23,7 +23,7 @@ defmodule Maneuver do
       :exit_or_run_aground ->
         unit
         |> put_trapped_maneuver
-        |> Unit.put_final_turn(turn_number)
+        |> Unit.apply_status(&Unit.Status.out_of_action(&1, turn_number))
     end
   end
 

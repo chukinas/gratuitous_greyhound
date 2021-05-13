@@ -112,6 +112,7 @@ defmodule Mission do
       |> resolve_island_collisions
       |> calc_unit_render
       |> calc_gunnery
+      |> resolve_damage_effects
       # Part 2: Prepare for this turn's planning
       |> calc_unit_active
       |> clear_player_actions
@@ -150,19 +151,6 @@ defmodule Mission do
     mission
   end
 
-  defp calc_unit_active(mission) do
-    units =
-      mission.units
-      |> Enum.map(&Unit.calc_active(&1, mission.turn_number))
-    units
-    |> Enum.map(&Map.take(&1, [:id, :active?, :final_turn, :render?]))
-    %__MODULE__{mission | units: units}
-  end
-
-  defp calc_unit_render(mission) do
-    Maps.map_each(mission, :units, &Unit.calc_render(&1, mission.turn_number))
-  end
-
   defp calc_gunnery(mission) do
     Enum.reduce(combats(mission), mission, fn combat_action, mission ->
       {units, gunfire} = CombatAction.exec(combat_action, mission)
@@ -171,9 +159,21 @@ defmodule Mission do
     end)
   end
 
-  #defp calc_random_mount_orientation(mission) do
-  #  Maps.map_each(mission, :units, &Unit.calc_random_mount_orientation/1)
-  #end
+  defp calc_unit_active(mission) do
+    fun = &Unit.Status.calc_active(&1, mission.turn_number)
+    # TODO rename Unit.update_status
+    Maps.map_each(mission, :units, &Unit.apply_status(&1, fun))
+  end
+
+  defp calc_unit_render(mission) do
+    fun = &Unit.Status.calc_render(&1, mission.turn_number)
+    Maps.map_each(mission, :units, &Unit.apply_status(&1, fun))
+  end
+
+  defp resolve_damage_effects(mission) do
+    fun = &Unit.Status.maybe_succumb_to_damage(&1)
+    Maps.map_each(mission, :units, &Unit.apply_status(&1, fun))
+  end
 
   # *** *******************************
   # *** IMPLEMENTATIONS
@@ -188,7 +188,7 @@ defmodule Mission do
           :turn_number,
           :units,
           :gunfire,
-          :player_actions
+          #:player_actions
         ])
         |> Enum.into([])
       concat [

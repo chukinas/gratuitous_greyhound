@@ -42,5 +42,6 @@ defmodule MissionBuilder do
     |> Mission.put(units)
     |> Mission.put(players)
     |> Mission.start
+    |> IOP.inspect("MissionBuilder new mission")
   end
 end
