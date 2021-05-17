@@ -7,7 +7,6 @@ defmodule Animation.Frame do
 
   use TypedStruct
   typedstruct enfore: true do
-    field :id_string, String.t()
     field :sprite, Sprite.t()
     field :start, number(), default: 0
     field :fade_duration, number() | :nofade, default: :nofade
@@ -18,8 +17,7 @@ defmodule Animation.Frame do
 
   def new(sprite, opts \\ []) do
     fields = Keyword.merge(opts,
-      sprite: sprite,
-      id_string: "animation-frame-#{Enum.random(1..10_000)}"
+      sprite: sprite
     )
     struct!(__MODULE__, fields)
   end

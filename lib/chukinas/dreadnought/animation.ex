@@ -9,6 +9,7 @@ defmodule Animation do
 
   use TypedStruct
   typedstruct enfore: true do
+    field :id_string, String.t()
     field :name, String.t()
     field :pose, Pose.t()
     field :start, number()
@@ -22,7 +23,8 @@ defmodule Animation do
     fields = Keyword.merge(opts,
       name: name,
       pose: pose,
-      start: start
+      start: start,
+      id_string: "animation-frame-#{Enum.random(1..10_000)}"
     )
     struct!(__MODULE__, fields)
   end

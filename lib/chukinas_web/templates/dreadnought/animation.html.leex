@@ -1,6 +1,7 @@
 <div
   <%# Position within World %>
   <%# TODO add invisible %>
+  id="<%= @animation.id_string %>"
   class="absolute"
   style="
     left: <%= @animation.pose.x %>px;
@@ -14,8 +15,7 @@
   <%# Sprites %>
   <div class="relative">
     <%= for frame <- @animation.frames do %>
-    <%= ChukinasWeb.DreadnoughtView.relative_sprite frame.sprite, @socket,
-        id_string: "animation-#{frame.id_string}" %>
+    <%= ChukinasWeb.DreadnoughtView.relative_sprite frame.sprite, @socket %>
     <% end %>
   </div>
 

@@ -24,17 +24,13 @@ defmodule ChukinasWeb.DreadnoughtView do
 
   def relative_sprite(sprite, socket, opts \\ []) do
     opts = Opts.merge!(opts, [
-      id_string: nil,
-      phx_hook: nil,
       attributes: [],
       pose: Pose.origin()
     ])
     pose = opts[:pose]
     attributes =
-      opts[:attributes] ++ [
-        %{name: "id", value: opts[:id_string]},
-        %{name: "phx-click", value: opts[:phx_hook]},
-      ]
+      opts[:attributes]
+      |> Enum.map(fn {name, value} -> %{name: Atom.to_string(name), value: value} end)
     angle = case pose.angle do
       0 -> nil
       x when is_number(x) -> x
