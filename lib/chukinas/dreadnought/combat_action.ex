@@ -7,6 +7,9 @@ defmodule CombatAction do
 
   alias CombatAction.Accumulator, as: Acc
 
+  # *** *******************************
+  # *** API
+
   def exec(%{value: :noop}, %{units: units, gunfire: gunfire}), do: {units, gunfire}
   def exec(
     %{unit_id: attacker_id, value: target_id} = _unit_action,
@@ -73,7 +76,6 @@ defmodule CombatAction do
     end
   end
 
-  #defp range_to_target(%Acc{} = acc, target_vector, turret_id) do
   defp range_to_target(%Straight{} = path) do
     #turret = Acc.turret(acc, turret_id)
     #attacker = Acc.attacker(acc)
@@ -104,8 +106,8 @@ defmodule CombatAction do
     Acc.put(acc, attacker, target, gunfire)
   end
 
-  # TODO implement
   def move_turret_to_neutral(acc, _turret_id) do
+    # TODO implement
     acc
   end
 end

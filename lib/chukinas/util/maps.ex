@@ -12,8 +12,8 @@ defmodule Maps do
 
   # TODO be clearer about which funcs operate on lists
 
-  # TODO rename map_values
   def map_each(map, key, fun) do
+    # TODO rename map_values
     Map.update!(map, key, &Enum.map(&1, fun))
   end
 

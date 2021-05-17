@@ -1,5 +1,6 @@
 alias Chukinas.Dreadnought.{Animation}
 alias Chukinas.Geometry.Pose
+alias Chukinas.Util.Maps
 
 defmodule Animation do
 
@@ -16,8 +17,11 @@ defmodule Animation do
   # *** *******************************
   # *** NEW
 
-  def new(sprite, opts \\ []) do
-    fields = Keyword.put(opts, :sprite, sprite)
+  def new(%Pose{} = pose, start, opts \\ []) when is_number(start) do
+    fields = Keyword.merge(opts,
+      pose: pose,
+      start: start
+    )
     struct!(__MODULE__, fields)
   end
 
@@ -26,6 +30,10 @@ defmodule Animation do
 
   # *** *******************************
   # *** SETTERS
+
+  def put(%__MODULE__{} = animation, %Animation.Frame{} = frame) do
+    Maps.push(animation, :frames, frame)
+  end
 
   # *** *******************************
   # *** IMPLEMENTATIONS
