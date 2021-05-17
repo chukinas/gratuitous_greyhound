@@ -6,6 +6,9 @@ alias Chukinas.LinearAlgebra.{HasCsys, CSys, Vector}
 
 defmodule Unit do
 
+  # *** *******************************
+  # *** TYPES
+
   @type damage :: {turn_number :: integer(), damage_rcvd :: integer()}
 
   use TypedStruct
@@ -26,8 +29,8 @@ defmodule Unit do
   # *** *******************************
   # *** NEW
 
-  # Refactor now that I have a unit builder module
   def new(id, opts \\ []) do
+    # Refactor now that I have a unit builder module
     {max_damage, fields} =
       opts
       |> Keyword.merge(id: id)
@@ -46,16 +49,16 @@ defmodule Unit do
   def put(unit, %Turret{} = turret), do: Maps.put_by_id(unit, :turrets, turret)
   def put(unit, %MountRotation{} = mount_action), do: Maps.put_by_id(unit, :mount_actions, mount_action, :mount_id)
 
-  # TODO delete
   def put_path(%__MODULE__{} = unit, geo_path) do
+  # TODO delete
     %{unit |
       pose: Path.get_end_pose(geo_path),
       compound_path: [ManeuverPartial.new(geo_path)]
     }
   end
 
-  # TODO rename put_maneuver
   def put_compound_path(unit, compound_path) when is_list(compound_path) do
+  # TODO rename put_maneuver
     pose =
       compound_path
       |> Enum.max(ManeuverPartial)
@@ -83,47 +86,56 @@ defmodule Unit do
 
   def apply_status(unit, function), do: Map.update!(unit, :status, function)
 
+
   # *** *******************************
   # *** GETTERS
 
   def belongs_to?(unit, player_id), do: unit.player_id == player_id
+
   def gunnery_target_vector(%{pose: pose}) do
     Vector.from_position(pose)
   end
   def turret(unit, turret_id) do
     IdList.fetch!(unit.turrets, turret_id)
   end
+
   def all_turret_mount_ids(%__MODULE__{turrets: turrets}) do
     Enum.map(turrets, & &1.id)
   end
+
   def center_of_mass(%__MODULE__{sprite: sprite}) do
     sprite
     |> Sprite.rect
     |> Rect.center_position
   end
+
   def status(%__MODULE__{status: status}), do: status
+
 
   # *** *******************************
   # *** IMPLEMENTATIONS
 
   defimpl HasCsys do
+
     def get_csys(%{pose: pose}) do
       CSys.new(pose)
     end
+
     def get_angle(%{pose: pose}), do: Pose.angle(pose)
   end
 
   defimpl Inspect do
     require IOP
     def inspect(unit, opts) do
-      unit_map =
+      title = "Unit-#{unit.id}"
+      fields =
         unit
         |> Map.take([
           :status,
           :selection_box_position
         ])
         |> Enum.into([])
-      IOP.struct("Unit-#{unit.id}", unit_map)
+      IOP.struct(title, fields)
     end
   end
 

@@ -18,6 +18,7 @@
         id_string: "unit-#{@unit.id}-mount-#{turret.id}", 
         pose: turret.pose %>
     <% end %>
+    <%= ChukinasWeb.DreadnoughtView.relative_sprite @unit.sprite, @socket %>
   </div>
 
 

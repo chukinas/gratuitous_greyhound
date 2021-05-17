@@ -4,6 +4,9 @@ alias Chukinas.LinearAlgebra.{HasCsys, CSys, Vector}
 
 defmodule Turret do
 
+  # *** *******************************
+  # *** NEW
+
   use TypedStruct
   typedstruct enforce: true do
     field :id, integer()
@@ -36,22 +39,29 @@ defmodule Turret do
   # *** GETTERS
 
   def angle_max_ccw(%__MODULE__{max_ccw_angle: angle}), do: angle
+
   def angle_max_cw(%__MODULE__{max_ccw_angle: angle, max_rotation: rotation}) do
     Trig.normalize_angle(angle + rotation)
   end
+
   def angle_arc_center(%__MODULE__{max_ccw_angle: angle} = turret) do
     Trig.normalize_angle(angle + half_travel(turret))
   end
+
   def vector_arc_center(mount) do
     mount
     |> angle_arc_center
     |> Vector.from_angle
   end
+
   def current_angle(%__MODULE__{pose: pose}), do: Pose.angle(pose)
+
   def current_rotation(mount) do
     rotation(mount, current_angle(mount))
   end
+
   def half_travel(%__MODULE__{max_rotation: rotation}), do: rotation / 2
+
   def gun_barrel_vector(%__MODULE__{sprite: sprite}) do
     %{x: x} =
       sprite
@@ -60,9 +70,13 @@ defmodule Turret do
       |> Mount.position
     {x, 0}
   end
+
   def pose(%__MODULE__{pose: pose}), do: pose
+
   def position(%__MODULE__{pose: pose}), do: Position.new(pose)
+
   def csys(turret), do: turret |> pose |> CSys.new
+
   def position_csys(turret) do
     turret
     |> position
@@ -102,9 +116,6 @@ defmodule Turret do
   def travel_from_current_angle(mount, angle) do
     rotation(mount, angle) - current_rotation(mount)
   end
-
-  # *** *******************************
-  # *** PRIVATE
 
   defp lies_within_arc?(mount, target_unit_vector) do
     angle_between =

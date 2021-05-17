@@ -45,7 +45,7 @@ defmodule IOP do
     quote do
       Algebra.concat [
         IOP.color("##{unquote(title)}<"),
-        IOP.doc(unquote(fields)),
+        IOP.doc(unquote(fields) |> Enum.into([])),
         IOP.color(">")
       ]
     end
