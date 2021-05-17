@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Unit, CombatAction, Turret, Gunfire}
+alias Chukinas.Dreadnought.{Unit, CombatAction, Turret, Animation}
 alias Chukinas.Geometry.{Collide, Straight, Pose}
 alias Chukinas.Util.IdList
 alias Chukinas.LinearAlgebra.{Vector, CSys}
@@ -102,8 +102,21 @@ defmodule CombatAction do
       acc
       |> Acc.target
       |> Unit.apply_status(&Unit.Status.take_damage(&1, 10, turn_number))
-    gunfire = Gunfire.new(attacker, turret_id)
+    pose = muzzle_flash_pose(attacker, turret_id)
+    # TODO rename Builder to Build. It'll read better
+    gunfire = Animation.Builder.simple_muzzle_flash(pose, 1)
     Acc.put(acc, attacker, target, gunfire)
+  end
+
+  def muzzle_flash_pose(unit, turret_id) do
+    # TODO move to Unit
+    turret = Unit.turret(unit, turret_id)
+    position_vector =
+      turret
+      |> Turret.gun_barrel_vector
+      |> CSys.Conversion.convert_to_world_vector(unit, turret)
+    angle = CSys.Conversion.sum_angles(turret, unit)
+    Pose.new(position_vector, angle)
   end
 
   def move_turret_to_neutral(acc, _turret_id) do

@@ -9,6 +9,7 @@ defmodule Animation do
 
   use TypedStruct
   typedstruct enfore: true do
+    field :name, String.t()
     field :pose, Pose.t()
     field :start, number()
     field :frames, [Animation.Frame.t()], default: []
@@ -17,8 +18,9 @@ defmodule Animation do
   # *** *******************************
   # *** NEW
 
-  def new(%Pose{} = pose, start, opts \\ []) when is_number(start) do
+  def new(name, %Pose{} = pose, start, opts \\ []) when is_number(start) do
     fields = Keyword.merge(opts,
+      name: name,
       pose: pose,
       start: start
     )
@@ -40,10 +42,11 @@ defmodule Animation do
 
   defimpl Inspect do
     require IOP
-    def inspect(animation_frame, opts) do
-      title = "AnimationFrame"
+    def inspect(animation, opts) do
+      title = "Animation"
       fields = [
-        sprite: animation_frame.sprite.name
+        name: animation.name,
+        pose: animation.pose
       ]
       IOP.struct(title, fields)
     end

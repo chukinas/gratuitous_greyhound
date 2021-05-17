@@ -4,7 +4,7 @@ defmodule Chukinas.Dreadnought.State do
   use Agent
 
   def start_link do
-    mission = MissionBuilder.build()
+    mission = MissionBuilder.dev()
     {:ok, pid} = Agent.start_link(fn -> mission end)
     {pid, mission}
   end

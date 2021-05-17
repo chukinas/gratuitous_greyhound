@@ -68,10 +68,11 @@
 
 
 <%# Gunfire %>
-<%= for gunfire <- @gunfire do %>
-  <%= ChukinasWeb.DreadnoughtView.render "gunfire.html",
+<%# TODO rename Animations %>
+<%= for animation <- @gunfire do %>
+  <%= ChukinasWeb.DreadnoughtView.render "animation.html",
     socket: @socket,
-    gunfire: gunfire %>
+    animation: animation %>
 <% end %>
 
 

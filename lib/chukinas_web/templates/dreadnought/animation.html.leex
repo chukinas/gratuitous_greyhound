@@ -1,0 +1,21 @@
+<div
+  <%# Position within World %>
+  <%# TODO add invisible %>
+  class="absolute"
+  style="
+    left: <%= @animation.pose.x %>px;
+    top: <%= @animation.pose.y %>px;
+    transform: rotate(<%= @animation.pose.angle %>deg);
+  "
+>
+
+
+  <%# Sprites %>
+  <div class="relative">
+    <%= for frame <- @animation.frames do %>
+    <%= ChukinasWeb.DreadnoughtView.relative_sprite frame.sprite, @socket,
+        id_string: "animation-#{frame.id_string}" %>
+    <% end %>
+  </div>
+
+</div>

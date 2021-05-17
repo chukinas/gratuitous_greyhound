@@ -11,7 +11,8 @@ defmodule Animation.Builder do
       "explosion_" <> Enum.random(~w(1 2 3))
       |> Spritesheet.blue
       |>  Animation.Frame.new(fade_duration: 1)
-    Animation.new(pose, start)
+    "simple muzzle flash"
+    |> Animation.new(pose, start)
     |> Animation.put(frame)
   end
 end
