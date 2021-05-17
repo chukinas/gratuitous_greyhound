@@ -1,26 +1,23 @@
-alias Chukinas.Dreadnought.{Animation, Sprite}
+alias Chukinas.Dreadnought.{Animation}
+alias Chukinas.Geometry.Pose
 
-defmodule Animation.Frame do
+defmodule Animation do
 
   # *** *******************************
   # *** TYPES
 
   use TypedStruct
   typedstruct enfore: true do
-    field :id_string, String.t()
-    field :sprite, Sprite.t()
-    field :start, number(), default: 0
-    field :fade_duration, number() | :nofade, default: :nofade
+    field :pose, Pose.t()
+    field :start, number()
+    field :frames, [Animation.Frame.t()], default: []
   end
 
   # *** *******************************
   # *** NEW
 
   def new(sprite, opts \\ []) do
-    fields = Keyword.merge(opts,
-      sprite: sprite,
-      id_string: "animation-frame-#{Enum.random(1..10_000)}"
-    )
+    fields = Keyword.put(opts, :sprite, sprite)
     struct!(__MODULE__, fields)
   end
 
