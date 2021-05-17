@@ -26,9 +26,15 @@ defmodule ChukinasWeb.DreadnoughtView do
     opts = Opts.merge!(opts, [
       id_string: nil,
       phx_hook: nil,
+      attributes: [],
       pose: Pose.origin()
     ])
     pose = opts[:pose]
+    attributes =
+      opts[:attributes] ++ [
+        %{name: "id", value: opts[:id_string]},
+        %{name: "phx-click", value: opts[:phx_hook]},
+      ]
     angle = case pose.angle do
       0 -> nil
       x when is_number(x) -> x
@@ -36,9 +42,8 @@ defmodule ChukinasWeb.DreadnoughtView do
     assigns = %{
       sprite: sprite,
       socket: socket,
-      id_string: opts[:id_string],
       position: sprite.rect |> Position.add(pose) |> Position.new,
-      phx_hook: opts[:phx_hook],
+      attributes: attributes,
       angle: angle
     }
     render("_relative_sprite.html", assigns)

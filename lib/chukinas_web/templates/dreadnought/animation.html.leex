@@ -7,6 +7,7 @@
     top: <%= @animation.pose.y %>px;
     transform: rotate(<%= @animation.pose.angle %>deg);
   "
+  phx-hook="Animation"
 >
 
 
@@ -14,7 +15,6 @@
   <div class="relative">
     <%= for frame <- @animation.frames do %>
     <%= ChukinasWeb.DreadnoughtView.relative_sprite frame.sprite, @socket,
-        phx_hook: "Animation",
         id_string: "animation-#{frame.id_string}" %>
     <% end %>
   </div>
