@@ -23,22 +23,22 @@ defmodule ChukinasWeb.DreadnoughtView do
   end
 
   def relative_sprite(sprite, socket, opts \\ []) do
-    opts =
-      opts
-      |> Opts.merge!([
-        id_string: false,
-        pose: Pose.origin()
-      ])
-    pose = Keyword.fetch!(opts, :pose)
+    opts = Opts.merge!(opts, [
+      id_string: nil,
+      phx_hook: nil,
+      pose: Pose.origin()
+    ])
+    pose = opts[:pose]
     angle = case pose.angle do
-      0 -> false
+      0 -> nil
       x when is_number(x) -> x
     end
     assigns = %{
       sprite: sprite,
       socket: socket,
-      id_string: Keyword.fetch!(opts, :id_string),
+      id_string: opts[:id_string],
       position: sprite.rect |> Position.add(pose) |> Position.new,
+      phx_hook: opts[:phx_hook],
       angle: angle
     }
     render("_relative_sprite.html", assigns)

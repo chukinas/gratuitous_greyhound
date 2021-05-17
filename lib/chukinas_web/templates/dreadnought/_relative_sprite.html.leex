@@ -11,6 +11,9 @@
     <% end %>
     transform-origin: <%= -@sprite.rect.x %>px <%= -@sprite.rect.y %>px;
   "
+  <%= if @phx_hook do %>
+    phx-hook="<%= @phx_hook %>"
+  <% end %>
 >
   <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: @sprite %>
 </div>

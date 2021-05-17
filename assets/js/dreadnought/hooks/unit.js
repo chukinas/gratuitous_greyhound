@@ -184,6 +184,12 @@ const PartialPath = {
   },
 }
 
+const Animation = {
+  mounted() {
+    console.log("Animation moundet")
+  }
+}
+
 const Gunfire = {
   mounted() {
     gsap.set(this.el, {
@@ -205,5 +211,6 @@ export default {
   Unit, 
   PartialPath, 
   RotationPartial,
+  Animation,
   Gunfire
 }
