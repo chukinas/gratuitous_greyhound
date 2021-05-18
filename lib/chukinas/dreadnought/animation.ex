@@ -16,7 +16,7 @@ defmodule Animation do
     field :frames, [Frame.t()], default: []
     field :last_frame_fade_duration, number(), default: 0
     # number of times to repeat. -1 means infinite loop
-    field :repeat, number(), default: 1
+    field :repeat, number(), default: 0
   end
 
   # *** *******************************
@@ -51,7 +51,6 @@ defmodule Animation do
       #|> Enum.map(&Frame.remove_fade/1)
       |> Enum.concat(List.wrap(frame))
     %__MODULE__{animation | frames: frames}
-    |> IOP.inspect("Animation put")
   end
 
   def put_frame(animation, sprite_fun, sprite_name, duration) when is_number(duration) do
