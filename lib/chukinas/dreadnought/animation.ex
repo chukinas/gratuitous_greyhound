@@ -15,6 +15,8 @@ defmodule Animation do
     # TODO rename delay
     field :start, number()
     field :frames, [Animation.Frame.t()], default: []
+    # number of times to repeat. -1 means infinite loop
+    field :repeat, number(), default: 1
   end
 
   # *** *******************************
@@ -50,6 +52,13 @@ defmodule Animation do
     sprite = apply(Spritesheet, sprite_fun, [sprite_name])
     frame = Animation.Frame.new(sprite, start: delay, fade_duration: fade_duration)
     put(animation, frame)
+  end
+
+  # *** *******************************
+  # *** TRANSFORM
+
+  def repeat(animation) do
+    %__MODULE__{animation | repeat: -1}
   end
 
   # *** *******************************

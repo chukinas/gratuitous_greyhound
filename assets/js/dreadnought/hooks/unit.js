@@ -187,7 +187,11 @@ const Animation = {
   mounted() {
     const animation = this.el
     const frames = [...animation.querySelectorAll(".dreadnought-relative-sprite")]
-    const timeline = gsap.timeline({delay: animation.dataset.delay * ANIMATIONDURATION})
+    const timeline = gsap.timeline({
+      delay: animation.dataset.delay * ANIMATIONDURATION,
+      repeat: animation.dataset.repeat,
+      repeatDelay: 1
+    })
     frames.forEach(frame => {
       const delay = frame.dataset.delay
       timeline.set(frame, {

@@ -1,6 +1,4 @@
 <div
-  <%# Position within World %>
-  <%# TODO add invisible %>
   id="<%= @animation.id_string %>"
   class="absolute"
   style="
@@ -10,6 +8,7 @@
   "
   phx-hook="Animation"
   data-delay="<%= @animation.start %>"
+  data-repeat="<%= @animation.repeat %>"
 >
 
 

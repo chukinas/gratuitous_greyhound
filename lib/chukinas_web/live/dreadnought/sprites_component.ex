@@ -18,7 +18,7 @@ defmodule ChukinasWeb.Dreadnought.SpritesComponent do
     sprites =
       Spritesheet.all()
       |> Enum.map(& Sprite.scale(&1, 2))
-    animation = Animation.Build.large_muzzle_flash(Pose.origin())
+    animation = Animation.Build.large_muzzle_flash(Pose.origin()) |> Animation.repeat
     animations = [%{struct: animation, rect: Animation.bounding_rect(animation)}]
     socket =
       socket
