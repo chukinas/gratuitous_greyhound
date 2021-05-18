@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Animation, Spritesheet}
-alias Chukinas.Geometry.Pose
+alias Chukinas.Geometry.{Rect, Pose}
 alias Chukinas.Util.Maps
 
 defmodule Animation do
@@ -32,6 +32,12 @@ defmodule Animation do
 
   # *** *******************************
   # *** GETTERS
+
+  def bounding_rect(%__MODULE__{frames: frames}) do
+    frames
+    |> Enum.map(&Animation.Frame.rect/1)
+    |> Rect.bounding_rect
+  end
 
   # *** *******************************
   # *** SETTERS

@@ -26,6 +26,10 @@ defmodule Animation.Frame do
   # *** *******************************
   # *** GETTERS
 
+  def rect(%__MODULE__{sprite: sprite}) do
+    Sprite.rect(sprite)
+  end
+
   # *** *******************************
   # *** SETTERS
 

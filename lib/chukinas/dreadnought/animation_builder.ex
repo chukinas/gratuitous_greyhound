@@ -6,7 +6,7 @@ defmodule Animation.Build do
   # *** *******************************
   # *** NEW
 
-  def simple_muzzle_flash(%Pose{} = pose, start) when is_number(start) do
+  def simple_muzzle_flash(%Pose{} = pose, start \\ 0) when is_number(start) do
     frame =
       "explosion_" <> Enum.random(~w(1 2 3))
       |> Spritesheet.blue
@@ -16,7 +16,7 @@ defmodule Animation.Build do
     |> Animation.put(frame)
   end
 
-  def large_muzzle_flash(%Pose{} = pose, start) when is_number(start) do
+  def large_muzzle_flash(%Pose{} = pose, start \\ 0) when is_number(start) do
     frame =
       "explosion_" <> Enum.random(~w(1 2 3))
       |> Spritesheet.blue

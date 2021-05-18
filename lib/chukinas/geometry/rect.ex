@@ -8,8 +8,10 @@ defmodule Rect do
 
   require Position
 
-  use TypedStruct
+  # *** *******************************
+  # *** TYPES
 
+  use TypedStruct
   typedstruct enforce: true do
     field :x, number()
     field :y, number()
@@ -56,6 +58,26 @@ defmodule Rect do
   # *** *******************************
   # *** GETTERS
 
+  def bottom_right_position(%__MODULE__{} = rect) do
+    rect
+    |> Position.from_size
+    |> Position.add(rect)
+  end
+
+  def list_vertices(%{x: x, y: y, width: width, height: height}) do
+    # TODO rename vertices
+    # TODO move getters to appropriate section
+    position = Position.new(x, y)
+    [
+      position,
+      Position.add_x(position, width),
+      # TODO replace with bottom_right_position
+      Position.add(position, width, height),
+      Position.add_y(position, height)
+    ]
+    |> Enum.map(&Position.to_vertex/1)
+  end
+
   def center_position(rect) do
     relative_center =
       rect
@@ -71,9 +93,18 @@ defmodule Rect do
   # *** *******************************
   # *** API
 
-  # This returns the smallest rect that contains the origin rect and is centered on the origin
-  # TODO is this used anymore?
+  def bounding_rect(rects) when is_list(rects) do
+    {min, max} = Position.min_max(rects ++ Enum.map(rects, &bottom_right_position/1))
+    size = Size.from_positions(min, max)
+    new(min, size)
+  end
+  def bounding_rect(%__MODULE__{} = a, %__MODULE__{} = b) do
+    bounding_rect([a, b])
+  end
+
   def get_centered_rect(origin, rect) do
+    # This returns the smallest rect that contains the origin rect and is centered on the origin
+    # TODO is this used anymore?
     half_width = max(
       abs(origin.x - rect.x),
       abs(rect.x + rect.width - origin.x)
@@ -87,18 +118,6 @@ defmodule Rect do
       Position.subtract(origin, dist_from_origin),
       Position.add(origin, dist_from_origin)
     )
-  end
-
-  # TODO move getters to appropriate section
-  def list_vertices(%{x: x, y: y, width: width, height: height}) do
-    position = Position.new(x, y)
-    [
-      position,
-      Position.add_x(position, width),
-      Position.add(position, width, height),
-      Position.add_y(position, height)
-    ]
-    |> Enum.map(&Position.to_vertex/1)
   end
 
   def scale(rect, scale) do

@@ -1,8 +1,12 @@
-alias Chukinas.Dreadnought.{Spritesheet, Sprite}
+alias Chukinas.Dreadnought.{Spritesheet, Sprite, Animation}
+alias Chukinas.Geometry.Pose
 alias ChukinasWeb.DreadnoughtView
 
 defmodule ChukinasWeb.Dreadnought.SpritesComponent do
   use ChukinasWeb, :live_component
+
+  # *** *******************************
+  # *** CALLBACKS
 
   @impl true
   def render(assigns) do
@@ -14,10 +18,12 @@ defmodule ChukinasWeb.Dreadnought.SpritesComponent do
     sprites =
       Spritesheet.all()
       |> Enum.map(& Sprite.scale(&1, 2))
+    animation = Animation.Build.large_muzzle_flash(Pose.origin())
+    animations = [%{struct: animation, rect: Animation.bounding_rect(animation)}]
     socket =
       socket
-      |> assign(sprites: sprites)
-      |> set_marker_visibility(true)
+      |> assign(sprites: sprites, animations: animations)
+      |> set_marker_visibility(false)
     {:ok, socket}
   end
 
@@ -27,7 +33,11 @@ defmodule ChukinasWeb.Dreadnought.SpritesComponent do
     {:noreply, socket}
   end
 
+  # *** *******************************
+  # *** FUNCTIONS
+
   def tabs do
+    # TODO private?
     [
       %{title: "Welcome", route: "welcome", current?: false},
       %{title: "Play", route: "play", current?: false},
