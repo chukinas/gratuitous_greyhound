@@ -1,8 +1,8 @@
 alias Chukinas.Dreadnought.{Animation, Spritesheet}
 alias Chukinas.Geometry.{Rect, Pose}
-alias Chukinas.Util.Maps
 
 defmodule Animation do
+  alias Animation.Frame
 
   # *** *******************************
   # *** TYPES
@@ -12,9 +12,9 @@ defmodule Animation do
     field :id_string, String.t()
     field :name, String.t()
     field :pose, Pose.t()
-    # TODO rename delay
-    field :start, number()
-    field :frames, [Animation.Frame.t()], default: []
+    field :delay, number()
+    field :frames, [Frame.t()], default: []
+    field :last_frame_fade_duration, number(), default: 0
     # number of times to repeat. -1 means infinite loop
     field :repeat, number(), default: 1
   end
@@ -22,13 +22,13 @@ defmodule Animation do
   # *** *******************************
   # *** NEW
 
-  def new(name, %Pose{} = pose, start, opts \\ []) when is_number(start) do
-    fields = Keyword.merge(opts,
+  def new(name, %Pose{} = pose, delay \\ 0) when is_number(delay) do
+    fields = [
+      id_string: "animation-frame-#{Enum.random(1..10_000)}",
       name: name,
       pose: pose,
-      start: start,
-      id_string: "animation-frame-#{Enum.random(1..10_000)}"
-    )
+      delay: delay,
+    ]
     struct!(__MODULE__, fields)
   end
 
@@ -37,21 +37,31 @@ defmodule Animation do
 
   def bounding_rect(%__MODULE__{frames: frames}) do
     frames
-    |> Enum.map(&Animation.Frame.rect/1)
+    |> Enum.map(&Frame.rect/1)
     |> Rect.bounding_rect
   end
 
   # *** *******************************
   # *** SETTERS
 
-  def put(%__MODULE__{} = animation, %Animation.Frame{} = frame) do
-    Maps.push(animation, :frames, frame)
+  def put(%__MODULE__{} = animation, %Frame{} = frame) do
+    #frame = Frame.fade(frame, animation.last_frame_fade_duration)
+    frames =
+      animation.frames
+      #|> Enum.map(&Frame.remove_fade/1)
+      |> Enum.concat(List.wrap(frame))
+    %__MODULE__{animation | frames: frames}
+    |> IOP.inspect("Animation put")
   end
 
-  def put_frame(animation, sprite_fun, sprite_name, delay, fade_duration) do
+  def put_frame(animation, sprite_fun, sprite_name, duration) when is_number(duration) do
     sprite = apply(Spritesheet, sprite_fun, [sprite_name])
-    frame = Animation.Frame.new(sprite, start: delay, fade_duration: fade_duration)
+    frame = Frame.new(sprite, duration)
     put(animation, frame)
+  end
+
+  def fade(animation, duration \\ 0.5) do
+    %__MODULE__{animation | last_frame_fade_duration: duration}
   end
 
   # *** *******************************
@@ -70,7 +80,8 @@ defmodule Animation do
       title = "Animation"
       fields = [
         name: animation.name,
-        pose: animation.pose
+        pose: animation.pose,
+        frames: animation.frames
       ]
       IOP.struct(title, fields)
     end

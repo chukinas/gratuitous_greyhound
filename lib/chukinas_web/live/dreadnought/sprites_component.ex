@@ -18,8 +18,12 @@ defmodule ChukinasWeb.Dreadnought.SpritesComponent do
     sprites =
       Spritesheet.all()
       |> Enum.map(& Sprite.scale(&1, 2))
-    animation = Animation.Build.large_muzzle_flash(Pose.origin()) |> Animation.repeat
-    animations = [%{struct: animation, rect: Animation.bounding_rect(animation)}]
+    animations = [
+      Animation.Build.simple_muzzle_flash(Pose.origin()),
+      Animation.Build.large_muzzle_flash(Pose.origin())
+    ]
+    |> Enum.map(&Animation.repeat/1)
+    |> Enum.map(fn ani -> %{struct: ani, rect: Animation.bounding_rect(ani)} end)
     socket =
       socket
       |> assign(sprites: sprites, animations: animations)

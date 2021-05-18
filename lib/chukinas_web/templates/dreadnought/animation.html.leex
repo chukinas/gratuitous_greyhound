@@ -7,7 +7,8 @@
     transform: rotate(<%= @animation.pose.angle %>deg);
   "
   phx-hook="Animation"
-  data-delay="<%= @animation.start %>"
+  data-delay="<%= @animation.delay %>"
+  data-fade="<%= @animation.last_frame_fade_duration %>"
   data-repeat="<%= @animation.repeat %>"
 >
 
@@ -18,8 +19,7 @@
       <%= ChukinasWeb.DreadnoughtView.relative_sprite frame.sprite, @socket,
         class: "invisible",
         attributes: [
-          "data-fade-duration": frame.fade_duration,
-          "data-delay": frame.start
+          "data-duration": frame.duration
         ] %>
     <% end %>
   </div>

@@ -133,7 +133,7 @@ defmodule Mission do
     |> calc_unit_active
     |> clear_player_actions
     |> calc_ai_commands
-    |> IOP.inspect
+    |> IOP.inspect("Mission new turn")
   end
 
   defp clear_gunfire(mission), do: Maps.clear(mission, :gunfire)

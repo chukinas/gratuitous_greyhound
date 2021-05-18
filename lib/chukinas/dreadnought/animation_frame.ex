@@ -8,18 +8,18 @@ defmodule Animation.Frame do
   use TypedStruct
   typedstruct enfore: true do
     field :sprite, Sprite.t()
-    # TODO rename delay
-    field :start, number(), default: 0
-    field :fade_duration, number() | :nofade, default: :nofade
+    field :duration, number()
+    #field :fade_duration, number(), default: 0
   end
 
   # *** *******************************
   # *** NEW
 
-  def new(sprite, opts \\ []) do
-    fields = Keyword.merge(opts,
-      sprite: sprite
-    )
+  def new(sprite, duration \\ 1) do
+    fields = [
+      sprite: sprite,
+      duration: duration
+    ]
     struct!(__MODULE__, fields)
   end
 
@@ -32,6 +32,17 @@ defmodule Animation.Frame do
 
   # *** *******************************
   # *** SETTERS
+
+  #def fade(frame, duration \\ 0.5) do
+  #  %__MODULE__{frame | fade_duration: duration}
+  #end
+
+  # *** *******************************
+  # *** TRANSFORM
+
+  #def remove_fade(frame) do
+  #  %__MODULE__{frame | fade_duration: 0}
+  #end
 
   # *** *******************************
   # *** IMPLEMENTATIONS

@@ -192,15 +192,24 @@ const Animation = {
       repeat: animation.dataset.repeat,
       repeatDelay: 1
     })
-    frames.forEach(frame => {
-      const delay = frame.dataset.delay
+    const lastFrameIndex = frames.length - 1
+    console.log(lastFrameIndex)
+    frames.forEach((frame, index) => {
       timeline.set(frame, {
-        visibility: 'visible'
-      }, delay)
-      timeline.to(frame, {
-        opacity: 0,
-        duration: frame.dataset.fadeDuration
-      }, delay)
+        visibility: 'visible',
+        duration: frame.dataset.duration
+      })
+      if (lastFrameIndex == index) {
+        timeline.to(frame, {
+          opacity: 0,
+          duration: animation.dataset.fade
+        }, `+=${frame.dataset.duration}`)
+      } else {
+        timeline.set(frame, {
+          visibility: 'hidden',
+          delay: frame.dataset.duration
+        }, `+=${frame.dataset.duration}`)
+      }
     })
   }
 }
