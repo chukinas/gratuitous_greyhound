@@ -24,6 +24,14 @@ defmodule Animation.Build do
     |> Animation.fade(0.5)
   end
 
+  def ordnance_hit(%Pose{} = pose, delay \\ 0) when is_number(delay) do
+    "ordnance_hit"
+    |> Animation.new(pose, delay)
+    |> Animation.put(rand_explosion_frame(0.05))
+    |> Animation.put_frame(:red, "muzzle_flash", 0)
+    |> Animation.fade(0.5)
+  end
+
   # *** *******************************
   # *** FUNCTIONS
 

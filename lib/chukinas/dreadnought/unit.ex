@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Unit, Sprite, Turret, ManeuverPartial, Maneuver, MountRotation}
-alias Chukinas.Geometry.{Pose, Path, Rect}
+alias Chukinas.Geometry.{Pose, Path, Rect, Position}
 alias Chukinas.Util.{Maps, IdList}
 # TODO do I need this dependency?
 alias Chukinas.LinearAlgebra.{HasCsys, CSys, Vector}
@@ -111,6 +111,13 @@ defmodule Unit do
 
   def status(%__MODULE__{status: status}), do: status
 
+  def pose(%__MODULE__{pose: pose}), do: pose
+
+  def position(unit) do
+    unit
+    |> pose
+    |> Position.new
+  end
 
   # *** *******************************
   # *** IMPLEMENTATIONS

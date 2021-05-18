@@ -31,7 +31,6 @@ defmodule Vector do
 
   def from_sin_and_cos({sin, cos}), do: {cos, sin}
 
-  # TODO remove
   def from_position(%{x: x, y: y}), do: {x, y}
 
   # *** *******************************
@@ -39,6 +38,7 @@ defmodule Vector do
 
   # TODO Trig.sign should be moved to a new Math module
   def sign({_, y}), do: Trig.sign(y)
+
   def angle(vector) when is_vector(vector) do
     vector
     |> normalize
@@ -47,7 +47,11 @@ defmodule Vector do
     |> Trig.mult(sign(vector))
     |> Trig.normalize_angle
   end
+
   def rotate_90({x, y}), do: {-y, x}
+
+  def rotate_180({x, y}), do: {-y, -x}
+
   def magnitude({x, y}), do: Trig.hypotenuse(x, y)
 
   # *** *******************************

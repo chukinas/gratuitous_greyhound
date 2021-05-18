@@ -17,7 +17,9 @@ defmodule Pose do
   # *** NEW
 
   def new({x, y}, angle), do: new(x, y, angle)
+
   def new(%{x: x, y: y}, angle), do: new(x, y, angle)
+
   def new(x, y, angle) do
     %__MODULE__{
       x: x,
@@ -28,10 +30,15 @@ defmodule Pose do
 
   def origin(), do: new(0, 0, 0)
 
+
   # *** *******************************
   # *** GETTERS
 
   def angle(%{angle: angle}), do: angle
+
+  def flip(%{angle: angle} = pose) do
+    %__MODULE__{pose | angle: angle + 180}
+  end
 
   # *** *******************************
   # *** SETTERS
