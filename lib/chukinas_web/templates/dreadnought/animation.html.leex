@@ -9,13 +9,16 @@
     transform: rotate(<%= @animation.pose.angle %>deg);
   "
   phx-hook="Animation"
+  data-start="<%= @animation.start %>"
 >
 
 
   <%# Sprites %>
   <div class="relative">
     <%= for frame <- @animation.frames do %>
-    <%= ChukinasWeb.DreadnoughtView.relative_sprite frame.sprite, @socket %>
+      <%= ChukinasWeb.DreadnoughtView.relative_sprite frame.sprite, @socket,
+        class: "invisible",
+        attributes: ["data-frame": 1] %>
     <% end %>
   </div>
 

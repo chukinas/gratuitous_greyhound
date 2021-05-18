@@ -25,6 +25,7 @@ defmodule ChukinasWeb.DreadnoughtView do
   def relative_sprite(sprite, socket, opts \\ []) do
     opts = Opts.merge!(opts, [
       attributes: [],
+      class: "",
       pose: Pose.origin()
     ])
     pose = opts[:pose]
@@ -39,6 +40,7 @@ defmodule ChukinasWeb.DreadnoughtView do
       sprite: sprite,
       socket: socket,
       position: sprite.rect |> Position.add(pose) |> Position.new,
+      class: opts[:class],
       attributes: attributes,
       angle: angle
     }

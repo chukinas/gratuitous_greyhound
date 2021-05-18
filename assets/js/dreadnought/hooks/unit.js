@@ -56,7 +56,6 @@ function scheduleRotation(rotatingEl, endAngle, angleTravel, opts = {}) {
     duration: 0.5,
     ...opts
   }
-  console.log(rotatingEl)
   gsap.fromTo(rotatingEl, {
     rotation: opts.startAngle
   }, {
@@ -186,7 +185,15 @@ const PartialPath = {
 
 const Animation = {
   mounted() {
-    console.log("Animation moundet")
+    const animation = this.el
+    const frames = [...animation.querySelectorAll(".dreadnought-relative-sprite")]
+    const timeline = gsap.timeline({delay: ANIMATIONDURATION})
+    frames.forEach(frame => {
+      timeline.set(frame, {
+        visibility: 'visible'
+      })
+    })
+    console.log(animation, frames)
   }
 }
 
