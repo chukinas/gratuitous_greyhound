@@ -187,26 +187,18 @@ const Animation = {
   mounted() {
     const animation = this.el
     const frames = [...animation.querySelectorAll(".dreadnought-relative-sprite")]
-    const timeline = gsap.timeline({delay: ANIMATIONDURATION})
+    const timeline = gsap.timeline({delay: animation.dataset.delay * ANIMATIONDURATION})
     frames.forEach(frame => {
+      const delay = frame.dataset.delay
       timeline.set(frame, {
+        delay,
         visibility: 'visible'
       })
-    })
-    console.log(animation, frames)
-  }
-}
-
-const Gunfire = {
-  mounted() {
-    gsap.set(this.el, {
-      delay: ANIMATIONDURATION,
-      visibility: 'visible'
-    })
-    gsap.to(this.el, {
-      delay: ANIMATIONDURATION,
-      opacity: 0,
-      duration: 0.5
+      timeline.to(frame, {
+        delay,
+        opacity: 0,
+        duration: frame.dataset.fadeDuration
+      })
     })
   }
 }
@@ -219,5 +211,4 @@ export default {
   PartialPath, 
   RotationPartial,
   Animation,
-  Gunfire
 }

@@ -104,7 +104,7 @@ defmodule CombatAction do
       |> Unit.apply_status(&Unit.Status.take_damage(&1, 10, turn_number))
     pose = muzzle_flash_pose(attacker, turret_id)
     # TODO rename Builder to Build. It'll read better
-    gunfire = Animation.Builder.simple_muzzle_flash(pose, 1)
+    gunfire = Animation.Build.simple_muzzle_flash(pose, 1)
     Acc.put(acc, attacker, target, gunfire)
   end
 

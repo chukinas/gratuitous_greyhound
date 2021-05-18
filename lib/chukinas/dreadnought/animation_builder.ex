@@ -1,7 +1,7 @@
 alias Chukinas.Dreadnought.{Spritesheet, Animation}
 alias Chukinas.Geometry.Pose
 
-defmodule Animation.Builder do
+defmodule Animation.Build do
 
   # *** *******************************
   # *** NEW
@@ -10,7 +10,7 @@ defmodule Animation.Builder do
     frame =
       "explosion_" <> Enum.random(~w(1 2 3))
       |> Spritesheet.blue
-      |>  Animation.Frame.new(fade_duration: 1)
+      |>  Animation.Frame.new(fade_duration: 0.5)
     "simple muzzle flash"
     |> Animation.new(pose, start)
     |> Animation.put(frame)

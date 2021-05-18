@@ -12,6 +12,7 @@ defmodule Animation do
     field :id_string, String.t()
     field :name, String.t()
     field :pose, Pose.t()
+    # TODO rename delay
     field :start, number()
     field :frames, [Animation.Frame.t()], default: []
   end

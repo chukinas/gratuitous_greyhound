@@ -8,6 +8,7 @@ defmodule Animation.Frame do
   use TypedStruct
   typedstruct enfore: true do
     field :sprite, Sprite.t()
+    # TODO rename delay
     field :start, number(), default: 0
     field :fade_duration, number() | :nofade, default: :nofade
   end
