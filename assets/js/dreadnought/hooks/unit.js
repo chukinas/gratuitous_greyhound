@@ -191,14 +191,12 @@ const Animation = {
     frames.forEach(frame => {
       const delay = frame.dataset.delay
       timeline.set(frame, {
-        delay,
         visibility: 'visible'
-      })
+      }, delay)
       timeline.to(frame, {
-        delay,
         opacity: 0,
         duration: frame.dataset.fadeDuration
-      })
+      }, delay)
     })
   }
 }

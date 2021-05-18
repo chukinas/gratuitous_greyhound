@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Animation}
+alias Chukinas.Dreadnought.{Animation, Spritesheet}
 alias Chukinas.Geometry.Pose
 alias Chukinas.Util.Maps
 
@@ -38,6 +38,12 @@ defmodule Animation do
 
   def put(%__MODULE__{} = animation, %Animation.Frame{} = frame) do
     Maps.push(animation, :frames, frame)
+  end
+
+  def put_frame(animation, sprite_fun, sprite_name, delay, fade_duration) do
+    sprite = apply(Spritesheet, sprite_fun, [sprite_name])
+    frame = Animation.Frame.new(sprite, start: delay, fade_duration: fade_duration)
+    put(animation, frame)
   end
 
   # *** *******************************
