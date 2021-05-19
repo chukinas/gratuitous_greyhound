@@ -85,14 +85,10 @@ const events = {
 // --------------------------------------------------------
 // HOOKS
 
-const Unit = {
+const UnitEvents = {
   mounted() {
-  },
-  updated() {
-    const unitEl = this.el
-    const unitId = unitEl.dataset.unitId
-    const eventsListElId = `unit-${unitId}-events`
-    const eventsList = document.getElementById(eventsListElId).children
+    const unitId = this.el.dataset.unitId
+    const eventsList = this.el.children
     for (const eventEl of eventsList) {
       const eventType = eventEl.dataset.eventType
       const fun = events[eventType]
@@ -133,6 +129,6 @@ const Animation = {
 }
 
 export default {
-  Unit, 
+  UnitEvents, 
   Animation,
 }

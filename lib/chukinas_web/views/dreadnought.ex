@@ -42,10 +42,6 @@ defmodule ChukinasWeb.DreadnoughtView do
 
   defp data_attr(key, value), do: %{name: "data-#{key}", value: value}
 
-  #defp event_type(value), do: %{name: "data-event-type", value: value}
-  #defp delay_attr(event), do: %{name: "data-delay", value: Unit.Event.delay(event)}
-  #defp duration_attr(event), do: %{name: "data-duration", value: Unit.Event.duration(event)}
-
   defp standard_attributes(event, event_type) do
     {delay, duration} = Unit.Event.delay_and_duration(event)
     [

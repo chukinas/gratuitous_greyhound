@@ -7,7 +7,6 @@
     top: <%= @unit.pose.y %>px; 
     transform: rotate(<%= @unit.pose.angle %>deg);
   "
-  phx-hook="Unit"
   data-unit-id="<%= @unit.id %>"
 >
 
@@ -24,7 +23,12 @@
 
 
   <%# Unit Events %>
-  <ul id="unit-<%= @unit.id %>-events" class="hidden">
+  <ul 
+    id="unit-<%= @unit.id %>-turn-<%= @turn_number %>-events" 
+    class="hidden"
+    phx-hook="UnitEvents"
+    data-unit-id="<%= @unit.id %>"
+  >
     <%= for event <- @unit.events do %>
       <%= ChukinasWeb.DreadnoughtView.unit_event(event) %>
     <% end %>
