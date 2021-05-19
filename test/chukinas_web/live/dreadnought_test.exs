@@ -102,28 +102,6 @@ defmodule ChukinasWeb.DreadnoughtLiveTest do
   # *** *******************************
   # *** TESTS
 
-  # test "disconnected and connected render", %{conn: conn} do
-  #   {:ok, skies_live, disconnected_html} = live(conn, "/skies")
-  #   assert disconnected_html =~ "Skies"
-  #   assert render(skies_live) =~ "Skies"
-  # end
-
-  # test "End Phase btn when all groups are complete", %{conn: conn} do
-  #   {:ok, view, _html} = live(conn, "/skies")
-  #   view
-  #   |> assert_turn(1)
-  #   |> assert_phase("Move")
-  #   |> assert_phase("Return", false)
-  #   |> assert_disabled("end_phase")
-  #   |> delay_entry()
-  #   |> end_phase()
-  #   |> assert_turn(2)
-  # end
-
-  test "Ship 1", %{conn: conn} do
-    {:error, {:live_redirect, %{to: "/dreadnought/welcome"}}} = live(conn, "/dreadnought")
-  end
-
   test "Two ships on screen", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/dreadnought/grid")
     assert has_element?(view, "#unit-1")
@@ -135,12 +113,5 @@ defmodule ChukinasWeb.DreadnoughtLiveTest do
   #     element(view, "#message-button") |> render_click()
   #     assert has_element?(view, "#unit--2")
   #   end
-
-  # test "Select a command", %{conn: conn} do
-  #   {:ok, view, _html} = live(conn, "/dreadnought/play")
-  #   render_click element(view, "#command-2")
-  #   assert has_element?(view, "#command-2[data-selected='true']")
-  #   assert has_element?(view, "#command-3[data-selected='false']")
-  # end
 
 end

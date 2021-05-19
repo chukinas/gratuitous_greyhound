@@ -104,7 +104,6 @@ defmodule CombatAction do
     # TODO rename Unit.update_status
       |> Unit.apply_status(&Unit.Status.take_damage(&1, 10, turn_number))
     pose = muzzle_flash_pose(attacker, turret_id)
-    # TODO rename Builder to Build. It'll read better
     ordnance_hit_angle =
       pose
       |> Pose.flip
@@ -113,12 +112,12 @@ defmodule CombatAction do
       target
       |> Unit.position
       |> Pose.new(ordnance_hit_angle)
-    gunfire = [
+    animations = [
       Animation.Build.large_muzzle_flash(pose, 1),
       # TODO calculate the ordnance flight time instead of guessing
       Animation.Build.ordnance_hit(ordnance_hit_pose, 1.1)
     ]
-    Acc.put(acc, attacker, target, gunfire)
+    Acc.put(acc, attacker, target, animations)
   end
 
   def muzzle_flash_pose(unit, turret_id) do

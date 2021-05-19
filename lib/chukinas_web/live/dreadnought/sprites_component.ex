@@ -43,7 +43,6 @@ defmodule ChukinasWeb.Dreadnought.SpritesComponent do
   def tabs do
     # TODO private?
     [
-      %{title: "Welcome", route: "welcome", current?: false},
       %{title: "Play", route: "play", current?: false},
       %{title: "Sprites", route: "sprites", current?: true},
     ]
