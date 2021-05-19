@@ -16,9 +16,12 @@ function parse_dom_string(string) {
   }
 }
 
+function unitElId(unitId) {
+  return `unit-${unitId}`
+}
+
 function unitEl(unitId) {
-  const unitElId = `unit-${unitId}`
-  return document.getElementById(unitElId)
+  return document.getElementById(unitElId(unitId))
 }
 
 function delayAndDuration(data) {
@@ -31,13 +34,12 @@ function delayAndDuration(data) {
 // --------------------------------------------------------
 // UNIT EVENTS
 
-function partialManeuver(maneuveringEl, pathEl, opts = {}) {
-  opts = {
-    fractionalStartTime: 0,
-    fractionalDuration: 1,
-    ...opts
-  }
-  gsap.to(maneuveringEl, {
+function maneuver(eventEl, unitId) {
+  const targetEl = unitEl(unitId)
+  const data = eventEl.dataset
+  const pathElId = `${unitElId(unitId)}-path-${data.id}`
+  const pathEl = document.getElementById(pathElId)
+  gsap.to(targetEl, {
     motionPath: {
       autoRotate: true,
       alignOrigin: [0.5, 0.5],
@@ -45,8 +47,7 @@ function partialManeuver(maneuveringEl, pathEl, opts = {}) {
       path: pathEl,
     },
     ease: "none",
-    delay: opts.fractionalStartTime * ANIMATIONDURATION,
-    duration: opts.fractionalDuration * ANIMATIONDURATION,
+    ...delayAndDuration(data)
   })
 }
 
@@ -76,6 +77,7 @@ function rotateMount(eventEl, unitId) {
 }
 
 const events = {
+  maneuver: maneuver,
   fadeout: fade,
   mountRotation: rotateMount
 }
@@ -92,21 +94,11 @@ const Unit = {
     const eventsListElId = `unit-${unitId}-events`
     const eventsList = document.getElementById(eventsListElId).children
     for (const eventEl of eventsList) {
-      const fun = events[eventEl.dataset.eventType]
+      const eventType = eventEl.dataset.eventType
+      const fun = events[eventType]
+      if (!fun) throw(`This unit event has no handler yet: ${eventType}`)
       fun(eventEl, unitId)
     }
-  },
-}
-
-const PathPartial = {
-  mounted() {
-    const maneuveringEl = document.getElementById(this.el.dataset.maneuveringElId)
-    const pathEl = this.el
-    const opts = {
-      fractionalStartTime: this.el.dataset.start,
-      fractionalDuration: this.el.dataset.duration,
-    }
-    partialManeuver(maneuveringEl, pathEl, opts)
   },
 }
 
@@ -142,6 +134,5 @@ const Animation = {
 
 export default {
   Unit, 
-  PathPartial, 
   Animation,
 }

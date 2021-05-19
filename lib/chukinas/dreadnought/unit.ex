@@ -1,5 +1,5 @@
-alias Chukinas.Dreadnought.{Unit, Sprite, Turret, Maneuver, MountRotation}
-alias Chukinas.Geometry.{Pose, Path, Rect, Position}
+alias Chukinas.Dreadnought.{Unit, Sprite, Turret, MountRotation}
+alias Chukinas.Geometry.{Pose, Rect, Position}
 alias Chukinas.Util.{Maps, IdList}
 # TODO do I need this dependency?
 alias Chukinas.LinearAlgebra.{HasCsys, CSys, Vector}
@@ -19,8 +19,6 @@ defmodule Unit do
     field :sprite, Sprite.t()
     field :turrets, [Turret.t()]
     field :pose, Pose.t()
-    # TODO should this be handled in .clear()?
-    field :compound_path, Maneuver.t(), default: []
     field :status, Unit.Status.t()
     field :events, [Unit.Event.t()], default: []
   end
@@ -48,28 +46,11 @@ defmodule Unit do
   def put(unit, %Turret{} = turret), do: Maps.put_by_id(unit, :turrets, turret)
   def put(unit, event) do
     true = Unit.Event.event?(event)
-    Maps.push(unit, :events, event)
-  end
-
-  def put_path(%__MODULE__{} = unit, geo_path) do
-  # TODO delete
-    %{unit |
-      pose: Path.get_end_pose(geo_path),
-      compound_path: [Unit.Event.Maneuver.new(geo_path)]
-    }
-  end
-
-  def put_compound_path(unit, compound_path) when is_list(compound_path) do
-  # TODO rename put_maneuver
-    pose =
-      compound_path
-      |> Enum.max(Unit.Event.Maneuver)
-      |> Unit.Event.Maneuver.end_pose
-    %__MODULE__{unit |
-      pose: pose,
-      # TODO rename maneuver
-      compound_path: compound_path
-    }
+    unit = Maps.push(unit, :events, event)
+    case event do
+      %Unit.Event.Maneuver{} -> calc_pose(unit)
+      _ -> unit
+    end
   end
 
   def clear(unit) do
@@ -91,6 +72,10 @@ defmodule Unit do
 
   # *** *******************************
   # *** GETTERS
+
+  def maneuvers(%__MODULE__{events: events}) do
+    Stream.filter(events, &is_struct(&1, Unit.Event.Maneuver))
+  end
 
   def belongs_to?(unit, player_id), do: unit.player_id == player_id
 
@@ -121,6 +106,19 @@ defmodule Unit do
     |> Position.new
   end
 
+
+  # *** *******************************
+  # *** TRANSFORMS
+
+  def calc_pose(unit) do
+    pose =
+      unit
+      |> maneuvers
+      |> Enum.max(Unit.Event.Maneuver)
+      |> Unit.Event.Maneuver.end_pose
+    %__MODULE__{unit | pose: pose}
+  end
+
   # *** *******************************
   # *** IMPLEMENTATIONS
 
@@ -140,7 +138,6 @@ defmodule Unit do
       fields =
         unit
         |> Map.take([
-          :status,
           :events
         ])
         |> Enum.into([])

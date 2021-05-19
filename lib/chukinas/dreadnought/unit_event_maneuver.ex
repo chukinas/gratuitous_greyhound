@@ -16,8 +16,10 @@ defmodule Unit.Event.Maneuver do
   use TypedStruct
 
   typedstruct enforce: true do
+    field :id, integer(), default: 1
     field :geo_path, Path.t()
     field :svg_path, String.t()
+    # TODO rename these to delay and duration
     field :fractional_start_time, number()
     field :fractional_duration, number()
   end
@@ -66,7 +68,7 @@ defmodule Unit.Event.Maneuver do
     def inspect(event, opts) do
       title = "Event(Maneuver)"
       fields = [
-        path: event.geo_path
+        delay: event.fractional_start_time
       ]
       IOP.struct(title, fields)
     end

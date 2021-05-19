@@ -29,25 +29,18 @@ defmodule Maneuver do
 
   def move_to(unit, pos) do
     path = Path.get_connecting_path(unit.pose, pos)
-    Unit.put_path(unit, path)
+    maneuver = Unit.Event.Maneuver.new(path)
+    Unit.put(unit, maneuver)
   end
 
   # *** *******************************
   # *** PRIVATE
 
-  defp put_trapped_maneuver(%Unit{
-    compound_path: [path_partial],
-    pose: pose1
-  } = unit) do
-    %Unit.Event.Maneuver{geo_path: last_round_path} = path_partial
-    geo_path1 =
-      last_round_path
-      |> Path.put_pose(pose1)
-    manuever = [
-      Unit.Event.Maneuver.new(geo_path1),
+  defp put_trapped_maneuver(%Unit{pose: pose} = unit) do
+    events = [
+      Unit.Event.Maneuver.new(Path.new_straight(pose, 300)),
+      Unit.Event.Fade.entire_turn()
     ]
-    unit
-    |> Unit.put_compound_path(manuever)
-    |> Unit.put(Unit.Event.Fade.entire_turn())
+    Unit.put(unit, events)
   end
 end

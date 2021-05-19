@@ -18,6 +18,10 @@ defmodule ChukinasWeb.DreadnoughtView do
     nil
   end
 
+  def unit_event(%Unit.Event.Maneuver{} = event) do
+    render("unit_event_maneuver.html", Map.from_struct(event))
+  end
+
   def unit_event(%MountRotation{} = event) do
     # TODO rename Unit.Event.MountRotation
     render("unit_event_mount.html", Map.from_struct(event))
