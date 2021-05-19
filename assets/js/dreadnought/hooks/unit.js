@@ -36,23 +36,6 @@ function partialManeuver(maneuveringEl, pathEl, opts = {}) {
   })
 }
 
-function scheduleRotation(rotatingEl, endAngle, angleTravel, opts = {}) {
-  opts = {
-    start: 0.5,
-    duration: 0.5,
-    ...opts
-  }
-  gsap.fromTo(rotatingEl, {
-    rotation: opts.startAngle
-  }, {
-    rotation: `${endAngle}_${opts.direction}`,
-    // rotation: '180_cw',
-    ease: "none",
-    delay: opts.start * ANIMATIONDURATION,
-    duration: opts.duration * ANIMATIONDURATION,
-  })
-}
-
 function parse_dom_string(string) {
   switch(string) {
     case "true":
@@ -62,16 +45,22 @@ function parse_dom_string(string) {
   }
 }
 
-function rotationEvent(eventEl, unitId) {
+function rotateMount(eventEl, unitId) {
   const data = eventEl.dataset
   const rotatingElId = `unit-${unitId}-mount-${data.mountId}`
   const rotatingEl = document.getElementById(rotatingElId)
-  console.log({data, rotatingEl, rotatingElId})
-  scheduleRotation(rotatingEl, data.angle, data.travel, data)
+  gsap.fromTo(rotatingEl, {
+    rotation: data.startAngle
+  }, {
+    rotation: `${data.endAngle}_${data.direction}`,
+    ease: "none",
+    delay: data.delay * ANIMATIONDURATION,
+    duration: data.duration * ANIMATIONDURATION,
+  })
 }
 
 const events = {
-  mountRotation: rotationEvent
+  mountRotation: rotateMount
 }
 
 // --------------------------------------------------------
@@ -83,7 +72,6 @@ const Unit = {
   updated() {
     const unitEl = this.el
     const unitId = unitEl.dataset.unitId
-    console.log("unitId", unitId)
     const eventsListElId = `unit-${unitId}-events`
     const eventsList = document.getElementById(eventsListElId).children
     for (const eventEl of eventsList) {
@@ -91,16 +79,6 @@ const Unit = {
       fun(eventEl, unitId)
     }
   },
-}
-
-const RotationPartial = {
-  mounted() {
-    const data = this.el.dataset
-    const rotatingElId = `unit-${data.unitId}-mount-${data.mountId}`
-    const rotatingEl = document.getElementById(rotatingElId)
-    console.log({data, rotatingEl, rotatingElId})
-    scheduleRotation(rotatingEl, data.angle, data.travel, data)
-  }
 }
 
 const PathPartial = {
@@ -126,7 +104,6 @@ const Animation = {
       repeatDelay: 1
     })
     const lastFrameIndex = frames.length - 1
-    console.log(lastFrameIndex)
     frames.forEach((frame, index) => {
       timeline.set(frame, {
         visibility: 'visible',
@@ -150,6 +127,5 @@ const Animation = {
 export default {
   Unit, 
   PathPartial, 
-  RotationPartial,
   Animation,
 }
