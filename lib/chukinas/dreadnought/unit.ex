@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Unit, Sprite, Turret, ManeuverPartial, Maneuver, MountRotation}
+alias Chukinas.Dreadnought.{Unit, Sprite, Turret, Maneuver, MountRotation}
 alias Chukinas.Geometry.{Pose, Path, Rect, Position}
 alias Chukinas.Util.{Maps, IdList}
 # TODO do I need this dependency?
@@ -55,7 +55,7 @@ defmodule Unit do
   # TODO delete
     %{unit |
       pose: Path.get_end_pose(geo_path),
-      compound_path: [ManeuverPartial.new(geo_path)]
+      compound_path: [Unit.Event.Maneuver.new(geo_path)]
     }
   end
 
@@ -63,8 +63,8 @@ defmodule Unit do
   # TODO rename put_maneuver
     pose =
       compound_path
-      |> Enum.max(ManeuverPartial)
-      |> ManeuverPartial.end_pose
+      |> Enum.max(Unit.Event.Maneuver)
+      |> Unit.Event.Maneuver.end_pose
     %__MODULE__{unit |
       pose: pose,
       # TODO rename maneuver

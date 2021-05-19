@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{ManeuverPartial, Maneuver, UnitAction, Unit}
+alias Chukinas.Dreadnought.{Maneuver, UnitAction, Unit}
 alias Chukinas.Geometry.{Path, Position}
 alias Chukinas.Util.IdList
 
@@ -10,7 +10,7 @@ defmodule Maneuver do
   # *** *******************************
   # *** TYPES
 
-  @type t() :: [ManeuverPartial.t()]
+  @type t() :: [Unit.Event.Maneuver.t()]
 
   # *** *******************************
   # *** API
@@ -39,12 +39,12 @@ defmodule Maneuver do
     compound_path: [path_partial],
     pose: pose1
   } = unit) do
-    %ManeuverPartial{geo_path: last_round_path} = path_partial
+    %Unit.Event.Maneuver{geo_path: last_round_path} = path_partial
     geo_path1 =
       last_round_path
       |> Path.put_pose(pose1)
     manuever = [
-      ManeuverPartial.new(geo_path1),
+      Unit.Event.Maneuver.new(geo_path1),
     ]
     unit
     |> Unit.put_compound_path(manuever)

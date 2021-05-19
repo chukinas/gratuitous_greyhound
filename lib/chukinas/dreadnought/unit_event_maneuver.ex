@@ -1,8 +1,8 @@
-alias Chukinas.Dreadnought.{ManeuverPartial}
+alias Chukinas.Dreadnought.{Unit}
 alias Chukinas.Geometry.Path
 alias Chukinas.Svg
 
-defmodule ManeuverPartial do
+defmodule Unit.Event.Maneuver do
   @moduledoc """
   Fully qualifies a portion of a unit's maneuver
 
@@ -54,4 +54,22 @@ defmodule ManeuverPartial do
       a == b -> :eq
     end
   end
+  # *** *******************************
+  # *** IMPLEMENTATIONS
+
+  defimpl Unit.Event do
+    def event?(_event), do: true
+  end
+
+  defimpl Inspect do
+    require IOP
+    def inspect(event, opts) do
+      title = "Event(Maneuver)"
+      fields = [
+        path: event.geo_path
+      ]
+      IOP.struct(title, fields)
+    end
+  end
+
 end

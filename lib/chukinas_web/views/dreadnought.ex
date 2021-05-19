@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{MountRotation, Unit, ManeuverPartial}
+alias Chukinas.Dreadnought.{MountRotation, Unit}
 alias Chukinas.Geometry.{Pose, Position}
 alias Chukinas.LinearAlgebra.CSys.Conversion
 alias Chukinas.LinearAlgebra.Vector
@@ -7,7 +7,7 @@ alias Chukinas.Util.Opts
 defmodule ChukinasWeb.DreadnoughtView do
   use ChukinasWeb, :view
 
-  def maneuver_path(%ManeuverPartial{} = path, unit_id) do
+  def maneuver_path(%Unit.Event.Maneuver{} = path, unit_id) do
     assigns =
       path
       |> Map.from_struct
