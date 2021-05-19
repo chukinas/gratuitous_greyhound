@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{MountRotation}
+alias Chukinas.Dreadnought.{MountRotation, Unit}
 alias Chukinas.Geometry.Trig
 
 defmodule MountRotation do
@@ -44,6 +44,10 @@ defmodule MountRotation do
 
   # *** *******************************
   # *** IMPLEMENTATIONS
+
+  defimpl Unit.Event do
+    def event?(_event), do: true
+  end
 
   defimpl Inspect do
     import Inspect.Algebra

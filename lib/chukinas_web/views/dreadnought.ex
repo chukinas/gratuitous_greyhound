@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.Unit
+alias Chukinas.Dreadnought.{MountRotation, Unit}
 alias Chukinas.Geometry.{Pose, Position}
 alias Chukinas.LinearAlgebra.CSys.Conversion
 alias Chukinas.LinearAlgebra.Vector
@@ -7,8 +7,12 @@ alias Chukinas.Util.Opts
 defmodule ChukinasWeb.DreadnoughtView do
   use ChukinasWeb, :view
 
-  # TODO I don't like this use of 'opts'. The two 'opts' are anything but. They're required.
+  def unit_event(%MountRotation{} = event, _socket) do
+    render("unit_event_mount.html", Map.from_struct(event))
+  end
+
   def sprite(opts \\ []) do
+    # TODO I don't like this use of 'opts'. The two 'opts' are anything but. They're required.
     sprite = Keyword.fetch!(opts, :sprite)
     rect = sprite.rect
     assigns = [

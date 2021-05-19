@@ -62,12 +62,34 @@ function parse_dom_string(string) {
   }
 }
 
+function rotationEvent(eventEl, unitId) {
+  const data = eventEl.dataset
+  const rotatingElId = `unit-${unitId}-mount-${data.mountId}`
+  const rotatingEl = document.getElementById(rotatingElId)
+  console.log({data, rotatingEl, rotatingElId})
+  scheduleRotation(rotatingEl, data.angle, data.travel, data)
+}
+
+const events = {
+  mountRotation: rotationEvent
+}
+
 // --------------------------------------------------------
 // HOOKS
 
 const Unit = {
   mounted() {
-    subscribeNewTurn(() => maneuver_unit(this.el))
+  },
+  updated() {
+    const unitEl = this.el
+    const unitId = unitEl.dataset.unitId
+    console.log("unitId", unitId)
+    const eventsListElId = `unit-${unitId}-events`
+    const eventsList = document.getElementById(eventsListElId).children
+    for (const eventEl of eventsList) {
+      const fun = events[eventEl.dataset.eventType]
+      fun(eventEl, unitId)
+    }
   },
 }
 

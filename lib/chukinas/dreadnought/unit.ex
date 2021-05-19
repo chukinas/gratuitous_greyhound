@@ -18,12 +18,11 @@ defmodule Unit do
     field :player_id, integer(), default: 1
     field :sprite, Sprite.t()
     field :turrets, [Turret.t()]
-    field :mount_actions, [MountRotation.t()], default: []
-    # Varies from game turn to game turn
     field :pose, Pose.t()
     # TODO should this be handled in .clear()?
     field :compound_path, Maneuver.t(), default: []
     field :status, Unit.Status.t()
+    field :events, [Unit.Event.t()], default: []
   end
 
   # *** *******************************
@@ -47,7 +46,10 @@ defmodule Unit do
 
   def put(unit, items) when is_list(items), do: Enum.reduce(items, unit, &put(&2, &1))
   def put(unit, %Turret{} = turret), do: Maps.put_by_id(unit, :turrets, turret)
-  def put(unit, %MountRotation{} = mount_action), do: Maps.put_by_id(unit, :mount_actions, mount_action, :mount_id)
+  def put(unit, event) do
+    true = Unit.Event.event?(event)
+    Maps.push(unit, :events, event)
+  end
 
   def put_path(%__MODULE__{} = unit, geo_path) do
   # TODO delete
@@ -71,7 +73,7 @@ defmodule Unit do
   end
 
   def clear(unit) do
-    %__MODULE__{unit | mount_actions: []}
+    %__MODULE__{unit | events: []}
   end
 
   def rotate_turret(unit, mount_id, angle) do
@@ -139,7 +141,7 @@ defmodule Unit do
         unit
         |> Map.take([
           :status,
-          :selection_box_position
+          :events
         ])
         |> Enum.into([])
       IOP.struct(title, fields)
