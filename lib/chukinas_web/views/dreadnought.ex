@@ -19,7 +19,10 @@ defmodule ChukinasWeb.DreadnoughtView do
   end
 
   def unit_event(%Unit.Event.Maneuver{} = event) do
-    render("unit_event_maneuver.html", Map.from_struct(event))
+    standard_attributes(event, "maneuver") ++ [
+      data_attr("id", event.id),
+    ]
+    |> render_event
   end
 
   def unit_event(%Unit.Event.MountRotation{} = event) do

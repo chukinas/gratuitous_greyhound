@@ -56,6 +56,8 @@ defmodule Unit.Event.Maneuver do
       a == b -> :eq
     end
   end
+
+
   # *** *******************************
   # *** IMPLEMENTATIONS
 
