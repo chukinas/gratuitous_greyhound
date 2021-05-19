@@ -40,6 +40,11 @@ defmodule ChukinasWeb.DreadnoughtView do
     standard_attributes(event, "fadeout") |> render_event
   end
 
+  def unit_event(non_animated_event) do
+    nil = Unit.Event.delay_and_duration(non_animated_event)
+    nil
+  end
+
   defp data_attr(key, value), do: %{name: "data-#{key}", value: value}
 
   defp standard_attributes(event, event_type) do

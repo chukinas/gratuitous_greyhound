@@ -21,6 +21,7 @@ defmodule Unit do
     field :pose, Pose.t()
     field :status, Unit.Status.t()
     field :events, [Unit.Event.t()], default: []
+    field :past_events, [Unit.Event.t()], default: []
   end
 
   # *** *******************************

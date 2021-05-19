@@ -98,11 +98,13 @@ defmodule CombatAction do
       |> Acc.attacker
       |> Unit.rotate_turret(turret_id, turret_angle)
     turn_number = Acc.turn_number(acc)
+    damage_event = Unit.Event.Damage.new(10, turn_number)
     target =
       acc
       |> Acc.target
     # TODO rename Unit.update_status
       |> Unit.apply_status(&Unit.Status.take_damage(&1, 10, turn_number))
+      |> Unit.put(damage_event)
     pose = muzzle_flash_pose(attacker, turret_id)
     ordnance_hit_angle =
       pose
