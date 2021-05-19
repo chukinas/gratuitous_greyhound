@@ -35,6 +35,11 @@ defmodule Unit.Event.Fade do
 
   defimpl Unit.Event do
     def event?(_event), do: true
+    def delay_and_duration(%{delay: delay, duration: duration}) do
+      {delay, duration}
+    end
+    #def delay(%{delay: delay}), do: delay
+    #def duration(%{duration: duration}), do: duration
   end
 
   defimpl Inspect do

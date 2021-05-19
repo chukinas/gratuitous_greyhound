@@ -28,7 +28,23 @@ defmodule ChukinasWeb.DreadnoughtView do
   end
 
   def unit_event(%Unit.Event.Fade{} = event) do
-    render("unit_event_fade.html", Map.from_struct(event))
+    attributes = standard_attributes(event, "fadeout")
+    render("unit_event.html", attributes: attributes)
+  end
+
+  defp data_attr(key, value), do: %{name: "data-#{key}", value: value}
+
+  #defp event_type(value), do: %{name: "data-event-type", value: value}
+  #defp delay_attr(event), do: %{name: "data-delay", value: Unit.Event.delay(event)}
+  #defp duration_attr(event), do: %{name: "data-duration", value: Unit.Event.duration(event)}
+
+  defp standard_attributes(event, event_type) do
+    {delay, duration} = Unit.Event.delay_and_duration(event)
+    [
+      data_attr("event-type", event_type),
+      data_attr("delay", delay),
+      data_attr("duration", duration)
+    ]
   end
 
   def sprite(opts \\ []) do

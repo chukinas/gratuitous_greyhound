@@ -10,4 +10,10 @@ defprotocol Unit.Event do
   """
 
   def event?(event)
+
+  def delay_and_duration(event)
+
+  #def delay(event)
+
+  #def duration(event)
 end
