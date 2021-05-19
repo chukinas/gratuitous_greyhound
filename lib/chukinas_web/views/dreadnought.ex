@@ -7,8 +7,13 @@ alias Chukinas.Util.Opts
 defmodule ChukinasWeb.DreadnoughtView do
   use ChukinasWeb, :view
 
-  def unit_event(%MountRotation{} = event, _socket) do
+  def unit_event(%MountRotation{} = event) do
+    # TODO rename Unit.Event.MountRotation
     render("unit_event_mount.html", Map.from_struct(event))
+  end
+
+  def unit_event(%Unit.Event.Fade{} = event) do
+    render("unit_event_fade.html", Map.from_struct(event))
   end
 
   def sprite(opts \\ []) do

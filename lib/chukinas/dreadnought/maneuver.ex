@@ -44,8 +44,10 @@ defmodule Maneuver do
       last_round_path
       |> Path.put_pose(pose1)
     manuever = [
-      ManeuverPartial.new(geo_path1, fadeout: true),
+      ManeuverPartial.new(geo_path1),
     ]
-    unit |> Unit.put_compound_path(manuever)
+    unit
+    |> Unit.put_compound_path(manuever)
+    |> Unit.put(Unit.Event.Fade.entire_turn())
   end
 end

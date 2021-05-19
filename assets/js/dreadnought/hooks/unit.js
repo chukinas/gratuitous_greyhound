@@ -19,7 +19,6 @@ function partialManeuver(maneuveringEl, pathEl, opts = {}) {
   opts = {
     fractionalStartTime: 0,
     fractionalDuration: 1,
-    fadeout: false,
     ...opts
   }
   gsap.to(maneuveringEl, {
@@ -29,7 +28,6 @@ function partialManeuver(maneuveringEl, pathEl, opts = {}) {
       align: pathEl,
       path: pathEl,
     },
-    opacity: opts.fadeout ? 0 : 1,
     ease: "none",
     delay: opts.fractionalStartTime * ANIMATIONDURATION,
     duration: opts.fractionalDuration * ANIMATIONDURATION,
@@ -43,6 +41,29 @@ function parse_dom_string(string) {
     case "false":
       return false;
   }
+}
+
+function unitEl(unitId) {
+  const unitElId = `unit-${unitId}`
+  return document.getElementById(unitElId)
+}
+
+function delayAndDuration(data) {
+  return {
+    delay: data.delay * ANIMATIONDURATION,
+    duration: data.duration * ANIMATIONDURATION,
+  }
+}
+
+function fade(eventEl, unitId) {
+  const data = eventEl.dataset
+  gsap.fromTo(unitEl(unitId), {
+    opacity: 1
+  }, {
+    opacity: 0,
+    ease: "none",
+    ...delayAndDuration(data)
+  })
 }
 
 function rotateMount(eventEl, unitId) {
@@ -60,6 +81,7 @@ function rotateMount(eventEl, unitId) {
 }
 
 const events = {
+  fadeout: fade,
   mountRotation: rotateMount
 }
 
@@ -88,7 +110,6 @@ const PathPartial = {
     const opts = {
       fractionalStartTime: this.el.dataset.start,
       fractionalDuration: this.el.dataset.duration,
-      fadeout: parse_dom_string(this.el.dataset.fadeout)
     }
     partialManeuver(maneuveringEl, pathEl, opts)
   },

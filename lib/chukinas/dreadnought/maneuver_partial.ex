@@ -20,7 +20,6 @@ defmodule ManeuverPartial do
     field :svg_path, String.t()
     field :fractional_start_time, number()
     field :fractional_duration, number()
-    field :fadeout, boolean()
   end
 
   # *** *******************************
@@ -29,8 +28,7 @@ defmodule ManeuverPartial do
   def new(geo_path, opts \\ []) do
     fields = Chukinas.Util.Opts.merge!(opts,
       fractional_start_time: 0,
-      fractional_duration: 1,
-      fadeout: false
+      fractional_duration: 1
     )
     |> Keyword.merge(
       geo_path: geo_path,
