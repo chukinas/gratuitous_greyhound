@@ -23,7 +23,7 @@
   </div>
 
 
-  <%# Mount Rotations %>
+  <%# Unit Events %>
   <ul id="unit-<%= @unit.id %>-events" class="hidden">
     <%= for event <- @unit.events do %>
       <%= ChukinasWeb.DreadnoughtView.unit_event(event) %>

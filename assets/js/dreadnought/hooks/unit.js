@@ -1,5 +1,3 @@
-import { subscribeNewTurn } from "./turnNumber.js";
-
 // --------------------------------------------------------
 // CONSTANTS
 
@@ -7,32 +5,7 @@ const gsap = window.gsap
 const ANIMATIONDURATION = 2 // second
 
 // --------------------------------------------------------
-// MANEUVER
-
-function maneuver_unit(maneuveringEl) {
-  const path = document.getElementById(`${maneuveringEl.id}-lastPath`)
-  partialManeuver(maneuveringEl, path)
-}
-
-// TODO rename scheduleManeuver
-function partialManeuver(maneuveringEl, pathEl, opts = {}) {
-  opts = {
-    fractionalStartTime: 0,
-    fractionalDuration: 1,
-    ...opts
-  }
-  gsap.to(maneuveringEl, {
-    motionPath: {
-      autoRotate: true,
-      alignOrigin: [0.5, 0.5],
-      align: pathEl,
-      path: pathEl,
-    },
-    ease: "none",
-    delay: opts.fractionalStartTime * ANIMATIONDURATION,
-    duration: opts.fractionalDuration * ANIMATIONDURATION,
-  })
-}
+// HELPERS
 
 function parse_dom_string(string) {
   switch(string) {
@@ -53,6 +26,28 @@ function delayAndDuration(data) {
     delay: data.delay * ANIMATIONDURATION,
     duration: data.duration * ANIMATIONDURATION,
   }
+}
+
+// --------------------------------------------------------
+// UNIT EVENTS
+
+function partialManeuver(maneuveringEl, pathEl, opts = {}) {
+  opts = {
+    fractionalStartTime: 0,
+    fractionalDuration: 1,
+    ...opts
+  }
+  gsap.to(maneuveringEl, {
+    motionPath: {
+      autoRotate: true,
+      alignOrigin: [0.5, 0.5],
+      align: pathEl,
+      path: pathEl,
+    },
+    ease: "none",
+    delay: opts.fractionalStartTime * ANIMATIONDURATION,
+    duration: opts.fractionalDuration * ANIMATIONDURATION,
+  })
 }
 
 function fade(eventEl, unitId) {

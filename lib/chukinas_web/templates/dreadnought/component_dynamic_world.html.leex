@@ -27,19 +27,9 @@
   viewBox="0 0 <%= @grid.width %> <%= @grid.height %> "
 >
   <%= for unit <- @units do %>
-  <%= if unit.status.render? do %>
-  <%= for maneuver_path <- unit.compound_path do %>
-  <path
-    id="unit-<%= unit.id %>-<%= @turn_number %>-1"
-    d="<%= maneuver_path.svg_path %>"
-    phx-hook="PathPartial"
-    data-maneuvering-el-id="unit-<%= unit.id %>"
-    data-start="<%= maneuver_path.fractional_start_time %>"
-    data-duration="<%= maneuver_path.fractional_duration %>"
-    style="stroke-linejoin:round;stroke-width:20;stroke:#fff;fill:none"
-  />
-  <% end %>
-  <% end %>
+    <%= for maneuver_path <- unit.compound_path do %>
+      <%= ChukinasWeb.DreadnoughtView.maneuver_path(maneuver_path, unit.id) %>
+    <% end %>
   <% end %>
 </svg>
 
