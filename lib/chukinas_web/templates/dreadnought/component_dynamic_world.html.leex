@@ -59,7 +59,7 @@
     <%= ChukinasWeb.DreadnoughtView.unit_selection_box(@myself, unit)%>
   <% end %>
   <%= if unit.status.render? do %>
-    <%= ChukinasWeb.DreadnoughtView.render "unit3.html",
+    <%= ChukinasWeb.DreadnoughtView.render "unit.html",
       socket: @socket,
       turn_number: @turn_number,
       unit: unit %>
