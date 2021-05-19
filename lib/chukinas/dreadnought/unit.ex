@@ -63,7 +63,7 @@ defmodule Unit do
     put(unit, [
       # TODO validate angle?
       Turret.put_angle(mount, angle),
-      MountRotation.new(mount.id, angle, travel)
+      Unit.Event.MountRotation.new(mount.id, angle, travel)
     ])
   end
 

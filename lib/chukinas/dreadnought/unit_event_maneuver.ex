@@ -61,6 +61,12 @@ defmodule Unit.Event.Maneuver do
 
   defimpl Unit.Event do
     def event?(_event), do: true
+    def delay_and_duration(%{
+      fractional_start_time: delay,
+      fractional_duration: duration
+    }) do
+      {delay, duration}
+    end
   end
 
   defimpl Inspect do

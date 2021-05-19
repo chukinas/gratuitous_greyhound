@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{MountRotation, Unit}
+alias Chukinas.Dreadnought.{Unit}
 alias Chukinas.Geometry.{Pose, Position}
 alias Chukinas.LinearAlgebra.CSys.Conversion
 alias Chukinas.LinearAlgebra.Vector
@@ -22,14 +22,19 @@ defmodule ChukinasWeb.DreadnoughtView do
     render("unit_event_maneuver.html", Map.from_struct(event))
   end
 
-  def unit_event(%MountRotation{} = event) do
-    # TODO rename Unit.Event.MountRotation
-    render("unit_event_mount.html", Map.from_struct(event))
+  def unit_event(%Unit.Event.MountRotation{} = event) do
+    # TODO move all this event stuff to separate view?
+    standard_attributes(event, "mountRotation") ++ [
+      data_attr("mount-id", event.mount_id),
+      data_attr("direction", event.angle_direction),
+      data_attr("start-angle", event.angle_start),
+      data_attr("end-angle", event.angle_end)
+    ]
+    |> render_event
   end
 
   def unit_event(%Unit.Event.Fade{} = event) do
-    attributes = standard_attributes(event, "fadeout")
-    render("unit_event.html", attributes: attributes)
+    standard_attributes(event, "fadeout") |> render_event
   end
 
   defp data_attr(key, value), do: %{name: "data-#{key}", value: value}
@@ -45,6 +50,9 @@ defmodule ChukinasWeb.DreadnoughtView do
       data_attr("delay", delay),
       data_attr("duration", duration)
     ]
+  end
+  def render_event(attributes) do
+    render("_unit_event.html", attributes: attributes)
   end
 
   def sprite(opts \\ []) do
