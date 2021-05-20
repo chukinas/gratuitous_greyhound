@@ -75,11 +75,17 @@ defmodule Unit do
   # *** GETTERS
 
   def stashable_events(%__MODULE__{events: events}) do
-    Stream.filter(events, &Unit.Event.stashable?/1)
+    Enum.filter(events, &Unit.Event.stashable?/1)
+  end
+
+  def damage(%__MODULE__{events: events, past_events: past_events}) do
+    events
+    |> Stream.concat(past_events)
+    |> Enum.filter(&is_struct(&1, Unit.Event.Damage))
   end
 
   def maneuvers(%__MODULE__{events: events}) do
-    Stream.filter(events, &is_struct(&1, Unit.Event.Maneuver))
+    Enum.filter(events, &is_struct(&1, Unit.Event.Maneuver))
   end
 
   def belongs_to?(unit, player_id), do: unit.player_id == player_id
@@ -158,9 +164,9 @@ defmodule Unit do
           :past_events
         ])
         |> Enum.into([])
-        |> Keyword.merge(
-          maneuvers: Unit.maneuvers(unit) |> Enum.to_list
-        )
+        #|> Keyword.merge(
+        #  maneuvers: Unit.maneuvers(unit) |> Enum.to_list
+        #)
       IOP.struct(title, fields)
     end
   end

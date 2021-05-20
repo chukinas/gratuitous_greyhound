@@ -1,6 +1,7 @@
 alias Chukinas.Dreadnought.{Unit}
+alias Unit.Event.Damage
 
-defmodule Unit.Event.Damage do
+defmodule Damage do
   @moduledoc """
   Describes a unit taking damage
   """
@@ -28,6 +29,11 @@ defmodule Unit.Event.Damage do
   end
 
   # *** *******************************
+  # *** GETTERS
+
+  def amount(%__MODULE__{amount: damage}), do: damage
+
+  # *** *******************************
   # *** IMPLEMENTATIONS
 
   defimpl Unit.Event do
@@ -48,4 +54,13 @@ defmodule Unit.Event.Damage do
     end
   end
 
+end
+
+
+defmodule Damage.Enum do
+  def sum(events) do
+    events
+    |> Stream.map(&Damage.amount/1)
+    |> Enum.sum
+  end
 end

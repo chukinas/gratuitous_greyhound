@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Unit}
-alias Chukinas.Util.{Maps}
+alias Unit.Event.Damage
 
 defmodule Unit.Status do
   @moduledoc """
@@ -9,15 +9,10 @@ defmodule Unit.Status do
   # *** *******************************
   # *** TYPES
 
-  @type damage :: {turn_number :: integer(), damage_points :: integer()}
-
   use TypedStruct
   typedstruct enforce: true do
-    # TODO rename max_damage_points
-    field :health, damage()
-    # TODO rename :turn_lost
+    field :health, integer()
     field :final_turn, integer(), enforce: false
-    field :damage, [damage()], default: []
     field :render?, boolean(), default: true
     field :active?, boolean(), default: true
   end
@@ -34,10 +29,6 @@ defmodule Unit.Status do
 
   def out_of_action(unit_status, turn_number) do
     %__MODULE__{unit_status | final_turn: turn_number}
-  end
-
-  def take_damage(unit_status, damage, turn_number) do
-    Maps.push(unit_status, :damage, {turn_number, damage})
   end
 
   def calc_active(unit_status, turn_number) do
@@ -67,20 +58,19 @@ defmodule Unit.Status do
   # *** *******************************
   # *** GETTERS
 
-  def total_damage(%{damage: damages}) do
-    damages
-    |> Stream.map(fn {_turn, damage} -> damage end)
-    |> Enum.sum
-  end
-  def remaining_health(%{health: health} = unit) do
-    (health - total_damage(unit))
-    |> max(0)
-  end
-  def percent_remaining_health(%{health: health} = unit) do
-    (1 - total_damage(unit) / health)
-    |> max(0)
-  end
   def active?(%__MODULE__{active?: active?}), do: active?
+
+  # *** *******************************
+  # *** FUNCTIONS
+
+  def remaining_health(%__MODULE__{health: health}, damage_events) do
+    (health - Damage.Enum.sum(damage_events))
+    |> max(0)
+  end
+  def percent_remaining_health(%__MODULE__{health: health}, damage_events) do
+    (1 - Damage.Enum.sum(damage_events) / health)
+    |> max(0)
+  end
 
   # *** *******************************
   # *** IMPLEMENTATIONS
