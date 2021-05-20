@@ -1,4 +1,5 @@
 alias Chukinas.Dreadnought.{Unit}
+
 alias Unit.Event.Damage
 
 defmodule Unit.Status do
@@ -48,25 +49,15 @@ defmodule Unit.Status do
   end
 
   # *** *******************************
-  # *** CALC
-
-  def maybe_succumb_to_damage(unit_status) do
-    # TODO implement
-    unit_status
-  end
-
-  # *** *******************************
   # *** GETTERS
+
+  def starting_health(%__MODULE__{health: health}), do: health
 
   def active?(%__MODULE__{active?: active?}), do: active?
 
   # *** *******************************
   # *** FUNCTIONS
 
-  def remaining_health(%__MODULE__{health: health}, damage_events) do
-    (health - Damage.Enum.sum(damage_events))
-    |> max(0)
-  end
   def percent_remaining_health(%__MODULE__{health: health}, damage_events) do
     (1 - Damage.Enum.sum(damage_events) / health)
     |> max(0)

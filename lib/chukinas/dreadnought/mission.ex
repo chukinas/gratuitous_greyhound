@@ -128,7 +128,7 @@ defmodule Mission do
     |> resolve_island_collisions
     |> calc_unit_render
     |> calc_gunnery
-    |> resolve_damage_effects
+    |> check_for_destroyed_ships
     # Part 3: Prepare for this turn's planning
     |> calc_unit_active
     |> clear_player_actions
@@ -178,9 +178,13 @@ defmodule Mission do
     Maps.map_each(mission, :units, &Unit.apply_status(&1, fun))
   end
 
-  defp resolve_damage_effects(mission) do
-    fun = &Unit.Status.maybe_succumb_to_damage(&1)
-    Maps.map_each(mission, :units, &Unit.apply_status(&1, fun))
+  defp check_for_destroyed_ships(mission) do
+    units =
+      mission
+      |> units
+      |> Unit.Enum.active_units
+      |> Enum.map(&Unit.maybe_destroyed/1)
+    put(mission, units)
   end
 
   # *** *******************************

@@ -1,9 +1,9 @@
 alias Chukinas.Dreadnought.{Unit}
-alias Unit.Event.Damage
+alias Unit.Event.Destroyed
 
-defmodule Damage do
+defmodule Destroyed do
   @moduledoc """
-  Describes a unit taking damage
+  Records the destruction of a unit
   """
 
   # *** *******************************
@@ -12,31 +12,36 @@ defmodule Damage do
   use TypedStruct
 
   typedstruct enforce: true do
-    #field :duration, number()
+    field :cause, :gunfire | :leaving
     field :turn, integer()
     field :delay, number()
-    field :amount, number()
   end
 
   # *** *******************************
   # *** NEW
 
-  def new(amount, turn, delay) do
+  defp new(cause, turn, delay) do
     %__MODULE__{
+      cause: cause,
       turn: turn,
-      delay: delay,
-      amount: amount
+      delay: delay
     }
+  end
+
+  def by_gunfire(turn_number, delay) do
+    new(:gunfire, turn_number, delay)
+  end
+
+  def by_leaving_arena(turn_number) do
+    new(:leaving, turn_number, 0)
+  end
+
+  def by_running_aground(turn_number, delay) do
+    new(:aground, turn_number, delay)
   end
 
   # *** *******************************
   # *** GETTERS
-
-  def amount(%__MODULE__{amount: damage}), do: damage
-
-  def turn_and_delay(%__MODULE__{} = event) do
-    {event.turn, event.delay}
-  end
 
   # *** *******************************
   # *** IMPLEMENTATIONS
@@ -50,10 +55,10 @@ defmodule Damage do
   defimpl Inspect do
     require IOP
     def inspect(event, opts) do
-      title = "Event(Damage)"
+      title = "Event(Destroyed)"
       fields = [
-        turn: event.turn,
-        amount: event.amount
+        cause: event.cause,
+        turn: event.turn
       ]
       IOP.struct(title, fields)
     end

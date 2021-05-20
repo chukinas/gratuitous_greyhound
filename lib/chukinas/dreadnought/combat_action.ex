@@ -98,7 +98,8 @@ defmodule CombatAction do
       |> Acc.attacker
       |> Unit.rotate_turret(turret_id, turret_angle)
     turn_number = Acc.turn_number(acc)
-    damage_event = Unit.Event.Damage.new(10, turn_number)
+    {delay_discharge, delay_hit} = {1, 1.1}
+    damage_event = Unit.Event.Damage.new(10, turn_number, delay_hit)
     target =
       acc
       |> Acc.target
@@ -113,9 +114,9 @@ defmodule CombatAction do
       |> Unit.position
       |> Pose.new(ordnance_hit_angle)
     animations = [
-      Animation.Build.large_muzzle_flash(pose, 1),
+      Animation.Build.large_muzzle_flash(pose, delay_discharge),
       # TODO calculate the ordnance flight time instead of guessing
-      Animation.Build.ordnance_hit(ordnance_hit_pose, 1.1)
+      Animation.Build.ordnance_hit(ordnance_hit_pose, delay_hit)
     ]
     Acc.put(acc, attacker, target, animations)
   end

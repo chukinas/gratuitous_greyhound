@@ -23,6 +23,7 @@ defmodule Maneuver do
       :exit_or_run_aground ->
         unit
         |> put_trapped_maneuver
+        |> Unit.put(Unit.Event.Destroyed.by_leaving_arena(turn_number))
         |> Unit.apply_status(&Unit.Status.out_of_action(&1, turn_number))
     end
   end
@@ -38,8 +39,7 @@ defmodule Maneuver do
 
   defp put_trapped_maneuver(%Unit{pose: pose} = unit) do
     events = [
-      Unit.Event.Maneuver.new(Path.new_straight(pose, 300)),
-      Unit.Event.Fade.entire_turn()
+      Unit.Event.Maneuver.new(Path.new_straight(pose, 300))
     ]
     Unit.put(unit, events)
   end

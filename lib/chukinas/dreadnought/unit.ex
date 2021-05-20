@@ -141,6 +141,26 @@ defmodule Unit do
     %__MODULE__{unit | pose: pose}
   end
 
+  def maybe_destroyed(unit) do
+    alias Unit.Event.Damage
+    alias Unit.Event.Damage.Enum, as: Damages
+    damages = damage(unit)
+    starting_health = Unit.Status.starting_health(unit.status)
+    still_alive? =
+      damages
+      |> Damages.has_remaining_health?(starting_health)
+    if still_alive? do
+      unit
+    else
+      {turn, delay} =
+        damages
+        |> Stream.map(&Damage.turn_and_delay/1)
+        |> Enum.max
+      event = Unit.Event.Destroyed.by_gunfire(turn, delay + 0.2)
+      put(unit, event)
+    end
+  end
+
   # *** *******************************
   # *** IMPLEMENTATIONS
 
