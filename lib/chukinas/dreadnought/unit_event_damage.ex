@@ -20,7 +20,7 @@ defmodule Unit.Event.Damage do
   # *** *******************************
   # *** NEW
 
-  def new(turn, amount) do
+  def new(amount, turn) do
     %__MODULE__{
       turn: turn,
       amount: amount
@@ -33,6 +33,7 @@ defmodule Unit.Event.Damage do
   defimpl Unit.Event do
     def event?(_event), do: true
     def delay_and_duration(_), do: nil
+    def stashable?(_), do: true
   end
 
   defimpl Inspect do

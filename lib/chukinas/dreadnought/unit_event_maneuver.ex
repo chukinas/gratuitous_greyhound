@@ -69,6 +69,7 @@ defmodule Unit.Event.Maneuver do
     }) do
       {delay, duration}
     end
+    def stashable?(_event), do: false
   end
 
   defimpl Inspect do

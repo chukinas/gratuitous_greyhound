@@ -38,7 +38,7 @@ defmodule Unit.Event.Fade do
     def delay_and_duration(%{delay: delay, duration: duration}) do
       {delay, duration}
     end
-    #def delay(%{delay: delay}), do: delay
+    def stashable?(_), do: false
     #def duration(%{duration: duration}), do: duration
   end
 

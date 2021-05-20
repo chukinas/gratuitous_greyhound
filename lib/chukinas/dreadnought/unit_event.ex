@@ -13,7 +13,7 @@ defprotocol Unit.Event do
 
   def delay_and_duration(event)
 
-  #def delay(event)
+  def stashable?(event)
 
   #def duration(event)
 end

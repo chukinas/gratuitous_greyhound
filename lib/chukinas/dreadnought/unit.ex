@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Unit, Sprite, Turret, MountRotation}
+alias Chukinas.Dreadnought.{Unit, Sprite, Turret}
 alias Chukinas.Geometry.{Pose, Rect, Position}
 alias Chukinas.Util.{Maps, IdList}
 # TODO do I need this dependency?
@@ -43,6 +43,10 @@ defmodule Unit do
   # *** *******************************
   # *** SETTERS
 
+  def push_past_events(unit, events) do
+    Maps.push(unit, :past_events, events)
+  end
+
   def put(unit, items) when is_list(items), do: Enum.reduce(items, unit, &put(&2, &1))
   def put(unit, %Turret{} = turret), do: Maps.put_by_id(unit, :turrets, turret)
   def put(unit, event) do
@@ -52,10 +56,6 @@ defmodule Unit do
       %Unit.Event.Maneuver{} -> calc_pose(unit)
       _ -> unit
     end
-  end
-
-  def clear(unit) do
-    %__MODULE__{unit | events: []}
   end
 
   def rotate_turret(unit, mount_id, angle) do
@@ -73,6 +73,10 @@ defmodule Unit do
 
   # *** *******************************
   # *** GETTERS
+
+  def stashable_events(%__MODULE__{events: events}) do
+    Stream.filter(events, &Unit.Event.stashable?/1)
+  end
 
   def maneuvers(%__MODULE__{events: events}) do
     Stream.filter(events, &is_struct(&1, Unit.Event.Maneuver))
@@ -111,6 +115,17 @@ defmodule Unit do
   # *** *******************************
   # *** TRANSFORMS
 
+  def clear(unit) do
+    # TODO rename reset_for_new_turn or something like that
+    new_past_events =
+      unit
+      |> stashable_events
+      |> Enum.to_list
+    unit
+    |> push_past_events(new_past_events)
+    |> Map.put(:events, [])
+  end
+
   def calc_pose(unit) do
     pose =
       unit
@@ -139,9 +154,13 @@ defmodule Unit do
       fields =
         unit
         |> Map.take([
-          :events
+          :events,
+          :past_events
         ])
         |> Enum.into([])
+        |> Keyword.merge(
+          maneuvers: Unit.maneuvers(unit) |> Enum.to_list
+        )
       IOP.struct(title, fields)
     end
   end

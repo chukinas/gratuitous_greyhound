@@ -50,6 +50,7 @@ defmodule Unit.Event.MountRotation do
     def delay_and_duration(%{time_start: delay, time_duration: duration}) do
       {delay, duration}
     end
+    def stashable?(_event), do: false
   end
 
   defimpl Inspect do
