@@ -23,16 +23,12 @@
 
           <div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
             <%= for tab <- @tabs do %>
-            <a
-              href="/dreadnought/<%= tab.live_action %>" 
-              class="
-              <%= if tab.current?, do: "border-yellow-700 text-yellow-900 font-bold", else: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" %>
-                inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium
-              "
-              aria-current="page"
-              >
-                <%= tab.title %>
-            </a>
+              <%= live_patch tab.title,
+                    class: "inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" <> 
+                      if(tab.current?, 
+                        do: "border-yellow-700 text-yellow-900 font-bold", 
+                        else: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"),
+                    to: Routes.dreadnought_path(@socket, tab.live_action) %>
             <% end %>
           </div>
 

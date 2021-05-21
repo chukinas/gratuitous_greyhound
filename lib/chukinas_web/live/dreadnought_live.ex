@@ -13,9 +13,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    socket =
-      socket
-      |> standard_assigns
     {:ok, socket, layout: {ChukinasWeb.LayoutView, "dreadnought_menu.html"}}
   end
 
@@ -25,6 +22,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
       nil -> redirect(socket, to: "/dreadnought/play")
         _ -> socket
     end
+    |> standard_assigns
     {:noreply, socket}
   end
 
