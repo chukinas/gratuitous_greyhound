@@ -103,9 +103,10 @@
     <main>
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
+        <%= if @live_action == :gallery do %>
         <%= live_component @socket,
             ChukinasWeb.Dreadnought.SpritesComponent, id: :sprites_component_thing %>
-
+        <% end %>
       </div>
     </main>
   </div>

@@ -1,14 +1,11 @@
-# TODO rename
-alias Chukinas.Dreadnought.{Spritesheet}
-
 defmodule ChukinasWeb.DreadnoughtLive do
   use ChukinasWeb, :live_view
   alias ChukinasWeb.DreadnoughtView
 
-  @impl true
-  def render(assigns) do
-    DreadnoughtView.render("layout_menu.html", assigns)
-  end
+  #@impl true
+  #def render(assigns) do
+  #  DreadnoughtView.render("layout_menu.html", assigns)
+  #end
 
   def render_template(template, assigns) do
     DreadnoughtView.render(template, assigns)
@@ -16,15 +13,8 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    sprites =
-      ~w(ship_large ship_small turret1 turret2 shell1 shell2 muzzle_flash)
-      |> Enum.map(&Spritesheet.red/1)
     socket =
       socket
-      |> assign(
-        show_markers?: true,
-        sprites: sprites
-      )
       |> standard_assigns
     {:ok, socket}
   end
