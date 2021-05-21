@@ -31,4 +31,11 @@ defmodule ChukinasWeb.Plugs.SanitizeRoomName do
     |> String.downcase()
     |> String.replace(~r/[^\w-]+/u, "-")
   end
+
+  def unslugify(slug) do
+    slug
+    |> String.split("-")
+    |> Enum.map(&String.capitalize/1)
+    |> Enum.join(" ")
+  end
 end

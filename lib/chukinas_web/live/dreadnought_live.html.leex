@@ -1,8 +1,8 @@
 <%= case @live_action do %>
-  <%= :gallery -> %>
+  <% :gallery -> %>
     <%= live_component @socket, ChukinasWeb.Dreadnought.GalleryComponent, id: :gallery %>
-  <%= :play -> %>
-    <%= render_template("play.html", room: @room) %>
+  <% :play -> %>
+    <%= render_template("play.html", room: @room, room_name: @room_name) %>
 <% end %>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>

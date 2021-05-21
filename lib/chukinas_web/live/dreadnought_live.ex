@@ -23,9 +23,9 @@ defmodule ChukinasWeb.DreadnoughtLive do
         _ -> socket
     end
     socket = case {params, socket.assigns} do
-      {%{"room" => room}, _} -> assign(socket, room: room)
+      {%{"room" => room}, _} -> assign(socket, room: room, room_name: ChukinasWeb.Plugs.SanitizeRoomName.unslugify(room))
       {_, %{room: _room}} -> socket
-      _ -> assign(socket, room: nil)
+      _ -> assign(socket, room: nil, room_name: nil)
     end
     |> IOP.inspect("dread live params")
     |> standard_assigns
