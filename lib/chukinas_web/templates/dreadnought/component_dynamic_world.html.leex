@@ -27,20 +27,9 @@
   viewBox="0 0 <%= @grid.width %> <%= @grid.height %> "
 >
   <%= for unit <- @units do %>
-  <%= if unit.render? do %>
-  <%= for maneuver_path <- unit.compound_path do %>
-  <path
-    id="unit-<%= unit.id %>-<%= @turn_number %>-1"
-    d="<%= maneuver_path.svg_path %>"
-    phx-hook="PartialPath"
-    data-maneuvering-el-id="unit-<%= unit.id %>"
-    data-start="<%= maneuver_path.fractional_start_time %>"
-    data-duration="<%= maneuver_path.fractional_duration %>"
-    data-fadeout="<%= maneuver_path.fadeout %>"
-    style="stroke-linejoin:round;stroke-width:20;stroke:#fff;fill:none"
-  />
-  <% end %>
-  <% end %>
+    <%= for maybe_maneuver_path <- unit.events do %>
+      <%= ChukinasWeb.DreadnoughtView.maneuver_path(maybe_maneuver_path, unit.id) %>
+    <% end %>
   <% end %>
 </svg>
 
@@ -56,12 +45,10 @@
 <%# Units and their selection boxes %>
 <%= for unit <- @units do %>
   <%= if unit.id in @player_actions.current_target_unit_ids do %>
-    <%= ChukinasWeb.DreadnoughtView.render "unit_selection_box.html",
-      myself: @myself,
-      unit: unit %>
+    <%= ChukinasWeb.DreadnoughtView.unit_selection_box(@myself, unit)%>
   <% end %>
-  <%= if unit.render? do %>
-    <%= ChukinasWeb.DreadnoughtView.render "unit3.html",
+  <%= if unit.status.render? do %>
+    <%= ChukinasWeb.DreadnoughtView.render "unit.html",
       socket: @socket,
       turn_number: @turn_number,
       unit: unit %>
@@ -70,10 +57,11 @@
 
 
 <%# Gunfire %>
-<%= for gunfire <- @gunfire do %>
-  <%= ChukinasWeb.DreadnoughtView.render "gunfire.html",
+<%# TODO rename Animations %>
+<%= for animation <- @gunfire do %>
+  <%= ChukinasWeb.DreadnoughtView.render "animation.html",
     socket: @socket,
-    gunfire: gunfire %>
+    animation: animation %>
 <% end %>
 
 

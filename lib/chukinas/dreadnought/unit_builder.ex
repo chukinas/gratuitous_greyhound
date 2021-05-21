@@ -30,7 +30,7 @@ defmodule Unit.Builder do
     Unit.new(id, fields)
   end
 
-  def blue_dreadnought(id, opts \\ []) do
+  def blue_dreadnought(id, name, opts \\ []) do
     sprite = Spritesheet.blue("hull_blue_large")
     turrets = build_turrets(sprite, {:blue, "turret_blue_1"}, [
       {1, 0},
@@ -41,7 +41,8 @@ defmodule Unit.Builder do
       [
         health: 150,
         sprite: sprite,
-        turrets: turrets
+        turrets: turrets,
+        name: name
       ]
       |> Keyword.merge(opts)
     Unit.new(id, fields)

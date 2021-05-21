@@ -19,8 +19,7 @@ defmodule ChukinasWeb.Router do
     get "/", PageController, :index
     get "/minis", PageController, :minis
     get "/music", PageController, :music
-    live "/dreadnought", DreadnoughtLive
-    live "/dreadnought/welcome", DreadnoughtLive, :welcome
+    live "/dreadnought", DreadnoughtLive, :play
     live "/dreadnought/disclaimer", DreadnoughtLive, :disclaimer
     live "/dreadnought/play", DreadnoughtLive, :play
     live "/dreadnought/gameover", DreadnoughtLive, :game_over

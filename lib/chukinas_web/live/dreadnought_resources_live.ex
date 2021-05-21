@@ -37,7 +37,6 @@ defmodule ChukinasWeb.DreadnoughtResourcesLive do
 
   def tabs do
     [
-      %{title: "Welcome", route: "welcome", current?: false},
       %{title: "Play", route: "play", current?: false},
       %{title: "Sprites", route: "sprites", current?: true},
     ]

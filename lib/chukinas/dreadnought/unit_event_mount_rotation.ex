@@ -1,7 +1,8 @@
-alias Chukinas.Dreadnought.{MountRotation}
+alias Chukinas.Dreadnought.{Unit}
 alias Chukinas.Geometry.Trig
+alias Unit.Event, as: Ev
 
-defmodule MountRotation do
+defmodule Ev.MountRotation do
   @moduledoc """
   Fully qualifies a portion of a unit's mounts's action
   """
@@ -45,20 +46,22 @@ defmodule MountRotation do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
+  defimpl Ev do
+    def event?(_event), do: true
+    def delay_and_duration(%{time_start: delay, time_duration: duration}) do
+      {delay, duration}
+    end
+    def stashable?(_event), do: false
+  end
+
   defimpl Inspect do
-    import Inspect.Algebra
-    def inspect(action, opts) do
-      col = fn string -> color(string, :cust_struct, opts) end
-      keywords = [
-        time: {action.time_start, action.time_duration},
-        angle_start: action.angle_start,
-        angle_end: action.angle_end,
-        angle_direction: action.angle_direction,
+    require IOP
+    def inspect(event, opts) do
+      title = "Event(MountRotation)"
+      fields = [
+        time: {event.time_start, event.time_duration},
       ]
-      concat [
-        col.("$Mount-#{action.mount_id}-Action"),
-        to_doc(keywords, opts)
-      ]
+      IOP.struct(title, fields)
     end
   end
 end

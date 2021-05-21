@@ -271,6 +271,26 @@
        y1="16.733143"
        x2="32.018116"
        y2="16.733143" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#origin_red"
+       id="linearGradient961"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.5,0,0,0.5,110.05485,-77.897674)"
+       x1="20.562542"
+       y1="16.733143"
+       x2="32.018116"
+       y2="16.733143" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#origin_red"
+       id="linearGradient963"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.5,0,0,0.5,97.477674,-77.212379)"
+       x1="20.562542"
+       y1="16.733143"
+       x2="32.018116"
+       y2="16.733143" />
   </defs>
   <sodipodi:namedview
      pagecolor="#ffffff"
@@ -282,16 +302,16 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="2560"
-     inkscape:window-height="1376"
+     inkscape:window-height="1352"
      id="namedview4"
      showgrid="false"
-     inkscape:zoom="15.219208"
-     inkscape:cx="120.00021"
-     inkscape:cy="57.923091"
+     inkscape:zoom="5.3808026"
+     inkscape:cx="35.835537"
+     inkscape:cy="58.385962"
      inkscape:window-x="2560"
-     inkscape:window-y="27"
+     inkscape:window-y="51"
      inkscape:window-maximized="0"
-     inkscape:current-layer="g1074"
+     inkscape:current-layer="g1062"
      inkscape:document-rotation="0"
      showguides="true"
      inkscape:guide-bbox="true"
@@ -311,13 +331,13 @@
       <image
          sodipodi:absref="/home/jc/projects/chukinas/assets/static/images/spritesheets/red.png"
          xlink:href="red.png"
-         width="122"
-         height="57"
-         preserveAspectRatio="none"
-         style="image-rendering:optimizeSpeed"
-         id="image1201"
+         y="0"
          x="0"
-         y="0" />
+         id="image1201"
+         style="image-rendering:optimizeSpeed"
+         preserveAspectRatio="none"
+         height="57"
+         width="122" />
     </g>
     <g
        inkscape:groupmode="layer"
@@ -502,13 +522,13 @@
       <image
          sodipodi:absref="/home/jc/projects/chukinas/assets/static/images/spritesheets/test.png"
          xlink:href="test.png"
-         y="13.903466"
-         x="41.94978"
-         id="image1034"
-         style="image-rendering:optimizeSpeed"
-         preserveAspectRatio="none"
+         width="33.333332"
          height="33.333332"
-         width="33.333332" />
+         preserveAspectRatio="none"
+         style="image-rendering:optimizeSpeed"
+         id="image1034"
+         x="41.94978"
+         y="13.903466" />
     </g>
     <g
        inkscape:groupmode="layer"
@@ -567,13 +587,13 @@
       <image
          sodipodi:absref="/home/jc/projects/chukinas/assets/static/images/spritesheets/blue.png"
          xlink:href="blue.png"
-         width="189.15617"
-         height="103.65759"
-         preserveAspectRatio="none"
-         style="opacity:1;image-rendering:optimizeSpeed"
-         id="image965"
+         y="0"
          x="0"
-         y="0" />
+         id="image965"
+         style="opacity:1;image-rendering:optimizeSpeed"
+         preserveAspectRatio="none"
+         height="103.65759"
+         width="189.15617" />
     </g>
     <g
        inkscape:groupmode="layer"
@@ -620,7 +640,8 @@
        inkscape:groupmode="layer"
        id="g1074"
        inkscape:label="hull_blue_merchant"
-       style="display:inline">
+       style="display:none"
+       sodipodi:insensitive="true">
       <path
          style="display:inline;fill:url(#main_green);fill-opacity:1;stroke:none;stroke-width:0.182973px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          d="m 114.29922,67.094964 -9.10191,-5.427185 0.44802,-5.790609 8.38537,-4.056278 22.32989,-0.800051 20.56831,1.430711 6.39525,2.651241 2.63107,5.887231 -3.24351,3.017931 -7.23254,2.866386 z"
@@ -854,8 +875,7 @@
        inkscape:groupmode="layer"
        id="g1056"
        inkscape:label="muzzle_flash_B"
-       style="display:none"
-       sodipodi:insensitive="true">
+       style="display:inline">
       <path
          style="display:inline;fill:url(#main_green);fill-opacity:1;stroke:none;stroke-width:0.182973px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          d="m 47.759052,48.279985 -6.993125,-0.537551 -1.570991,2.066998 -6.731305,-0.625918 -0.340352,2.730711 -1.963335,2.847548 -5.171276,0.612993 -7.683244,-3.626051 -0.250805,-3.618366 4.957042,-5.172195 -1.724831,-6.539764 -5.585178,-6.545998 3.428099,-4.158891 6.164181,-3.167819 4.918586,1.347859 0.544346,2.882514 4.392719,-1.205291 4.934656,2.819524 5.742182,-0.106962 4.694752,3.362118 2.745108,1.448459 -0.770914,4.211969 2.075791,4.256562 -1.271177,4.526914 z"
@@ -863,10 +883,10 @@
          inkscape:label="main"
          sodipodi:nodetypes="ccccccccccccccccccccccccc" />
       <circle
-         style="display:inline;fill:url(#linearGradient1050);fill-opacity:1;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;paint-order:fill markers stroke"
+         style="display:inline;fill:url(#linearGradient961);fill-opacity:1;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;paint-order:fill markers stroke"
          id="circle1054"
-         cx="7.3398285"
-         cy="39.360878"
+         cx="0.79583931"
+         cy="38.422756"
          r="2.8638935"
          inkscape:label="origin" />
     </g>
@@ -874,8 +894,7 @@
        inkscape:groupmode="layer"
        id="g1062"
        inkscape:label="muzzle_flash_C"
-       style="display:none"
-       sodipodi:insensitive="true">
+       style="display:inline">
       <path
          style="display:inline;fill:url(#main_green);fill-opacity:1;stroke:none;stroke-width:0.182973px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          d="m 180.58274,30.432593 -4.0338,-1.421605 -0.40753,4.709724 -2.43265,1.670769 -4.32624,-0.65909 -7.92914,-0.632773 -0.48752,-3.736462 3.55496,-3.850588 2.99615,-0.806986 -1.95486,-5.151077 -3.06994,-1.560306 0.7922,-2.284093 3.38774,-1.382454 -2.80696,-2.819216 -4.00842,-0.337279 -1.00945,-2.573249 7.27483,-4.9993537 3.44414,-0.1055644 1.68332,1.9046675 -0.0444,3.2492067 2.30371,2.0764519 1.14805,3.174675 1.05327,-3.194773 3.51691,-1.080611 5.74218,-0.106962 2.1046,2.657846 0.2782,4.827793 1.56238,5.836343 0.0437,3.846527 -2.6218,2.519628 z"
@@ -883,10 +902,10 @@
          inkscape:label="main"
          sodipodi:nodetypes="ccccccccccccccccccccccccccccccc" />
       <circle
-         style="display:inline;fill:url(#linearGradient1050);fill-opacity:1;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;paint-order:fill markers stroke"
+         style="display:inline;fill:url(#linearGradient963);fill-opacity:1;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;paint-order:fill markers stroke"
          id="circle1060"
-         cx="145.80864"
-         cy="20.759523"
+         cx="126.68748"
+         cy="20.506695"
          r="2.8638935"
          inkscape:label="origin" />
     </g>

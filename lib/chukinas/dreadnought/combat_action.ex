@@ -1,11 +1,15 @@
-alias Chukinas.Dreadnought.{Unit, CombatAction, Turret, Gunfire}
+alias Chukinas.Dreadnought.{Unit, CombatAction, Turret, Animation}
 alias Chukinas.Geometry.{Collide, Straight, Pose}
 alias Chukinas.Util.IdList
 alias Chukinas.LinearAlgebra.{Vector, CSys}
+alias Unit.Event, as: Ev
 
 defmodule CombatAction do
 
   alias CombatAction.Accumulator, as: Acc
+
+  # *** *******************************
+  # *** API
 
   def exec(%{value: :noop}, %{units: units, gunfire: gunfire}), do: {units, gunfire}
   def exec(
@@ -73,7 +77,6 @@ defmodule CombatAction do
     end
   end
 
-  #defp range_to_target(%Acc{} = acc, target_vector, turret_id) do
   defp range_to_target(%Straight{} = path) do
     #turret = Acc.turret(acc, turret_id)
     #attacker = Acc.attacker(acc)
@@ -96,16 +99,42 @@ defmodule CombatAction do
       |> Acc.attacker
       |> Unit.rotate_turret(turret_id, turret_angle)
     turn_number = Acc.turn_number(acc)
+    {delay_discharge, delay_hit} = {1, 1.1}
+    damage_event = Ev.Damage.new(10, turn_number, delay_hit)
     target =
       acc
       |> Acc.target
-      |> Unit.put_damage(10, turn_number)
-    gunfire = Gunfire.new(attacker, turret_id)
-    Acc.put(acc, attacker, target, gunfire)
+      |> Unit.put(damage_event)
+    pose = muzzle_flash_pose(attacker, turret_id)
+    ordnance_hit_angle =
+      pose
+      |> Pose.flip
+      |> Pose.angle
+    ordnance_hit_pose =
+      target
+      |> Unit.position
+      |> Pose.new(ordnance_hit_angle)
+    animations = [
+      Animation.Build.large_muzzle_flash(pose, delay_discharge),
+      # TODO calculate the ordnance flight time instead of guessing
+      Animation.Build.ordnance_hit(ordnance_hit_pose, delay_hit)
+    ]
+    Acc.put(acc, attacker, target, animations)
   end
 
-  # TODO implement
+  def muzzle_flash_pose(unit, turret_id) do
+    # TODO move to Unit
+    turret = Unit.turret(unit, turret_id)
+    position_vector =
+      turret
+      |> Turret.gun_barrel_vector
+      |> CSys.Conversion.convert_to_world_vector(unit, turret)
+    angle = CSys.Conversion.sum_angles(turret, unit)
+    Pose.new(position_vector, angle)
+  end
+
   def move_turret_to_neutral(acc, _turret_id) do
+    # TODO implement
     acc
   end
 end

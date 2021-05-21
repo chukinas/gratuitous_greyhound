@@ -1,9 +1,0 @@
-<%# Gunfire Template %>
-<div 
-  id="<%= @gunfire.id_string %>"
-  class="invisible"
-  phx-hook="Gunfire"
->
-  <%= ChukinasWeb.DreadnoughtView.relative_sprite @gunfire.sprite, @socket, 
-      pose: @gunfire.pose %>
-</div>

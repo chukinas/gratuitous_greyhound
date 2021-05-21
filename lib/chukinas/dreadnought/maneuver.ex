@@ -1,6 +1,7 @@
-alias Chukinas.Dreadnought.{ManeuverPartial, Maneuver, UnitAction, Unit}
+alias Chukinas.Dreadnought.{Maneuver, UnitAction, Unit}
 alias Chukinas.Geometry.{Path, Position}
 alias Chukinas.Util.IdList
+alias Unit.Event, as: Ev
 
 defmodule Maneuver do
   @moduledoc """
@@ -10,7 +11,7 @@ defmodule Maneuver do
   # *** *******************************
   # *** TYPES
 
-  @type t() :: [ManeuverPartial.t()]
+  @type t() :: [Ev.Maneuver.t()]
 
   # *** *******************************
   # *** API
@@ -23,29 +24,23 @@ defmodule Maneuver do
       :exit_or_run_aground ->
         unit
         |> put_trapped_maneuver
-        |> Unit.put_final_turn(turn_number)
+        |> Unit.put(Ev.Destroyed.by_leaving_arena(turn_number))
     end
   end
 
   def move_to(unit, pos) do
     path = Path.get_connecting_path(unit.pose, pos)
-    Unit.put_path(unit, path)
+    maneuver = Ev.Maneuver.new(path)
+    Unit.put(unit, maneuver)
   end
 
   # *** *******************************
   # *** PRIVATE
 
-  defp put_trapped_maneuver(%Unit{
-    compound_path: [path_partial],
-    pose: pose1
-  } = unit) do
-    %ManeuverPartial{geo_path: last_round_path} = path_partial
-    geo_path1 =
-      last_round_path
-      |> Path.put_pose(pose1)
-    manuever = [
-      ManeuverPartial.new(geo_path1, fadeout: true),
+  defp put_trapped_maneuver(%Unit{pose: pose} = unit) do
+    events = [
+      Ev.Maneuver.new(Path.new_straight(pose, 300))
     ]
-    unit |> Unit.put_compound_path(manuever)
+    Unit.put(unit, events)
   end
 end

@@ -1,10 +1,12 @@
-alias Chukinas.Util.Opts
+# iop.ex
 
 defmodule IOP do
 
+  alias Inspect.Algebra
+  require Inspect.Algebra
+
   @opts [
     syntax_colors: [
-      cust_struct: [:light_cyan, :bright],
       number: :light_yellow,
       atom: :cyan,
       string: :yellow,
@@ -16,32 +18,71 @@ defmodule IOP do
     ]
   ]
 
-  def inspect(term, label, opts \\ []) do
-    opts = Opts.merge!(opts, [
-      show_if: fn _x -> true end,
-      only: nil,
-      disabled: false
-      #exclude: nil
-    ])
-    if opts[:show_if].(term) and not opts[:disabled] do
-      filtered_term = case opts[:only] do
-        nil -> term
-        key when not is_list(key) -> Map.take(term, [key])
-        keys -> Map.take(term, keys)
-      end
-      IO.inspect(filtered_term, Keyword.merge(@opts, label: label))
-    end
-    term
+  def inspect(term, label \\ nil) do
+    IO.puts ""
+    IO.inspect(term, Keyword.merge(@opts, label: label))
   end
 
-  def inspect(term) do
-    IO.inspect(term, @opts)
+  defmacro color(term) do
+    quote do
+      Algebra.color(unquote(term), :map, var!(opts))
+    end
   end
+
+  defmacro doc(term) do
+    quote do
+      Algebra.to_doc(unquote(term), var!(opts))
+    end
+  end
+
+  defmacro comma do
+    quote do
+      IOP.color(",")
+    end
+  end
+
+  defmacro struct(title, fields) do
+    quote do
+      Algebra.concat [
+        IOP.color("##{unquote(title)}<"),
+        IOP.doc(unquote(fields) |> Enum.into([])),
+        IOP.color(">")
+      ]
+    end
+  end
+
+  defmacro container(title, inner) when is_binary(title) do
+    quote do
+      IOP.color("##{unquote(title)}<")
+      |> Algebra.glue("", unquote(inner))
+      |> Algebra.nest(2)
+      |> Algebra.glue("", IOP.color(">"))
+      |> Algebra.group
+    end
+  end
+
+#alias Chukinas.Util.Opts
+#  def inspect(term, label, opts \\ []) do
+#    opts = Opts.merge!(opts, [
+#      show_if: fn _x -> true end,
+#      only: nil,
+#      disabled: false
+#      #exclude: nil
+#    ])
+#    if opts[:show_if].(term) and not opts[:disabled] do
+#      filtered_term = case opts[:only] do
+#        nil -> term
+#        key when not is_list(key) -> Map.take(term, [key])
+#        keys -> Map.take(term, keys)
+#      end
+#      IO.inspect(filtered_term, Keyword.merge(@opts, label: label))
+#    end
+#    term
+#  end
+
 end
 
 # I prefer to display maps as keyword lists.
-# Control over the order
-# Readability
 # Inspect protocol so you don't have to label as much
 # Note the IOP namespace. This is so that you can use it with minimal typing, no import)
 # label convention: "Module-name function-name", b/c no need to actually say what it is, typically, since the inspect protocol tells me that.

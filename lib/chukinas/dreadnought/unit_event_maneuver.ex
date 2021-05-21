@@ -1,8 +1,9 @@
-alias Chukinas.Dreadnought.{ManeuverPartial}
+alias Chukinas.Dreadnought.{Unit}
 alias Chukinas.Geometry.Path
 alias Chukinas.Svg
+alias Unit.Event, as: Ev
 
-defmodule ManeuverPartial do
+defmodule Ev.Maneuver do
   @moduledoc """
   Fully qualifies a portion of a unit's maneuver
 
@@ -16,11 +17,12 @@ defmodule ManeuverPartial do
   use TypedStruct
 
   typedstruct enforce: true do
+    field :id, integer(), default: 1
     field :geo_path, Path.t()
     field :svg_path, String.t()
+    # TODO rename these to delay and duration
     field :fractional_start_time, number()
     field :fractional_duration, number()
-    field :fadeout, boolean()
   end
 
   # *** *******************************
@@ -29,8 +31,7 @@ defmodule ManeuverPartial do
   def new(geo_path, opts \\ []) do
     fields = Chukinas.Util.Opts.merge!(opts,
       fractional_start_time: 0,
-      fractional_duration: 1,
-      fadeout: false
+      fractional_duration: 1
     )
     |> Keyword.merge(
       geo_path: geo_path,
@@ -56,4 +57,31 @@ defmodule ManeuverPartial do
       a == b -> :eq
     end
   end
+
+
+  # *** *******************************
+  # *** IMPLEMENTATIONS
+
+  defimpl Ev do
+    def event?(_event), do: true
+    def delay_and_duration(%{
+      fractional_start_time: delay,
+      fractional_duration: duration
+    }) do
+      {delay, duration}
+    end
+    def stashable?(_event), do: false
+  end
+
+  defimpl Inspect do
+    require IOP
+    def inspect(event, opts) do
+      title = "Event(Maneuver)"
+      fields = [
+        delay: event.fractional_start_time
+      ]
+      IOP.struct(title, fields)
+    end
+  end
+
 end

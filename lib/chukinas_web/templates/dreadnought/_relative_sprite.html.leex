@@ -1,8 +1,5 @@
 <div 
-  <%= if @id_string do %>
-    id="<%= @id_string %>"
-  <% end %>
-  class="absolute"
+  class="dreadnought-relative-sprite absolute <%= @class %>"
   style="
     left: <%= @position.x %>px; 
     top: <%= @position.y %>px; 
@@ -11,6 +8,9 @@
     <% end %>
     transform-origin: <%= -@sprite.rect.x %>px <%= -@sprite.rect.y %>px;
   "
+  <%= for attr <- @attributes do %>
+    <%= attr.name %>="<%= attr.value %>"
+  <% end %>
 >
   <%= ChukinasWeb.DreadnoughtView.sprite socket: @socket, sprite: @sprite %>
 </div>

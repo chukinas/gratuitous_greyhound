@@ -1,5 +1,3 @@
-import { subscribeNewTurn } from "./turnNumber.js";
-
 // --------------------------------------------------------
 // CONSTANTS
 
@@ -7,66 +5,7 @@ const gsap = window.gsap
 const ANIMATIONDURATION = 2 // second
 
 // --------------------------------------------------------
-// MANEUVER
-
-const has_already_maneuvered = (function() {
-  const lastTurnNumbers = new Map()
-  return function(el) {
-    const unitId = el.id
-    const turnNumber = document.getElementById("turn-number").dataset.turnNumber
-    const lastTurnNumberExecuted = lastTurnNumbers.get(unitId)
-    if (turnNumber == lastTurnNumberExecuted) {
-      return true
-    }
-    lastTurnNumbers.set(unitId, turnNumber)
-    return false
-  }
-})()
-
-function maneuver_unit(maneuveringEl) {
-  const path = document.getElementById(`${maneuveringEl.id}-lastPath`)
-  partialManeuver(maneuveringEl, path)
-}
-
-// TODO rename scheduleManeuver
-function partialManeuver(maneuveringEl, pathEl, opts = {}) {
-  opts = {
-    fractionalStartTime: 0,
-    fractionalDuration: 1,
-    fadeout: false,
-    ...opts
-  }
-  gsap.to(maneuveringEl, {
-    motionPath: {
-      autoRotate: true,
-      alignOrigin: [0.5, 0.5],
-      align: pathEl,
-      path: pathEl,
-    },
-    opacity: opts.fadeout ? 0 : 1,
-    ease: "none",
-    delay: opts.fractionalStartTime * ANIMATIONDURATION,
-    duration: opts.fractionalDuration * ANIMATIONDURATION,
-  })
-}
-
-function scheduleRotation(rotatingEl, endAngle, angleTravel, opts = {}) {
-  opts = {
-    start: 0.5,
-    duration: 0.5,
-    ...opts
-  }
-  console.log(rotatingEl)
-  gsap.fromTo(rotatingEl, {
-    rotation: opts.startAngle
-  }, {
-    rotation: `${endAngle}_${opts.direction}`,
-    // rotation: '180_cw',
-    ease: "none",
-    delay: opts.start * ANIMATIONDURATION,
-    duration: opts.duration * ANIMATIONDURATION,
-  })
-}
+// HELPERS
 
 function parse_dom_string(string) {
   switch(string) {
@@ -77,133 +16,119 @@ function parse_dom_string(string) {
   }
 }
 
+function unitElId(unitId) {
+  return `unit-${unitId}`
+}
+
+function unitEl(unitId) {
+  return document.getElementById(unitElId(unitId))
+}
+
+function delayAndDuration(data) {
+  return {
+    delay: data.delay * ANIMATIONDURATION,
+    duration: data.duration * ANIMATIONDURATION,
+  }
+}
+
 // --------------------------------------------------------
-// WELCOME SHIP PATHS
+// UNIT EVENTS
 
-const pathIds =[
-  "#welcomePathTopLeft",
-  "#welcomePathTopRight",
-  "#path856",
-  "#path858",
-  "#path860",
-  "#path862",
-  "#path864",
-  "#path866",
-  "#path868",
-  "#path870",
-]
-
-function getRandItemFromArray(items) {
-  return items[Math.floor(Math.random() * items.length)]
-}
-
-function getDurationFromPath(path) {
-  const speed = 200
-  const len = MotionPathPlugin.getLength(path)
-  return len / speed
-}
-
-function randomizeStartEnd() {
-  const start = getRandItemFromArray([0, 1])
-  const end = Math.abs(start - 1)
-  return {start, end}
-}
-
-function animateShip(shipElement) {
-  const path = getRandItemFromArray(pathIds)
-  gsap.to(shipElement, {
+function maneuver(eventEl, unitId) {
+  const targetEl = unitEl(unitId)
+  const data = eventEl.dataset
+  const pathElId = `${unitElId(unitId)}-path-${data.id}`
+  const pathEl = document.getElementById(pathElId)
+  gsap.to(targetEl, {
     motionPath: {
       autoRotate: true,
       alignOrigin: [0.5, 0.5],
-      align: path,
-      path,
-      ...randomizeStartEnd()
+      align: pathEl,
+      path: pathEl,
     },
-    ease: 'none',
-    duration: getDurationFromPath(path),
-    onComplete: () => animateShip(shipElement)
+    ease: "none",
+    ...delayAndDuration(data)
   })
+}
+
+function fade(eventEl, unitId) {
+  const data = eventEl.dataset
+  gsap.fromTo(unitEl(unitId), {
+    opacity: 1
+  }, {
+    opacity: 0,
+    ease: "none",
+    ...delayAndDuration(data)
+  })
+}
+
+function rotateMount(eventEl, unitId) {
+  const data = eventEl.dataset
+  const rotatingElId = `unit-${unitId}-mount-${data.mountId}`
+  const rotatingEl = document.getElementById(rotatingElId)
+  gsap.fromTo(rotatingEl, {
+    rotation: data.startAngle
+  }, {
+    rotation: `${data.endAngle}_${data.direction}`,
+    ease: "none",
+    delay: data.delay * ANIMATIONDURATION,
+    duration: data.duration * ANIMATIONDURATION,
+  })
+}
+
+const events = {
+  maneuver: maneuver,
+  fadeout: fade,
+  mountRotation: rotateMount
 }
 
 // --------------------------------------------------------
 // HOOKS
 
-const WelcomeCardShip = {
+const UnitEvents = {
   mounted() {
-    animateShip(this.el)
-  }
-}
-
-const WelcomeCardShipFwdTurret = {
-  mounted() {
-    gsap.to(this.el, {duration: 3, rotation: -60, ease: Sine.easeInOut})
-  }
-}
-
-const WelcomeCardShipRearTurret = {
-  mounted() {
-    gsap.set(this.el, {rotation: 180, ease: Sine.easeInOut})
-    gsap.to(this.el, {duration: 3, rotation: "+=120", ease: Sine.easeInOut})
-  }
-}
-
-const Unit = {
-  mounted() {
-    subscribeNewTurn(() => maneuver_unit(this.el))
-  },
-  //beforeUpdate() {
-  //},
-  //updated() {
-  //  if (!has_already_maneuvered(this.el)) {
-  //    maneuver_unit(this.el)
-  //  }
-  //},
-}
-
-const RotationPartial = {
-  mounted() {
-    const data = this.el.dataset
-    const rotatingElId = `unit-${data.unitId}-mount-${data.mountId}`
-    const rotatingEl = document.getElementById(rotatingElId)
-    console.log({data, rotatingEl, rotatingElId})
-    scheduleRotation(rotatingEl, data.angle, data.travel, data)
-  }
-}
-
-// TODO rename PathPartial
-const PartialPath = {
-  mounted() {
-    const maneuveringEl = document.getElementById(this.el.dataset.maneuveringElId)
-    const pathEl = this.el
-    const opts = {
-      fractionalStartTime: this.el.dataset.start,
-      fractionalDuration: this.el.dataset.duration,
-      fadeout: parse_dom_string(this.el.dataset.fadeout)
+    const unitId = this.el.dataset.unitId
+    const eventsList = this.el.children
+    for (const eventEl of eventsList) {
+      const eventType = eventEl.dataset.eventType
+      const fun = events[eventType]
+      if (!fun) throw(`This unit event has no handler yet: ${eventType}`)
+      fun(eventEl, unitId)
     }
-    partialManeuver(maneuveringEl, pathEl, opts)
   },
 }
 
-const Gunfire = {
+const Animation = {
   mounted() {
-    gsap.set(this.el, {
-      delay: ANIMATIONDURATION,
-      visibility: 'visible'
+    const animation = this.el
+    const frames = [...animation.querySelectorAll(".dreadnought-relative-sprite")]
+    const timeline = gsap.timeline({
+      delay: animation.dataset.delay * ANIMATIONDURATION,
+      repeat: animation.dataset.repeat,
+      repeatDelay: 1
     })
-    gsap.to(this.el, {
-      delay: ANIMATIONDURATION,
-      opacity: 0,
-      duration: 0.5
+    const lastFrameIndex = frames.length - 1
+    frames.forEach((frame, index) => {
+      timeline.set(frame, {
+        visibility: 'visible',
+        duration: frame.dataset.duration
+      })
+      if (lastFrameIndex == index) {
+        timeline.to(frame, {
+          opacity: 0,
+          duration: animation.dataset.fade
+        }, `+=${frame.dataset.duration}`)
+      } else {
+        timeline.set(frame, {
+          visibility: 'hidden',
+          delay: frame.dataset.duration
+        }, `+=${frame.dataset.duration}`)
+      }
     })
   }
 }
 
 export default {
-  WelcomeCardShip, 
-  WelcomeCardShipFwdTurret, 
-  WelcomeCardShipRearTurret, 
-  Unit, 
-  PartialPath, 
-  RotationPartial,
-  Gunfire
+  UnitEvents, 
+  Animation,
 }

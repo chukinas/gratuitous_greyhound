@@ -1,0 +1,38 @@
+<div
+  <%# Position within World %>
+  id="unit-<%= @unit.id %>"
+  class="absolute"
+  style="
+    left: <%= @unit.pose.x %>px;
+    top: <%= @unit.pose.y %>px; 
+    transform: rotate(<%= @unit.pose.angle %>deg);
+  "
+  data-unit-id="<%= @unit.id %>"
+>
+
+
+  <%# Sprites %>
+  <div class="relative">
+    <%= ChukinasWeb.DreadnoughtView.relative_sprite @unit.sprite, @socket %>
+    <%= for turret <- @unit.turrets do %>
+    <%= ChukinasWeb.DreadnoughtView.relative_sprite turret.sprite, @socket, 
+        attributes: [id: "unit-#{@unit.id}-mount-#{turret.id}"],
+        pose: turret.pose %>
+    <% end %>
+  </div>
+
+
+  <%# Unit Events %>
+  <ul 
+    id="unit-<%= @unit.id %>-turn-<%= @turn_number %>-events" 
+    class="hidden"
+    phx-hook="UnitEvents"
+    data-unit-id="<%= @unit.id %>"
+  >
+    <%= for event <- @unit.events do %>
+      <%= ChukinasWeb.DreadnoughtView.unit_event(event) %>
+    <% end %>
+  </ul>
+
+
+</div>

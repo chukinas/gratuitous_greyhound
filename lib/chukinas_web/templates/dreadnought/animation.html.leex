@@ -1,0 +1,27 @@
+<div
+  id="<%= @animation.id_string %>"
+  class="absolute"
+  style="
+    left: <%= @animation.pose.x %>px;
+    top: <%= @animation.pose.y %>px;
+    transform: rotate(<%= @animation.pose.angle %>deg);
+  "
+  phx-hook="Animation"
+  data-delay="<%= @animation.delay %>"
+  data-fade="<%= @animation.last_frame_fade_duration %>"
+  data-repeat="<%= @animation.repeat %>"
+>
+
+
+  <%# Sprites %>
+  <div class="relative">
+    <%= for frame <- @animation.frames do %>
+      <%= ChukinasWeb.DreadnoughtView.relative_sprite frame.sprite, @socket,
+        class: "invisible",
+        attributes: [
+          "data-duration": frame.duration
+        ] %>
+    <% end %>
+  </div>
+
+</div>

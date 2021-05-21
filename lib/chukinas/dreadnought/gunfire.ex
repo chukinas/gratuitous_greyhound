@@ -1,4 +1,4 @@
-alias Chukinas.Dreadnought.{Gunfire, Spritesheet, Turret, Unit}
+alias Chukinas.Dreadnought.{Gunfire, Spritesheet, Turret, Unit, Sprite}
 alias Chukinas.Geometry.Pose
 alias Chukinas.LinearAlgebra.CSys
 
@@ -48,28 +48,19 @@ defmodule Gunfire do
   # *** SETTERS
 
   # *** *******************************
-  # *** API
-
-  # *** *******************************
-  # *** PRIVATE
-
-  # *** *******************************
   # *** IMPLEMENTATIONS
 
   defimpl Inspect do
-    import Inspect.Algebra
+    require IOP
     def inspect(gunfire, opts) do
-      col = fn string -> color(string, :cust_struct, opts) end
-      unit_map =
+      title = "Gunfire"
+      fields =
         gunfire
         |> Map.take([
           :pose
         ])
         |> Enum.into([])
-        #|> Keyword.put(:health, gunfire.percent_remaining_health(gunfire))
-      concat [
-        col.("#Gunfire"),
-        to_doc(unit_map, opts)]
+      IOP.struct(title, fields)
     end
   end
 end

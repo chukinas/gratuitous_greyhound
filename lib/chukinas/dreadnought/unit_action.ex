@@ -67,6 +67,7 @@ defmodule UnitAction do
 end
 
 
+# TODO move to separate module?
 defmodule UnitAction.Enum do
   def maneuevers(actions) do
     # TODO rename maneuver?

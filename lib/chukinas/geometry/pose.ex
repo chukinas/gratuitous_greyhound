@@ -1,13 +1,12 @@
 alias Chukinas.Geometry.{Pose, Position, Trig}
+
+# pose.ex
+
 defmodule Pose do
 
   require Position
 
-  # *** *******************************
-  # *** TYPES
-
   use TypedStruct
-
   typedstruct enforce: true do
     field :x, number()
     field :y, number()
@@ -18,7 +17,9 @@ defmodule Pose do
   # *** NEW
 
   def new({x, y}, angle), do: new(x, y, angle)
+
   def new(%{x: x, y: y}, angle), do: new(x, y, angle)
+
   def new(x, y, angle) do
     %__MODULE__{
       x: x,
@@ -29,10 +30,15 @@ defmodule Pose do
 
   def origin(), do: new(0, 0, 0)
 
+
   # *** *******************************
   # *** GETTERS
 
   def angle(%{angle: angle}), do: angle
+
+  def flip(%{angle: angle} = pose) do
+    %__MODULE__{pose | angle: angle + 180}
+  end
 
   # *** *******************************
   # *** SETTERS
@@ -69,13 +75,17 @@ defmodule Pose do
 
   defimpl Inspect do
     import Inspect.Algebra
+    require IOP
     def inspect(pose, opts) do
-      col = fn string -> color(string, :cust_struct, opts) end
       concat [
-        col.("#Pose<"),
-        to_doc({round(pose.x), round(pose.y)}, opts), "∠ " , to_doc(round(pose.angle), opts),
+        IOP.color("#Pose<"),
+        IOP.doc(pose.x |> round),
+        ", ",
+        IOP.doc(pose.y |> round),
+        " ∠ ",
+        IOP.doc(round(pose.angle)),
         "°",
-        col.(">")
+        IOP.color(">")
       ]
     end
   end

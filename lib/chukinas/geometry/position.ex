@@ -144,13 +144,15 @@ defmodule Position do
 
   defimpl Inspect do
     import Inspect.Algebra
+    require IOP
     def inspect(position, opts) do
-      col = fn string -> color(string, :cust_struct, opts) end
-      values = {round(position.x), round(position.y)}
+      {x, y} = {round(position.x), round(position.y)}
       concat [
-        col.("#Position<"),
-        to_doc(values, opts),
-        col.(">")
+        IOP.color("#Position<"),
+        IOP.doc(x),
+        ", ",
+        IOP.doc(y),
+        IOP.color(">")
       ]
     end
   end
