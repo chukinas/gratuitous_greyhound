@@ -35,6 +35,7 @@ defmodule Chukinas.MixProject do
   defp deps do
     [
       {:phoenix, "~> 1.5.7"},
+      {:ecto, "~> 3.3.4"},
       {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
       {:phoenix_live_view, "~> 0.15.0"},
       {:floki, ">= 0.27.0", only: :test},
