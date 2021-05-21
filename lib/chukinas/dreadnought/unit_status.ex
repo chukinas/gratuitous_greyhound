@@ -1,7 +1,5 @@
 alias Chukinas.Dreadnought.{Unit}
 
-alias Unit.Event.Damage
-
 defmodule Unit.Status do
   @moduledoc """
   Tracks unit damage, whether it's alive or dead, visible, etc
@@ -12,7 +10,7 @@ defmodule Unit.Status do
 
   use TypedStruct
   typedstruct enforce: true do
-    field :health, integer()
+    # TODO remove
     field :final_turn, integer(), enforce: false
     field :render?, boolean(), default: true
     field :active?, boolean(), default: true
@@ -21,8 +19,8 @@ defmodule Unit.Status do
   # *** *******************************
   # *** NEW
 
-  def new(max_damage) do
-    %__MODULE__{health: max_damage}
+  def new() do
+    %__MODULE__{}
   end
 
   # *** *******************************
@@ -51,17 +49,7 @@ defmodule Unit.Status do
   # *** *******************************
   # *** GETTERS
 
-  def starting_health(%__MODULE__{health: health}), do: health
-
   def active?(%__MODULE__{active?: active?}), do: active?
-
-  # *** *******************************
-  # *** FUNCTIONS
-
-  def percent_remaining_health(%__MODULE__{health: health}, damage_events) do
-    (1 - Damage.Enum.sum(damage_events) / health)
-    |> max(0)
-  end
 
   # *** *******************************
   # *** IMPLEMENTATIONS

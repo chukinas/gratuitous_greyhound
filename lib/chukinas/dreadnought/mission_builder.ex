@@ -5,19 +5,10 @@ alias Chukinas.Geometry.{Pose, Size, Position, Grid}
 defmodule MissionBuilder do
 
   def dev do
-    square_size = 50
-    arena = %{
-      width: 700,
-      height: 400
-    }
-    margin = Size.new(arena.height, arena.width)
-    [square_count_x, square_count_y] =
-      [arena.width, arena.height]
-      |> Enum.map(&round(&1 / square_size))
-    grid = Grid.new(square_size, square_count_x, square_count_y)
+    {grid, margin} = medium_map()
     units = [
       Unit.Builder.red_cruiser(1, pose: Pose.new(0, 0, 0), name: "Prince Eugene"),
-      Unit.Builder.blue_dreadnought(2, "Hood", pose: Pose.new(Position.from_size(grid), 225), player_id: 2)
+      Unit.Builder.blue_merchant(2, pose: Pose.new(Position.from_size(grid), 225), player_id: 2)
     ]
     players = [
       Player.new(1, :human),
@@ -71,5 +62,23 @@ defmodule MissionBuilder do
     |> Mission.put(players)
     |> Mission.start
     |> IOP.inspect("MissionBuilder new mission")
+  end
+
+  def small_map, do: grid_and_margin(800, 500)
+  def medium_map, do: grid_and_margin(1400, 700)
+  def large_map, do: grid_and_margin(3000, 2000)
+
+  def grid_and_margin(width, height) do
+    square_size = 50
+    arena = %{
+      width: width,
+      height: height
+    }
+    margin = Size.new(arena.height, arena.width)
+    [square_count_x, square_count_y] =
+      [arena.width, arena.height]
+      |> Enum.map(&round(&1 / square_size))
+    grid = Grid.new(square_size, square_count_x, square_count_y)
+    {grid, margin}
   end
 end
