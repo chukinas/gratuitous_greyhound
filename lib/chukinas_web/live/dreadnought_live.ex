@@ -27,11 +27,14 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
 
   @impl true
-  def handle_params(_params, _url, socket) do
-    socket = case socket.assigns.live_action do
-      :play -> assign(socket, :mission, MissionBuilder.build())
-      _ -> socket
+  def handle_params(params, _url, socket) do
+    room = case params do
+      %{"room" => room} -> room
+      %{} -> "no_room"
     end
+    socket =
+      socket
+      |> assign(room: room)
     {:noreply, socket}
   end
 

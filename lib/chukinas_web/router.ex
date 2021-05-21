@@ -20,14 +20,14 @@ defmodule ChukinasWeb.Router do
     get "/minis", PageController, :minis
     get "/music", PageController, :music
     live "/dreadnought", DreadnoughtLive, :play
-    live "/dreadnought/disclaimer", DreadnoughtLive, :disclaimer
-    live "/dreadnought/play", DreadnoughtLive, :play
-    live "/dreadnought/gameover", DreadnoughtLive, :game_over
-    live "/dreadnought/dev", DreadnoughtLive, :dev
-    live "/dreadnought/grid", DreadnoughtLive, :grid
+    live "/dreadnought/:room", DreadnoughtLive
+    #live "/dreadnought/play", DreadnoughtLive, :play
+    #live "/dreadnought/gameover", DreadnoughtLive, :game_over
+    #live "/dreadnought/dev", DreadnoughtLive, :dev
+    #live "/dreadnought/grid", DreadnoughtLive, :grid
     live "/dreadnought/sprites", DreadnoughtResourcesLive
-    live "/proofofconcept/change_tracking_test", ChangeTrackingTestLive
-    live "/proofofconcept/zoompan", ZoomPanLive
+    #live "/proofofconcept/change_tracking_test", ChangeTrackingTestLive
+    #live "/proofofconcept/zoompan", ZoomPanLive
   end
 
   # Other scopes may use custom stacks.
