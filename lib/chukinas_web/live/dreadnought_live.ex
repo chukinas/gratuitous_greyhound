@@ -1,80 +1,53 @@
-alias Chukinas.Dreadnought.{Mission, State}
+# TODO rename
+alias Chukinas.Dreadnought.{Spritesheet}
 
-defmodule ChukinasWeb.DreadnoughtPlayLive do
+defmodule ChukinasWeb.DreadnoughtLive do
   use ChukinasWeb, :live_view
-  alias ChukinasWeb.Dreadnought
-
-  # *** *******************************
-  # *** CALLBACKS
+  alias ChukinasWeb.DreadnoughtView
 
   @impl true
   def render(assigns) do
-    ChukinasWeb.DreadnoughtView.render "layout_gameplay.html", assigns
+    DreadnoughtView.render("layout_menu.html", assigns)
+  end
+
+  def render_template(template, assigns) do
+    DreadnoughtView.render(template, assigns)
   end
 
   @impl true
   def mount(_params, _session, socket) do
-    {pid, mission} = State.start_link()
+    sprites =
+      ~w(ship_large ship_small turret1 turret2 shell1 shell2 muzzle_flash)
+      |> Enum.map(&Spritesheet.red/1)
     socket = assign(socket,
-      page_title: "Dreadnought",
-      pid: pid,
-      mission: mission,
-      mission_playing_surface: Mission.to_playing_surface(mission) |> Map.from_struct,
-      mission_player: Mission.to_player(mission)
+      page_title: "Dreadnought Resources",
+      tabs: tabs(),
+      header: "Sprites",
+      show_markers?: true,
+      sprites: sprites
     )
     {:ok, socket}
   end
 
-
   @impl true
-  def handle_params(params, _url, socket) do
-    room = case params do
-      %{"room" => room} -> room
-      %{} -> "no_room"
+  def handle_params(_params, _url, socket) do
+    socket = case socket.assigns.live_action do
+      nil -> redirect(socket, to: "/dreadnought/play")
+        _ -> socket
     end
-    socket =
-      socket
-      |> assign(room: room)
     {:noreply, socket}
   end
 
   @impl true
-  def handle_event("log", _params, socket) do
+  def handle_event("toggle_show_markers", _, socket) do
+    socket = assign(socket, show_markers?: !socket.assigns.show_markers?)
     {:noreply, socket}
   end
 
-  @impl true
-  def handle_event("route_to", %{"route" => route}, socket) do
-    {:noreply, push_patch(socket, to: route)}
-  end
-
-  #@impl true
-  #def handle_event("game_over", _, socket) do
-  #  socket =
-  #    socket
-  #    |> put_flash(:info, "You have no available moves! Play again.")
-  #  mission =
-  #    MissionBuilder.build()
-  #  send_update Dreadnought.DynamicWorldComponent, id: :dynamic_world, mission: mission
-  #  {:noreply, socket}
-  #end
-
-  @impl true
-  # TODO rename mission_player to `player_turn` PlayerTurn
-  def handle_info({:player_turn_complete, player_actions}, socket) do
-    #mission =
-    #  socket.assigns.mission
-    #  |> Mission.put(units)
-    #  |> Mission.complete_player_turn(commands)
-    #mission_player =
-    #  mission
-    #  |> Mission.to_player
-    #socket =
-    #  socket
-    #  |> assign(mission: mission)
-    # TODO use alias to shorten this call..
-    mission_player = State.complete_player_turn(socket.assigns.pid, player_actions)
-    send_update Dreadnought.DynamicWorldComponent, mission_player
-    {:noreply, socket}
+  def tabs do
+    [
+      %{title: "Play", route: "play", current?: false},
+      %{title: "Sprites", route: "sprites", current?: true},
+    ]
   end
 end
