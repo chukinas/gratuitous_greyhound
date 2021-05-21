@@ -8,6 +8,7 @@ defmodule ChukinasWeb.Router do
     plug :put_root_layout, {ChukinasWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug ChukinasWeb.Plugs.SanitizeRoomName
   end
 
   pipeline :api do
@@ -21,13 +22,7 @@ defmodule ChukinasWeb.Router do
     get "/music", PageController, :music
     live "/dreadnought", DreadnoughtLive, :play
     live "/dreadnought/:room", DreadnoughtLive
-    #live "/dreadnought/play", DreadnoughtLive, :play
-    #live "/dreadnought/gameover", DreadnoughtLive, :game_over
-    #live "/dreadnought/dev", DreadnoughtLive, :dev
-    #live "/dreadnought/grid", DreadnoughtLive, :grid
     live "/dreadnought/sprites", DreadnoughtResourcesLive
-    #live "/proofofconcept/change_tracking_test", ChangeTrackingTestLive
-    #live "/proofofconcept/zoompan", ZoomPanLive
   end
 
   # Other scopes may use custom stacks.
