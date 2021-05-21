@@ -2,7 +2,7 @@ alias Chukinas.Dreadnought.{Spritesheet, Sprite, Animation}
 alias Chukinas.Geometry.Pose
 alias ChukinasWeb.DreadnoughtView
 
-defmodule ChukinasWeb.Dreadnought.SpritesComponent do
+defmodule ChukinasWeb.Dreadnought.GalleryComponent do
   use ChukinasWeb, :live_component
 
   # *** *******************************

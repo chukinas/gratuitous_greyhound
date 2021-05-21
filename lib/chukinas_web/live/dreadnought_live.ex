@@ -17,11 +17,17 @@ defmodule ChukinasWeb.DreadnoughtLive do
   end
 
   @impl true
-  def handle_params(_params, _url, socket) do
+  def handle_params(params, _url, socket) do
     socket = case socket.assigns.live_action do
       nil -> redirect(socket, to: "/dreadnought/play")
         _ -> socket
     end
+    socket = case {params, socket.assigns} do
+      {%{"room" => room}, _} -> assign(socket, room: room)
+      {_, %{room: _room}} -> socket
+      _ -> assign(socket, room: nil)
+    end
+    |> IOP.inspect("dread live params")
     |> standard_assigns
     {:noreply, socket}
   end
