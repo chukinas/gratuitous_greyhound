@@ -19,13 +19,13 @@ defmodule ChukinasWeb.DreadnoughtLive do
     sprites =
       ~w(ship_large ship_small turret1 turret2 shell1 shell2 muzzle_flash)
       |> Enum.map(&Spritesheet.red/1)
-    socket = assign(socket,
-      page_title: "Dreadnought Resources",
-      tabs: tabs(),
-      header: "Sprites",
-      show_markers?: true,
-      sprites: sprites
-    )
+    socket =
+      socket
+      |> assign(
+        show_markers?: true,
+        sprites: sprites
+      )
+      |> standard_assigns
     {:ok, socket}
   end
 
@@ -44,10 +44,30 @@ defmodule ChukinasWeb.DreadnoughtLive do
     {:noreply, socket}
   end
 
-  def tabs do
-    [
-      %{title: "Play", route: "play", current?: false},
-      %{title: "Sprites", route: "sprites", current?: true},
+  def standard_assigns(socket) do
+    live_action = socket.assigns.live_action
+    tabs = [
+      %{title: "Play", live_action: :play, current?: false},
+      %{title: "Gallery", live_action: :gallery, current?: false},
     ]
+    |> Enum.map(fn tab ->
+      case tab.live_action do
+        ^live_action -> %{tab | current?: true}
+        _ -> %{tab | current?: false}
+      end
+    end)
+    title = case Enum.find(tabs, & &1.live_action == live_action) do
+      %{title: title} -> title
+      nil -> nil
+    end
+    page_title = case title do
+      nil -> "Dreadnought"
+      title -> "Dreadnought | #{title}"
+    end
+    assign(socket,
+      tabs: tabs,
+      page_title: page_title,
+      header: title
+    )
   end
 end
