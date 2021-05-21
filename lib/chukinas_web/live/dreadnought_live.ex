@@ -1,6 +1,6 @@
-alias Chukinas.Dreadnought.{Mission, MissionBuilder, State}
+alias Chukinas.Dreadnought.{Mission, State}
 
-defmodule ChukinasWeb.DreadnoughtLive do
+defmodule ChukinasWeb.DreadnoughtPlayLive do
   use ChukinasWeb, :live_view
   alias ChukinasWeb.Dreadnought
 

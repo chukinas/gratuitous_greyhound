@@ -1,7 +1,7 @@
 # TODO rename
 alias Chukinas.Dreadnought.{Spritesheet}
 
-defmodule ChukinasWeb.DreadnoughtResourcesLive do
+defmodule ChukinasWeb.DreadnoughtLive do
   use ChukinasWeb, :live_view
   alias ChukinasWeb.DreadnoughtView
 
