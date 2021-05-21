@@ -49,6 +49,9 @@ defmodule Unit do
 
   def put(unit, items) when is_list(items), do: Enum.reduce(items, unit, &put(&2, &1))
   def put(unit, %Turret{} = turret), do: Maps.put_by_id(unit, :turrets, turret)
+  def put(unit, %Unit.Status{} = status) do
+    %__MODULE__{unit | status: status}
+  end
   def put(unit, event) do
     true = Ev.event?(event)
     unit = Maps.push(unit, :events, event)
@@ -74,6 +77,25 @@ defmodule Unit do
   # *** *******************************
   # *** GETTERS
 
+  def filter_events(unit, event_module, which \\ :all) do
+    unit
+    |> events(which)
+    |> Enum.filter(&is_struct(&1, event_module))
+  end
+
+  def any_events?(unit, event_module, which \\ :all) do
+    unit
+    |> events(which)
+    |> Enum.any?(&is_struct(&1, event_module))
+  end
+
+  def events(unit, which \\ :all)
+  def events(%__MODULE__{events: value}, :current), do: value
+  def events(%__MODULE__{past_events: value}, :past), do: value
+  def events(%__MODULE__{events: current, past_events: past}, :all) do
+    Stream.concat(current, past)
+  end
+
   def starting_health(%__MODULE__{health: value}), do: value
 
   def percent_health(unit) do
@@ -87,15 +109,9 @@ defmodule Unit do
     Enum.filter(events, &Ev.stashable?/1)
   end
 
-  def damage(%__MODULE__{events: events, past_events: past_events}) do
-    events
-    |> Stream.concat(past_events)
-    |> Enum.filter(&is_struct(&1, Ev.Damage))
-  end
+  def damage(unit), do: filter_events(unit, Ev.Damage)
 
-  def maneuvers(%__MODULE__{events: events}) do
-    Enum.filter(events, &is_struct(&1, Ev.Maneuver))
-  end
+  def maneuvers(unit), do: filter_events(unit, Ev.Maneuver)
 
   def belongs_to?(unit, player_id), do: unit.player_id == player_id
 

@@ -126,11 +126,10 @@ defmodule Mission do
     # Part 2: Execute previous turn's planning
     |> put_tentative_maneuvers
     |> resolve_island_collisions
-    |> calc_unit_render
     |> calc_gunnery
     |> check_for_destroyed_ships
+    |> calc_unit_status
     # Part 3: Prepare for this turn's planning
-    |> calc_unit_active
     |> clear_player_actions
     |> calc_ai_commands
     |> IOP.inspect("Mission new turn")
@@ -167,15 +166,8 @@ defmodule Mission do
     end)
   end
 
-  defp calc_unit_active(mission) do
-    fun = &Unit.Status.calc_active(&1, mission.turn_number)
-    # TODO rename Unit.update_status
-    Maps.map_each(mission, :units, &Unit.apply_status(&1, fun))
-  end
-
-  defp calc_unit_render(mission) do
-    fun = &Unit.Status.calc_render(&1, mission.turn_number)
-    Maps.map_each(mission, :units, &Unit.apply_status(&1, fun))
+  defp calc_unit_status(mission) do
+    Maps.map_each(mission, :units, &Unit.Status.Logic.calc_status/1)
   end
 
   defp check_for_destroyed_ships(mission) do

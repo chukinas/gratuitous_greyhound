@@ -1,6 +1,7 @@
 alias Chukinas.Dreadnought.{ManeuverPlanning, Unit}
 alias Chukinas.Geometry.{GridSquare, Position}
 
+# TODO rename ManeuverPlanning.Data?
 defmodule ManeuverPlanning.Token do
   @moduledoc """
   Logic for calculating the maneuver options available to a unit
