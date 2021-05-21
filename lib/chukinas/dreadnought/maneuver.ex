@@ -1,6 +1,7 @@
 alias Chukinas.Dreadnought.{Maneuver, UnitAction, Unit}
 alias Chukinas.Geometry.{Path, Position}
 alias Chukinas.Util.IdList
+alias Unit.Event, as: Ev
 
 defmodule Maneuver do
   @moduledoc """
@@ -10,7 +11,7 @@ defmodule Maneuver do
   # *** *******************************
   # *** TYPES
 
-  @type t() :: [Unit.Event.Maneuver.t()]
+  @type t() :: [Ev.Maneuver.t()]
 
   # *** *******************************
   # *** API
@@ -23,14 +24,13 @@ defmodule Maneuver do
       :exit_or_run_aground ->
         unit
         |> put_trapped_maneuver
-        |> Unit.put(Unit.Event.Destroyed.by_leaving_arena(turn_number))
-        |> Unit.apply_status(&Unit.Status.out_of_action(&1, turn_number))
+        |> Unit.put(Ev.Destroyed.by_leaving_arena(turn_number))
     end
   end
 
   def move_to(unit, pos) do
     path = Path.get_connecting_path(unit.pose, pos)
-    maneuver = Unit.Event.Maneuver.new(path)
+    maneuver = Ev.Maneuver.new(path)
     Unit.put(unit, maneuver)
   end
 
@@ -39,7 +39,7 @@ defmodule Maneuver do
 
   defp put_trapped_maneuver(%Unit{pose: pose} = unit) do
     events = [
-      Unit.Event.Maneuver.new(Path.new_straight(pose, 300))
+      Ev.Maneuver.new(Path.new_straight(pose, 300))
     ]
     Unit.put(unit, events)
   end

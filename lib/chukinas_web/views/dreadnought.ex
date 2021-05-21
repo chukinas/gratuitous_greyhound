@@ -3,11 +3,12 @@ alias Chukinas.Geometry.{Pose, Position}
 alias Chukinas.LinearAlgebra.CSys.Conversion
 alias Chukinas.LinearAlgebra.Vector
 alias Chukinas.Util.Opts
+alias Unit.Event, as: Ev
 
 defmodule ChukinasWeb.DreadnoughtView do
   use ChukinasWeb, :view
 
-  def maneuver_path(%Unit.Event.Maneuver{} = path, unit_id) do
+  def maneuver_path(%Ev.Maneuver{} = path, unit_id) do
     assigns =
       path
       |> Map.from_struct
@@ -18,14 +19,14 @@ defmodule ChukinasWeb.DreadnoughtView do
     nil
   end
 
-  def unit_event(%Unit.Event.Maneuver{} = event) do
+  def unit_event(%Ev.Maneuver{} = event) do
     standard_attributes(event, "maneuver") ++ [
       data_attr("id", event.id),
     ]
     |> render_event
   end
 
-  def unit_event(%Unit.Event.MountRotation{} = event) do
+  def unit_event(%Ev.MountRotation{} = event) do
     # TODO move all this event stuff to separate view?
     standard_attributes(event, "mountRotation") ++ [
       data_attr("mount-id", event.mount_id),
@@ -36,19 +37,19 @@ defmodule ChukinasWeb.DreadnoughtView do
     |> render_event
   end
 
-  def unit_event(%Unit.Event.Fade{} = event) do
+  def unit_event(%Ev.Fadeout{} = event) do
     standard_attributes(event, "fadeout") |> render_event
   end
 
   def unit_event(non_animated_event) do
-    nil = Unit.Event.delay_and_duration(non_animated_event)
+    nil = Ev.delay_and_duration(non_animated_event)
     nil
   end
 
   defp data_attr(key, value), do: %{name: "data-#{key}", value: value}
 
   defp standard_attributes(event, event_type) do
-    {delay, duration} = Unit.Event.delay_and_duration(event)
+    {delay, duration} = Ev.delay_and_duration(event)
     [
       data_attr("event-type", event_type),
       data_attr("delay", delay),

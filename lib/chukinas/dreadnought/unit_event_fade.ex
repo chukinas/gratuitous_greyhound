@@ -1,7 +1,7 @@
 alias Chukinas.Dreadnought.{Unit}
+alias Unit.Event, as: Ev
 
-# TODO rename Fadeout
-defmodule Unit.Event.Fade do
+defmodule Ev.Fadeout do
   @moduledoc """
   Describes a unit fading from view, usually meaning that it's out of action
   """
@@ -33,7 +33,7 @@ defmodule Unit.Event.Fade do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl Unit.Event do
+  defimpl Ev do
     def event?(_event), do: true
     def delay_and_duration(%{delay: delay, duration: duration}) do
       {delay, duration}
@@ -45,7 +45,7 @@ defmodule Unit.Event.Fade do
   defimpl Inspect do
     require IOP
     def inspect(event, opts) do
-      title = "Event(Fade)"
+      title = "Event(Fadeout)"
       fields = [
         time: {event.delay, event.duration},
       ]

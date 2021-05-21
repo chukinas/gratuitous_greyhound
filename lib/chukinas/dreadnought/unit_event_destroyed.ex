@@ -1,7 +1,7 @@
 alias Chukinas.Dreadnought.{Unit}
-alias Unit.Event.Destroyed
+alias Unit.Event, as: Ev
 
-defmodule Destroyed do
+defmodule Ev.Destroyed do
   @moduledoc """
   Records the destruction of a unit
   """
@@ -43,10 +43,17 @@ defmodule Destroyed do
   # *** *******************************
   # *** GETTERS
 
+  def get_fadeout(%__MODULE__{cause: cause, delay: delay}) do
+    case cause do
+      :leaving -> Ev.Fadeout.new(delay, 1)
+      :gunfire -> Ev.Fadeout.new(delay, 0.4)
+    end
+  end
+
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl Unit.Event do
+  defimpl Ev do
     def event?(_event), do: true
     def delay_and_duration(_), do: nil
     def stashable?(_), do: true

@@ -1,8 +1,9 @@
 alias Chukinas.Dreadnought.{Unit}
 alias Chukinas.Geometry.Path
 alias Chukinas.Svg
+alias Unit.Event, as: Ev
 
-defmodule Unit.Event.Maneuver do
+defmodule Ev.Maneuver do
   @moduledoc """
   Fully qualifies a portion of a unit's maneuver
 
@@ -61,7 +62,7 @@ defmodule Unit.Event.Maneuver do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl Unit.Event do
+  defimpl Ev do
     def event?(_event), do: true
     def delay_and_duration(%{
       fractional_start_time: delay,

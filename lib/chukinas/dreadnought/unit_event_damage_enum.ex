@@ -1,10 +1,10 @@
-alias Chukinas.Dreadnought.Unit.Event.Damage
+alias Chukinas.Dreadnought.Unit.Event, as: Ev
 
-defmodule Damage.Enum do
+defmodule Ev.Damage.Enum do
 
   def sum(events) do
     events
-    |> Stream.map(&Damage.amount/1)
+    |> Stream.map(&Ev.Damage.amount/1)
     |> Enum.sum
   end
 

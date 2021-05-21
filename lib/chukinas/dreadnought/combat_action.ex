@@ -2,6 +2,7 @@ alias Chukinas.Dreadnought.{Unit, CombatAction, Turret, Animation}
 alias Chukinas.Geometry.{Collide, Straight, Pose}
 alias Chukinas.Util.IdList
 alias Chukinas.LinearAlgebra.{Vector, CSys}
+alias Unit.Event, as: Ev
 
 defmodule CombatAction do
 
@@ -99,7 +100,7 @@ defmodule CombatAction do
       |> Unit.rotate_turret(turret_id, turret_angle)
     turn_number = Acc.turn_number(acc)
     {delay_discharge, delay_hit} = {1, 1.1}
-    damage_event = Unit.Event.Damage.new(10, turn_number, delay_hit)
+    damage_event = Ev.Damage.new(10, turn_number, delay_hit)
     target =
       acc
       |> Acc.target

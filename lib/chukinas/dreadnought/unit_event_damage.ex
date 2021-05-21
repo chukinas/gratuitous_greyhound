@@ -1,7 +1,7 @@
 alias Chukinas.Dreadnought.{Unit}
-alias Unit.Event.Damage
+alias Unit.Event, as: Ev
 
-defmodule Damage do
+defmodule Ev.Damage do
   @moduledoc """
   Describes a unit taking damage
   """
@@ -41,7 +41,7 @@ defmodule Damage do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl Unit.Event do
+  defimpl Ev do
     def event?(_event), do: true
     def delay_and_duration(_), do: nil
     def stashable?(_), do: true

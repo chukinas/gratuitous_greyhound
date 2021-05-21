@@ -77,6 +77,12 @@ defmodule Unit do
   # *** *******************************
   # *** GETTERS
 
+  def find_event(unit, event_module, which \\ :all) do
+    unit
+    |> events(which)
+    |> Enum.find(&is_struct(&1, event_module))
+  end
+
   def filter_events(unit, event_module, which \\ :all) do
     unit
     |> events(which)
@@ -145,6 +151,16 @@ defmodule Unit do
 
   # *** *******************************
   # *** TRANSFORMS
+
+  def fade_if_destroyed(unit) do
+    case Unit.find_event(unit, Ev.Destroyed, :current) do
+      nil ->
+        unit
+      event ->
+        fadeout = Ev.Destroyed.get_fadeout(event)
+        put(unit, fadeout)
+    end
+  end
 
   def clear(unit) do
     # TODO rename reset_for_new_turn or something like that

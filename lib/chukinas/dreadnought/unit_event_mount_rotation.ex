@@ -1,7 +1,8 @@
 alias Chukinas.Dreadnought.{Unit}
 alias Chukinas.Geometry.Trig
+alias Unit.Event, as: Ev
 
-defmodule Unit.Event.MountRotation do
+defmodule Ev.MountRotation do
   @moduledoc """
   Fully qualifies a portion of a unit's mounts's action
   """
@@ -45,7 +46,7 @@ defmodule Unit.Event.MountRotation do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl Unit.Event do
+  defimpl Ev do
     def event?(_event), do: true
     def delay_and_duration(%{time_start: delay, time_duration: duration}) do
       {delay, duration}
