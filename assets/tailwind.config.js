@@ -29,7 +29,7 @@ module.exports = {
       textColor: ['visited']
     },
   },
-  _plugins: [
+  plugins: [
     require('@tailwindcss/forms'),
   ],
 }
