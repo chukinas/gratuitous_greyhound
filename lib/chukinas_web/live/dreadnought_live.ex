@@ -27,7 +27,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
       {_, %{room: _room}} -> socket
       _ -> assign(socket, room: nil, room_name: nil)
     end
-    |> IOP.inspect("dread live params")
     |> standard_assigns
     {:noreply, socket}
   end
@@ -59,29 +58,10 @@ defmodule ChukinasWeb.DreadnoughtLive do
       nil -> "Dreadnought"
       title -> "Dreadnought | #{title}"
     end
-    JoinRoom.validate(%{}) |> IOP.inspect("dread live std assign")
     assign(socket,
       tabs: tabs,
       page_title: page_title,
       header: if(active_tab.show_header, do: title, else: nil)
     )
-  end
-end
-
-
-defmodule JoinRoom do
-  #use Ecto.Schema
-  # http://blog.plataformatec.com.br/2016/05/ectos-insert_all-and-schemaless-queries/
-
-  def validate(params) do
-    data  = %{}
-    types = %{first_name: :string, last_name: :string, email: :string}
-
-    changeset =
-      {data, types}
-      |> Ecto.Changeset.cast(params, Map.keys(types))
-      #|> validate_required(...)
-      #|> validate_length(...)
-    changeset
   end
 end
