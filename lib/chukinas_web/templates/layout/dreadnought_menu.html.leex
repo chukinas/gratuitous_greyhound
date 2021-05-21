@@ -89,6 +89,7 @@
   </nav>
 
   <div class="py-10">
+    <%= if @header do %>
     <header>
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 class="text-3xl font-bold leading-tight text-yellow-900">
@@ -96,8 +97,9 @@
         </h1>
       </div>
     </header>
+    <% end %>
     <main>
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <%= @inner_content %>
       </div>
     </main>

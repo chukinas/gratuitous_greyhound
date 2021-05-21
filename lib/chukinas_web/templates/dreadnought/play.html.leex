@@ -1,4 +1,6 @@
-<div>
-  <p>Your room:</p>
-  <p><%= @room_name %></p>
-</div>
+<%= if @room do %>
+  <p>Your room: <b><%= @room_name %></b></p>
+<% else %>
+  <%= render_template("join_room.html", [])  %>
+<% end %>
+

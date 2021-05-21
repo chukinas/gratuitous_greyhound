@@ -41,8 +41,8 @@ defmodule ChukinasWeb.DreadnoughtLive do
   def standard_assigns(socket) do
     live_action = socket.assigns.live_action
     tabs = [
-      %{title: "Play", live_action: :play, current?: false},
-      %{title: "Gallery", live_action: :gallery, current?: false},
+      %{title: "Play", live_action: :play, current?: false, show_header: false},
+      %{title: "Gallery", live_action: :gallery, current?: false, show_header: true},
     ]
     |> Enum.map(fn tab ->
       case tab.live_action do
@@ -50,7 +50,8 @@ defmodule ChukinasWeb.DreadnoughtLive do
         _ -> %{tab | current?: false}
       end
     end)
-    title = case Enum.find(tabs, & &1.live_action == live_action) do
+    active_tab = Enum.find(tabs, & &1.live_action == live_action)
+    title = case active_tab do
       %{title: title} -> title
       nil -> nil
     end
@@ -61,7 +62,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
     assign(socket,
       tabs: tabs,
       page_title: page_title,
-      header: title
+      header: if(active_tab.show_header, do: title, else: nil)
     )
   end
 end
