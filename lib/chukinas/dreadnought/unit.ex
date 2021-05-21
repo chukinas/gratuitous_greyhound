@@ -152,16 +152,6 @@ defmodule Unit do
   # *** *******************************
   # *** TRANSFORMS
 
-  def fade_if_destroyed(unit) do
-    case Unit.find_event(unit, Ev.Destroyed, :current) do
-      nil ->
-        unit
-      event ->
-        fadeout = Ev.Destroyed.get_fadeout(event)
-        put(unit, fadeout)
-    end
-  end
-
   def clear(unit) do
     # TODO rename reset_for_new_turn or something like that
     new_past_events =
@@ -197,8 +187,9 @@ defmodule Unit do
         damages
         |> Stream.map(&Damage.turn_and_delay/1)
         |> Enum.max
-      event = Ev.Destroyed.by_gunfire(turn, delay + 0.2)
-      put(unit, event)
+      destruction = Ev.Destroyed.by_gunfire(turn, delay + 0.2)
+      fadeout = Ev.Destroyed.get_fadeout(destruction)
+      put(unit, [destruction, fadeout])
     end
   end
 

@@ -128,16 +128,11 @@ defmodule Mission do
     |> resolve_island_collisions
     |> calc_gunnery
     |> check_for_destroyed_ships
-    |> calc_destruction_fades
     |> calc_unit_status
     # Part 3: Prepare for this turn's planning
     |> clear_player_actions
     |> calc_ai_commands
     |> IOP.inspect("Mission new turn")
-  end
-
-  defp calc_destruction_fades(mission) do
-    Maps.map_each(mission, :units, &Unit.fade_if_destroyed/1)
   end
 
   defp clear_gunfire(mission), do: Maps.clear(mission, :gunfire)
