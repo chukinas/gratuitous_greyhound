@@ -16,7 +16,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
     socket =
       socket
       |> standard_assigns
-    {:ok, socket}
+    {:ok, socket, layout: {ChukinasWeb.LayoutView, "dreadnought_menu.html"}}
   end
 
   @impl true
