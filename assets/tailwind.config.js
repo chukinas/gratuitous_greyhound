@@ -29,7 +29,7 @@ module.exports = {
       cursor: ['disabled'],
       opacity: ['disabled'],
       padding: ['hover'],
-      textColor: ['visited']
+      textColor: ['visited', 'disabled']
     },
   },
   plugins: [
