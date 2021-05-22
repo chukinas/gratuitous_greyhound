@@ -16,16 +16,6 @@ defmodule JoinRoomComponent do
       |> UserSession.changeset
       |> Map.put(:action, :insert)
       |> IOP.inspect
-      #|> apply_changes
-    #case UserSession.changeset(%UserSession{}, params) do
-    #  %{valid?: true} = changeset ->
-    #    user_session =
-    #      changeset
-    #      |> apply_changes
-    #    {:ok, user_session}
-    #  changeset ->
-    #    {:error, changeset}
-    #end
     {:noreply, assign(socket, changeset: changeset)}
   end
 

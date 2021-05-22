@@ -12,6 +12,10 @@ defmodule Chukinas.Dreadnought.UserSession do
     user_session
     |> cast(attrs, [:username, :room])
     |> validate_required([:username, :room])
+    |> validate_length(:username, max: 15)
+    |> validate_format(:username, ~r/\s*(?:[\w\.]\s*){2,}+$/, message: "should be at least 2 alphanumeric characters")
+    |> validate_length(:room, max: 15)
+    |> validate_format(:room, ~r/\s*(?:[\w\.]\s*){8,}+$/, message: "should be at least 8 alphanumeric characters")
   end
 
   def changeset(attrs) do
@@ -19,6 +23,6 @@ defmodule Chukinas.Dreadnought.UserSession do
   end
 
   def empty do
-    changeset(%__MODULE__{}, %{username: "joe", room: "hello"})
+    changeset(%__MODULE__{}, %{})
   end
 end
