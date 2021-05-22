@@ -8,10 +8,10 @@
         <div>
           <%= label f, field, class: Class.label() %>
           <div class="mt-1 relative rounded-md shadow-sm">
-            <%= Element.text_input f, field %>
-            <%= error_icon_text_field f, field %>
+            <%= Component.text_input f, field %>
+            <%= Component.error_icon_text_input f, field %>
           </div>
-          <%= error_paragraph f, field, Class.error_paragraph() %>
+          <%= Component.error_paragraph f, field, Class.error_paragraph() %>
         </div>
       <% end %>
 

@@ -4,7 +4,6 @@ alias Chukinas.Dreadnought.{UserSession}
 defmodule JoinRoomComponent do
   use ChukinasWeb, :live_component
   use Phoenix.HTML
-  import ChukinasWeb.ErrorHelpers
 
   #use Ecto.Schema
   # http://blog.plataformatec.com.br/2016/05/ectos-insert_all-and-schemaless-queries/
