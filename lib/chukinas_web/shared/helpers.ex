@@ -1,5 +1,6 @@
 defmodule ChukinasWeb.Components do
   use Phoenix.HTML
+  use ChukinasWeb, :view
   import ChukinasWeb.ErrorHelpers
   alias ChukinasWeb.CssClasses, as: Class
 
@@ -8,6 +9,19 @@ defmodule ChukinasWeb.Components do
       alias ChukinasWeb.Components, as: Component
       alias ChukinasWeb.CssClasses, as: Class
     end
+  end
+
+  def toggle(id, opts \\ []) do
+    assigns =
+      [
+        label: nil,
+        phx_click: nil,
+        phx_target: nil,
+        is_enabled?: false
+      ]
+      |> Keyword.merge(opts)
+      |> Keyword.put(:id, id)
+    render("toggle.html", assigns)
   end
 
   def error_paragraph(form, field) do
@@ -21,17 +35,7 @@ defmodule ChukinasWeb.Components do
   end
 
   def error_icon_text_input(form, field) do
-    if not valid?(form, field), do: __error_icon__()
-  end
-
-  defp __error_icon__ do
-    ~E"""
-    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-      <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-      </svg>
-    </div>
-    """
+    if not valid?(form, field), do: render("error_icon.html")
   end
 
   def valid?(form), do: form.source.valid?

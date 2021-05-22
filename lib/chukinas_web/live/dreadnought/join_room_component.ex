@@ -37,10 +37,15 @@ defmodule JoinRoomComponent do
     {:ok, socket}
   end
 
-  # TODO put the aria and placeholder stuff back in
   @impl true
   def render(assigns) do
     ChukinasWeb.DreadnoughtView.render("component_join_room.html", assigns)
   end
 
 end
+
+# TODO put the aria and placeholder stuff back in
+# TODO move the dialog box up
+# TODO fix the missing bar under current tab
+# TODO fix colors
+# TODO move DreadnoughtView.toggle to Components

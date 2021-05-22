@@ -1,6 +1,6 @@
 <%# 'show markers' toggle %>
 <div class="my-4">
-  <%= ChukinasWeb.DreadnoughtView.toggle("toggle_show_markers",
+  <%= Component.toggle("toggle_show_markers",
   label: (if @show_markers?, do: "Markers Shown", else: "Markers Hidden"),
   is_enabled?: @show_markers?,
   phx_click: "toggle_show_markers",

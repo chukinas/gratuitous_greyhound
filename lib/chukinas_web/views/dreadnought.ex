@@ -121,19 +121,6 @@ defmodule ChukinasWeb.DreadnoughtView do
     render("_button.html", assigns)
   end
 
-  def toggle(id, opts \\ []) do
-    assigns =
-      [
-        label: nil,
-        phx_click: nil,
-        phx_target: nil,
-        is_enabled?: false
-      ]
-      |> Keyword.merge(opts)
-      |> Keyword.put(:id, id)
-    render("_toggle.html", assigns)
-  end
-
   def unit_selection_box(myself, %Unit{} = unit) do
     box_size = 200
     box_position =
