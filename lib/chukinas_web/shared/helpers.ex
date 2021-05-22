@@ -59,5 +59,3 @@ defmodule ChukinasWeb.Components do
     Phoenix.HTML.Form.submit(text, class: class, disabled: !valid?(form))
   end
 end
-
-# TODO the tab underline in menu aren't highlighting

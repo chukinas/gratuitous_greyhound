@@ -47,5 +47,3 @@ end
 # TODO put the aria and placeholder stuff back in
 # TODO move the dialog box up
 # TODO fix the missing bar under current tab
-# TODO fix colors
-# TODO move DreadnoughtView.toggle to Components
