@@ -6,7 +6,7 @@ defmodule ChukinasWeb.CssClasses do
 
   def text_input(:invalid), do: "block w-full pr-10 border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
 
-  def label, do: "block text-sm font-medium text-gray-700"
+  def label, do: "block text-sm font-medium #{text :dark}"
 
   def error_paragraph, do: "mt-2 text-sm text-red-600"
 
@@ -16,8 +16,14 @@ defmodule ChukinasWeb.CssClasses do
   def menu_tab(false = _active?), do: join(menu_tab(:both), "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300")
   def menu_tab(:both), do: "inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
 
-  def menu_profile_mobile(true = _active?), do: join(menu_profile_mobile(:both), "bg-yellow-200 border-yellow-500 text-yellow-900 font-bold")
+  def menu_profile_mobile(true = _active?), do: join(menu_profile_mobile(:both), "bg-yellow-200 border-yellow-500 #{text :dark} font-bold")
   def menu_profile_mobile(false = _active?), do: join(menu_profile_mobile(:both), "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800")
   def menu_profile_mobile(:both), do: "block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+
+  def menu_nav, do: "#{bg(:light)} shadow-sm"
+
+  def bg(:light), do: "bg-yellow-50"
+
+  def text(:dark), do: "text-yellow-900"
 
 end

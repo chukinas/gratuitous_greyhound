@@ -8,6 +8,8 @@ defmodule ChukinasWeb.Plugs.SanitizeRoomName do
   end
 
   def call(%{:path_params => %{"room" => room_name}} = conn, _opts) do
+    IOP.inspect conn.path_info, "sanitize"
+    IOP.inspect Phoenix.Controller.current_url(conn, %{name: "bill"}), "sanitize"
     room_slug = slugify(room_name)
     if room_slug != room_name do
       path =
@@ -29,7 +31,9 @@ defmodule ChukinasWeb.Plugs.SanitizeRoomName do
   def slugify(string) do
     string
     |> String.downcase()
-    |> String.replace(~r/[^\w-]+/u, "-")
+    |> String.replace(~r/[^[:alnum:]]+/u, "-")
+    |> String.trim("-")
+    |> IOP.inspect
   end
 
   def unslugify(slug) do
