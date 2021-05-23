@@ -34,8 +34,14 @@ defmodule JoinRoomComponent do
   def assign_changeset_and_url(socket, changeset, show_errors? \\ true) do
     changeset = if show_errors?, do: Map.put(changeset, :action, :insert), else: changeset
     room_slug = UserSession.get_room_slug(changeset)
-    IOP.inspect socket.assigns, "join comp assign url"
-    assign(socket, maybe_url: room_slug, changeset: changeset)
+    url = [
+      URI.to_string(socket.host_uri),
+      "dreadnought/play",
+      room_slug
+    ]
+    |> Enum.join("/")
+    |> IOP.inspect("join room url")
+    assign(socket, maybe_url: url, changeset: changeset)
   end
 
   @impl true
@@ -45,7 +51,6 @@ defmodule JoinRoomComponent do
       socket
       |> assign(assigns)
       |> assign_changeset_and_url(changeset, false)
-      |> IOP.inspect("join comp update")
     {:ok, socket}
   end
 

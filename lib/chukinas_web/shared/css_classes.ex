@@ -2,7 +2,7 @@ defmodule ChukinasWeb.CssClasses do
 
   def join(a, b), do: Enum.join([a, b], " ")
 
-  def text_input(:valid), do: join text_input(:both), "appearance-none px-3 py-2 border border-gray-300 shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-700 focus:border-yellow-700"
+  def text_input(:valid), do: join text_input(:both), "appearance-none px-3 py-2 border border-gray-300 shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-700 focus:border-yellow-700 disabled:text-gray-500"
   def text_input(:invalid), do: join text_input(:both), "pr-10 border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500"
   def text_input(:both), do: "block w-full focus:outline-none sm:text-sm rounded-md disabled:#{bg :light} disabled:shadow-none"
 
