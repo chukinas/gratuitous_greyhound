@@ -1,0 +1,8 @@
+<div>
+  <div class="mt-1 flex rounded-md shadow-sm">
+    <div class="relative flex items-stretch flex-grow focus-within:z-10">
+      <input value="<%= @maybe_url %>" type="text" name="email" id="email" disabled class="block w-full rounded-none rounded-l-md sm:text-sm border-gray-300 disabled:text-gray-400">
+    </div>
+    <%= __MODULE__.submit "Join", @form, class: @submit_class %>
+  </div>
+</div>

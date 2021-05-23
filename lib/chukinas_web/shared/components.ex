@@ -55,9 +55,16 @@ defmodule ChukinasWeb.Components do
     Phoenix.HTML.Form.text_input(form, field, opts)
   end
 
-  def submit(text, form) do
-    class = Class.submit()
-    Phoenix.HTML.Form.submit(text, class: class, disabled: !valid?(form))
+  def url_join(form, url) do
+    render("url_join.html", maybe_url: url, form: form, submit_class: Class.join_btn())
+  end
+
+  def submit(text, form, opts \\ []) do
+    opts =
+      opts
+      |> Keyword.put_new(:class, Class.submit())
+      |> Keyword.put_new(:disabled, !valid?(form))
+    Phoenix.HTML.Form.submit(text, opts)
   end
 
   defp merge_class_and_opts(opts, class) do

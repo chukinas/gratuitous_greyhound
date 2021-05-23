@@ -10,7 +10,9 @@ defmodule ChukinasWeb.CssClasses do
 
   def error_paragraph, do: "mt-2 text-sm text-red-600"
 
-  def submit, do: "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white disabled:text-gray-400 bg-yellow-700 disabled:bg-gray-200 disabled:cursor-not-allowed hover:bg-yellow-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+  def submit, do: join btn_common(), "w-full flex justify-center border-transparent shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+  def join_btn, do: join btn_common(), "-ml-px inline-flex items-center space-x-2 border-gray-300 rounded-l-none focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+  def btn_common, do: "py-2 px-4 border rounded-md text-sm text-white disabled:text-gray-400 font-medium bg-yellow-700 hover:bg-yellow-800 disabled:bg-gray-200 disabled:cursor-not-allowed "
 
   def menu_tab(true = _active?), do: join(menu_tab(:both), "border-yellow-700 text-yellow-900 font-bold")
   def menu_tab(false = _active?), do: join(menu_tab(:both), "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300")
