@@ -2,7 +2,7 @@
   <% :gallery -> %>
     <%= live_component @socket, ChukinasWeb.Dreadnought.GalleryComponent, id: :gallery %>
   <% :play -> %>
-    <%= render_template("play.html", room: @room, room_name: @room_name) %>
+    <%= live_component @socket, ChukinasWeb.Dreadnought.PlayComponent, id: :play, user_session: @user_session %>
 <% end %>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>

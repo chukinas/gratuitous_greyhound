@@ -1,6 +1,0 @@
-<%= if @room do %>
-  <p>Your room: <b><%= @room_name %></b></p>
-<% else %>
-  <%= live_component @socket, ChukinasWeb.Dreadnought.JoinRoomComponent, id: :join_room %>
-<% end %>
-

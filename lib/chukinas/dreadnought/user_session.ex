@@ -6,9 +6,13 @@ defmodule Chukinas.Dreadnought.UserSession do
 
   embedded_schema do
     field :username, :string
+    # TODO rename desired_room or something
     field :room, :string
+    field :room_name, :string
     field :room_slug, :string
   end
+
+  def new, do: %__MODULE__{}
 
   def changeset(user_session, attrs) do
     changeset =
@@ -16,6 +20,7 @@ defmodule Chukinas.Dreadnought.UserSession do
       |> cast(attrs, [:username, :room])
       |> update_change(:username, &String.trim/1)
       |> put_room_slug
+      |> put_room_name
       |> validate_required([:username, :room])
       |> validate_length(:username, min: 2, max: 15)
       |> validate_room_slug_alnum_len
@@ -44,6 +49,15 @@ defmodule Chukinas.Dreadnought.UserSession do
     |> put_change(:room, room)
   end
 
+  def put_room_name(changeset) do
+    room_slug =
+      changeset
+      |> get_field(:room_slug)
+      |> slugify
+    changeset
+    |> put_change(:room_slug, room_slug)
+  end
+
   def put_room_slug(changeset) do
     room_slug =
       changeset
@@ -66,7 +80,6 @@ defmodule Chukinas.Dreadnought.UserSession do
       changeset
       |> apply_changes
     user_session
-    |> Map.take([:username, :room_slug])
   end
 
 end

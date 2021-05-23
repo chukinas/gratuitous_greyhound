@@ -16,6 +16,7 @@ defmodule JoinRoomComponent do
     {:noreply, socket}
   end
 
+  # TODO rename "join"
   def handle_event("save", %{"user_session" => params}, socket) do
     case UserSession.changeset(params) do
       {:ok, changeset} ->
@@ -46,12 +47,21 @@ defmodule JoinRoomComponent do
 
   @impl true
   def update(assigns, socket) do
-    {_, changeset} = UserSession.empty()
     socket =
       socket
       |> assign(assigns)
-      |> assign_changeset_and_url(changeset, false)
+      |> assign_changeset_and_url(assigns.changeset, false)
+      |> maybe_redirect_away_from_room
     {:ok, socket}
+  end
+
+  defp maybe_redirect_away_from_room(socket) do
+    IOP.inspect socket.assigns, "join comp maybe redirect"
+    if !socket.assigns.changeset.valid? do
+      # TODO extract route to function
+      send self(), {:push_patch, to: "/dreadnought/play"}
+    end
+    socket
   end
 
 end

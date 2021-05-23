@@ -5,7 +5,12 @@ defmodule ChukinasWeb.Plugs.SanitizeRoomName do
 
   defmacro __using__(_opts) do
     quote do
-      import ChukinasWeb.Plugs.SanitizeRoomName, only: [slugify: 1, count_alnum: 1, to_alnum: 1]
+      import ChukinasWeb.Plugs.SanitizeRoomName, only: [
+        slugify: 1,
+        unslugify: 1,
+        count_alnum: 1,
+        to_alnum: 1
+      ]
     end
   end
 
@@ -14,8 +19,6 @@ defmodule ChukinasWeb.Plugs.SanitizeRoomName do
   end
 
   def call(%{:path_params => %{"room" => room_name}} = conn, _opts) do
-    IOP.inspect conn.path_info, "sanitize"
-    IOP.inspect Phoenix.Controller.current_url(conn, %{name: "bill"}), "sanitize"
     room_slug = slugify(room_name)
     if room_slug != room_name do
       path =
@@ -40,7 +43,6 @@ defmodule ChukinasWeb.Plugs.SanitizeRoomName do
     |> String.downcase()
     |> String.replace(~r/[^[:alnum:]]+/u, "-")
     |> String.trim("-")
-    |> IOP.inspect
   end
 
   def to_alnum(string) do
