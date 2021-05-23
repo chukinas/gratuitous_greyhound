@@ -49,13 +49,25 @@ defmodule ChukinasWeb.Components do
   def valid(form), do: form |> valid? |> valid
   def valid(form, field), do: form |> valid?(field) |> valid
 
-  def text_input(form, field) do
+  def text_input(form, field, opts \\ []) do
     class = form |> valid(field) |> Class.text_input
-    Phoenix.HTML.Form.text_input(form, field, class: class)
+    opts = merge_class_and_opts(opts, class)
+    Phoenix.HTML.Form.text_input(form, field, opts)
   end
 
   def submit(text, form) do
     class = Class.submit()
     Phoenix.HTML.Form.submit(text, class: class, disabled: !valid?(form))
+  end
+
+  defp merge_class_and_opts(opts, class) do
+    {_, new_class} = Keyword.get_and_update(opts, :class, fn current_class ->
+      new_class = case current_class do
+        nil -> class
+        old_class -> Class.join(old_class, class)
+      end
+      {current_class, new_class}
+    end)
+    new_class
   end
 end

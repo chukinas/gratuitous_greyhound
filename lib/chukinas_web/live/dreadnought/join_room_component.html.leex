@@ -21,6 +21,12 @@
           </div>
         <% end %>
         <div>
+          <%= label f, :room_slug, class: Class.label() %>
+          <div class="mt-1 relative rounded-md shadow-sm">
+            <%= Component.text_input f, :room_slug, disabled: true, value: @maybe_url %>
+          </div>
+        </div>
+        <div>
           <%= Component.submit "Join", f %>
         </div>
       </form>

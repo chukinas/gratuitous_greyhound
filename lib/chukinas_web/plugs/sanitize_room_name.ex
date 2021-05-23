@@ -3,6 +3,12 @@ defmodule ChukinasWeb.Plugs.SanitizeRoomName do
   alias Phoenix.Controller
   alias Plug.Conn
 
+  defmacro __using__(_opts) do
+    quote do
+      import ChukinasWeb.Plugs.SanitizeRoomName, only: [slugify: 1, count_alnum: 1, to_alnum: 1]
+    end
+  end
+
   def init(opts) do
     opts
   end
@@ -28,12 +34,25 @@ defmodule ChukinasWeb.Plugs.SanitizeRoomName do
     conn
   end
 
+  def slugify(nil), do: ""
   def slugify(string) do
     string
     |> String.downcase()
     |> String.replace(~r/[^[:alnum:]]+/u, "-")
     |> String.trim("-")
     |> IOP.inspect
+  end
+
+  def to_alnum(string) do
+    string
+    |> slugify
+    |> String.replace("-", "")
+  end
+
+  def count_alnum(string) do
+    string
+    |> to_alnum
+    |> String.length
   end
 
   def unslugify(slug) do

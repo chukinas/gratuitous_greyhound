@@ -11,10 +11,9 @@ defmodule JoinRoomComponent do
 
   @impl true
   def handle_event("validate", %{"user_session" => params}, socket) do
-    IOP.inspect socket.conn_info, "hangle event val"
     {_, changeset} = params |> UserSession.changeset
-    changeset = changeset |> Map.put(:action, :insert)
-    {:noreply, assign(socket, changeset: changeset)}
+    socket = assign_changeset_and_url(socket, changeset)
+    {:noreply, socket}
   end
 
   def handle_event("save", %{"user_session" => params}, socket) do
@@ -27,12 +26,16 @@ defmodule JoinRoomComponent do
           |> push_patch(to: "/dreadnought/play/#{user_session.room_slug}")
         {:noreply, socket}
       {:error, changeset} ->
+        socket = assign_changeset_and_url(socket, changeset)
         {:noreply, assign(socket, changeset: Map.put(changeset, :action, :insert))}
     end
   end
 
-  def assign_potential_url(socket, changeset) do
-    assign(socket, :maybe_url, UserSession.maybe_url(changeset))
+  def assign_changeset_and_url(socket, changeset, show_errors? \\ true) do
+    changeset = if show_errors?, do: Map.put(changeset, :action, :insert), else: changeset
+    room_slug = UserSession.get_room_slug(changeset)
+    IOP.inspect socket.assigns, "join comp assign url"
+    assign(socket, maybe_url: room_slug, changeset: changeset)
   end
 
   @impl true
@@ -41,7 +44,8 @@ defmodule JoinRoomComponent do
     socket =
       socket
       |> assign(assigns)
-      |> assign(changeset: changeset)
+      |> assign_changeset_and_url(changeset, false)
+      |> IOP.inspect("join comp update")
     {:ok, socket}
   end
 
