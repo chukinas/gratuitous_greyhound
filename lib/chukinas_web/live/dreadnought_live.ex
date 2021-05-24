@@ -1,23 +1,13 @@
+alias Chukinas.Sessions
+
 defmodule ChukinasWeb.DreadnoughtLive do
   use ChukinasWeb, :live_view
-  alias ChukinasWeb.DreadnoughtView
-  # TODO find a better home for UserSession
-  alias Chukinas.Dreadnought.UserSession
-
-  #@impl true
-  #def render(assigns) do
-  #  DreadnoughtView.render("layout_menu.html", assigns)
-  #end
-
-  def render_template(template, assigns) do
-    DreadnoughtView.render(template, assigns)
-  end
 
   @impl true
   def mount(params, _session, socket) do
     IOP.inspect params, "dread live mount"
     # TODO if mounted
-    {_, user_session} = UserSession.empty()
+    {_, user_session} = Sessions.empty_user_session()
     socket =
       socket
       |> assign(user_session: user_session)
@@ -42,15 +32,8 @@ defmodule ChukinasWeb.DreadnoughtLive do
   end
 
   @impl true
-  # TODO move this to....
-  def handle_event("toggle_show_markers", _, socket) do
-    socket = assign(socket, show_markers?: !socket.assigns.show_markers?)
-    {:noreply, socket}
-  end
-
-  @impl true
   def handle_info({:push_patch, opts}, socket) do
-    IOP.inspect socket, "dread live push patch"
+    IOP.inspect opts, "dread live push patch"
     socket = push_patch(socket, opts)
     {:noreply, socket}
   end

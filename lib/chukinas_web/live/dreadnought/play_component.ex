@@ -1,17 +1,16 @@
 alias ChukinasWeb.Dreadnought.{PlayComponent}
-alias Chukinas.Dreadnought.{UserSession}
+alias Chukinas.Sessions
 
 defmodule PlayComponent do
   use ChukinasWeb, :live_component
 
   @impl true
   def update(assigns, socket) do
-    {_, changeset} =
-      UserSession.changeset(assigns.user_session, %{})
+    {_, changeset} = Sessions.changeset_user_session(assigns.user_session, %{})
     socket =
       socket
       |> assign(changeset: changeset)
-      |> assign(user_session: UserSession.apply(changeset))
+      |> assign(user_session: Sessions.apply_changes(changeset))
     {:ok, socket}
   end
 

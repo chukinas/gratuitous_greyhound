@@ -1,18 +1,29 @@
-# TODO move this to the 'state' folder
-defmodule Chukinas.Dreadnought.UserSession do
-  use ChukinasWeb.Plugs.SanitizeRoomName
+alias Chukinas.Sessions.Room.Name
+
+defmodule Chukinas.Sessions.UserSession do
   use Ecto.Schema
   import Ecto.Changeset
+
+  # *** *******************************
+  # *** TYPES
 
   embedded_schema do
     field :username, :string
     # TODO rename desired_room or something
     field :room, :string
+    # TODO rename room_pretty or something
     field :room_name, :string
+    # TODO rename room
     field :room_slug, :string
   end
 
+  # *** *******************************
+  # *** NEW
+
   def new, do: %__MODULE__{}
+
+  # *** *******************************
+  # *** CHANGESETS
 
   def changeset(user_session, attrs) do
     changeset =
@@ -31,17 +42,23 @@ defmodule Chukinas.Dreadnought.UserSession do
     end
   end
 
-  def get_room_slug(%Ecto.Changeset{} = changeset) do
-    changeset
-    |> get_field(:room_slug)
+  def changeset(attrs) do
+    changeset(%__MODULE__{}, attrs)
   end
+
+  def empty do
+    changeset(%__MODULE__{}, %{})
+  end
+
+  # *** *******************************
+  # *** CHANGESET TRANSFORMS
 
   defp validate_room_slug_alnum_len(changeset) do
     room = get_change(changeset, :room, nil)
     room_alnum =
       changeset
       |> get_field(:room_slug)
-      |> to_alnum
+      |> Name.to_alnum
     changeset
     |> put_change(:room, room_alnum)
     |> validate_length(:room, min: 5, message: "should be at least 5 alphanumeric characters")
@@ -53,7 +70,7 @@ defmodule Chukinas.Dreadnought.UserSession do
     room_slug =
       changeset
       |> get_field(:room_slug)
-      |> slugify
+      |> Name.slugify
     changeset
     |> put_change(:room_slug, room_slug)
   end
@@ -62,17 +79,17 @@ defmodule Chukinas.Dreadnought.UserSession do
     room_slug =
       changeset
       |> get_field(:room)
-      |> slugify
+      |> Name.slugify
     changeset
     |> put_change(:room_slug, room_slug)
   end
 
-  def changeset(attrs) do
-    changeset(%__MODULE__{}, attrs)
-  end
+  # *** *******************************
+  # *** FUNCTIONS
 
-  def empty do
-    changeset(%__MODULE__{}, %{})
+  def get_room_slug(%Ecto.Changeset{} = changeset) do
+    changeset
+    |> get_field(:room_slug)
   end
 
   def apply(changeset) do
