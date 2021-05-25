@@ -7,10 +7,10 @@
     type="button" 
     class="<%= if @is_enabled?, do: "bg-yellow-700", else: "bg-gray-200" %> relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500" 
     role="switch" 
-    :aria-checked="isEnabled" 
-    aria-labelledby="annual-billing-label" <%# TODO rename %>
     phx-click="<%= @phx_click %>"
-    phx-target="<%= @phx_target %>"
+    <%= if @phx_target do %>
+      phx-target="<%= @phx_target %>"
+    <% end %>
   >
     <span class="sr-only">Use setting</span>
     <!-- Enabled: "translate-x-5", Not Enabled: "translate-x-0" -->

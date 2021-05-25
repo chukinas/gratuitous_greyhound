@@ -29,6 +29,14 @@ defmodule ChukinasWeb.DreadnoughtLive do
   def assign_room_param(socket, _params), do: assign(socket, room_param: nil)
 
   @impl true
+  def handle_event("toggle_show_markers", _, socket) do
+    socket =
+      socket
+      |> assign(show_markers?: !socket.assigns[:show_markers?])
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_info({:update_assigns, new_assigns}, socket) do
     new_assigns  |> IOP.inspect("dread live h.info update ass")
     socket =

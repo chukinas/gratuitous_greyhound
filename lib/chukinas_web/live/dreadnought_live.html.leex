@@ -1,6 +1,10 @@
 <%= case @live_action do %>
   <% :gallery -> %>
-    <%= live_component @socket, ChukinasWeb.Dreadnought.GalleryComponent, id: :gallery %>
+    <%= live_component(
+          @socket, 
+          ChukinasWeb.GalleryComponent, 
+          show_markers?: assigns[:show_markers?],
+          id: :gallery ) %>
   <% :room -> %>
     <%= live_component(
           @socket, 
