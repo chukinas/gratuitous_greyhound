@@ -4,7 +4,7 @@
   <% :room -> %>
     <%= live_component(
           @socket, 
-          ChukinasWeb.Dreadnought.PlayComponent, 
+          ChukinasWeb.RoomComponent, 
           id: :room, 
           show_join_screen?: assigns[:show_join_screen?], 
           user_session: assigns[:user_session], 

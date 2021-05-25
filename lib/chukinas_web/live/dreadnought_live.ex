@@ -26,6 +26,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
   def assign_room_param(socket, %{"room" => room}), do: assign(socket, room_param: room)
   def assign_room_param(socket, _params), do: assign(socket, room_param: nil)
 
+  # TODO simplify this?
   def route(params, socket) do
     route(params, socket, socket.assigns.live_action, socket.assigns[:user_session])
   end

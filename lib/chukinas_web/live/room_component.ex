@@ -1,13 +1,10 @@
-alias ChukinasWeb.Dreadnought.{PlayComponent}
 alias Chukinas.Sessions
 
-# TODO rename RoomComponent
-defmodule PlayComponent do
+defmodule ChukinasWeb.RoomComponent do
   use ChukinasWeb, :live_component
 
   @impl true
   def update(assigns, socket) do
-    # TODO remove the setting of user_session to nil in liveview
     show_join_screen? =
       cond do
         assigns.show_join_screen? -> true
@@ -18,8 +15,6 @@ defmodule PlayComponent do
       socket
       |> assign(assigns)
       |> assign(show_join_screen?: show_join_screen?)
-    # TODO take this away once I have a lobby component
-      |> assign(pretty_room_name: Sessions.pretty_room_name(assigns.user_session))
     {:ok, socket}
   end
 
@@ -30,11 +25,15 @@ defmodule PlayComponent do
       <%= live_component(
             @socket,
             ChukinasWeb.JoinComponent,
-            id: :join_room,
+            id: :join,
             path_params: @path_params,
             user_session: @user_session )%>
     <% else %>
-      <p>Your room: <b><%= @pretty_room_name %></b></p>
+      <%= live_component(
+            @socket,
+            ChukinasWeb.LobbyComponent,
+            id: :lobby,
+            user_session: @user_session )%>
     <% end %>
     """
   end
