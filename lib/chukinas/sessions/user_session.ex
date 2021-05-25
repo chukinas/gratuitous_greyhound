@@ -26,28 +26,14 @@ defmodule Chukinas.Sessions.UserSession do
   # *** CHANGESETS
 
   def changeset(user_session, attrs) do
-    changeset =
-      user_session
-      |> cast(attrs, [:username, :room])
-      |> update_change(:username, &String.trim/1)
-      |> put_room_slug
-      |> put_room_name
-      |> validate_required([:username, :room])
-      |> validate_length(:username, min: 2, max: 15)
-      |> validate_room_slug_alnum_len
-    if changeset.valid? do
-      {:ok, changeset}
-    else
-      {:error, changeset}
-    end
-  end
-
-  def changeset(attrs) do
-    changeset(%__MODULE__{}, attrs)
-  end
-
-  def empty do
-    changeset(%__MODULE__{}, %{})
+    user_session
+    |> cast(attrs, [:username, :room])
+    |> update_change(:username, &String.trim/1)
+    |> put_room_slug
+    |> put_room_name
+    |> validate_required([:username, :room])
+    |> validate_length(:username, min: 2, max: 15)
+    |> validate_room_slug_alnum_len
   end
 
   # *** *******************************
@@ -85,18 +71,22 @@ defmodule Chukinas.Sessions.UserSession do
   end
 
   # *** *******************************
+  # *** GETTERS
+
+  def room(%__MODULE__{room_slug: value}), do: value
+
+  def pretty_room_name(user_session) do
+    user_session
+    |> room
+    |> Name.pretty
+  end
+
+  # *** *******************************
   # *** FUNCTIONS
 
   def get_room_slug(%Ecto.Changeset{} = changeset) do
     changeset
     |> get_field(:room_slug)
-  end
-
-  def apply(changeset) do
-    user_session =
-      changeset
-      |> apply_changes
-    user_session
   end
 
 end

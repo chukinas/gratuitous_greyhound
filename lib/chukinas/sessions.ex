@@ -3,19 +3,17 @@ defmodule Chukinas.Sessions do
   The Sessions context.
   """
 
+  import Ecto.Changeset
   alias Chukinas.Sessions.UserSession
   alias Chukinas.Sessions.Room
 
   # *** *******************************
   # *** UserSession
 
-  defdelegate empty_user_session, to: UserSession, as: :empty
-  # TODO does this belong here?
-  defdelegate changeset_user_session(user_session, attrs), to: UserSession, as: :changeset
-  defdelegate changeset_user_session(attrs), to: UserSession, as: :changeset
-  # TODO Should this just be Ecto.Changeset.apply?
-  def apply_changes(%Ecto.Changeset{} = changeset), do: UserSession.apply(changeset)
-  defdelegate get_room_slug(changeset), to: UserSession
+  # TODO rename user_session_changeset
+  def changeset_user_session(user_session \\ %UserSession{}, attrs) do
+    UserSession.changeset(user_session, attrs)
+  end
 
   def list_user_sessions do
     raise "TODO"
@@ -23,8 +21,15 @@ defmodule Chukinas.Sessions do
 
   def get_user_session!(id), do: raise "TODO"
 
-  def create_user_session(attrs \\ %{}) do
-    raise "TODO"
+  def create_user_session(attrs \\ %{})
+  def create_user_session(nil), do: create_user_session(%{})
+  def create_user_session(attrs) do
+    changeset = changeset_user_session(attrs)
+    if changeset.valid? do
+      {:ok, apply_changes(changeset)}
+    else
+      {:error, changeset}
+    end
   end
 
   def update_user_session(%UserSession{} = user_session, attrs) do
@@ -42,11 +47,26 @@ defmodule Chukinas.Sessions do
   # *** *******************************
   # *** ROOM
 
+  def get_room(%UserSession{room_slug: room}), do: room
+  def get_room(%Ecto.Changeset{} = changeset) do
+    get_field(changeset, :room_slug, "")
+  end
+
+  # TODO replace with get_room
+  defdelegate get_room_slug(changeset), to: UserSession
+
+  # TODO this clause is temp until I have Lobby component
+  def pretty_room_name(nil), do: "" |> IOP.inspect("sessions pretty")
+  def pretty_room_name(string) when is_binary(string) do
+    Room.Name.pretty(string)
+  end
+  def pretty_room_name(%UserSession{} = user_session) do
+    UserSession.pretty_room_name(user_session)
+  end
+
   def list_rooms do
     raise "TODO"
   end
-
-  def get_room!(id), do: raise "TODO"
 
   def create_room(attrs \\ %{}) do
     raise "TODO"
