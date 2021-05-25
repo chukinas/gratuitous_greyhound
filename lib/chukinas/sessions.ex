@@ -12,8 +12,7 @@ defmodule Chukinas.Sessions do
   # *** *******************************
   # *** UserSession
 
-  # TODO rename user_session_changeset
-  def changeset_user_session(user_session \\ %UserSession{}, attrs) do
+  def user_session_changeset(user_session \\ %UserSession{}, attrs) do
     UserSession.changeset(user_session, attrs)
   end
 
@@ -26,7 +25,7 @@ defmodule Chukinas.Sessions do
   def create_user_session(attrs \\ %{})
   def create_user_session(nil), do: create_user_session(%{})
   def create_user_session(attrs) do
-    changeset = changeset_user_session(attrs)
+    changeset = user_session_changeset(attrs)
     if changeset.valid? do
       {:ok, apply_changes(changeset)}
     else

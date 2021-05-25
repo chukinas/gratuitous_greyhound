@@ -10,7 +10,7 @@
   <div class="mt-8 sm:mx-auto sm:w-full max-w-2xl">
     <div class="<%= Class.bg :light %> py-8 px-4 shadow sm:rounded-lg sm:px-10">
 
-      <%= f = form_for @changeset, "#", phx_change: :validate, phx_submit: :save, phx_target: @myself, class: "space-y-6" %>
+      <%= f = form_for @changeset, "#", phx_change: :validate, phx_submit: :join, phx_target: @myself, class: "space-y-6" %>
         <%= for field <- [:username, :room] do %>
           <div>
             <%= label f, field, class: Class.label() %>

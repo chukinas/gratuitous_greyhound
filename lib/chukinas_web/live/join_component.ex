@@ -34,15 +34,12 @@ defmodule ChukinasWeb.JoinComponent do
 
   @impl true
   def handle_event("validate", %{"user_session" => params}, socket) do
-    # TODO this shouldn't return a tuple
-    # TODO rename user_session_changeset
-    changeset = Sessions.changeset_user_session(params)
+    changeset = Sessions.user_session_changeset(params)
     socket = assign_changeset_and_url(socket, changeset)
     {:noreply, socket}
   end
 
-  # TODO rename "join"
-  def handle_event("save", %{"user_session" => params}, socket) do
+  def handle_event("join", %{"user_session" => params}, socket) do
     case Sessions.create_user_session(params) do
       {:error, changeset} ->
         socket =
