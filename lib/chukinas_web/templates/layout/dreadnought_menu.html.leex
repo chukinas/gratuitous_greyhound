@@ -24,7 +24,7 @@
             <%= for tab <- @tabs do %>
               <%= live_patch tab.title,
                     class: Class.menu_tab(tab.current?),
-                    to: Routes.dreadnought_path(@socket, tab.live_action) %>
+                    to: tab.path %>
             <% end %>
           </div>
 
@@ -67,7 +67,7 @@
         <%= for tab <- @tabs do %>
           <%= live_patch tab.title,
                 class: Class.menu_profile_mobile(tab.current?),
-                to: Routes.dreadnought_path(@socket, tab.live_action) %>
+                to: tab.path %>
         <% end %>
       </div>
     </div>

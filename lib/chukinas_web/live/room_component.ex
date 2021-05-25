@@ -21,20 +21,22 @@ defmodule ChukinasWeb.RoomComponent do
   @impl true
   def render(assigns) do
     ~L"""
-    <%= if assigns.show_join_screen? do %>
-      <%= live_component(
-            @socket,
-            ChukinasWeb.JoinComponent,
-            id: :join,
-            path_params: @path_params,
-            user_session: @user_session )%>
-    <% else %>
-      <%= live_component(
-            @socket,
-            ChukinasWeb.LobbyComponent,
-            id: :lobby,
-            user_session: @user_session )%>
-    <% end %>
+    <div id="roomComponent">
+      <%= if assigns.show_join_screen? do %>
+        <%= live_component(
+              @socket,
+              ChukinasWeb.JoinComponent,
+              id: :join,
+              path_params: @path_params,
+              user_session: @user_session )%>
+      <% else %>
+        <%= live_component(
+              @socket,
+              ChukinasWeb.LobbyComponent,
+              id: :lobby,
+              user_session: @user_session )%>
+      <% end %>
+    </div>
     """
   end
 

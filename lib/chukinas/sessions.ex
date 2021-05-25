@@ -1,3 +1,5 @@
+alias ChukinasWeb.Router.Helpers, as: Routes
+
 defmodule Chukinas.Sessions do
   @moduledoc """
   The Sessions context.
@@ -44,9 +46,25 @@ defmodule Chukinas.Sessions do
     raise "TODO"
   end
 
+  # TODO this should maybe accept a path helper instead....
+  # ... when is_function(func, 2)
+  def path(socket, user_session) do
+    room = get_room(user_session)
+    Routes.dreadnought_path(socket, :room, room)
+  end
+
+  def url(socket, user_session) do
+    [
+      URI.to_string(socket.host_uri),
+      path(socket, user_session)
+    ]
+    |> Enum.join
+  end
+
   # *** *******************************
   # *** ROOM
 
+  def get_room(nil), do: ""
   def get_room(%UserSession{room_slug: room}), do: room
   def get_room(%Ecto.Changeset{} = changeset) do
     get_field(changeset, :room_slug, "")

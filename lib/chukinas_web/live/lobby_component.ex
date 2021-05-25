@@ -15,7 +15,9 @@ defmodule ChukinasWeb.LobbyComponent do
   @impl true
   def render(assigns) do
     ~L"""
-    <p>Your room: <b><%= @pretty_room_name %></b></p>
+    <div id="lobbyComponent">
+      <p>Your room: <b><%= @pretty_room_name %></b></p>
+    </div>
     """
   end
 
