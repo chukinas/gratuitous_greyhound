@@ -20,6 +20,9 @@ defmodule POS do
   # *** *******************************
   # *** POSITION
 
+  @type position_type :: Position.t()
+  @type position_list :: [position_type]
+
   defdelegate position(term), to: Position, as: :new
   defdelegate position(a, b), to: Position, as: :new
 

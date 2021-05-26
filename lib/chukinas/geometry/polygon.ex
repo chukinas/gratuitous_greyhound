@@ -1,15 +1,15 @@
-alias Chukinas.Geometry.{Polygon, Position, CollidableShape}
+alias Chukinas.Geometry.{Polygon, CollidableShape}
 
 defmodule Polygon do
   @moduledoc"""
   An arbitrary 2D shape composed of straight edges
   """
 
-  use TypedStruct
+  use Chukinas.PositionOrientationSize
 
   typedstruct enforce: true do
     # TODO I should use Collision.Polygon.Vertex instead?
-    field :vertices, [Position.t()]
+    field :vertices, POS.position_list
   end
 
   # *** *******************************
@@ -17,14 +17,14 @@ defmodule Polygon do
 
   def new(vertices) when length(vertices) > 2 do
     %__MODULE__{
-      vertices: vertices |> Enum.map(&Position.new/1)
+      vertices: vertices |> Enum.map(&position/1)
     }
   end
 
   # TODO this should be a protocol implementation
   def to_vertices(polygon) do
     polygon.vertices
-    |> Enum.map(&Position.to_vertex/1)
+    |> Enum.map(&position_to_vertex/1)
   end
 
   # *** *******************************
