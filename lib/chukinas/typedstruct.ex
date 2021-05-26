@@ -12,30 +12,23 @@ defmodule Chukinas.TypedStruct do
   defmacro position_fields do
     quote do
       # TODO can I replace number() with just `number`?
-      field :x, number
-      field :y, number
+      field :x, number(), enforce: true
+      field :y, number(), enforce: true
     end
   end
 
   defmacro pose_fields do
     quote do
       position_fields()
-      field :angle, number()
+      field :angle, number(), enforce: true
     end
   end
 
   defmacro size_fields do
     quote do
-      field :width, number()
-      field :height, number()
+      field :width, number(), enforce: true
+      field :height, number(), enforce: true
     end
   end
-
-  #defmacro rect_fields do
-  #  quote do
-  #    position_fields()
-  #    size_fields()
-  #  end
-  #end
 
 end

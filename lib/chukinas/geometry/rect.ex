@@ -11,7 +11,6 @@ defmodule Rect do
   # *** *******************************
   # *** TYPES
 
-  use Chukinas.TypedStruct
   typedstruct enforce: true do
     position_fields()
     size_fields()

@@ -102,8 +102,11 @@ defmodule Mission do
   # *** CALC
 
   def calc_ai_commands(mission) do
+    mission
     Enum.reduce(ai_player_ids(mission), mission, fn player_id, mission ->
+      IO.puts "start func"
       %PlayerTurn{player_actions: actions} = PlayerTurn.new(player_id, :ai, mission)
+      IO.puts "about to put actinso"
       mission |> put(actions)
     end)
   end
@@ -132,7 +135,6 @@ defmodule Mission do
     # Part 3: Prepare for this turn's planning
     |> clear_player_actions
     |> calc_ai_commands
-    |> IOP.inspect("Mission new turn")
   end
 
   defp clear_gunfire(mission), do: Maps.clear(mission, :gunfire)

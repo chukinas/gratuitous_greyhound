@@ -6,6 +6,8 @@ alias Unit.Event, as: Ev
 
 defmodule CombatAction do
 
+  use Chukinas.PositionOrientationSize
+
   alias CombatAction.Accumulator, as: Acc
 
   # *** *******************************
@@ -112,7 +114,7 @@ defmodule CombatAction do
       |> Pose.angle
     ordnance_hit_pose =
       target
-      |> Unit.position
+      |> position
       |> Pose.new(ordnance_hit_angle)
     animations = [
       Animation.Build.large_muzzle_flash(pose, delay_discharge),

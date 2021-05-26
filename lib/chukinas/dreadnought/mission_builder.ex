@@ -5,6 +5,7 @@ alias Chukinas.Geometry.{Pose, Size, Position, Grid}
 defmodule MissionBuilder do
 
   def dev do
+    IO.puts "building missionn"
     {grid, margin} = medium_map()
     units = [
       Unit.Builder.red_cruiser(1, pose: Pose.new(0, 0, 0), name: "Prince Eugene"),
@@ -19,7 +20,6 @@ defmodule MissionBuilder do
     |> Mission.put(units)
     |> Mission.put(players)
     |> Mission.start
-    |> IOP.inspect("Mission.Build first turn")
   end
 
   def build do
@@ -61,7 +61,6 @@ defmodule MissionBuilder do
     |> Mission.put(units)
     |> Mission.put(players)
     |> Mission.start
-    |> IOP.inspect("MissionBuilder new mission")
   end
 
   def small_map, do: grid_and_margin(800, 500)

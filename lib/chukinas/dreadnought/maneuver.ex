@@ -8,6 +8,8 @@ defmodule Maneuver do
   Fully qualifies a unit's maneuvering for a given turn
   """
 
+  use Chukinas.PositionOrientationSize
+
   # *** *******************************
   # *** TYPES
 
@@ -28,8 +30,8 @@ defmodule Maneuver do
     end
   end
 
-  def move_to(unit, pos) do
-    path = Path.get_connecting_path(unit.pose, pos)
+  def move_to(unit, position) do
+    path = Path.get_connecting_path(pose(unit), position)
     maneuver = Ev.Maneuver.new(path)
     Unit.put(unit, maneuver)
   end
@@ -37,9 +39,10 @@ defmodule Maneuver do
   # *** *******************************
   # *** PRIVATE
 
-  defp put_trapped_maneuver(%Unit{pose: pose} = unit) do
+  defp put_trapped_maneuver(%Unit{} = unit) do
+    this_pose = unit |> pose |> IOP.inspect("put trap man")
     events = [
-      Ev.Maneuver.new(Path.new_straight(pose, 300))
+      Ev.Maneuver.new(Path.new_straight(this_pose, 300))
     ]
     Unit.put(unit, events)
   end

@@ -141,7 +141,7 @@ defmodule PlayerTurn do
         player_actions: player.player_actions,
         units: player.units
       }
-     concat ["#Player<", to_doc(summary, opts), ">"]
+     concat ["#Player-#{player.player_id}<", to_doc(summary, opts), ">"]
     end
   end
 end

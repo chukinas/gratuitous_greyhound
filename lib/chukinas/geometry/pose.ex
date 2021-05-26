@@ -6,15 +6,20 @@ defmodule Pose do
 
   require Position
 
-  use TypedStruct
-  typedstruct enforce: true do
-    field :x, number()
-    field :y, number()
-    field :angle, number()
+  use Chukinas.TypedStruct
+
+  typedstruct do
+    pose_fields()
   end
 
   # *** *******************************
   # *** NEW
+
+  def new(%{x: x, y: y, angle: angle}), do: new(x, y, angle)
+
+  def new(%__MODULE__{} = pose), do: pose
+
+  def new({x, y, angle}), do: new(x, y, angle)
 
   def new({x, y}, angle), do: new(x, y, angle)
 
@@ -40,10 +45,18 @@ defmodule Pose do
     %__MODULE__{pose | angle: angle + 180}
   end
 
+  def tuple(%{x: x, y: y, angle: angle}), do: {x, y, angle}
+
   # *** *******************************
   # *** SETTERS
 
   def put_angle(pose, angle), do: %__MODULE__{pose | angle: angle}
+
+  # TODO this is in the wrong place
+  def put_pose(poseable_item, pose) when is_struct(poseable_item) do
+    pose = new(pose) |> Map.from_struct
+    Map.merge(poseable_item, pose)
+  end
 
   # *** *******************************
   # *** API

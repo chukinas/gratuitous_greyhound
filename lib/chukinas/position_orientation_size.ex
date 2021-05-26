@@ -1,23 +1,24 @@
-alias Chukinas.Geometry.{Size, Position}
+alias Chukinas.Geometry.{Size, Position, Pose}
 alias Chukinas.PositionOrientationSize, as: POS
 
 defmodule POS do
 
-  #import Position.Guard
+  require Position.Guard
+  import Position.Guard
 
   defmacro __using__(_opts) do
     quote do
+      require Position.Guard
+      import Position.Guard
       require POS
       import POS
+      use Chukinas.TypedStruct
     end
   end
 
 
   # *** *******************************
   # *** POSITION
-
-  require Position.Guard
-  defguard has_position(term) when Position.Guard.has_position(term)
 
   defdelegate position(term), to: Position, as: :new
   defdelegate position(a, b), to: Position, as: :new
@@ -55,5 +56,39 @@ defmodule POS do
   defdelegate width(size), to: Size
 
   defdelegate height(size), to: Size
+
+  # *** *******************************
+  # *** ANGLE
+
+  def angle(%{angle: value}), do: value
+
+  # *** *******************************
+  # *** POSE
+
+  defdelegate pose(term), to: Pose, as: :new
+
+  def pose_into(pose, poseable_item)
+  when has_pose(pose)
+  and has_pose(poseable_item) do
+    Pose.put_pose(poseable_item, pose)
+  end
+
+  def pose_to_keywords(pose) do
+    pose
+    |> pose()
+    |> Map.from_struct
+    |> Enum.into([])
+  end
+
+  # TODO there should be a better API
+  def opts_convert_pose(opts) do
+    case Keyword.pop(opts, :pose) do
+      {nil, _} ->
+        opts
+      {pose, opts} ->
+        opts
+        |> Keyword.merge(pose |> pose_to_keywords)
+    end
+  end
 
 end

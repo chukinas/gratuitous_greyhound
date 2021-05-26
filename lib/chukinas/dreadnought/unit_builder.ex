@@ -3,6 +3,8 @@ alias Chukinas.Geometry.{Pose}
 
 defmodule Unit.Builder do
 
+  use Chukinas.PositionOrientationSize
+
   def blue_merchant(id, opts \\ []) do
     fields =
       [
@@ -12,6 +14,7 @@ defmodule Unit.Builder do
         name: "noname"
       ]
       |> Keyword.merge(opts)
+      |> opts_convert_pose
     Unit.new(id, fields)
   end
 
@@ -27,6 +30,7 @@ defmodule Unit.Builder do
         turrets: turrets
       ]
       |> Keyword.merge(opts)
+      |> opts_convert_pose
     Unit.new(id, fields)
   end
 
@@ -45,6 +49,7 @@ defmodule Unit.Builder do
         name: name
       ]
       |> Keyword.merge(opts)
+      |> opts_convert_pose
     Unit.new(id, fields)
   end
 
@@ -61,6 +66,7 @@ defmodule Unit.Builder do
         turrets: turrets
       ]
       |> Keyword.merge(opts)
+      |> opts_convert_pose
     Unit.new(id, fields)
   end
 
@@ -76,6 +82,8 @@ defmodule Unit.Builder do
         turrets: turrets
       ]
       |> Keyword.merge(opts)
+      # TODO reduce boilerplate
+      |> opts_convert_pose
     Unit.new(id, fields)
   end
 
