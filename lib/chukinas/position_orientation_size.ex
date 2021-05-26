@@ -67,6 +67,8 @@ defmodule POS do
 
   defdelegate pose(term), to: Pose, as: :new
 
+  defdelegate pose_origin(), to: Pose, as: :origin
+
   def pose_into(pose, poseable_item)
   when has_pose(pose)
   and has_pose(poseable_item) do

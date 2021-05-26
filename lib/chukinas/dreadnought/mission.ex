@@ -104,9 +104,7 @@ defmodule Mission do
   def calc_ai_commands(mission) do
     mission
     Enum.reduce(ai_player_ids(mission), mission, fn player_id, mission ->
-      IO.puts "start func"
       %PlayerTurn{player_actions: actions} = PlayerTurn.new(player_id, :ai, mission)
-      IO.puts "about to put actinso"
       mission |> put(actions)
     end)
   end

@@ -5,7 +5,6 @@ alias Chukinas.Geometry.{Pose, Size, Position, Grid}
 defmodule MissionBuilder do
 
   def dev do
-    IO.puts "building missionn"
     {grid, margin} = medium_map()
     units = [
       Unit.Builder.red_cruiser(1, pose: Pose.new(0, 0, 0), name: "Prince Eugene"),

@@ -1,5 +1,4 @@
 alias Chukinas.Dreadnought.{Unit}
-alias Chukinas.Geometry.{Pose, Position}
 alias Chukinas.LinearAlgebra.CSys.Conversion
 alias Chukinas.LinearAlgebra.Vector
 alias Chukinas.Util.Opts
@@ -8,6 +7,7 @@ alias Unit.Event, as: Ev
 defmodule ChukinasWeb.DreadnoughtView do
   use ChukinasWeb, :view
   use ChukinasWeb.Components
+  use Chukinas.PositionOrientationSize
 
   def maneuver_path(%Ev.Maneuver{} = path, unit_id) do
     assigns =
@@ -71,7 +71,7 @@ defmodule ChukinasWeb.DreadnoughtView do
       image_file_path: sprite.image_file_path,
       image_size: sprite.image_size,
       image_clip_path: sprite.image_clip_path,
-      transform: sprite.image_origin |> Position.add(sprite.rect) |> Position.multiply(-1)
+      transform: sprite.image_origin |> position_add(sprite.rect) |> position_multiply(-1)
     ]
     render("_sprite.html", assigns)
   end
@@ -80,7 +80,7 @@ defmodule ChukinasWeb.DreadnoughtView do
     opts = Opts.merge!(opts, [
       attributes: [],
       class: "",
-      pose: Pose.origin()
+      pose: pose_origin()
     ])
     pose = opts[:pose]
     attributes =
@@ -93,7 +93,7 @@ defmodule ChukinasWeb.DreadnoughtView do
     assigns = %{
       sprite: sprite,
       socket: socket,
-      position: sprite.rect |> Position.add(pose) |> Position.new,
+      position: sprite.rect |> position_add(pose) |> position,
       class: opts[:class],
       attributes: attributes,
       angle: angle
@@ -128,8 +128,8 @@ defmodule ChukinasWeb.DreadnoughtView do
       |> Unit.center_of_mass
       |> Vector.new
       |> Conversion.convert_to_world_vector(unit)
-      |> Position.new
-      |> Position.subtract(box_size / 2)
+      |> position
+      |> position_subtract(box_size / 2)
     assigns =
       [
         unit_id: unit.id,
