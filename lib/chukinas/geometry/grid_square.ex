@@ -1,18 +1,18 @@
-alias Chukinas.Geometry.{GridSquare, Position, CollidableShape, Path, Rect}
+alias Chukinas.Geometry.{GridSquare, CollidableShape, Path, Rect}
 
 defmodule GridSquare do
   @moduledoc"""
   Represents a single square in a grid
   """
 
-  use TypedStruct
+  use Chukinas.PositionOrientationSize
 
   typedstruct enforce: true do
     field :id, String.t()
     field :unit_id, integer(), enforce: false
     field :column, integer()
     field :row, integer()
-    field :center, Position.t()
+    field :center, POS.position_type
     field :size, number()
     field :path, Path.t(), enforce: false
     field :path_type, atom(), enforce: false
@@ -26,7 +26,7 @@ defmodule GridSquare do
       id: "#{col}-#{row}",
       column: col,
       row: row,
-      center: Position.new((col - 0.5) * size, (row - 0.5) * size),
+      center: position((col - 0.5) * size, (row - 0.5) * size),
       size: size
     }
   end
@@ -34,7 +34,8 @@ defmodule GridSquare do
   # *** *******************************
   # *** GETTERS
 
-  def position(%__MODULE__{center: position}), do: position
+  # TODO rename center_position
+  def position(%__MODULE__{center: value}), do: value
 
   # *** *******************************
   # *** API
@@ -52,8 +53,8 @@ defmodule GridSquare do
   def to_rect(square) do
     half_size = square.size / 2
     Rect.new(
-      square.center |> Position.subtract(half_size),
-      square.center |> Position.add(half_size)
+      square.center |> position_subtract(half_size),
+      square.center |> position_add(half_size)
     )
   end
 
