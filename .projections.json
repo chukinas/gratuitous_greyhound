@@ -1,5 +1,6 @@
 {
     "assets/js/dreadnought/*.js": { "type": "hook" },
+    "lib/chukinas/*.ex": { "type": "chukinas" },
     "lib/chukinas/dreadnought/*.ex": { "type": "dreadnought" },
     "lib/chukinas/geometry/*.ex": { "type": "geometry" },
     "lib/chukinas/linear_algebra/*.ex": { "type": "algebra" },

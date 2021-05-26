@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{Position, Rect, CollidableShape, Size}
+alias Chukinas.Geometry.{Rect, CollidableShape}
 alias Chukinas.LinearAlgebra.Vector
 
 defmodule Rect do
@@ -6,17 +6,15 @@ defmodule Rect do
   A Rect is an in-grid rectangle, comprising only horizontal and vertical lines
   """
 
-  require Position
+  use Chukinas.PositionOrientationSize
 
   # *** *******************************
   # *** TYPES
 
-  use TypedStruct
+  use Chukinas.TypedStruct
   typedstruct enforce: true do
-    field :x, number()
-    field :y, number()
-    field :width, number()
-    field :height, number()
+    position_fields()
+    size_fields()
   end
 
   # *** *******************************
@@ -30,6 +28,7 @@ defmodule Rect do
       height: abs(start_y - end_y)
     }
   end
+
   def new(%{x: x, y: y}, %{width: width, height: height}) do
     %__MODULE__{
       x: x,
@@ -38,7 +37,9 @@ defmodule Rect do
       height: height
     }
   end
-  def new(start_position, end_position) when Position.is(start_position) and Position.is(end_position) do
+
+  def new(start_position, end_position)
+  when has_position(start_position) and has_position(end_position) do
     %__MODULE__{
       x: start_position.x,
       y: start_position.y,
@@ -58,34 +59,33 @@ defmodule Rect do
   # *** *******************************
   # *** GETTERS
 
+  # TODO rename position_bottom_right
   def bottom_right_position(%__MODULE__{} = rect) do
     rect
-    |> Position.from_size
-    |> Position.add(rect)
+    |> position_from_size
+    |> position_add(rect)
   end
 
-  def list_vertices(%{x: x, y: y, width: width, height: height}) do
+  def list_vertices(rect) do
     # TODO rename vertices
     # TODO move getters to appropriate section
-    position = Position.new(x, y)
-    [
-      position,
-      Position.add_x(position, width),
-      # TODO replace with bottom_right_position
-      Position.add(position, width, height),
-      Position.add_y(position, height)
-    ]
-    |> Enum.map(&Position.to_vertex/1)
+    position_top_left = position(rect)
+    for pos <- [
+      position_top_left,
+      position_add_x(position_top_left, width(rect)),
+      bottom_right_position(rect),
+      position_add_y(position_top_left, height(rect))
+    ], do: position_to_vertex(pos)
   end
 
   def center_position(rect) do
     relative_center =
       rect
-      |> Position.from_size
-      |> Position.divide(2)
+      |> position_from_size
+      |> position_divide(2)
     rect
-    |> Position.add(relative_center)
-    |> Position.new
+    |> position_add(relative_center)
+    |> position
   end
   def center_vector(rect), do: center_position(rect) |> Vector.new
 
@@ -94,8 +94,8 @@ defmodule Rect do
   # *** API
 
   def bounding_rect(rects) when is_list(rects) do
-    {min, max} = Position.min_max(rects ++ Enum.map(rects, &bottom_right_position/1))
-    size = Size.from_positions(min, max)
+    {min, max} = position_min_max(rects ++ Enum.map(rects, &bottom_right_position/1))
+    size = size_new(min, max)
     new(min, size)
   end
   def bounding_rect(%__MODULE__{} = a, %__MODULE__{} = b) do
@@ -113,17 +113,17 @@ defmodule Rect do
       abs(origin.y - rect.y),
       abs(rect.y + rect.height - origin.y)
     )
-    dist_from_origin = Position.new(half_width, half_height)
+    dist_from_origin = position(half_width, half_height)
     Rect.new(
-      Position.subtract(origin, dist_from_origin),
-      Position.add(origin, dist_from_origin)
+      position_subtract(origin, dist_from_origin),
+      position_add(origin, dist_from_origin)
     )
   end
 
   def scale(rect, scale) do
     rect
-    |> Position.multiply(scale)
-    |> Size.multiply(scale)
+    |> position_multiply(scale)
+    |> size_multiply(scale)
   end
 
   # *** *******************************
@@ -137,8 +137,8 @@ defmodule Rect do
     import Inspect.Algebra
     require IOP
     def inspect(rect, opts) do
-      pos = rect |> Position.new |> IOP.doc
-      size = rect |> Size.new |> IOP.doc
+      pos = rect |> position |> IOP.doc
+      size = rect |> size_new |> IOP.doc
       contents =
         pos
         |> concat(IOP.comma)

@@ -69,6 +69,13 @@ defmodule Size do
   end
 
   # *** *******************************
+  # *** GETTERS
+
+  def width(%{width: val}), do: val
+
+  def height(%{height: val}), do: val
+
+  # *** *******************************
   # *** CONVERSIONS
 
   def to_position(size) do

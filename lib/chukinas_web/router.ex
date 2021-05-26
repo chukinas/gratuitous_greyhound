@@ -22,6 +22,7 @@ defmodule ChukinasWeb.Router do
     live "/dreadnought", DreadnoughtLive
     live "/dreadnought/rooms", DreadnoughtLive, :room
     live "/dreadnought/rooms/:room", DreadnoughtLive, :room
+    live "/dreadnought/play", DreadnoughtPlayLive
     live "/dreadnought/gallery", DreadnoughtLive, :gallery
   end
 
