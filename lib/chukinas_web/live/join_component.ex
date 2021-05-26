@@ -10,56 +10,76 @@ defmodule ChukinasWeb.JoinComponent do
 
   @impl true
   def update(assigns, socket) do
-    user_sessions_attrs =
-      case assigns.user_session do
-        nil -> %{}
-        user_session -> user_session
-      end
-      |> Map.merge(assigns.path_params)
-      |> IOP.inspect("join comp update, attrs")
-    {:error, changeset} = Sessions.create_user_session()
-    changeset = Enum.reduce(user_sessions_attrs, changeset, fn {key, value}, changeset ->
-      key =
-        cond do
-          is_atom(key) -> key
-          true -> String.to_atom(key)
-        end
-      Ecto.Changeset.put_change(changeset, key, value)
-    end)
+    user_session = assigns[:user_session]
+    changeset =
+      Sessions.user_session_changeset(
+        user_session,
+        user_session_attrs(assigns.path_params)
+      )
     socket =
       socket
+      |> assign(user_session: user_session)
       |> assign_changeset_and_url(changeset, false)
     {:ok, socket}
   end
 
   @impl true
   def handle_event("validate", %{"user_session" => params}, socket) do
-    changeset = Sessions.user_session_changeset(params)
+    IOP.inspect params, "validate attrs"
+    changeset =
+      Sessions.user_session_changeset(
+        socket.assigns.user_session,
+        # TODO do I need to include the path_params again?
+        # or do they persist as raw input now?
+        params
+      )
     socket = assign_changeset_and_url(socket, changeset)
     {:noreply, socket}
   end
 
   def handle_event("join", %{"user_session" => params}, socket) do
-    case Sessions.create_user_session(params) do
+    case Sessions.update_user_session(socket.assigns.user_session, params) do
+      {:ok, user_session} ->
+        send self(), {:update_assigns, %{user_session: user_session, show_join_screen?: false}}
+        socket =
+          socket
+          |> push_patch(to: Sessions.path(socket, Sessions.room(user_session)))
+        {:noreply, socket}
       {:error, changeset} ->
         socket =
           socket
           |> assign_changeset_and_url(changeset)
         {:noreply, socket}
-      {:ok, user_session} ->
-        send self(), {:update_assigns, %{user_session: user_session, show_join_screen?: false}}
-        socket =
-          socket
-          |> push_patch(to: Sessions.path(socket, user_session))
-        {:noreply, socket}
     end
   end
 
   def assign_changeset_and_url(socket, changeset, show_errors? \\ true) do
+    # TODO I shouldn't be manipulating the raw map..?
     changeset = if show_errors?, do: Map.put(changeset, :action, :insert), else: changeset
     url = Sessions.url(socket, changeset)
+          |> IOP.inspect("join comp assign cs, url")
     assign(socket, maybe_url: url, changeset: changeset)
   end
 
+  # *** *******************************
+  # *** FUNCTIONS
+
+  def user_session_attrs(assigns) do
+    user_session_attrs(assigns, %{})
+  end
+
+  def user_session_attrs(%{"username" => username} = assigns, attrs) do
+    assigns = Map.drop(assigns, ["username"])
+    attrs = Map.put(attrs, :username, username)
+    user_session_attrs(assigns, attrs)
+  end
+
+  def user_session_attrs(%{"room" => room_raw} = assigns, attrs) do
+    assigns = Map.drop(assigns, ["room"])
+    attrs = Map.put(attrs, :room_raw, room_raw)
+    user_session_attrs(assigns, attrs)
+  end
+
+  def user_session_attrs(_assigns, attrs), do: attrs |> IOP.inspect("joincomp us sess attrs")
 
 end
