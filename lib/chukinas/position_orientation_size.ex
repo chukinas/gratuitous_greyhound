@@ -61,14 +61,18 @@ defmodule POS do
   defdelegate height(size), to: Size
 
   # *** *******************************
-  # *** ANGLE
+  # *** ORIENTATION
 
+  # TODO rename orientation
   def angle(%{angle: value}), do: value
+
+  defdelegate orientation_rotate(orientation, angle), to: Pose, as: :rotate
 
   # *** *******************************
   # *** POSE
 
   defdelegate pose(term), to: Pose, as: :new
+  defdelegate pose(x, y, angle), to: Pose, as: :new
 
   defdelegate pose_origin(), to: Pose, as: :origin
 
