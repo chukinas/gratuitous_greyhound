@@ -2,9 +2,9 @@
   id="<%= @animation.id_string %>"
   class="absolute"
   style="
-    left: <%= @animation.pose.x %>px;
-    top: <%= @animation.pose.y %>px;
-    transform: rotate(<%= @animation.pose.angle %>deg);
+    left: <%= @animation.x %>px;
+    top: <%= @animation.y %>px;
+    transform: rotate(<%= @animation.angle %>deg);
   "
   phx-hook="Animation"
   data-delay="<%= @animation.delay %>"

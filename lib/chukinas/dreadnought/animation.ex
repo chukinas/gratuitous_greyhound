@@ -1,17 +1,18 @@
 alias Chukinas.Dreadnought.{Animation, Spritesheet}
-alias Chukinas.Geometry.{Rect, Pose}
+alias Chukinas.Geometry.Rect
 
 defmodule Animation do
+
   alias Animation.Frame
+  use Chukinas.PositionOrientationSize
 
   # *** *******************************
   # *** TYPES
 
-  use TypedStruct
   typedstruct enfore: true do
     field :id_string, String.t()
     field :name, String.t()
-    field :pose, Pose.t()
+    pose_fields()
     field :delay, number()
     field :frames, [Frame.t()], default: []
     field :last_frame_fade_duration, number(), default: 0
@@ -22,13 +23,14 @@ defmodule Animation do
   # *** *******************************
   # *** NEW
 
-  def new(name, %Pose{} = pose, delay \\ 0) when is_number(delay) do
-    fields = [
-      id_string: "animation-frame-#{Enum.random(1..10_000)}",
-      name: name,
-      pose: pose,
-      delay: delay,
-    ]
+  def new(name, pose, delay \\ 0) when has_pose(pose) and is_number(delay) do
+    fields =
+      %{
+        id_string: "animation-frame-#{Enum.random(1..10_000)}",
+        name: name,
+        delay: delay,
+      }
+      |> merge_pose(pose)
     struct!(__MODULE__, fields)
   end
 
@@ -75,11 +77,12 @@ defmodule Animation do
 
   defimpl Inspect do
     require IOP
+    import Chukinas.PositionOrientationSize
     def inspect(animation, opts) do
       title = "Animation"
       fields = [
         name: animation.name,
-        pose: animation.pose,
+        pose: animation |> pose_new,
         frames: animation.frames
       ]
       IOP.struct(title, fields)
