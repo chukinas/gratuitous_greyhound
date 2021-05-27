@@ -3,13 +3,13 @@ alias Chukinas.PositionOrientationSize, as: POS
 
 defmodule POS do
 
-  require Position.Guard
-  import Position.Guard
+  require POS.Guards
+  import POS.Guards
 
   defmacro __using__(_opts) do
     quote do
-      require Position.Guard
-      import Position.Guard
+      require POS.Guards
+      import POS.Guards
       require POS
       import POS
       alias POS, as: POS

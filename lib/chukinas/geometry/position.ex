@@ -1,9 +1,11 @@
 alias Chukinas.Geometry.{Position}
 alias Chukinas.Util.Precision
+alias Chukinas.PositionOrientationSize, as: POS
 
 defmodule Position do
-  import Position.Guard
+  import POS.Guards
 
+  # TODO remove
   defguard is(position) when has_position(position)
 
   # *** *******************************
