@@ -1,5 +1,4 @@
 alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret}
-alias Chukinas.Geometry.{Pose}
 
 defmodule Unit.Builder do
 
@@ -87,10 +86,10 @@ defmodule Unit.Builder do
   defp build_turrets(unit_sprite, {sprite_fun, sprite_name}, turret_tuples) do
     turret_sprite = apply(Spritesheet, sprite_fun, [sprite_name])
     Enum.map(turret_tuples, fn {mount_id, rest_angle} ->
-      relative_mount_position = Sprite.mount_position(unit_sprite, mount_id)
       pose =
-        relative_mount_position
-        |> Pose.new(rest_angle)
+        unit_sprite
+        |> Sprite.mount_position(mount_id)
+        |> pose_new(rest_angle)
       Turret.new(mount_id, turret_sprite, pose)
     end)
   end
