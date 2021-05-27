@@ -163,7 +163,8 @@ defmodule Unit do
     |> maneuvers
     |> Enum.max(Ev.Maneuver)
     |> Ev.Maneuver.end_pose
-    |> pose_into!(unit)
+    |> pose_new
+    |> pos_into!(unit)
   end
 
   def maybe_destroyed(unit) do

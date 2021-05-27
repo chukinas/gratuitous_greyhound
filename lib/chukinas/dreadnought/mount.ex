@@ -16,8 +16,8 @@ defmodule Mount do
   # *** NEW
 
   def new(id, position) do
-    [position: position]
-    |> pos_into_struct(__MODULE__, id: id)
+    fields = [id: id] ++ pos_map_to(position, :position, :keyword)
+    struct!(__MODULE__, fields)
   end
 
   # *** *******************************

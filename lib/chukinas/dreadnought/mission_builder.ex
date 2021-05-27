@@ -17,10 +17,23 @@ defmodule MissionBuilder do
       Player.new(2, :ai)
     ]
     Mission.new(grid, margin)
-    |> Map.put(:islands, [])
+    |> Map.put(:islands, islands())
     |> Mission.put(units)
     |> Mission.put(players)
     |> Mission.start
+  end
+
+  defp islands do
+    [
+      position_new(500, 500),
+      position_new(2500, 1200),
+      position_new(1500, 1800),
+    ]
+    |> Enum.with_index
+    |> Enum.map(fn {position, index} ->
+      position = position_shake position
+      Island.random(index, position)
+    end)
   end
 
   def build do
@@ -34,16 +47,6 @@ defmodule MissionBuilder do
     }
     margin = size_new(arena.height, arena.width)
     #margin = size_new(200, 100)
-    islands = [
-      position_new(500, 500),
-      position_new(2500, 1200),
-      position_new(1500, 1800),
-    ]
-    |> Enum.with_index
-    |> Enum.map(fn {position, index} ->
-      position = position_shake position
-      Island.random(index, position)
-    end)
     [square_count_x, square_count_y] =
       [arena.width, arena.height]
       |> Enum.map(&round(&1 / square_size))
@@ -58,7 +61,7 @@ defmodule MissionBuilder do
       Player.new(2, :ai)
     ]
     Mission.new(grid, margin)
-    |> Map.put(:islands, islands)
+    |> Map.put(:islands, islands())
     |> Mission.put(units)
     |> Mission.put(players)
     |> Mission.start

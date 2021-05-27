@@ -12,6 +12,7 @@ defmodule POS do
       import Position.Guard
       require POS
       import POS
+      alias POS, as: POS
       use Chukinas.TypedStruct
     end
   end
@@ -19,40 +20,63 @@ defmodule POS do
   # *** *******************************
   # *** STRUCT HELPERS
 
+  @type position_key    :: :x | :y
+  @type pose_key        :: :angle | position_key
+  @type size_key        :: :width | :height
+
+  @type position_map    :: %{position_key => number, optional(any) => any}
+  @type pose_map        :: %{pose_key     => number, optional(any) => any}
+  @type size_map        :: %{size_key     => number, optional(any) => any}
+  @type pos_map         :: position_map | pose_map | size_map
+
+  @type position_struct :: Position.t
+  @type pose_struct     :: Pose.t
+  @type size_struct     :: Size.t
+  @type pos_struct      :: Position.t | Pose.t | Size.t
+
+  @type pos_type        :: :position | :pose | :size
+  #@type position_tuple  :: {:position,  position_map}
+  #@type pose_tuple      :: {:pose,      pose_map}
+  #@type size_tuple      :: {:size,      size_map}
+  #@type pos_tuple       :: position_tuple | pose_tuple | size_tuple
+  @type pos_tuple       :: {pos_type, pos_map}
+  @type pos_keywords    :: [pos_tuple]
+
   # TODO rename ? pose_into_new_struct
-  def pos_into_struct(pos, module, fields) do
-    struct!(module, pos_into(pos, fields))
-  end
+  #@spec pos_into_struct(pos_keywords, module, [{atom, any}]) :: struct
+  #def pos_into_struct(pos, module, fields) when is_list(pos) and is_atom(module) and is_list(fields) do
+  #  struct!(module, pos_into(pos, fields))
+  #end
 
-  def pos_into(pos, fields) when is_list(pos) do
-    Enum.reduce(pos, fields, &pos_into/2)
-  end
+  #defp pos_into(pos, fields) when is_list(pos) and is_list(fields) do
+  #  Enum.reduce(pos, fields, &pos_into/2)
+  #end
 
-  def pos_into({type, value}, enum), do: pos_into(type, value, enum)
+  #defp pos_into({type, value}, enum), do: pos_into(type, value, enum)
 
-  def pos_into(type, value, struct) when is_struct(struct) do
-    value
-    |> to_list(type)
-    |> Enum.reduce(struct, fn {key, value}, struct ->
-      Map.put(struct, key, value)
-    end)
-  end
+  #defp pos_into(type, value, struct) when is_struct(struct) do
+  #  value
+  #  |> to_list(type)
+  #  |> Enum.reduce(struct, fn {key, value}, struct ->
+  #    Map.put(struct, key, value)
+  #  end)
+  #end
 
-  def pos_into(type, value, enum) do
-    value
-    |> to_list(type)
-    |> Enum.into(enum)
-  end
+  #defp pos_into(type, value, enum) do
+  #  value
+  #  |> to_list(type)
+  #  |> Enum.into(enum)
+  #end
 
-  defp to_list(%{} = pos_map, type) do
-    pos_map
-    |> Map.take(keys(type))
-    |> Enum.to_list
-  end
+  #defp to_list(%{} = pos_map, type) do
+  #  pos_map
+  #  |> Map.take(keys(type))
+  #  |> Enum.to_list
+  #end
 
-  defp keys(:position), do: ~w(x y)a
-  defp keys(:pose), do: ~w(x y angle)a
-  defp keys(:size), do: ~w(width height)a
+  #defp keys(:position), do: ~w(x y)a
+  #defp keys(:pose), do: ~w(x y angle)a
+  #defp keys(:size), do: ~w(width height)a
 
   # TODO see note for pose_into
   #def position_into(position, enum \\ []) do
@@ -69,19 +93,83 @@ defmodule POS do
   #end
 
   # TODO there should maybe be a pose_into and pose_into! or pose_into_new! ...?
-  def pose_into!(pose, poseable_item)
-  when has_pose(pose)
-  and has_pose(poseable_item) do
-    pos_into(:pose, pose, poseable_item)
-    # TODO remove this from pose?:
-    # Pose.put_pose(poseable_item, pose)
-  end
+  #def pose_into!(pose, poseable_item)
+  #when has_pose(pose)
+  #and has_pose(poseable_item) do
+  #  pos_into(:pose, pose, poseable_item)
+  #  # TODO remove this from pose?:
+  #  # Pose.put_pose(poseable_item, pose)
+  #end
 
-  def pose_to_keywords(pose) do
-    pose
-    |> pose()
+  #def pose_to_keywords(pose) do
+  #  pose
+  #  |> pose()
+  #  |> Map.from_struct
+  #  |> Enum.into([])
+  #end
+
+  # *** *******************************
+  # *** MERGE
+
+  #def pos_merge(list, pos) when is_struct(pos)
+  #  pos
+  #  |> build_pos_struct.()
+  #  |>
+  #  |> Enum.into(list)
+  #end
+
+  #def pos_merge(list, pos) when length(list) > 0 do
+  #  pos
+  #  |> build_pos_struct.()
+  #  |>
+  #  |> Enum.into(list)
+  #end
+
+  #def pos_merge(enum, pos, type) when length(enum) > 0 do
+  #  pos
+  #  |> new_func(type).()
+  #  |> Enum.into(enum)
+  #end
+
+  #defp pos_any_to_map(pos_keyword) when is_list(pos_keyword) do
+
+  #end
+
+  def pos_into!(pos_struct, %{} = map) do
+    # TODO replace with protocol
+    case pos_struct do
+      %Pose{} -> pos_struct
+    end
     |> Map.from_struct
     |> Enum.into([])
+    |> Enum.reduce(map, fn {key, value}, map ->
+      Map.replace!(map, key, value)
+    end)
+  end
+
+  @spec pos_map_to(pos_map, pos_type, :keyword) :: keyword
+  def pos_map_to(pos_map, type, :keyword) do
+    pos_map
+    |> pos_map_to(type, :map)
+    |> Enum.into([])
+  end
+
+  @spec pos_map_to(pos_map, pos_type, :map) :: pos_map
+  def pos_map_to(pos_map, type, :map) do
+    pos_map
+    |> pos_map_to(type, :struct)
+    |> Map.from_struct
+  end
+
+  @spec pos_map_to(pos_map, pos_type, :struct) :: struct
+  def pos_map_to(pos_map, type, :struct) do
+    new =
+      case type do
+        :position -> &position_new/1
+        :pose     -> &pose_new/1
+        :size     -> &size_new/1
+      end
+    new.(pos_map)
   end
 
   # *** *******************************
@@ -90,7 +178,9 @@ defmodule POS do
   @type position_type :: Position.t()
   @type position_list :: [position_type]
 
+  @spec position_new(any) :: Position.t
   defdelegate position_new(term), to: Position, as: :new
+  @spec position_new(any, any) :: Position.t
   defdelegate position_new(a, b), to: Position, as: :new
 
   defdelegate position(term), to: Position, as: :new
@@ -138,6 +228,7 @@ defmodule POS do
   # TODO rename orientation
   def angle(%{angle: value}), do: value
 
+  # TODO rename rotate?
   defdelegate orientation_rotate(orientation, angle), to: Pose, as: :rotate
 
   # *** *******************************
@@ -159,8 +250,8 @@ defmodule POS do
       {nil, _} ->
         opts
       {pose, opts} ->
-        opts
-        |> Keyword.merge(pose |> pose_to_keywords)
+        pose_keywords = pos_map_to(pose, :pose, :keyword)
+        Keyword.merge(opts, pose_keywords)
     end
   end
 
