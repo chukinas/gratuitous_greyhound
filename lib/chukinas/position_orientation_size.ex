@@ -23,6 +23,9 @@ defmodule POS do
   @type position_type :: Position.t()
   @type position_list :: [position_type]
 
+  defdelegate position_new(term), to: Position, as: :new
+  defdelegate position_new(a, b), to: Position, as: :new
+
   defdelegate position(term), to: Position, as: :new
   defdelegate position(a, b), to: Position, as: :new
 
@@ -44,6 +47,8 @@ defmodule POS do
   defdelegate position_divide(position, scalar), to: Position, as: :divide
 
   defdelegate position_min_max(items_with_position), to: Position, as: :min_max
+
+  defdelegate position_shake(position), to: Position, as: :shake
 
   # *** *******************************
   # *** SIZE
@@ -71,6 +76,11 @@ defmodule POS do
   # *** *******************************
   # *** POSE
 
+  defdelegate pose_new(term), to: Pose, as: :new
+  defdelegate pose_new(position, angle), to: Pose, as: :new
+  defdelegate pose_new(x, y, angle), to: Pose, as: :new
+
+  # TODO remove?
   defdelegate pose(term), to: Pose, as: :new
   defdelegate pose(x, y, angle), to: Pose, as: :new
 

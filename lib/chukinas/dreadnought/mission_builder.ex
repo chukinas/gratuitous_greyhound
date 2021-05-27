@@ -1,14 +1,16 @@
 alias Chukinas.Dreadnought.{Mission, Unit, MissionBuilder, Island, Player}
-alias Chukinas.Geometry.{Pose, Size, Position, Grid}
+alias Chukinas.Geometry.{Grid}
 
 # TODO rename Mission.Build
 defmodule MissionBuilder do
 
+  use Chukinas.PositionOrientationSize
+
   def dev do
     {grid, margin} = medium_map()
     units = [
-      Unit.Builder.red_cruiser(1, pose: Pose.new(0, 0, 0), name: "Prince Eugene"),
-      Unit.Builder.blue_merchant(2, pose: Pose.new(Position.from_size(grid), 225), player_id: 2)
+      Unit.Builder.red_cruiser(1, pose: pose_new(0, 0, 0), name: "Prince Eugene"),
+      Unit.Builder.blue_merchant(2, pose: pose_new(position_from_size(grid), 225), player_id: 2)
     ]
     players = [
       Player.new(1, :human),
@@ -30,16 +32,16 @@ defmodule MissionBuilder do
     #  width: 700,
     #  height: 400
     }
-    margin = Size.new(arena.height, arena.width)
-    #margin = Size.new(200, 100)
+    margin = size_new(arena.height, arena.width)
+    #margin = size_new(200, 100)
     islands = [
-      Position.new(500, 500),
-      Position.new(2500, 1200),
-      Position.new(1500, 1800),
+      position_new(500, 500),
+      position_new(2500, 1200),
+      position_new(1500, 1800),
     ]
     |> Enum.with_index
     |> Enum.map(fn {position, index} ->
-      position = Position.shake position
+      position = position_shake position
       Island.random(index, position)
     end)
     [square_count_x, square_count_y] =
@@ -47,9 +49,9 @@ defmodule MissionBuilder do
       |> Enum.map(&round(&1 / square_size))
     grid = Grid.new(square_size, square_count_x, square_count_y)
     units = [
-      Unit.Builder.red_destroyer(1, pose: Pose.new(0, 0, 0), name: "Prince Eugene"),
-      #Unit.Builder.red_cruiser(2, pose: Pose.new(800, 155, 75), name: "Billy"),
-      Unit.Builder.blue_merchant(3, pose: Pose.new(Position.from_size(grid), 225), player_id: 2)
+      Unit.Builder.red_destroyer(1, pose: pose_new(0, 0, 0), name: "Prince Eugene"),
+      #Unit.Builder.red_cruiser(2, pose: pose_new(800, 155, 75), name: "Billy"),
+      Unit.Builder.blue_merchant(3, pose: pose_new(position_from_size(grid), 225), player_id: 2)
     ]
     players = [
       Player.new(1, :human),
@@ -72,7 +74,7 @@ defmodule MissionBuilder do
       width: width,
       height: height
     }
-    margin = Size.new(arena.height, arena.width)
+    margin = size_new(arena.height, arena.width)
     [square_count_x, square_count_y] =
       [arena.width, arena.height]
       |> Enum.map(&round(&1 / square_size))

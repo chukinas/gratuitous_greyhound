@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{ManeuverPlanning, Unit, Maneuver}
-alias Chukinas.Geometry.{GridSquare, Grid, Collide, Path, Straight, Turn, Position, Polygon}
+alias Chukinas.Geometry.{GridSquare, Grid, Collide, Path, Straight, Turn, Polygon}
 
 defmodule ManeuverPlanning do
   @moduledoc """
@@ -50,7 +50,7 @@ defmodule ManeuverPlanning do
       Turn.new(pose, min_distance, trim_angle + angle),
     ]
     |> Stream.map(&Path.get_end_pose/1)
-    |> Enum.map(&Position.to_tuple/1)
+    |> Enum.map(&position_to_tuple/1)
     |> Polygon.new
   end
 end
