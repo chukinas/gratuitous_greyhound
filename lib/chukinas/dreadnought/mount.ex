@@ -15,8 +15,10 @@ defmodule Mount do
   # *** *******************************
   # *** NEW
 
-  def new(id, position) do
-    fields = [id: id] ++ pos_map_to(position, :position, :keyword)
+  def new(id, location) do
+    fields =
+      %{ id: id }
+      |> merge_position(location)
     struct!(__MODULE__, fields)
   end
 

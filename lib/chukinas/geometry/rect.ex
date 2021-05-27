@@ -92,11 +92,16 @@ defmodule Rect do
   # *** *******************************
   # *** API
 
-  def bounding_rect(rects) when is_list(rects) do
-    {min, max} = position_min_max(rects ++ Enum.map(rects, &bottom_right_position/1))
+  def bounding_rect_from_positions(list) do
+    {min, max} = position_min_max(list)
     size = size_new(min, max)
     new(min, size)
   end
+
+  def bounding_rect(rects) when is_list(rects) do
+    bounding_rect_from_positions(rects ++ Enum.map(rects, &bottom_right_position/1))
+  end
+
   def bounding_rect(%__MODULE__{} = a, %__MODULE__{} = b) do
     bounding_rect([a, b])
   end

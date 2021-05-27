@@ -22,7 +22,12 @@ defmodule Chukinas.Dreadnought.Island do
   # *** NEW
 
   def new(id, location, points) do
-    fields = [id: id, relative_vertices: points] ++ pos_map_to(location, :position, :keyword)
+    fields =
+      %{
+        id: id,
+        relative_vertices: points
+      }
+      |> merge_position(location)
     struct!(__MODULE__, fields)
   end
 

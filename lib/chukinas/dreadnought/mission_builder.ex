@@ -9,8 +9,8 @@ defmodule MissionBuilder do
   def dev do
     {grid, margin} = medium_map()
     units = [
-      Unit.Builder.red_cruiser(1, pose: pose_new(0, 0, 0), name: "Prince Eugene"),
-      Unit.Builder.blue_merchant(2, pose: pose_new(position_from_size(grid), 225), player_id: 2)
+      Unit.Builder.red_cruiser(1, pose_new(0, 0, 0), name: "Prince Eugene"),
+      Unit.Builder.blue_merchant(2, pose_new(position_from_size(grid), 225), player_id: 2)
     ]
     players = [
       Player.new(1, :human),
@@ -52,9 +52,9 @@ defmodule MissionBuilder do
       |> Enum.map(&round(&1 / square_size))
     grid = Grid.new(square_size, square_count_x, square_count_y)
     units = [
-      Unit.Builder.red_destroyer(1, pose: pose_new(0, 0, 0), name: "Prince Eugene"),
-      #Unit.Builder.red_cruiser(2, pose: pose_new(800, 155, 75), name: "Billy"),
-      Unit.Builder.blue_merchant(3, pose: pose_new(position_from_size(grid), 225), player_id: 2)
+      Unit.Builder.red_destroyer(1, pose_new(0, 0, 0), name: "Prince Eugene"),
+      #Unit.Builder.red_cruiser(2, pose_new(800, 155, 75), name: "Billy"),
+      Unit.Builder.blue_merchant(3, pose_new(position_from_size(grid), 225), player_id: 2)
     ]
     players = [
       Player.new(1, :human),

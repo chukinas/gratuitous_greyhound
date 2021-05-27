@@ -5,7 +5,7 @@ defmodule Unit.Builder do
 
   use Chukinas.PositionOrientationSize
 
-  def blue_merchant(id, opts \\ []) do
+  def blue_merchant(id, pose, opts \\ []) do
     fields =
       [
         health: 40,
@@ -14,11 +14,10 @@ defmodule Unit.Builder do
         name: "noname"
       ]
       |> Keyword.merge(opts)
-      |> opts_convert_pose
-    Unit.new(id, fields)
+    Unit.new(id, pose, fields)
   end
 
-  def blue_destroyer(id, opts \\ []) do
+  def blue_destroyer(id, pose, opts \\ []) do
     sprite = Spritesheet.blue("hull_blue_small")
     turrets = build_turrets(sprite, {:blue, "turret_blue_2"}, [
       {1, 0},
@@ -30,11 +29,10 @@ defmodule Unit.Builder do
         turrets: turrets
       ]
       |> Keyword.merge(opts)
-      |> opts_convert_pose
-    Unit.new(id, fields)
+    Unit.new(id, pose, fields)
   end
 
-  def blue_dreadnought(id, name, opts \\ []) do
+  def blue_dreadnought(id, pose, name, opts \\ []) do
     sprite = Spritesheet.blue("hull_blue_large")
     turrets = build_turrets(sprite, {:blue, "turret_blue_1"}, [
       {1, 0},
@@ -49,11 +47,10 @@ defmodule Unit.Builder do
         name: name
       ]
       |> Keyword.merge(opts)
-      |> opts_convert_pose
-    Unit.new(id, fields)
+    Unit.new(id, pose, fields)
   end
 
-  def red_cruiser(id, opts \\ []) do
+  def red_cruiser(id, pose, opts \\ []) do
     sprite = Spritesheet.red("ship_large")
     turrets = build_turrets(sprite, {:red, "turret1"}, [
       {1, 0},
@@ -66,11 +63,10 @@ defmodule Unit.Builder do
         turrets: turrets
       ]
       |> Keyword.merge(opts)
-      |> opts_convert_pose
-    Unit.new(id, fields)
+    Unit.new(id, pose, fields)
   end
 
-  def red_destroyer(id, opts \\ []) do
+  def red_destroyer(id, pose, opts \\ []) do
     sprite = Spritesheet.red("ship_small")
     turrets = build_turrets(sprite, {:red, "turret1"}, [
       {1, 0}
@@ -82,9 +78,7 @@ defmodule Unit.Builder do
         turrets: turrets
       ]
       |> Keyword.merge(opts)
-      # TODO reduce boilerplate
-      |> opts_convert_pose
-    Unit.new(id, fields)
+    Unit.new(id, pose, fields)
   end
 
   # *** *******************************

@@ -27,17 +27,20 @@ defmodule Unit do
   # *** *******************************
   # *** NEW
 
-  def new(id, opts \\ []) do
+  def new(id, pose, opts \\ []) do
     # Refactor now that I have a unit builder module
     {max_damage, fields} =
       opts
       |> Keyword.merge(id: id)
       |> Keyword.pop!(:health)
     unit_status = Unit.Status.new()
-    fields = Keyword.merge(fields,
-      status: unit_status,
-      health: max_damage
-    )
+    fields =
+      Keyword.merge(fields,
+        status: unit_status,
+        health: max_damage
+      )
+      |> Map.new
+      |> merge_pose(pose)
     struct!(__MODULE__, fields)
   end
 
@@ -163,8 +166,7 @@ defmodule Unit do
     |> maneuvers
     |> Enum.max(Ev.Maneuver)
     |> Ev.Maneuver.end_pose
-    |> pose_new
-    |> pos_into!(unit)
+    |> merge_pose_into!(unit)
   end
 
   def maybe_destroyed(unit) do

@@ -1,12 +1,14 @@
 alias Chukinas.Geometry.{Pose, PathLike, Rect, Straight, Position, Trig, CollidableShape}
 alias Chukinas.LinearAlgebra.{HasCsys, CSys}
+alias Chukinas.LinearAlgebra
 
 defmodule Straight do
 
+  import LinearAlgebra
+  use Chukinas.PositionOrientationSize
+
   # *** *******************************
   # *** TYPES
-
-  use TypedStruct
 
   typedstruct enforce: true do
     field :start, Pose.t()
@@ -36,16 +38,16 @@ defmodule Straight do
   def start_pose(straight), do: straight.start
   def length(straight), do: straight.len
   def end_pose(%__MODULE__{len: len} = path) do
-    {len, 0}
-    |> CSys.Conversion.convert_to_world_vector(path)
-    |> Pose.new(angle(path))
+    path
+    |> vector_new(x: len)
+    |> pose_new(path.start.angle)
   end
   def bounding_rect(path) do
-    start = path |> start_pose()
-    final = path |> end_pose()
-    {xmin, xmax} = Enum.min_max([start.x, final.x])
-    {ymin, ymax} = Enum.min_max([start.y, final.y])
-    Rect.new(xmin, ymin, xmax, ymax)
+    [
+      start_pose(path),
+      end_pose(path)
+    ]
+    |> Rect.bounding_rect_from_positions
   end
 
   # *** *******************************
