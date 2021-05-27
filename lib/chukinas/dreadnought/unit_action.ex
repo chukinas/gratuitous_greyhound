@@ -1,5 +1,4 @@
 alias Chukinas.Dreadnought.{UnitAction}
-alias Chukinas.Geometry.{Position}
 
 defmodule UnitAction do
   @moduledoc """
@@ -13,13 +12,14 @@ defmodule UnitAction do
   @type unit_id() :: integer()
   @type mode() :: :maneuver | :combat
 
-  use TypedStruct
+  use Chukinas.PositionOrientationSize
+
   typedstruct do
     field :unit_id, unit_id(), enforce: true
     field :mode, mode()
     # TODO rename target?
     # TODO replace :exit_or_run_aground with :noop
-    field :value, :exit_or_run_aground | Position.t() | :noop
+    field :value, :exit_or_run_aground | POS.position_type | :noop
   end
 
   # *** *******************************
@@ -33,8 +33,8 @@ defmodule UnitAction do
     }
   end
 
-  def move_to(unit_id, %Position{} = position) do
-    new(unit_id, :maneuver, position)
+  def move_to(unit_id, position) when has_position(position) do
+    new(unit_id, :maneuver, position(position))
   end
   def exit_or_run_aground(unit_id) do
     new(unit_id, :maneuver, :exit_or_run_aground)
