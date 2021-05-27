@@ -1,34 +1,30 @@
 alias Chukinas.Dreadnought.Mount
-alias Chukinas.Geometry.Position
 
 defmodule Mount do
+
+  use Chukinas.PositionOrientationSize
 
   # *** *******************************
   # *** TYPES
 
-  use TypedStruct
   typedstruct enforce: true do
     field :id, integer()
-    field :position, Position.t()
+    position_fields()
   end
 
   # *** *******************************
   # *** NEW
 
   def new(id, position) do
-    %__MODULE__{id: id, position: position}
+    [position: position]
+    |> pos_into_struct(__MODULE__, id: id)
   end
-
-  # *** *******************************
-  # *** GETTERS
-
-  def position(%__MODULE__{position: position}), do: position
 
   # *** *******************************
   # *** API
 
   def scale(%__MODULE__{} = mount, scale) do
-    Map.update!(mount, :position, &Position.multiply(&1, scale))
+    Map.update!(mount, :position, &position_multiply(&1, scale))
   end
 
   # *** *******************************

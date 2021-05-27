@@ -9,7 +9,8 @@ defmodule Sprite do
   # *** *******************************
   # *** TYPES
 
-  use TypedStruct
+  use Chukinas.PositionOrientationSize
+
   typedstruct enforce: true do
     field :name, String.t()
     field :image_file_path, String.t()
@@ -44,7 +45,7 @@ defmodule Sprite do
   def mount_position(%__MODULE__{mounts: mounts}, mount_id) do
     mounts
     |> IdList.fetch!(mount_id)
-    |> Mount.position
+    |> position_new
   end
   def base_filename(%__MODULE__{image_file_path: path}), do: Path.basename(path)
   def mounts(%__MODULE__{mounts: mounts}), do: mounts

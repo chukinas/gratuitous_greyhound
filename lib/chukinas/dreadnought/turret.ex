@@ -1,13 +1,14 @@
-alias Chukinas.Dreadnought.{Turret, Sprite, Mount}
-alias Chukinas.Geometry.{Pose, Trig, Position, Pose}
+alias Chukinas.Dreadnought.{Turret, Sprite}
+alias Chukinas.Geometry.{Pose, Trig, Pose}
 alias Chukinas.LinearAlgebra.{HasCsys, CSys, Vector}
 
 defmodule Turret do
 
+  use Chukinas.PositionOrientationSize
+
   # *** *******************************
   # *** NEW
 
-  use TypedStruct
   typedstruct enforce: true do
     field :id, integer()
     field :sprite, Sprite.t()
@@ -67,19 +68,19 @@ defmodule Turret do
       sprite
       |> Sprite.mounts
       |> List.first
-      |> Mount.position
+      |> position_new
     {x, 0}
   end
 
-  def pose(%__MODULE__{pose: pose}), do: pose
+  def get_pose(%__MODULE__{pose: pose}), do: pose
 
-  def position(%__MODULE__{pose: pose}), do: Position.new(pose)
+  def get_position(%__MODULE__{pose: pose}), do: position_new(pose)
 
-  def csys(turret), do: turret |> pose |> CSys.new
+  def csys(turret), do: turret |> get_pose |> CSys.new
 
   def position_csys(turret) do
     turret
-    |> position
+    |> get_position
     |> CSys.new
   end
 
@@ -137,7 +138,7 @@ defmodule Turret do
     require IOP
     def inspect(turret, opts) do
       IOP.struct("Turret-#{turret.id}", [
-        pose: turret.pose
+        pose: turret.get_pose
       ])
     end
   end

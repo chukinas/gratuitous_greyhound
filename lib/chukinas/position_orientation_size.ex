@@ -16,6 +16,73 @@ defmodule POS do
     end
   end
 
+  # *** *******************************
+  # *** STRUCT HELPERS
+
+  # TODO rename ? pose_into_new_struct
+  def pos_into_struct(pos, module, fields) do
+    struct!(module, pos_into(pos, fields))
+  end
+
+  def pos_into(pos, fields) when is_list(pos) do
+    Enum.reduce(pos, fields, &pos_into/2)
+  end
+
+  def pos_into({type, value}, enum), do: pos_into(type, value, enum)
+
+  def pos_into(type, value, struct) when is_struct(struct) do
+    value
+    |> to_list(type)
+    |> Enum.reduce(struct, fn {key, value}, struct ->
+      Map.put(struct, key, value)
+    end)
+  end
+
+  def pos_into(type, value, enum) do
+    value
+    |> to_list(type)
+    |> Enum.into(enum)
+  end
+
+  defp to_list(%{} = pos_map, type) do
+    pos_map
+    |> Map.take(keys(type))
+    |> Enum.to_list
+  end
+
+  defp keys(:position), do: ~w(x y)a
+  defp keys(:pose), do: ~w(x y angle)a
+  defp keys(:size), do: ~w(width height)a
+
+  # TODO see note for pose_into
+  #def position_into(position, enum \\ []) do
+  #    position
+  #    |> Map.take(~w(x y)a)
+  #    |> Enum.into(enum)
+  #end
+
+  ## TODO see note for pose_into
+  #def size_into(position, enum \\ []) do
+  #    position
+  #    |> Map.take(~w(width height)a)
+  #    |> Enum.into(enum)
+  #end
+
+  # TODO there should maybe be a pose_into and pose_into! or pose_into_new! ...?
+  def pose_into!(pose, poseable_item)
+  when has_pose(pose)
+  and has_pose(poseable_item) do
+    pos_into(:pose, pose, poseable_item)
+    # TODO remove this from pose?:
+    # Pose.put_pose(poseable_item, pose)
+  end
+
+  def pose_to_keywords(pose) do
+    pose
+    |> pose()
+    |> Map.from_struct
+    |> Enum.into([])
+  end
 
   # *** *******************************
   # *** POSITION
@@ -85,19 +152,6 @@ defmodule POS do
   defdelegate pose(x, y, angle), to: Pose, as: :new
 
   defdelegate pose_origin(), to: Pose, as: :origin
-
-  def pose_into(pose, poseable_item)
-  when has_pose(pose)
-  and has_pose(poseable_item) do
-    Pose.put_pose(poseable_item, pose)
-  end
-
-  def pose_to_keywords(pose) do
-    pose
-    |> pose()
-    |> Map.from_struct
-    |> Enum.into([])
-  end
 
   # TODO there should be a better API
   def opts_convert_pose(opts) do
