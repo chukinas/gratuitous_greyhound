@@ -7,23 +7,23 @@ defmodule Turn do
   typedstruct enforce: true do
     field :pose, Pose.t()
     field :length, number()
-    field :angle, integer()
+    field :rotation, integer()
     field :radius, float()
   end
 
   # *** *******************************
   # *** NEW
 
-  def new(%Pose{} = start_pose, len, angle) do
+  def new(%Pose{} = start_pose, len, rotation) do
     %__MODULE__{
       pose: start_pose,
       length: round(len),
-      angle: angle,
-      radius: round(radius(len, angle))
+      rotation: rotation,
+      radius: round(radius(len, rotation))
     }
   end
-  def new(x, y, angle, len, angle) do
-    new Pose.new(x, y, angle), len, angle
+  def new(x, y, orientation, len, rotation) do
+    new Pose.new(x, y, orientation), len, rotation
   end
 
   # *** *******************************
@@ -31,12 +31,12 @@ defmodule Turn do
 
   def start_pose(path), do: path.pose
   def end_pose(path) do
-    right_angle = (90 * get_sign path.angle)
+    right_angle = (90 * get_sign path.rotation)
     path.pose
     |> Pose.rotate(right_angle)
     |> Straight.new(path.radius)
     |> PathLike.pose_end()
-    |> Pose.rotate(180 + path.angle)
+    |> Pose.rotate(180 + path.rotation)
     |> Straight.new(path.radius)
     |> PathLike.pose_end()
     |> Pose.rotate(right_angle)
@@ -49,12 +49,14 @@ defmodule Turn do
     Rect.new(xmin, ymin, xmax, ymax)
   end
 
+  def rotation(%__MODULE__{rotation: value}), do: value
+
   # *** *******************************
   # *** API
 
   def get_radius(path), do: path.radius
 
-  def split(%__MODULE__{angle: angle_orig} = path, angle) when abs(angle_orig) > abs(angle) do
+  def split(%__MODULE__{rotation: angle_orig} = path, angle) when abs(angle_orig) > abs(angle) do
     ratio = angle / angle_orig
     path1 = new(
       path.pose,
@@ -93,8 +95,8 @@ defmodule Turn do
   defp get_sign(number) when number > 0, do: 1
   defp get_sign(_number), do: -1
 
-  defp radius(length, angle) do
-    (length * 360) / (2 * :math.pi() * abs(angle))
+  defp radius(length, rotation) do
+    (length * 360) / (2 * :math.pi() * abs(rotation))
   end
 
   defp normalize_angle(angle) do
@@ -114,13 +116,13 @@ defmodule Turn do
     def len(path), do: path.length
     def get_bounding_rect(path), do: Turn.bounding_rect(path)
     # TODO these should end in question mark
-    def exceeds_angle(turn, angle), do: abs(turn.angle) > abs(angle)
-    def deceeds_angle(turn, angle), do: abs(turn.angle) < abs(angle)
+    def exceeds_angle(turn, rotation), do: abs(turn.rotation) > abs(rotation)
+    def deceeds_angle(turn, rotation), do: abs(turn.rotation) < abs(rotation)
   end
 
   defimpl CollidableShape do
     def to_vertices(turn) do
-      {_first, second} = turn |> Turn.split(turn.angle/2)
+      {_first, second} = turn |> Turn.split(turn.rotation/2)
       [
         turn.pose,
         second.pose,
