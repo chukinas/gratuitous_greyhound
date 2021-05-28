@@ -50,7 +50,7 @@ defmodule MissionBuilder do
     [square_count_x, square_count_y] =
       [arena.width, arena.height]
       |> Enum.map(&round(&1 / square_size))
-    grid = Grid.new(square_size, square_count_x, square_count_y)
+    grid = Grid.new(square_size, position_new(square_count_x, square_count_y))
     units = [
       Unit.Builder.red_destroyer(1, pose_new(0, 0, 0), name: "Prince Eugene"),
       #Unit.Builder.red_cruiser(2, pose_new(800, 155, 75), name: "Billy"),
@@ -81,7 +81,7 @@ defmodule MissionBuilder do
     [square_count_x, square_count_y] =
       [arena.width, arena.height]
       |> Enum.map(&round(&1 / square_size))
-    grid = Grid.new(square_size, square_count_x, square_count_y)
+    grid = Grid.new(square_size, position_new(square_count_x, square_count_y))
     {grid, margin}
   end
 end
