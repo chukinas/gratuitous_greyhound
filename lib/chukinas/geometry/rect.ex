@@ -18,6 +18,8 @@ defmodule Rect do
   # *** *******************************
   # *** NEW
 
+  def new({a, b} = _min_max_position), do: new(a, b)
+
   def new(start_x, start_y, end_x, end_y) do
     new(
       position_new(start_x, start_y),
@@ -94,8 +96,9 @@ defmodule Rect do
   # *** API
 
   def bounding_rect_from_positions(list) do
-    {min, max} = position_min_max(list)
-    new(min, max)
+    list
+    |> position_min_max
+    |> new
   end
 
   def bounding_rect(rects) when is_list(rects) do

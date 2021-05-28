@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{Rect, Position}
+alias Chukinas.Geometry.Rect
 alias Chukinas.Svg.{Interpret, Parse}
 
 defmodule Interpret do
@@ -6,20 +6,24 @@ defmodule Interpret do
   Analyze output of Svg.Parse to determine e.g. min x and y..
   """
 
+  import Chukinas.PositionOrientationSize
+
+  # TODO opts is the wrong word for this
   def interpret(svg, opts \\ []) when is_binary(svg) do
     svg
     |> Parse.parse(opts)
-    |> _interpret
+    |> _interpret()
   end
 
   defp _interpret(parsed_svg) when is_list(parsed_svg) do
-    {min, max} =
+    rect =
       parsed_svg
       |> to_positions
-      |> Position.min_max
+      |> position_min_max
+      |> Rect.new
     %{
       path: to_path(parsed_svg),
-      rect: Rect.new(min, max),
+      rect: rect
     }
   end
 
@@ -31,7 +35,7 @@ defmodule Interpret do
 
   # assumes absolute commands
   defp to_position(["Z"]), do: nil
-  defp to_position([_, x, y]), do: Position.new(x, y)
+  defp to_position([_, x, y]), do: position_new(x, y)
 
   defp to_path(cmds) do
     cmds
