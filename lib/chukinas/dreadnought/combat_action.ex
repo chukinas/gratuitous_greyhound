@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Unit, CombatAction, Turret, Animation}
-alias Chukinas.Geometry.{Collide, Straight, Pose}
+alias Chukinas.Geometry.{Collide, Straight}
 alias Chukinas.Util.IdList
 alias Chukinas.LinearAlgebra.{Vector, CSys}
 alias Unit.Event, as: Ev
@@ -7,7 +7,6 @@ alias Unit.Event, as: Ev
 defmodule CombatAction do
 
   use Chukinas.PositionOrientationSize
-
   alias CombatAction.Accumulator, as: Acc
 
   # *** *******************************
@@ -69,7 +68,7 @@ defmodule CombatAction do
     turret_vector = CSys.Conversion.convert_to_world_vector(turret, attacker)
     path_vector = Vector.subtract(target_vector, turret_vector)
     angle = Vector.angle(path_vector)
-    path_start_pose = Pose.new(turret_vector, angle)
+    path_start_pose = pose_new(turret_vector, angle)
     range = Vector.magnitude(path_vector)
     path = Straight.new(path_start_pose, range)
     if Collide.avoids?(path, Acc.islands(acc)) do
@@ -110,12 +109,13 @@ defmodule CombatAction do
     pose = muzzle_flash_pose(attacker, turret_id)
     ordnance_hit_angle =
       pose
-      |> Pose.flip
-      |> Pose.angle
+      |> flip_angle
+      |> angle
     ordnance_hit_pose =
       target
-      |> position
-      |> Pose.new(ordnance_hit_angle)
+      # TODO position_new is redundant
+      |> position_new
+      |> pose_new(ordnance_hit_angle)
     animations = [
       Animation.Build.large_muzzle_flash(pose, delay_discharge),
       # TODO calculate the ordnance flight time instead of guessing
@@ -127,12 +127,11 @@ defmodule CombatAction do
   def muzzle_flash_pose(unit, turret_id) do
     # TODO move to Unit
     turret = Unit.turret(unit, turret_id)
-    position_vector =
-      turret
-      |> Turret.gun_barrel_vector
-      |> CSys.Conversion.convert_to_world_vector(unit, turret)
     angle = CSys.Conversion.sum_angles(turret, unit)
-    Pose.new(position_vector, angle)
+    turret
+    |> Turret.gun_barrel_vector
+    |> CSys.Conversion.convert_to_world_vector(unit, turret)
+    |> pose_new(angle)
   end
 
   def move_turret_to_neutral(acc, _turret_id) do

@@ -130,6 +130,9 @@ defmodule POS do
   def angle(%{angle: value}), do: value
 
   # TODO rename rotate?
+  defdelegate flip_angle(orientation), to: Pose, as: :flip
+
+  # TODO rename rotate?
   defdelegate orientation_rotate(orientation, angle), to: Pose, as: :rotate
 
   # *** *******************************
