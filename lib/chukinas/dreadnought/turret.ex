@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Turret, Sprite}
-alias Chukinas.Geometry.{Pose, Trig, Pose}
+alias Chukinas.Geometry.Trig
 alias Chukinas.LinearAlgebra.{HasCsys, CSys, Vector}
 
 defmodule Turret do
@@ -15,7 +15,7 @@ defmodule Turret do
     field :max_ccw_angle, degrees :: number()
     field :max_rotation, positive_degrees :: number()
     field :rest_angle, degrees :: number()
-    field :pose, Pose.t()
+    pose_fields()
   end
 
   # *** *******************************
@@ -24,16 +24,18 @@ defmodule Turret do
   def new(id, sprite, pose) do
     rest_angle =
       pose
-      |> Pose.angle
-      |> Trig.normalize_angle
-    %__MODULE__{
-      id: id,
-      sprite: sprite,
-      max_ccw_angle: Trig.normalize_angle(rest_angle - 135),
-      max_rotation: 270,
-      rest_angle: rest_angle,
-      pose: pose
-    }
+      |> angle_normalize
+      |> angle
+    fields =
+      %{
+        id: id,
+        sprite: sprite,
+        max_ccw_angle: Trig.normalize_angle(rest_angle - 135),
+        max_rotation: 270,
+        rest_angle: rest_angle,
+      }
+      |> merge_pose(pose)
+    struct!(__MODULE__, fields)
   end
 
   # *** *******************************
@@ -55,7 +57,7 @@ defmodule Turret do
     |> Vector.from_angle
   end
 
-  def current_angle(%__MODULE__{pose: pose}), do: Pose.angle(pose)
+  def current_angle(turret), do: get_angle(turret)
 
   def current_rotation(mount) do
     rotation(mount, current_angle(mount))
@@ -72,11 +74,11 @@ defmodule Turret do
     {x, 0}
   end
 
-  def get_pose(%__MODULE__{pose: pose}), do: pose
+  def get_pose(turret), do: pose_new(turret)
 
-  def get_position(%__MODULE__{pose: pose}), do: position_new(pose)
+  def get_position(turret), do: position_new(turret)
 
-  def csys(turret), do: turret |> get_pose |> CSys.new
+  def csys(turret), do: turret |> CSys.new
 
   def position_csys(turret) do
     turret
@@ -87,9 +89,7 @@ defmodule Turret do
   # *** *******************************
   # *** SETTERS
 
-  def put_angle(mount, angle) do
-    Map.update!(mount, :pose, &Pose.put_angle(&1, angle))
-  end
+  defdelegate put_angle(mount, angle), to: POS, as: :put_angle!
 
   # *** *******************************
   # *** API
@@ -131,14 +131,16 @@ defmodule Turret do
 
   defimpl HasCsys do
     def get_csys(turret), do: Turret.csys(turret)
+    # This no longer seems necessary, now that pose is on the item itself
     def get_angle(turret), do: Turret.current_angle(turret)
   end
 
   defimpl Inspect do
+    alias Chukinas.PositionOrientationSize, as: POS
     require IOP
     def inspect(turret, opts) do
       IOP.struct("Turret-#{turret.id}", [
-        pose: turret.get_pose
+        pose: POS.pose_new(turret)
       ])
     end
   end

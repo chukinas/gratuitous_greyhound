@@ -17,7 +17,7 @@
     <%= for turret <- @unit.turrets do %>
     <%= ChukinasWeb.DreadnoughtView.relative_sprite turret.sprite, @socket, 
         attributes: [id: "unit-#{@unit.id}-mount-#{turret.id}"],
-        pose: turret.pose %>
+        pose: turret %>
     <% end %>
   </div>
 
