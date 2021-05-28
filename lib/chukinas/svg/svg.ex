@@ -7,6 +7,7 @@ defmodule Chukinas.Svg do
   """
 
   import Chukinas.Util.Precision, only: [values_to_int: 1]
+  import Chukinas.PositionOrientationSize
 
   # *** *******************************
   # *** API
@@ -36,12 +37,14 @@ defmodule Chukinas.Svg do
     path
     |> Path.get_start_pose()
     |> values_to_int
+    |> position_to_tuple
   end
 
   defp get_end_coord(path) do
     path
     |> Path.get_end_pose()
     |> values_to_int
+    |> position_to_tuple
   end
 
   defp get_quadratic_curve(%Turn{angle: angle} = path) when abs(angle) <= 90 do
@@ -54,6 +57,7 @@ defmodule Chukinas.Svg do
       |> Path.new_straight(length_to_intercept)
       |> Path.get_end_pose()
       |> values_to_int
+      |> position_to_tuple
     {x1, y1} = get_end_coord(path)
     "Q #{dx} #{dy} #{x1} #{y1}"
   end
