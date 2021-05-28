@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{Straight, Path, Position, Turn, Trig}
+alias Chukinas.Geometry.{Straight, Path, Turn, Trig}
 alias Chukinas.Svg.{Interpret}
 
 defmodule Chukinas.Svg do
@@ -6,7 +6,7 @@ defmodule Chukinas.Svg do
   This module converts path structs to svg path strings for use in eex templates.
   """
 
-  require Position
+  import Chukinas.Util.Precision, only: [values_to_int: 1]
 
   # *** *******************************
   # *** API
@@ -35,13 +35,13 @@ defmodule Chukinas.Svg do
   defp get_start_coord(path) do
     path
     |> Path.get_start_pose()
-    |> Position.to_int_tuple()
+    |> values_to_int
   end
 
   defp get_end_coord(path) do
     path
     |> Path.get_end_pose()
-    |> Position.to_int_tuple()
+    |> values_to_int
   end
 
   defp get_quadratic_curve(%Turn{angle: angle} = path) when abs(angle) <= 90 do
@@ -53,7 +53,7 @@ defmodule Chukinas.Svg do
       |> Path.get_start_pose()
       |> Path.new_straight(length_to_intercept)
       |> Path.get_end_pose()
-      |> Position.to_int_tuple()
+      |> values_to_int
     {x1, y1} = get_end_coord(path)
     "Q #{dx} #{dy} #{x1} #{y1}"
   end
