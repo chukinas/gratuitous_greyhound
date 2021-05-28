@@ -1,5 +1,7 @@
+# TODO in the three main modules, there should be no references to Trig
 alias Chukinas.Geometry.{Size, Position, Pose, Trig}
 alias Chukinas.PositionOrientationSize, as: POS
+alias Chukinas.Util.Precision
 
 defmodule POS do
 
@@ -75,6 +77,17 @@ defmodule POS do
 
   def put_angle!(struct, angle), do: %{struct | angle: angle}
   def put_angle(map, angle), do: Map.put(map, :angle, angle)
+
+  def into_struct!(fields, module), do: struct!(module, fields)
+
+  # *** *******************************
+  # *** IsPos
+
+  def approx_equal(a, b) do
+    a
+    |> POS.IsPos.keys
+    |> Enum.all?(& Precision.approx_equal(a, b, &1))
+  end
 
   # *** *******************************
   # *** POSITION

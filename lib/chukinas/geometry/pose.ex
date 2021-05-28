@@ -65,24 +65,6 @@ defmodule Pose do
     %{pose | angle: Trig.normalize_angle(pose.angle + angle)}
   end
 
-  def straight(pose, length) do
-    dx = length * Trig.cos(pose.angle)
-    dy = length * Trig.sin(pose.angle)
-    new(pose.x + dx, pose.y + dy, pose.angle)
-  end
-
-  def left(pose, length) do
-    pose
-    |> rotate(-90)
-    |> straight(length)
-  end
-
-  def right(pose, length) do
-    pose
-    |> rotate(90)
-    |> straight(length)
-  end
-
   # *** *******************************
   # *** IMPLEMENTATIONS
 
@@ -102,4 +84,5 @@ defmodule Pose do
       ]
     end
   end
+
 end

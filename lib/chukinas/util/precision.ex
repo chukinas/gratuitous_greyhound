@@ -33,4 +33,12 @@ defmodule Chukinas.Util.Precision do
   def approx_equal(a, b) do
     abs(a - b) < 1
   end
+
+  def approx_equal(a, b, key) do
+    approx_equal(
+      Map.fetch!(a, key),
+      Map.fetch!(b, key)
+    )
+  end
+
 end

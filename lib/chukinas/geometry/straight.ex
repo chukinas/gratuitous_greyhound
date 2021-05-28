@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{Pose, PathLike, Rect, Straight, Position, Trig, CollidableShape}
+alias Chukinas.Geometry.{PathLike, Rect, Straight, Trig, CollidableShape}
 alias Chukinas.LinearAlgebra.{HasCsys, CSys}
 alias Chukinas.LinearAlgebra
 
@@ -6,12 +6,13 @@ defmodule Straight do
 
   import LinearAlgebra
   use Chukinas.PositionOrientationSize
+  import Chukinas.Collide
 
   # *** *******************************
   # *** TYPES
 
   typedstruct enforce: true do
-    field :start, Pose.t()
+    pose_fields()
     field :len, number()
   end
 
@@ -19,35 +20,32 @@ defmodule Straight do
   # *** NEW
 
   def new(start_pose, len) do
-    %__MODULE__{
-      start: start_pose,
-      len: len,
-    }
+    %{len: len}
+    |> merge_pose(start_pose)
+    |> into_struct!(__MODULE__)
   end
-  def new(x, y, angle, len) do
-    %__MODULE__{
-      start: Pose.new(x, y, angle),
-      len: len,
-    }
-  end
+
+  def new(x, y, angle, len), do: new(pose(x, y, angle), len)
 
   # *** *******************************
   # *** GETTERS
 
-  def angle(straight), do: straight.start |> Pose.angle
-  def start_pose(straight), do: straight.start
+  def angle(straight), do: straight |> get_angle
+  def start_pose(straight), do: straight |> pose_new
   def length(straight), do: straight.len
   def end_pose(%__MODULE__{len: len} = path) do
     path
-    |> vector_new(x: len)
-    |> pose_new(path.start.angle)
+    |> vector_forward(len)
+    |> position_new
+    |> merge_position_into!(path)
+    |> pose_new
   end
   def bounding_rect(path) do
-    [
+    {
       start_pose(path),
       end_pose(path)
-    ]
-    |> Rect.bounding_rect_from_positions
+    }
+    |> Rect.new
   end
 
   # *** *******************************
@@ -62,7 +60,7 @@ defmodule Straight do
     # Then compare that to the actual start angle to see if there's a match.
     distance = Trig.distance_between_points start_pose, end_position
     proposed_path = new(start_pose, distance)
-    if proposed_path |> end_pose |> Position.approx_equal(end_position) do
+    if proposed_path |> end_pose |> position_new |> approx_equal(end_position) do
       proposed_path
     else
       nil
@@ -83,22 +81,23 @@ defmodule Straight do
 
   defimpl CollidableShape do
     def to_vertices(straight) do
-      [
-        straight |> PathLike.pose_start |> Pose.left(20),
-        straight |> PathLike.pose_start |> Pose.right(20),
-        straight |> PathLike.pose_end   |> Pose.right(20),
-        straight |> PathLike.pose_end   |> Pose.left(20)
-      ]
-      |> Enum.map(&Position.to_vertex/1)
+      end_pose = PathLike.pose_end(straight)
+      for vector <- [
+        straight |> vector_left(20),
+        straight |> vector_right(20),
+        end_pose |> vector_right(20),
+        end_pose |> vector_left(20)
+      ], do: vertex_new(vector)
     end
   end
 
   defimpl HasCsys do
+
     def get_csys(%{start: pose}) do
       CSys.new(pose)
     end
-    def get_angle(%{start: pose}) do
-      Pose.angle(pose)
-    end
+
+    def get_angle(%{angle: value}), do: value
+
   end
 end

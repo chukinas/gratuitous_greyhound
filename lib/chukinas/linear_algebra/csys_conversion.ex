@@ -1,10 +1,14 @@
 alias Chukinas.LinearAlgebra.{Vector, CSys, HasCsys}
+alias Chukinas.Util.Maps
 
 # TODO rename Csys
 defmodule CSys.Conversion do
-  import Vector.Guards
 
+  import Vector.Guards
+  alias Chukinas.PositionOrientationSize, as: POS
+  require POS.Guards
   use TypedStruct
+
   typedstruct enforce: true do
     # TODO rename __rotation__ ?
     field :__transforms__, [CSys.t()], default: []
@@ -23,7 +27,7 @@ defmodule CSys.Conversion do
   end
   def new(starting_point) do
     starting_point
-    |> HasCsys.get_csys
+    |> get_csys
     |> new
   end
 
@@ -61,25 +65,22 @@ defmodule CSys.Conversion do
   end
 
   def put_inv(%__MODULE__{} = token, item_with_csys) do
-    transform =
-      item_with_csys
-      |> HasCsys.get_csys
-      |> CSys.flip
-    Map.update!(token, :__transforms__, & [transform | &1])
+    item_with_csys
+    |> get_csys
+    |> CSys.flip
+    |> push_transform_into(token)
   end
 
   def put(%__MODULE__{} = token, item_with_csys) do
-    transform =
-      item_with_csys
-      |> HasCsys.get_csys
-    Map.update!(token, :__transforms__, & [transform | &1])
+    item_with_csys
+    |> get_csys
+    |> push_transform_into(token)
   end
 
   def put_position(%__MODULE__{} = token, item_with_csys) do
-    transform =
-      item_with_csys
-      |> HasCsys.get_csys
-    Map.update!(token, :__transforms__, & [transform | &1])
+    item_with_csys
+    |> get_csys
+    |> push_transform_into(token)
   end
 
   def get_vector(%__MODULE__{__transforms__: transforms, __start_point__: vector}) do
@@ -97,7 +98,21 @@ defmodule CSys.Conversion do
   def sum_angles(a, b), do: sum_angles([a, b])
   def sum_angles(items_with_csys) do
     items_with_csys
-    |> Enum.map(&HasCsys.get_angle/1)
+    |> Enum.map(&get_item_angle/1)
     |> Enum.sum
   end
+
+  def push_transform_into(transform, token) do
+    Maps.push(token, :__transforms__, transform)
+  end
+
+  # *** *******************************
+  # *** fazing out HasCsys...
+
+  def get_item_angle(item) when POS.Guards.has_pose(item), do: POS.get_angle(item)
+  def get_item_angle(item), do: HasCsys.get_angle(item)
+
+  def get_csys(item) when POS.Guards.has_pose(item), do: CSys.new(item)
+  def get_csys(item), do: HasCsys.get_csys(item)
+
 end
