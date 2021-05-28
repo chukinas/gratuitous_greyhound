@@ -1,5 +1,4 @@
 alias Chukinas.Geometry.{Rect, CollidableShape}
-alias Chukinas.LinearAlgebra.Vector
 
 defmodule Rect do
   @moduledoc"""
@@ -20,12 +19,10 @@ defmodule Rect do
   # *** NEW
 
   def new(start_x, start_y, end_x, end_y) do
-    %__MODULE__{
-      x: start_x,
-      y: start_y,
-      width: abs(start_x - end_x),
-      height: abs(start_y - end_y)
-    }
+    new(
+      position_new(start_x, start_y),
+      position_new(end_x, end_y)
+    )
   end
 
   def new(%{x: x, y: y}, %{width: width, height: height}) do
@@ -38,15 +35,19 @@ defmodule Rect do
   end
 
   def new(start_position, end_position)
-  when has_position(start_position) and has_position(end_position) do
-    %__MODULE__{
-      x: start_position.x,
-      y: start_position.y,
-      width: abs(start_position.x - end_position.x),
-      height: abs(start_position.y - end_position.y)
-    }
+  when has_position(start_position)
+  and has_position(end_position) do
+    size = size_from_positions(start_position, end_position)
+    fields =
+      %{}
+      |> merge_position(start_position)
+      |> merge_size(size)
+    struct!(__MODULE__, fields)
   end
-  def new(width, height) when is_number(width) and is_number(height) do
+
+  def new(width, height)
+  when is_number(width)
+  and is_number(height) do
     %__MODULE__{
       x: 0,
       y: 0,
@@ -59,7 +60,7 @@ defmodule Rect do
   # *** GETTERS
 
   # TODO rename position_bottom_right
-  def bottom_right_position(%__MODULE__{} = rect) do
+  def bottom_right_position(rect) do
     rect
     |> position_from_size
     |> position_add(rect)
@@ -69,24 +70,24 @@ defmodule Rect do
     # TODO rename vertices
     # TODO move getters to appropriate section
     position_top_left = position(rect)
+    relative_position_br = rect |> position_from_size
     for pos <- [
       position_top_left,
-      position_add_x(position_top_left, width(rect)),
+      position_add_x(position_top_left, relative_position_br),
       bottom_right_position(rect),
-      position_add_y(position_top_left, height(rect))
+      position_add_y(position_top_left, relative_position_br)
     ], do: position_to_vertex(pos)
   end
 
   def center_position(rect) do
-    relative_center =
-      rect
-      |> position_from_size
-      |> position_divide(2)
     rect
-    |> position_add(relative_center)
-    |> position
+    |> position_from_size
+    |> position_divide(2)
+    |> position_add(rect)
+    |> position_new
   end
-  def center_vector(rect), do: center_position(rect) |> Vector.new
+
+  def center_vector(rect), do: rect |> center_position |> position_to_tuple
 
 
   # *** *******************************
@@ -94,15 +95,16 @@ defmodule Rect do
 
   def bounding_rect_from_positions(list) do
     {min, max} = position_min_max(list)
-    size = size_new(min, max)
-    new(min, size)
+    new(min, max)
   end
 
   def bounding_rect(rects) when is_list(rects) do
     bounding_rect_from_positions(rects ++ Enum.map(rects, &bottom_right_position/1))
   end
 
-  def bounding_rect(%__MODULE__{} = a, %__MODULE__{} = b) do
+  def bounding_rect(a, b)
+  when has_position_and_size(a)
+  and has_position_and_size(b) do
     bounding_rect([a, b])
   end
 
@@ -141,7 +143,7 @@ defmodule Rect do
     import Inspect.Algebra
     require IOP
     def inspect(rect, opts) do
-      pos = rect |> position |> IOP.doc
+      pos = rect |> position_new |> IOP.doc
       size = rect |> size_new |> IOP.doc
       contents =
         pos

@@ -12,4 +12,8 @@ defmodule Chukinas.PositionOrientationSize.Guards do
     when is_map_key(size, :width)
     and is_map_key(size, :height)
 
+  defguard has_position_and_size(element)
+    when has_position(element)
+    and has_size(element)
+
 end

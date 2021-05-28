@@ -117,8 +117,13 @@ defmodule POS do
   def size_new(a, b) when has_position(a) and has_position(b) do
     Size.new(a, b)
   end
+
   defdelegate size_new(size), to: Size, as: :new
   defdelegate size_new(a, b), to: Size, as: :new
+
+  defdelegate size_from_position(position), to: Size, as: :from_position
+
+  defdelegate size_from_positions(a, b), to: Size, as: :from_positions
 
   defdelegate size_multiply(size, scalar), to: Size, as: :multiply
 

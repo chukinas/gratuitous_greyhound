@@ -37,6 +37,13 @@ defmodule Size do
     }
   end
 
+  def from_position(a) do
+    %__MODULE__{
+      width: a.x,
+      height: a.y
+    }
+  end
+
   def from_positions(a, b) do
     %__MODULE__{
       width: abs(a.x - b.x),

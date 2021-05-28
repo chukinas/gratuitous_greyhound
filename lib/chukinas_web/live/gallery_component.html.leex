@@ -82,7 +82,7 @@
         <%= if @show_markers? do %>
           <%= ChukinasWeb.DreadnoughtView.center %{x: 0, y: 0} %>
           <%= for mount <- sprite.mounts do %>
-            <%= ChukinasWeb.DreadnoughtView.center mount.position, type: :mount %>
+            <%= ChukinasWeb.DreadnoughtView.center mount, type: :mount %>
           <% end %>
         <% end %>
       </div>
