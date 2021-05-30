@@ -1,7 +1,8 @@
 # TODO in the three main modules, there should be no references to Trig
 alias Chukinas.Geometry.{Size, Position, Pose, Trig}
 alias Chukinas.PositionOrientationSize, as: POS
-alias Chukinas.Util.Precision
+alias Chukinas.Util.{Maps, Precision}
+alias Chukinas.Math, as: M
 
 defmodule POS do
 
@@ -45,31 +46,36 @@ defmodule POS do
   @type pos_keywords    :: [pos_tuple]
 
   # *** *******************************
+  # *** PRECISION
+
+  def position_set_precision(position, precision) do
+    position
+    |> position_new
+    |> pos_set_precision(precision)
+  end
+
+  def pose_set_precision(pose, precision) do
+    pose
+    |> pose_new
+    |> pos_set_precision(precision)
+  end
+
+  defp pos_set_precision(struct, precision) when is_number(precision) do
+    Enum.reduce(POS.IsPos.keys(struct), struct, fn key, struct ->
+      Map.update!(struct, key, &Float.round(&1 * 1.0, precision))
+    end)
+  end
+
+  # *** *******************************
   # *** MERGE
 
-  def merge_position(map, pos_map), do: merge(map, pos_map, Position)
-  def merge_pose(map, pos_map), do: merge(map, pos_map, Pose)
-  def merge_size(map, pos_map), do: merge(map, pos_map, Size)
+  def merge_position(map, pos_map), do: Maps.merge(map, pos_map, Position)
+  def merge_pose(map, pos_map), do: Maps.merge(map, pos_map, Pose)
+  def merge_size(map, pos_map), do: Maps.merge(map, pos_map, Size)
 
-  def merge(map, pos_map, pos_module) do
-    pos =
-      pos_module
-      |> apply(:new, [pos_map])
-      |> Map.from_struct
-    Map.merge(map, pos)
-  end
-
-  def merge_position!(struct, pos_map), do: merge!(struct, pos_map, Position)
-  def merge_pose!(struct, pos_map), do: merge!(struct, pos_map, Pose)
-  def merge_size!(struct, pos_map), do: merge!(struct, pos_map, Size)
-
-  def merge!(struct, pos_map, pos_module) when is_struct(struct) do
-    pos =
-      pos_module
-      |> apply(:new, [pos_map])
-      |> Map.from_struct
-    struct!(struct, pos)
-  end
+  def merge_position!(struct, pos_map), do: Maps.merge!(struct, pos_map, Position)
+  def merge_pose!(struct, pos_map), do: Maps.merge!(struct, pos_map, Pose)
+  def merge_size!(struct, pos_map), do: Maps.merge!(struct, pos_map, Size)
 
   def merge_position_into!(pos_map, struct), do: merge_position!(struct, pos_map)
   def merge_pose_into!(pos_map, struct), do: merge_pose!(struct, pos_map)
@@ -120,9 +126,14 @@ defmodule POS do
 
   defdelegate position_divide(position, scalar), to: Position, as: :divide
 
+  def position_min_max(a, b), do: position_min_max([a, b])
   defdelegate position_min_max(items_with_position), to: Position, as: :min_max
 
   defdelegate position_shake(position), to: Position, as: :shake
+
+  def put_zero_position(item) do
+    Map.merge(item, %{x: 0, y: 0})
+  end
 
   # *** *******************************
   # *** SIZE
@@ -156,6 +167,20 @@ defmodule POS do
   end
 
   defdelegate flip_angle(orientation), to: Pose, as: :flip
+
+  def angle_add(map, value) do
+    Map.update!(map, :angle, & &1 + value)
+  end
+
+  def angle_subtract(map, value), do: angle_add(map, -value)
+
+  def angle_multiply(map, value) do
+    Map.update!(map, :angle, & &1 * value)
+  end
+
+  def angle_flip_sign(map) do
+    Map.update!(map, :angle, &M.flip_sign/1)
+  end
 
   # TODO rename rotate?
   defdelegate orientation_rotate(orientation, angle), to: Pose, as: :rotate

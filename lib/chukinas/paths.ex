@@ -1,12 +1,26 @@
-alias Chukinas.Geometry.{Path, PathLike, Straight, Turn}
+alias Chukinas.Geometry.{PathLike, Straight}
+alias Chukinas.Paths
 
-defmodule Path do
+defmodule Paths do
+
+  use Chukinas.PositionOrientationSize
 
   # *** *******************************
   # *** TYPES
 
   @type t() :: PathLike.t()
 
+  def path_new(x, y, angle, length, rotation \\ nil) do
+    pose = pose_new(x, y, angle)
+    case rotation do
+      nil ->
+        new_straight(pose, length)
+      angle when is_number(angle) ->
+        new_turn(pose, length, rotation)
+    end
+  end
+
+    # TODO remove these
   def new(%{pose: pose, length: length, angle: angle}) do
     new_turn(pose, length, angle)
   end
@@ -20,9 +34,18 @@ defmodule Path do
 
   defdelegate new_straight(x, y, angle, length), to: Straight, as: :new
   defdelegate new_straight(start_pose, length), to: Straight, as: :new
-  defdelegate new_turn(start_pose, length, angle), to: Turn, as: :new
+  defdelegate new_turn(start_pose, length, angle), to: Paths.Turn, as: :new
   defdelegate get_start_pose(path), to: PathLike, as: :pose_start
   defdelegate get_end_pose(path), to: PathLike, as: :pose_end
+
+  def pose_at_end(path), do: path |> get_end_pose
+
+  def position_at_end(path) do
+    path
+    |> get_end_pose
+    |> position_new
+  end
+
   defdelegate get_bounding_rect(path), to: PathLike, as: :get_bounding_rect
   defdelegate exceeds_angle(path, angle), to: PathLike, as: :exceeds_angle
   defdelegate deceeds_angle(path, angle), to: PathLike, as: :deceeds_angle
@@ -30,8 +53,11 @@ defmodule Path do
   def get_connecting_path(start_pose, final_position) do
     possible_straight_path = Straight.get_connecting_path start_pose, final_position
     case possible_straight_path do
-      nil -> Turn.connecting_path! start_pose, final_position
+      nil -> Paths.Turn.connecting_path! start_pose, final_position
       _ -> possible_straight_path
     end
   end
+
+  def length_from_path(path), do: path.length
+
 end

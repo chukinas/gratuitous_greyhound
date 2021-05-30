@@ -1,4 +1,5 @@
-alias Chukinas.Geometry.{GridSquare, CollidableShape, Path, Rect}
+alias Chukinas.Geometry.{GridSquare, CollidableShape, Rect}
+alias Chukinas.Paths
 
 defmodule GridSquare do
   @moduledoc"""
@@ -14,7 +15,7 @@ defmodule GridSquare do
     field :row, integer()
     field :center, POS.position_type
     field :size, number()
-    field :path, Path.t(), enforce: false
+    field :path, Paths.t(), enforce: false
     field :path_type, atom(), enforce: false
   end
 
@@ -41,10 +42,10 @@ defmodule GridSquare do
   # *** API
 
   def calc_path(square, start_pose) do
-    path = Path.get_connecting_path(start_pose, square.center)
+    path = Paths.get_connecting_path(start_pose, square.center)
     path_type = cond do
-      Path.exceeds_angle(path, 30) -> :sharp_turn
-      Path.deceeds_angle(path, 10) -> :straight
+      Paths.exceeds_angle(path, 30) -> :sharp_turn
+      Paths.deceeds_angle(path, 10) -> :straight
       true -> :turn
     end
     %{square | path: path, path_type: path_type}

@@ -1,4 +1,6 @@
-alias Chukinas.Geometry.{Straight, Path, Turn, Trig}
+alias Chukinas.Geometry.{Straight, Trig}
+alias Chukinas.Paths
+alias Chukinas.Paths.Turn
 alias Chukinas.Svg.{Interpret}
 
 defmodule Chukinas.Svg do
@@ -35,14 +37,14 @@ defmodule Chukinas.Svg do
 
   defp get_start_coord(path) do
     path
-    |> Path.get_start_pose()
+    |> Paths.get_start_pose()
     |> values_to_int
     |> position_to_tuple
   end
 
   defp get_end_coord(path) do
     path
-    |> Path.get_end_pose()
+    |> Paths.get_end_pose()
     |> values_to_int
     |> position_to_tuple
   end
@@ -54,9 +56,9 @@ defmodule Chukinas.Svg do
     length_to_intercept = radius * :math.tan(half_angle_rad)
     {dx, dy} =
       path
-      |> Path.get_start_pose()
-      |> Path.new_straight(length_to_intercept)
-      |> Path.get_end_pose()
+      |> Paths.get_start_pose()
+      |> Paths.new_straight(length_to_intercept)
+      |> Paths.get_end_pose()
       |> values_to_int
       |> position_to_tuple
     {x1, y1} = get_end_coord(path)

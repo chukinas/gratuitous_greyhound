@@ -30,4 +30,20 @@ defmodule Maps do
 
   def clear(map, key), do: Map.update!(map, key, &__clear__/1)
   defp __clear__(value) when is_list(value), do: []
+
+  def merge(map, pos_map, pos_module) do
+    pos =
+      pos_module
+      |> apply(:new, [pos_map])
+      |> Map.from_struct
+    Map.merge(map, pos)
+  end
+
+  def merge!(struct, pos_map, pos_module) when is_struct(struct) do
+    pos =
+      pos_module
+      |> apply(:new, [pos_map])
+      |> Map.from_struct
+    struct!(struct, pos)
+  end
 end

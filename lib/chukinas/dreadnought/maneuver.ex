@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Maneuver, UnitAction, Unit}
-alias Chukinas.Geometry.{Path}
+alias Chukinas.Paths
 alias Chukinas.Util.IdList
 alias Unit.Event, as: Ev
 
@@ -31,7 +31,7 @@ defmodule Maneuver do
   end
 
   def move_to(unit, position) do
-    path = Path.get_connecting_path(pose(unit), position)
+    path = Paths.get_connecting_path(pose(unit), position)
     maneuver = Ev.Maneuver.new(path)
     Unit.put(unit, maneuver)
   end
@@ -42,7 +42,7 @@ defmodule Maneuver do
   defp put_trapped_maneuver(%Unit{} = unit) do
     this_pose = unit |> pose |> IOP.inspect("put trap man")
     events = [
-      Ev.Maneuver.new(Path.new_straight(this_pose, 300))
+      Ev.Maneuver.new(Paths.new_straight(this_pose, 300))
     ]
     Unit.put(unit, events)
   end

@@ -1,3 +1,5 @@
+# TODO this shouldn't be its own module anymore. Move this to POS
+#
 defmodule Chukinas.TypedStruct do
 
   use TypedStruct

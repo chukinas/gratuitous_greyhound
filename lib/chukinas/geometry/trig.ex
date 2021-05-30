@@ -64,6 +64,14 @@ defmodule Chukinas.Geometry.Trig do
     2 * radius * :math.pi() * angle / 360
   end
 
+  defguard angle_is_normal(angle)
+    when angle >= 0
+    and angle < 360
+
+  defguard angle_is_normal_non_zero(angle)
+    when angle > 0
+    and angle < 360
+
   def normalize_angle(angle) do
     cond do
       angle < 0 ->

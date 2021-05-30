@@ -6,5 +6,5 @@
     "lib/chukinas/linear_algebra/*.ex": { "type": "algebra" },
     "lib/chukinas_web/templates/dreadnought/*.html.leex": { "type": "template" },
     "lib/chukinas_web/live/dreadnought/*_component.ex": { "type": "component" },
-    "test/chukinas/dreadnought/*_test.exs": { "type": "test" },
+    "test/chukinas/*_test.exs": { "type": "test" },
 }

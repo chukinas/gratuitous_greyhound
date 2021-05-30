@@ -42,10 +42,50 @@ defmodule Vector do
   def angle(vector) when is_vector(vector) do
     vector
     |> normalize
+    # TODO put all the dots together
     |> dot(@x)
     |> Trig.acos
     |> Trig.mult(sign(vector))
     |> Trig.normalize_angle
+  end
+
+  def rotate(vector, angle)
+  when is_vector(vector)
+  and is_number(angle) do
+    angle
+    |> from_angle
+    |> matrix_dot_vector(vector)
+  end
+
+  def components(vector, :x), do: x_components(vector)
+  def components(vector, :y), do: y_components(vector)
+  # This is the top row of an orientation matrix
+  def x_components({x, y}), do: {x, -y}
+  # This is the botton row of an orientation matrix
+  def y_components({x, y}), do: {y,  x}
+  # This is the top row of an orientation matrix
+  def x_axis({x, y}), do: {x,  y}
+  # This is the botton row of an orientation matrix
+  def y_axis({x, y}), do: {-y, x}
+
+  def matrix_dot_matrix(matrix_a, matrix_b) do
+    [x_axis(matrix_b), y_axis(matrix_b)]
+    |> Enum.map(& matrix_dot_vector(matrix_a, &1))
+    |> Enum.map(& elem(&1, 0))
+    |> List.to_tuple
+  end
+
+  def matrix_dot_vector(matrix, vector) do
+    for component <- [:x, :y] do
+      matrix
+      |> components(component)
+      |> vector_dot_vector(vector)
+    end
+    |> List.to_tuple
+  end
+
+  def vector_dot_vector({a, b}, {c, d}) do
+    a * c + b * d
   end
 
   def rotate_90({x, y}), do: {-y, x}
@@ -57,11 +97,22 @@ defmodule Vector do
   # *** *******************************
   # *** API
 
+  # TODO rename flip_sign
   def flip(vector), do: scalar(vector, -1)
+
+  def flip_sign(vector), do: scalar(vector, -1)
+
+  def flip_sign_y({x, y}), do: {x, -y}
+
   def scalar({a, b}, scalar), do: {a * scalar, b * scalar}
+
   def dot({a, b}, {c, d}), do: a * c + b * d
+
   def add({a, b}, {c, d}), do: {a + c, b + d}
+
   def subtract(a, b), do: b |> flip |> add(a)
+
+  # TODO rename ? `unit_vector`?
   def normalize({a, b}) do
     magnitude =
       [a, b]
@@ -73,18 +124,31 @@ defmodule Vector do
       b / magnitude
     }
   end
+
   def sign_between(a, b) do
+    [a, b] = for vec <- [a, b], do: normalize(vec)
     a
     |> rotate_90
     |> dot(b)
     |> Trig.sign
   end
+
   # TODO rename signed_angle_between
   def angle_between(a, b) do
-    Trig.normalize_angle(sign_between(a, b) * angle_between_abs(a, b))
+    [a, b] = for vec <- [a, b], do: normalize(vec)
+    sign = sign_between(a, b)
+    angle = angle_between_abs(a, b)
+    Trig.normalize_angle(sign * angle)
   end
+
   # TODO rename angle_between
   def angle_between_abs(a, b) do
-    dot(a, b) |> Trig.acos
+    [a, b] = for vec <- [a, b], do: normalize(vec)
+    dot(a, b)
+    |> IOP.inspect("#{inspect a} dot #{inspect b}")
+    |> Trig.acos
+    |> Trig.normalize_angle
+    |> IOP.inspect("dot product")
   end
+
 end
