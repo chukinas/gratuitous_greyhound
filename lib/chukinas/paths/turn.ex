@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{PathLike, Rect, CollidableShape, Circle, Trig}
+alias Chukinas.Geometry.{PathLike, Rect, CollidableShape, Circle}
 alias Chukinas.Paths.Turn
 
 defmodule Turn do
@@ -17,10 +17,16 @@ defmodule Turn do
   # *** *******************************
   # *** NEW
 
-  def new(pose, len, rotation) do
+  def new(pose, trav_distance, signed_trav_angle) do
+    trav_angle = signed_trav_angle |> abs
+    direction = Circle.rotation_direction(signed_trav_angle)
+    circle =
+      pose
+      |> csys_from_pose
+      |> Circle.from_tangent_distance_angle_direction(trav_distance, trav_angle, direction)
     %{
-      circle: Circle.from_tangent_len_rotation(pose, len, rotation),
-      traversal_angle: abs(rotation),
+      circle: circle,
+      traversal_angle: trav_angle,
     }
     |> merge_pose(pose)
     |> into_struct!(__MODULE__)
@@ -32,6 +38,19 @@ defmodule Turn do
     circle = Circle.from_tangent_and_position(start_pose, end_position)
     end_coord = end_position |> coord_from_position
     trav_angle = Circle.traversal_angle_at_coord(circle, end_coord)
+    %{
+      circle: circle,
+      traversal_angle: trav_angle
+    }
+    |> merge_pose(start_pose)
+    |> into_struct!(__MODULE__)
+  end
+
+  def from_circle_and_angle(circle, trav_angle) do
+    start_pose =
+      circle
+      |> Circle.csys_after_traversing_angle(trav_angle)
+      |> pose_from_csys
     %{
       circle: circle,
       traversal_angle: trav_angle
@@ -76,32 +95,26 @@ defmodule Turn do
 
   def radius(turn), do: turn |> circle |> Circle.radius
 
-  def rotation(turn) do
-    turn
-    |> circle
-    |> Circle.rotation_at_arclen(turn |> traversal_distance)
-  end
+  #def rotation(turn) do
+  #  turn
+  #  |> circle
+  #  |> Circle.rotation_at_arclen(turn |> traversal_distance)
+  #end
 
   # *** *******************************
   # *** API
 
   # TODO this only works for angles smaller than that of the turn's
   def split(path, angle) do
-    length0 = path |> traversal_distance
-    ratio = angle / (path |> traversal_angle)
-    true = ratio < 1
-
-    pose1 = path |> pose_new
-    length1 = length0 |> Trig.mult(ratio)
-    rotation1 = path |> rotation |> Trig.mult(ratio)
-    path1 = new(pose1, length1, rotation1)
-
-    pose2 = Circle.tangent_pose_after_len(circle(path), length1)
-    length2 = length0 - length1
-    rotation2 = path |> rotation |> Trig.subtract(rotation1)
-    path2 = new(pose2, length2, rotation2)
-
-    {path1, path2}
+    trav_angle_1 = angle
+    trav_angle_2 = (path |> traversal_angle) - angle
+    circle_1 = path |> circle
+    circle_2 = circle_1 |> Circle.rotate_in_direction_of_rotation(trav_angle_1)
+    {
+      from_circle_and_angle(circle_1, trav_angle_1),
+      from_circle_and_angle(circle_2, trav_angle_2)
+    }
+    |> IOP.inspect("turn split paths")
   end
 
 end
@@ -109,14 +122,21 @@ end
 
 defimpl CollidableShape, for: Turn do
   use Chukinas.PositionOrientationSize
+  use Chukinas.LinearAlgebra
   def to_vertices(turn) do
-    half_trav_angle = Turn.traversal_angle(turn) / 2
-    {_first, second} = Turn.split(turn, half_trav_angle)
+    circle = Turn.circle(turn)
+    trav_angle = turn |> Turn.traversal_angle
     [
-      turn |> pose_new,
-      second |> pose_new,
-      turn |> Turn.end_pose
+      0,
+      trav_angle / 2,
+      trav_angle
     ]
+    |> Enum.map(fn trav_angle ->
+      circle
+      |> Circle.coord_after_traversing_angle(trav_angle)
+      |> position_from_coord
+    end)
+    |> IOP.inspect("turn, to vertices")
     |> Enum.map(&position_to_vertex/1)
   end
 end
@@ -126,7 +146,7 @@ defimpl PathLike, for: Turn do
   use Chukinas.PositionOrientationSize
   def pose_start(path), do: path |> pose_new
   def pose_end(path), do: Turn.end_pose(path)
-  def len(path), do: Turn.traversal_distance
+  def len(path), do: Turn.traversal_distance(path)
   def get_bounding_rect(path), do: Turn.bounding_rect(path)
   # TODO these should end in question mark
   def exceeds_angle(turn, rotation) do

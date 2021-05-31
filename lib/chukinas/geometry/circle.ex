@@ -78,10 +78,21 @@ defmodule Circle do
   # *** *******************************
   # *** FROM TANGENT, ARC LENGTH, ROTATION
 
+  def from_tangent_distance_angle_direction(tangent_csys, trav_distance, trav_angle, direction)
+  # TODO guard for tangent_csys
+  when trav_distance > 0
+  and is_number(trav_angle)
+  and direction in [:cw, :ccw] do
+    radius = radius_from_angle_and_arclen(trav_angle, trav_distance)
+    center_csys = tangent_csys |> center_csys(radius, direction)
+    new(center_csys, radius, direction)
+  end
+
   def from_tangent_len_rotation(tangent_pose, arc_len, rotation)
   when has_pose(tangent_pose)
   and arc_len > 0
   and is_number(rotation) do
+    IO.warn "DEPRECATED Circle.from_tangent_len_rotation"
     radius = radius_from_angle_and_arclen(abs(rotation), arc_len)
     rotation = rotation_direction(rotation)
     csys =
@@ -127,16 +138,6 @@ defmodule Circle do
     |> radius
     |> angle_from_radius_and_arclen(arclen)
     |> Trig.mult(sign_of_rotation(circle))
-  end
-
-  @doc"""
-  Returns a signed angle (neg for ccw, pos for cw)
-  """
-  def rotation_at(circle, position) when has_position(position) do
-    IO.warn "rotation_at is deprecated"
-    circle
-    |> traversal_angle_at_coord(position |> coord_from_position)
-    |> Trig.mult(circle |> sign_of_rotation)
   end
 
   def arc_len_at_angle(%__MODULE__{} = circle, angle)
