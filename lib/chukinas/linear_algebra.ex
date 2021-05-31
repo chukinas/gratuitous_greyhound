@@ -49,7 +49,14 @@ defmodule LinearAlgebra do
   def merge_csys!(map, csys_map), do: Maps.merge!(map, csys_map, Csys)
 
   # *** *******************************
+  # *** POS
+
+  defdelegate pose_from_csys(csys), to: Csys, as: :pose
+
+  # *** *******************************
   # *** CSYS
+
+  def csys_origin, do: pose_origin() |> csys_new
 
   def csys_from_pose(pose), do: Csys.new(pose)
 
@@ -62,6 +69,8 @@ defmodule LinearAlgebra do
 
   def csys_right(csys), do: Csys.rotate(csys, 90)
 
+  def csys_90(csys, signed_number), do: Csys.rotate_90(csys, signed_number)
+
   def csys_180(csys), do: Csys.rotate(csys, 180)
 
   def csys_rotate(csys, angle), do: Csys.rotate(csys, angle)
@@ -71,9 +80,16 @@ defmodule LinearAlgebra do
   # *** *******************************
   # *** CSYS -> VECTOR
 
+  def coord_from_csys(csys), do: position_vector_from_csys(csys)
+
+  # replace this with the above *from* functino?
   def coord_of_csys(csys), do: position_vector_from_csys(csys)
 
   def position_vector_from_csys(csys), do: Csys.location(csys)
+
+  def angle_from_csys_orientation(csys) do
+    csys |> Csys.orientation |> Vector.angle
+  end
 
   # *** *******************************
   # *** POSE -> VECTOR
@@ -128,6 +144,11 @@ defmodule LinearAlgebra do
     |> csys_forward(radius)
     |> coord_of_csys
   end
+
+  # *** *******************************
+  # *** COORD
+
+  def coord_from_position(position), do: position_to_tuple(position)
 
   # *** *******************************
   # *** ???

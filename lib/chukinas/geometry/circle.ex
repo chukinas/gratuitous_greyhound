@@ -67,6 +67,22 @@ defmodule Circle do
   end
 
   # *** *******************************
+  # *** FROM TANGENT, ARC LENGTH, ROTATION
+
+  def from_tangent_len_rotation(tangent_pose, arc_len, rotation)
+  when has_pose(tangent_pose)
+  and arc_len > 0
+  and is_number(rotation) do
+    radius = radius_from_angle_and_arclen(abs(rotation), arc_len)
+    rotation = rotation_direction(rotation)
+    csys =
+      tangent_pose
+      |> csys_from_pose
+      |> center_csys(sign(rotation) * radius)
+    new(csys, radius, rotation)
+  end
+
+  # *** *******************************
   # *** GETTERS
 
   def csys(circle), do: circle |> csys_new
@@ -79,37 +95,120 @@ defmodule Circle do
     |> Trig.mult(2 * :math.pi())
   end
 
-  def sign_of_rotation(%__MODULE__{rotation: :ccw}), do: -1
   def sign_of_rotation(%__MODULE__{rotation: :cw}),  do:  1
+  def sign_of_rotation(%__MODULE__{rotation: :ccw}), do: -1
+
+  # *** *******************************
+  # *** FUNCTIONS
+
+  def rotation_direction(signed_rotation) when signed_rotation > 0, do: :cw
+  def rotation_direction(signed_rotation) when signed_rotation < 0, do: :ccw
 
   # *** *******************************
   # *** API
 
-  def coord_at_angle(%__MODULE__{rotation: :ccw} = circle, angle) do
-    coord_at_angle(circle, -angle)
-  end
-
-  def coord_at_angle(%__MODULE__{} = circle, angle) do
+  @doc"""
+  Returns a signed angle for a given arc length
+  """
+  def rotation_at_arclen(circle, arclen) when is_number(arclen) do
+    IO.warn "rotation_at_arclen is deprecated"
     circle
-    |> csys
-    |> vector_from_csys_and_polar(angle, circle |> radius)
+    |> radius
+    |> angle_from_radius_and_arclen(arclen)
+    |> Trig.mult(sign_of_rotation(circle))
   end
 
   @doc"""
   Returns a signed angle (neg for ccw, pos for cw)
   """
   def rotation_at(circle, position) when has_position(position) do
-    position
-    |> vector_from_position
-    |> angle_of_vector_wrt_csys(circle)
+    IO.warn "rotation_at is deprecated"
+    circle
+    |> traversal_angle_at_coord(position |> coord_from_position)
     |> Trig.mult(circle |> sign_of_rotation)
   end
 
   def arc_len_at_angle(%__MODULE__{} = circle, angle)
   when angle_is_normal(angle) do
-    circle
-    |> circumference
-    |> Trig.mult(360 / angle)
+    IO.warn "arc_len_at_angle is deprecated"
+    traversal_distance_after_traversing_angle(circle, angle)
   end
+
+  def tangent_pose_after_len(circle, arclen) do
+    IO.warn "tangent_pose_after_len is deprecated"
+    circle
+    |> csys_after_traversing_distance(arclen)
+    |> pose_from_csys
+  end
+
+  def rotate_in_direction_of_rotation(circle, angle) do
+    angle = angle |> abs |> Trig.mult(sign_of_rotation(circle))
+    circle |> csys_rotate(angle)
+  end
+
+  # *** *******************************
+  # *** API
+
+  def csys_after_traversing_angle(circle, angle) do
+    circle
+    |> rotate_in_direction_of_rotation(angle)
+    |> csys_new
+    |> csys_forward(circle |> radius)
+    |> csys_90(circle |> sign_of_rotation)
+  end
+
+  def csys_after_traversing_distance(circle, distance) do
+    trav_angle =
+      circle
+      |> traversal_angle_after_traversing_distance(distance)
+    csys_after_traversing_angle(circle, trav_angle)
+  end
+
+  def coord_after_traversing_angle(circle, angle) do
+    csys_after_traversing_angle(circle, angle)
+    |> coord_from_csys
+  end
+
+  def coord_after_traversing_distance(circle, distance) do
+    trav_angle =
+      circle
+      |> traversal_angle_after_traversing_distance(distance)
+    coord_after_traversing_angle(circle, trav_angle)
+  end
+
+  def traversal_distance_after_traversing_angle(circle, trav_angle) do
+    arclen_from_radius_and_angle(circle |> radius, trav_angle)
+  end
+
+  def traversal_angle_after_traversing_distance(circle, distance) do
+    angle_from_radius_and_arclen(circle |> radius, distance)
+  end
+
+  @doc"""
+  Traversal is movement along the circumference,
+  in the direction of rotation, starting at the initial tangent pose.
+
+  Returns the degrees traveled in the direction of rotation until
+  meeting the line segment connecting circle center and coord arg.
+  Always a positive number.
+  """
+  def traversal_angle_at_coord(circle, coord) do
+    coord
+    |> angle_of_vector_wrt_csys(circle)
+    |> IOP.inspect("trav angle")
+    |> Trig.mult(circle |> sign_of_rotation)
+    |> Trig.normalize_angle
+  end
+
+  def traversal_distance_at_coord(circle, coord) do
+    trav_angle = traversal_angle_at_coord(circle, coord)
+    circle
+    |> radius
+    |> arclen_from_radius_and_angle(trav_angle)
+  end
+
+  # *** *******************************
+  # *** deprecate in favor of new naming conventions
+
 
 end

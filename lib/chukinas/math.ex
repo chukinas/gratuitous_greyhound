@@ -27,4 +27,24 @@ defmodule Chukinas.Math do
 
   def flip_sign(x), do: x * sign(x)
 
+  def split_with_ratio(value, ratio) do
+    new_val = value * ratio
+    {new_val, value - new_val}
+  end
+
+  # *** *******************************
+  # *** ANGLES
+
+  def radius_from_angle_and_arclen(angle, arclen) do
+    (360 * arclen) / (2 * :math.pi() * angle)
+  end
+
+  def angle_from_radius_and_arclen(radius, arclen) do
+    (360 * arclen) / (2 * :math.pi() * radius)
+  end
+
+  def arclen_from_radius_and_angle(radius, angle) do
+    (2 * :math.pi() * radius * angle) / 360
+  end
+
 end

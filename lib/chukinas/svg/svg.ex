@@ -51,7 +51,7 @@ defmodule Chukinas.Svg do
 
   # TODO I don't like calling the key directly her
   defp get_quadratic_curve(%Turn{rotation: angle} = path) when abs(angle) <= 90 do
-    radius = Turn.get_radius path
+    radius = Turn.radius path
     half_angle_rad = abs(Trig.deg_to_rad(angle)) / 2
     length_to_intercept = radius * :math.tan(half_angle_rad)
     {dx, dy} =

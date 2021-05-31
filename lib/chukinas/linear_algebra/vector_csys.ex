@@ -84,9 +84,9 @@ defmodule Chukinas.LinearAlgebra.VectorCsys do
 
   def orientation(%{orientation: value}), do: value
 
-  def location(%__MODULE__{location: value}), do: value
+  def location(%{location: value}), do: value
 
-  def pose(%__MODULE__{} = csys) do
+  def pose(%{} = csys) do
     angle =
       csys
       |> orientation
@@ -96,7 +96,7 @@ defmodule Chukinas.LinearAlgebra.VectorCsys do
     |> POS.pose_new(angle)
   end
 
-  def position(%__MODULE__{} = csys) do
+  def position(%{} = csys) do
     csys
     |> location
     |> POS.position_new

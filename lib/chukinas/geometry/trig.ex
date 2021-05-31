@@ -5,6 +5,10 @@ defmodule Chukinas.Geometry.Trig do
 
   def mult(a, b), do: a * b
 
+  def add(a, b), do: a + b
+
+  def divide(a, b), do: a / b
+
   def sign(value) when value <  0, do: -1
   def sign(value) when value >= 0, do:  1
 

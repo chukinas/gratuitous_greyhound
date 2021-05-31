@@ -4,50 +4,40 @@ alias Chukinas.Paths.Turn
 defmodule Turn do
 
   use Chukinas.PositionOrientationSize
-  import Chukinas.LinearAlgebra
-  alias Chukinas.LinearAlgebra.VectorCsys, as: V
 
   typedstruct enforce: true do
     pose_fields()
-    field :length, number()
-    # TODO replace with Circle
-    # TODO make a note that rotation is a signed angle (neg for ccw)
-    field :rotation, integer()
-    field :radius, float()
+    field :circle, Circle.t
+    field :length, number
+    # Readonly reference fields
+    field :rotation, number
   end
 
   # *** *******************************
   # *** NEW
 
-  def new(start_pose, len, rotation) do
+  def new(pose, len, rotation) do
     %{
-      length: round(len),
-      rotation: rotation,
-      radius: round(radius(len, rotation))
+      circle: Circle.from_tangent_len_rotation(pose, len, rotation),
+      length: len,
+      rotation: rotation
     }
-    |> merge_pose(start_pose)
+    |> merge_pose(pose)
     |> into_struct!(__MODULE__)
   end
 
-  # TODO remove if unused
-  def new(x, y, orientation, len, rotation) do
-    new pose_new(x, y, orientation), len, rotation
-  end
+  #def new(x, y, orientation, len, rotation) do
+  #  new pose_new(x, y, orientation), len, rotation
+  #end
 
   # *** *******************************
   # *** GETTERS
 
   def start_pose(path), do: path.pose
   def end_pose(path) do
-    {radius, rotation} = radius_and_rotation(path)
     path
-    |> V.new
-    |> V.rotate_90(rotation)
-    |> V.forward(radius)
-    |> V.rotate(180 + rotation)
-    |> V.forward(radius)
-    |> V.rotate_90(rotation)
-    |> V.pose
+    |> circle
+    |> Circle.tangent_pose_after_len(path.length)
   end
   def bounding_rect(path) do
     path
@@ -57,34 +47,40 @@ defmodule Turn do
     |> Rect.new
   end
 
-  def center_vector(%__MODULE__{} = turn) do
-    {radius, rotation} = radius_and_rotation(turn)
-    vector_90(turn, radius, rotation)
+  #def center_vector(%__MODULE__{} = turn) do
+  #end
+
+  def circle(%__MODULE__{circle: value}), do: value
+
+  def radius(turn), do: turn |> circle |> Circle.radius
+
+  def rotation(turn) do
+    turn
+    |> circle
+    |> Circle.rotation_at_arclen(turn |> length)
   end
-
-  def radius(%__MODULE__{radius: value}), do: value
-
-  def rotation(%__MODULE__{rotation: value}), do: value
-
-  def radius_and_rotation(%__MODULE__{rotation: rot, radius: rad}), do: {rad, rot}
 
   # *** *******************************
   # *** API
 
-  def get_radius(path), do: path.radius
+  # def get_radius(path), do: path.radius
 
-  def split(%__MODULE__{rotation: angle_orig} = path, angle) when abs(angle_orig) > abs(angle) do
-    ratio = angle / angle_orig
-    path1 = new(
-      path,
-      len1 = (path.length * ratio),
-      angle
-    )
-    path2 = new(
-      PathLike.pose_end(path1),
-      path.length - len1,
-      angle_orig - angle
-    )
+  # TODO this only works for angles smaller than that of the turn's
+  def split(path, angle) do
+    length0 = path |> length
+    ratio = angle / (path |> angle)
+    true = ratio < 1
+
+    pose1 = path |> pose_new
+    length1 = length0 |> Trig.mult(ratio)
+    rotation1 = path |> rotation |> Trig.mult(ratio)
+    path1 = new(pose1, length1, rotation1)
+
+    pose2 = Circle.tangent_pose_after_len(circle(path), length1)
+    length2 = length0 - length1
+    rotation2 = path |> rotation |> Trig.subtract(rotation1)
+    path2 = new(pose2, length2, rotation2)
+
     {path1, path2}
   end
 
@@ -100,9 +96,9 @@ defmodule Turn do
   # *** *******************************
   # *** PRIVATE
 
-  defp radius(length, rotation) do
-    (length * 360) / (2 * :math.pi() * abs(rotation))
-  end
+  #defp radius(length, rotation) do
+  #  (length * 360) / (2 * :math.pi() * abs(rotation))
+  #end
 
   # *** *******************************
   # *** IMPLEMENTATIONS
@@ -113,8 +109,12 @@ defmodule Turn do
     def len(path), do: path.length
     def get_bounding_rect(path), do: Turn.bounding_rect(path)
     # TODO these should end in question mark
-    def exceeds_angle(turn, rotation), do: abs(turn.rotation) > abs(rotation)
-    def deceeds_angle(turn, rotation), do: abs(turn.rotation) < abs(rotation)
+    def exceeds_angle(_turn, _rotation) do
+      raise "woops"
+    end
+    def deceeds_angle(_turn, _rotation) do
+      raise "woops"
+    end
   end
 
   defimpl CollidableShape do
