@@ -21,7 +21,8 @@ defmodule Circle do
 
   def new(csys, radius, rotation)
   when has_csys(csys)
-  and radius > 0 do
+  and radius > 0
+  and rotation in [:cw, :ccw] do
     fields =
       %{
         radius: radius,
@@ -37,14 +38,18 @@ defmodule Circle do
   def from_tangent_and_position(tangent_pose, other_position_on_circle)
   when has_pose(tangent_pose)
   and has_position(other_position_on_circle) do
+    # TODO deprecate these two from funcs, replace w/ similar that take linalg args
     tangent_csys = csys_from_pose tangent_pose
-    signed_radius =
-      other_position_on_circle
-      |> vector_from_position
-      |> signed_radius(tangent_csys)
-    center_csys = center_csys(tangent_csys, signed_radius)
+    coord = other_position_on_circle |> coord_from_position
+    from_tangent_csys_and_other_coord(tangent_csys, coord)
+  end
+
+  def from_tangent_csys_and_other_coord(tangent_csys, coord) do
+    signed_radius = signed_radius(coord, tangent_csys)
+    radius = abs(signed_radius)
     rotation = if signed_radius < 0, do: :ccw, else: :cw
-    new(center_csys, abs(signed_radius), rotation)
+    center_csys = center_csys(tangent_csys, radius, rotation)
+    new(center_csys, radius, rotation)
   end
 
   def signed_radius(point_coords, tangent_csys)
@@ -54,15 +59,19 @@ defmodule Circle do
       point_coords
       |> vector_wrt_csys(tangent_csys)
     (x * x + y * y) / (2 * y)
-    |> abs
   end
 
-  def center_csys(tangent_csys, signed_radius) do
-    cond do
-      signed_radius > 0 -> csys_right(tangent_csys)
-      signed_radius < 0 -> csys_left(tangent_csys)
-    end
-    |> csys_forward(signed_radius)
+  def center_csys(tangent_csys, radius, :cw) do
+    tangent_csys
+    |> csys_right
+    |> csys_forward(radius)
+    |> csys_180
+  end
+
+  def center_csys(tangent_csys, radius, :ccw) do
+    tangent_csys
+    |> csys_left
+    |> csys_forward(radius)
     |> csys_180
   end
 
@@ -78,7 +87,7 @@ defmodule Circle do
     csys =
       tangent_pose
       |> csys_from_pose
-      |> center_csys(sign(rotation) * radius)
+      |> center_csys(radius, rotation)
     new(csys, radius, rotation)
   end
 
@@ -195,7 +204,6 @@ defmodule Circle do
   def traversal_angle_at_coord(circle, coord) do
     coord
     |> angle_of_vector_wrt_csys(circle)
-    |> IOP.inspect("trav angle")
     |> Trig.mult(circle |> sign_of_rotation)
     |> Trig.normalize_angle
   end
@@ -206,9 +214,5 @@ defmodule Circle do
     |> radius
     |> arclen_from_radius_and_angle(trav_angle)
   end
-
-  # *** *******************************
-  # *** deprecate in favor of new naming conventions
-
 
 end

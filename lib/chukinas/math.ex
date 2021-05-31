@@ -47,4 +47,6 @@ defmodule Chukinas.Math do
     (2 * :math.pi() * radius * angle) / 360
   end
 
+  def normalize_angle(angle), do: Trig.normalize_angle(angle)
+
 end

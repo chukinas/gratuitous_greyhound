@@ -3,9 +3,11 @@ defmodule Chukinas.Geometry.Trig do
   # *** *******************************
   # *** API
 
-  def mult(a, b), do: a * b
-
   def add(a, b), do: a + b
+
+  def subtract(a, b), do: a - b
+
+  def mult(a, b), do: a * b
 
   def divide(a, b), do: a / b
 

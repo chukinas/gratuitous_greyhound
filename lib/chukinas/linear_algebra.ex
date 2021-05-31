@@ -54,6 +54,11 @@ defmodule LinearAlgebra do
   defdelegate pose_from_csys(csys), to: Csys, as: :pose
 
   # *** *******************************
+  # *** COORD
+
+  def unit_vector_from_vector(vector), do: Vector.normalize(vector)
+
+  # *** *******************************
   # *** CSYS
 
   def csys_origin, do: pose_origin() |> csys_new
@@ -62,6 +67,10 @@ defmodule LinearAlgebra do
 
   defdelegate csys_new(pose_or_csys), to: Csys, as: :new
   def csys_new(x, y, angle), do: pose_new(x, y, angle) |> csys_new
+
+  def csys_from_orientation_and_coord(orientation, coord) do
+    Csys.new(orientation, coord)
+  end
 
   defdelegate csys_forward(csys, distance), to: Csys, as: :forward
 
@@ -124,6 +133,7 @@ defmodule LinearAlgebra do
     func.(pose_or_csys, distance)
   end
 
+  @spec vector_wrt_csys(Vector.t, Csys.t) :: Vector.t
   def vector_wrt_csys(vector, csys) do
     csys
     |> csys_invert
@@ -132,10 +142,14 @@ defmodule LinearAlgebra do
 
   def vector_from_position(position), do: position_to_tuple(position)
 
+  def angle_from_vector(vector) do
+    Vector.angle(vector)
+  end
+
   def angle_of_vector_wrt_csys(vector, csys) do
-    csys
-    |> Csys.orientation
-    |> Vector.angle_between(vector)
+    vector
+    |> vector_wrt_csys(csys)
+    |> angle_from_vector
   end
 
   def vector_from_csys_and_polar(csys, angle, radius) do

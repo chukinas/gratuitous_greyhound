@@ -39,6 +39,7 @@ defmodule Vector do
   # TODO Trig.sign should be moved to a new Math module
   def sign({_, y}), do: Trig.sign(y)
 
+  # TODO add func that gets angle from two vectors
   def angle(vector) when is_vector(vector) do
     vector
     |> normalize
@@ -113,16 +114,10 @@ defmodule Vector do
   def subtract(a, b), do: b |> flip |> add(a)
 
   # TODO rename ? `unit_vector`?
-  def normalize({a, b}) do
-    magnitude =
-      [a, b]
-      |> Enum.map(&:math.pow(&1, 2))
-      |> Enum.sum
-      |> :math.sqrt
-    {
-      a / magnitude,
-      b / magnitude
-    }
+  def normalize({a, b} = vector) do
+    magnitude = magnitude vector
+    (for var <- [a, b], do: var / magnitude)
+    |> List.to_tuple
   end
 
   def sign_between(a, b) do
