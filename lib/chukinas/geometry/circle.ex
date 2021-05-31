@@ -98,6 +98,8 @@ defmodule Circle do
 
   def radius(%__MODULE__{radius: value}), do: value
 
+  def diameter(%__MODULE__{radius: value}), do: value * 2
+
   def circumference(circle) do
     circle
     |> radius

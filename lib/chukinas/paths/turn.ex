@@ -4,13 +4,14 @@ alias Chukinas.Paths.Turn
 defmodule Turn do
 
   use Chukinas.PositionOrientationSize
+  use Chukinas.LinearAlgebra
 
   typedstruct enforce: true do
-    pose_fields()
+    # Fully define path:
     field :circle, Circle.t
-    field :length, number
-    # Readonly reference fields
-    field :rotation, number
+    field :traversal_angle, number
+    # Common reference values:
+    pose_fields()
   end
 
   # *** *******************************
@@ -19,36 +20,57 @@ defmodule Turn do
   def new(pose, len, rotation) do
     %{
       circle: Circle.from_tangent_len_rotation(pose, len, rotation),
-      length: len,
-      rotation: rotation
+      traversal_angle: abs(rotation),
     }
     |> merge_pose(pose)
     |> into_struct!(__MODULE__)
   end
 
-  #def new(x, y, orientation, len, rotation) do
-  #  new pose_new(x, y, orientation), len, rotation
-  #end
+  def connecting_path!(start_pose, end_position)
+  when has_pose(start_pose)
+  and has_position(end_position) do
+    circle = Circle.from_tangent_and_position(start_pose, end_position)
+    end_coord = end_position |> coord_from_position
+    trav_angle = Circle.traversal_angle_at_coord(circle, end_coord)
+    %{
+      circle: circle,
+      traversal_angle: trav_angle
+    }
+    |> merge_pose(start_pose)
+    |> into_struct!(__MODULE__)
+  end
 
   # *** *******************************
   # *** GETTERS
 
-  def start_pose(path), do: path.pose
+  def traversal_angle(%__MODULE__{traversal_angle: value}), do: value
+
+  def traversal_distance(turn) do
+    angle = turn |> traversal_angle
+    turn
+    |> circle
+    |> Circle.traversal_distance_after_traversing_angle(angle)
+  end
+
+  def start_pose(path), do: pose_new(path)
+
   def end_pose(path) do
     path
     |> circle
-    |> Circle.tangent_pose_after_len(path.length)
-  end
-  def bounding_rect(path) do
-    path
-    |> end_pose
-    |> position_new
-    |> position_min_max(path)
-    |> Rect.new
+    |> Circle.csys_after_traversing_angle(path |> traversal_angle)
+    |> pose_from_csys
   end
 
-  #def center_vector(%__MODULE__{} = turn) do
-  #end
+  # TODO remove
+  def bounding_rect(path) do
+    path
+    |> circle
+    # TODO alias Circle, don't import
+    # TODO rename Circle.coord
+    |> Circle.location
+    |> position_from_coord
+    |> Rect.from_centered_square(path |> circle |> Circle.diameter)
+  end
 
   def circle(%__MODULE__{circle: value}), do: value
 
@@ -57,18 +79,16 @@ defmodule Turn do
   def rotation(turn) do
     turn
     |> circle
-    |> Circle.rotation_at_arclen(turn |> length)
+    |> Circle.rotation_at_arclen(turn |> traversal_distance)
   end
 
   # *** *******************************
   # *** API
 
-  # def get_radius(path), do: path.radius
-
   # TODO this only works for angles smaller than that of the turn's
   def split(path, angle) do
-    length0 = path |> length
-    ratio = angle / (path |> angle)
+    length0 = path |> traversal_distance
+    ratio = angle / (path |> traversal_angle)
     true = ratio < 1
 
     pose1 = path |> pose_new
@@ -84,49 +104,36 @@ defmodule Turn do
     {path1, path2}
   end
 
-  def connecting_path!(start_pose, end_position)
-  when has_pose(start_pose)
-  and has_position(end_position) do
-    circle = Circle.from_tangent_and_position(start_pose, end_position)
-    rotation = Circle.rotation_at(circle, end_position)
-    len = Circle.arc_len_at_angle(circle, rotation)
-    new(start_pose, len, rotation)
+end
+
+
+defimpl CollidableShape, for: Turn do
+  use Chukinas.PositionOrientationSize
+  def to_vertices(turn) do
+    half_trav_angle = Turn.traversal_angle(turn) / 2
+    {_first, second} = Turn.split(turn, half_trav_angle)
+    [
+      turn |> pose_new,
+      second |> pose_new,
+      turn |> Turn.end_pose
+    ]
+    |> Enum.map(&position_to_vertex/1)
   end
+end
 
-  # *** *******************************
-  # *** PRIVATE
 
-  #defp radius(length, rotation) do
-  #  (length * 360) / (2 * :math.pi() * abs(rotation))
-  #end
-
-  # *** *******************************
-  # *** IMPLEMENTATIONS
-
-  defimpl PathLike do
-    def pose_start(path), do: path |> pose
-    def pose_end(path), do: Turn.end_pose(path)
-    def len(path), do: path.length
-    def get_bounding_rect(path), do: Turn.bounding_rect(path)
-    # TODO these should end in question mark
-    def exceeds_angle(_turn, _rotation) do
-      raise "woops"
-    end
-    def deceeds_angle(_turn, _rotation) do
-      raise "woops"
-    end
+defimpl PathLike, for: Turn do
+  use Chukinas.PositionOrientationSize
+  def pose_start(path), do: path |> pose_new
+  def pose_end(path), do: Turn.end_pose(path)
+  def len(path), do: Turn.traversal_distance
+  def get_bounding_rect(path), do: Turn.bounding_rect(path)
+  # TODO these should end in question mark
+  def exceeds_angle(turn, rotation) do
+    turn |> Turn.traversal_angle > rotation
   end
-
-  defimpl CollidableShape do
-    def to_vertices(turn) do
-      {_first, second} = turn |> Turn.split(turn.rotation/2)
-      [
-        turn |> pose,
-        second |> pose,
-        turn |> Turn.end_pose
-      ]
-      |> Enum.map(&position_to_vertex/1)
-    end
+  def deceeds_angle(turn, rotation) do
+    turn |> Turn.traversal_angle < rotation
   end
 end
 

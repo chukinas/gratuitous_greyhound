@@ -58,6 +58,13 @@ defmodule Rect do
     }
   end
 
+  def from_centered_square(position, size) do
+    new(
+      position |> position_subtract(size / 2),
+      size_new(size, size)
+    )
+  end
+
   # *** *******************************
   # *** GETTERS
 

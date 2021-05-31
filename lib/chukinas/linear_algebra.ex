@@ -53,6 +53,8 @@ defmodule LinearAlgebra do
 
   defdelegate pose_from_csys(csys), to: Csys, as: :pose
 
+  def position_from_coord(coord), do: position_new(coord)
+
   # *** *******************************
   # *** COORD
 

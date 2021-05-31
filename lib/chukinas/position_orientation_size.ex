@@ -195,8 +195,11 @@ defmodule POS do
   defdelegate pose_new(position, angle), to: Pose, as: :new
   defdelegate pose_new(x, y, angle), to: Pose, as: :new
 
-  # TODO remove?
-  defdelegate pose(term), to: Pose, as: :new
+  def pose(item) do
+    IO.warn "DEPRECATED: PositionOrientationSize.pose/1"
+    Pose.new(item)
+  end
+
   defdelegate pose(x, y, angle), to: Pose, as: :new
 
   defdelegate pose_origin(), to: Pose, as: :origin
