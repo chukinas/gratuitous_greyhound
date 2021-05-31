@@ -1,5 +1,6 @@
-alias Chukinas.Geometry.{PathLike, Straight}
+alias Chukinas.Geometry.{PathLike, Straight, Circle}
 alias Chukinas.Paths
+alias Paths.Turn
 
 defmodule Paths do
 
@@ -38,7 +39,19 @@ defmodule Paths do
   defdelegate get_start_pose(path), to: PathLike, as: :pose_start
   defdelegate get_end_pose(path), to: PathLike, as: :pose_end
 
+  def pose_at_start(path), do: path |> get_start_pose
+
   def pose_at_end(path), do: path |> get_end_pose
+
+  def rotation_direction(turn) do
+    turn |> Turn.circle |> Circle.rotation_direction
+  end
+
+  defdelegate traversal_angle(turn), to: Turn
+
+  def radius(%Turn{} = turn) do
+    turn |> Turn.radius
+  end
 
   def position_at_end(path) do
     path

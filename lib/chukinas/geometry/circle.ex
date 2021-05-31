@@ -123,6 +123,8 @@ defmodule Circle do
 
   def coord(%__MODULE__{location: value}), do: value
 
+  def rotation_direction(%__MODULE__{rotation: value}), do: value
+
   # *** *******************************
   # *** FUNCTIONS
 
@@ -208,10 +210,8 @@ defmodule Circle do
   Always a positive number.
   """
   def traversal_angle_at_coord(circle, coord) do
-    IOP.inspect circle, "trav angle, circle"
     coord
-    |> LinearAlgebra.angle_of_vector_wrt_csys(circle)
-    |> IOP.inspect("circle trav angle at coord")
+    |> LinearAlgebra.angle_of_coord_wrt_csys(circle)
     |> mult(circle |> sign_of_rotation)
     |> normalize_angle
   end

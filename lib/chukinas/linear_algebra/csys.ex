@@ -72,13 +72,13 @@ defmodule CSys do
   def transform(%__MODULE__{} = trans, vector) do
     trans.rotation
     |> Matrix.mult(vector)
-    |> Vector.add(trans.position)
+    |> Vector.sum(trans.position)
   end
 
   def translate(%__MODULE__{} = trans, vector) do
     trans.rotation
     |> Matrix.mult(vector)
-    |> Vector.add(trans.position)
+    |> Vector.sum(trans.position)
   end
 
   # *** *******************************

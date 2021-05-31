@@ -47,9 +47,7 @@ defmodule Vector do
     # TODO put all the dots together
     |> dot(@x)
     |> acos
-    |> IOP.inspect("vector angle")
     |> mult(sign(vector))
-    |> IOP.inspect("vector angle after sign")
     |> normalize_angle
   end
 

@@ -95,6 +95,12 @@ defmodule Turn do
 
   def radius(turn), do: turn |> circle |> Circle.radius
 
+  #def rotation_direction(%__MODULE__{} = turn) do
+  #  turn
+  #  |> circle
+  #  |> Circle.rotation_direction
+  #end
+
   # *** *******************************
   # *** API
 

@@ -150,8 +150,7 @@ defmodule LinearAlgebra do
 
   def vector_from_position(position), do: position_to_tuple(position)
 
-  def angle_of_vector_wrt_csys(coord, csys) do
-    IO.warn "rename to `angle_of_coord_wrt_csys`"
+  def angle_of_coord_wrt_csys(coord, csys) do
     Angle.of_coord_wrt_csys(coord, csys)
   end
 
