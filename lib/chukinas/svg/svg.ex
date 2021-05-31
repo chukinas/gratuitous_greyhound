@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{Straight, Trig}
+alias Chukinas.Geometry.Straight
 alias Chukinas.Paths
 alias Chukinas.Paths.Turn
 alias Chukinas.Svg.{Interpret}
@@ -10,6 +10,7 @@ defmodule Chukinas.Svg do
 
   import Chukinas.Util.Precision, only: [values_to_int: 1]
   import Chukinas.PositionOrientationSize
+  use Chukinas.Math
 
   # *** *******************************
   # *** API
@@ -53,7 +54,7 @@ defmodule Chukinas.Svg do
   defp get_quadratic_curve(%Turn{traversal_angle: angle} = path)
   when angle <= 90 do
     radius = Turn.radius path
-    half_angle_rad = abs(Trig.deg_to_rad(angle)) / 2
+    half_angle_rad = abs(deg_to_rad(angle)) / 2
     length_to_intercept = radius * :math.tan(half_angle_rad)
     {dx, dy} =
       path

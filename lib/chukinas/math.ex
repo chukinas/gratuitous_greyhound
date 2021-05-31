@@ -1,8 +1,5 @@
 defmodule Chukinas.Math do
 
-  alias Chukinas.Geometry.Trig
-  require Trig
-
   # *** *******************************
   # *** MACROS
 
@@ -11,12 +8,8 @@ defmodule Chukinas.Math do
     quote do
       require Chukinas.Math
       import Chukinas.Math
-      alias Chukinas.Geometry.Trig
     end
   end
-
-  defguard angle_is_normal(angle)
-    when Trig.angle_is_normal(angle)
 
   # *** *******************************
   # *** FUNCTIONS
@@ -33,7 +26,7 @@ defmodule Chukinas.Math do
   end
 
   # *** *******************************
-  # *** ANGLES
+  # *** ARCS
 
   def radius_from_angle_and_arclen(angle, arclen) do
     (360 * arclen) / (2 * :math.pi() * angle)
@@ -47,6 +40,71 @@ defmodule Chukinas.Math do
     (2 * :math.pi() * radius * angle) / 360
   end
 
-  def normalize_angle(angle), do: Trig.normalize_angle(angle)
+  # *** *******************************
+  # *** PIPE BASIC OPERATORS
+
+  def add(a, b), do: a + b
+
+  def subtract(a, b), do: a - b
+
+  def mult(a, b), do: a * b
+
+  def divide(a, b), do: a / b
+
+  # *** *******************************
+  # *** TRIG
+
+  def asin(value), do: :math.asin(value) |> rad_to_deg
+
+
+  def sin_and_cos(0), do: {0, 1}
+  def sin_and_cos(90), do: {1, 0}
+  def sin_and_cos(180), do: {0, -1}
+  def sin_and_cos(-90), do: {-1, 0}
+  def sin_and_cos(270), do: {-1, 0}
+  def sin_and_cos(deg) do
+    rad = deg_to_rad(deg)
+    {:math.sin(rad), :math.cos(rad)}
+  end
+
+  def sin(degrees) do
+    degrees
+    |> deg_to_rad()
+    |> :math.sin()
+  end
+
+  def cos(degrees) do
+    degrees
+    |> deg_to_rad()
+    |> :math.cos()
+  end
+
+  def acos(value), do: :math.acos(value) |> rad_to_deg
+
+  # *** *******************************
+  # *** ANGLE CONVERSIONS
+
+  defguard angle_is_normal(angle)
+    when angle >= 0
+    and angle < 360
+
+  defguard angle_is_normal_non_zero(angle)
+    when angle > 0
+    and angle < 360
+
+  def normalize_angle(angle) do
+    cond do
+      angle < 0 ->
+        normalize_angle(angle + 360)
+      angle >= 360 ->
+        normalize_angle(angle - 360)
+      true ->
+        angle
+    end
+  end
+
+  def deg_to_rad(angle), do: angle * :math.pi() / 180
+
+  def rad_to_deg(angle), do: angle * 180 / :math.pi()
 
 end

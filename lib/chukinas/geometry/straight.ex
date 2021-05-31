@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{PathLike, Rect, Straight, Trig, CollidableShape}
+alias Chukinas.Geometry.{PathLike, Rect, Straight, CollidableShape}
 alias Chukinas.LinearAlgebra.{HasCsys, CSys}
 alias Chukinas.LinearAlgebra
 
@@ -6,6 +6,7 @@ defmodule Straight do
 
   import LinearAlgebra
   use Chukinas.PositionOrientationSize
+  use Chukinas.LinearAlgebra
   import Chukinas.Collide
 
   # *** *******************************
@@ -58,7 +59,11 @@ defmodule Straight do
   def get_connecting_path(start_pose, end_position) do
     # Calculate the angle b/w start and end position.
     # Then compare that to the actual start angle to see if there's a match.
-    distance = Trig.distance_between_points start_pose, end_position
+    distance =
+      end_position
+      |> position_subtract(start_pose)
+      |> vector_from_position
+      |> magnitude_from_vector
     proposed_path = new(start_pose, distance)
     if proposed_path |> end_pose |> position_new |> approx_equal(end_position) do
       proposed_path

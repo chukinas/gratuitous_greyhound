@@ -1,10 +1,10 @@
 alias Chukinas.Dreadnought.{Turret, Sprite}
-alias Chukinas.Geometry.Trig
 alias Chukinas.LinearAlgebra.{HasCsys, CSys, Vector}
 
 defmodule Turret do
 
   use Chukinas.PositionOrientationSize
+  use Chukinas.Math
 
   # *** *******************************
   # *** NEW
@@ -30,7 +30,7 @@ defmodule Turret do
       %{
         id: id,
         sprite: sprite,
-        max_ccw_angle: Trig.normalize_angle(rest_angle - 135),
+        max_ccw_angle: normalize_angle(rest_angle - 135),
         max_rotation: 270,
         rest_angle: rest_angle,
       }
@@ -44,11 +44,11 @@ defmodule Turret do
   def angle_max_ccw(%__MODULE__{max_ccw_angle: angle}), do: angle
 
   def angle_max_cw(%__MODULE__{max_ccw_angle: angle, max_rotation: rotation}) do
-    Trig.normalize_angle(angle + rotation)
+    normalize_angle(angle + rotation)
   end
 
   def angle_arc_center(%__MODULE__{max_ccw_angle: angle} = turret) do
-    Trig.normalize_angle(angle + half_travel(turret))
+    normalize_angle(angle + half_travel(turret))
   end
 
   def vector_arc_center(mount) do
@@ -105,7 +105,7 @@ defmodule Turret do
   end
 
   def rotation(mount, angle) do
-    angle = Trig.normalize_angle(angle)
+    angle = normalize_angle(angle)
     angle = if angle < mount.max_ccw_angle do
       angle + 360
     else

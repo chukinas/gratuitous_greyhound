@@ -1,13 +1,18 @@
 ExUnit.start()
 
-defmodule Chukinas.Geometry.PathTest do
+defmodule Chukinas.PathsTest do
+
   use ExUnit.Case, async: true
   use DreadnoughtHelpers
+  use Chukinas.PositionOrientationSize
+  import Chukinas.Math
+  alias Chukinas.Paths
 
+  # TODO move this out to helpers module
   def assert_equal(val1, val2), do: assert_in_delta(val1, val2, 0.01)
 
   def assert_same_angle(%{angle: a}, %{angle: b}) do
-    assert_equal Trig.normalize_angle(a), Trig.normalize_angle(b)
+    assert_equal normalize_angle(a), normalize_angle(b)
   end
 
   def assert_same_position(position1, {x, y}), do: assert_same_position(position1, %{x: x, y: y})
@@ -23,13 +28,13 @@ defmodule Chukinas.Geometry.PathTest do
 
   test "end position of vertical straight path" do
     Straight.new(0, 0, 90, 10)
-    |> Path.get_end_pose()
+    |> Paths.get_end_pose()
     |> assert_same_position({0, 10})
   end
 
   test "end position of horizontal straight path" do
     Straight.new(0, 0, 0, 10)
-    |> Path.get_end_pose()
+    |> Paths.get_end_pose()
     |> assert_same_position({10, 0})
   end
 
@@ -37,7 +42,7 @@ defmodule Chukinas.Geometry.PathTest do
     path = Straight.new(0, 0, 45, :math.sqrt(2))
     actual_rect =
       path
-      |> Path.get_bounding_rect()
+      |> Paths.get_bounding_rect()
     expected_rect = Rect.new(0, 0, 1, 1)
     assert match_numerical_map? expected_rect, actual_rect
   end
@@ -46,45 +51,16 @@ defmodule Chukinas.Geometry.PathTest do
     radius = 100
     angle = 180
     expected_length = radius * :math.pi()
-    actual_length = Trig.arc_length radius, angle
+    actual_length = arclen_from_radius_and_angle(radius, angle)
     assert ^expected_length = actual_length
-  end
-
-  test "get connecting paths" do
-    [0, 90, 180, 270]
-    |> Stream.map(&Pose.new(0, 0, &1))
-    |> Enum.each(&test_90deg_turn/1)
-  end
-
-  test "why can ship not face left?" do
-    start_pose = Pose.new(2900, 450, 80)
-    end_position = Position.new(2895, 700)
-    Trig.distance_between_points(start_pose, end_position)
-    test_connecting_path start_pose, end_position
   end
 
   def test_connecting_path(start_pose, end_position) do
     actual_end_pose =
       start_pose
-      |> Path.get_connecting_path(end_position)
-      |> Path.get_end_pose
+      |> Paths.get_connecting_path(end_position)
+      |> Paths.get_end_pose
     assert_same_position(end_position, actual_end_pose)
-  end
-
-  def test_90deg_turn(start_pose) do
-    # desired values
-    radius = 100
-    angle = -90
-    length = Trig.arc_length radius, angle
-    path = Path.new_turn start_pose, length, angle
-    end_pose =
-      Path.get_end_pose(path)
-    # Actual Values
-    actual_end_pose =
-      Path.get_connecting_path(start_pose, end_pose)
-      |> Path.get_end_pose
-    # Test
-    assert_same_pose end_pose, actual_end_pose
   end
 
   test "get connecting (turn) path" do
@@ -92,15 +68,38 @@ defmodule Chukinas.Geometry.PathTest do
     # desired values
     radius = 100
     angle = 90
-    length = Trig.arc_length radius, angle
-    path = Path.new_turn start_pose, length, angle
+    length = arclen_from_radius_and_angle(radius, angle)
+    path = Paths.new_turn start_pose, length, angle
     end_pose =
-      Path.get_end_pose(path)
+      Paths.get_end_pose(path)
     # Actual Values
     actual_end_pose =
-      Path.get_connecting_path(start_pose, end_pose)
-      |> Path.get_end_pose
+      Paths.get_connecting_path(start_pose, end_pose)
+      |> Paths.get_end_pose
     # Test
     assert match_numerical_map? end_pose, actual_end_pose
   end
+  test "calculate end pose of straight path" do
+    actual_end_pose =
+      Paths.new(
+        pose: Pose.origin(),
+        length: 1
+      )
+      |> Paths.get_end_pose()
+    expected_end_pose = Pose.new(1, 0, 0)
+    assert match_numerical_map? expected_end_pose, actual_end_pose
+  end
+
+  test "calculate end pose of turn path" do
+    actual_end_pose =
+      Paths.new(
+        pose: Pose.new(0, -1, 0),
+        length: :math.pi() / 2,
+        angle: 90
+      )
+      |> Paths.get_end_pose()
+    expected_end_pose = Pose.new(1, 0, 90)
+    assert match_numerical_map? expected_end_pose, actual_end_pose
+  end
+
 end

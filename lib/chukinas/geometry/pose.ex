@@ -1,11 +1,9 @@
-alias Chukinas.Geometry.{Pose, Position, Trig}
-
-# pose.ex
+alias Chukinas.Geometry.{Pose, Position}
 
 defmodule Pose do
 
   require Position
-
+  use Chukinas.Math
   use Chukinas.TypedStruct
 
   typedstruct do
@@ -23,18 +21,15 @@ defmodule Pose do
 
   def new({x, y}, angle), do: new(x, y, angle)
 
-  def new(%{x: x, y: y}, angle), do: new(x, y, angle)
+  def origin(), do: new(0, 0, 0)
 
   def new(x, y, angle) do
     %__MODULE__{
       x: x,
       y: y,
-      angle: Trig.normalize_angle(angle),
+      angle: angle
     }
   end
-
-  def origin(), do: new(0, 0, 0)
-
 
   # *** *******************************
   # *** GETTERS
@@ -62,7 +57,7 @@ defmodule Pose do
   # *** API
 
   def rotate(%__MODULE__{} = pose, angle) do
-    %{pose | angle: Trig.normalize_angle(pose.angle + angle)}
+    %{pose | angle: normalize_angle(pose.angle + angle)}
   end
 
   # *** *******************************

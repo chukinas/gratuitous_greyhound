@@ -86,7 +86,7 @@ defmodule Turn do
     |> circle
     # TODO alias Circle, don't import
     # TODO rename Circle.coord
-    |> Circle.location
+    |> Circle.coord
     |> position_from_coord
     |> Rect.from_centered_square(path |> circle |> Circle.diameter)
   end
@@ -94,12 +94,6 @@ defmodule Turn do
   def circle(%__MODULE__{circle: value}), do: value
 
   def radius(turn), do: turn |> circle |> Circle.radius
-
-  #def rotation(turn) do
-  #  turn
-  #  |> circle
-  #  |> Circle.rotation_at_arclen(turn |> traversal_distance)
-  #end
 
   # *** *******************************
   # *** API
@@ -114,7 +108,6 @@ defmodule Turn do
       from_circle_and_angle(circle_1, trav_angle_1),
       from_circle_and_angle(circle_2, trav_angle_2)
     }
-    |> IOP.inspect("turn split paths")
   end
 
 end
@@ -136,7 +129,6 @@ defimpl CollidableShape, for: Turn do
       |> Circle.coord_after_traversing_angle(trav_angle)
       |> position_from_coord
     end)
-    |> IOP.inspect("turn, to vertices")
     |> Enum.map(&position_to_vertex/1)
   end
 end

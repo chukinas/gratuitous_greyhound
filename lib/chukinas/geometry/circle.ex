@@ -114,11 +114,13 @@ defmodule Circle do
   def circumference(circle) do
     circle
     |> radius
-    |> Trig.mult(2 * :math.pi())
+    |> mult(2 * :math.pi())
   end
 
   def sign_of_rotation(%__MODULE__{rotation: :cw}),  do:  1
   def sign_of_rotation(%__MODULE__{rotation: :ccw}), do: -1
+
+  def coord(%__MODULE__{location: value}), do: value
 
   # *** *******************************
   # *** FUNCTIONS
@@ -137,7 +139,7 @@ defmodule Circle do
     circle
     |> radius
     |> angle_from_radius_and_arclen(arclen)
-    |> Trig.mult(sign_of_rotation(circle))
+    |> mult(sign_of_rotation(circle))
   end
 
   def arc_len_at_angle(%__MODULE__{} = circle, angle)
@@ -154,7 +156,7 @@ defmodule Circle do
   end
 
   def rotate_in_direction_of_rotation(circle, angle) do
-    angle = angle |> abs |> Trig.mult(sign_of_rotation(circle))
+    angle = angle |> abs |> mult(sign_of_rotation(circle))
     circle |> csys_rotate(angle)
   end
 
@@ -207,8 +209,8 @@ defmodule Circle do
   def traversal_angle_at_coord(circle, coord) do
     coord
     |> angle_of_vector_wrt_csys(circle)
-    |> Trig.mult(circle |> sign_of_rotation)
-    |> Trig.normalize_angle
+    |> mult(circle |> sign_of_rotation)
+    |> normalize_angle
   end
 
   def traversal_distance_at_coord(circle, coord) do

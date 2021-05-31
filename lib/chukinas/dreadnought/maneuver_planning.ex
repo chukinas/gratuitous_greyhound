@@ -18,7 +18,7 @@ defmodule ManeuverPlanning do
     maneuver_polygon = get_maneuver_polygon(unit)
     grid
     |> Grid.squares(include: maneuver_polygon, exclude: islands)
-    |> Stream.map(&GridSquare.calc_path(&1, pose(unit)))
+    |> Stream.map(&GridSquare.calc_path(&1, pose_new(unit)))
     |> Stream.filter(&Collide.avoids?(&1.path, islands))
     |> Stream.map(&%GridSquare{&1 | unit_id: unit.id})
   end
@@ -39,7 +39,7 @@ defmodule ManeuverPlanning do
   # *** PRIVATE
 
   defp get_maneuver_polygon(%Unit{} = unit, trim_angle \\ 0) do
-    pose = unit |> pose()
+    pose = unit |> pose_new
     max_distance = 400
     min_distance = 200
     angle = 45

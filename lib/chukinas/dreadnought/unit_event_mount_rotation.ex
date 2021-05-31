@@ -1,11 +1,12 @@
 alias Chukinas.Dreadnought.{Unit}
-alias Chukinas.Geometry.Trig
 alias Unit.Event, as: Ev
 
 defmodule Ev.MountRotation do
   @moduledoc """
   Fully qualifies a portion of a unit's mounts's action
   """
+
+  use Chukinas.Math
 
   # *** *******************************
   # *** TYPES
@@ -25,7 +26,7 @@ defmodule Ev.MountRotation do
   # *** NEW
 
   def new(mount_id, angle_end, angle_travel, opts \\ []) do
-    angle_end = Trig.normalize_angle(angle_end)
+    angle_end = normalize_angle(angle_end)
     time_duration = case angle_travel do
       0 -> 1
       trav -> Float.round(abs(trav) / 360 / 2.0, 2)
@@ -38,7 +39,7 @@ defmodule Ev.MountRotation do
       mount_id: mount_id,
       angle_end: angle_end,
       angle_direction: (if angle_travel < 0, do: :ccw, else: :cw),
-      angle_start: Trig.normalize_angle(angle_end - angle_travel)
+      angle_start: normalize_angle(angle_end - angle_travel)
     )
     struct!(__MODULE__, fields)
   end

@@ -109,13 +109,13 @@ defmodule Chukinas.LinearAlgebra.VectorCsys do
     csys
     |> orientation
     |> Vector.scalar(distance)
-    |> Vector.add(location)
+    |> Vector.sum(location)
   end
 
   def add_csys_location(vector, %__MODULE__{} = csys) do
     csys
     |> location
-    |> Vector.add(vector)
+    |> Vector.sum(vector)
   end
 
   def transform_vector(%__MODULE__{} = csys, vector)

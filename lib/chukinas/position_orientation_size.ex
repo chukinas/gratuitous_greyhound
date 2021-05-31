@@ -1,5 +1,4 @@
-# TODO in the three main modules, there should be no references to Trig
-alias Chukinas.Geometry.{Size, Position, Pose, Trig}
+alias Chukinas.Geometry.{Size, Position, Pose}
 alias Chukinas.PositionOrientationSize, as: POS
 alias Chukinas.Util.{Maps, Precision}
 alias Chukinas.Math, as: M
@@ -8,6 +7,7 @@ defmodule POS do
 
   require POS.Guards
   import POS.Guards
+  use Chukinas.Math
 
   defmacro __using__(_opts) do
     quote do
@@ -164,7 +164,7 @@ defmodule POS do
   def get_angle(%{angle: value}), do: value
 
   def angle_normalize(%{angle: _value} = map) do
-    Map.update!(map, :angle, &Trig.normalize_angle/1)
+    Map.update!(map, :angle, &normalize_angle/1)
   end
 
   defdelegate flip_angle(orientation), to: Pose, as: :flip

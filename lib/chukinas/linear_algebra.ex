@@ -1,12 +1,12 @@
 alias Chukinas.LinearAlgebra
 alias Chukinas.LinearAlgebra.Vector
 alias Chukinas.LinearAlgebra.VectorCsys, as: Csys
-alias Chukinas.Geometry.Trig
 alias Chukinas.Util.Maps
 
 defmodule LinearAlgebra do
 
   use Chukinas.PositionOrientationSize
+  use Chukinas.Math
   alias Vector.Guards
   require Guards
 
@@ -128,7 +128,7 @@ defmodule LinearAlgebra do
   end
 
   def vector_90(pose_or_csys, distance, angle) do
-    func = case Trig.normalize_angle(angle) do
+    func = case normalize_angle(angle) do
       angle when angle < 180 -> &vector_right/2
       angle when angle > 180 -> &vector_left/2
     end
@@ -167,19 +167,13 @@ defmodule LinearAlgebra do
   def coord_from_position(position), do: position_to_tuple(position)
 
   # *** *******************************
-  # *** ???
+  # *** VECTOR
 
-  #def vector_right(item, distance) when has_pose(item) do
-  #  convert_to_world_vector({0, +distance}, item)
-  #end
+  def magnitude_from_vector(vector) do
+    Vector.magnitude(vector)
+  end
 
-  #def vector_angle(item, distance, angle) when has_pose(item) do
-  #  item
-  #  |> orientation_rotate(angle)
-  #  |> vector_forward(distance)
-  #end
-
-  defdelegate vector_add(a, b), to: Vector, as: :add
+  defdelegate vector_add(a, b), to: Vector, as: :sum
 
   #def relative_vector_left(item, distance) do
   #  item |> put_zero_position |> vector_left(distance)

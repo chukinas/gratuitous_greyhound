@@ -1,5 +1,4 @@
 alias Chukinas.LinearAlgebra.{Vector}
-alias Chukinas.Geometry.Trig
 
 defmodule Vector.Guards do
   defguard is_vector(value)
@@ -9,7 +8,9 @@ defmodule Vector.Guards do
 end
 
 defmodule Vector do
+
   import Vector.Guards
+  import Chukinas.Math
 
   @x {1, 0}
   #@y {0, 1}
@@ -25,7 +26,7 @@ defmodule Vector do
   def origin, do: new(0, 0)
 
   def from_angle(degrees) do
-    {sin, cos} = Trig.sin_and_cos(degrees)
+    {sin, cos} = sin_and_cos(degrees)
     {cos, sin}
   end
 
@@ -36,18 +37,15 @@ defmodule Vector do
   # *** *******************************
   # *** GETTERS
 
-  # TODO Trig.sign should be moved to a new Math module
-  def sign({_, y}), do: Trig.sign(y)
-
   # TODO add func that gets angle from two vectors
   def angle(vector) when is_vector(vector) do
     vector
     |> normalize
     # TODO put all the dots together
     |> dot(@x)
-    |> Trig.acos
-    |> Trig.mult(sign(vector))
-    |> Trig.normalize_angle
+    |> acos
+    |> mult(sign(vector))
+    |> normalize_angle
   end
 
   def rotate(vector, angle)
@@ -93,7 +91,12 @@ defmodule Vector do
 
   def rotate_180({x, y}), do: {-y, -x}
 
-  def magnitude({x, y}), do: Trig.hypotenuse(x, y)
+  def magnitude({x, y}) do
+    [x, y]
+    |> Enum.map(&:math.pow(&1, 2))
+    |> Enum.sum
+    |> :math.sqrt
+  end
 
   # *** *******************************
   # *** API
@@ -109,9 +112,9 @@ defmodule Vector do
 
   def dot({a, b}, {c, d}), do: a * c + b * d
 
-  def add({a, b}, {c, d}), do: {a + c, b + d}
+  def sum({a, b}, {c, d}), do: {a + c, b + d}
 
-  def subtract(a, b), do: b |> flip |> add(a)
+  def subtract(a, b), do: b |> flip |> sum(a)
 
   # TODO rename ? `unit_vector`?
   def normalize({a, b} = vector) do
@@ -125,7 +128,7 @@ defmodule Vector do
     a
     |> rotate_90
     |> dot(b)
-    |> Trig.sign
+    |> sign
   end
 
   # TODO rename signed_angle_between
@@ -133,17 +136,15 @@ defmodule Vector do
     [a, b] = for vec <- [a, b], do: normalize(vec)
     sign = sign_between(a, b)
     angle = angle_between_abs(a, b)
-    Trig.normalize_angle(sign * angle)
+    normalize_angle(sign * angle)
   end
 
   # TODO rename angle_between
   def angle_between_abs(a, b) do
     [a, b] = for vec <- [a, b], do: normalize(vec)
     dot(a, b)
-    |> IOP.inspect("#{inspect a} dot #{inspect b}")
-    |> Trig.acos
-    |> Trig.normalize_angle
-    |> IOP.inspect("dot product")
+    |> acos
+    |> normalize_angle
   end
 
 end
