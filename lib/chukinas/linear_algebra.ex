@@ -1,5 +1,5 @@
 alias Chukinas.LinearAlgebra
-alias Chukinas.LinearAlgebra.Vector
+alias Chukinas.LinearAlgebra.{Angle, Vector}
 alias Chukinas.LinearAlgebra.VectorCsys, as: Csys
 alias Chukinas.Util.Maps
 
@@ -58,7 +58,13 @@ defmodule LinearAlgebra do
   # *** *******************************
   # *** COORD
 
+  def coord_new(x, y), do: {x, y}
+
+  def coord_origin(), do: coord_new(0, 0)
+
   def unit_vector_from_vector(vector), do: Vector.normalize(vector)
+
+  def coord_from_position(position), do: position_to_tuple(position)
 
   # *** *******************************
   # *** CSYS
@@ -144,14 +150,9 @@ defmodule LinearAlgebra do
 
   def vector_from_position(position), do: position_to_tuple(position)
 
-  def angle_from_vector(vector) do
-    Vector.angle(vector)
-  end
-
-  def angle_of_vector_wrt_csys(vector, csys) do
-    vector
-    |> vector_wrt_csys(csys)
-    |> angle_from_vector
+  def angle_of_vector_wrt_csys(coord, csys) do
+    IO.warn "rename to `angle_of_coord_wrt_csys`"
+    Angle.of_coord_wrt_csys(coord, csys)
   end
 
   def vector_from_csys_and_polar(csys, angle, radius) do
@@ -162,9 +163,18 @@ defmodule LinearAlgebra do
   end
 
   # *** *******************************
-  # *** COORD
+  # *** ANGLE
 
-  def coord_from_position(position), do: position_to_tuple(position)
+  def angle_from_vector(vector) do
+    IO.warn "DEPRECATED LinearAlgebra.angle_from_vector"
+    Vector.angle(vector)
+  end
+
+  def angle_relative_to_vector(to_vector, from_vector) do
+    Angle.from_vector(to_vector, from_vector)
+  end
+
+  def angle_between_vectors(a, b), do: Angle.between_vectors(a, b)
 
   # *** *******************************
   # *** VECTOR

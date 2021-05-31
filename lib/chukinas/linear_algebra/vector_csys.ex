@@ -6,13 +6,14 @@ defmodule Chukinas.LinearAlgebra.VectorCsys do
   alias Chukinas.PositionOrientationSize, as: POS
   require POS.Guards
   import POS.Guards
-  #require Vector.Guards
-  #import Vector.Guards
   use TypedStruct
   use Chukinas.LinearAlgebra
 
   # *** *******************************
   # *** TYPES
+
+  @type orientation :: Vector.t
+  @type location :: Vector.t
 
   typedstruct enforce: true do
     # TODO replace with csys_fields?
@@ -39,6 +40,7 @@ defmodule Chukinas.LinearAlgebra.VectorCsys do
     )
   end
 
+  @spec new(orientation, location) :: t
   def new(orientation, location) when is_vector(location) do
     %__MODULE__{
       # TODO need unit vector

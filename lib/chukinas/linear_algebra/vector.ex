@@ -1,5 +1,6 @@
 alias Chukinas.LinearAlgebra.{Vector}
 
+# TODO move to Guard module
 defmodule Vector.Guards do
   defguard is_vector(value)
     when tuple_size(value) == 2
@@ -20,7 +21,9 @@ defmodule Vector do
   # *** NEW
 
   def new(x, y), do: {x, y}
+
   def new([x, y]), do: {x, y}
+
   def new(%{x: x, y: y}), do: {x, y}
 
   def origin, do: new(0, 0)
@@ -44,7 +47,9 @@ defmodule Vector do
     # TODO put all the dots together
     |> dot(@x)
     |> acos
+    |> IOP.inspect("vector angle")
     |> mult(sign(vector))
+    |> IOP.inspect("vector angle after sign")
     |> normalize_angle
   end
 
@@ -121,30 +126,6 @@ defmodule Vector do
     magnitude = magnitude vector
     (for var <- [a, b], do: var / magnitude)
     |> List.to_tuple
-  end
-
-  def sign_between(a, b) do
-    [a, b] = for vec <- [a, b], do: normalize(vec)
-    a
-    |> rotate_90
-    |> dot(b)
-    |> sign
-  end
-
-  # TODO rename signed_angle_between
-  def angle_between(a, b) do
-    [a, b] = for vec <- [a, b], do: normalize(vec)
-    sign = sign_between(a, b)
-    angle = angle_between_abs(a, b)
-    normalize_angle(sign * angle)
-  end
-
-  # TODO rename angle_between
-  def angle_between_abs(a, b) do
-    [a, b] = for vec <- [a, b], do: normalize(vec)
-    dot(a, b)
-    |> acos
-    |> normalize_angle
   end
 
 end

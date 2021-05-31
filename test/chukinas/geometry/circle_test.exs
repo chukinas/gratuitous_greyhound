@@ -1,6 +1,6 @@
 ExUnit.start()
 
-defmodule Chukinas.LinearAlgebra.CircleTest do
+defmodule Chukinas.Geometry.CircleTest do
 
   use ExUnit.Case, async: true
   use Chukinas.PositionOrientationSize

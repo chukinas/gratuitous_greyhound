@@ -4,6 +4,7 @@ alias Chukinas.LinearAlgebra.{HasCsys, CSys, Vector}
 defmodule Turret do
 
   use Chukinas.PositionOrientationSize
+  use Chukinas.LinearAlgebra
   use Chukinas.Math
 
   # *** *******************************
@@ -99,7 +100,7 @@ defmodule Turret do
     vector_arc_center = vector_arc_center(mount)
     cond do
       lies_within_arc?(mount, vector_desired) -> {:ok, angle}
-      Vector.sign_between(vector_arc_center, vector_desired) < 0 -> {:corrected, angle_max_ccw(mount)}
+      angle_relative_to_vector(vector_desired, vector_arc_center) > 180 -> {:corrected, angle_max_ccw(mount)}
       true -> {:corrected, angle_max_cw(mount)}
     end
   end
@@ -122,7 +123,7 @@ defmodule Turret do
     angle_between =
       mount
       |> vector_arc_center
-      |> Vector.angle_between_abs(target_unit_vector)
+      |> angle_between_vectors(target_unit_vector)
     angle_between <= half_travel(mount)
   end
 

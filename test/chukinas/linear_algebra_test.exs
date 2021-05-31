@@ -3,11 +3,10 @@ ExUnit.start()
 defmodule Chukinas.LinearAlgebraTest do
 
   use ExUnit.Case, async: true
-  alias Chukinas.LinearAlgebra.VectorCsys, as: V
   use Chukinas.PositionOrientationSize
   use Chukinas.TestHelpers
   use Chukinas.LinearAlgebra
-  use Chukinas.Math
+  alias Chukinas.Math
 
   describe "vector coordinate system" do
 
@@ -43,10 +42,21 @@ defmodule Chukinas.LinearAlgebraTest do
       )
     end
 
-    test "angle wrt a csys" do
+    test "angle wrt a csys, large" do
       assert_in_delta(
-        normalize_angle(-44),
+        Math.normalize_angle(-44),
         angle_of_vector_wrt_csys(@coord, @csys),
+        1
+      )
+    end
+
+    test "angle wrt a csys, small" do
+      csys = csys_origin()
+             |> IOP.inspect("lin alg test, csys small")
+      coord = coord_new(1, -1)
+      assert_in_delta(
+        Math.normalize_angle(-45),
+        angle_of_vector_wrt_csys(coord, csys),
         1
       )
     end
