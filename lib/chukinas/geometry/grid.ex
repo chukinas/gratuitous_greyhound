@@ -20,6 +20,11 @@ defmodule Grid do
   # *** *******************************
   # *** NEW
 
+  def new(%{square_size: size, x_count: x, y_count: y}) do
+    square_count = %{x: x, y: y}
+    new size, square_count
+  end
+
   def new(square_size, count, start \\ position_new(1, 1))
   when has_position(count)
   and has_position(start) do
