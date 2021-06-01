@@ -71,6 +71,6 @@ defmodule Paths do
     end
   end
 
-  def length_from_path(path), do: path.length
+  def length_from_path(path), do: PathLike.len(path)
 
 end

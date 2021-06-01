@@ -3,7 +3,6 @@ ExUnit.start()
 defmodule Paths.TurnTest do
 
   use ExUnit.Case, async: true
-  alias Chukinas.LinearAlgebra.VectorCsys, as: V
   use Chukinas.PositionOrientationSize
   use Chukinas.TestHelpers
   import Chukinas.Paths

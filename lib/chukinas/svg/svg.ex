@@ -26,6 +26,7 @@ defmodule Chukinas.Svg do
   end
 
   def get_path_string(%Turn{} = path) do
+    IO.warn "where called from"
     {start_x, start_y} = path |> Paths.pose_at_start |> LinearAlgebra.coord_from_position
     {end_x, end_y} = path |> Paths.pose_at_end |> LinearAlgebra.coord_from_position
     rx = ry = _radius = path |> Paths.radius
