@@ -28,7 +28,10 @@ defmodule Chukinas.Svg do
   def get_path_string(%Turn{} = path) do
     IO.warn "where called from"
     {start_x, start_y} = path |> Paths.pose_at_start |> LinearAlgebra.coord_from_position
-    {end_x, end_y} = path |> Paths.pose_at_end |> LinearAlgebra.coord_from_position
+    {end_x, end_y} =
+      path
+      |> Paths.pose_at_end
+      |> LinearAlgebra.coord_from_position
     rx = ry = _radius = path |> Paths.radius
     large_arc_flag = if Paths.traversal_angle(path) > 180, do: 1, else: 0
     sweep_flag =
@@ -42,7 +45,6 @@ defmodule Chukinas.Svg do
     ]
     |> Stream.map(&round_number/1)
     |> Enum.join(" ")
-    |> IOP.inspect("svg turn")
     # TODO this function gets called waaayyy too much
   end
 
