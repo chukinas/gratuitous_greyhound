@@ -1,4 +1,5 @@
-alias Chukinas.Geometry.{Rect, CollidableShape}
+alias Chukinas.Geometry.Rect
+alias Chukinas.Collide.IsShape
 
 defmodule Rect do
   @moduledoc"""
@@ -146,7 +147,7 @@ defmodule Rect do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl CollidableShape do
+  defimpl IsShape do
     def to_coords(rect), do: Rect.to_coords(rect)
   end
 

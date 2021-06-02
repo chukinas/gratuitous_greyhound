@@ -1,5 +1,4 @@
-# TODO rename file
-alias Chukinas.Geometry.{Shape, CollidableShape}
+alias Chukinas.Collide.{Shape, IsShape}
 
 defmodule Shape do
   @moduledoc"""
@@ -34,7 +33,7 @@ defmodule Shape do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl CollidableShape do
+  defimpl IsShape do
     def to_coords(polygon), do: Shape.coords(polygon)
   end
 

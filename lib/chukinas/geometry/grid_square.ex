@@ -1,4 +1,5 @@
-alias Chukinas.Geometry.{GridSquare, CollidableShape, Rect}
+alias Chukinas.Geometry.{GridSquare, Rect}
+alias Chukinas.Collide.IsShape
 alias Chukinas.Paths
 
 defmodule GridSquare do
@@ -62,7 +63,7 @@ defmodule GridSquare do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl CollidableShape do
+  defimpl IsShape do
     def to_coords(grid_square) do
       grid_square
       |> GridSquare.to_rect

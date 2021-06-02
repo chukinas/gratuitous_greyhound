@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Unit, CombatAction, Turret, Animation}
-alias Chukinas.Geometry.{Collide}
+alias Chukinas.Collide
 alias Chukinas.Util.IdList
 alias Chukinas.Paths
 alias Chukinas.LinearAlgebra.Vector
@@ -74,7 +74,7 @@ defmodule CombatAction do
     path_start_pose = pose_new(turret_vector, angle)
     range = Vector.magnitude(path_vector)
     path = Paths.straight_new(path_start_pose, range)
-    if Collide.avoids?(path, Acc.islands(acc)) do
+    if Collide.avoids_collision_with?(path, Acc.islands(acc)) do
       {:ok, path}
     else
       {:fail, :intervening_terrain}

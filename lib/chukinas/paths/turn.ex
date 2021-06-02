@@ -1,5 +1,6 @@
-alias Chukinas.Geometry.{Rect, CollidableShape, Circle}
+alias Chukinas.Geometry.{Rect, Circle}
 alias Chukinas.Paths.{PathLike, Turn}
+alias Chukinas.Collide.IsShape
 
 defmodule Turn do
 
@@ -119,7 +120,7 @@ defmodule Turn do
 end
 
 
-defimpl CollidableShape, for: Turn do
+defimpl IsShape, for: Turn do
   use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra
   def to_coords(turn) do

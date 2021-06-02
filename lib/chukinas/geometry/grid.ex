@@ -1,4 +1,5 @@
-alias Chukinas.Geometry.{Grid, GridSquare, Collide, CollidableShape, Rect}
+alias Chukinas.Geometry.{Grid, GridSquare, Rect}
+alias Chukinas.Collide
 
 # TODO rename CommandGrid?
 defmodule Grid do
@@ -129,7 +130,7 @@ defmodule Grid do
   defp exclude(squares, nil), do: squares
   defp exclude(squares, obstacles) when is_list(obstacles) do
     squares
-    |> Stream.filter(&Collide.avoids?(&1, obstacles))
+    |> Stream.filter(&Collide.avoids_collision_with?(&1, obstacles))
   end
 
   defp split_grid(grid) do
@@ -158,7 +159,7 @@ defmodule Grid do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl CollidableShape do
+  defimpl Collide.IsShape do
     def to_coords(grid) do
       grid
       |> Grid.to_rect

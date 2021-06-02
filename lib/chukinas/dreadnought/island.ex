@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.CollidableShape
+alias Chukinas.Collide.IsShape
 alias Chukinas.LinearAlgebra.Vector
 alias Chukinas.Dreadnought.Island
 
@@ -72,7 +72,7 @@ defmodule Island do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl CollidableShape do
+  defimpl IsShape do
     def to_coords(island) do
       island
       |> Island.position_points

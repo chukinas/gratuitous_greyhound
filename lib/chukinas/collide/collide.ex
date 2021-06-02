@@ -1,4 +1,5 @@
-alias Chukinas.Geometry.{Collide, CollidableShape}
+# TODO rename file and module
+alias Chukinas.Collide.{Collide, IsShape}
 alias Collision.{Detection, Polygon}
 
 defmodule Collide do
@@ -10,17 +11,21 @@ defmodule Collide do
     )
   end
 
-  def any?(a, shapes) when is_list(shapes) and not is_list(a) do
-    subject = polygon_from_shape(a)
+  def any?(subject, obstacles)
+  when not is_list(subject)
+  and      is_list(obstacles) do
+    subject = polygon_from_shape(subject)
     obstacles =
-      for shape <- shapes, do: polygon_from_shape(shape)
+      for shape <- obstacles, do: polygon_from_shape(shape)
     Enum.any?(obstacles, fn obstacle ->
       Detection.SeparatingAxis.collision?(subject, obstacle)
     end)
   end
 
-  def avoids?(a, shapes) when is_list(shapes) and not is_list(a) do
-    not any?(a, shapes)
+  def avoids?(subject, obstacles)
+  when not is_list(subject)
+  and      is_list(obstacles) do
+    not any?(subject, obstacles)
   end
 
   def generate_include_filter(target) do
@@ -38,7 +43,7 @@ defmodule Collide do
 
   defp polygon_from_shape(shape) do
     shape
-    |> CollidableShape.to_coords
+    |> IsShape.to_coords
     |> vertices_from_coords
   end
 
