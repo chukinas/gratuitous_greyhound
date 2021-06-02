@@ -1,13 +1,13 @@
 alias Chukinas.Dreadnought.{Unit}
-alias Chukinas.LinearAlgebra.CSys.Conversion
-alias Chukinas.LinearAlgebra.Vector
 alias Chukinas.Util.Opts
 alias Unit.Event, as: Ev
 
 defmodule ChukinasWeb.DreadnoughtView do
+
   use ChukinasWeb, :view
   use ChukinasWeb.Components
   use Chukinas.PositionOrientationSize
+  use Chukinas.LinearAlgebra
 
   def maneuver_path(%Ev.Maneuver{} = path, unit_id) do
     assigns =
@@ -126,8 +126,8 @@ defmodule ChukinasWeb.DreadnoughtView do
     box_position =
       unit
       |> Unit.center_of_mass
-      |> Vector.new
-      |> Conversion.convert_to_world_vector(unit)
+      |> coord_from_position
+      |> vector_transform_from(unit)
       |> position
       |> position_subtract(box_size / 2)
     assigns =
