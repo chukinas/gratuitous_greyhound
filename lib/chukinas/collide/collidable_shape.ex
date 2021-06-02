@@ -1,3 +1,3 @@
 defprotocol Chukinas.Geometry.CollidableShape do
-  def to_vertices(path)
+  def to_coords(element)
 end

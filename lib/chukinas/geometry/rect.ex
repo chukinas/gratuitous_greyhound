@@ -6,6 +6,7 @@ defmodule Rect do
   """
 
   use Chukinas.PositionOrientationSize
+  use Chukinas.LinearAlgebra
 
   # *** *******************************
   # *** TYPES
@@ -75,17 +76,17 @@ defmodule Rect do
     |> position_add(rect)
   end
 
-  def list_vertices(rect) do
+  def to_coords(rect) do
     # TODO rename vertices
     # TODO move getters to appropriate section
     position_top_left = position(rect)
     relative_position_br = rect |> position_from_size
-    for pos <- [
+    for position <- [
       position_top_left,
       position_add_x(position_top_left, relative_position_br),
       bottom_right_position(rect),
       position_add_y(position_top_left, relative_position_br)
-    ], do: position_to_vertex(pos)
+    ], do: coord_from_position(position)
   end
 
   def center_position(rect) do
@@ -146,7 +147,7 @@ defmodule Rect do
   # *** IMPLEMENTATIONS
 
   defimpl CollidableShape do
-    def to_vertices(rect), do: Rect.list_vertices(rect)
+    def to_coords(rect), do: Rect.to_coords(rect)
   end
 
   defimpl Inspect do

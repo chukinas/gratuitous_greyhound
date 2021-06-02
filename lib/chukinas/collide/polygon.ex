@@ -1,37 +1,41 @@
-alias Chukinas.Geometry.{Polygon, CollidableShape}
+# TODO rename file
+alias Chukinas.Geometry.{Shape, CollidableShape}
 
-defmodule Polygon do
+defmodule Shape do
   @moduledoc"""
   An arbitrary 2D shape composed of straight edges
   """
 
   use Chukinas.PositionOrientationSize
+  use Chukinas.LinearAlgebra
+  # TODO remove the auto use of typestruct from POS
+  use TypedStruct
 
   typedstruct enforce: true do
-    # TODO I should use Collision.Polygon.Vertex instead?
-    field :vertices, POS.position_list
+    # TODO use list of coords
+    field :coords, [any]
   end
 
   # *** *******************************
   # *** NEW
 
-  def new(vertices) when length(vertices) > 2 do
+  def from_coords(coords) when length(coords) > 2 do
+    Enum.each(coords, fn coord -> true = is_coord(coord) end)
     %__MODULE__{
-      vertices: vertices |> Enum.map(&position/1)
+      coords: coords
     }
   end
 
-  # TODO this should be a protocol implementation
-  def to_vertices(polygon) do
-    polygon.vertices
-    |> Enum.map(&position_to_vertex/1)
-  end
+  # *** *******************************
+  # *** GETTERS
+
+  def coords(%__MODULE__{coords: val}), do: val
 
   # *** *******************************
   # *** IMPLEMENTATIONS
 
   defimpl CollidableShape do
-    def to_vertices(polygon), do: Polygon.to_vertices(polygon)
+    def to_coords(polygon), do: Shape.coords(polygon)
   end
 
 end

@@ -1,12 +1,14 @@
 alias Chukinas.Geometry.CollidableShape
 alias Chukinas.LinearAlgebra.Vector
+alias Chukinas.Dreadnought.Island
 
-defmodule Chukinas.Dreadnought.Island do
+defmodule Island do
   @moduledoc"""
   Handles rendering and collision of islands for ships and players to interact with
   """
 
   use Chukinas.PositionOrientationSize
+  use Chukinas.LinearAlgebra
 
   # *** *******************************
   # *** TYPES
@@ -14,6 +16,7 @@ defmodule Chukinas.Dreadnought.Island do
   typedstruct do
     # ID must be unique within the world
     field :id, integer()
+    # TODO rename position_points ?
     field :relative_vertices, list(POS.position_struct)
     position_fields()
   end
@@ -52,13 +55,28 @@ defmodule Chukinas.Dreadnought.Island do
   end
 
   # *** *******************************
+  # *** API
+
+  def world_coord(island, relative_position) do
+    island
+    |> position_new
+    |> position_add(relative_position)
+    |> coord_from_position
+  end
+
+  # *** *******************************
+  # *** GETTERS
+
+  def position_points(%__MODULE__{relative_vertices: val}), do: val
+
+  # *** *******************************
   # *** IMPLEMENTATIONS
 
   defimpl CollidableShape do
-    def to_vertices(island) do
-      island.relative_vertices
-      |> Stream.map(&position_add(&1, island))
-      |> Enum.map(&position_to_vertex/1)
+    def to_coords(island) do
+      island
+      |> Island.position_points
+      |> Enum.map(&Island.world_coord(island, &1))
     end
   end
 end

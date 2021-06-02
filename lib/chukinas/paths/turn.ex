@@ -122,7 +122,7 @@ end
 defimpl CollidableShape, for: Turn do
   use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra
-  def to_vertices(turn) do
+  def to_coords(turn) do
     circle = Turn.circle(turn)
     trav_angle = turn |> Turn.traversal_angle
     [
@@ -133,9 +133,7 @@ defimpl CollidableShape, for: Turn do
     |> Enum.map(fn trav_angle ->
       circle
       |> Circle.coord_after_traversing_angle(trav_angle)
-      |> position_from_coord
     end)
-    |> Enum.map(&position_to_vertex/1)
   end
 end
 

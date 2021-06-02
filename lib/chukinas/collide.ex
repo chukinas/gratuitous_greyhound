@@ -1,6 +1,6 @@
 alias Chukinas.Collide
 alias Collision.Polygon.Vertex
-alias Chukinas.Geometry.Polygon
+alias Chukinas.Geometry.Shape
 alias Chukinas.Geometry.Collide, as: Coll
 
 defmodule Collide do
@@ -18,7 +18,7 @@ defmodule Collide do
   # *** POLYGON
 
   def polygon_from_coords(coords) when is_list(coords) do
-    Polygon.new(coords)
+    Shape.from_coords(coords)
   end
 
   # *** *******************************

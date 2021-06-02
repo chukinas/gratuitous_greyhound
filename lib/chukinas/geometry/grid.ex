@@ -159,10 +159,10 @@ defmodule Grid do
   # *** IMPLEMENTATIONS
 
   defimpl CollidableShape do
-    def to_vertices(grid) do
+    def to_coords(grid) do
       grid
       |> Grid.to_rect
-      |> Rect.list_vertices
+      |> Rect.to_coords
     end
   end
 end

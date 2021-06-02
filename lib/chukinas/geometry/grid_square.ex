@@ -63,10 +63,10 @@ defmodule GridSquare do
   # *** IMPLEMENTATIONS
 
   defimpl CollidableShape do
-    def to_vertices(grid_square) do
+    def to_coords(grid_square) do
       grid_square
       |> GridSquare.to_rect
-      |> Rect.list_vertices
+      |> Rect.to_coords
     end
   end
 end

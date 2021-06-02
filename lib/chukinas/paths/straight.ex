@@ -86,14 +86,14 @@ defmodule Straight do
   end
 
   defimpl CollidableShape do
-    def to_vertices(straight) do
+    def to_coords(straight) do
       end_pose = PathLike.pose_end(straight)
-      for vector <- [
+      [
         straight |> vector_left(20),
         straight |> vector_right(20),
         end_pose |> vector_right(20),
         end_pose |> vector_left(20)
-      ], do: vertex_new(vector)
+      ]
     end
   end
 
