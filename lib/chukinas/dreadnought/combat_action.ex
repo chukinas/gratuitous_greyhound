@@ -1,12 +1,13 @@
 alias Chukinas.Dreadnought.{Unit, CombatAction, Turret, Animation}
 alias Chukinas.Geometry.{Collide, Straight}
 alias Chukinas.Util.IdList
-alias Chukinas.LinearAlgebra.{Vector, CSys}
+alias Chukinas.LinearAlgebra.Vector
 alias Unit.Event, as: Ev
 
 defmodule CombatAction do
 
   use Chukinas.PositionOrientationSize
+  use Chukinas.LinearAlgebra
   alias CombatAction.Accumulator, as: Acc
 
   # *** *******************************
@@ -54,8 +55,8 @@ defmodule CombatAction do
     attacker = Acc.attacker(acc)
     desired_angle =
       target_vector
-      |> CSys.Conversion.convert_from_world_vector(attacker, Turret.position_csys(turret))
-      |> Vector.angle
+      |> vector_transform_to([attacker, turret |> coord_from_position])
+      |> angle_from_vector
     case Turret.normalize_desired_angle(turret, desired_angle) do
       {:ok, angle} -> {:ok, angle}
       {_, _angle} -> {:fail, :out_of_fire_arc}
@@ -65,7 +66,8 @@ defmodule CombatAction do
   defp path_to_target(%Acc{} = acc, target_vector, turret_id) do
     turret = Acc.turret(acc, turret_id)
     attacker = Acc.attacker(acc)
-    turret_vector = CSys.Conversion.convert_to_world_vector(turret, attacker)
+    # TODO rename turret_coord
+    turret_vector = vector_transform_from(turret, attacker)
     path_vector = Vector.subtract(target_vector, turret_vector)
     angle = Vector.angle(path_vector)
     path_start_pose = pose_new(turret_vector, angle)
@@ -79,12 +81,6 @@ defmodule CombatAction do
   end
 
   defp range_to_target(%Straight{} = path) do
-    #turret = Acc.turret(acc, turret_id)
-    #attacker = Acc.attacker(acc)
-    #magnitude =
-    #  target_vector
-    #  |> CSys.Conversion.convert_from_world_vector(attacker, Turret.position_csys(turret))
-    #  |> Vector.magnitude
     range = Straight.length(path)
     if range <= 1000 do
       {:ok, range}
@@ -127,10 +123,10 @@ defmodule CombatAction do
   def muzzle_flash_pose(unit, turret_id) do
     # TODO move to Unit
     turret = Unit.turret(unit, turret_id)
-    angle = CSys.Conversion.sum_angles(turret, unit)
+    angle = angle_from_sum(turret, unit)
     turret
     |> Turret.gun_barrel_vector
-    |> CSys.Conversion.convert_to_world_vector(unit, turret)
+    |> vector_transform_from([turret, unit])
     |> pose_new(angle)
   end
 

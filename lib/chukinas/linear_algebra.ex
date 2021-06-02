@@ -192,6 +192,10 @@ defmodule LinearAlgebra do
   # *** *******************************
   # *** CSYS CONVERSIONS
 
+  def vector_transform_from(position, from) when has_position(position) do
+    vector_transform_from(position |> coord_from_position, from)
+  end
+
   def vector_transform_from(vector, []), do: vector
 
   def vector_transform_from(vector, [csys | remaining_csys]) do
@@ -218,6 +222,10 @@ defmodule LinearAlgebra do
 
   def vector_transform_from(vector, csys) when is_vector(vector) do
     Csys.transform_vector(csys, vector)
+  end
+
+  def vector_transform_to(position, to) when has_position(position) do
+    vector_transform_to(position |> coord_from_position, to)
   end
 
   def vector_transform_to(vector, []), do: vector

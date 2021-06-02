@@ -186,6 +186,8 @@ defmodule POS do
   # TODO rename rotate?
   defdelegate orientation_rotate(orientation, angle), to: Pose, as: :rotate
 
+  def angle_from_sum(%{angle: a}, %{angle: b}), do: a + b
+
   # *** *******************************
   # *** POSE
 
