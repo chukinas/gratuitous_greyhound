@@ -1,6 +1,7 @@
 defmodule Chukinas.TestHelpers do
 
   use Chukinas.PositionOrientationSize
+  use Chukinas.LinearAlgebra
 
   defmacro __using__(_options) do
     quote do
@@ -20,6 +21,17 @@ defmodule Chukinas.TestHelpers do
   def compare_nums(a, b) do
     assert a == b
   end
+
+  def assert_approx_equal(a, b) when is_vector(a) and is_vector(b) do
+    assert_tuple_approx_equal(a, b)
+  end
+
+  # TODO remove these 3
+  def assert_approx_equal(:coord, a, b), do: assert_tuple_approx_equal(a, b)
+
+  def assert_approx_equal(:vector, a, b), do: assert_tuple_approx_equal(a, b)
+
+  def assert_approx_equal(:tuple, a, b), do: assert_tuple_approx_equal(a, b)
 
   def assert_tuple_approx_equal(a, b) when tuple_size(a) == tuple_size(b) do
     [a, b] = for tuple <- [a, b] do

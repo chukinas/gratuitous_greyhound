@@ -165,8 +165,7 @@ defmodule LinearAlgebra do
   # *** ANGLE
 
   def angle_from_vector(vector) do
-    IO.warn "DEPRECATED LinearAlgebra.angle_from_vector"
-    Vector.angle(vector)
+    Angle.from_vector(vector, {1, 0})
   end
 
   def angle_relative_to_vector(to_vector, from_vector) do
@@ -178,30 +177,74 @@ defmodule LinearAlgebra do
   # *** *******************************
   # *** VECTOR
 
+  def vector_origin, do: {0, 0}
+
   def magnitude_from_vector(vector) do
     Vector.magnitude(vector)
   end
 
   defdelegate vector_add(a, b), to: Vector, as: :sum
 
-  #def relative_vector_left(item, distance) do
-  #  item |> put_zero_position |> vector_left(distance)
-  #end
+  def vector_subtract(from_vector, vector) do
+    Vector.subtract(from_vector, vector)
+  end
 
-  #def relative_vector_right(item, distance) do
-  #  item |> put_zero_position |> vector_right(distance)
-  #end
+  # *** *******************************
+  # *** CSYS CONVERSIONS
 
-  #def relative_vector_angle(item, distance, angle) do
-  #  item |> put_zero_position |> vector_angle(distance, angle)
-  #end
+  def vector_transform_from(vector, []), do: vector
 
-  #def relative_vector_right_angle(item, distance, angle) do
-  #  item |> put_zero_position |> vector_right_angle(distance, angle)
-  #end
+  def vector_transform_from(vector, [csys | remaining_csys]) do
+    vector
+    |> vector_transform_from(csys)
+    |> vector_transform_from(remaining_csys)
+  end
 
-  #def vector_from_position(item) do
-  #  position_to_tuple(item)
-  #end
+  def vector_transform_from(vector, pose) when has_pose(pose) do
+    vector_transform_from(vector, pose |> csys_from_pose)
+  end
+
+  def vector_transform_from(vector, wrt_vector)
+  when is_vector(vector)
+  and is_vector(wrt_vector) do
+    vector_add(vector, wrt_vector)
+  end
+
+  def vector_transform_from(vector, csys)
+  when is_vector(vector)
+  and has_csys(csys) do
+    Csys.transform_vector(csys, vector)
+  end
+
+  def vector_transform_from(vector, csys) when is_vector(vector) do
+    Csys.transform_vector(csys, vector)
+  end
+
+  def vector_transform_to(vector, []), do: vector
+
+  def vector_transform_to(vector, [csys | remaining_csys]) do
+    vector
+    |> vector_transform_to(csys)
+    |> vector_transform_to(remaining_csys)
+  end
+
+  def vector_transform_to(vector, wrt_vector)
+  when is_vector(vector)
+  and is_vector(wrt_vector) do
+    vector_subtract(vector, wrt_vector)
+  end
+
+  def vector_transform_to(vector, pose)
+  when has_pose(pose) do
+    vector_transform_to(vector, pose |> csys_from_pose)
+  end
+
+  def vector_transform_to(vector, csys)
+  when is_vector(vector)
+  and has_csys(csys) do
+    csys
+    |> Csys.invert
+    |> Csys.transform_vector(vector)
+  end
 
 end
