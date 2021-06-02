@@ -1,9 +1,9 @@
 alias Chukinas.Dreadnought.{Gunfire, Spritesheet, Turret, Unit, Sprite}
-alias Chukinas.LinearAlgebra.CSys
 
 defmodule Gunfire do
 
   use Chukinas.PositionOrientationSize
+  use Chukinas.LinearAlgebra
 
   # *** *******************************
   # *** TYPES
@@ -24,8 +24,8 @@ defmodule Gunfire do
     position_vector =
       turret
       |> Turret.gun_barrel_vector
-      |> CSys.Conversion.convert_to_world_vector(unit, turret)
-    angle = CSys.Conversion.sum_angles(turret, unit)
+      |> vector_transform_from([turret, unit])
+    angle = angle_from_sum(turret, unit)
     position_vector
     |> pose_new(angle)
     |> new
