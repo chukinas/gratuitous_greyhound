@@ -1,4 +1,4 @@
-defprotocol Chukinas.Geometry.PathLike do
+defprotocol Chukinas.Paths.PathLike do
   def pose_start(path)
   def pose_end(path)
   def len(path)

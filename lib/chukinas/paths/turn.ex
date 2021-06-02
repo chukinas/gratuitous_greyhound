@@ -1,5 +1,5 @@
-alias Chukinas.Geometry.{PathLike, Rect, CollidableShape, Circle}
-alias Chukinas.Paths.Turn
+alias Chukinas.Geometry.{Rect, CollidableShape, Circle}
+alias Chukinas.Paths.{PathLike, Turn}
 
 defmodule Turn do
 

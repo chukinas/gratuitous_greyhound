@@ -1,8 +1,10 @@
 ExUnit.start()
 
 defmodule CollisionTest do
+
   use ExUnit.Case, async: true
   use DreadnoughtHelpers
+  use Chukinas.PositionOrientationSize
 
   test "get squares which include a target shape" do
     count_overlapping_squares = fn target ->
@@ -24,19 +26,19 @@ defmodule CollisionTest do
 
   test "convex polygons" do
     points = [
-      Position.new(0, 0),
-      Position.new(1, 0),
-      Position.new(1, 1),
+      position_new(0, 0),
+      position_new(1, 0),
+      position_new(1, 1),
     ]
     convex_polygon =
       points
-      |> Enum.map(&Position.to_vertex/1)
+      |> Enum.map(&position_to_vertex/1)
       |> Collision.Polygon.from_vertices
     assert convex_polygon.convex
     concave_polygon =
       points
       |> Enum.reverse
-      |> Enum.map(&Position.to_vertex/1)
+      |> Enum.map(&position_to_vertex/1)
       |> Collision.Polygon.from_vertices
     refute concave_polygon.convex
   end

@@ -1,6 +1,7 @@
-alias Chukinas.Geometry.{PathLike, Rect, Straight, CollidableShape}
+alias Chukinas.Geometry.{Rect, CollidableShape}
 alias Chukinas.LinearAlgebra.{HasCsys, CSys}
 alias Chukinas.LinearAlgebra
+alias Chukinas.Paths.{Straight, PathLike}
 
 defmodule Straight do
 

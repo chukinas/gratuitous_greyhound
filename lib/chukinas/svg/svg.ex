@@ -1,6 +1,5 @@
-alias Chukinas.Geometry.Straight
 alias Chukinas.Paths
-alias Chukinas.Paths.Turn
+alias Paths.{Straight, Turn}
 alias Chukinas.Svg.{Interpret}
 alias Chukinas.LinearAlgebra
 
@@ -26,7 +25,7 @@ defmodule Chukinas.Svg do
   end
 
   def get_path_string(%Turn{} = path) do
-    IO.warn "where called from"
+    #IO.warn "where called from"
     {start_x, start_y} = path |> Paths.pose_at_start |> LinearAlgebra.coord_from_position
     {end_x, end_y} =
       path

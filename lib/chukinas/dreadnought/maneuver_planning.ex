@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{ManeuverPlanning, Unit, Maneuver}
-alias Chukinas.Geometry.{GridSquare, Grid, Collide, Straight, Polygon}
+alias Chukinas.Geometry.{GridSquare, Grid, Collide, Polygon}
 alias Chukinas.Paths
 alias Paths.Turn
 
@@ -44,10 +44,10 @@ defmodule ManeuverPlanning do
     min_distance = 200
     angle = 45
     [
-      Straight.new(pose, min_distance),
+      Paths.straight_new(pose, min_distance),
       Turn.new(pose, min_distance, trim_angle - angle),
       Turn.new(pose, max_distance, trim_angle - angle),
-      Straight.new(pose, max_distance),
+      Paths.straight_new(pose, max_distance),
       Turn.new(pose, max_distance, trim_angle + angle),
       Turn.new(pose, min_distance, trim_angle + angle),
     ]

@@ -27,19 +27,19 @@ defmodule Chukinas.PathsTest do
   end
 
   test "end position of vertical straight path" do
-    Straight.new(0, 0, 90, 10)
+    Paths.new_straight(0, 0, 90, 10)
     |> Paths.get_end_pose()
     |> assert_same_position({0, 10})
   end
 
   test "end position of horizontal straight path" do
-    Straight.new(0, 0, 0, 10)
+    Paths.new_straight(0, 0, 0, 10)
     |> Paths.get_end_pose()
     |> assert_same_position({10, 0})
   end
 
   test "bounding rect of 45deg straight path" do
-    path = Straight.new(0, 0, 45, :math.sqrt(2))
+    path = Paths.new_straight(0, 0, 45, :math.sqrt(2))
     actual_rect =
       path
       |> Paths.get_bounding_rect()
@@ -64,7 +64,7 @@ defmodule Chukinas.PathsTest do
   end
 
   test "get connecting (turn) path" do
-    start_pose = Pose.origin()
+    start_pose = pose_origin()
     # desired values
     radius = 100
     angle = 90
@@ -82,23 +82,23 @@ defmodule Chukinas.PathsTest do
   test "calculate end pose of straight path" do
     actual_end_pose =
       Paths.new(
-        pose: Pose.origin(),
+        pose: pose_origin(),
         length: 1
       )
       |> Paths.get_end_pose()
-    expected_end_pose = Pose.new(1, 0, 0)
+    expected_end_pose = pose_new(1, 0, 0)
     assert match_numerical_map? expected_end_pose, actual_end_pose
   end
 
   test "calculate end pose of turn path" do
     actual_end_pose =
       Paths.new(
-        pose: Pose.new(0, -1, 0),
+        pose: pose_new(0, -1, 0),
         length: :math.pi() / 2,
         angle: 90
       )
       |> Paths.get_end_pose()
-    expected_end_pose = Pose.new(1, 0, 90)
+    expected_end_pose = pose_new(1, 0, 90)
     assert match_numerical_map? expected_end_pose, actual_end_pose
   end
 
