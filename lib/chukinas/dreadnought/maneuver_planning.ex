@@ -1,6 +1,6 @@
 alias Chukinas.Dreadnought.{ManeuverPlanning, Unit, Maneuver}
-alias Chukinas.Geometry.{GridSquare, Grid, Collide, Polygon}
-alias Chukinas.Paths
+alias Chukinas.Geometry.{GridSquare, Grid}
+alias Chukinas.{Collide, Paths}
 alias Paths.Turn
 
 defmodule ManeuverPlanning do
@@ -19,7 +19,7 @@ defmodule ManeuverPlanning do
     grid
     |> Grid.squares(include: maneuver_polygon, exclude: islands)
     |> Stream.map(&GridSquare.calc_path(&1, pose_new(unit)))
-    |> Stream.filter(&Collide.avoids?(&1.path, islands))
+    |> Stream.filter(&Collide.avoids_collision_with?(&1.path, islands))
     |> Stream.map(&%GridSquare{&1 | unit_id: unit.id})
   end
 
@@ -53,6 +53,6 @@ defmodule ManeuverPlanning do
     ]
     |> Stream.map(&Paths.get_end_pose/1)
     |> Enum.map(&position_to_tuple/1)
-    |> Polygon.new
+    |> Collide.polygon_from_coords
   end
 end

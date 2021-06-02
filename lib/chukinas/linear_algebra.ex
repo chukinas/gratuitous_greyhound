@@ -39,6 +39,8 @@ defmodule LinearAlgebra do
     when is_map_key(csys, :orientation)
     and is_map_key(csys, :location)
 
+  defguard is_coord(vec) when Guards.is_vector(vec)
+
   defguard is_vector(vec) when Guards.is_vector(vec)
 
   # *** *******************************

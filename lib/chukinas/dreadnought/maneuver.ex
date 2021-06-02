@@ -40,9 +40,8 @@ defmodule Maneuver do
   # *** PRIVATE
 
   defp put_trapped_maneuver(%Unit{} = unit) do
-    this_pose = unit |> pose |> IOP.inspect("put trap man")
     events = [
-      Ev.Maneuver.new(Paths.new_straight(this_pose, 300))
+      Ev.Maneuver.new(Paths.new_straight(unit, 300))
     ]
     Unit.put(unit, events)
   end
