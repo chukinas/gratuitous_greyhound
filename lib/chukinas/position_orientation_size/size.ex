@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{Size, Position}
+alias Chukinas.PositionOrientationSize.{Size, Position}
 alias Chukinas.Util.Precision
 
 defmodule Size do

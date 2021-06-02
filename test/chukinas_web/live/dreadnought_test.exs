@@ -1,7 +1,7 @@
 defmodule ChukinasWeb.DreadnoughtLiveTest do
   use ChukinasWeb.ConnCase
 
-  import Phoenix.LiveViewTest
+  #import Phoenix.LiveViewTest
 
   # *** *******************************
   # *** ACTIONS

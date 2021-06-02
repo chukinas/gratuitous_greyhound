@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{Pose, Position}
+alias Chukinas.PositionOrientationSize.{Pose, Position}
 
 defmodule Pose do
 

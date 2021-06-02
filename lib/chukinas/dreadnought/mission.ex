@@ -1,8 +1,10 @@
 alias Chukinas.Dreadnought.{Unit, Mission, Island, ActionSelection, Player, PlayerTurn, UnitAction, Maneuver, CombatAction, Gunfire}
-alias Chukinas.Geometry.{Grid, Size}
+alias Chukinas.Geometry.Grid
 alias Chukinas.Util.{Maps, IdList}
 
 defmodule Mission do
+
+  use Chukinas.PositionOrientationSize
 
   # *** *******************************
   # *** TYPES
@@ -11,8 +13,9 @@ defmodule Mission do
   typedstruct do
     field :turn_number, integer(), default: 1
     field :grid, Grid.t()
-    field :world, Size.t()
-    field :margin, Size.t()
+    # TODO replace any with Size type
+    field :world, any
+    field :margin, any
     field :islands, [Island.t()], default: []
     field :units, [Unit.t()], default: []
     field :players, [Player.t()], default: []
@@ -23,8 +26,8 @@ defmodule Mission do
   # *** *******************************
   # *** NEW
 
-  def new(%Grid{} = grid, %Size{} = margin) do
-    world = Size.new(
+  def new(%Grid{} = grid, margin) when has_size(margin) do
+    world = size_new(
       grid.width + 2 * margin.width,
       grid.height + 2 * margin.height
     )
@@ -102,7 +105,6 @@ defmodule Mission do
   # *** CALC
 
   def calc_ai_commands(mission) do
-    mission
     Enum.reduce(ai_player_ids(mission), mission, fn player_id, mission ->
       %PlayerTurn{player_actions: actions} = PlayerTurn.new(player_id, :ai, mission)
       mission |> put(actions)

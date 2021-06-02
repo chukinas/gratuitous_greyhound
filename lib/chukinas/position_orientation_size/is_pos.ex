@@ -1,5 +1,4 @@
-alias Chukinas.PositionOrientationSize.IsPos
-alias Chukinas.Geometry.{Position, Size, Pose}
+alias Chukinas.PositionOrientationSize.{IsPos, Position, Size, Pose}
 
 defprotocol IsPos do
   def keys(term)

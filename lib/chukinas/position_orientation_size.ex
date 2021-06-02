@@ -1,5 +1,5 @@
-alias Chukinas.Geometry.{Size, Position, Pose}
 alias Chukinas.PositionOrientationSize, as: POS
+alias POS.{Size, Position, Pose}
 alias Chukinas.Util.{Maps, Precision}
 alias Chukinas.Math, as: M
 
@@ -65,6 +65,8 @@ defmodule POS do
       Map.update!(struct, key, &Float.round(&1 * 1.0, precision))
     end)
   end
+
+  def position_new_rounded(map), do: Position.rounded(map)
 
   # *** *******************************
   # *** MERGE

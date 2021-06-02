@@ -6,7 +6,7 @@ defmodule Interpret do
   Analyze output of Svg.Parse to determine e.g. min x and y..
   """
 
-  import Chukinas.PositionOrientationSize
+  use Chukinas.PositionOrientationSize
 
   # TODO opts is the wrong word for this
   def interpret(svg, opts \\ []) when is_binary(svg) do
