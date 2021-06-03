@@ -1,15 +1,14 @@
 alias Chukinas.Geometry.Rect
-alias Chukinas.LinearAlgebra.{HasCsys, CSys}
 alias Chukinas.LinearAlgebra
+alias Chukinas.LinearAlgebra.{HasCsys, CSys}
 alias Chukinas.Paths.{Straight, PathLike}
-alias Chukinas.Collide.IsShape
+alias Chukinas.Collide
 
 defmodule Straight do
 
   import LinearAlgebra
   use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra
-  import Chukinas.Collide
 
   # *** *******************************
   # *** TYPES
@@ -86,7 +85,7 @@ defmodule Straight do
     def deceeds_angle(_straight, _angle), do: true
   end
 
-  defimpl IsShape do
+  defimpl Collide.IsShape do
     def to_coords(straight) do
       end_pose = PathLike.pose_end(straight)
       [

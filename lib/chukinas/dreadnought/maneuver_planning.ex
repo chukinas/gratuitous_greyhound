@@ -53,6 +53,6 @@ defmodule ManeuverPlanning do
     ]
     |> Stream.map(&Paths.get_end_pose/1)
     |> Enum.map(&position_to_tuple/1)
-    |> Collide.polygon_from_coords
+    |> Collide.shape_from_coords
   end
 end

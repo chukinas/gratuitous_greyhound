@@ -1,5 +1,4 @@
 alias Chukinas.Geometry.{Grid, GridSquare, Rect}
-alias Chukinas.Collide
 
 # TODO rename CommandGrid?
 defmodule Grid do
@@ -8,6 +7,7 @@ defmodule Grid do
   """
 
   use Chukinas.PositionOrientationSize
+  alias Chukinas.Collide
 
   typedstruct enforce: true do
     field :square_size, integer()

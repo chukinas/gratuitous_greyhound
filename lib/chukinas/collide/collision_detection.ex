@@ -1,8 +1,7 @@
-# TODO rename file and module
-alias Chukinas.Collide.{Collide, IsShape}
+alias Chukinas.Collide.{CollisionDetection, IsShape}
 alias Collision.{Detection, Polygon}
 
-defmodule Collide do
+defmodule CollisionDetection do
 
   def collide?(a, b) do
     Detection.SeparatingAxis.collision?(
@@ -45,6 +44,7 @@ defmodule Collide do
     shape
     |> IsShape.to_coords
     |> vertices_from_coords
+    |> Polygon.from_vertices
   end
 
   def vertices_from_coords(coords) do
