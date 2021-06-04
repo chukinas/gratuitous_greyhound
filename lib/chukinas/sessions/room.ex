@@ -1,4 +1,5 @@
 alias Chukinas.Sessions.Room
+alias Chukinas.Sessions.RoomRegistry
 
 defmodule Room do
   use GenServer
@@ -14,15 +15,29 @@ defmodule Room do
   end
 
   def start_link(room_name) do
-    GenServer.start_link(__MODULE__, room_name)
+    GenServer.start_link(
+      __MODULE__,
+      room_name,
+      name: RoomRegistry.build_name(room_name)
+    )
   end
 
   def add_member(room, member_name) do
-    GenServer.call(room, {:add_member, member_name})
+    room
+    |> get_room
+    |> GenServer.call({:add_member, member_name})
   end
 
   def print_members(room) do
-    GenServer.cast(room, :print_members)
+    room
+    |> get_room
+    |> GenServer.cast(:print_members)
+  end
+
+  defp get_room(room) when is_pid(room), do: room
+
+  defp get_room(room_name) when is_binary(room_name) do
+    RoomRegistry.build_name(room_name)
   end
 
   # *** *******************************

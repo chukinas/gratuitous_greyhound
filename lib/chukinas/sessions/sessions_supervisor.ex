@@ -1,5 +1,5 @@
 alias Chukinas.SessionSupervisor
-alias Chukinas.Sessions.Room
+#alias Chukinas.Sessions.Room
 
 defmodule SessionSupervisor do
   use Supervisor
@@ -13,8 +13,8 @@ defmodule SessionSupervisor do
       Chukinas.Sessions.RoomRegistry,
       Chukinas.Sessions.RoomDynamicSupervisor,
       #{Chukinas.Sessions.RoomRegistry, []},
-      {Room, "red"},
-      {Room, "black"},
+      #{Room, "red"},
+      #{Room, "black"},
     ]
     Supervisor.init(children, strategy: :one_for_one)
   end
