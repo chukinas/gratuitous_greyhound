@@ -10,6 +10,9 @@ defmodule SessionSupervisor do
 
   def init(_init_arg) do
     children = [
+      Chukinas.Sessions.RoomRegistry,
+      Chukinas.Sessions.RoomDynamicSupervisor,
+      #{Chukinas.Sessions.RoomRegistry, []},
       {Room, "red"},
       {Room, "black"},
     ]
