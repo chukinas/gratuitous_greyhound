@@ -12,9 +12,8 @@ defmodule Chukinas.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Chukinas.PubSub},
       # Start the Endpoint (http/https)
-      ChukinasWeb.Endpoint
-      # Start a worker by calling: Chukinas.Worker.start_link(arg)
-      # {Chukinas.Worker, arg}
+      ChukinasWeb.Endpoint,
+      {Chukinas.SessionSupervisor, []},
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

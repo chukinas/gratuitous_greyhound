@@ -3,21 +3,26 @@ alias Chukinas.Sessions.Room
 defmodule Room do
   use GenServer
 
-  @me __MODULE__
-
   # *** *******************************
   # *** CLIENT
 
-  def start_link(default) do
-    GenServer.start_link(__MODULE__, default, name: @me)
+  def child_spec(room_name) do
+    %{
+      id: room_name,
+      start: {__MODULE__, :start_link, [room_name]}
+    }
   end
 
-  def add_member(member_name) do
-    GenServer.call(@me, {:add_member, member_name})
+  def start_link(room_name) do
+    GenServer.start_link(__MODULE__, room_name)
   end
 
-  def print_members do
-    GenServer.cast(@me, :print_members)
+  def add_member(room, member_name) do
+    GenServer.call(room, {:add_member, member_name})
+  end
+
+  def print_members(room) do
+    GenServer.cast(room, :print_members)
   end
 
   # *** *******************************
