@@ -5,7 +5,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def mount(params, _session, socket) do
-    IOP.inspect params, "dread live mount"
     {:ok, socket, layout: {ChukinasWeb.LayoutView, "dreadnought_menu.html"}}
   end
 
@@ -38,7 +37,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def handle_info({:update_assigns, new_assigns}, socket) do
-    new_assigns  |> IOP.inspect("dread live h.info update ass")
     socket =
       socket
       |> assign(new_assigns)
