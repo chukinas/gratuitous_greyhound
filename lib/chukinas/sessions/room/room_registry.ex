@@ -8,9 +8,10 @@ defmodule RoomRegistry do
     Registry.child_spec(keys: :unique, name: @me)
   end
 
-  def start_link(_init_arg) do
-    Registry.start_link(keys: :unique, name: @me)
-  end
+  #def start_link(_init_arg) do
+  #  IO.puts "does RoomRegistry start_link actually get called?"
+  #  Registry.start_link(keys: :unique, name: @me)
+  #end
 
   def build_name(room_name) do
     {:via, Registry, {@me, room_name}}

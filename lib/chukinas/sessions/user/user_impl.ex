@@ -9,17 +9,20 @@ defmodule User do
 
   use TypedStruct
   typedstruct enforce: false do
-    field :uuid, String.t(), default: Ecto.UUID.generate()
+    field :uuid, String.t()
     field :name, String.t()
     field :room_name, String.t()
     field :pretty_room_name, String.t()
+    field :player_id, integer
   end
 
   # *** *******************************
   # *** NEW
 
   def new() do
-    %__MODULE__{}
+    %__MODULE__{
+      uuid: Ecto.UUID.generate()
+    }
   end
 
   # *** *******************************

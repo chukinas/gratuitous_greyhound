@@ -25,7 +25,6 @@ defmodule ChukinasWeb.JoinComponent do
 
   @impl true
   def handle_event("validate", %{"user_session" => params}, socket) do
-    IOP.inspect params, "validate attrs"
     changeset =
       Sessions.user_session_changeset(
         socket.assigns.user_session,
@@ -57,7 +56,6 @@ defmodule ChukinasWeb.JoinComponent do
     # TODO I shouldn't be manipulating the raw map..?
     changeset = if show_errors?, do: Map.put(changeset, :action, :insert), else: changeset
     url = Sessions.url(socket, changeset)
-          |> IOP.inspect("join comp assign cs, url")
     assign(socket, maybe_url: url, changeset: changeset)
   end
 
@@ -80,6 +78,6 @@ defmodule ChukinasWeb.JoinComponent do
     user_session_attrs(assigns, attrs)
   end
 
-  def user_session_attrs(_assigns, attrs), do: attrs |> IOP.inspect("joincomp us sess attrs")
+  def user_session_attrs(_assigns, attrs), do: attrs
 
 end

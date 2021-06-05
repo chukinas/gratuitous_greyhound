@@ -4,7 +4,13 @@ defmodule ChukinasWeb.DreadnoughtLive do
   use ChukinasWeb, :live_view
 
   @impl true
-  def mount(params, _session, socket) do
+  def mount(_params, _session, socket) do
+    socket = if socket.connected? do
+      socket
+      |> assign(user: Sessions.new_user())
+    else
+      socket
+    end
     {:ok, socket, layout: {ChukinasWeb.LayoutView, "dreadnought_menu.html"}}
   end
 

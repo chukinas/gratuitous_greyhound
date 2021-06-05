@@ -1,4 +1,5 @@
 alias ChukinasWeb.Router.Helpers, as: Routes
+alias Chukinas.Sessions.User
 
 defmodule Chukinas.Sessions do
   @moduledoc """
@@ -7,6 +8,15 @@ defmodule Chukinas.Sessions do
 
   #import Ecto.Changeset
   alias Chukinas.Sessions.UserSession
+
+  # *** *******************************
+  # *** Users
+
+  def new_user do
+    user = User.new()
+    User.Registry.register(user |> User.uuid |> IOP.inspect)
+    user
+  end
 
   # *** *******************************
   # *** UserSession
@@ -56,7 +66,6 @@ defmodule Chukinas.Sessions do
   end
 
   def url(socket, user_session) do
-    IOP.inspect user_session, "sessions url"
     [
       URI.to_string(socket.host_uri),
       path(socket, user_session)
