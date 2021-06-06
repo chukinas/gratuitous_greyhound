@@ -1,5 +1,6 @@
 alias Chukinas.Dreadnought.{PlayerTurn, Unit, ActionSelection, ManeuverPlanning, UnitAction, Gunfire}
-alias Chukinas.Geometry.{Size, Grid, GridSquare}
+alias Chukinas.Geometry.{Grid, GridSquare}
+alias Chukinas.PositionOrientationSize.Size
 
 # TODO this name should match that of the Dyn World comp. Change this one or both to match
 defmodule PlayerTurn do

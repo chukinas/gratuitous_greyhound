@@ -1,10 +1,10 @@
 alias Chukinas.Sessions.RoomDynamicSupervisor
-alias Chukinas.Sessions.Room
+alias Chukinas.Sessions.RoomServer
 
 defmodule RoomDynamicSupervisor do
   use DynamicSupervisor
 
-  @me RoomDynamicSupervisor
+  @me :room_dynamic_supervisor
 
   def start_link(init_arg) do
     DynamicSupervisor.start_link(__MODULE__, init_arg, name: @me)
@@ -15,7 +15,7 @@ defmodule RoomDynamicSupervisor do
   end
 
   def new_room(room_name) do
-    child_spec = Room.child_spec(room_name)
+    child_spec = RoomServer.child_spec(room_name)
     DynamicSupervisor.start_child @me, child_spec
   end
 

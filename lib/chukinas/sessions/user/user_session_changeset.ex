@@ -1,5 +1,5 @@
 alias Chukinas.Sessions.UserSession
-alias Chukinas.Sessions.Room
+alias Chukinas.Sessions.RoomName
 
 defmodule UserSession.Changeset do
   use Ecto.Schema
@@ -82,7 +82,7 @@ defmodule UserSession.Changeset do
       nil ->
         changeset
       room_raw ->
-        room_slug = Room.Name.slugify(room_raw)
+        room_slug = RoomName.slugify(room_raw)
         changeset |> put_change(:room_slug, room_slug)
     end
   end

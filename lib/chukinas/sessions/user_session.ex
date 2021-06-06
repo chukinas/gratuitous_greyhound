@@ -1,5 +1,5 @@
 alias Chukinas.Sessions.UserSession
-alias Chukinas.Sessions.Room
+alias Chukinas.Sessions.RoomName
 
 defmodule UserSession do
 
@@ -20,7 +20,7 @@ defmodule UserSession do
     %__MODULE__{
       username: username,
       room: room,
-      pretty_room_name: Room.Name.pretty(room)
+      pretty_room_name: RoomName.pretty(room)
     }
   end
 

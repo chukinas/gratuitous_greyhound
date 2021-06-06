@@ -1,5 +1,6 @@
 alias Chukinas.Dreadnought.{Mission.PlayingSurface, Island}
-alias Chukinas.Geometry.{Size, Grid}
+alias Chukinas.Geometry.Grid
+alias Chukinas.PositionOrientationSize.Size
 
 defmodule PlayingSurface do
   @moduledoc """

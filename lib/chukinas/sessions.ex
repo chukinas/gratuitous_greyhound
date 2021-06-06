@@ -1,6 +1,5 @@
 alias ChukinasWeb.Router.Helpers, as: Routes
-alias Chukinas.Sessions.User
-alias Chukinas.Sessions.Room
+alias Chukinas.Sessions.{RoomName, User}
 
 defmodule Chukinas.Sessions do
   @moduledoc """
@@ -83,7 +82,7 @@ defmodule Chukinas.Sessions do
   when is_binary(room_name) do
     %User{user |
       room_name: room_name,
-      pretty_room_name: Room.Name.pretty(room_name)
+      pretty_room_name: RoomName.pretty(room_name)
     }
   end
 

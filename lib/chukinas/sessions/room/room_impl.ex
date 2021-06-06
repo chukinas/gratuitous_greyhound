@@ -1,7 +1,7 @@
-alias Chukinas.Sessions.Room.Impl
+alias Chukinas.Sessions.RoomImpl
 alias Chukinas.Util.Maps
 
-defmodule Impl do
+defmodule RoomImpl do
   use TypedStruct
 
   @type member :: {uuid :: String.t, name :: String.t}

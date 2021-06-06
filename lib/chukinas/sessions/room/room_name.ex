@@ -1,6 +1,6 @@
-alias Chukinas.Sessions.Room.Name
+alias Chukinas.Sessions.RoomName
 
-defmodule Name do
+defmodule RoomName do
 
   # TODO don't need this. An import statement would be fine
   #defmacro __using__(_opts) do
