@@ -28,6 +28,7 @@ defmodule ChukinasWeb.RoomComponent do
               ChukinasWeb.JoinComponent,
               id: :join,
               path_params: @path_params,
+              user: @user,
               user_session: @user_session )%>
       <% else %>
         <%= live_component(
