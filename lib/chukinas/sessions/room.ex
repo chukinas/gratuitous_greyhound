@@ -22,12 +22,6 @@ defmodule Room do
     )
   end
 
-  def add_member(room, member_name) do
-    room
-    |> get_room
-    |> GenServer.call({:add_member, member_name})
-  end
-
   def print_members(room) do
     room
     |> get_room
@@ -41,14 +35,14 @@ defmodule Room do
   end
 
   # *** *******************************
-  # *** Callbacks
+  # *** CALLBACKS
 
   def init(room_name) when is_binary(room_name) do
     {:ok, Room.Impl.new(room_name)}
   end
 
-  def handle_call({:add_member, member_name}, _from, room) do
-    {:ok, member_number, room} = Room.Impl.add_member(room, member_name)
+  def handle_call({:add_member, member_uuid, member_name}, _from, room) do
+    {:ok, member_number, room} = Room.Impl.add_member(room, member_uuid, member_name)
     {:reply, {:member_number, member_number}, room}
   end
 

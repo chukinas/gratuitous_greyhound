@@ -27,6 +27,8 @@ defmodule UserSession do
   # *** *******************************
   # *** GETTERS
 
+  def username(%__MODULE__{username: value}), do: value
+
   def room(%__MODULE__{room: value}), do: value
 
   def pretty_room_name(%__MODULE__{pretty_room_name: value}), do: value

@@ -4,9 +4,11 @@ alias Chukinas.Util.Maps
 defmodule Impl do
   use TypedStruct
 
+  @type member :: {uuid :: String.t, name :: String.t}
+
   typedstruct do
     field :name, String.t, enforce: true
-    field :members, [String.t], default: []
+    field :members, [member], default: []
   end
 
   # *** *******************************
@@ -32,8 +34,8 @@ defmodule Impl do
   # *** *******************************
   # *** API
 
-  def add_member(room, member_name) do
-    room = Maps.push(room, :members, member_name)
+  def add_member(room, member_uuid, member_name) do
+    room = Maps.push(room, :members, {member_uuid, member_name})
     member_number = room |> member_count
     {:ok, member_number, room}
   end
