@@ -1,5 +1,5 @@
 alias ChukinasWeb.Router.Helpers, as: Routes
-alias Chukinas.Sessions.{RoomName, User}
+alias Chukinas.Sessions.{Room, RoomName, User}
 
 defmodule Chukinas.Sessions do
   @moduledoc """
@@ -80,10 +80,19 @@ defmodule Chukinas.Sessions do
 
   def join_room(%User{} = user, room_name)
   when is_binary(room_name) do
-    %User{user |
+    {:member_number, player_id} =
+      # TODO maybe this function can accept a map instead?
+      Room.add_member(
+        room_name,
+        user |> User.uuid,
+        user |> User.name
+      )
+    user = %User{user |
       room_name: room_name,
-      pretty_room_name: RoomName.pretty(room_name)
+      pretty_room_name: RoomName.pretty(room_name),
+      player_id: player_id
     }
+    {:ok, user}
   end
 
   #def get_room(nil), do: ""

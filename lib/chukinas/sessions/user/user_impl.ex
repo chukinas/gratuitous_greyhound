@@ -29,6 +29,8 @@ defmodule User do
 
   def uuid(%__MODULE__{uuid: value}), do: value
 
+  def name(%__MODULE__{name: value}), do: value
+
   def room_name(%__MODULE__{room_name: value}), do: value
 
   def pretty_room_name(%__MODULE__{pretty_room_name: value}), do: value

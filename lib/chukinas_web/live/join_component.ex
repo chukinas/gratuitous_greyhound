@@ -1,4 +1,5 @@
 alias Chukinas.Sessions
+alias Chukinas.Sessions.UserSession
 
 defmodule ChukinasWeb.JoinComponent do
   use ChukinasWeb, :live_component
@@ -19,6 +20,7 @@ defmodule ChukinasWeb.JoinComponent do
     socket =
       socket
       |> assign(user_session: user_session)
+      |> assign(user: assigns.user)
       |> assign_changeset_and_url(changeset, false)
     {:ok, socket}
   end
@@ -38,8 +40,10 @@ defmodule ChukinasWeb.JoinComponent do
 
   def handle_event("join", %{"user_session" => params}, socket) do
     case Sessions.update_user_session(socket.assigns.user_session, params) do
+      # TODO use `with`?
       {:ok, user_session} ->
-        send self(), {:update_assigns, %{user_session: user_session, show_join_screen?: false}}
+        {:ok, user} = Sessions.join_room(socket.assigns.user, user_session |> UserSession.room)
+        send self(), {:update_assigns, %{user_session: user_session, show_join_screen?: false, user: user}}
         socket =
           socket
           |> push_patch(to: Sessions.path(socket, Sessions.room(user_session)))
