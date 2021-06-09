@@ -12,14 +12,10 @@ defmodule MissionBuilder do
       Unit.Builder.red_cruiser(1, pose_new(0, 0, 0), name: "Prince Eugene"),
       Unit.Builder.blue_merchant(2, pose_new(position_from_size(grid), 225), player_id: 2)
     ]
-    players = [
-      Player.new(1, :human),
-      Player.new(2, :ai)
-    ]
     Mission.new(grid, margin)
     |> Map.put(:islands, islands())
     |> Mission.put(units)
-    |> Mission.put(players)
+    |> Mission.put(human_and_ai_players())
     |> Mission.start
   end
 
@@ -56,14 +52,10 @@ defmodule MissionBuilder do
       #Unit.Builder.red_cruiser(2, pose_new(800, 155, 75), name: "Billy"),
       Unit.Builder.blue_merchant(3, pose_new(position_from_size(grid), 225), player_id: 2)
     ]
-    players = [
-      Player.new(1, :human),
-      Player.new(2, :ai)
-    ]
     Mission.new(grid, margin)
     |> Map.put(:islands, islands())
     |> Mission.put(units)
-    |> Mission.put(players)
+    |> Mission.put(human_and_ai_players())
     |> Mission.start
   end
 
@@ -84,4 +76,15 @@ defmodule MissionBuilder do
     grid = Grid.new(square_size, position_new(square_count_x, square_count_y))
     {grid, margin}
   end
+
+  # *** *******************************
+  # *** COMMON BUILDS
+
+  def human_and_ai_players do
+    [
+      Player.new_human(1, "PLACEHOLDER", "Billy Jane"),
+      Player.new_ai(2, "PLACEHOLDER", "R2-D2")
+    ]
+  end
+
 end

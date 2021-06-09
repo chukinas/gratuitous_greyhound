@@ -1,14 +1,13 @@
+alias Chukinas.Dreadnought.Player
 alias Chukinas.Sessions.RoomImpl
 alias Chukinas.Util.Maps
 
 defmodule RoomImpl do
   use TypedStruct
 
-  @type member :: {uuid :: String.t, name :: String.t}
-
   typedstruct do
     field :name, String.t, enforce: true
-    field :members, [member], default: []
+    field :players, [Player.t], default: []
   end
 
   # *** *******************************
@@ -23,26 +22,29 @@ defmodule RoomImpl do
   # *** *******************************
   # *** GETTERS
 
-  def members(%__MODULE__{members: value}), do: value
+  def players(%__MODULE__{players: value}), do: value
 
   def member_count(room) do
     room
-    |> members
+    |> players
     |> Enum.count
   end
 
   # *** *******************************
   # *** API
 
-  def add_member(room, member_uuid, member_name) do
-    room = Maps.push(room, :members, {member_uuid, member_name})
-    member_number = room |> member_count
-    {:ok, member_number, room}
+  # TODO rename `add_player`?
+  def add_member(room, player_uuid, player_name) do
+    player_id = 1 + member_count(room)
+    player = Player.new_human(player_id, player_uuid, player_name)
+    room = Maps.push(room, :players, player)
+           |> IOP.inspect
+    {:ok, player_id, room}
   end
 
   def print_members(room) do
     room
-    |> members
+    |> players
     |> Enum.reverse
     |> Stream.with_index(1)
     |> Enum.each(fn {member_name, number} -> IO.puts("#{number}: #{member_name}") end)
