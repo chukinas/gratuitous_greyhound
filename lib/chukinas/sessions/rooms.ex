@@ -1,6 +1,6 @@
-alias Chukinas.Sessions.{Room, RoomRegistry, RoomDynamicSupervisor}
+alias Chukinas.Sessions.{Rooms, RoomRegistry, RoomDynamicSupervisor}
 
-defmodule Room do
+defmodule Rooms do
 
   # *** *******************************
   # *** API

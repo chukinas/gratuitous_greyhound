@@ -1,4 +1,4 @@
-alias Chukinas.Sessions.{RoomServer, RoomRegistry, RoomImpl}
+alias Chukinas.Sessions.{RoomServer, RoomRegistry, Room}
 
 defmodule RoomServer do
   use GenServer
@@ -37,16 +37,16 @@ defmodule RoomServer do
   # *** CALLBACKS
 
   def init(room_name) when is_binary(room_name) do
-    {:ok, RoomImpl.new(room_name)}
+    {:ok, Room.new(room_name)}
   end
 
   def handle_call({:add_member, member_uuid, member_name}, _from, room) do
-    {:ok, member_number, room} = RoomImpl.add_member(room, member_uuid, member_name)
+    {:ok, member_number, room} = Room.add_member(room, member_uuid, member_name)
     {:reply, {:member_number, member_number}, room}
   end
 
   def handle_cast(:print_members, room) do
-    RoomImpl.print_members(room)
+    Room.print_members(room)
     {:noreply, room}
   end
 

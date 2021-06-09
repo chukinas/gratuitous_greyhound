@@ -1,8 +1,8 @@
 alias Chukinas.Dreadnought.Player
-alias Chukinas.Sessions.RoomImpl
+alias Chukinas.Sessions.Room
 alias Chukinas.Util.Maps
 
-defmodule RoomImpl do
+defmodule Room do
   use TypedStruct
 
   typedstruct do
