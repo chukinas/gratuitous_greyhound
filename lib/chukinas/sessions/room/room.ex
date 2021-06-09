@@ -24,7 +24,15 @@ defmodule Room do
   # *** *******************************
   # *** GETTERS
 
+  def pretty_name(%__MODULE__{pretty_name: value}), do: value
+
   def players(%__MODULE__{players: value}), do: value
+
+  def players_sorted(room) do
+    room
+    |> players
+    |> Enum.sort_by(&Player.id/1, :asc)
+  end
 
   def member_count(room) do
     room

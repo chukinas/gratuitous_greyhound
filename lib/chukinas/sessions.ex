@@ -1,5 +1,5 @@
 alias ChukinasWeb.Router.Helpers, as: Routes
-alias Chukinas.Sessions.{Rooms, RoomName, User, UserRegistry}
+alias Chukinas.Sessions.{Rooms, User, UserRegistry}
 
 defmodule Chukinas.Sessions do
   @moduledoc """
@@ -89,7 +89,6 @@ defmodule Chukinas.Sessions do
       )
     user = %User{user |
       room_name: room_name,
-      pretty_room_name: RoomName.pretty(room_name),
       player_id: player_id
     }
     {:ok, user}

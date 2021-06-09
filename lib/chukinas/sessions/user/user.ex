@@ -11,7 +11,6 @@ defmodule User do
     field :uuid, String.t(), enforce: true
     field :name, String.t()
     field :room_name, String.t()
-    field :pretty_room_name, String.t()
     field :player_id, integer
     field :players, [Player.t]
   end
@@ -34,7 +33,6 @@ defmodule User do
 
   def room_name(%__MODULE__{room_name: value}), do: value
 
-  def pretty_room_name(%__MODULE__{pretty_room_name: value}), do: value
 
   # *** *******************************
   # *** SETTERS
@@ -46,7 +44,6 @@ defmodule User do
     new_values = %{
       name: user_session |> UserSession.username,
       room_name: user_session |> UserSession.room,
-      pretty_room_name: user_session |> UserSession.pretty_room_name,
     }
     Map.merge(user, new_values)
   end

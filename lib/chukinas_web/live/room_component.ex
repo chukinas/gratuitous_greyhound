@@ -36,6 +36,7 @@ defmodule ChukinasWeb.RoomComponent do
               ChukinasWeb.LobbyComponent,
               id: :lobby,
               room: @room,
+              user: @user,
               user_session: @user_session )%>
       <% end %>
     </div>
