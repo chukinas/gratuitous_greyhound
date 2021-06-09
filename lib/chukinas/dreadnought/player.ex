@@ -10,21 +10,30 @@ defmodule Player do
   typedstruct enforce: true do
     field :id, integer()
     field :type, :human | :ai
+    field :uuid, String.t
+    field :name, String.t
   end
 
   # *** *******************************
   # *** NEW
 
-  def new(id, type) when type in ~w(human ai)a do
+  # TODO `type` should be an option
+  def new(id, type, uuid, name) when type in ~w(human ai)a do
     %__MODULE__{
       id: id,
-      type: type
+      type: type,
+      uuid: uuid,
+      name: name
     }
   end
 
   # *** *******************************
   # *** GETTERS
 
-  def id(%__MODULE__{id: id}), do: id
+  def id(%__MODULE__{id: value}), do: value
+  def type(%__MODULE__{type: value}), do: value
+  def uuid(%__MODULE__{uuid: value}), do: value
+  def name(%__MODULE__{name: value}), do: value
   def ai?(%__MODULE__{type: type}), do: type === :ai
+
 end

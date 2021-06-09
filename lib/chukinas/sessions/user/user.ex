@@ -1,4 +1,3 @@
-# TODO rename file
 alias Chukinas.Sessions.{User, UserSession}
 
 defmodule User do

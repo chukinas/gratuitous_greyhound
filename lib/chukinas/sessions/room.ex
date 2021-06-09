@@ -16,8 +16,11 @@ defmodule Room do
 
   defp get_room_pid(room_name) when is_binary(room_name) do
     case RoomRegistry.pid(room_name) do
-      nil -> RoomDynamicSupervisor.new_room(room_name)
-      pid -> pid
+      nil ->
+        {:ok, pid} = RoomDynamicSupervisor.new_room(room_name)
+        pid
+      pid ->
+        pid
     end
   end
 
