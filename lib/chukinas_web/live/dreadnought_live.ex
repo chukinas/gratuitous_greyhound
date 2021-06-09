@@ -47,4 +47,11 @@ defmodule ChukinasWeb.DreadnoughtLive do
     {:noreply, socket}
   end
 
+  # TODO does the user struct still need the room name, etc?
+  @impl true
+  def handle_info({:update_room, room}, socket) do
+    socket = assign(socket, room: room)
+    {:noreply, socket}
+  end
+
 end

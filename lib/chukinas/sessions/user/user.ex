@@ -1,4 +1,5 @@
 alias Chukinas.Sessions.{User, UserSession}
+alias Chukinas.Dreadnought.Player
 
 defmodule User do
 
@@ -12,6 +13,7 @@ defmodule User do
     field :room_name, String.t()
     field :pretty_room_name, String.t()
     field :player_id, integer
+    field :players, [Player.t]
   end
 
   # *** *******************************

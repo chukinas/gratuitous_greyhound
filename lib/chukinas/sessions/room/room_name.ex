@@ -2,18 +2,6 @@ alias Chukinas.Sessions.RoomName
 
 defmodule RoomName do
 
-  # TODO don't need this. An import statement would be fine
-  #defmacro __using__(_opts) do
-  #  quote do
-  #    import Name, only: [
-  #      slugify: 1,
-  #      pretty: 1,
-  #      count_alnum: 1,
-  #      to_alnum: 1
-  #    ]
-  #  end
-  #end
-
   def slugify(nil), do: ""
   def slugify(string) do
     string

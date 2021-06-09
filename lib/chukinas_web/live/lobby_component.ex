@@ -3,10 +3,13 @@ defmodule ChukinasWeb.LobbyComponent do
 
   @impl true
   def render(assigns) do
+    IOP.inspect(assigns, "lobby comp, render")
     ~L"""
-    <div id="lobbyComponent">
-      <p>Your room: <b><%= @user_session.pretty_room_name %></b></p>
-    </div>
+    <%= if @room do %>
+      <div id="lobbyComponent">
+        <p>Your room: <b><%= @room.pretty_name %></b></p>
+      </div>
+    <% end %>
     """
   end
 

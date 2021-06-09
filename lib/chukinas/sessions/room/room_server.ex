@@ -1,4 +1,5 @@
 alias Chukinas.Sessions.{RoomServer, RoomRegistry, Room}
+alias Chukinas.Sessions.User.Registry, as: UserRegistry
 
 defmodule RoomServer do
   use GenServer
@@ -21,18 +22,6 @@ defmodule RoomServer do
     )
   end
 
-  def print_members(room) do
-    room
-    |> get_room
-    |> GenServer.cast(:print_members)
-  end
-
-  defp get_room(room) when is_pid(room), do: room
-
-  defp get_room(room_name) when is_binary(room_name) do
-    RoomRegistry.build_name(room_name)
-  end
-
   # *** *******************************
   # *** CALLBACKS
 
@@ -41,13 +30,20 @@ defmodule RoomServer do
   end
 
   def handle_call({:add_member, member_uuid, member_name}, _from, room) do
-    {:ok, member_number, room} = Room.add_member(room, member_uuid, member_name)
+    {:ok, member_number, room} = Room.add_player(room, member_uuid, member_name)
+    send_room_to_players(room)
     {:reply, {:member_number, member_number}, room}
   end
 
-  def handle_cast(:print_members, room) do
-    Room.print_members(room)
-    {:noreply, room}
+  # *** *******************************
+  # *** FUNCTIONS
+
+  defp send_room_to_players(room) do
+    for uuid <- Room.player_uuids(room) do
+      for pid <- UserRegistry.pids(uuid) do
+        send pid, {:update_room, room}
+      end
+    end
   end
 
 end

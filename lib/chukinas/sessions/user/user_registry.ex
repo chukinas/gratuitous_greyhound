@@ -16,8 +16,21 @@ defmodule User.Registry do
     Registry.register(@me, user_uuid, nil)
   end
 
+  def pids(user_uuid) do
+    #IOP.inspect Registry.keys(@me), "User reg, pids, keys"
+    for {pid, _value} <- Registry.lookup(@me, user_uuid), do: pid
+  end
+
   def count do
     Registry.count(@me)
+  end
+
+  def all_uuids do
+    Registry.select @me, [{
+      {:"$1", :_, :_},
+      [],
+      [:"$1"]
+    }]
   end
 
 end
