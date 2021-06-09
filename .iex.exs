@@ -5,4 +5,4 @@ alias Chukinas.Sessions.RoomRegistry, as: Reg
 alias Chukinas.Sessions.Room
 alias Chukinas.Sessions.RoomDynamicSupervisor, as: DS
 
-alias Chukinas.Sessions.User.Registry, as: UR
+alias Chukinas.Sessions.UserRegistry, as: UR

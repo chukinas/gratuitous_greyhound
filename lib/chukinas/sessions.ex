@@ -1,5 +1,5 @@
 alias ChukinasWeb.Router.Helpers, as: Routes
-alias Chukinas.Sessions.{Rooms, RoomName, User}
+alias Chukinas.Sessions.{Rooms, RoomName, User, UserRegistry}
 
 defmodule Chukinas.Sessions do
   @moduledoc """
@@ -14,7 +14,7 @@ defmodule Chukinas.Sessions do
 
   def new_user do
     user = User.new()
-    User.Registry.register(user |> User.uuid)
+    UserRegistry.register(user |> User.uuid)
     user
   end
 

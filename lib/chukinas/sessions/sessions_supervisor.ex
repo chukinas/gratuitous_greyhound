@@ -1,5 +1,5 @@
 alias Chukinas.SessionSupervisor
-#alias Chukinas.Sessions.Room
+alias Chukinas.Sessions.{RoomRegistry, RoomDynamicSupervisor, UserRegistry}
 
 defmodule SessionSupervisor do
   use Supervisor
@@ -10,9 +10,9 @@ defmodule SessionSupervisor do
 
   def init(_init_arg) do
     children = [
-      Chukinas.Sessions.RoomRegistry,
-      Chukinas.Sessions.RoomDynamicSupervisor,
-      Chukinas.Sessions.User.Registry,
+      RoomRegistry,
+      RoomDynamicSupervisor,
+      UserRegistry,
     ]
     Supervisor.init(children, strategy: :one_for_one)
   end

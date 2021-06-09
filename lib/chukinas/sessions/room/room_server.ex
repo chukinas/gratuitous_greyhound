@@ -1,5 +1,5 @@
 alias Chukinas.Sessions.{RoomServer, RoomRegistry, Room}
-alias Chukinas.Sessions.User.Registry, as: UserRegistry
+alias Chukinas.Sessions.UserRegistry
 
 defmodule RoomServer do
   use GenServer

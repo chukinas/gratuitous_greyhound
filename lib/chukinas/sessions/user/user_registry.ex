@@ -1,6 +1,6 @@
-alias Chukinas.Sessions.User
+alias Chukinas.Sessions.UserRegistry
 
-defmodule User.Registry do
+defmodule UserRegistry do
 
   @me :user_registry
 
