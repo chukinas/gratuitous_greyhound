@@ -8,7 +8,6 @@ defmodule Room do
   def add_member(room_name, member_uuid, member_name) do
     room_name
     |> get_room_pid
-    |> IOP.inspect("room pid")
     |> GenServer.call({:add_member, member_uuid, member_name})
   end
 

@@ -23,7 +23,7 @@
         <div>
           <%= label f, :username, class: Class.label() %>
           <div class="mt-1 relative rounded-md shadow-sm">
-            <%= Component.text_input f, :username %>
+            <%= Component.text_input f, :username, autofocus: true %>
             <%= Component.error_icon_text_input f, :username %>
           </div>
           <%= Component.error_paragraph f, :username %>

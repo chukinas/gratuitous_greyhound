@@ -14,7 +14,7 @@ defmodule Chukinas.Sessions do
 
   def new_user do
     user = User.new()
-    User.Registry.register(user |> User.uuid |> IOP.inspect)
+    User.Registry.register(user |> User.uuid)
     user
   end
 

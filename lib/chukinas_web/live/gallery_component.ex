@@ -27,10 +27,9 @@ defmodule ChukinasWeb.GalleryComponent do
 
   def map_animation(animation) do
     %{
-      struct: Animation.repeat(animation) |> IO.inspect(structs: false),
-      rect: Animation.bounding_rect(animation) |> IO.inspect(structs: false)
+      struct: Animation.repeat(animation),
+      rect: Animation.bounding_rect(animation)
     }
-    |> IOP.inspect
   end
 
 end
