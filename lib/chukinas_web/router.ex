@@ -1,3 +1,5 @@
+alias Chukinas.Sessions
+
 defmodule ChukinasWeb.Router do
   use ChukinasWeb, :router
 
@@ -8,6 +10,7 @@ defmodule ChukinasWeb.Router do
     plug :put_root_layout, {ChukinasWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :put_uuid_in_session
   end
 
   pipeline :api do
@@ -46,4 +49,19 @@ defmodule ChukinasWeb.Router do
       live_dashboard "/dashboard", metrics: ChukinasWeb.Telemetry
     end
   end
+
+  # TODO move this to a module?
+  def put_uuid_in_session(conn, _opts) do
+    {conn, uuid} =
+      case conn.req_cookies["uuid"] do
+        nil ->
+          uuid = Sessions.new_uuid()
+          conn = put_resp_cookie(conn, "uuid", uuid)
+          {conn, uuid}
+        uuid ->
+          {conn, uuid}
+      end
+    put_session(conn, :uuid, uuid)
+  end
+
 end

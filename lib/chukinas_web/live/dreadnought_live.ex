@@ -5,7 +5,9 @@ defmodule ChukinasWeb.DreadnoughtLive do
   use ChukinasWeb, :live_view
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(_params, session, socket) do
+    IOP.inspect socket.private, "dread live socket privaet"
+    IOP.inspect session, "dread live session"
     socket = if socket.connected? do
       socket
       |> assign(user: Sessions.new_user())

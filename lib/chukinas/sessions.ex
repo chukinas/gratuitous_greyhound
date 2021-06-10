@@ -18,6 +18,10 @@ defmodule Chukinas.Sessions do
     user
   end
 
+  def new_uuid do
+    Ecto.UUID.generate()
+  end
+
   # *** *******************************
   # *** UserSession
 
