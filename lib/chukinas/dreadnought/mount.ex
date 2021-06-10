@@ -1,34 +1,32 @@
 alias Chukinas.Dreadnought.Mount
-alias Chukinas.Geometry.Position
 
 defmodule Mount do
+
+  use Chukinas.PositionOrientationSize
 
   # *** *******************************
   # *** TYPES
 
-  use TypedStruct
   typedstruct enforce: true do
     field :id, integer()
-    field :position, Position.t()
+    position_fields()
   end
 
   # *** *******************************
   # *** NEW
 
-  def new(id, position) do
-    %__MODULE__{id: id, position: position}
+  def new(id, location) do
+    fields =
+      %{ id: id }
+      |> merge_position(location)
+    struct!(__MODULE__, fields)
   end
-
-  # *** *******************************
-  # *** GETTERS
-
-  def position(%__MODULE__{position: position}), do: position
 
   # *** *******************************
   # *** API
 
   def scale(%__MODULE__{} = mount, scale) do
-    Map.update!(mount, :position, &Position.multiply(&1, scale))
+    position_multiply(mount, scale)
   end
 
   # *** *******************************
@@ -40,9 +38,9 @@ defmodule Mount do
       col = fn string -> color(string, :cust_struct, opts) end
       concat [
         col.("#Mount-#{mount.id}<"),
-        to_doc(mount.position.x |> round, opts),
+        to_doc(mount.x |> round, opts),
         ", ",
-        to_doc(mount.position.y |> round, opts),
+        to_doc(mount.y |> round, opts),
         col.(">")
       ]
     end

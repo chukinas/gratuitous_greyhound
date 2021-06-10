@@ -1,0 +1,103 @@
+<%# 'show markers' toggle %>
+<div class="my-4">
+  <%= Component.toggle(
+        "toggleShowMarkers",
+        label: (if @show_markers?, do: "Markers Shown", else: "Markers Hidden"),
+        is_enabled?: @show_markers?,
+        phx_click: "toggle_show_markers" )%>
+</div>
+
+
+
+
+
+<%# grid %>
+<%# based on horizontal link cards %>
+<div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+
+  <%# SPRITE ANIMATIONS %>
+  <%= for animation <- @animations do %>
+  <%# single animation card %>
+  <div class="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex flex-col items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-yellow-500">
+
+
+    <%# SPRITE ANIMATION %>
+    <div 
+      style="
+        width: <%= animation.rect.width %>px;
+        height: <%= animation.rect.height %>px;
+      "
+    >
+      <div 
+        class="relative"
+        style="
+          margin-left: <%= -animation.rect.x %>px;
+          margin-top: <%= -animation.rect.y %>px;
+        "
+      >
+        <%= ChukinasWeb.DreadnoughtView.render "animation.html",
+          socket: @socket,
+          animation: animation.struct %>
+        <%= if @show_markers? do %>
+          <%= ChukinasWeb.DreadnoughtView.center %{x: 0, y: 0} %>
+        <% end %>
+      </div>
+    </div>
+
+
+    <%# DESCRIPTIVE TEXT %>
+    <div class="flex-1 min-w-0">
+      <a href="#" class="focus:outline-none">
+        <span class="absolute inset-0" aria-hidden="true"></span>
+        <p class="text-sm font-medium text-gray-900">
+          <%= animation.struct.name %>
+        </p>
+      </a>
+    </div>
+  </div>
+  <% end %>
+
+  <%# SPRITES %>
+  <%= for sprite <- @sprites do %>
+  <%# single sprite card %>
+  <div class="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex flex-col items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-yellow-500">
+
+
+    <%# SPRITE %>
+    <div 
+      class="bg-gray-400"
+      style="
+        width: <%= sprite.rect.width %>px;
+        height: <%= sprite.rect.height %>px;
+      "
+    >
+      <div 
+        class="relative"
+        style="
+          margin-left: <%= -sprite.rect.x %>px;
+          margin-top: <%= -sprite.rect.y %>px;
+        "
+      >
+        <%= ChukinasWeb.DreadnoughtView.relative_sprite sprite, @socket %>
+        <%= if @show_markers? do %>
+          <%= ChukinasWeb.DreadnoughtView.center %{x: 0, y: 0} %>
+          <%= for mount <- sprite.mounts do %>
+            <%= ChukinasWeb.DreadnoughtView.center mount, type: :mount %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+
+    <%# DESCRIPTIVE TEXT %>
+    <div class="flex-1 min-w-0">
+      <a href="#" class="focus:outline-none">
+        <span class="absolute inset-0" aria-hidden="true"></span>
+        <p class="text-sm font-medium text-gray-900">
+          <%= sprite.name %>
+        </p>
+      </a>
+    </div>
+  </div>
+  <% end %>
+</div>

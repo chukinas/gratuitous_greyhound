@@ -1,11 +1,14 @@
 alias Chukinas.Dreadnought.{Unit, CombatAction, Turret, Animation}
-alias Chukinas.Geometry.{Collide, Straight, Pose}
+alias Chukinas.Collide
 alias Chukinas.Util.IdList
-alias Chukinas.LinearAlgebra.{Vector, CSys}
+alias Chukinas.Paths
+alias Chukinas.LinearAlgebra.Vector
 alias Unit.Event, as: Ev
 
 defmodule CombatAction do
 
+  use Chukinas.PositionOrientationSize
+  use Chukinas.LinearAlgebra
   alias CombatAction.Accumulator, as: Acc
 
   # *** *******************************
@@ -53,8 +56,8 @@ defmodule CombatAction do
     attacker = Acc.attacker(acc)
     desired_angle =
       target_vector
-      |> CSys.Conversion.convert_from_world_vector(attacker, Turret.position_csys(turret))
-      |> Vector.angle
+      |> vector_transform_to([attacker, turret |> coord_from_position])
+      |> angle_from_vector
     case Turret.normalize_desired_angle(turret, desired_angle) do
       {:ok, angle} -> {:ok, angle}
       {_, _angle} -> {:fail, :out_of_fire_arc}
@@ -64,27 +67,22 @@ defmodule CombatAction do
   defp path_to_target(%Acc{} = acc, target_vector, turret_id) do
     turret = Acc.turret(acc, turret_id)
     attacker = Acc.attacker(acc)
-    turret_vector = CSys.Conversion.convert_to_world_vector(turret, attacker)
+    # TODO rename turret_coord
+    turret_vector = vector_transform_from(turret, attacker)
     path_vector = Vector.subtract(target_vector, turret_vector)
     angle = Vector.angle(path_vector)
-    path_start_pose = Pose.new(turret_vector, angle)
+    path_start_pose = pose_new(turret_vector, angle)
     range = Vector.magnitude(path_vector)
-    path = Straight.new(path_start_pose, range)
-    if Collide.avoids?(path, Acc.islands(acc)) do
+    path = Paths.straight_new(path_start_pose, range)
+    if Collide.avoids_collision_with?(path, Acc.islands(acc)) do
       {:ok, path}
     else
       {:fail, :intervening_terrain}
     end
   end
 
-  defp range_to_target(%Straight{} = path) do
-    #turret = Acc.turret(acc, turret_id)
-    #attacker = Acc.attacker(acc)
-    #magnitude =
-    #  target_vector
-    #  |> CSys.Conversion.convert_from_world_vector(attacker, Turret.position_csys(turret))
-    #  |> Vector.magnitude
-    range = Straight.length(path)
+  defp range_to_target(path) do
+    range = Paths.traversal_distance(path)
     if range <= 1000 do
       {:ok, range}
     else
@@ -108,12 +106,13 @@ defmodule CombatAction do
     pose = muzzle_flash_pose(attacker, turret_id)
     ordnance_hit_angle =
       pose
-      |> Pose.flip
-      |> Pose.angle
+      |> flip_angle
+      |> angle
     ordnance_hit_pose =
       target
-      |> Unit.position
-      |> Pose.new(ordnance_hit_angle)
+      # TODO position_new is redundant
+      |> position_new
+      |> pose_new(ordnance_hit_angle)
     animations = [
       Animation.Build.large_muzzle_flash(pose, delay_discharge),
       # TODO calculate the ordnance flight time instead of guessing
@@ -125,12 +124,11 @@ defmodule CombatAction do
   def muzzle_flash_pose(unit, turret_id) do
     # TODO move to Unit
     turret = Unit.turret(unit, turret_id)
-    position_vector =
-      turret
-      |> Turret.gun_barrel_vector
-      |> CSys.Conversion.convert_to_world_vector(unit, turret)
-    angle = CSys.Conversion.sum_angles(turret, unit)
-    Pose.new(position_vector, angle)
+    angle = angle_from_sum(turret, unit)
+    turret
+    |> Turret.gun_barrel_vector
+    |> vector_transform_from([turret, unit])
+    |> pose_new(angle)
   end
 
   def move_turret_to_neutral(acc, _turret_id) do

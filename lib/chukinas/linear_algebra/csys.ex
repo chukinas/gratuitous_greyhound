@@ -1,7 +1,8 @@
-alias Chukinas.Geometry.{Trig}
 alias Chukinas.LinearAlgebra.{CSys, Vector, Matrix, HasCsys}
 
 defmodule CSys do
+
+  use Chukinas.Math
 
   use TypedStruct
   typedstruct enforce: true do
@@ -17,7 +18,7 @@ defmodule CSys do
   def new({x, y}), do: new(x, y, 0)
   def new(x, y), do: new(x, y, 0)
   def new(x, y, deg) do
-    {sin, cos} = Trig.sin_and_cos(deg)
+    {sin, cos} = sin_and_cos(deg)
     dir = {
       {cos, -sin},
       {sin,  cos}
@@ -34,11 +35,12 @@ defmodule CSys do
   def position(%__MODULE__{position: pos}), do: pos
   def angle(%__MODULE__{} = csys) do
     csys
-    |> sin_and_cos
+    |> sin_and_cos_from_orientation
     |> Vector.from_sin_and_cos
     |> Vector.angle
   end
-  def sin_and_cos(%__MODULE__{rotation: rotation}) do
+
+  def sin_and_cos_from_orientation(%__MODULE__{rotation: rotation}) do
     elem(rotation, 1)
   end
 
@@ -70,13 +72,13 @@ defmodule CSys do
   def transform(%__MODULE__{} = trans, vector) do
     trans.rotation
     |> Matrix.mult(vector)
-    |> Vector.add(trans.position)
+    |> Vector.sum(trans.position)
   end
 
   def translate(%__MODULE__{} = trans, vector) do
     trans.rotation
     |> Matrix.mult(vector)
-    |> Vector.add(trans.position)
+    |> Vector.sum(trans.position)
   end
 
   # *** *******************************

@@ -1,11 +1,12 @@
 alias Chukinas.Dreadnought.{Mission, Unit}
-alias Chukinas.Geometry.{Path, Pose, Position, Rect, Straight}
+alias Chukinas.Geometry.{Rect}
+alias Chukinas.PositionOrientationSize, as: POS
 
 defmodule DreadnoughtHelpers do
   defmacro __using__(_options) do
     quote do
       alias Chukinas.Dreadnought.{Arena, Mission, Unit, Spritesheet, Sprite}
-      alias Chukinas.Geometry.{Path, Pose, Position, Rect, Straight, Trig, Grid}
+      alias Chukinas.Geometry.{Rect, Grid}
       alias Chukinas.Svg
       import DreadnoughtHelpers, only: :functions
     end
@@ -27,7 +28,7 @@ defmodule DreadnoughtHelpers do
   # *** *******************************
   # *** BUILDERS
 
-  def unit(), do: Unit.new(1, start_pose: Pose.new(0, 500, 0))
+  def unit(), do: Unit.new(1, start_pose: POS.pose_new(0, 500, 0))
   def arena(), do: Rect.new(1000, 1000)
 
   # *** *******************************

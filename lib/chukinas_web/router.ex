@@ -1,3 +1,5 @@
+alias Chukinas.Sessions
+
 defmodule ChukinasWeb.Router do
   use ChukinasWeb, :router
 
@@ -10,6 +12,11 @@ defmodule ChukinasWeb.Router do
     plug :put_secure_browser_headers
   end
 
+  pipeline :dreadnought do
+    plug :browser
+    plug :put_uuid_in_session
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -19,15 +26,15 @@ defmodule ChukinasWeb.Router do
     get "/", PageController, :index
     get "/minis", PageController, :minis
     get "/music", PageController, :music
-    live "/dreadnought", DreadnoughtLive, :play
-    live "/dreadnought/disclaimer", DreadnoughtLive, :disclaimer
-    live "/dreadnought/play", DreadnoughtLive, :play
-    live "/dreadnought/gameover", DreadnoughtLive, :game_over
-    live "/dreadnought/dev", DreadnoughtLive, :dev
-    live "/dreadnought/grid", DreadnoughtLive, :grid
-    live "/dreadnought/sprites", DreadnoughtResourcesLive
-    live "/proofofconcept/change_tracking_test", ChangeTrackingTestLive
-    live "/proofofconcept/zoompan", ZoomPanLive
+  end
+
+  scope "/dreadnought", ChukinasWeb do
+    pipe_through :dreadnought
+    live "/", DreadnoughtLive
+    live "/rooms", DreadnoughtLive, :room
+    live "/rooms/:room", DreadnoughtLive, :room
+    live "/play", DreadnoughtPlayLive
+    live "/gallery", DreadnoughtLive, :gallery
   end
 
   # Other scopes may use custom stacks.
@@ -50,4 +57,19 @@ defmodule ChukinasWeb.Router do
       live_dashboard "/dashboard", metrics: ChukinasWeb.Telemetry
     end
   end
+
+  # TODO move this to a module?
+  def put_uuid_in_session(conn, _opts) do
+    {conn, uuid} =
+      case conn.req_cookies["uuid"] do
+        nil ->
+          uuid = Sessions.new_uuid()
+          conn = put_resp_cookie(conn, "uuid", uuid, path: "/dreadnought")
+          {conn, uuid}
+        uuid ->
+          {conn, uuid}
+      end
+    put_session(conn, :uuid, uuid)
+  end
+
 end

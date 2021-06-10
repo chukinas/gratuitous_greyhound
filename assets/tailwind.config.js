@@ -5,6 +5,7 @@ module.exports = {
     cursor: {
       pointer: 'pointer',
       grab: 'grab',
+      'not-allowed': 'not-allowed',
     },
     scale: {
       '25': '.25',
@@ -24,10 +25,14 @@ module.exports = {
   },
   variants: {
     extend: {
+      backgroundColor: ['disabled'],
+      cursor: ['disabled'],
       opacity: ['disabled'],
       padding: ['hover'],
-      textColor: ['visited']
+      textColor: ['visited', 'disabled']
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
 }

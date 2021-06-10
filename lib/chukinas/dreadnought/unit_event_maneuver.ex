@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Unit}
-alias Chukinas.Geometry.Path
+alias Chukinas.Paths
 alias Chukinas.Svg
 alias Unit.Event, as: Ev
 
@@ -18,7 +18,7 @@ defmodule Ev.Maneuver do
 
   typedstruct enforce: true do
     field :id, integer(), default: 1
-    field :geo_path, Path.t()
+    field :geo_path, Paths.t()
     field :svg_path, String.t()
     # TODO rename these to delay and duration
     field :fractional_start_time, number()
@@ -44,7 +44,7 @@ defmodule Ev.Maneuver do
   # *** GETTERS
 
   def end_pose(%{geo_path: path}) do
-    Path.get_end_pose(path)
+    Paths.get_end_pose(path)
   end
 
   # *** *******************************

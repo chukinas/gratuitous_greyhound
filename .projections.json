@@ -1,9 +1,10 @@
 {
     "assets/js/dreadnought/*.js": { "type": "hook" },
+    "lib/chukinas/*.ex": { "type": "chukinas" },
     "lib/chukinas/dreadnought/*.ex": { "type": "dreadnought" },
     "lib/chukinas/geometry/*.ex": { "type": "geometry" },
     "lib/chukinas/linear_algebra/*.ex": { "type": "algebra" },
     "lib/chukinas_web/templates/dreadnought/*.html.leex": { "type": "template" },
-    "lib/chukinas_web/live/dreadnought/*_component.html.leex": { "type": "component" },
-    "test/chukinas/dreadnought/*_test.exs": { "type": "test" },
+    "lib/chukinas_web/live/dreadnought/*_component.ex": { "type": "component" },
+    "test/chukinas/*_test.exs": { "type": "test" },
 }

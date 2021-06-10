@@ -1,0 +1,36 @@
+<div 
+  class="flex items-center"
+>
+
+  <button 
+    id="<%= @id %>"
+    type="button" 
+    class="<%= if @is_enabled?, do: "bg-yellow-700", else: "bg-gray-200" %> relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500" 
+    role="switch" 
+    phx-click="<%= @phx_click %>"
+    <%= if @phx_target do %>
+      phx-target="<%= @phx_target %>"
+    <% end %>
+  >
+    <span class="sr-only">Use setting</span>
+    <!-- Enabled: "translate-x-5", Not Enabled: "translate-x-0" -->
+
+    <span 
+      aria-hidden="true" 
+      class="<%= if @is_enabled?, do: "translate-x-5", else: "translate-x-0" %> translate-x-0 pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200"
+      ></span>
+  </button>
+
+  <%# label %>
+  <%= if @label do %>
+  <span class="ml-3" id="annual-billing-label">
+    <label
+      for="<%= @id %>"
+      class="text-sm font-bold select-none cursor-pointer <%= if @is_enabled?, do: "text-yellow-900", else: "text-gray-500" %>">
+      <%= @label %>
+    </label>
+    <span class="text-sm text-gray-500 hidden">(Save 10%)</span>
+  </span>
+  <% end %>
+
+</div>

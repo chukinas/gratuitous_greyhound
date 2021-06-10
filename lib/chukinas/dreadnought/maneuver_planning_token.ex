@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{ManeuverPlanning, Unit}
-alias Chukinas.Geometry.{GridSquare, Position}
+alias Chukinas.Geometry.GridSquare
 
 # TODO rename ManeuverPlanning.Data?
 defmodule ManeuverPlanning.Token do
@@ -19,7 +19,8 @@ defmodule ManeuverPlanning.Token do
     field :current_depth, integer()
     field :target_depth, integer()
     field :get_squares, (Unit.t() -> [GridSquare.t()])
-    field :move_to, (Unit.t(), Position.t() -> Unit.t())
+    # TODO change any to Position
+    field :move_to, (Unit.t(), any -> Unit.t())
   end
 
   # *** *******************************
@@ -43,6 +44,7 @@ defmodule ManeuverPlanning.Token do
   # *** GETTERS
 
   def square(%__MODULE__{original_square: square}), do: square
+
   def position(%__MODULE__{original_square: square}), do: square.center
 
   # *** *******************************

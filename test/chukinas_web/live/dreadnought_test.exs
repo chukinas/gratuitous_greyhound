@@ -1,7 +1,7 @@
 defmodule ChukinasWeb.DreadnoughtLiveTest do
   use ChukinasWeb.ConnCase
 
-  import Phoenix.LiveViewTest
+  #import Phoenix.LiveViewTest
 
   # *** *******************************
   # *** ACTIONS
@@ -102,11 +102,11 @@ defmodule ChukinasWeb.DreadnoughtLiveTest do
   # *** *******************************
   # *** TESTS
 
-  test "Two ships on screen", %{conn: conn} do
-    {:ok, view, _html} = live(conn, "/dreadnought/grid")
-    assert has_element?(view, "#unit-1")
-    assert has_element?(view, "#unit-2")
-  end
+  #test "Two ships on screen", %{conn: conn} do
+  #  {:ok, view, _html} = live(conn, "/dreadnought/grid")
+  #  assert has_element?(view, "#unit-1")
+  #  assert has_element?(view, "#unit-2")
+  #end
 
   #   test "Start game.", %{conn: conn} do
   #     {:ok, view, _html} = live(conn, "/dreadnought/disclaimer")

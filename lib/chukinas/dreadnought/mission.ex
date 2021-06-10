@@ -1,8 +1,10 @@
 alias Chukinas.Dreadnought.{Unit, Mission, Island, ActionSelection, Player, PlayerTurn, UnitAction, Maneuver, CombatAction, Gunfire}
-alias Chukinas.Geometry.{Grid, Size}
+alias Chukinas.Geometry.Grid
 alias Chukinas.Util.{Maps, IdList}
 
 defmodule Mission do
+
+  use Chukinas.PositionOrientationSize
 
   # *** *******************************
   # *** TYPES
@@ -11,8 +13,9 @@ defmodule Mission do
   typedstruct do
     field :turn_number, integer(), default: 1
     field :grid, Grid.t()
-    field :world, Size.t()
-    field :margin, Size.t()
+    # TODO replace any with Size type
+    field :world, any
+    field :margin, any
     field :islands, [Island.t()], default: []
     field :units, [Unit.t()], default: []
     field :players, [Player.t()], default: []
@@ -23,8 +26,8 @@ defmodule Mission do
   # *** *******************************
   # *** NEW
 
-  def new(%Grid{} = grid, %Size{} = margin) do
-    world = Size.new(
+  def new(%Grid{} = grid, margin) when has_size(margin) do
+    world = size_new(
       grid.width + 2 * margin.width,
       grid.height + 2 * margin.height
     )
@@ -132,7 +135,6 @@ defmodule Mission do
     # Part 3: Prepare for this turn's planning
     |> clear_player_actions
     |> calc_ai_commands
-    |> IOP.inspect("Mission new turn")
   end
 
   defp clear_gunfire(mission), do: Maps.clear(mission, :gunfire)

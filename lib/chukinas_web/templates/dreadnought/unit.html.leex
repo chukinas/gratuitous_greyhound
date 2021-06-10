@@ -1,11 +1,11 @@
 <div
-  <%# Position within World %>
+  <%# Pose within World %>
   id="unit-<%= @unit.id %>"
   class="absolute"
   style="
-    left: <%= @unit.pose.x %>px;
-    top: <%= @unit.pose.y %>px; 
-    transform: rotate(<%= @unit.pose.angle %>deg);
+    left: <%= @unit.x %>px;
+    top: <%= @unit.y %>px; 
+    transform: rotate(<%= @unit.angle %>deg);
   "
   data-unit-id="<%= @unit.id %>"
 >
@@ -17,7 +17,7 @@
     <%= for turret <- @unit.turrets do %>
     <%= ChukinasWeb.DreadnoughtView.relative_sprite turret.sprite, @socket, 
         attributes: [id: "unit-#{@unit.id}-mount-#{turret.id}"],
-        pose: turret.pose %>
+        pose: turret %>
     <% end %>
   </div>
 

@@ -1,12 +1,11 @@
 alias Chukinas.Dreadnought.{UnitAction, ActionSelection, Unit}
-alias Chukinas.Geometry.Position
 
 defmodule ActionSelection do
 
   # *** *******************************
   # *** TYPES
 
-  use TypedStruct
+  use Chukinas.PositionOrientationSize
 
   typedstruct enforce: true do
     field :player_id, integer()
@@ -93,7 +92,7 @@ defmodule ActionSelection do
   # *** PLAYER-ISSUED ACTIONS
 
   def maneuver(player_actions, unit_id, x, y) do
-    command = UnitAction.move_to(unit_id, Position.new(x, y))
+    command = UnitAction.move_to(unit_id, position(x, y))
     put(player_actions, command)
   end
 

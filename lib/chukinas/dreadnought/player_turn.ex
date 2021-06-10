@@ -1,7 +1,7 @@
 alias Chukinas.Dreadnought.{PlayerTurn, Unit, ActionSelection, ManeuverPlanning, UnitAction, Gunfire}
-alias Chukinas.Geometry.{Size, Grid, GridSquare}
+alias Chukinas.Geometry.{Grid, GridSquare}
+alias Chukinas.PositionOrientationSize.Size
 
-# TODO better name => Chukinas.Dreadnought.PlayerTurn ?
 # TODO this name should match that of the Dyn World comp. Change this one or both to match
 defmodule PlayerTurn do
   @moduledoc """
@@ -142,7 +142,7 @@ defmodule PlayerTurn do
         player_actions: player.player_actions,
         units: player.units
       }
-     concat ["#Player<", to_doc(summary, opts), ">"]
+     concat ["#Player-#{player.player_id}<", to_doc(summary, opts), ">"]
     end
   end
 end

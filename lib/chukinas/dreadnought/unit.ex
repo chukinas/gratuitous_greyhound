@@ -1,15 +1,16 @@
 alias Chukinas.Dreadnought.{Unit, Sprite, Turret}
-alias Chukinas.Geometry.{Pose, Rect, Position}
+alias Chukinas.Geometry.{Rect}
 alias Chukinas.Util.{Maps, IdList}
 alias Chukinas.LinearAlgebra.{HasCsys, CSys, Vector}
 alias Unit.Event, as: Ev
 
 defmodule Unit do
 
+  use Chukinas.PositionOrientationSize
+
   # *** *******************************
   # *** TYPES
 
-  use TypedStruct
   typedstruct enforce: true do
     field :id, integer()
     field :name, String.t()
@@ -17,7 +18,7 @@ defmodule Unit do
     field :sprite, Sprite.t()
     field :turrets, [Turret.t()]
     field :health, integer()
-    field :pose, Pose.t()
+    pose_fields()
     field :status, Unit.Status.t()
     field :events, [Ev.t()], default: []
     field :past_events, [Ev.t()], default: []
@@ -26,17 +27,20 @@ defmodule Unit do
   # *** *******************************
   # *** NEW
 
-  def new(id, opts \\ []) do
+  def new(id, pose, opts \\ []) do
     # Refactor now that I have a unit builder module
     {max_damage, fields} =
       opts
       |> Keyword.merge(id: id)
       |> Keyword.pop!(:health)
     unit_status = Unit.Status.new()
-    fields = Keyword.merge(fields,
-      status: unit_status,
-      health: max_damage
-    )
+    fields =
+      Keyword.merge(fields,
+        status: unit_status,
+        health: max_damage
+      )
+      |> Map.new
+      |> merge_pose(pose)
     struct!(__MODULE__, fields)
   end
 
@@ -121,9 +125,12 @@ defmodule Unit do
 
   def belongs_to?(unit, player_id), do: unit.player_id == player_id
 
-  def gunnery_target_vector(%{pose: pose}) do
-    Vector.from_position(pose)
+  def gunnery_target_vector(unit) do
+    unit
+    |> position
+    |> Vector.from_position
   end
+
   def turret(unit, turret_id) do
     IdList.fetch!(unit.turrets, turret_id)
   end
@@ -140,15 +147,6 @@ defmodule Unit do
 
   def status(%__MODULE__{status: status}), do: status
 
-  def pose(%__MODULE__{pose: pose}), do: pose
-
-  def position(unit) do
-    unit
-    |> pose
-    |> Position.new
-  end
-
-
   # *** *******************************
   # *** TRANSFORMS
 
@@ -164,12 +162,11 @@ defmodule Unit do
   end
 
   def calc_pose(unit) do
-    pose =
-      unit
-      |> maneuvers
-      |> Enum.max(Ev.Maneuver)
-      |> Ev.Maneuver.end_pose
-    %__MODULE__{unit | pose: pose}
+    unit
+    |> maneuvers
+    |> Enum.max(Ev.Maneuver)
+    |> Ev.Maneuver.end_pose
+    |> merge_pose_into!(unit)
   end
 
   def maybe_destroyed(unit) do
@@ -198,11 +195,14 @@ defmodule Unit do
 
   defimpl HasCsys do
 
-    def get_csys(%{pose: pose}) do
-      CSys.new(pose)
+    def get_csys(unit) do
+      unit
+      |> pose
+      |> CSys.new
     end
 
-    def get_angle(%{pose: pose}), do: Pose.angle(pose)
+    # TODO rename `angle`
+    def get_angle(unit), do: angle(unit)
   end
 
   defimpl Inspect do

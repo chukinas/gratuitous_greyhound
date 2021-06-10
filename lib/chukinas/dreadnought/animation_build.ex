@@ -1,19 +1,20 @@
 alias Chukinas.Dreadnought.{Spritesheet, Animation}
-alias Chukinas.Geometry.Pose
 
 defmodule Animation.Build do
+
+  use Chukinas.PositionOrientationSize
 
   # *** *******************************
   # *** NEW
 
-  def simple_muzzle_flash(%Pose{} = pose, delay \\ 0) when is_number(delay) do
+  def simple_muzzle_flash(pose, delay \\ 0) when is_number(delay) do
     "simple muzzle flash"
     |> Animation.new(pose, delay)
     |> Animation.put(rand_explosion_frame(0))
     |> Animation.fade(0.5)
   end
 
-  def large_muzzle_flash(%Pose{} = pose, delay \\ 0) when is_number(delay) do
+  def large_muzzle_flash(pose, delay \\ 0) when is_number(delay) do
     "large muzzle flash"
     |> Animation.new(pose, delay)
     |> Animation.put(rand_explosion_frame(0.05))
@@ -24,7 +25,7 @@ defmodule Animation.Build do
     |> Animation.fade(0.5)
   end
 
-  def ordnance_hit(%Pose{} = pose, delay \\ 0) when is_number(delay) do
+  def ordnance_hit(pose, delay \\ 0) when is_number(delay) do
     "ordnance_hit"
     |> Animation.new(pose, delay)
     |> Animation.put(rand_explosion_frame(0.05))

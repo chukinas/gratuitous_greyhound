@@ -1,20 +1,22 @@
-alias Chukinas.Geometry.{GridSquare, Position, CollidableShape, Path, Rect}
+alias Chukinas.Geometry.{GridSquare, Rect}
+alias Chukinas.Collide.IsShape
+alias Chukinas.Paths
 
 defmodule GridSquare do
   @moduledoc"""
   Represents a single square in a grid
   """
 
-  use TypedStruct
+  use Chukinas.PositionOrientationSize
 
   typedstruct enforce: true do
     field :id, String.t()
     field :unit_id, integer(), enforce: false
     field :column, integer()
     field :row, integer()
-    field :center, Position.t()
+    field :center, POS.position_type
     field :size, number()
-    field :path, Path.t(), enforce: false
+    field :path, Paths.t(), enforce: false
     field :path_type, atom(), enforce: false
   end
 
@@ -26,7 +28,7 @@ defmodule GridSquare do
       id: "#{col}-#{row}",
       column: col,
       row: row,
-      center: Position.new((col - 0.5) * size, (row - 0.5) * size),
+      center: position((col - 0.5) * size, (row - 0.5) * size),
       size: size
     }
   end
@@ -34,16 +36,17 @@ defmodule GridSquare do
   # *** *******************************
   # *** GETTERS
 
-  def position(%__MODULE__{center: position}), do: position
+  # TODO rename center_position
+  def position(%__MODULE__{center: value}), do: value
 
   # *** *******************************
   # *** API
 
   def calc_path(square, start_pose) do
-    path = Path.get_connecting_path(start_pose, square.center)
+    path = Paths.get_connecting_path(start_pose, square.center)
     path_type = cond do
-      Path.exceeds_angle(path, 30) -> :sharp_turn
-      Path.deceeds_angle(path, 10) -> :straight
+      Paths.exceeds_angle(path, 30) -> :sharp_turn
+      Paths.deceeds_angle(path, 10) -> :straight
       true -> :turn
     end
     %{square | path: path, path_type: path_type}
@@ -52,19 +55,19 @@ defmodule GridSquare do
   def to_rect(square) do
     half_size = square.size / 2
     Rect.new(
-      square.center |> Position.subtract(half_size),
-      square.center |> Position.add(half_size)
+      square.center |> position_subtract(half_size),
+      square.center |> position_add(half_size)
     )
   end
 
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl CollidableShape do
-    def to_vertices(grid_square) do
+  defimpl IsShape do
+    def to_coords(grid_square) do
       grid_square
       |> GridSquare.to_rect
-      |> Rect.list_vertices
+      |> Rect.to_coords
     end
   end
 end

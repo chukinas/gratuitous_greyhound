@@ -1,5 +1,5 @@
 alias Chukinas.Dreadnought.{Maneuver, UnitAction, Unit}
-alias Chukinas.Geometry.{Path, Position}
+alias Chukinas.Paths
 alias Chukinas.Util.IdList
 alias Unit.Event, as: Ev
 
@@ -7,6 +7,8 @@ defmodule Maneuver do
   @moduledoc """
   Fully qualifies a unit's maneuvering for a given turn
   """
+
+  use Chukinas.PositionOrientationSize
 
   # *** *******************************
   # *** TYPES
@@ -19,7 +21,7 @@ defmodule Maneuver do
   def get_unit_with_tentative_maneuver(units, maneuver_action, turn_number) do
     unit = units |> IdList.fetch!(maneuver_action.unit_id)
     case UnitAction.value(maneuver_action) do
-      %Position{} = pos -> move_to(unit, pos)
+      position when has_position(position) -> move_to(unit, position)
         # TODO rename :trapped
       :exit_or_run_aground ->
         unit
@@ -28,8 +30,8 @@ defmodule Maneuver do
     end
   end
 
-  def move_to(unit, pos) do
-    path = Path.get_connecting_path(unit.pose, pos)
+  def move_to(unit, position) do
+    path = Paths.get_connecting_path(pose_new(unit), position)
     maneuver = Ev.Maneuver.new(path)
     Unit.put(unit, maneuver)
   end
@@ -37,9 +39,9 @@ defmodule Maneuver do
   # *** *******************************
   # *** PRIVATE
 
-  defp put_trapped_maneuver(%Unit{pose: pose} = unit) do
+  defp put_trapped_maneuver(%Unit{} = unit) do
     events = [
-      Ev.Maneuver.new(Path.new_straight(pose, 300))
+      Ev.Maneuver.new(Paths.new_straight(unit, 300))
     ]
     Unit.put(unit, events)
   end

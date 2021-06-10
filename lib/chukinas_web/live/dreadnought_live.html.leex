@@ -1,0 +1,22 @@
+<%= case @live_action do %>
+  <% :gallery -> %>
+    <%= live_component(
+          @socket, 
+          ChukinasWeb.GalleryComponent, 
+          show_markers?: assigns[:show_markers?],
+          id: :gallery ) %>
+  <% :room -> %>
+    <%= live_component(
+          @socket, 
+          ChukinasWeb.RoomComponent, 
+          id: :room, 
+          show_join_screen?: assigns[:show_join_screen?], 
+          user: assigns[:user], 
+          user_session: assigns[:user_session], 
+          room: assigns[:room], 
+          path_params: @path_params) %>
+<% end %>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/MotionPathPlugin.min.js"></script>
+<script>gsap.registerPlugin(MotionPathPlugin);</script>

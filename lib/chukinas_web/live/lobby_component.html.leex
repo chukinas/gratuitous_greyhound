@@ -1,0 +1,7 @@
+<div id="lobbyComponent">
+  <p>Your room: <b><%= @pretty_room_name %></b></p>
+  <h1 class="font-bold" >Players</h1>
+  <%= for player <- @players do %>
+    <p>Player <%= player.id %>: <%= player.name %><%= if player.self?, do: " (you)" %></p>
+  <% end %>
+</div>

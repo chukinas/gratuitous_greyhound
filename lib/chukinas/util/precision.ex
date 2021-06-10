@@ -33,4 +33,37 @@ defmodule Chukinas.Util.Precision do
   def approx_equal(a, b) do
     abs(a - b) < 1
   end
+
+  def approx_equal(a, b, key) do
+    approx_equal(
+      Map.fetch!(a, key),
+      Map.fetch!(b, key)
+    )
+  end
+
+
+  # *** *******************************
+  # *** PRIVATE
+
+  # TODO This logic should go into that utility module
+  defp set_precision(struct) when is_struct(struct) do
+    struct |> Map.from_struct() |> set_precision()
+  end
+  defp set_precision(%{} = map) do
+    map
+    |> Enum.map(&set_precision/1)
+    |> Map.new()
+  end
+
+  defp set_precision({key, value}) do
+    {key, set_precision(value)}
+  end
+
+  defp set_precision(value) when is_float(value) do
+    Float.round(value, 1)
+  end
+
+  defp set_precision(value) when is_integer(value) do
+    value * 1.0
+  end
 end

@@ -1,35 +1,34 @@
-alias Chukinas.Geometry.{Position, Rect, CollidableShape, Size}
-alias Chukinas.LinearAlgebra.Vector
+alias Chukinas.Geometry.Rect
+alias Chukinas.Collide.IsShape
 
 defmodule Rect do
   @moduledoc"""
   A Rect is an in-grid rectangle, comprising only horizontal and vertical lines
   """
 
-  require Position
+  use Chukinas.PositionOrientationSize
+  use Chukinas.LinearAlgebra
 
   # *** *******************************
   # *** TYPES
 
-  use TypedStruct
   typedstruct enforce: true do
-    field :x, number()
-    field :y, number()
-    field :width, number()
-    field :height, number()
+    position_fields()
+    size_fields()
   end
 
   # *** *******************************
   # *** NEW
 
+  def new({a, b} = _min_max_position), do: new(a, b)
+
   def new(start_x, start_y, end_x, end_y) do
-    %__MODULE__{
-      x: start_x,
-      y: start_y,
-      width: abs(start_x - end_x),
-      height: abs(start_y - end_y)
-    }
+    new(
+      position_new(start_x, start_y),
+      position_new(end_x, end_y)
+    )
   end
+
   def new(%{x: x, y: y}, %{width: width, height: height}) do
     %__MODULE__{
       x: x,
@@ -38,15 +37,21 @@ defmodule Rect do
       height: height
     }
   end
-  def new(start_position, end_position) when Position.is(start_position) and Position.is(end_position) do
-    %__MODULE__{
-      x: start_position.x,
-      y: start_position.y,
-      width: abs(start_position.x - end_position.x),
-      height: abs(start_position.y - end_position.y)
-    }
+
+  def new(start_position, end_position)
+  when has_position(start_position)
+  and has_position(end_position) do
+    size = size_from_positions(start_position, end_position)
+    fields =
+      %{}
+      |> merge_position(start_position)
+      |> merge_size(size)
+    struct!(__MODULE__, fields)
   end
-  def new(width, height) when is_number(width) and is_number(height) do
+
+  def new(width, height)
+  when is_number(width)
+  and is_number(height) do
     %__MODULE__{
       x: 0,
       y: 0,
@@ -55,50 +60,63 @@ defmodule Rect do
     }
   end
 
+  def from_centered_square(position, size) do
+    new(
+      position |> position_subtract(size / 2),
+      size_new(size, size)
+    )
+  end
+
   # *** *******************************
   # *** GETTERS
 
-  def bottom_right_position(%__MODULE__{} = rect) do
+  # TODO rename position_bottom_right
+  def bottom_right_position(rect) do
     rect
-    |> Position.from_size
-    |> Position.add(rect)
+    |> position_from_size
+    |> position_add(rect)
   end
 
-  def list_vertices(%{x: x, y: y, width: width, height: height}) do
+  def to_coords(rect) do
     # TODO rename vertices
     # TODO move getters to appropriate section
-    position = Position.new(x, y)
-    [
-      position,
-      Position.add_x(position, width),
-      # TODO replace with bottom_right_position
-      Position.add(position, width, height),
-      Position.add_y(position, height)
-    ]
-    |> Enum.map(&Position.to_vertex/1)
+    position_top_left = position(rect)
+    relative_position_br = rect |> position_from_size
+    for position <- [
+      position_top_left,
+      position_add_x(position_top_left, relative_position_br),
+      bottom_right_position(rect),
+      position_add_y(position_top_left, relative_position_br)
+    ], do: coord_from_position(position)
   end
 
   def center_position(rect) do
-    relative_center =
-      rect
-      |> Position.from_size
-      |> Position.divide(2)
     rect
-    |> Position.add(relative_center)
-    |> Position.new
+    |> position_from_size
+    |> position_divide(2)
+    |> position_add(rect)
+    |> position_new
   end
-  def center_vector(rect), do: center_position(rect) |> Vector.new
+
+  def center_vector(rect), do: rect |> center_position |> position_to_tuple
 
 
   # *** *******************************
   # *** API
 
-  def bounding_rect(rects) when is_list(rects) do
-    {min, max} = Position.min_max(rects ++ Enum.map(rects, &bottom_right_position/1))
-    size = Size.from_positions(min, max)
-    new(min, size)
+  def bounding_rect_from_positions(list) do
+    list
+    |> position_min_max
+    |> new
   end
-  def bounding_rect(%__MODULE__{} = a, %__MODULE__{} = b) do
+
+  def bounding_rect(rects) when is_list(rects) do
+    bounding_rect_from_positions(rects ++ Enum.map(rects, &bottom_right_position/1))
+  end
+
+  def bounding_rect(a, b)
+  when has_position_and_size(a)
+  and has_position_and_size(b) do
     bounding_rect([a, b])
   end
 
@@ -113,32 +131,32 @@ defmodule Rect do
       abs(origin.y - rect.y),
       abs(rect.y + rect.height - origin.y)
     )
-    dist_from_origin = Position.new(half_width, half_height)
+    dist_from_origin = position(half_width, half_height)
     Rect.new(
-      Position.subtract(origin, dist_from_origin),
-      Position.add(origin, dist_from_origin)
+      position_subtract(origin, dist_from_origin),
+      position_add(origin, dist_from_origin)
     )
   end
 
   def scale(rect, scale) do
     rect
-    |> Position.multiply(scale)
-    |> Size.multiply(scale)
+    |> position_multiply(scale)
+    |> size_multiply(scale)
   end
 
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl CollidableShape do
-    def to_vertices(rect), do: Rect.list_vertices(rect)
+  defimpl IsShape do
+    def to_coords(rect), do: Rect.to_coords(rect)
   end
 
   defimpl Inspect do
     import Inspect.Algebra
     require IOP
     def inspect(rect, opts) do
-      pos = rect |> Position.new |> IOP.doc
-      size = rect |> Size.new |> IOP.doc
+      pos = rect |> position_new |> IOP.doc
+      size = rect |> size_new |> IOP.doc
       contents =
         pos
         |> concat(IOP.comma)

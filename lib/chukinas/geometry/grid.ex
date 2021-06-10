@@ -1,4 +1,4 @@
-alias Chukinas.Geometry.{Grid, GridSquare, Collide, Position, CollidableShape, Rect}
+alias Chukinas.Geometry.{Grid, GridSquare, Rect}
 
 # TODO rename CommandGrid?
 defmodule Grid do
@@ -6,32 +6,50 @@ defmodule Grid do
   Represents the square chess-like board the game is played on
   """
 
-  use TypedStruct
+  use Chukinas.PositionOrientationSize
+  alias Chukinas.Collide
 
   typedstruct enforce: true do
     field :square_size, integer()
     # Row/Cols are 1-indexed
-    field :start, Position.t()
-    field :count, Position.t()
+    field :start, POS.position_type
+    field :count, POS.position_type
     # Calculated Values:
-    field :width, integer()
-    field :height, integer()
+    size_fields()
   end
 
   # *** *******************************
   # *** NEW
 
-  def new(square_size, %Position{} = count, %Position{} = start) do
-    new(square_size, count.x, count.y, {start.x, start.y})
+  def new(%{square_size: size, x_count: x, y_count: y}) do
+    square_count = %{x: x, y: y}
+    new size, square_count
   end
-  def new(square_size, x_count, y_count, {x_start, y_start} \\ {1, 1}) do
-    %__MODULE__{
-      square_size: square_size,
-      start: Position.new(x_start, y_start),
-      count: Position.new(x_count, y_count),
-      width: square_size * x_count,
-      height: square_size * y_count
-    }
+
+  def new(square_size, count, start \\ position_new(1, 1))
+  when has_position(count)
+  and has_position(start) do
+    size =
+      count
+      |> position_multiply(square_size)
+      |> size_from_position
+    fields =
+      %{
+        square_size: square_size,
+        count: position_new(count),
+        start: position_new(start),
+      }
+      |> merge_size(size)
+    struct!(__MODULE__, fields)
+  end
+
+  def new(square_size, x_count, y_count, {x_start, y_start}) do
+  #def new(square_size, x_count, y_count, {x_start, y_start} \\ {1, 1}) do
+    new(
+      square_size,
+      position_new(x_count, y_count),
+      position_new(x_start, y_start)
+    )
   end
 
   # *** *******************************
@@ -60,13 +78,12 @@ defmodule Grid do
     |> exclude(opts.exclude)
   end
 
+  # TODO rename ? bounding_rect
   def to_rect(grid) do
-    start_position =
-      grid.start
-      |> Position.add(-1)
-      |> Position.multiply(grid.square_size)
-    end_position = Position.add(start_position, grid.width, grid.height)
-    Rect.new(start_position, end_position)
+    grid.start
+    |> position_subtract(1)
+    |> position_multiply(grid.square_size)
+    |> Rect.new(size_new(grid))
   end
 
   # *** *******************************
@@ -113,7 +130,7 @@ defmodule Grid do
   defp exclude(squares, nil), do: squares
   defp exclude(squares, obstacles) when is_list(obstacles) do
     squares
-    |> Stream.filter(&Collide.avoids?(&1, obstacles))
+    |> Stream.filter(&Collide.avoids_collision_with?(&1, obstacles))
   end
 
   defp split_grid(grid) do
@@ -142,11 +159,11 @@ defmodule Grid do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl CollidableShape do
-    def to_vertices(grid) do
+  defimpl Collide.IsShape do
+    def to_coords(grid) do
       grid
       |> Grid.to_rect
-      |> Rect.list_vertices
+      |> Rect.to_coords
     end
   end
 end
