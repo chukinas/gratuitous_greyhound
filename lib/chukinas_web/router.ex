@@ -10,6 +10,10 @@ defmodule ChukinasWeb.Router do
     plug :put_root_layout, {ChukinasWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+  end
+
+  pipeline :dreadnought do
+    plug :browser
     plug :put_uuid_in_session
   end
 
@@ -22,11 +26,15 @@ defmodule ChukinasWeb.Router do
     get "/", PageController, :index
     get "/minis", PageController, :minis
     get "/music", PageController, :music
-    live "/dreadnought", DreadnoughtLive
-    live "/dreadnought/rooms", DreadnoughtLive, :room
-    live "/dreadnought/rooms/:room", DreadnoughtLive, :room
-    live "/dreadnought/play", DreadnoughtPlayLive
-    live "/dreadnought/gallery", DreadnoughtLive, :gallery
+  end
+
+  scope "/dreadnought", ChukinasWeb do
+    pipe_through :dreadnought
+    live "/", DreadnoughtLive
+    live "/rooms", DreadnoughtLive, :room
+    live "/rooms/:room", DreadnoughtLive, :room
+    live "/play", DreadnoughtPlayLive
+    live "/gallery", DreadnoughtLive, :gallery
   end
 
   # Other scopes may use custom stacks.
@@ -56,7 +64,7 @@ defmodule ChukinasWeb.Router do
       case conn.req_cookies["uuid"] do
         nil ->
           uuid = Sessions.new_uuid()
-          conn = put_resp_cookie(conn, "uuid", uuid)
+          conn = put_resp_cookie(conn, "uuid", uuid, path: "/dreadnought")
           {conn, uuid}
         uuid ->
           {conn, uuid}
