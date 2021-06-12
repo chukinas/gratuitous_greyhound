@@ -1,5 +1,9 @@
+# TODO rename Chukinas.Sessions.SessionSupervisor ?
 alias Chukinas.SessionSupervisor
-alias Chukinas.Sessions.{RoomRegistry, RoomDynamicSupervisor, UserRegistry}
+alias Chukinas.Sessions.RoomRegistry
+alias Chukinas.Sessions.RoomDynamicSupervisor
+alias Chukinas.Sessions.UserRegistry
+alias Chukinas.Sessions.Players
 
 defmodule SessionSupervisor do
   use Supervisor
@@ -13,6 +17,7 @@ defmodule SessionSupervisor do
       RoomRegistry,
       RoomDynamicSupervisor,
       UserRegistry,
+      Players,
     ]
     Supervisor.init(children, strategy: :one_for_one)
   end
