@@ -1,4 +1,5 @@
 alias Chukinas.Sessions
+alias Chukinas.Sessions.Players
 alias ChukinasWeb.Router.Helpers, as: Routes
 
 defmodule ChukinasWeb.DreadnoughtLive.Impl do
@@ -38,6 +39,11 @@ defmodule ChukinasWeb.DreadnoughtLive.Impl do
       page_title: page_title,
       header: if(active_tab.show_header, do: title, else: nil)
     )
+  end
+
+  def assign_room_name(socket) do
+    uuid = socket.assigns.uuid
+    assign(socket, room_name: Players.get(uuid))
   end
 
 end

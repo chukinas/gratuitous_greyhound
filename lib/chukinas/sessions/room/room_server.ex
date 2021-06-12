@@ -35,6 +35,10 @@ defmodule RoomServer do
     {:reply, {:member_number, member_number}, room}
   end
 
+  def handle_call(:get, _from, room) do
+    {:reply, room, room}
+  end
+
   # *** *******************************
   # *** FUNCTIONS
 

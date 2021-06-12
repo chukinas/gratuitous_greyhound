@@ -11,6 +11,12 @@ defmodule Rooms do
     |> GenServer.call({:add_member, member_uuid, member_name})
   end
 
+  def get(room_name) do
+    room_name
+    |> get_room_pid
+    |> GenServer.call(:get)
+  end
+
   # *** *******************************
   # *** PRIVATE
 

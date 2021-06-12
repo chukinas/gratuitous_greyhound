@@ -1,5 +1,9 @@
 alias ChukinasWeb.Router.Helpers, as: Routes
-alias Chukinas.Sessions.{Rooms, User, UserRegistry}
+alias Chukinas.Sessions.Players
+alias Chukinas.Sessions.Room
+alias Chukinas.Sessions.Rooms
+alias Chukinas.Sessions.User
+alias Chukinas.Sessions.UserRegistry
 
 defmodule Chukinas.Sessions do
   @moduledoc """
@@ -96,6 +100,15 @@ defmodule Chukinas.Sessions do
       player_id: player_id
     }
     {:ok, user}
+  end
+
+  def get_room_from_player_uuid(player_uuid) do
+    with {:ok, room_name} <- Players.fetch(player_uuid),
+         %Room{} = room <- Rooms.get(room_name) do
+      room
+    else
+      _ -> nil
+    end
   end
 
 end

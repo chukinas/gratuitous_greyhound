@@ -6,11 +6,12 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def mount(_params, session, socket) do
-    IOP.inspect socket.private, "dread live socket privaet"
-    IOP.inspect session, "dread live session"
     socket = if socket.connected? do
+      uuid = Map.fetch!(session, "uuid")
       socket
       |> assign(user: Sessions.new_user())
+      |> assign(uuid: uuid)
+      |> assign(room: Sessions.get_room_from_player_uuid(uuid))
     else
       socket
     end
