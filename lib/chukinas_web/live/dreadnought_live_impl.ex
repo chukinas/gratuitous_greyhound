@@ -45,10 +45,14 @@ defmodule ChukinasWeb.DreadnoughtLive.Impl do
   end
 
   def maybe_redirect_to_play(socket, room) do
-    if room && :play != socket.assigns.live_action do
-      Phoenix.LiveView.push_patch(socket, to: Routes.dreadnought_path(socket, :play))
-    else
-      socket
+    live_action = socket.assigns.live_action
+    cond do
+      room && :play != live_action ->
+        Phoenix.LiveView.push_patch(socket, to: Routes.dreadnought_path(socket, :play))
+      !room && :play == live_action ->
+        Phoenix.LiveView.push_patch(socket, to: Routes.dreadnought_path(socket, :join))
+      true ->
+        socket
     end
   end
 
