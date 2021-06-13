@@ -3,29 +3,25 @@
     <%= live_component(
           @socket, 
           ChukinasWeb.GalleryComponent, 
-          show_markers?: assigns[:show_markers?],
-          id: :gallery ) %>
+          id: :gallery_component,
+          show_markers?: assigns[:show_markers?]
+        )%>
   <%# TODO clean this up %>
   <% :join -> %>
     <%= live_component(
           @socket, 
           ChukinasWeb.JoinComponent, 
-          id: :room, 
-          show_join_screen?: assigns[:show_join_screen?], 
-          user: assigns[:user], 
-          user_session: assigns[:user_session], 
-          room: assigns[:room]
-        ) %>
+          id: :join_component, 
+          uuid: @uuid
+        )%>
   <% :play -> %>
-    <%= live_component(
+    <%= if @room, do: live_component(
           @socket, 
-          ChukinasWeb.RoomComponent, 
-          id: :room, 
-          show_join_screen?: assigns[:show_join_screen?], 
-          user: assigns[:user], 
-          user_session: assigns[:user_session], 
-          room: assigns[:room]
-        ) %>
+          ChukinasWeb.LobbyComponent, 
+          id: :lobby_component, 
+          uuid: @uuid,
+          room: @room
+        )%>
   <% :index -> %>
     Hi!
 <% end %>

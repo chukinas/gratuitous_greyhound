@@ -1,20 +1,16 @@
 alias Chukinas.Dreadnought.Player
-alias Chukinas.Sessions.{Room, User}
+alias Chukinas.Sessions.Room
 
 defmodule ChukinasWeb.LobbyComponent do
   use ChukinasWeb, :live_component
 
+  # *** *******************************
+  # *** CALLBACKS
+
   @impl true
   def update(assigns, socket) do
-    # TODO reduce the number of unnecessary incoming assigns
-    user = assigns.user
     room = assigns.room
-    players =
-      if room do
-        for player <- Room.players_sorted(room), do: build_player(player, user)
-      else
-        []
-      end
+    players = for player <- Room.players_sorted(room), do: build_player(player, assigns.uuid)
     socket =
       assign(socket,
         pretty_room_name: Room.pretty_name(room),
@@ -26,11 +22,11 @@ defmodule ChukinasWeb.LobbyComponent do
   # *** *******************************
   # *** FUNCTIONS
 
-  def build_player(%Player{} = player, %User{} = user) do
+  def build_player(%Player{} = player, uuid) do
     %{
       id: Player.id(player),
       name: Player.name(player),
-      self?: Player.uuid(player) == User.uuid(user)
+      self?: Player.uuid(player) == uuid
     }
   end
 

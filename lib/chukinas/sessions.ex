@@ -22,6 +22,10 @@ defmodule Chukinas.Sessions do
     user
   end
 
+  def user_from_uuid(uuid) do
+    User.new(uuid)
+  end
+
   def new_uuid do
     # TODO replace calls to ectouuid with a call to this func
     Ecto.UUID.generate()
@@ -73,15 +77,18 @@ defmodule Chukinas.Sessions do
       room_name: room_name,
       player_id: player_id
     }
+    Players.register(User.uuid(user), room_name)
     {:ok, user}
   end
 
   def get_room_from_player_uuid(player_uuid) do
     with {:ok, room_name} <- Players.fetch(player_uuid),
-         %Room{} = room <- Rooms.get(room_name) do
+         %Room{} = room   <- Rooms.get(room_name) do
       room
     else
-      _ -> nil
+      response ->
+        IOP.inspect response, "sessions, get room"
+        nil
     end
   end
 

@@ -11,7 +11,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
     socket =
       if !socket.connected? do
         socket
-        #|> assign(uuid: uuid)
+        |> assign(uuid: uuid)
         |> assign(room: nil)
       else
         Sessions.register_uuid(uuid)

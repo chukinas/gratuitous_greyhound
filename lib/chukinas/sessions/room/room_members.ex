@@ -24,6 +24,10 @@ defmodule Players do
     end
   end
 
+  def get_all do
+    Agent.get(@name, & &1)
+  end
+
   @spec get(player_uuid) :: room_name | nil
   def get(player_uuid) do
     Agent.get(@name, &Map.get(&1, player_uuid))
@@ -32,6 +36,7 @@ defmodule Players do
   @spec fetch(player_uuid) :: {:ok, room_name} | :error
   def fetch(player_uuid) do
     Agent.get(@name, &Map.fetch(&1, player_uuid))
+    |> IOP.inspect("fetch, Players")
   end
 
   @spec delete(player_uuid) :: :ok

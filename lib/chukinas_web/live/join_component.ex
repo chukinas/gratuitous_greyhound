@@ -11,7 +11,8 @@ defmodule ChukinasWeb.JoinComponent do
 
   @impl true
   def update(assigns, socket) do
-    user_session = assigns[:user_session]
+    user_session = nil
+    user = Sessions.user_from_uuid(assigns.uuid)
     changeset =
       Sessions.user_session_changeset(
         user_session,
@@ -20,7 +21,7 @@ defmodule ChukinasWeb.JoinComponent do
     socket =
       socket
       |> assign(user_session: user_session)
-      |> assign(user: assigns.user)
+      |> assign(user: user)
       |> assign_changeset_and_url(changeset, false)
     {:ok, socket}
   end

@@ -18,9 +18,14 @@ defmodule User do
   # *** *******************************
   # *** NEW
 
-  def new() do
+  def new do
+    new Ecto.UUID.generate()
+
+  end
+
+  def new(uuid) do
     %__MODULE__{
-      uuid: Ecto.UUID.generate()
+      uuid: uuid
     }
   end
 
