@@ -1,16 +1,16 @@
-alias Chukinas.Sessions.UserRegistry
+defmodule Chukinas.Sessions.PlayerRegistry do
+  @moduledoc"""
+  Maps player UUIDs to PIDs
 
-defmodule UserRegistry do
+  For human players, a UUID will map to 0..* LiveViews.
+  For AI players, a UUID will map to a GenServer.
+  """
 
   @me :user_registry
 
   def child_spec(_init_arg) do
     Registry.child_spec(keys: :unique, name: @me)
   end
-
-  #def start_link(_init_arg) do
-  #  Registry.start_link(keys: :unique, name: @me)
-  #end
 
   def register(user_uuid) do
     Registry.register(@me, user_uuid, nil)

@@ -3,6 +3,7 @@ defmodule Chukinas.Application do
   # for more information on OTP Applications
   @moduledoc false
 
+  alias Chukinas.Sessions.SessionSupervisor
   use Application
 
   def start(_type, _args) do
@@ -13,7 +14,7 @@ defmodule Chukinas.Application do
       {Phoenix.PubSub, name: Chukinas.PubSub},
       # Start the Endpoint (http/https)
       ChukinasWeb.Endpoint,
-      {Chukinas.SessionSupervisor, []},
+      {SessionSupervisor, []},
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

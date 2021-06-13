@@ -1,7 +1,8 @@
-alias Chukinas.Sessions.{RoomServer, RoomRegistry, Room}
-alias Chukinas.Sessions.UserRegistry
+defmodule Chukinas.Sessions.RoomServer do
 
-defmodule RoomServer do
+  alias Chukinas.Sessions.PlayerRegistry
+  alias Chukinas.Sessions.Room
+  alias Chukinas.Sessions.RoomRegistry
   use GenServer
 
   # *** *******************************
@@ -67,7 +68,7 @@ defmodule RoomServer do
 
   defp send_room_to_players(room, player_uuid) when is_binary(player_uuid) do
     IO.puts "RoomServer send room to #{player_uuid}"
-    for pid <- UserRegistry.pids(player_uuid) do
+    for pid <- PlayerRegistry.pids(player_uuid) do
       send pid, {:update_room, room}
     end
   end

@@ -3,11 +3,11 @@ defmodule Chukinas.Sessions do
   The Sessions context
   """
 
-  alias Chukinas.Sessions.Players
+  alias Chukinas.Sessions.PlayerRooms
   alias Chukinas.Sessions.Room
   alias Chukinas.Sessions.Rooms
   alias Chukinas.Sessions.User
-  alias Chukinas.Sessions.UserRegistry
+  alias Chukinas.Sessions.PlayerRegistry
   alias Chukinas.Sessions.UserSession
 
 
@@ -16,7 +16,7 @@ defmodule Chukinas.Sessions do
 
   def new_user do
     user = User.new()
-    UserRegistry.register(user |> User.uuid)
+    PlayerRegistry.register(user |> User.uuid)
     user
   end
 
@@ -31,7 +31,7 @@ defmodule Chukinas.Sessions do
 
   # TODO rename `register_liveview`?
   def register_uuid(player_uuid) do
-    UserRegistry.register(player_uuid)
+    PlayerRegistry.register(player_uuid)
   end
 
   # *** *******************************
@@ -74,22 +74,18 @@ defmodule Chukinas.Sessions do
       room_name: room_name,
       player_id: player_id
     }
-    Players.register(User.uuid(user), room_name)
+    PlayerRooms.register(User.uuid(user), room_name)
     {:ok, user}
   end
 
   def leave_room(player_uuid) do
     # TODO do not manually set the liveview's room to nil
-    # TODO rename this Players module
-    IOP.inspect(player_uuid, "Sessions.leave_room, uuid")
-    room_name = Players.pop(player_uuid)
-                |> IOP.inspect("Sessions.leave_room, room_name")
-
+    room_name = PlayerRooms.pop(player_uuid)
     Rooms.remove_player(room_name, player_uuid)
   end
 
   def get_room_from_player_uuid(player_uuid) do
-    with {:ok, room_name} <- Players.fetch(player_uuid),
+    with {:ok, room_name} <- PlayerRooms.fetch(player_uuid),
          %Room{} = room   <- Rooms.get(room_name) do
       room
     else

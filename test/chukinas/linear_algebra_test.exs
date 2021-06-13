@@ -2,11 +2,11 @@ ExUnit.start()
 
 defmodule Chukinas.LinearAlgebraTest do
 
-  use ExUnit.Case, async: true
+  alias Chukinas.Math
+  use Chukinas.LinearAlgebra
   use Chukinas.PositionOrientationSize
   use Chukinas.TestHelpers
-  use Chukinas.LinearAlgebra
-  alias Chukinas.Math
+  use ExUnit.Case, async: true
 
   describe "vector coordinate system" do
 

@@ -1,7 +1,5 @@
-# TODO what's the right name / directory for this?
-alias Chukinas.Sessions.Players
+defmodule Chukinas.Sessions.PlayerRooms do
 
-defmodule Players do
   use Agent
 
   @name __MODULE__
@@ -9,11 +7,14 @@ defmodule Players do
   @type room_name :: String.t
 
   # *** *******************************
-  # *** CLIENT
+  # *** AGENT
 
   def start_link(_opts) do
     Agent.start_link(fn -> %{} end, name: @name)
   end
+
+  # *** *******************************
+  # *** API
 
   def register(player_uuid, room_name) do
     if Agent.get(@name, &Map.has_key?(&1, player_uuid)) do
