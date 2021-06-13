@@ -1,4 +1,4 @@
-alias ChukinasWeb.Router.Helpers, as: Routes
+#alias ChukinasWeb.Router.Helpers, as: Routes
 alias Chukinas.Sessions.Players
 alias Chukinas.Sessions.Room
 alias Chukinas.Sessions.Rooms
@@ -47,38 +47,11 @@ defmodule Chukinas.Sessions do
     UserSession.Changeset.create_user_session(user_session, attrs)
   end
 
-  #def delete_user_session(%UserSession{} = user_session) do
-  #  raise "TODO"
-  #end
-
-  #def change_user_session(%UserSession{} = user_session, _attrs \\ %{}) do
-  #  raise "TODO"
-  #end
-
-  # TODO this should maybe accept a path helper instead....
-  # ... when is_function(func, 2)
-  # TODO swap the arguments so things pipe nicer
-  def path(socket, %UserSession{} = user_session) do
-    room = user_session |> UserSession.room
-    path(socket, room)
+  def room_name(%UserSession{} = user_session) do
+    user_session |> UserSession.room
   end
-  def path(socket, %Ecto.Changeset{} = user_session) do
-    room = user_session |> UserSession.Changeset.room
-    path(socket, room)
-  end
-  def path(socket, nil = _room) do
-    Routes.dreadnought_path(socket, :room)
-  end
-  def path(socket, room) when is_binary(room) do
-    Routes.dreadnought_path(socket, :room, room)
-  end
-
-  def url(socket, user_session) do
-    [
-      URI.to_string(socket.host_uri),
-      path(socket, user_session)
-    ]
-    |> Enum.join
+  def room_name(%Ecto.Changeset{} = user_session) do
+    user_session |> UserSession.Changeset.room
   end
 
   defdelegate room(user_session), to: UserSession

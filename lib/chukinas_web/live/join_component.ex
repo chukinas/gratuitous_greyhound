@@ -15,7 +15,7 @@ defmodule ChukinasWeb.JoinComponent do
     changeset =
       Sessions.user_session_changeset(
         user_session,
-        user_session_attrs(assigns.path_params)
+        user_session_attrs(%{})
       )
     socket =
       socket
@@ -39,29 +39,22 @@ defmodule ChukinasWeb.JoinComponent do
   end
 
   def handle_event("join", %{"user_session" => params}, socket) do
-    case Sessions.update_user_session(socket.assigns.user_session, params) do
-      # TODO use `with`?
-      {:ok, user_session} ->
-        user = User.merge_user_session(socket.assigns.user, user_session)
-        room_name = UserSession.room(user_session)
-        {:ok, user} = Sessions.join_room(user, room_name)
-        send self(), {:update_assigns, %{user_session: user_session, show_join_screen?: false, user: user}}
-        socket =
-          socket
-          |> push_patch(to: Sessions.path(socket, Sessions.room(user_session)))
-        {:noreply, socket}
-      {:error, changeset} ->
-        socket =
-          socket
-          |> assign_changeset_and_url(changeset)
-        {:noreply, socket}
-    end
+    socket =
+      with {:ok, user_session} <- Sessions.update_user_session(socket.assigns.user_session, params),
+           user                <- User.merge_user_session(socket.assigns.user, user_session),
+           room_name           <- UserSession.room(user_session),
+           {:ok, _user}        <- Sessions.join_room(user, room_name) do
+        socket
+      else
+        {:error, changeset} -> assign_changeset_and_url(socket, changeset)
+      end
+    {:noreply, socket}
   end
 
   def assign_changeset_and_url(socket, changeset, show_errors? \\ true) do
     # TODO I shouldn't be manipulating the raw map..?
     changeset = if show_errors?, do: Map.put(changeset, :action, :insert), else: changeset
-    url = Sessions.url(socket, changeset)
+    url = build_url(socket, changeset)
     assign(socket, maybe_url: url, changeset: changeset)
   end
 
@@ -85,5 +78,20 @@ defmodule ChukinasWeb.JoinComponent do
   end
 
   def user_session_attrs(_assigns, attrs), do: attrs
+
+  def build_path(socket, user_session) do
+    Enum.join [
+      Routes.dreadnought_path(socket, :join),
+      Sessions.room_name(user_session),
+    ]
+  end
+
+  def build_url(socket, user_session) do
+    Enum.join [
+      URI.to_string(socket.host_uri),
+      Routes.dreadnought_path(socket, :join),
+      Sessions.room_name(user_session),
+    ]
+  end
 
 end

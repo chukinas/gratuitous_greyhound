@@ -1,20 +1,24 @@
 alias Chukinas.Sessions
-alias Chukinas.Sessions.Players
+alias Chukinas.Sessions.Room
 alias ChukinasWeb.Router.Helpers, as: Routes
 
 defmodule ChukinasWeb.DreadnoughtLive.Impl do
 
   import Phoenix.LiveView, only: [assign: 2]
 
-  def assign_room_param(socket, %{"room" => room}), do: assign(socket, room_param: room)
-  def assign_room_param(socket, _params), do: assign(socket, room_param: nil)
+  #def assign_room_param(socket, %{"room" => room}) do
+  #  assign(socket, room_param: room)
+  #end
+  #def assign_room_param(socket, _params) do
+  #  assign(socket, room_param: nil)
+  #end
 
   def standard_assigns(socket) do
     gallery? = socket.assigns.live_action == :gallery
     tabs = [
       %{
         title: "Play",
-        path: Sessions.path(socket, socket.assigns[:user_session]),
+        path: Routes.dreadnought_path(socket, :join),
         current?: !gallery?,
         show_header: false
       },
@@ -41,9 +45,11 @@ defmodule ChukinasWeb.DreadnoughtLive.Impl do
     )
   end
 
-  def assign_room_name(socket) do
-    uuid = socket.assigns.uuid
-    assign(socket, room_name: Players.get(uuid))
+  def get_room_name(socket) do
+    case socket.assigns.room do
+      nil -> nil
+      %Room{} = room -> Room.name(room)
+    end
   end
 
 end

@@ -1,5 +1,6 @@
 alias Chukinas.Dreadnought.Player
-alias Chukinas.Sessions.{RoomName, Room}
+alias Chukinas.Sessions.Room
+alias Chukinas.Sessions.RoomName
 alias Chukinas.Util.Maps
 
 defmodule Room do
@@ -23,6 +24,8 @@ defmodule Room do
 
   # *** *******************************
   # *** GETTERS
+
+  def name(%__MODULE__{name: value}), do: value
 
   def pretty_name(%__MODULE__{pretty_name: value}), do: value
 

@@ -5,7 +5,18 @@
           ChukinasWeb.GalleryComponent, 
           show_markers?: assigns[:show_markers?],
           id: :gallery ) %>
-  <% :room -> %>
+  <%# TODO clean this up %>
+  <% :join -> %>
+    <%= live_component(
+          @socket, 
+          ChukinasWeb.JoinComponent, 
+          id: :room, 
+          show_join_screen?: assigns[:show_join_screen?], 
+          user: assigns[:user], 
+          user_session: assigns[:user_session], 
+          room: assigns[:room]
+        ) %>
+  <% :play -> %>
     <%= live_component(
           @socket, 
           ChukinasWeb.RoomComponent, 
@@ -13,8 +24,10 @@
           show_join_screen?: assigns[:show_join_screen?], 
           user: assigns[:user], 
           user_session: assigns[:user_session], 
-          room: assigns[:room], 
-          path_params: @path_params) %>
+          room: assigns[:room]
+        ) %>
+  <% :index -> %>
+    Hi!
 <% end %>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
