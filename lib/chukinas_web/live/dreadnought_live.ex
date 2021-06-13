@@ -14,6 +14,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
         #|> assign(uuid: uuid)
         |> assign(room: nil)
       else
+        Sessions.register_uuid(uuid)
         socket
         # TODO don't assign user here. User is no longer needed?
         |> assign(user: Sessions.new_user())
@@ -69,7 +70,10 @@ defmodule ChukinasWeb.DreadnoughtLive do
   # TODO does the user struct still need the room name, etc?
   @impl true
   def handle_info({:update_room, room}, socket) do
-    socket = assign(socket, room: room)
+    socket =
+      socket
+      |> assign(room: room)
+      |> Impl.maybe_redirect_to_play(room)
     {:noreply, socket}
   end
 

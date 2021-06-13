@@ -1,4 +1,3 @@
-alias Chukinas.Sessions
 alias Chukinas.Sessions.Room
 alias ChukinasWeb.Router.Helpers, as: Routes
 
@@ -43,6 +42,14 @@ defmodule ChukinasWeb.DreadnoughtLive.Impl do
       page_title: page_title,
       header: if(active_tab.show_header, do: title, else: nil)
     )
+  end
+
+  def maybe_redirect_to_play(socket, room) do
+    if room && :play != socket.assigns.live_action do
+      Phoenix.LiveView.push_patch(socket, to: Routes.dreadnought_path(socket, :play))
+    else
+      socket
+    end
   end
 
   def get_room_name(socket) do

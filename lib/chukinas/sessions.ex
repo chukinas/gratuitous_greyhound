@@ -23,7 +23,12 @@ defmodule Chukinas.Sessions do
   end
 
   def new_uuid do
+    # TODO replace calls to ectouuid with a call to this func
     Ecto.UUID.generate()
+  end
+
+  def register_uuid(player_uuid) do
+    UserRegistry.register(player_uuid)
   end
 
   # *** *******************************
@@ -31,10 +36,6 @@ defmodule Chukinas.Sessions do
 
   def user_session_changeset(data, attrs) do
     UserSession.Changeset.changeset(data, attrs)
-  end
-
-  def list_user_sessions do
-    raise "TODO"
   end
 
   def create_user_session(attrs \\ %{})

@@ -83,14 +83,13 @@ defmodule ChukinasWeb.JoinComponent do
     Enum.join [
       Routes.dreadnought_path(socket, :join),
       Sessions.room_name(user_session),
-    ]
+    ], "/"
   end
 
   def build_url(socket, user_session) do
     Enum.join [
       URI.to_string(socket.host_uri),
-      Routes.dreadnought_path(socket, :join),
-      Sessions.room_name(user_session),
+      build_path(socket, user_session),
     ]
   end
 

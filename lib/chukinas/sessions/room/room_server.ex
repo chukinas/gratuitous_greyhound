@@ -30,9 +30,12 @@ defmodule RoomServer do
   end
 
   def handle_call({:add_member, member_uuid, member_name}, _from, room) do
-    {:ok, member_number, room} = Room.add_player(room, member_uuid, member_name)
-    send_room_to_players(room)
-    {:reply, {:member_number, member_number}, room}
+    with {:ok, member_number, room} <- Room.add_player(room, member_uuid, member_name) do
+      send_all(room)
+      {:reply, {:member_number, member_number}, room}
+    else
+      _ -> {:reply, :error, room}
+    end
   end
 
   def handle_call(:get, _from, room) do
@@ -42,7 +45,7 @@ defmodule RoomServer do
   # *** *******************************
   # *** FUNCTIONS
 
-  defp send_room_to_players(room) do
+  defp send_all(room) do
     for uuid <- Room.player_uuids(room) do
       for pid <- UserRegistry.pids(uuid) do
         send pid, {:update_room, room}
