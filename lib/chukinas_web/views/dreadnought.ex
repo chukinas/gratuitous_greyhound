@@ -112,15 +112,6 @@ defmodule ChukinasWeb.DreadnoughtView do
     render("_center.html", assigns)
   end
 
-  def button(opts \\ []) do
-    assigns = Opts.merge!(opts,
-      text: "placeholder text",
-      phx_click: nil,
-      phx_target: nil
-    )
-    render("_button.html", assigns)
-  end
-
   def unit_selection_box(myself, %Unit{} = unit) do
     box_size = 200
     box_position =

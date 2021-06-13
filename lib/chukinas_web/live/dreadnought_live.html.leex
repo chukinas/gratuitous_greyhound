@@ -8,7 +8,7 @@
         )%>
   <%# TODO clean this up %>
   <% :join -> %>
-    <%= live_component(
+    <%= if connected?(@socket), do: live_component(
           @socket, 
           ChukinasWeb.JoinComponent, 
           id: :join_component, 

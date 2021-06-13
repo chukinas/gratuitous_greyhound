@@ -52,6 +52,13 @@ defmodule ChukinasWeb.DreadnoughtLive do
   end
 
   @impl true
+  def handle_event("leave_room", _, socket) do
+    IOP.inspect socket.assigns, "DreadLive leave room socket assigns"
+    Sessions.leave_room(socket.assigns.uuid)
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_info({:push_patch, path}, socket) do
     socket =
       socket

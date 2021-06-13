@@ -4,4 +4,5 @@
   <%= for player <- @players do %>
     <p>Player <%= player.id %>: <%= player.name %><%= if player.self?, do: " (you)" %></p>
   <% end %>
+  <%= Component.button("Leave Room", phx_click: "leave_room") %>
 </div>

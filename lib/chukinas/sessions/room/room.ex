@@ -47,6 +47,12 @@ defmodule Room do
     for player <- players(room), do: Player.uuid(player)
   end
 
+  def players_except(room, unwanted_player_uuid) do
+    room
+    |> players
+    |> Enum.filter(& !Player.has_uuid?(&1, unwanted_player_uuid))
+  end
+
   # *** *******************************
   # *** API
 
@@ -56,6 +62,10 @@ defmodule Room do
     room = Maps.push(room, :players, player)
            |> IOP.inspect
     {:ok, player_id, room}
+  end
+
+  def remove_player(room, player_uuid) do
+    %__MODULE__{room | players: players_except(room, player_uuid)}
   end
 
 end

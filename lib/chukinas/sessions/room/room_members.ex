@@ -39,6 +39,13 @@ defmodule Players do
     |> IOP.inspect("fetch, Players")
   end
 
+  @spec pop(player_uuid) :: room_name | nil
+  def pop(player_uuid) do
+    Agent.get_and_update(@name, fn state ->
+      Map.pop(state, player_uuid)
+    end)
+  end
+
   @spec delete(player_uuid) :: :ok
   def delete(player_uuid) do
     Agent.update(@name, &Map.delete(&1, player_uuid))

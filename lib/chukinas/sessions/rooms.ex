@@ -5,13 +5,19 @@ defmodule Rooms do
   # *** *******************************
   # *** API
 
-  def add_member(room_name, member_uuid, member_name) do
+  def add_member(room_name, member_uuid, member_name) when is_binary(room_name) do
     room_name
     |> get_room_pid
     |> GenServer.call({:add_member, member_uuid, member_name})
   end
 
-  def get(room_name) do
+  def remove_player(room_name, player_uuid) when is_binary(room_name) do
+    room_name
+    |> get_room_pid
+    |> GenServer.call({:remove_player, player_uuid})
+  end
+
+  def get(room_name) when is_binary(room_name) do
     room_name
     |> get_room_pid
     |> GenServer.call(:get)

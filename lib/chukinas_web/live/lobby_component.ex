@@ -1,8 +1,10 @@
 alias Chukinas.Dreadnought.Player
 alias Chukinas.Sessions.Room
+alias ChukinasWeb.Components
 
 defmodule ChukinasWeb.LobbyComponent do
   use ChukinasWeb, :live_component
+  use Components
 
   # *** *******************************
   # *** CALLBACKS

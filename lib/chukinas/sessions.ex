@@ -1,17 +1,15 @@
-#alias ChukinasWeb.Router.Helpers, as: Routes
-alias Chukinas.Sessions.Players
-alias Chukinas.Sessions.Room
-alias Chukinas.Sessions.Rooms
-alias Chukinas.Sessions.User
-alias Chukinas.Sessions.UserRegistry
-
 defmodule Chukinas.Sessions do
   @moduledoc """
-  The Sessions context.
+  The Sessions context
   """
 
-  #import Ecto.Changeset
+  alias Chukinas.Sessions.Players
+  alias Chukinas.Sessions.Room
+  alias Chukinas.Sessions.Rooms
+  alias Chukinas.Sessions.User
+  alias Chukinas.Sessions.UserRegistry
   alias Chukinas.Sessions.UserSession
+
 
   # *** *******************************
   # *** Users
@@ -31,6 +29,7 @@ defmodule Chukinas.Sessions do
     Ecto.UUID.generate()
   end
 
+  # TODO rename `register_liveview`?
   def register_uuid(player_uuid) do
     UserRegistry.register(player_uuid)
   end
@@ -59,8 +58,6 @@ defmodule Chukinas.Sessions do
     user_session |> UserSession.Changeset.room
   end
 
-  defdelegate room(user_session), to: UserSession
-
   # *** *******************************
   # *** ROOM
 
@@ -79,6 +76,16 @@ defmodule Chukinas.Sessions do
     }
     Players.register(User.uuid(user), room_name)
     {:ok, user}
+  end
+
+  def leave_room(player_uuid) do
+    # TODO do not manually set the liveview's room to nil
+    # TODO rename this Players module
+    IOP.inspect(player_uuid, "Sessions.leave_room, uuid")
+    room_name = Players.pop(player_uuid)
+                |> IOP.inspect("Sessions.leave_room, room_name")
+
+    Rooms.remove_player(room_name, player_uuid)
   end
 
   def get_room_from_player_uuid(player_uuid) do

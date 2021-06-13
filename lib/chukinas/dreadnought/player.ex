@@ -43,4 +43,11 @@ defmodule Player do
   def name(%__MODULE__{name: value}), do: value
   def ai?(%__MODULE__{type: type}), do: type === :ai
 
+  # *** *******************************
+  # *** API
+
+  def has_uuid?(%__MODULE__{uuid: uuid}, wanted_uuid) do
+    uuid == wanted_uuid
+  end
+
 end

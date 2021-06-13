@@ -31,11 +31,20 @@ defmodule RoomServer do
 
   def handle_call({:add_member, member_uuid, member_name}, _from, room) do
     with {:ok, member_number, room} <- Room.add_player(room, member_uuid, member_name) do
-      send_all(room)
+      send_room_to_players(room)
       {:reply, {:member_number, member_number}, room}
     else
       _ -> {:reply, :error, room}
     end
+  end
+
+  def handle_call({:remove_player, player_uuid}, _from, room) do
+    # TODO kill room if now empty
+    room = Room.remove_player(room, player_uuid)
+    send_room_to_players room
+    send_room_to_players nil, player_uuid
+    {:reply, room, room}
+    # TODO isn't there a way to have a function execute here?
   end
 
   def handle_call(:get, _from, room) do
@@ -45,11 +54,24 @@ defmodule RoomServer do
   # *** *******************************
   # *** FUNCTIONS
 
-  defp send_all(room) do
+  # TODO set timeout to kill room if inactive for __ mins
+
+  defp send_room_to_players(room, recipients \\ :all)
+
+  #defp send_room_to_players(room, recipients) when is_list(recipients) do
+  #  Enum.each recipients, &send_room_to_players(room, &1)
+  #end
+
+  defp send_room_to_players(room, :all) do
     for uuid <- Room.player_uuids(room) do
-      for pid <- UserRegistry.pids(uuid) do
-        send pid, {:update_room, room}
-      end
+      send_room_to_players(room, uuid)
+    end
+  end
+
+  defp send_room_to_players(room, player_uuid) when is_binary(player_uuid) do
+    IO.puts "RoomServer send room to #{player_uuid}"
+    for pid <- UserRegistry.pids(player_uuid) do
+      send pid, {:update_room, room}
     end
   end
 
