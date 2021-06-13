@@ -1,7 +1,7 @@
-alias Chukinas.Sessions.{User, UserSession}
-alias Chukinas.Dreadnought.Player
+defmodule Chukinas.Sessions.User do
 
-defmodule User do
+  alias Chukinas.Dreadnought.Player
+  alias Chukinas.Sessions.UserSession
 
   # *** *******************************
   # *** TYPES

@@ -30,12 +30,9 @@ defmodule RoomServer do
   end
 
   def handle_call({:add_member, member_uuid, member_name}, _from, room) do
-    with {:ok, member_number, room} <- Room.add_player(room, member_uuid, member_name) do
-      send_room_to_players(room)
-      {:reply, {:member_number, member_number}, room}
-    else
-      _ -> {:reply, :error, room}
-    end
+    {:ok, member_number, room} = Room.add_player(room, member_uuid, member_name)
+    send_room_to_players(room)
+    {:reply, {:member_number, member_number}, room}
   end
 
   def handle_call({:remove_player, player_uuid}, _from, room) do

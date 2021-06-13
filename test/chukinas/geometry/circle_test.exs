@@ -15,7 +15,8 @@ defmodule Chukinas.Geometry.CircleTest do
 
     # For an r=1 circle centered on origin:
     @origin_circle Circle.new(csys_origin(), 1, :ccw)
-    @circumference 2 * :math.pi() * 1
+
+    def circumference, do: 2 * :math.pi()
 
     test "from pose and position" do
       pose = pose_new(1, 0, 270)
@@ -49,7 +50,7 @@ defmodule Chukinas.Geometry.CircleTest do
       coord = {1, -1}
       assert 45 == Circle.traversal_angle_at_coord(@origin_circle, coord)
       assert_in_delta(
-        @circumference / 8,
+        circumference() / 8,
         Circle.traversal_distance_at_coord(@origin_circle, coord),
         0.1
       )

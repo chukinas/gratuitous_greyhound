@@ -1,25 +1,28 @@
-alias Chukinas.Sessions
-alias ChukinasWeb.DreadnoughtLive.Impl
-
 defmodule ChukinasWeb.DreadnoughtLive do
+
+  alias Chukinas.Sessions
+  alias ChukinasWeb.DreadnoughtLive.Impl
   use ChukinasWeb, :live_view
+
+  # *** *******************************
+  # *** CALLBACKS
 
   @impl true
   def mount(_params, session, socket) do
     IO.puts "mounting!!"
     uuid = Map.fetch!(session, "uuid")
     socket =
-      if !socket.connected? do
-        socket
-        |> assign(uuid: uuid)
-        |> assign(room: nil)
-      else
+      if socket.connected? do
         Sessions.register_uuid(uuid)
         socket
         # TODO don't assign user here. User is no longer needed?
         |> assign(user: Sessions.new_user())
         |> assign(uuid: uuid)
         |> assign(room: Sessions.get_room_from_player_uuid(uuid))
+      else
+        socket
+        |> assign(uuid: uuid)
+        |> assign(room: nil)
       end
     {:ok, socket, layout: {ChukinasWeb.LayoutView, "dreadnought_menu.html"}}
   end

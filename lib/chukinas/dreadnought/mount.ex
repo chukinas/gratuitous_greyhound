@@ -17,7 +17,7 @@ defmodule Mount do
 
   def new(id, location) do
     fields =
-      %{ id: id }
+      %{id: id}
       |> merge_position(location)
     struct!(__MODULE__, fields)
   end

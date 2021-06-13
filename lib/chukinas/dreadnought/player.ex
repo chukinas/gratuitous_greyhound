@@ -1,6 +1,4 @@
-alias Chukinas.Dreadnought.{Player}
-
-defmodule Player do
+defmodule Chukinas.Dreadnought.Player do
 
   # *** *******************************
   # *** TYPES

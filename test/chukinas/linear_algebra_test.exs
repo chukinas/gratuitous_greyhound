@@ -11,7 +11,7 @@ defmodule Chukinas.LinearAlgebraTest do
   describe "vector coordinate system" do
 
     @sqrt2 :math.sqrt(2)
-    @coord_at_45 {@sqrt2/2, @sqrt2/2}
+    @coord_at_45 {@sqrt2 / 2, @sqrt2 / 2}
 
     test "inversion" do
       pose = pose_new(1, 1, -90)

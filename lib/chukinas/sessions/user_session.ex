@@ -1,7 +1,6 @@
-alias Chukinas.Sessions.UserSession
-alias Chukinas.Sessions.RoomName
+defmodule Chukinas.Sessions.UserSession do
 
-defmodule UserSession do
+  alias Chukinas.Sessions.RoomName
 
   # *** *******************************
   # *** TYPES

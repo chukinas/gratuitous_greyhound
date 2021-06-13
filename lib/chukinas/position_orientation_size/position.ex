@@ -87,7 +87,7 @@ defmodule Position do
     |> Map.update!(:y, fun)
   end
 
-  def divide(position, value) when not (value == 0), do: multiply(position, 1/value)
+  def divide(position, value) when not (value == 0), do: multiply(position, 1 / value)
 
   def round_to_int(position) do
     position
