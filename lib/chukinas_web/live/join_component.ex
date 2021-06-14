@@ -1,7 +1,7 @@
-alias Chukinas.Sessions
-alias Chukinas.Sessions.{User, UserSession}
-
 defmodule ChukinasWeb.JoinComponent do
+
+  alias Chukinas.Sessions
+  alias Chukinas.Sessions.UserSession
   use ChukinasWeb, :live_component
   use ChukinasWeb.Components
   use Phoenix.HTML
@@ -12,7 +12,6 @@ defmodule ChukinasWeb.JoinComponent do
   @impl true
   def update(assigns, socket) do
     user_session = nil
-    user = Sessions.user_from_uuid(assigns.uuid)
     changeset =
       Sessions.user_session_changeset(
         user_session,
@@ -21,7 +20,7 @@ defmodule ChukinasWeb.JoinComponent do
     socket =
       socket
       |> assign(user_session: user_session)
-      |> assign(user: user)
+      |> assign(uuid: assigns.uuid)
       |> assign_changeset_and_url(changeset, false)
     {:ok, socket}
   end
@@ -41,13 +40,15 @@ defmodule ChukinasWeb.JoinComponent do
 
   def handle_event("join", %{"user_session" => params}, socket) do
     socket =
-      with {:ok, user_session} <- Sessions.update_user_session(socket.assigns.user_session, params),
-           user                <- User.merge_user_session(socket.assigns.user, user_session),
-           room_name           <- UserSession.room(user_session),
-           {:ok, _user}        <- Sessions.join_room(user, room_name) do
-        socket
-      else
-        {:error, changeset} -> assign_changeset_and_url(socket, changeset)
+      case Sessions.join_room(socket.assigns.user_session, params) do
+        {:ok, user_session} ->
+          room_name = UserSession.room(user_session)
+          player_uuid = socket.assigns.uuid
+          player_name = UserSession.username(user_session)
+          :ok = Sessions.do_join_room(room_name, player_uuid, player_name)
+          socket
+        {:error, changeset} ->
+          assign_changeset_and_url(socket, changeset)
       end
     {:noreply, socket}
   end

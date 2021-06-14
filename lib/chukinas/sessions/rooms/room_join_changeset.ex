@@ -1,9 +1,13 @@
-alias Chukinas.Sessions.UserSession
-alias Chukinas.Sessions.RoomName
+# TODO rename RoomJoin
+defmodule Chukinas.Sessions.RoomJoinChangeset do
 
-defmodule UserSession.Changeset do
   use Ecto.Schema
+
   import Ecto.Changeset
+
+  # TODO factor this out, so I can delete UsesSession
+  alias Chukinas.Sessions.UserSession
+  alias Chukinas.Sessions.RoomName
 
   # *** *******************************
   # *** TYPES
@@ -17,14 +21,17 @@ defmodule UserSession.Changeset do
   # *** *******************************
   # *** NEW
 
+  # TODO remove dependency on UserSession
   def user_session_to_schema(%UserSession{} = us = _user_session) do
     %__MODULE__{
+      # TODO rename one of these to room_name
       username: us.username,
       room_raw: UserSession.pretty_room_name(us),
       room_slug: us.room
     }
   end
 
+  # TODO remove dependency on UserSession
   def schema_to_user_session(%__MODULE__{
     username: username,
     room_slug: room
@@ -35,10 +42,12 @@ defmodule UserSession.Changeset do
   # *** *******************************
   # *** API
 
+  # TODO remove dependency on UserSession
   def changeset(nil, attrs) do
     changeset(%UserSession{}, attrs)
   end
 
+  # TODO remove dependency on UserSession
   def changeset(%UserSession{} = user_session, attrs) do
     user_session
     |> user_session_to_schema

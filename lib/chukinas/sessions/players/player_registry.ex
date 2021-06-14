@@ -17,7 +17,6 @@ defmodule Chukinas.Sessions.PlayerRegistry do
   end
 
   def pids(user_uuid) do
-    #IOP.inspect Registry.keys(@me), "User reg, pids, keys"
     for {pid, _value} <- Registry.lookup(@me, user_uuid), do: pid
   end
 

@@ -9,14 +9,11 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def mount(_params, session, socket) do
-    IO.puts "mounting!!"
     uuid = Map.fetch!(session, "uuid")
     socket =
       if socket.connected? do
         Sessions.register_uuid(uuid)
         socket
-        # TODO don't assign user here. User is no longer needed?
-        |> assign(user: Sessions.new_user())
         |> assign(uuid: uuid)
         |> assign(room: Sessions.get_room_from_player_uuid(uuid))
       else
@@ -29,7 +26,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def handle_params(_params, _url, socket) do
-    IO.puts "handling params!!"
     play_or_join = if socket.assigns.room, do: :play, else: :join
     socket =
       case socket.assigns.live_action do
@@ -56,7 +52,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def handle_event("leave_room", _, socket) do
-    IOP.inspect socket.assigns, "DreadLive leave room socket assigns"
     Sessions.leave_room(socket.assigns.uuid)
     {:noreply, socket}
   end
