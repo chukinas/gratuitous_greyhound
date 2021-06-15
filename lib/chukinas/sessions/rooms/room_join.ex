@@ -4,44 +4,49 @@ defmodule Chukinas.Sessions.RoomJoin do
   @primary_key false
 
   alias Chukinas.Sessions.RoomName
+  alias Ecto.Changeset
 
   # *** *******************************
   # *** TYPES
 
+  @types %{
+    room_name: :string,
+    player_uuid: :string,
+    player_name: :string
+  }
+
+  @required_fields Map.keys @types
+
   embedded_schema do
-    field :room_name, :string
-    field :player_uuid, :string
-    field :player_name, :string
+    for key <- Map.keys(@types) do
+      Macro.escape(field(key, :string))
+    end
   end
 
   # *** *******************************
   # *** API
 
-  def slugify_raw_room_name(%{raw_room_name: raw} = params) do
-    room_name = RoomName.slugify(raw)
-    Map.put(params, :room_name, room_name)
-  end
-
-  def changeset(attrs) do
+  def changeset(data \\ %__MODULE__{}, attrs) do
     path_len_msg = "path should be 5 - 20 characters"
-    %__MODULE__{}
-    |> Ecto.Changeset.cast(attrs, [:room_name, :player_uuid, :player_name])
-    |> Ecto.Changeset.update_change(:player_name, &String.trim/1)
-    |> Ecto.Changeset.validate_required([:player_name, :room_name, :player_uuid])
-    |> Ecto.Changeset.validate_length(:player_name, min: 2, max: 15)
-    # TODO can these 2 be combined?
-    |> Ecto.Changeset.validate_length(:room_name, min: 5, message: path_len_msg)
-    |> Ecto.Changeset.validate_length(:room_name, max: 20, message: path_len_msg)
+    data
+    |> Changeset.cast(attrs, @required_fields)
+    |> Changeset.update_change(:player_name, &String.trim/1)
+    |> Changeset.update_change(:room_name, &RoomName.slugify/1)
+    |> Changeset.validate_required(@required_fields)
+    |> Changeset.validate_length(:player_name, min: 2, max: 15)
+    |> Changeset.validate_length(:room_name, min: 5, max: 20, message: path_len_msg)
   end
 
-  def validate(attrs) do
-    changeset = changeset(attrs)
+  def validate(data \\ %__MODULE__{}, attrs) do
+    changeset = changeset(data, attrs)
     if changeset.valid? do
-      join_room = Ecto.Changeset.apply_changes(changeset)
+      join_room = Changeset.apply_changes(changeset)
       {:ok, join_room}
     else
       {:error, changeset}
     end
   end
+
+  def types, do: @types
 
 end
