@@ -16,29 +16,29 @@
                 phx_change: :validate, 
                 phx_submit: :join, 
                 phx_target: @myself, 
-                as: "user_session", 
+                as: "room_join", 
                 class: "space-y-6") %>
 
         <%# USER NAME %>
         <div>
-          <%= label f, :username, class: Class.label() %>
+          <%= label f, :player_name, class: Class.label() %>
           <div class="mt-1 relative rounded-md shadow-sm">
-            <%= Component.text_input f, :username, autofocus: true %>
-            <%= Component.error_icon_text_input f, :username %>
+            <%= Component.text_input f, :player_name, autofocus: true %>
+            <%= Component.error_icon_text_input f, :player_name %>
           </div>
-          <%= Component.error_paragraph f, :username %>
+          <%= Component.error_paragraph f, :player_name %>
         </div>
 
         <%# ROOM %>
         <div>
-          <%= label f, :room_raw, "Room", class: Class.label() %>
+          <%= label f, :room_name_raw, "Room", class: Class.label() %>
           <div class="mt-1 relative rounded-md shadow-sm">
-            <%= Component.text_input f, :room_raw %>
-            <%= Component.error_icon_text_input f, :room_raw %>
-            <%= Component.error_icon_text_input f, :room_slug %>
+            <%= Component.text_input f, :room_name_raw %>
+            <%= Component.error_icon_text_input f, :room_name_raw %>
+            <%= Component.error_icon_text_input f, :room_name %>
           </div>
-          <%= Component.error_paragraph f, :room_raw %>
-          <%= Component.error_paragraph f, :room_slug %>
+          <%= Component.error_paragraph f, :room_name_raw %>
+          <%= Component.error_paragraph f, :room_name %>
         </div>
 
         <%# URL and JOIN button %>

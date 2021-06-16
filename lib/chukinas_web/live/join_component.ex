@@ -1,98 +1,103 @@
+# TODO rename RoomJoinComponent
+
 defmodule ChukinasWeb.JoinComponent do
 
-  alias Chukinas.Sessions
-  alias Chukinas.Sessions.UserSession
   use ChukinasWeb, :live_component
   use ChukinasWeb.Components
   use Phoenix.HTML
+  alias Chukinas.Sessions
+  alias Ecto.Changeset
 
   #use Ecto.Schema
   # http://blog.plataformatec.com.br/2016/05/ectos-insert_all-and-schemaless-queries/
 
+  # *** *******************************
+  # *** CALLBACKS
+
   @impl true
   def update(assigns, socket) do
-    user_session = nil
-    changeset =
-      Sessions.user_session_changeset(
-        user_session,
-        user_session_attrs(%{})
-      )
     socket =
       socket
-      |> assign(user_session: user_session)
-      |> assign(uuid: assigns.uuid)
-      |> assign_changeset_and_url(changeset, false)
+      |> assign(player_uuid: assigns.uuid)
+      |> assign_changeset_and_url(%{}, false)
     {:ok, socket}
   end
 
   @impl true
-  def handle_event("validate", %{"user_session" => params}, socket) do
-    changeset =
-      Sessions.user_session_changeset(
-        socket.assigns.user_session,
-        # TODO do I need to include the path_params again?
-        # or do they persist as raw input now?
-        params
-      )
-    socket = assign_changeset_and_url(socket, changeset)
+  def handle_event("validate", %{"room_join" => params}, socket) do
+    socket = assign_changeset_and_url(socket, params)
     {:noreply, socket}
   end
 
-  def handle_event("join", %{"user_session" => params}, socket) do
+  def handle_event("join", %{"room_join" => params}, socket) do
+    attrs = params_to_attrs(params, socket)
     socket =
-      case Sessions.join_room(socket.assigns.user_session, params) do
-        {:ok, user_session} ->
-          room_name = UserSession.room(user_session)
-          player_uuid = socket.assigns.uuid
-          player_name = UserSession.username(user_session)
-          :ok = Sessions.do_join_room(room_name, player_uuid, player_name)
+      case Sessions.room_join_validate(attrs) do
+        {:ok, room_join} ->
+          :ok = Sessions.join_room(room_join)
           socket
-        {:error, changeset} ->
-          assign_changeset_and_url(socket, changeset)
+        {:error, _changeset} ->
+          assign_changeset_and_url(socket, params)
       end
     {:noreply, socket}
   end
 
-  def assign_changeset_and_url(socket, changeset, show_errors? \\ true) do
-    # TODO I shouldn't be manipulating the raw map..?
-    changeset = if show_errors?, do: Map.put(changeset, :action, :insert), else: changeset
-    url = build_url(socket, changeset)
-    assign(socket, maybe_url: url, changeset: changeset)
-  end
-
   # *** *******************************
-  # *** FUNCTIONS
+  # *** PRIVATE
 
-  def user_session_attrs(assigns) do
-    user_session_attrs(assigns, %{})
+  defp assign_changeset_and_url(socket, changeset_or_params, show_errors? \\ true)
+
+  defp assign_changeset_and_url(socket, %Changeset{} = changeset, show_errors?) do
+    changeset = if show_errors? do
+      # TODO I shouldn't be manipulating the raw map..?
+      Map.put(changeset, :action, :insert)
+    else
+      changeset
+    end
+    socket
+    |> assign(changeset: changeset)
+    |> assign_url
   end
 
-  def user_session_attrs(%{"username" => username} = assigns, attrs) do
-    assigns = Map.drop(assigns, ["username"])
-    attrs = Map.put(attrs, :username, username)
-    user_session_attrs(assigns, attrs)
+  defp assign_changeset_and_url(socket, params, show_errors?) do
+    attrs = params_to_attrs(params, socket)
+    changeset =
+      changeset_data()
+      |> Sessions.room_join_changeset(attrs)
+    # TODO is this necessary?
+      |> Changeset.cast(attrs, [:room_name_raw])
+    assign_changeset_and_url(socket, changeset, show_errors?)
   end
 
-  def user_session_attrs(%{"room" => room_raw} = assigns, attrs) do
-    assigns = Map.drop(assigns, ["room"])
-    attrs = Map.put(attrs, :room_raw, room_raw)
-    user_session_attrs(assigns, attrs)
+  defp params_to_attrs(params, socket) do
+    params
+    |> Map.put("room_name", params["room_name_raw"])
+    |> Map.put("player_uuid", socket.assigns.player_uuid)
   end
 
-  def user_session_attrs(_assigns, attrs), do: attrs
+  defp assign_url(socket) do
+    assign(socket, maybe_url: build_url(socket))
+  end
 
-  def build_path(socket, user_session) do
+  defp build_url(socket) do
+    Enum.join [
+      URI.to_string(socket.host_uri),
+      build_path(socket),
+    ]
+  end
+
+  defp build_path(socket) do
     Enum.join [
       Routes.dreadnought_path(socket, :join),
-      Sessions.room_name(user_session),
+      Changeset.get_field(socket.assigns.changeset, :room_name)
     ], "/"
   end
 
-  def build_url(socket, user_session) do
-    Enum.join [
-      URI.to_string(socket.host_uri),
-      build_path(socket, user_session),
-    ]
+  defp changeset_data do
+    types =
+      Sessions.room_join_types()
+      |> Map.put(:room_name_raw, :string)
+    {%{}, types}
   end
 
 end
