@@ -1,3 +1,5 @@
+# TODO rename PlayerProcesses?
+
 defmodule Chukinas.Sessions.PlayerRegistry do
   @moduledoc"""
   Maps player UUIDs to PIDs
