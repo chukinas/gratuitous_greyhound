@@ -1,6 +1,5 @@
-alias Chukinas.Sessions
-
 defmodule ChukinasWeb.Router do
+
   use ChukinasWeb, :router
 
   pipeline :browser do
@@ -63,7 +62,7 @@ defmodule ChukinasWeb.Router do
     {conn, uuid} =
       case conn.req_cookies["uuid"] do
         nil ->
-          uuid = Sessions.new_uuid()
+          uuid = Ecto.UUID.generate()
           conn = put_resp_cookie(conn, "uuid", uuid, path: "/dreadnought")
           {conn, uuid}
         uuid ->

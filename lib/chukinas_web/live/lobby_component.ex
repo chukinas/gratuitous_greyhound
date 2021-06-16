@@ -1,10 +1,9 @@
-alias Chukinas.Dreadnought.Player
-alias Chukinas.Sessions.Room
-alias ChukinasWeb.Components
-
 defmodule ChukinasWeb.LobbyComponent do
+
   use ChukinasWeb, :live_component
-  use Components
+  use ChukinasWeb.Components
+  alias Chukinas.Dreadnought.Player
+  alias Chukinas.Sessions.Room
 
   # *** *******************************
   # *** CALLBACKS
@@ -22,14 +21,13 @@ defmodule ChukinasWeb.LobbyComponent do
   end
 
   # *** *******************************
-  # *** FUNCTIONS
+  # *** PRIVATE
 
-  def build_player(%Player{} = player, uuid) do
-    %{
-      id: Player.id(player),
-      name: Player.name(player),
-      self?: Player.uuid(player) == uuid
-    }
+  defp build_player(%Player{} = player, uuid) do
+    player
+    |> Map.from_struct
+    |> Map.take(~w/id name ready?/a)
+    |> Map.put(:self?, Player.uuid(player) == uuid)
   end
 
 end

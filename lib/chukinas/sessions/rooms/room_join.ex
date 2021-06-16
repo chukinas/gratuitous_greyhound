@@ -23,6 +23,12 @@ defmodule Chukinas.Sessions.RoomJoin do
     end
   end
 
+  @type t :: %__MODULE__{
+    room_name: String.t,
+    player_uuid: String.t,
+    player_name: String.t
+  }
+
   # *** *******************************
   # *** API
 

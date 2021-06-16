@@ -9,10 +9,10 @@ defmodule Chukinas.Sessions.User do
 
   use TypedStruct
   typedstruct enforce: false do
+    field :player_id, integer
     field :uuid, String.t(), enforce: true
     field :name, String.t()
     field :room_name, String.t()
-    field :player_id, integer
     field :players, [Player.t]
   end
 
@@ -21,7 +21,6 @@ defmodule Chukinas.Sessions.User do
 
   def new do
     new Ecto.UUID.generate()
-
   end
 
   def new(uuid) do

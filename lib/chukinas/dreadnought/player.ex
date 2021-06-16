@@ -10,6 +10,7 @@ defmodule Chukinas.Dreadnought.Player do
     field :type, :human | :ai
     field :uuid, String.t
     field :name, String.t
+    field :ready?, boolean
   end
 
   # *** *******************************
@@ -20,7 +21,8 @@ defmodule Chukinas.Dreadnought.Player do
       id: id,
       type: type,
       uuid: uuid,
-      name: name
+      name: name,
+      ready?: false
     }
   end
 
