@@ -40,9 +40,10 @@ defmodule Chukinas.Util.IdList do
             {:still_looking, [item | list]}
           end
         item, {:found, list} ->
-          {:still_looking, [item | list]}
+          {:found, [item | list]}
       end
     list
+    |> Enum.reverse
   end
 
   # *** *******************************
@@ -52,7 +53,7 @@ defmodule Chukinas.Util.IdList do
     Map.fetch!(a, key) == Map.fetch!(b, key)
   end
   defp _match?(%{} = a, sought_id, key) do
-    Map.fetch!(a, key) == sought_id
+    (Map.fetch!(a, key) == sought_id)
   end
 
   defp _not_match?(a, b, key), do: not _match?(a, b, key)

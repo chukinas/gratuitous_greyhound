@@ -10,7 +10,7 @@
   <% :join -> %>
     <%= if connected?(@socket), do: live_component(
           @socket, 
-          ChukinasWeb.JoinComponent, 
+          ChukinasWeb.RoomJoinComponent, 
           id: :join_component, 
           uuid: @uuid
         )%>

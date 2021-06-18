@@ -1,6 +1,4 @@
-# TODO rename RoomJoinComponent
-
-defmodule ChukinasWeb.JoinComponent do
+defmodule ChukinasWeb.RoomJoinComponent do
 
   use ChukinasWeb, :live_component
   use ChukinasWeb.Components
