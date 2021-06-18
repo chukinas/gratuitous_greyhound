@@ -19,4 +19,12 @@ defmodule RoomRegistry do
     end
   end
 
+  @spec fetch_pid(String.t) :: :error | {:ok, pid}
+  def fetch_pid(room_name) do
+    case pid(room_name) do
+      nil -> :error
+      pid -> {:ok, pid}
+    end
+  end
+
 end

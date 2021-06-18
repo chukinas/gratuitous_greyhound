@@ -50,12 +50,11 @@ defmodule Chukinas.Sessions.Rooms do
   # *** PRIVATE
 
   defp room_pid_from_name(room_name) when is_binary(room_name) do
-    case RoomRegistry.pid(room_name) do
-      nil ->
-        {:ok, pid} = RoomDynamicSupervisor.new_room(room_name)
-        pid
-      pid ->
-        pid
+    with :error <- RoomRegistry.fetch_pid(room_name),
+         {:ok, pid} <- RoomDynamicSupervisor.new_room(room_name) do
+      pid
+    else
+      {:ok, pid} -> pid
     end
   end
 

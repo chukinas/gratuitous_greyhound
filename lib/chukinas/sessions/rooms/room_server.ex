@@ -2,6 +2,7 @@ defmodule Chukinas.Sessions.RoomServer do
 
   alias Chukinas.Sessions.Players
   alias Chukinas.Sessions.Room
+  alias Chukinas.Sessions.RoomBackup
   alias Chukinas.Sessions.RoomRegistry
   use GenServer
 
@@ -27,7 +28,11 @@ defmodule Chukinas.Sessions.RoomServer do
   # *** CALLBACKS
 
   def init(room_name) when is_binary(room_name) do
-    {:ok, Room.new(room_name)}
+    room = case RoomBackup.fetch_and_pop(room_name) do
+      {:ok, room} -> room
+      :error -> Room.new(room_name)
+    end
+    {:ok, room, {:continue, :send_all_players}}
   end
 
   def handle_call({:add_member, %{
@@ -64,6 +69,7 @@ defmodule Chukinas.Sessions.RoomServer do
 
   def terminate(reason, room) do
     IOP.inspect {reason, room}, "Room Server terminate args"
+    RoomBackup.put(room)
   end
 
 end
