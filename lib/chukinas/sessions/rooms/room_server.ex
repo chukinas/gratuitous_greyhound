@@ -30,8 +30,11 @@ defmodule Chukinas.Sessions.RoomServer do
     {:ok, Room.new(room_name)}
   end
 
-  def handle_call({:add_member, member_uuid, member_name}, _from, room) do
-    {:ok, _member_number, room} = Room.add_player(room, member_uuid, member_name)
+  def handle_call({:add_member, %{
+    player_name: player_name,
+    player_uuid: player_uuid,
+  }}, _from, room) do
+    {:ok, _member_number, room} = Room.add_player(room, player_uuid, player_name)
     {:reply, :ok, room, {:continue, :send_all_players}}
   end
 

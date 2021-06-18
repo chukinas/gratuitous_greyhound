@@ -1,4 +1,5 @@
 alias Chukinas.Dreadnought, as: D
+alias Chukinas.Dreadnought.Player
 alias Chukinas.Geometry, as: G
 
 alias Chukinas.Sessions.RoomRegistry, as: Reg

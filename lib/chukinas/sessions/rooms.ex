@@ -18,7 +18,7 @@ defmodule Chukinas.Sessions.Rooms do
   def add_member(%RoomJoin{} = room_join) do
     room_join.room_name
     |> room_pid_from_name
-    |> GenServer.call({:add_member, room_join.player_uuid, room_join.player_uuid})
+    |> GenServer.call({:add_member, room_join})
   end
 
   def remove_player(room_name, player_uuid) when is_binary(room_name) do

@@ -54,7 +54,6 @@ defmodule Chukinas.Sessions.Room do
     player_id = 1 + member_count(room)
     player = Player.new_human(player_id, player_uuid, player_name)
     room = Maps.push(room, :players, player)
-           |> IOP.inspect
     {:ok, player_id, room}
   end
 
