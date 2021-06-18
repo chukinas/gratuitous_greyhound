@@ -60,6 +60,12 @@ defmodule Chukinas.Sessions.Room do
     |> Enum.filter(& !Player.has_uuid?(&1, unwanted_player_uuid))
   end
 
+  def player_from_uuid(%__MODULE__{players: players}, wanted_player_uuid)
+  when is_binary(wanted_player_uuid) do
+    players
+    |> Player.Enum.by_uuid(wanted_player_uuid)
+  end
+
   def player_id_from_uuid(%__MODULE__{players: players}, wanted_player_uuid)
   when is_binary(wanted_player_uuid) do
     players

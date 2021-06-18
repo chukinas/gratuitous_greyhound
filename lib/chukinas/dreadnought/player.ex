@@ -42,6 +42,7 @@ defmodule Chukinas.Dreadnought.Player do
   def type(%__MODULE__{type: value}), do: value
   def uuid(%__MODULE__{uuid: value}), do: value
   def name(%__MODULE__{name: value}), do: value
+  def ready?(%__MODULE__{ready?: value}), do: value
   def ai?(%__MODULE__{type: type}), do: type === :ai
 
   # *** *******************************
@@ -59,9 +60,15 @@ end
 
 defmodule Chukinas.Dreadnought.Player.Enum do
   alias Chukinas.Dreadnought.Player
+
   def id_from_uuid(players, uuid) do
     players
-    |> Enum.find(& Player.uuid(&1) == uuid)
+    |> by_uuid(uuid)
     |> Player.id
   end
+
+  def by_uuid(players, uuid) do
+    Enum.find(players, & Player.uuid(&1) == uuid)
+  end
+
 end

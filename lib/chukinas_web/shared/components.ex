@@ -92,7 +92,8 @@ defmodule ChukinasWeb.Components do
       type: "button",
       value: text,
       class: Class.submit(),
-      phx_click: opts[:phx_click]
+      phx_click: opts[:phx_click],
+      "phx-target": opts[:phx_target]
     )
   end
 
