@@ -1,10 +1,23 @@
-alias Chukinas.Dreadnought.{Mission, Unit, MissionBuilder, Island, Player}
-alias Chukinas.Geometry.{Grid}
-
-# TODO rename Mission.Build
-defmodule MissionBuilder do
+defmodule Chukinas.Dreadnought.MissionBuilder do
 
   use Chukinas.PositionOrientationSize
+  alias Chukinas.Dreadnought.Island
+  alias Chukinas.Dreadnought.Mission
+  alias Chukinas.Dreadnought.Player
+  alias Chukinas.Dreadnought.Unit
+  alias Chukinas.Geometry.Grid
+
+  def online(%Player{} = player) do
+    {grid, margin} = medium_map()
+    units = [
+      Unit.Builder.red_cruiser(1, pose_new(0, 0, 0), name: "Prince Eugene"),
+    ]
+    Mission.new(grid, margin)
+    |> Map.put(:islands, islands())
+    |> Mission.put(units)
+    |> Mission.put(player)
+    |> Mission.start
+  end
 
   def dev do
     {grid, margin} = medium_map()
@@ -18,6 +31,9 @@ defmodule MissionBuilder do
     |> Mission.put(human_and_ai_players())
     |> Mission.start
   end
+
+  # *** *******************************
+  # *** PRIVATE
 
   defp islands do
     [

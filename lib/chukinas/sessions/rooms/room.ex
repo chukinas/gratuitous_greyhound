@@ -1,15 +1,19 @@
 defmodule Chukinas.Sessions.Room do
 
   use TypedStruct
+  alias Chukinas.Dreadnought.Mission
+  alias Chukinas.Dreadnought.MissionBuilder
   alias Chukinas.Dreadnought.Player
   alias Chukinas.Sessions.RoomName
   alias Chukinas.Util.Maps
   alias Chukinas.Util.IdList
 
-  typedstruct do
-    field :name, String.t, enforce: true
-    field :pretty_name, String.t, enforce: true
+  typedstruct enforce: true do
+    field :name, String.t
+    field :pretty_name, String.t
+    # TODO move players fully into mission
     field :players, [Player.t], default: []
+    field :mission, Mission.t, enforce: false
   end
 
   # *** *******************************
@@ -51,6 +55,12 @@ defmodule Chukinas.Sessions.Room do
     for player <- players(room), do: Player.uuid(player)
   end
 
+  defp ready?(room) do
+    room
+    |> players
+    |> Enum.all?(&Player.ready?/1)
+  end
+
   # *** *******************************
   # *** GETTERS /2
 
@@ -73,6 +83,13 @@ defmodule Chukinas.Sessions.Room do
   end
 
   # *** *******************************
+  # *** SETTERS
+
+  def update_players(%__MODULE__{players: players} = room, fun) do
+    %__MODULE__{room | players: fun.(players)}
+  end
+
+  # *** *******************************
   # *** API
 
   def add_player(room, player_uuid, player_name) do
@@ -92,9 +109,27 @@ defmodule Chukinas.Sessions.Room do
   end
 
   def toggle_ready(%__MODULE__{} = room, player_id) do
-    players = IdList.update!(room.players, player_id, &Player.toggle_ready/1)
-    room = %__MODULE__{room | players: players}
+    player_update =
+      fn players ->
+        IdList.update!(players, player_id, &Player.toggle_ready/1)
+      end
+    room =
+      room
+      |> update_players(player_update)
+      |> maybe_start_game
     {:ok, room}
+  end
+
+  # *** *******************************
+  # *** PRIVATE
+
+  defp maybe_start_game(room) do
+    if ready?(room) do
+      [player] = room |> players
+      %__MODULE__{room | mission: MissionBuilder.online(player)}
+    else
+      room
+    end
   end
 
 end

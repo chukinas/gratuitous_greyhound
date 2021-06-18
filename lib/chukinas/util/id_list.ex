@@ -39,8 +39,8 @@ defmodule Chukinas.Util.IdList do
           else
             {:still_looking, [item | list]}
           end
-        item, {:found, list} ->
-          {:found, [item | list]}
+        item, {result, list} ->
+          {result, [item | list]}
       end
     list
     |> Enum.reverse
