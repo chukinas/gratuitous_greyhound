@@ -85,10 +85,10 @@ defmodule Chukinas.Sessions.Room do
     end
   end
 
-  # TODO return result tuple
   def toggle_ready(%__MODULE__{} = room, player_id) do
     players = IdList.update!(room.players, player_id, &Player.toggle_ready/1)
-    %__MODULE__{room | players: players}
+    room = %__MODULE__{room | players: players}
+    {:ok, room}
   end
 
 end

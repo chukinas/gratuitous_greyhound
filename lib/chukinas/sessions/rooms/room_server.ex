@@ -55,9 +55,8 @@ defmodule Chukinas.Sessions.RoomServer do
   end
 
   def handle_cast({:toggle_ready, player_id}, room) do
-    room
-    |> Room.toggle_ready(player_id)
-    |> noreply
+    {:ok, room} = Room.toggle_ready(room, player_id)
+    noreply(room)
   end
 
   def handle_continue(:send_all_players, room) do
