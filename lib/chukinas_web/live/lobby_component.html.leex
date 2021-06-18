@@ -8,7 +8,7 @@
     <%= Component.toggle(
           "toggleReady",
           label: (if player.ready?, do: "Ready", else: "Are you ready?"),
-          is_enabled?: player.ready?,
+          selected?: player.ready?,
           phx_target: @myself,
           phx_click: "toggle_ready" )%>
 

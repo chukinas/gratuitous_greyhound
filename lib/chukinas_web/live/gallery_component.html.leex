@@ -3,7 +3,7 @@
   <%= Component.toggle(
         "toggleShowMarkers",
         label: (if @show_markers?, do: "Markers Shown", else: "Markers Hidden"),
-        is_enabled?: @show_markers?,
+        selected?: @show_markers?,
         phx_click: "toggle_show_markers" )%>
 </div>
 

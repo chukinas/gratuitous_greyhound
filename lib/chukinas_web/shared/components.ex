@@ -17,7 +17,7 @@ defmodule ChukinasWeb.Components do
         label: nil,
         phx_click: nil,
         phx_target: nil,
-        is_enabled?: false
+        selected?: false
       ]
       |> Keyword.merge(opts)
       |> Keyword.put(:id, id)
