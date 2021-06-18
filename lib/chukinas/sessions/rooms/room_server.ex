@@ -1,6 +1,6 @@
 defmodule Chukinas.Sessions.RoomServer do
 
-  alias Chukinas.Sessions.PlayerRegistry
+  alias Chukinas.Sessions.Players
   alias Chukinas.Sessions.Room
   alias Chukinas.Sessions.RoomRegistry
   use GenServer
@@ -31,17 +31,15 @@ defmodule Chukinas.Sessions.RoomServer do
   end
 
   def handle_call({:add_member, member_uuid, member_name}, _from, room) do
-    {:ok, member_number, room} = Room.add_player(room, member_uuid, member_name)
-    send_room_to_players(room)
-    {:reply, {:member_number, member_number}, room}
+    {:ok, _member_number, room} = Room.add_player(room, member_uuid, member_name)
+    {:reply, :ok, room, {:continue, :send_all_players}}
   end
 
   def handle_call({:remove_player, player_uuid}, _from, room) do
     # TODO kill room if now empty
     room = Room.remove_player(room, player_uuid)
-    send_room_to_players room
-    send_room_to_players nil, player_uuid
-    {:reply, room, room}
+    Players.send_room(player_uuid, nil)
+    {:reply, room, room, {:continue, :send_all_players}}
     # TODO isn't there a way to have a function execute here?
   end
 
@@ -49,28 +47,20 @@ defmodule Chukinas.Sessions.RoomServer do
     {:reply, room, room}
   end
 
-  # *** *******************************
-  # *** FUNCTIONS
-
-  # TODO set timeout to kill room if inactive for __ mins
-
-  defp send_room_to_players(room, recipients \\ :all)
-
-  #defp send_room_to_players(room, recipients) when is_list(recipients) do
-  #  Enum.each recipients, &send_room_to_players(room, &1)
-  #end
-
-  defp send_room_to_players(room, :all) do
-    for uuid <- Room.player_uuids(room) do
-      send_room_to_players(room, uuid)
-    end
+  def handle_cast({:toggle_ready, player_id}, room) do
+    {:noreply, Room.toggle_ready(room, player_id), {:continue, :send_all_players}}
   end
 
-  defp send_room_to_players(room, player_uuid) when is_binary(player_uuid) do
-    IO.puts "RoomServer send room to #{player_uuid}"
-    for pid <- PlayerRegistry.pids(player_uuid) do
-      send pid, {:update_room, room}
+  def handle_continue(:send_all_players, room) do
+    IOP.inspect room, "RoomServer continue send all players"
+    for uuid <- Room.player_uuids(room) do
+      Players.send_room(uuid, room)
     end
+    {:noreply, room}
+  end
+
+  def terminate(reason, room) do
+    IOP.inspect {reason, room}, "Room Server terminate args"
   end
 
 end

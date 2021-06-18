@@ -37,7 +37,6 @@ defmodule Chukinas.Sessions.PlayerRooms do
   @spec fetch(player_uuid) :: {:ok, room_name} | :error
   def fetch(player_uuid) do
     Agent.get(@name, &Map.fetch(&1, player_uuid))
-    |> IOP.inspect("fetch, Players")
   end
 
   @spec pop(player_uuid) :: room_name | nil

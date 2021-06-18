@@ -1,10 +1,10 @@
-alias Chukinas.Dreadnought.Player
-alias Chukinas.Sessions.Room
-alias Chukinas.Sessions.RoomName
-alias Chukinas.Util.Maps
+defmodule Chukinas.Sessions.Room do
 
-defmodule Room do
   use TypedStruct
+  alias Chukinas.Dreadnought.Player
+  alias Chukinas.Sessions.RoomName
+  alias Chukinas.Util.Maps
+  alias Chukinas.Util.IdList
 
   typedstruct do
     field :name, String.t, enforce: true
@@ -47,12 +47,6 @@ defmodule Room do
     for player <- players(room), do: Player.uuid(player)
   end
 
-  def players_except(room, unwanted_player_uuid) do
-    room
-    |> players
-    |> Enum.filter(& !Player.has_uuid?(&1, unwanted_player_uuid))
-  end
-
   # *** *******************************
   # *** API
 
@@ -66,6 +60,26 @@ defmodule Room do
 
   def remove_player(room, player_uuid) do
     %__MODULE__{room | players: players_except(room, player_uuid)}
+  end
+
+  def players_except(room, unwanted_player_uuid) do
+    room
+    |> players
+    |> Enum.filter(& !Player.has_uuid?(&1, unwanted_player_uuid))
+  end
+
+  def player_id_from_uuid(%__MODULE__{players: players}, wanted_player_uuid)
+  when is_binary(wanted_player_uuid) do
+    players
+    |> Player.Enum.id_from_uuid(wanted_player_uuid)
+  end
+
+  # *** *******************************
+  # *** SETTERS
+
+  def toggle_ready(%__MODULE__{} = room, player_id) do
+    players = IdList.update!(room.players, player_id, &Player.toggle_ready/1)
+    %__MODULE__{room | players: players}
   end
 
 end

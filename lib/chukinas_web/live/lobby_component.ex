@@ -4,6 +4,7 @@ defmodule ChukinasWeb.LobbyComponent do
   use ChukinasWeb.Components
   alias Chukinas.Dreadnought.Player
   alias Chukinas.Sessions.Room
+  alias Chukinas.Sessions.Rooms
 
   # *** *******************************
   # *** CALLBACKS
@@ -11,13 +12,23 @@ defmodule ChukinasWeb.LobbyComponent do
   @impl true
   def update(assigns, socket) do
     room = assigns.room
-    players = for player <- Room.players_sorted(room), do: build_player(player, assigns.uuid)
+    uuid = assigns.uuid
+    players = for player <- Room.players_sorted(room), do: build_player(player, uuid)
+    player_id = Room.player_id_from_uuid(room, uuid)
     socket =
       assign(socket,
+        room_name: Room.name(room),
         pretty_room_name: Room.pretty_name(room),
+        player_id: player_id,
         players: players
       )
     {:ok, socket}
+  end
+
+  @impl true
+  def handle_event("toggle_ready", _, socket) do
+    Rooms.toggle_ready(socket.assigns.room_name, socket.assigns.player_id)
+    {:noreply, socket}
   end
 
   # *** *******************************

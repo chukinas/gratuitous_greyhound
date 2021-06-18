@@ -1,9 +1,5 @@
 defmodule Chukinas.Sessions.SessionSupervisor do
 
-  alias Chukinas.Sessions.PlayerRooms
-  alias Chukinas.Sessions.RoomDynamicSupervisor
-  alias Chukinas.Sessions.RoomRegistry
-  alias Chukinas.Sessions.PlayerRegistry
   use Supervisor
 
   def start_link(init_arg) do
@@ -12,10 +8,10 @@ defmodule Chukinas.Sessions.SessionSupervisor do
 
   def init(_init_arg) do
     children = [
-      RoomRegistry,
-      RoomDynamicSupervisor,
-      PlayerRegistry,
-      PlayerRooms,
+      Chukinas.Sessions.RoomRegistry,
+      Chukinas.Sessions.RoomDynamicSupervisor,
+      Chukinas.Sessions.PlayerRegistry,
+      Chukinas.Sessions.PlayerRooms,
     ]
     Supervisor.init(children, strategy: :one_for_one)
   end

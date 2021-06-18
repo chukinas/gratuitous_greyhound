@@ -50,4 +50,17 @@ defmodule Chukinas.Dreadnought.Player do
     uuid == wanted_uuid
   end
 
+  def toggle_ready(%__MODULE__{ready?: ready?} = player) do
+    %__MODULE__{player | ready?: !ready?}
+  end
+
+end
+
+defmodule Chukinas.Dreadnought.Player.Enum do
+  alias Chukinas.Dreadnought.Player
+  def id_from_uuid(players, uuid) do
+    players
+    |> Enum.find(& Player.uuid(&1) == uuid)
+    |> Player.id
+  end
 end

@@ -30,6 +30,21 @@ defmodule Chukinas.Util.IdList do
     Stream.map(enum, & Map.fetch!(&1, key))
   end
 
+  def update!(enum, id, key \\ :id, fun) do
+    {:found, list} =
+      Enum.reduce enum, {:still_looking, []}, fn
+        item, {:still_looking, list} ->
+          if _match?(item, id, key) do
+            {:found, [fun.(item) | list]}
+          else
+            {:still_looking, [item | list]}
+          end
+        item, {:found, list} ->
+          {:still_looking, [item | list]}
+      end
+    list
+  end
+
   # *** *******************************
   # *** PRIVATE
 
