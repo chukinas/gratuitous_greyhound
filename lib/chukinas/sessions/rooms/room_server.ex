@@ -32,23 +32,22 @@ defmodule Chukinas.Sessions.RoomServer do
       {:ok, room} -> room
       :error -> Room.new(room_name)
     end
-    {:ok, room, {:continue, :send_all_players}}
+    ok(room)
   end
 
-  def handle_call({:add_member, %{
+  def handle_call({:add_player, %{
     player_name: player_name,
     player_uuid: player_uuid,
   }}, _from, room) do
-    {:ok, _member_number, room} = Room.add_player(room, player_uuid, player_name)
-    {:reply, :ok, room, {:continue, :send_all_players}}
+    {:ok, room} = Room.add_player(room, player_uuid, player_name)
+    reply(room, :ok)
   end
 
   def handle_call({:remove_player, player_uuid}, _from, room) do
-    # TODO kill room if now empty
-    room = Room.remove_player(room, player_uuid)
     Players.send_room(player_uuid, nil)
-    {:reply, room, room, {:continue, :send_all_players}}
-    # TODO isn't there a way to have a function execute here?
+    {result, room} = Room.remove_player(room, player_uuid)
+    if result == :empty, do: Process.exit(self(), :normal)
+    reply(room)
   end
 
   def handle_call(:get, _from, room) do
@@ -56,7 +55,9 @@ defmodule Chukinas.Sessions.RoomServer do
   end
 
   def handle_cast({:toggle_ready, player_id}, room) do
-    {:noreply, Room.toggle_ready(room, player_id), {:continue, :send_all_players}}
+    room
+    |> Room.toggle_ready(player_id)
+    |> noreply
   end
 
   def handle_continue(:send_all_players, room) do
@@ -67,9 +68,26 @@ defmodule Chukinas.Sessions.RoomServer do
     {:noreply, room}
   end
 
+  def terminate(:normal, _room) do
+    IO.puts "closing a room!"
+  end
+
   def terminate(reason, room) do
     IOP.inspect {reason, room}, "Room Server terminate args"
     RoomBackup.put(room)
   end
+
+  # *** *******************************
+  # *** RETURN TUPLES
+
+  def ok(room), do: {:ok, room, send_all()}
+
+  def noreply(room), do: {:noreply, room, send_all()}
+
+  def reply(room), do: {:reply, room, room, send_all()}
+
+  def reply(room, return_value), do: {:reply, return_value, room, send_all()}
+
+  def send_all, do: {:continue, :send_all_players}
 
 end

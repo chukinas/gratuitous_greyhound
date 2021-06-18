@@ -15,10 +15,12 @@ defmodule Chukinas.Sessions.Rooms do
   # *** *******************************
   # *** API
 
-  def add_member(%RoomJoin{} = room_join) do
+  @spec add_player(RoomJoin.t) :: atom
+  def add_player(%RoomJoin{} = room_join) do
     room_join.room_name
     |> room_pid_from_name
-    |> GenServer.call({:add_member, room_join})
+    |> GenServer.call({:add_player, room_join})
+    |> IOP.inspect("Rooms add player")
   end
 
   def remove_player(room_name, player_uuid) when is_binary(room_name) do

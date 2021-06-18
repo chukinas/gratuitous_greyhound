@@ -27,7 +27,7 @@ defmodule Chukinas.Sessions do
   defdelegate room_join_validate(attrs), to: RoomJoin, as: :validate
 
   def join_room(room_join) do
-    :ok = Rooms.add_member(room_join)
+    :ok = Rooms.add_player(room_join)
     :ok = Players.set_room(room_join)
   end
 

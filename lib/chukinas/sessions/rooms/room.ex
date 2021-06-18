@@ -23,7 +23,7 @@ defmodule Chukinas.Sessions.Room do
   end
 
   # *** *******************************
-  # *** GETTERS
+  # *** GETTERS /1
 
   def name(%__MODULE__{name: value}), do: value
 
@@ -37,10 +37,14 @@ defmodule Chukinas.Sessions.Room do
     |> Enum.sort_by(&Player.id/1, :asc)
   end
 
-  def member_count(room) do
+  def player_count(room) do
     room
     |> players
     |> Enum.count
+  end
+
+  def empty?(room) do
+    player_count(room) == 0
   end
 
   def player_uuids(room) do
@@ -48,18 +52,7 @@ defmodule Chukinas.Sessions.Room do
   end
 
   # *** *******************************
-  # *** API
-
-  def add_player(room, player_uuid, player_name) do
-    player_id = 1 + member_count(room)
-    player = Player.new_human(player_id, player_uuid, player_name)
-    room = Maps.push(room, :players, player)
-    {:ok, player_id, room}
-  end
-
-  def remove_player(room, player_uuid) do
-    %__MODULE__{room | players: players_except(room, player_uuid)}
-  end
+  # *** GETTERS /2
 
   def players_except(room, unwanted_player_uuid) do
     room
@@ -74,8 +67,25 @@ defmodule Chukinas.Sessions.Room do
   end
 
   # *** *******************************
-  # *** SETTERS
+  # *** API
 
+  def add_player(room, player_uuid, player_name) do
+    player_id = 1 + player_count(room)
+    player = Player.new_human(player_id, player_uuid, player_name)
+    room = Maps.push(room, :players, player)
+    {:ok, room}
+  end
+
+  def remove_player(room, player_uuid) do
+    room = %__MODULE__{room | players: players_except(room, player_uuid)}
+    if empty?(room) do
+      {:empty, room}
+    else
+      {:ok, room}
+    end
+  end
+
+  # TODO return result tuple
   def toggle_ready(%__MODULE__{} = room, player_id) do
     players = IdList.update!(room.players, player_id, &Player.toggle_ready/1)
     %__MODULE__{room | players: players}
