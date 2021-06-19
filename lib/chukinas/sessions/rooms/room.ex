@@ -5,15 +5,12 @@ defmodule Chukinas.Sessions.Room do
   alias Chukinas.Dreadnought.MissionBuilder
   alias Chukinas.Dreadnought.Player
   alias Chukinas.Sessions.RoomName
-  alias Chukinas.Util.Maps
   alias Chukinas.Util.IdList
 
   typedstruct enforce: true do
     field :name, String.t
     field :pretty_name, String.t
-    # TODO move players fully into mission
-    field :players, [Player.t], default: []
-    field :mission, Mission.t, enforce: false
+    field :mission, Mission.t | %{}, default: %{players: []}
   end
 
   # *** *******************************
@@ -29,11 +26,15 @@ defmodule Chukinas.Sessions.Room do
   # *** *******************************
   # *** GETTERS /1
 
+  def mission(%__MODULE__{mission: value}), do: value
+
   def name(%__MODULE__{name: value}), do: value
 
   def pretty_name(%__MODULE__{pretty_name: value}), do: value
 
-  def players(%__MODULE__{players: value}), do: value
+  def players(%__MODULE__{mission: mission}) do
+    Mission.players(mission)
+  end
 
   def players_sorted(room) do
     room
@@ -70,23 +71,38 @@ defmodule Chukinas.Sessions.Room do
     |> Enum.filter(& !Player.has_uuid?(&1, unwanted_player_uuid))
   end
 
-  def player_from_uuid(%__MODULE__{players: players}, wanted_player_uuid)
+  def player_from_uuid(%__MODULE__{} = room, wanted_player_uuid)
   when is_binary(wanted_player_uuid) do
-    players
+    room
+    |> players
     |> Player.Enum.by_uuid(wanted_player_uuid)
   end
 
-  def player_id_from_uuid(%__MODULE__{players: players}, wanted_player_uuid)
+  def player_id_from_uuid(%__MODULE__{} = room, wanted_player_uuid)
   when is_binary(wanted_player_uuid) do
-    players
-    |> Player.Enum.id_from_uuid(wanted_player_uuid)
+    room
+    |> player_from_uuid(wanted_player_uuid)
+    |> Player.id
   end
 
   # *** *******************************
   # *** SETTERS
 
-  def update_players(%__MODULE__{players: players} = room, fun) do
-    %__MODULE__{room | players: fun.(players)}
+  def put_mission(%__MODULE__{} = room, mission) do
+    %__MODULE__{room | mission: mission}
+  end
+
+  def put_players(%__MODULE__{} = room, players) do
+    mission = room.mission |> Mission.put(players)
+    put_mission(room, mission)
+  end
+
+  def update_players(%__MODULE__{} = room, fun) do
+    players =
+      room
+      |> players
+      |> fun.()
+    put_players(room, players)
   end
 
   # *** *******************************
@@ -95,12 +111,17 @@ defmodule Chukinas.Sessions.Room do
   def add_player(room, player_uuid, player_name) do
     player_id = 1 + player_count(room)
     player = Player.new_human(player_id, player_uuid, player_name)
-    room = Maps.push(room, :players, player)
+    mission =
+      room
+      |> mission
+      |> Mission.put(player)
+    room = put_mission(room, mission)
     {:ok, room}
   end
 
   def remove_player(room, player_uuid) do
-    room = %__MODULE__{room | players: players_except(room, player_uuid)}
+    players = players_except(room, player_uuid)
+    room = put_players(room, players)
     if empty?(room) do
       {:empty, room}
     else
