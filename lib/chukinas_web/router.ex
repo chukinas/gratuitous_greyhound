@@ -29,11 +29,13 @@ defmodule ChukinasWeb.Router do
 
   scope "/dreadnought", ChukinasWeb do
     pipe_through :dreadnought
+    # TODO make the action something like `redirect_to_setup`
+    # TODO add in all the othe junk paths here. THis way people (incl me) aren't frustrated by my constant changing of urls
     live "/", DreadnoughtLive, :index
     live "/gallery", DreadnoughtLive, :gallery
-    live "/join", DreadnoughtLive, :join
-    live "/play", DreadnoughtLive, :play
-    live "/playing", DreadnoughtPlayLive, :index
+    live "/setup", DreadnoughtLive, :setup
+    # TODO remove the :index
+    live "/play", DreadnoughtPlayLive, :index
   end
 
   # Other scopes may use custom stacks.

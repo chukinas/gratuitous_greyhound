@@ -6,22 +6,12 @@
           id: :gallery_component,
           show_markers?: assigns[:show_markers?]
         )%>
-  <%# TODO clean this up %>
-  <% :join -> %>
-    <%= if connected?(@socket), do: live_component(
-          @socket, 
-          ChukinasWeb.RoomJoinComponent, 
-          id: :join_component, 
-          uuid: @uuid
-        )%>
-  <% :play -> %>
-    <%= if @room, do: live_component(
-          @socket, 
-          ChukinasWeb.LobbyComponent, 
-          id: :lobby_component, 
-          uuid: @uuid,
-          room: @room
-        )%>
+  <% :setup -> %>
+    <%= if @room do %>
+      <%= live_component(@socket, ChukinasWeb.LobbyComponent, id: :lobby_component, uuid: @uuid, room: @room) %>
+    <% else %>
+      <%= live_component(@socket, ChukinasWeb.RoomJoinComponent, id: :join_component, uuid: @uuid) %>
+    <% end %>
   <% :index -> %>
     Hi!
 <% end %>

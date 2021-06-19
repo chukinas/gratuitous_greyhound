@@ -86,7 +86,7 @@ defmodule ChukinasWeb.RoomJoinComponent do
 
   defp build_path(socket) do
     Enum.join [
-      Routes.dreadnought_path(socket, :join),
+      Routes.dreadnought_path(socket, :setup),
       Changeset.get_field(socket.assigns.changeset, :room_name)
     ], "/"
   end

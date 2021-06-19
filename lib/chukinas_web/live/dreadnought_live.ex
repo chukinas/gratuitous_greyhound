@@ -1,9 +1,8 @@
 defmodule ChukinasWeb.DreadnoughtLive do
 
+  use ChukinasWeb, :live_view
   alias Chukinas.Sessions
   alias Chukinas.Sessions.Room
-  alias ChukinasWeb.DreadnoughtLive.Impl
-  use ChukinasWeb, :live_view
 
   # *** *******************************
   # *** CALLBACKS (MOUNT/PARAMS)
@@ -27,20 +26,27 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def handle_params(_params, _url, socket) do
-    play_or_join = if socket.assigns.room, do: :play, else: :join
-    socket =
-      case socket.assigns.live_action do
-        :gallery ->
-          socket
-        ^play_or_join ->
-          socket
-        _wrong_live_action ->
-          redirect_path = Routes.dreadnought_path(socket, play_or_join)
-          send self(), {:push_patch, redirect_path}
-          socket
+    live_action = socket.assigns.live_action
+    mission_in_progress? =
+      case socket.assigns.room do
+        nil -> false
+        room -> Room.mission_in_progress?(room)
       end
-      |> Impl.standard_assigns
+    cond do
+      live_action == :index ->
+        Routes.dreadnought_path(socket, :setup) |> redirect
+      mission_in_progress? ->
+        path = Routes.dreadnought_play_path(socket, :index)
+        send self(), {:push_redirect, path}
+      true ->
+        :ok
+    end
+    socket = standard_assigns(socket)
     {:noreply, socket}
+  end
+
+  def redirect(path) do
+    send self(), {:push_patch, path}
   end
 
   # *** *******************************
@@ -72,6 +78,14 @@ defmodule ChukinasWeb.DreadnoughtLive do
   end
 
   @impl true
+  def handle_info({:push_redirect, path}, socket) do
+    socket =
+      socket
+      |> push_redirect(to: path)
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_info({:update_assigns, new_assigns}, socket) do
     socket =
       socket
@@ -89,14 +103,43 @@ defmodule ChukinasWeb.DreadnoughtLive do
       else
         socket
         |> assign(room: room)
-        |> Impl.maybe_redirect_to_play(room)
       end
     {:noreply, socket}
   end
 
-  #@impl true
-  #def handle_info(:start_game, socket) do
-  #  Phoenix.Controller.redirect(
-  #end
+  # *** *******************************
+  # *** FUNCTIONS
+
+  def standard_assigns(socket) do
+    gallery? = socket.assigns.live_action == :gallery
+    tabs = [
+      %{
+        title: "Play",
+        path: Routes.dreadnought_path(socket, :setup),
+        current?: !gallery?,
+        show_header: false
+      },
+      %{
+        title: "Gallery",
+        path: Routes.dreadnought_path(socket, :gallery),
+        current?: gallery?,
+        show_header: true
+      },
+    ]
+    active_tab = Enum.find(tabs, & &1.current?)
+    title = case active_tab do
+      %{title: title} -> title
+      nil -> nil
+    end
+    page_title = case title do
+      nil -> "Dreadnought"
+      title -> "Dreadnought | #{title}"
+    end
+    assign(socket,
+      tabs: tabs,
+      page_title: page_title,
+      header: if(active_tab.show_header, do: title, else: nil)
+    )
+  end
 
 end
