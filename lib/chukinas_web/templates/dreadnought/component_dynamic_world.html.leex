@@ -69,7 +69,7 @@
 <div class="absolute pointer-events-auto text-9xl text-white font-bold top-0 left-0" >
   <%= @turn_number %>
   <%= if @show_end_turn_btn? do %>
-  <%= ChukinasWeb.DreadnoughtView.button(
+  <%= ChukinasWeb.Components.button(
       text: "End Turn", 
       phx_target: @myself, 
       phx_click: "end_turn") %>

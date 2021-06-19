@@ -1,8 +1,9 @@
-alias Chukinas.Dreadnought.{ActionSelection}
-alias Chukinas.Util.Precision
-
 defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
+
   use ChukinasWeb, :live_component
+  use ChukinasWeb.Components
+  alias Chukinas.Dreadnought.ActionSelection
+  alias Chukinas.Util.Precision
 
   @impl true
   def render(assigns) do

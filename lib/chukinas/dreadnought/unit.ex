@@ -14,8 +14,7 @@ defmodule Unit do
   typedstruct enforce: true do
     field :id, integer()
     field :name, String.t()
-    # TODO remove default
-    field :player_id, integer(), default: 1
+    field :player_id, integer
     field :sprite, Sprite.t()
     field :turrets, [Turret.t()]
     field :health, integer()
@@ -28,7 +27,8 @@ defmodule Unit do
   # *** *******************************
   # *** NEW
 
-  def new(id, pose, opts \\ []) do
+  @spec new(integer, integer, any, keyword) :: t
+  def new(id, player_id, pose, opts \\ []) do
     # Refactor now that I have a unit builder module
     {max_damage, fields} =
       opts
@@ -37,6 +37,7 @@ defmodule Unit do
     unit_status = Unit.Status.new()
     fields =
       Keyword.merge(fields,
+        player_id: player_id,
         status: unit_status,
         health: max_damage
       )

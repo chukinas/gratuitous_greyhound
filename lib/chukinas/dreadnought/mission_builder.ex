@@ -35,6 +35,7 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
 
   @spec ready?(Mission.t) :: boolean
   defp ready?(%Mission{} = mission) do
+    # TODO check that each player is ready too
     #Enum.all?(
       Mission.player_count(mission) in 1..2
       #each_player_has_at_least_one_unit(mission)
@@ -55,8 +56,8 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
   def dev do
     {grid, margin} = medium_map()
     units = [
-      Unit.Builder.red_cruiser(1, pose_new(0, 0, 0), name: "Prince Eugene"),
-      Unit.Builder.blue_merchant(2, pose_new(position_from_size(grid), 225), player_id: 2)
+      Unit.Builder.red_cruiser(1, 1, pose_new(0, 0, 0), name: "Prince Eugene"),
+      Unit.Builder.blue_merchant(2, 2, pose_new(position_from_size(grid), 225))
     ]
     Mission.new(grid, margin)
     |> Map.put(:islands, islands())
@@ -97,9 +98,9 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
       |> Enum.map(&round(&1 / square_size))
     grid = Grid.new(square_size, position_new(square_count_x, square_count_y))
     units = [
-      Unit.Builder.red_destroyer(1, pose_new(0, 0, 0), name: "Prince Eugene"),
+      Unit.Builder.red_destroyer(1, 1, pose_new(0, 0, 0), name: "Prince Eugene"),
       #Unit.Builder.red_cruiser(2, pose_new(800, 155, 75), name: "Billy"),
-      Unit.Builder.blue_merchant(3, pose_new(position_from_size(grid), 225), player_id: 2)
+      Unit.Builder.blue_merchant(3, 2, pose_new(position_from_size(grid), 225))
     ]
     Mission.new(grid, margin)
     |> Map.put(:islands, islands())
