@@ -1,10 +1,20 @@
-alias Chukinas.Dreadnought.{Unit, Mission, Island, ActionSelection, Player, PlayerTurn, UnitAction, Maneuver, CombatAction, Gunfire}
-alias Chukinas.Geometry.Grid
-alias Chukinas.Util.{Maps, IdList}
-
-defmodule Mission do
+defmodule Chukinas.Dreadnought.Mission do
 
   use Chukinas.PositionOrientationSize
+  alias Chukinas.Dreadnought.ActionSelection
+  alias Chukinas.Dreadnought.CombatAction
+  alias Chukinas.Dreadnought.Gunfire
+  alias Chukinas.Dreadnought.Island
+  alias Chukinas.Dreadnought.Maneuver
+  # TODO rename playingsurface
+  alias Chukinas.Dreadnought.Mission.PlayingSurface
+  alias Chukinas.Dreadnought.Player
+  alias Chukinas.Dreadnought.PlayerTurn
+  alias Chukinas.Dreadnought.Unit
+  alias Chukinas.Dreadnought.UnitAction
+  alias Chukinas.Geometry.Grid
+  alias Chukinas.Util.IdList
+  alias Chukinas.Util.Maps
 
   # *** *******************************
   # *** TYPES
@@ -39,32 +49,9 @@ defmodule Mission do
   end
 
   # *** *******************************
-  # *** GETTERS
+  # *** GETTERS (PLAYERS)
 
-  def to_playing_surface(mission), do: Mission.PlayingSurface.new(mission)
-
-  def to_player(mission), do: PlayerTurn.map(1, :human,  mission)
-
-  defp turn_complete?(mission) do
-    player_ids = mission |> player_ids |> MapSet.new
-    completed_player_ids = mission |> completed_player_ids |> MapSet.new
-    MapSet.equal?(player_ids, completed_player_ids)
-  end
-
-  def players(mission), do: mission.players
-
-  defp commands(%__MODULE__{player_actions: actions}) do
-    # TODO rename unit_actions
-    Stream.flat_map(actions, &ActionSelection.actions/1)
-  end
-
-  defp actions(mission), do: commands(mission)
-
-  defp maneuver_actions(%__MODULE__{} = mission) do
-    mission
-    |> commands
-    |> UnitAction.Enum.maneuevers
-  end
+  def players(%{players: value}), do: value
 
   def player_ids(mission), do: IdList.ids(mission.players)
 
@@ -77,6 +64,38 @@ defmodule Mission do
     |> players
     |> Stream.filter(&Player.ai?/1)
     |> Stream.map(&Player.id/1)
+  end
+
+  def player_count(mission) do
+    mission
+    |> players
+    |> Enum.count
+  end
+
+  # *** *******************************
+  # *** GETTERS
+
+  def to_playing_surface(mission), do: PlayingSurface.new(mission)
+
+  def to_player(mission), do: PlayerTurn.map(1, :human,  mission)
+
+  defp turn_complete?(mission) do
+    player_ids = mission |> player_ids |> MapSet.new
+    completed_player_ids = mission |> completed_player_ids |> MapSet.new
+    MapSet.equal?(player_ids, completed_player_ids)
+  end
+
+  defp commands(%__MODULE__{player_actions: actions}) do
+    # TODO rename unit_actions
+    Stream.flat_map(actions, &ActionSelection.actions/1)
+  end
+
+  defp actions(mission), do: commands(mission)
+
+  defp maneuver_actions(%__MODULE__{} = mission) do
+    mission
+    |> commands
+    |> UnitAction.Enum.maneuevers
   end
 
   def units(%{units: units}), do: units
@@ -192,6 +211,7 @@ defmodule Mission do
         mission
         |> Map.take([
           :units,
+          :players
         ])
         |> Enum.into([])
       IOP.struct(title, fields)

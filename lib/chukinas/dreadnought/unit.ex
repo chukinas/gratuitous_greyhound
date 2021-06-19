@@ -14,6 +14,7 @@ defmodule Unit do
   typedstruct enforce: true do
     field :id, integer()
     field :name, String.t()
+    # TODO remove default
     field :player_id, integer(), default: 1
     field :sprite, Sprite.t()
     field :turrets, [Turret.t()]

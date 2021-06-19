@@ -1,5 +1,6 @@
 alias Chukinas.Dreadnought, as: D
 alias Chukinas.Dreadnought.Player
+alias Chukinas.Dreadnought.Mission
 alias Chukinas.Geometry, as: G
 
 alias Chukinas.Sessions

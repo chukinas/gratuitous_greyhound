@@ -7,17 +7,50 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
   alias Chukinas.Dreadnought.Unit
   alias Chukinas.Geometry.Grid
 
-  def online(%Player{} = player) do
+  # *** *******************************
+  # *** ONLINE GAME
+
+  @spec online :: Mission.t
+  def online() do
     {grid, margin} = medium_map()
-    units = [
-      Unit.Builder.red_cruiser(1, pose_new(0, 0, 0), name: "Prince Eugene"),
-    ]
     Mission.new(grid, margin)
     |> Map.put(:islands, islands())
-    |> Mission.put(units)
-    |> Mission.put(player)
-    |> Mission.start
+    # Still needs players, units, and needs to be started
   end
+
+  def add_player(%Mission{} = mission, player_uuid, player_name) do
+    player_id = 1 + Mission.player_count(mission)
+    player = Player.new_human(player_id, player_uuid, player_name)
+    Mission.put(mission, player)
+  end
+
+  def maybe_start(%Mission{} = mission) do
+    if ready?(mission) do
+      mission
+      |> Mission.start
+    else
+      mission
+    end
+  end
+
+  @spec ready?(Mission.t) :: boolean
+  defp ready?(%Mission{} = mission) do
+    #Enum.all?(
+      Mission.player_count(mission) in 1..2
+      #each_player_has_at_least_one_unit(mission)
+    #)
+  end
+
+  #@spec each_player_has_at_least_one_unit(Mission.t) :: boolean
+  #defp each_player_has_at_least_one_unit(mission) do
+  #  units = Mission.units(mission)
+  #  mission
+  #  |> Mission.player_ids
+  #  |> Enum.all?(&Unit.Enum.active_player_unit_count(units, &1) > 0)
+  #end
+
+  # *** *******************************
+  # *** DEV
 
   def dev do
     {grid, margin} = medium_map()

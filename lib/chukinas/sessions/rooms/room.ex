@@ -10,7 +10,7 @@ defmodule Chukinas.Sessions.Room do
   typedstruct enforce: true do
     field :name, String.t
     field :pretty_name, String.t
-    field :mission, Mission.t | %{}, default: %{players: []}
+    field :mission, Mission.t, default: MissionBuilder.online()
   end
 
   # *** *******************************
@@ -32,9 +32,7 @@ defmodule Chukinas.Sessions.Room do
 
   def pretty_name(%__MODULE__{pretty_name: value}), do: value
 
-  def players(%__MODULE__{mission: mission}) do
-    Mission.players(mission)
-  end
+  def players(%__MODULE__{mission: mission}), do: Mission.players(mission)
 
   def players_sorted(room) do
     room
@@ -42,6 +40,7 @@ defmodule Chukinas.Sessions.Room do
     |> Enum.sort_by(&Player.id/1, :asc)
   end
 
+  # TODO used?
   def player_count(room) do
     room
     |> players
@@ -54,12 +53,6 @@ defmodule Chukinas.Sessions.Room do
 
   def player_uuids(room) do
     for player <- players(room), do: Player.uuid(player)
-  end
-
-  defp ready?(room) do
-    room
-    |> players
-    |> Enum.all?(&Player.ready?/1)
   end
 
   # *** *******************************
@@ -108,15 +101,11 @@ defmodule Chukinas.Sessions.Room do
   # *** *******************************
   # *** API
 
+  @spec add_player(t, String.t, String.t) :: {:ok, t}
   def add_player(room, player_uuid, player_name) do
-    player_id = 1 + player_count(room)
-    player = Player.new_human(player_id, player_uuid, player_name)
-    mission =
-      room
-      |> mission
-      |> Mission.put(player)
-    room = put_mission(room, mission)
-    {:ok, room}
+    room
+    |> Map.update!(:mission, &MissionBuilder.add_player(&1, player_uuid, player_name))
+    |> ok
   end
 
   def remove_player(room, player_uuid) do
@@ -144,13 +133,12 @@ defmodule Chukinas.Sessions.Room do
   # *** *******************************
   # *** PRIVATE
 
+  @spec maybe_start_game(t) :: t
   defp maybe_start_game(room) do
-    if ready?(room) do
-      [player] = room |> players
-      %__MODULE__{room | mission: MissionBuilder.online(player)}
-    else
-      room
-    end
+    Map.update!(room, :mission, &MissionBuilder.maybe_start/1)
   end
+
+  @spec ok(t) :: {:ok, t}
+  defp ok(room), do: {:ok, room}
 
 end
