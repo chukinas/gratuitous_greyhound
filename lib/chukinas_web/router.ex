@@ -33,7 +33,7 @@ defmodule ChukinasWeb.Router do
     live "/gallery", DreadnoughtLive, :gallery
     live "/join", DreadnoughtLive, :join
     live "/play", DreadnoughtLive, :play
-    live "/play/solo", DreadnoughtPlayLive
+    live "/playing", DreadnoughtPlayLive, :index
   end
 
   # Other scopes may use custom stacks.

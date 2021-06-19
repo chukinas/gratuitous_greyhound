@@ -21,7 +21,7 @@ defmodule Chukinas.Dreadnought.Mission do
 
   use TypedStruct
   typedstruct do
-    field :turn_number, integer(), default: 1
+    field :turn_number, integer(), default: 0
     field :grid, Grid.t()
     # TODO replace any with Size type
     field :world, any
@@ -74,6 +74,12 @@ defmodule Chukinas.Dreadnought.Mission do
 
   # *** *******************************
   # *** GETTERS
+
+  def in_progress?(mission) do
+    turn_number(mission) > 0
+  end
+
+  def turn_number(%__MODULE__{turn_number: value}), do: value
 
   def to_playing_surface(mission), do: PlayingSurface.new(mission)
 
@@ -132,6 +138,7 @@ defmodule Chukinas.Dreadnought.Mission do
 
   def start(mission) do
     mission
+    |> increment_turn_number
     |> calc_ai_commands
   end
 

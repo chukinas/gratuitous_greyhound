@@ -28,18 +28,28 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
     if ready?(mission) do
       mission
       |> Mission.start
+      |> IOP.inspect("Miss build, starting game")
     else
       mission
+      |> IOP.inspect("Miss build, NOT starting game")
     end
   end
 
   @spec ready?(Mission.t) :: boolean
   defp ready?(%Mission{} = mission) do
-    # TODO check that each player is ready too
-    #Enum.all?(
-      Mission.player_count(mission) in 1..2
-      #each_player_has_at_least_one_unit(mission)
-    #)
+    with true <- Mission.player_count(mission) in 1..2,
+         true <- all_players_ready?(mission) do
+      true
+    else
+      false -> false
+    end
+  end
+
+  @spec all_players_ready?(Mission.t) :: boolean
+  def all_players_ready?(mission) do
+    mission
+    |> Mission.players
+    |> Enum.all?(&Player.ready?/1)
   end
 
   #@spec each_player_has_at_least_one_unit(Mission.t) :: boolean

@@ -1,11 +1,12 @@
 defmodule ChukinasWeb.DreadnoughtLive do
 
   alias Chukinas.Sessions
+  alias Chukinas.Sessions.Room
   alias ChukinasWeb.DreadnoughtLive.Impl
   use ChukinasWeb, :live_view
 
   # *** *******************************
-  # *** CALLBACKS
+  # *** CALLBACKS (MOUNT/PARAMS)
 
   @impl true
   def mount(_params, session, socket) do
@@ -42,6 +43,9 @@ defmodule ChukinasWeb.DreadnoughtLive do
     {:noreply, socket}
   end
 
+  # *** *******************************
+  # *** CALLBACKS (EVENTS)
+
   @impl true
   def handle_event("toggle_show_markers", _, socket) do
     socket =
@@ -55,6 +59,9 @@ defmodule ChukinasWeb.DreadnoughtLive do
     Sessions.leave_room(socket.assigns.uuid)
     {:noreply, socket}
   end
+
+  # *** *******************************
+  # *** CALLBACKS (INFO)
 
   @impl true
   def handle_info({:push_patch, path}, socket) do
@@ -76,10 +83,20 @@ defmodule ChukinasWeb.DreadnoughtLive do
   @impl true
   def handle_info({:update_room, room}, socket) do
     socket =
-      socket
-      |> assign(room: room)
-      |> Impl.maybe_redirect_to_play(room)
+      if Room.mission_in_progress?(room) do
+        path = Routes.dreadnought_play_path(socket, :index)
+        Phoenix.LiveView.push_redirect(socket, to: path)
+      else
+        socket
+        |> assign(room: room)
+        |> Impl.maybe_redirect_to_play(room)
+      end
     {:noreply, socket}
   end
+
+  #@impl true
+  #def handle_info(:start_game, socket) do
+  #  Phoenix.Controller.redirect(
+  #end
 
 end

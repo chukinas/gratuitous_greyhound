@@ -40,7 +40,6 @@ defmodule Chukinas.Sessions.Room do
     |> Enum.sort_by(&Player.id/1, :asc)
   end
 
-  # TODO used?
   def player_count(room) do
     room
     |> players
@@ -53,6 +52,12 @@ defmodule Chukinas.Sessions.Room do
 
   def player_uuids(room) do
     for player <- players(room), do: Player.uuid(player)
+  end
+
+  def mission_in_progress?(room) do
+    room
+    |> mission
+    |> Mission.in_progress?
   end
 
   # *** *******************************
