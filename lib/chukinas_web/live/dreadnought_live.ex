@@ -27,15 +27,13 @@ defmodule ChukinasWeb.DreadnoughtLive do
   @impl true
   def handle_params(_params, _url, socket) do
     live_action = socket.assigns.live_action
-    mission_in_progress? =
-      case socket.assigns.room do
-        nil -> false
-        room -> Room.mission_in_progress?(room)
-      end
     cond do
-      live_action == :index ->
-        Routes.dreadnought_path(socket, :setup) |> redirect
-      mission_in_progress? ->
+      live_action == :redirect_to_setup ->
+        path = Routes.dreadnought_path(socket, :setup)
+        send self(), {:push_patch, path}
+      live_action == :gallery ->
+        :ok
+      Room.mission_in_progress?(socket.assigns.room) ->
         path = Routes.dreadnought_play_path(socket, :index)
         send self(), {:push_redirect, path}
       true ->
@@ -43,10 +41,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
     end
     socket = standard_assigns(socket)
     {:noreply, socket}
-  end
-
-  def redirect(path) do
-    send self(), {:push_patch, path}
   end
 
   # *** *******************************

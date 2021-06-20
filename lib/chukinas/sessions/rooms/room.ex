@@ -54,6 +54,7 @@ defmodule Chukinas.Sessions.Room do
     for player <- players(room), do: Player.uuid(player)
   end
 
+  def mission_in_progress?(nil), do: false
   def mission_in_progress?(room) do
     room
     |> mission

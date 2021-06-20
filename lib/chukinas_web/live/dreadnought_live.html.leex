@@ -12,7 +12,7 @@
     <% else %>
       <%= live_component(@socket, ChukinasWeb.RoomJoinComponent, id: :join_component, uuid: @uuid) %>
     <% end %>
-  <% :index -> %>
+  <% _ -> %>
     Hi!
 <% end %>
 
