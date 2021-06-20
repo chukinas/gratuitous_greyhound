@@ -59,6 +59,11 @@ defmodule Chukinas.Sessions.RoomServer do
     noreply(room)
   end
 
+  def handle_cast({:update_mission, func}, room) do
+    {:ok, room} = Room.update_mission(room, func)
+    noreply(room)
+  end
+
   def handle_continue(:send_all_players, room) do
     IOP.inspect room, "RoomServer continue send all players"
     for uuid <- Room.player_uuids(room) do

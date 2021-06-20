@@ -17,22 +17,15 @@ defmodule Chukinas.Sessions.Rooms do
 
   @spec add_player(RoomJoin.t) :: atom
   def add_player(%RoomJoin{} = room_join) do
-    room_join.room_name
-    |> room_pid_from_name
-    |> GenServer.call({:add_player, room_join})
-    |> IOP.inspect("Rooms add player")
+    genserver_call room_join.room_name, {:add_player, room_join}
   end
 
   def remove_player(room_name, player_uuid) when is_binary(room_name) do
-    room_name
-    |> room_pid_from_name
-    |> GenServer.call({:remove_player, player_uuid})
+    genserver_call room_name, {:remove_player, player_uuid}
   end
 
   def get(room_name) when is_binary(room_name) do
-    room_name
-    |> room_pid_from_name
-    |> GenServer.call(:get)
+    genserver_call room_name, :get
   end
 
   def fetch(room_name) do
@@ -43,13 +36,27 @@ defmodule Chukinas.Sessions.Rooms do
   end
 
   def toggle_ready(room_name, player_id) when is_integer(player_id) do
-    room_name
-    |> room_pid_from_name
-    |> GenServer.cast({:toggle_ready, player_id})
+    genserver_cast room_name, {:toggle_ready, player_id}
+  end
+
+  def update_mission(room_name, fun) do
+    genserver_cast room_name, {:update_mission, fun}
   end
 
   # *** *******************************
   # *** PRIVATE
+
+  defp genserver_call(room_name, msg) do
+    room_name
+    |> room_pid_from_name
+    |> GenServer.call(msg)
+  end
+
+  defp genserver_cast(room_name, msg) do
+    room_name
+    |> room_pid_from_name
+    |> GenServer.cast(msg)
+  end
 
   defp room_pid_from_name(room_name) when is_binary(room_name) do
     with :error <- RoomRegistry.fetch_pid(room_name),

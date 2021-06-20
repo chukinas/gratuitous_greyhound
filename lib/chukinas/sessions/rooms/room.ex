@@ -136,6 +136,14 @@ defmodule Chukinas.Sessions.Room do
     {:ok, room}
   end
 
+  @type mission_func :: (Mission.t -> Mission.t)
+  @spec update_mission(t, mission_func) :: t
+  def update_mission(%__MODULE__{} = room, fun) do
+    room
+    |> put_mission(room |> mission |> fun.())
+    |> ok
+  end
+
   # *** *******************************
   # *** PRIVATE
 
