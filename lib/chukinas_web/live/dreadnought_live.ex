@@ -9,19 +9,23 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def mount(_params, session, socket) do
-    uuid = Map.fetch!(session, "uuid")
-    socket =
-      if socket.connected? do
-        Sessions.register_uuid(uuid)
-        socket
-        |> assign(uuid: uuid)
-        |> assign(room: Sessions.get_room_from_player_uuid(uuid))
-      else
-        socket
-        |> assign(uuid: uuid)
-        |> assign(room: nil)
-      end
+    socket = assign_uuid_and_room(socket, session)
     {:ok, socket, layout: {ChukinasWeb.LayoutView, "dreadnought_menu.html"}}
+  end
+
+  @spec assign_uuid_and_room(Phoenix.LiveView.Socket.t, map) :: Phoenix.LiveView.Socket.t
+  def assign_uuid_and_room(socket, session) do
+    uuid = Map.fetch!(session, "uuid")
+    if socket.connected? do
+      Sessions.register_uuid(uuid)
+      socket
+      |> assign(uuid: uuid)
+      |> assign(room: Sessions.get_room_from_player_uuid(uuid))
+    else
+      socket
+      |> assign(uuid: uuid)
+      |> assign(room: nil)
+    end
   end
 
   @impl true
