@@ -13,6 +13,7 @@
 
 <%# World: Actual Play %>
 <%# TODO compine this stuff into single tag %>
+<%= if @mission do %>
 <%= live_component @socket, 
     ChukinasWeb.Dreadnought.StaticWorldComponent, 
     id: :grid_lab, 
@@ -22,6 +23,7 @@
   <%# TODO remove the ChukinasWeb %>
   <%= live_component @socket,
       ChukinasWeb.Dreadnought.DynamicWorldComponent, @mission_player %>
+<% end %>
 <% end %>
 
 <%# REMOVE this duplication %>

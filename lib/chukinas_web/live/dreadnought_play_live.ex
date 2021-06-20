@@ -19,19 +19,12 @@ defmodule ChukinasWeb.DreadnoughtPlayLive do
 
   @impl true
   def mount(_params, session, socket) do
-    {pid, mission} = State.start_link()
     socket =
       socket
       |> assign_uuid_and_room(session)
       |> maybe_redirect_to_setup
-      |> assign(
-        # TODO add page titles to dreadnought_live too
-        page_title: "Dreadnought",
-        pid: pid,
-        mission: mission,
-        mission_playing_surface: Mission.to_playing_surface(mission) |> Map.from_struct,
-        mission_player: Mission.to_player(mission)
-      )
+      |> assign_mission
+      |> assign(page_title: "Dreadnought")
     {:ok, socket}
   end
 
@@ -43,14 +36,16 @@ defmodule ChukinasWeb.DreadnoughtPlayLive do
     socket
   end
 
-  @impl true
-  def handle_event("log", _params, socket) do
-    {:noreply, socket}
-  end
-
-  @impl true
-  def handle_event("route_to", %{"route" => route}, socket) do
-    {:noreply, push_patch(socket, to: route)}
+  def assign_mission(socket) do
+    with %Room{} = room <- socket.assigns.room,
+         %Mission{} = mission <- Room.mission(room) do
+      socket
+      |> assign(mission: mission)
+      |> assign(mission_playing_surface: Mission.to_playing_surface(mission) |> Map.from_struct)
+      |> assign(mission_player: Mission.to_player(mission))
+    else
+      _ -> assign(socket, mission: nil)
+    end
   end
 
   @impl true
