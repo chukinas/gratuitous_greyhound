@@ -1,15 +1,22 @@
-alias Chukinas.LinearAlgebra
-alias Chukinas.LinearAlgebra.{Angle, Vector}
-alias Chukinas.LinearAlgebra.VectorCsys, as: Csys
-alias Chukinas.Util.Maps
+defmodule Chukinas.LinearAlgebra do
 
-defmodule LinearAlgebra do
-
-  use Chukinas.PositionOrientationSize
   use Chukinas.Math
-  alias Vector.Guards
+  use Chukinas.PositionOrientationSize
+  alias Chukinas.PositionOrientationSize, as: POS
+  alias Chukinas.LinearAlgebra.Angle
+  alias Chukinas.LinearAlgebra.Vector
+  alias Chukinas.LinearAlgebra.Vector.Guards
+  # TODO is this still used?
+  alias Chukinas.LinearAlgebra.VectorCsys, as: Csys
+  alias Chukinas.Util.Maps
   require Guards
 
+  # *** *******************************
+  # *** TYPES
+
+  @type coord :: POS.position_map | Vector.t
+  @type pose_or_csys :: POS.pose_map | Csys.t
+  @type pose_or_csys_s :: [pose_or_csys]
 
   # *** *******************************
   # *** USING
@@ -74,6 +81,13 @@ defmodule LinearAlgebra do
   def csys_origin, do: pose_origin() |> csys_new
 
   def csys_from_pose(pose), do: Csys.new(pose)
+
+  def csys_from_vector(vector) when is_vector(vector) do
+    Csys.new %{
+      orientation: Vector.from_angle(0),
+      location: vector
+    }
+  end
 
   defdelegate csys_new(pose_or_csys), to: Csys, as: :new
   def csys_new(x, y, angle), do: pose_new(x, y, angle) |> csys_new
@@ -192,69 +206,127 @@ defmodule LinearAlgebra do
   end
 
   # *** *******************************
-  # *** CSYS CONVERSIONS
+  # *** HELPERS
 
-  def vector_transform_from(position, from) when has_position(position) do
-    vector_transform_from(position |> coord_from_position, from)
+  # TODO where do these belong?
+  defp coerce_to_vector(position) when has_position(position) do
+    coord_from_position position
   end
-
-  def vector_transform_from(vector, []), do: vector
-
-  def vector_transform_from(vector, [csys | remaining_csys]) do
+  defp coerce_to_vector(vector) when is_vector(vector) do
     vector
-    |> vector_transform_from(csys)
-    |> vector_transform_from(remaining_csys)
   end
 
-  def vector_transform_from(vector, pose) when has_pose(pose) do
-    vector_transform_from(vector, pose |> csys_from_pose)
+  defp coerce_to_csys_list(list) when is_list(list) do
+    for item <- list, do: coerce_to_csys(item)
+  end
+  defp coerce_to_csys_list(item) do
+    [coerce_to_csys item]
   end
 
-  def vector_transform_from(vector, wrt_vector)
-  when is_vector(vector)
-  and is_vector(wrt_vector) do
-    vector_add(vector, wrt_vector)
+  # TODO replace with simply `csys_new`
+  defp coerce_to_csys(pose) when has_pose(pose) do
+    csys_from_pose pose
+  end
+  defp coerce_to_csys(csys) when has_csys(csys) do
+    csys
+  end
+  defp coerce_to_csys(vector) when is_vector(vector) do
+    csys_from_vector vector
   end
 
-  def vector_transform_from(vector, csys)
-  when is_vector(vector)
-  and has_csys(csys) do
-    Csys.transform_vector(csys, vector)
+  # *** *******************************
+  # *** COORD RELATIVE TO OUTER CSYS
+
+  @doc """
+  Translate an inner coord (e.g. turret position wrt ship) to outer coord (e.g. turret wrt world)
+  """
+  @spec vector_inner_to_outer(coord, pose_or_csys_s) :: Vector.t
+  def vector_inner_to_outer(coord, pose_or_csys) do
+    vector_transform_from(coord, pose_or_csys)
   end
 
-  def vector_transform_from(vector, csys) when is_vector(vector) do
-    Csys.transform_vector(csys, vector)
+  # TODO deprecate
+  @spec vector_transform_from(coord, pose_or_csys_s) :: Vector.t
+  def vector_transform_from(coord, from) do
+    do_vector_transform_to_outer(
+      coord |> coerce_to_vector,
+      from  |> coerce_to_csys_list
+    )
   end
 
-  def vector_transform_to(position, to) when has_position(position) do
-    vector_transform_to(position |> coord_from_position, to)
-  end
-
-  def vector_transform_to(vector, []), do: vector
-
-  def vector_transform_to(vector, [csys | remaining_csys]) do
+  defp do_vector_transform_to_outer(vector, []) do
     vector
-    |> vector_transform_to(csys)
-    |> vector_transform_to(remaining_csys)
   end
 
-  def vector_transform_to(vector, wrt_vector)
-  when is_vector(vector)
-  and is_vector(wrt_vector) do
-    vector_subtract(vector, wrt_vector)
+  defp do_vector_transform_to_outer(vector, [csys | remaining_csys]) do
+    csys
+    |> Csys.transform_vector(vector)
+    |> do_vector_transform_to_outer(remaining_csys)
   end
 
-  def vector_transform_to(vector, pose)
-  when has_pose(pose) do
-    vector_transform_to(vector, pose |> csys_from_pose)
+  # *** *******************************
+  # *** COORD RELATIVE TO INNER CSYS
+
+  @doc """
+  Translate an outer coord (e.g. target wrt world) to inner coord (e.g. target wrt turret)
+  """
+  @spec vector_outer_to_inner(coord, pose_or_csys_s) :: Vector.t
+  def vector_outer_to_inner(coord, pose_or_csys) do
+    vector_transform_to(coord, pose_or_csys)
   end
 
-  def vector_transform_to(vector, csys)
-  when is_vector(vector)
-  and has_csys(csys) do
+  # TODO deprecate
+  @spec vector_transform_to(coord, pose_or_csys_s) :: Vector.t
+  def vector_transform_to(coord, from) do
+    do_vector_transform_to_inner(
+      coord |> coerce_to_vector,
+      from  |> coerce_to_csys_list
+    )
+  end
+
+  defp do_vector_transform_to_inner(vector, []) do
+    vector
+  end
+
+  defp do_vector_transform_to_inner(vector, [csys | remaining_csys]) do
     csys
     |> Csys.invert
     |> Csys.transform_vector(vector)
+    |> do_vector_transform_to_inner(remaining_csys)
+  end
+
+  # *** *******************************
+  # *** IN-PlACE RELATIVE POSE TRANSLATIONS
+
+  @spec update_position_translate_right!(p, number) :: p when p: POS.position_map
+  def update_position_translate_right!(poseable, distance) do
+    fun = &position_translate_right(&1, distance)
+    update_position!(poseable, fun)
+  end
+
+  @spec update_position_translate!(p, number) :: p when p: POS.position_map
+  def update_position_translate!(poseable, distance) do
+    fun = &position_translate(&1, distance)
+    update_position!(poseable, fun)
+  end
+
+  # *** *******************************
+  # *** RELATIVE POSITION TRANSLATIONS
+
+  # TODO I don't like how this end-use pose functions are split b/w this and POS.ex
+
+  def position_translate_right(poseable, distance) do
+    position_translate(poseable, 0, distance)
+  end
+
+  def position_translate(poseable, x_rel, y_rel) do
+    position_translate(poseable, {x_rel, y_rel})
+  end
+
+  def position_translate(poseable, {_x_rel, _y_rel} = rel_position) do
+    rel_position
+    |> vector_inner_to_outer(poseable)
+    |> position_from_vector
   end
 
 end

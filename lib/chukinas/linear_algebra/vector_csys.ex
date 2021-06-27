@@ -24,6 +24,8 @@ defmodule Chukinas.LinearAlgebra.VectorCsys do
 
   # *** *******************************
   # *** NEW
+  #
+  # TODO move all the various NEWs to main linear_algebra file
 
   def new(%__MODULE__{} = csys), do: csys
 

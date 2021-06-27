@@ -138,6 +138,45 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
   end
 
   # *** *******************************
+  # *** UNITS
+
+  def red_fleet(starting_id, player_id) do
+    import Unit.Builder
+    use Chukinas.LinearAlgebra
+    formation =
+      [
+        {  0,   0},
+        { 50, -50},
+        {-50, -50},
+      ]
+    lead_pose = pose_new(100, 100, 45)
+    poses = for rel_vector <- formation, do: update_position!(lead_pose, rel_vector)
+    [
+      red_cruiser(starting_id, player_id, Enum.at(poses, 0), name: "Navarin"),
+      red_destroyer(starting_id + 1, player_id, Enum.at(poses, 1), name: "Potemkin"),
+      red_destroyer(starting_id + 2, player_id, Enum.at(poses, 2), name: "Sissoi"),
+    ]
+  end
+
+  def blue_fleet(starting_id, player_id, bl_coord) do
+    use Chukinas.LinearAlgebra
+    import Unit.Builder
+    dreadnought_position =
+      bl_coord
+      |> position_new
+      |> pose_new(-135)
+      |> csys_from_pose
+      |> csys_forward(100)
+      |> pose_from_csys
+    dreadnought =
+      blue_dreadnought(starting_id, player_id, dreadnought_position, name: "Washington")
+    destroyer =
+      blue_destroyer(starting_id + 1, player_id, dreadnought_position, name: "Detroit")
+      |> update_position_translate_right!(75)
+    [dreadnought, destroyer]
+  end
+
+  # *** *******************************
   # *** COMMON BUILDS
 
   def human_and_ai_players do

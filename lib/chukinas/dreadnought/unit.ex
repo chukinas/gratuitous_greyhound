@@ -1,12 +1,17 @@
-alias Chukinas.Dreadnought.{Unit, Sprite, Turret}
-alias Chukinas.Geometry.{Rect}
-alias Chukinas.Util.{Maps, IdList}
-alias Chukinas.LinearAlgebra.{HasCsys, CSys, Vector}
-alias Unit.Event, as: Ev
-
-defmodule Unit do
+defmodule Chukinas.Dreadnought.Unit do
 
   use Chukinas.PositionOrientationSize
+  alias Chukinas.Dreadnought.Sprite
+  alias Chukinas.Dreadnought.Turret
+  alias Chukinas.Dreadnought.Unit.Event, as: Ev
+  alias Chukinas.Dreadnought.Unit.Status
+  alias Chukinas.Geometry.Rect
+  alias Chukinas.LinearAlgebra.CSys
+  alias Chukinas.LinearAlgebra.HasCsys
+  alias Chukinas.LinearAlgebra.Vector
+  alias Chukinas.Util.IdList
+  alias Chukinas.Util.Maps
+
 
   # *** *******************************
   # *** TYPES
@@ -34,7 +39,7 @@ defmodule Unit do
       opts
       |> Keyword.merge(id: id)
       |> Keyword.pop!(:health)
-    unit_status = Unit.Status.new()
+    unit_status = Status.new()
     fields =
       Keyword.merge(fields,
         player_id: player_id,
@@ -55,7 +60,7 @@ defmodule Unit do
 
   def put(unit, items) when is_list(items), do: Enum.reduce(items, unit, &put(&2, &1))
   def put(unit, %Turret{} = turret), do: Maps.put_by_id(unit, :turrets, turret)
-  def put(unit, %Unit.Status{} = status) do
+  def put(unit, %Status{} = status) do
     %__MODULE__{unit | status: status}
   end
   def put(unit, event) do
@@ -133,6 +138,7 @@ defmodule Unit do
     |> Vector.from_position
   end
 
+  @spec turret(t, integer) :: Turret.t
   def turret(unit, turret_id) do
     IdList.fetch!(unit.turrets, turret_id)
   end

@@ -1,15 +1,19 @@
-alias Chukinas.PositionOrientationSize, as: POS
-alias POS.{Size, Position, Pose}
-alias Chukinas.Util.{Maps, Precision}
-alias Chukinas.Math, as: M
+defmodule Chukinas.PositionOrientationSize do
 
-defmodule POS do
-
-  require POS.Guards
-  import POS.Guards
+  import Chukinas.PositionOrientationSize.Guards
+  # TODO are both of these needed?
   use Chukinas.Math
+  alias Chukinas.Math
+  alias Chukinas.PositionOrientationSize.IsPos
+  alias Chukinas.PositionOrientationSize.Pose
+  alias Chukinas.PositionOrientationSize.Position
+  alias Chukinas.PositionOrientationSize.Size
+  alias Chukinas.Util.Maps
+  alias Chukinas.Util.Precision
+  require Chukinas.PositionOrientationSize.Guards
 
   defmacro __using__(_opts) do
+    alias Chukinas.PositionOrientationSize, as: POS
     quote do
       require POS.Guards
       import POS.Guards
@@ -61,12 +65,24 @@ defmodule POS do
   end
 
   defp pos_set_precision(struct, precision) when is_number(precision) do
-    Enum.reduce(POS.IsPos.keys(struct), struct, fn key, struct ->
+    Enum.reduce(IsPos.keys(struct), struct, fn key, struct ->
       Map.update!(struct, key, &Float.round(&1 * 1.0, precision))
     end)
   end
 
   def position_new_rounded(map), do: Position.rounded(map)
+
+  # *** *******************************
+  # *** UPDATE
+
+  def update_position!(item_with_position, fun) do
+    position = fun.(item_with_position)
+    replace_position!(item_with_position, position)
+  end
+
+  def replace_position!(item_with_position, new_position) do
+    Maps.replace_keys(item_with_position, new_position, ~w/x y/a)
+  end
 
   # *** *******************************
   # *** MERGE
@@ -93,7 +109,7 @@ defmodule POS do
 
   def approx_equal(a, b) do
     a
-    |> POS.IsPos.keys
+    |> IsPos.keys
     |> Enum.all?(& Precision.approx_equal(a, b, &1))
   end
 
@@ -182,7 +198,7 @@ defmodule POS do
   end
 
   def angle_flip_sign(map) do
-    Map.update!(map, :angle, &M.flip_sign/1)
+    Map.update!(map, :angle, &Math.flip_sign/1)
   end
 
   # TODO rename rotate?

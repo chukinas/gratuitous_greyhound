@@ -46,4 +46,18 @@ defmodule Maps do
       |> Map.from_struct
     struct!(struct, pos)
   end
+
+  @spec replace_keys(map, map, [atom]) :: map
+  def replace_keys(to_struct, from_map, keys) when is_struct(to_struct) do
+    fields = for key <- keys, do: {key, Map.fetch!(from_map, key)}
+    struct!(to_struct, fields)
+  end
+
+  def replace_keys(to_map, from_map, keys) do
+    Enum.reduce(keys, to_map, fn key, map ->
+      val = Map.fetch!(from_map, key)
+      Map.replace!(map, key, val)
+    end)
+  end
+
 end
