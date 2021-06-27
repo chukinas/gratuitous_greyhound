@@ -1,19 +1,20 @@
-alias Chukinas.Dreadnought.{Gunfire, Spritesheet, Turret, Unit, Sprite}
-
-defmodule Gunfire do
+defmodule Chukinas.Dreadnought.Gunfire do
 
   use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra
+  alias Chukinas.Dreadnought.Sprite
+  alias Chukinas.Dreadnought.Spritesheet
+  alias Chukinas.Dreadnought.Turret
+  alias Chukinas.Dreadnought.Unit
+
 
   # *** *******************************
   # *** TYPES
 
   typedstruct do
-    field :sprite, Sprite.t()
     pose_fields()
+    field :sprite, Sprite.t()
     field :id_string, String.t()
-    #field :time_start, number()
-    #field :time_duration, number()
   end
 
   # *** *******************************

@@ -1,11 +1,12 @@
-alias Chukinas.Dreadnought.{Turret, Sprite}
-alias Chukinas.LinearAlgebra.{HasCsys, CSys, Vector}
+defmodule Chukinas.Dreadnought.Turret do
 
-defmodule Turret do
-
-  use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra
+  use Chukinas.PositionOrientationSize
   use Chukinas.Math
+  alias Chukinas.Dreadnought.Sprite
+  alias Chukinas.LinearAlgebra.CSys
+  alias Chukinas.LinearAlgebra.HasCsys
+  alias Chukinas.LinearAlgebra.Vector
 
   # *** *******************************
   # *** NEW
@@ -131,6 +132,7 @@ defmodule Turret do
   # *** IMPLEMENTATIONS
 
   defimpl HasCsys do
+    alias Chukinas.Dreadnought.Turret
     def get_csys(turret), do: Turret.csys(turret)
     # This no longer seems necessary, now that pose is on the item itself
     def get_angle(turret), do: Turret.current_angle(turret)

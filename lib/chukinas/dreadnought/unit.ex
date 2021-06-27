@@ -6,9 +6,7 @@ defmodule Chukinas.Dreadnought.Unit do
   alias Chukinas.Dreadnought.Unit.Event, as: Ev
   alias Chukinas.Dreadnought.Unit.Status
   alias Chukinas.Geometry.Rect
-  alias Chukinas.LinearAlgebra.CSys
-  alias Chukinas.LinearAlgebra.HasCsys
-  alias Chukinas.LinearAlgebra.Vector
+  alias Chukinas.LinearAlgebra
   alias Chukinas.Util.IdList
   alias Chukinas.Util.Maps
 
@@ -24,7 +22,7 @@ defmodule Chukinas.Dreadnought.Unit do
     field :turrets, [Turret.t()]
     field :health, integer()
     pose_fields()
-    field :status, Unit.Status.t()
+    field :status, Status.t()
     field :events, [Ev.t()], default: []
     field :past_events, [Ev.t()], default: []
   end
@@ -88,6 +86,8 @@ defmodule Chukinas.Dreadnought.Unit do
   # *** *******************************
   # *** GETTERS
 
+  def angle(%__MODULE__{angle: value}), do: value
+
   def find_event(unit, event_module, which \\ :all) do
     unit
     |> events(which)
@@ -135,7 +135,7 @@ defmodule Chukinas.Dreadnought.Unit do
   def gunnery_target_vector(unit) do
     unit
     |> position
-    |> Vector.from_position
+    |> LinearAlgebra.vector_from_position
   end
 
   @spec turret(t, integer) :: Turret.t
@@ -201,18 +201,6 @@ defmodule Chukinas.Dreadnought.Unit do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl HasCsys do
-
-    def get_csys(unit) do
-      unit
-      |> pose
-      |> CSys.new
-    end
-
-    # TODO rename `angle`
-    def get_angle(unit), do: angle(unit)
-  end
-
   defimpl Inspect do
     require IOP
     def inspect(unit, opts) do
@@ -232,4 +220,16 @@ defmodule Chukinas.Dreadnought.Unit do
     end
   end
 
+end
+
+defimpl Chukinas.LinearAlgebra.HasCsys, for: Chukinas.Dreadnought.Unit do
+
+  use Chukinas.LinearAlgebra
+
+  def get_csys(unit) do
+    csys_new unit
+  end
+
+  # TODO rename `angle`
+  def get_angle(unit), do: Chukinas.Dreadnought.Unit.angle(unit)
 end

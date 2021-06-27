@@ -117,9 +117,8 @@ defmodule ChukinasWeb.DreadnoughtView do
     box_position =
       unit
       |> Unit.center_of_mass
-      |> coord_from_position
-      |> vector_transform_from(unit)
-      |> position
+      |> vector_inner_to_outer([unit])
+      |> position_from_vector
       |> position_subtract(box_size / 2)
     assigns =
       [

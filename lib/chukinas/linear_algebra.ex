@@ -89,6 +89,7 @@ defmodule Chukinas.LinearAlgebra do
     }
   end
 
+  @spec csys_new(any) :: Csys.t
   defdelegate csys_new(pose_or_csys), to: Csys, as: :new
   def csys_new(x, y, angle), do: pose_new(x, y, angle) |> csys_new
 
@@ -228,7 +229,7 @@ defmodule Chukinas.LinearAlgebra do
     csys_from_pose pose
   end
   defp coerce_to_csys(csys) when has_csys(csys) do
-    csys
+    csys_new(csys)
   end
   defp coerce_to_csys(vector) when is_vector(vector) do
     csys_from_vector vector
