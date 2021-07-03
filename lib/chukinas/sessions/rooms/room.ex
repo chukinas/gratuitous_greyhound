@@ -137,7 +137,7 @@ defmodule Chukinas.Sessions.Room do
   end
 
   @type mission_func :: (Mission.t -> Mission.t)
-  @spec update_mission(t, mission_func) :: t
+  @spec update_mission(t, mission_func) :: {:ok, t}
   def update_mission(%__MODULE__{} = room, fun) do
     room
     |> put_mission(room |> mission |> fun.())

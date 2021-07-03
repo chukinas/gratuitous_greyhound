@@ -106,6 +106,13 @@ defmodule Chukinas.Dreadnought.Mission do
 
   def units(%{units: units}), do: units
 
+  @spec unit_count(t) :: integer
+  def unit_count(mission) do
+    mission
+    |> units
+    |> Enum.count
+  end
+
   def combats(mission), do: mission |> actions |> UnitAction.Enum.combats
 
 

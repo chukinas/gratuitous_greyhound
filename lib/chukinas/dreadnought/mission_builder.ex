@@ -27,6 +27,7 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
   def maybe_start(%Mission{} = mission) do
     if ready?(mission) do
       mission
+      |> put_fleets
       |> Mission.start
       |> IOP.inspect("Miss build, starting game")
     else
@@ -140,17 +141,31 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
   # *** *******************************
   # *** UNITS
 
-  def red_fleet(starting_id, player_id) do
+  @spec put_fleets(Mission.t) :: Mission.t
+  def put_fleets(%Mission{} = mission) do
+    player_ids_and_fleet_colors = Enum.zip([
+      Mission.player_ids(mission),
+      [:red, :blue],
+      # TODO second pose needs to be relative to bl corner of play area
+      [pose_new(100, 100, 45), pose_new(500, 500, -135)]
+    ])
+    Enum.reduce(player_ids_and_fleet_colors, mission, fn {player_id, color, pose}, mission ->
+      next_unit_id = Mission.unit_count(mission) + 1
+      units = build_fleet(color, next_unit_id, player_id, pose)
+      Mission.put(mission, units)
+    end)
+  end
+
+  def build_fleet(:red, starting_id, player_id, pose) do
     import Unit.Builder
     use Chukinas.LinearAlgebra
     formation =
       [
         {  0,   0},
-        { 50, -50},
+        {-50,  50},
         {-50, -50},
       ]
-    lead_pose = pose_new(100, 100, 45)
-    poses = for rel_vector <- formation, do: update_position!(lead_pose, rel_vector)
+    poses = for rel_vector <- formation, do: update_position_translate!(pose, rel_vector)
     [
       red_cruiser(starting_id, player_id, Enum.at(poses, 0), name: "Navarin"),
       red_destroyer(starting_id + 1, player_id, Enum.at(poses, 1), name: "Potemkin"),
@@ -158,13 +173,11 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
     ]
   end
 
-  def blue_fleet(starting_id, player_id, bl_coord) do
+  def build_fleet(:blue, starting_id, player_id, pose) do
     use Chukinas.LinearAlgebra
     import Unit.Builder
     dreadnought_position =
-      bl_coord
-      |> position_new
-      |> pose_new(-135)
+      pose
       |> csys_from_pose
       |> csys_forward(100)
       |> pose_from_csys

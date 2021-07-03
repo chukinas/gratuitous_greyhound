@@ -235,6 +235,19 @@ defmodule Chukinas.LinearAlgebra do
     csys_from_vector vector
   end
 
+
+  #@spec something() :: [Csys.t]
+  #def something do
+  #  poseable = %{
+  #    x: 1,
+  #    y: 2,
+  #    angle: 0,
+  #    somethsraino: "ntesrai"
+  #  }
+  #  vector_inner_to_outer({0, 0}, poseable)
+  #  #coerce_to_csys_list(poseable)
+  #end
+
   # *** *******************************
   # *** COORD RELATIVE TO OUTER CSYS
 
@@ -243,7 +256,9 @@ defmodule Chukinas.LinearAlgebra do
   """
   @spec vector_inner_to_outer(coord, pose_or_csys_s) :: Vector.t
   def vector_inner_to_outer(coord, pose_or_csys) do
-    vector_transform_from(coord, pose_or_csys)
+    a = coerce_to_vector(coord)
+    b = coerce_to_csys_list(pose_or_csys)
+    do_vector_transform_to_outer(a, b)
   end
 
   # TODO deprecate
@@ -305,9 +320,9 @@ defmodule Chukinas.LinearAlgebra do
     update_position!(poseable, fun)
   end
 
-  @spec update_position_translate!(p, number) :: p when p: POS.position_map
-  def update_position_translate!(poseable, distance) do
-    fun = &position_translate(&1, distance)
+  @spec update_position_translate!(p, Vector.t) :: p when p: POS.position_map
+  def update_position_translate!(poseable, vector) do
+    fun = &position_translate(&1, vector)
     update_position!(poseable, fun)
   end
 
