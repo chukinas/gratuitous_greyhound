@@ -1,10 +1,8 @@
-alias Chukinas.Dreadnought.{Unit}
-alias Unit.Event, as: Ev
-
-defmodule Ev.Damage do
+defmodule Chukinas.Dreadnought.Unit.Event.Damage do
   @moduledoc """
   Describes a unit taking damage
   """
+  alias Chukinas.Dreadnought.Unit.Event, as: Ev
 
   # *** *******************************
   # *** TYPES

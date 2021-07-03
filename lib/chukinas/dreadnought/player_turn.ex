@@ -1,14 +1,16 @@
-alias Chukinas.Dreadnought.{PlayerTurn, Unit, ActionSelection, ManeuverPlanning, UnitAction, Gunfire}
-alias Chukinas.Geometry.{Grid, GridSquare}
-alias Chukinas.PositionOrientationSize.Size
-
 # TODO this name should match that of the Dyn World comp. Change this one or both to match
-defmodule PlayerTurn do
+defmodule Chukinas.Dreadnought.PlayerTurn do
   @moduledoc """
-  Holds the information needed to a single player taking his turn
+  Holds the information needed for a single player taking his turn
 
   It is regenerated for each new turn.
   """
+
+  alias Chukinas.Dreadnought.ActionSelection
+  alias Chukinas.Dreadnought.ManeuverPlanning
+  alias Chukinas.Dreadnought.Unit
+  alias Chukinas.Dreadnought.UnitAction
+  alias Chukinas.Geometry.GridSquare
 
   # *** *******************************
   # *** TYPES
@@ -22,16 +24,15 @@ defmodule PlayerTurn do
     field :player_id, integer()
     # TODO be more specific
     field :player_type, any()
-    field :margin, Size.t()
-    field :grid, Grid.t()
+    field :margin, Chukinas.PositionOrientationSize.Size.t()
+    field :grid, Chukinas.Geometry.Grid.t()
     # These are handled locally by the dynamic component:
     field :player_actions, ActionSelection.t()
     # These must be set by the mission each turn:
-    field :turn_number, integer()
     field :units, [Unit.t()], default: []
     field :cmd_squares, [GridSquare.t()], default: []
     field :show_end_turn_btn?, boolean(), default: false
-    field :gunfire, [Gunfire.t()]
+    field :gunfire, [ Chukinas.Dreadnought.Gunfire.t()]
   end
 
   # *** *******************************
@@ -43,7 +44,6 @@ defmodule PlayerTurn do
   } = mission) do
     mission
     |> Map.take([
-      :turn_number,
       :units,
       :margin,
       :grid,

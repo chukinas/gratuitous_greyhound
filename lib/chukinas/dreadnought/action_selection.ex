@@ -1,6 +1,7 @@
-alias Chukinas.Dreadnought.{UnitAction, ActionSelection, Unit}
+defmodule Chukinas.Dreadnought.ActionSelection do
 
-defmodule ActionSelection do
+  alias Chukinas.Dreadnought.Unit
+  alias Chukinas.Dreadnought.UnitAction
 
   # *** *******************************
   # *** TYPES

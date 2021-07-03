@@ -1,1 +1,1 @@
-<%= live_component @socket, ChukinasWeb.Dreadnought.DynamicWorldComponent, @mission_player %>
+<%= live_component @socket, ChukinasWeb.Dreadnought.DynamicWorldComponent, id: :player_turn, mission: @mission, mission_player: @mission_player %>
