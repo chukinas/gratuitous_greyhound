@@ -57,13 +57,6 @@ defmodule ChukinasWeb.DreadnoughtPlayLive do
     {:noreply, socket}
   end
 
-  #@impl true
-  ## TODO rename mission_player to `player_turn` PlayerTurn
-  #def handle_info({:player_turn_complete, player_actions}, socket) do
-  #  send_update Dreadnought.DynamicWorldComponent, mission_player
-  #  {:noreply, socket}
-  #end
-
   @impl true
   def handle_info({:push_redirect, path}, socket) do
     socket =

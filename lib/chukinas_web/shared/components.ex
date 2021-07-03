@@ -82,19 +82,12 @@ defmodule ChukinasWeb.Components do
   end
 
   def button(text, opts \\ []) do
-    #assigns = Opts.merge!(opts,
-    #  text: "placeholder text",
-    #  phx_click: nil,
-    #  phx_target: nil
-    #)
-    Phoenix.HTML.Tag.tag(
-      :input,
+    attrs = Keyword.merge(opts,
       type: "button",
       value: text,
-      class: Class.submit(),
-      phx_click: opts[:phx_click],
-      "phx-target": opts[:phx_target]
+      class: Class.submit()
     )
+    Phoenix.HTML.Tag.tag(:input, attrs)
   end
 
 end

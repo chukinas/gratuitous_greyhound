@@ -6,12 +6,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
   # alias Chukinas.Sessions.Missions
   alias Chukinas.Util.Precision
 
-  @impl true
-  def render(assigns) do
-    # TODO is it a problem that there isn't a single root element here? %>
-    # TODO might be worth having a containing div so I only have to set margin and size once
-    ChukinasWeb.DreadnoughtView.render("component_dynamic_world.html", assigns)
-  end
+  # TODO is it a problem that there isn't a single root element here? %>
 
   @impl true
   # the assigns are a map of Mission.Player

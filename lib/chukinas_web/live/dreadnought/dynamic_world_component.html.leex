@@ -68,11 +68,13 @@
 <%# End Turn Button %>
 <div class="absolute pointer-events-auto text-9xl text-white font-bold top-0 left-0" >
   <%= @turn_number %>
-  <%= if false and @show_end_turn_btn? do %>
+  <%= if @show_end_turn_btn? do %>
   <%= ChukinasWeb.Components.button(
-      text: "End Turn", 
-      phx_target: @myself, 
-      phx_click: "end_turn") %>
+      "End Turn", 
+      id: "dynWorldCompCompleteTurnBtn",
+      "phx-target": @myself, 
+      "phx-click": "end_turn"
+      )%>
   <% end %>
 </div>
 
