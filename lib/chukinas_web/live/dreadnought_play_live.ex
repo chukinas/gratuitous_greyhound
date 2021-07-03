@@ -34,7 +34,6 @@ defmodule ChukinasWeb.DreadnoughtPlayLive do
          %Mission{} = mission <- Room.mission(room) do
       socket
       |> assign(mission: mission)
-      |> assign(mission_playing_surface: Mission.to_playing_surface(mission) |> Map.from_struct)
       |> assign(mission_player: Mission.to_player(mission))
     else
       _ -> assign(socket, mission: nil)
