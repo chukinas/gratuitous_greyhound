@@ -11,12 +11,6 @@ defmodule ChukinasWeb.DreadnoughtPlayLive do
   # *** CALLBACKS
 
   @impl true
-  def render(assigns) do
-    # TODO get rid of this manual render
-    ChukinasWeb.DreadnoughtView.render "layout_gameplay.html", assigns
-  end
-
-  @impl true
   def mount(_params, session, socket) do
     socket =
       socket
