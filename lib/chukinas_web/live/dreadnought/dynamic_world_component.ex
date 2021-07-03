@@ -3,6 +3,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
   use ChukinasWeb, :live_component
   use ChukinasWeb.Components
   alias Chukinas.Dreadnought.ActionSelection
+  # alias Chukinas.Sessions.Missions
   alias Chukinas.Util.Precision
 
   @impl true
@@ -43,7 +44,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
   @impl true
   def handle_event("select_square", %{
     "unit_id" => unit_id,
-    "x" =>  x,
+    "x" => x,
     "y" => y
   }, socket) do
     [x, y, unit_id] =
@@ -53,9 +54,11 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
       socket.assigns.player_actions
       |> ActionSelection.maneuver(unit_id, x, y)
       |> maybe_end_turn
+      |> IOP.inspect("dyn world comp select_square")
     socket =
       socket
       |> assign(player_actions: player_actions)
+      |> IOP.inspect("DynamicWorldComponent select_square end")
     {:noreply, socket}
   end
 
@@ -66,10 +69,15 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
   end
 
   defp maybe_end_turn(%ActionSelection{} = player_actions) do
+    IOP.inspect player_actions, "DynamicWorldComponent maybe_end_turn"
+    IOP.inspect self(), "DynamicWorldComponent maybe_end_turn"
+    # TODO make sure DreadnoughtLive doesn't have a handler for this
     if ActionSelection.turn_complete?(player_actions) do
-      send self(), {:player_turn_complete, player_actions}
+      # Missions.complete_player_turn("the-red", player_actions)
+      send self(), {:complete_turn, player_actions}
     end
     player_actions
+    |> IOP.inspect("DynamicWorldComponent maybe_end_turn end")
   end
 
   #def inspect_assigns(assigns, note) do

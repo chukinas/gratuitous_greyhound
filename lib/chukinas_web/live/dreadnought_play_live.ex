@@ -2,10 +2,9 @@ defmodule ChukinasWeb.DreadnoughtPlayLive do
 
   use ChukinasWeb, :live_view
   alias Chukinas.Dreadnought.Mission
-  # TODO refactor out this state module
-  alias Chukinas.Dreadnought.State
+  alias Chukinas.Sessions.Missions
   alias Chukinas.Sessions.Room
-  alias ChukinasWeb.Dreadnought
+  # TODO where and why used?
   import ChukinasWeb.DreadnoughtLive, only: [assign_uuid_and_room: 2]
 
   # *** *******************************
@@ -49,12 +48,21 @@ defmodule ChukinasWeb.DreadnoughtPlayLive do
   end
 
   @impl true
-  # TODO rename mission_player to `player_turn` PlayerTurn
-  def handle_info({:player_turn_complete, player_actions}, socket) do
-    mission_player = State.complete_player_turn(socket.assigns.pid, player_actions)
-    send_update Dreadnought.DynamicWorldComponent, mission_player
+  def handle_info({:complete_turn, action_selection}, socket) do
+    # TODO I don't like how I have to take this intermediate step.
+    # TODO DynamicWorldComponent should have access to the room name.
+    IOP.inspect action_selection, "handle_info complete_turn"
+    Missions.complete_player_turn(socket.assigns.room.name, action_selection)
+    IOP.inspect action_selection, "DreadnoughtLive complete_turn end"
     {:noreply, socket}
   end
+
+  #@impl true
+  ## TODO rename mission_player to `player_turn` PlayerTurn
+  #def handle_info({:player_turn_complete, player_actions}, socket) do
+  #  send_update Dreadnought.DynamicWorldComponent, mission_player
+  #  {:noreply, socket}
+  #end
 
   @impl true
   def handle_info({:push_redirect, path}, socket) do
@@ -62,6 +70,14 @@ defmodule ChukinasWeb.DreadnoughtPlayLive do
       socket
       |> push_redirect(to: path)
     {:noreply, socket}
+  end
+
+  @impl true
+  def handle_info({:update_room, room}, socket) do
+    {:noreply, assign(
+      socket,
+      room: room
+    )}
   end
 
 end
