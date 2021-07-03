@@ -4,13 +4,13 @@
   id="arenaGrid"
   class="absolute inset-0 grid"
   style="
-    grid-auto-columns: <%= @grid.square_size %>px;
-    grid-auto-rows: <%= @grid.square_size %>px;
+    grid-auto-columns: <%= @player_turn.grid.square_size %>px;
+    grid-auto-rows: <%= @player_turn.grid.square_size %>px;
   "
 >
-  <%= if @player_actions.current_mode == :maneuver do %>
-  <%= for square <- @cmd_squares do %>
-  <%= if square.unit_id == @player_actions.current_unit_id do %>
+  <%= if @player_turn.player_actions.current_mode == :maneuver do %>
+  <%= for square <- @player_turn.cmd_squares do %>
+  <%= if square.unit_id == @player_turn.player_actions.current_unit_id do %>
   <%= ChukinasWeb.DreadnoughtView.render "maneuver_square.html", 
     myself: @myself, 
     square: square %>
@@ -24,9 +24,9 @@
 <svg
   id="svg_paths"
   class="absolute opacity-20 inset-0"
-  viewBox="0 0 <%= @grid.width %> <%= @grid.height %> "
+  viewBox="0 0 <%= @player_turn.grid.width %> <%= @player_turn.grid.height %> "
 >
-  <%= for unit <- @units do %>
+  <%= for unit <- @player_turn.units do %>
     <%= for maybe_maneuver_path <- unit.events do %>
       <%= ChukinasWeb.DreadnoughtView.maneuver_path(maybe_maneuver_path, unit.id) %>
     <% end %>
@@ -35,7 +35,7 @@
 
 
 <%# Maneuver Actions %>
-<%= for action <- @player_actions.actions do %>
+<%= for action <- @player_turn.player_actions.actions do %>
 <%= if action.mode == :maneuver and action.value != :exit_or_run_aground do %>
 <%= ChukinasWeb.DreadnoughtView.render "maneuver_location.html", position: action.value %>
 <% end %>
@@ -43,8 +43,8 @@
 
 
 <%# Units and their selection boxes %>
-<%= for unit <- @units do %>
-  <%= if unit.id in @player_actions.current_target_unit_ids do %>
+<%= for unit <- @player_turn.units do %>
+  <%= if unit.id in @player_turn.player_actions.current_target_unit_ids do %>
     <%= ChukinasWeb.DreadnoughtView.unit_selection_box(@myself, unit)%>
   <% end %>
   <%= if unit.status.render? do %>
@@ -58,7 +58,7 @@
 
 <%# Gunfire %>
 <%# TODO rename Animations %>
-<%= for animation <- @gunfire do %>
+<%= for animation <- @player_turn.gunfire do %>
   <%= ChukinasWeb.DreadnoughtView.render "animation.html",
     socket: @socket,
     animation: animation %>
@@ -68,7 +68,7 @@
 <%# End Turn Button %>
 <div class="absolute pointer-events-auto text-9xl text-white font-bold top-0 left-0" >
   <%= @turn_number %>
-  <%= if @show_end_turn_btn? do %>
+  <%= if @player_turn.show_end_turn_btn? do %>
   <%= ChukinasWeb.Components.button(
       "End Turn", 
       id: "dynWorldCompCompleteTurnBtn",

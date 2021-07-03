@@ -13,7 +13,8 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
   def update(assigns, socket) do
     socket =
       socket
-      |> assign(assigns.mission_player)
+      |> assign(id: assigns.id)
+      |> assign(player_turn: assigns.mission_player)
       |> assign(turn_number: assigns.mission.turn_number)
     {:ok, socket}
   end
