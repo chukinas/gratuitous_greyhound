@@ -55,15 +55,7 @@
   <% end %>
 <% end %>
 
-
-<%# Gunfire %>
-<%# TODO rename Animations %>
-<%= for animation <- @player_turn.gunfire do %>
-  <%= ChukinasWeb.DreadnoughtView.render "animation.html",
-    socket: @socket,
-    animation: animation %>
-<% end %>
-
+<%= View.animations(@socket, @player_turn.gunfire) %>
 
 <%# End Turn Button %>
 <div class="absolute pointer-events-auto text-9xl text-white font-bold top-0 left-0" >

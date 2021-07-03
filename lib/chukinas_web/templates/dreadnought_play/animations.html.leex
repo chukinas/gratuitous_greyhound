@@ -1,0 +1,6 @@
+<%= for animation <- @animations do %>
+  <%= ChukinasWeb.DreadnoughtView.render "animation.html",
+    socket: @socket,
+    animation: animation %>
+<% end %>
+

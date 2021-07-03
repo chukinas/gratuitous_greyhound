@@ -5,6 +5,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
   alias Chukinas.Dreadnought.ActionSelection
   # alias Chukinas.Sessions.Missions
   alias Chukinas.Util.Precision
+  alias ChukinasWeb.DreadnoughtPlayView, as: View
 
   # TODO is it a problem that there isn't a single root element here? %>
 
