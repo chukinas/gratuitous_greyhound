@@ -1,6 +1,4 @@
-alias Chukinas.Dreadnought.Mount
-
-defmodule Mount do
+defmodule Chukinas.Dreadnought.Sprites.Mount do
 
   use Chukinas.PositionOrientationSize
 

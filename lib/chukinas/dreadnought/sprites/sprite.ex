@@ -1,7 +1,7 @@
 defmodule Chukinas.Dreadnought.Sprite do
 
   use Chukinas.PositionOrientationSize
-  alias Chukinas.Dreadnought.Mount
+  alias Chukinas.Dreadnought.Sprites.Mount
   alias Chukinas.Geometry.Rect
   alias Chukinas.Svg
   alias Chukinas.Svg.Interpret
