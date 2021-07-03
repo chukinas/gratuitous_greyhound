@@ -6,7 +6,7 @@
     background-color: black;
     touch-action: none;
   }
-  #world {
+  #xxx_world {
     background-image:url("<%= Routes.static_path @socket, "/images/ocean.png" %>")
   }
 </style>
@@ -26,7 +26,4 @@
 <% end %>
 <% end %>
 
-<%# REMOVE this duplication %>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/MotionPathPlugin.min.js"></script>
-<script>gsap.registerPlugin(MotionPathPlugin);</script>
+<%= ChukinasWeb.SharedComponents.import_gsap() %>
