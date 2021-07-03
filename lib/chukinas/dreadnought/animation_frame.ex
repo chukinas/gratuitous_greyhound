@@ -1,13 +1,13 @@
-alias Chukinas.Dreadnought.{Animation, Sprite}
+defmodule Chukinas.Dreadnought.Animation.Frame do
 
-defmodule Animation.Frame do
+  alias Chukinas.Geometry.Rect
 
   # *** *******************************
   # *** TYPES
 
   use TypedStruct
   typedstruct enfore: true do
-    field :sprite, Sprite.t()
+    field :sprite, Chukinas.Dreadnought.Sprites.t
     field :duration, number()
     #field :fade_duration, number(), default: 0
   end
@@ -27,7 +27,7 @@ defmodule Animation.Frame do
   # *** GETTERS
 
   def rect(%__MODULE__{sprite: sprite}) do
-    Sprite.rect(sprite)
+    Rect.new(sprite)
   end
 
   # *** *******************************

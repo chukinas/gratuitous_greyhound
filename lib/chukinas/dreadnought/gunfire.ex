@@ -2,8 +2,7 @@ defmodule Chukinas.Dreadnought.Gunfire do
 
   use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra
-  alias Chukinas.Dreadnought.Sprite
-  alias Chukinas.Dreadnought.Spritesheet
+  alias Chukinas.Dreadnought.Sprites
   alias Chukinas.Dreadnought.Turret
   alias Chukinas.Dreadnought.Unit
 
@@ -13,8 +12,8 @@ defmodule Chukinas.Dreadnought.Gunfire do
 
   typedstruct do
     pose_fields()
-    field :sprite, Sprite.t()
-    field :id_string, String.t()
+    field :sprite, Sprites.t
+    field :id_string, String.t
   end
 
   # *** *******************************
@@ -33,7 +32,7 @@ defmodule Chukinas.Dreadnought.Gunfire do
   end
   def new(pose) do
     spritename = "explosion_" <> Enum.random(~w(1 2 3))
-    sprite = Spritesheet.blue(spritename)
+    sprite = Sprites.blue(spritename)
     fields =
       %{
         sprite: sprite,

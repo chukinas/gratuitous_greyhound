@@ -1,13 +1,12 @@
-alias Chukinas.Geometry.Rect
-alias Chukinas.Collide.IsShape
-
-defmodule Rect do
+defmodule Chukinas.Geometry.Rect do
   @moduledoc"""
   A Rect is an in-grid rectangle, comprising only horizontal and vertical lines
   """
 
   use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra
+  alias Chukinas.Collide.IsShape
+  alias Chukinas.Util.Maps
 
   # *** *******************************
   # *** TYPES
@@ -19,6 +18,10 @@ defmodule Rect do
 
   # *** *******************************
   # *** NEW
+
+  def new(%{x: x, y: y, width: width, height: height}) do
+    new(x, y, width, height)
+  end
 
   def new({a, b} = _min_max_position), do: new(a, b)
 
@@ -132,7 +135,7 @@ defmodule Rect do
       abs(rect.y + rect.height - origin.y)
     )
     dist_from_origin = position(half_width, half_height)
-    Rect.new(
+    new(
       position_subtract(origin, dist_from_origin),
       position_add(origin, dist_from_origin)
     )
@@ -144,10 +147,13 @@ defmodule Rect do
     |> size_multiply(scale)
   end
 
+  def merge_rect(map, rect_map), do: Maps.merge(map, rect_map, __MODULE__)
+
   # *** *******************************
   # *** IMPLEMENTATIONS
 
   defimpl IsShape do
+    alias Chukinas.Geometry.Rect
     def to_coords(rect), do: Rect.to_coords(rect)
   end
 

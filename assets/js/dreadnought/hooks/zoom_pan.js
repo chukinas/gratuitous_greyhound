@@ -253,9 +253,9 @@ function setPositionAndZoom() {
 }
 
 function pan(vector) {
-  logToElixir({
-    title: "pan!!"
-  })
+  // logToElixir({
+  //   title: "pan!!"
+  // })
   pinch(vector)
 }
 
@@ -289,7 +289,7 @@ const ZoomPanContainer = {
     elZoomPanContainer.onpointerout = Gestures.up;
     elZoomPanContainer.onpointerleave = Gestures.up;
     logToElixir = (params) => {
-      me.pushEvent("log", params)
+      // me.pushEvent("log", params)
     }
     Gestures.setCallbacks({
       logToElixir, 

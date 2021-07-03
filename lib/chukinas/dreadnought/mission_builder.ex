@@ -10,10 +10,10 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
   # *** *******************************
   # *** ONLINE GAME
 
-  @spec online :: Mission.t
-  def online() do
+  @spec online(String.t) :: Mission.t
+  def online(room_name) do
     {grid, margin} = medium_map()
-    Mission.new(grid, margin)
+    Mission.new(room_name, grid, margin)
     |> Map.put(:islands, islands())
     # Still needs players, units, and needs to be started
   end
@@ -70,7 +70,7 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
       Unit.Builder.red_cruiser(1, 1, pose_new(0, 0, 0), name: "Prince Eugene"),
       Unit.Builder.blue_merchant(2, 2, pose_new(position_from_size(grid), 225))
     ]
-    Mission.new(grid, margin)
+    Mission.new("dev", grid, margin)
     |> Map.put(:islands, islands())
     |> Mission.put(units)
     |> Mission.put(human_and_ai_players())
@@ -113,7 +113,7 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
       #Unit.Builder.red_cruiser(2, pose_new(800, 155, 75), name: "Billy"),
       Unit.Builder.blue_merchant(3, 2, pose_new(position_from_size(grid), 225))
     ]
-    Mission.new(grid, margin)
+    Mission.new("something...", grid, margin)
     |> Map.put(:islands, islands())
     |> Mission.put(units)
     |> Mission.put(human_and_ai_players())

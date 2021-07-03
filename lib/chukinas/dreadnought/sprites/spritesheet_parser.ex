@@ -1,7 +1,6 @@
-alias Chukinas.Dreadnought.Spritesheet.Parser
-alias Chukinas.Util.Precision
+defmodule Chukinas.Dreadnought.SpritesheetParser do
 
-defmodule Parser do
+  alias Chukinas.Util.Precision
 
   # Return list of spritesheets
   def parse_svg(svg_as_map) do

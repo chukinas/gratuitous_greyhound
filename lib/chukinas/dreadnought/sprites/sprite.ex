@@ -1,15 +1,15 @@
-alias Chukinas.Dreadnought.{Sprite, Mount}
-alias Chukinas.Geometry.Rect
-alias Chukinas.Svg.{Interpret}
-alias Chukinas.Svg
-alias Chukinas.Util.{IdList, Maps}
+defmodule Chukinas.Dreadnought.Sprite do
 
-defmodule Sprite do
+  use Chukinas.PositionOrientationSize
+  alias Chukinas.Dreadnought.Mount
+  alias Chukinas.Geometry.Rect
+  alias Chukinas.Svg
+  alias Chukinas.Svg.Interpret
+  alias Chukinas.Util.IdList
+  alias Chukinas.Util.Maps
 
   # *** *******************************
   # *** TYPES
-
-  use Chukinas.PositionOrientationSize
 
   typedstruct enforce: true do
     field :name, String.t()
@@ -19,7 +19,7 @@ defmodule Sprite do
     # TODO change to position type
     field :image_origin, any
     field :image_clip_path, String.t()
-    field :rect, Rect.t()
+    rect_fields()
     field :mounts, [Mount.t()]
   end
 
@@ -30,15 +30,16 @@ defmodule Sprite do
     %{path: image_clip_path, rect: image_rect} = sprite.image_clip_path |> Interpret.interpret
     origin = position_new_rounded(sprite.origin)
     rect = position_subtract(image_rect, origin)
-    %__MODULE__{
+    fields = %{
       name: sprite.clip_name,
       image_file_path: "/images/spritesheets/" <> image_map.path.name,
       image_size: size_new(image_map),
       image_origin: origin,
       image_clip_path: image_clip_path,
-      rect: rect,
       mounts: build_mounts(sprite.mounts, origin)
     }
+    |> Rect.merge_rect(rect)
+    struct!(__MODULE__, fields)
   end
 
   # *** *******************************
@@ -51,7 +52,10 @@ defmodule Sprite do
   end
   def base_filename(%__MODULE__{image_file_path: path}), do: Path.basename(path)
   def mounts(%__MODULE__{mounts: mounts}), do: mounts
-  def rect(%__MODULE__{rect: rect}), do: rect
+
+  def rect(%__MODULE__{} = sprite) do
+    Rect.new(sprite)
+  end
 
   # *** *******************************
   # *** API

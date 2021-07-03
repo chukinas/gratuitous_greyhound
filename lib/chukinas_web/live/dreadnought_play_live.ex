@@ -46,7 +46,7 @@ defmodule ChukinasWeb.DreadnoughtPlayLive do
     # TODO I don't like how I have to take this intermediate step.
     # TODO DynamicWorldComponent should have access to the room name.
     IOP.inspect action_selection, "handle_info complete_turn"
-    Missions.complete_player_turn(socket.assigns.room.name, action_selection)
+    Missions.complete_player_turn(socket.assigns.mission.room_name, action_selection)
     IOP.inspect action_selection, "DreadnoughtLive complete_turn end"
     {:noreply, socket}
   end

@@ -1,10 +1,9 @@
-alias Chukinas.Dreadnought.{Animation, Spritesheet}
-alias Chukinas.Geometry.Rect
+defmodule Chukinas.Dreadnought.Animation do
 
-defmodule Animation do
-
-  alias Animation.Frame
   use Chukinas.PositionOrientationSize
+  alias Chukinas.Dreadnought.Animation.Frame
+  alias Chukinas.Dreadnought.Sprites
+  alias Chukinas.Geometry.Rect
 
   # *** *******************************
   # *** TYPES
@@ -56,7 +55,7 @@ defmodule Animation do
   end
 
   def put_frame(animation, sprite_fun, sprite_name, duration) when is_number(duration) do
-    sprite = apply(Spritesheet, sprite_fun, [sprite_name])
+    sprite = apply(Sprites, sprite_fun, [sprite_name])
     frame = Frame.new(sprite, duration)
     put(animation, frame)
   end

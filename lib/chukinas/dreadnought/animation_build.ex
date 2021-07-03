@@ -1,8 +1,8 @@
-alias Chukinas.Dreadnought.{Spritesheet, Animation}
-
-defmodule Animation.Build do
+defmodule Chukinas.Dreadnought.Animation.Build do
 
   use Chukinas.PositionOrientationSize
+  alias Chukinas.Dreadnought.Animation
+  alias Chukinas.Dreadnought.Sprites
 
   # *** *******************************
   # *** NEW
@@ -38,7 +38,7 @@ defmodule Animation.Build do
 
   defp rand_explosion_frame(duration) do
     "explosion_" <> Enum.random(~w(1 2 3))
-    |> Spritesheet.blue
+    |> Sprites.blue
     |> Animation.Frame.new(duration)
   end
 end

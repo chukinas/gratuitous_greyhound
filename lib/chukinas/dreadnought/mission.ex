@@ -21,6 +21,7 @@ defmodule Chukinas.Dreadnought.Mission do
 
   use TypedStruct
   typedstruct do
+    field :room_name, String.t, enforce: true
     field :turn_number, integer(), default: 0
     field :grid, Grid.t()
     # TODO replace any with Size type
@@ -36,12 +37,13 @@ defmodule Chukinas.Dreadnought.Mission do
   # *** *******************************
   # *** NEW
 
-  def new(%Grid{} = grid, margin) when has_size(margin) do
+  def new(room_name, %Grid{} = grid, margin) when has_size(margin) do
     world = size_new(
       grid.width + 2 * margin.width,
       grid.height + 2 * margin.height
     )
     %__MODULE__{
+      room_name: room_name,
       world: world,
       grid: grid,
       margin: margin,
@@ -224,6 +226,7 @@ defmodule Chukinas.Dreadnought.Mission do
       fields =
         mission
         |> Map.take([
+          :room_name,
           :units,
           :players
         ])

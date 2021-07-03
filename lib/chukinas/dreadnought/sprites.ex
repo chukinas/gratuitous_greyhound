@@ -1,14 +1,23 @@
-alias Chukinas.Dreadnought.{Spritesheet, Sprite}
+defmodule Chukinas.Dreadnought.Sprites do
 
-defmodule Spritesheet do
+  alias Chukinas.Dreadnought.Sprite
+  alias Chukinas.Dreadnought.SpritesheetParser
 
   @external_resource "assets/static/images/spritesheets/sprites.svg"
   Module.register_attribute(__MODULE__, :function_heads, accumulate: true)
 
+  # *** *******************************
+  # *** TYPES
+
+  @type t :: Sprite.t
+
+  # *** *******************************
+  # *** API
+
   # TODO move to Sprite and delete this file?
   {:ok, svg_content} = File.read(@external_resource)
   svg_map = XmlToMap.naive_map(svg_content)
-  for spritesheet <- Spritesheet.Parser.parse_svg(svg_map) do
+  for spritesheet <- SpritesheetParser.parse_svg(svg_map) do
     function_name = spritesheet.image.path.root |> String.to_atom
     for sprite <- spritesheet.sprites do
       sprite_struct = Sprite.from_parsed_spritesheet(sprite, spritesheet.image)
@@ -35,4 +44,14 @@ defmodule Spritesheet do
   defp all_function_heads do
     Stream.filter(@function_heads, fn {fun, _} -> fun != :test end)
   end
+
+  # *** *******************************
+  # *** SPRITE API
+
+  def scale(sprite, scale), do: Sprite.scale(sprite, scale)
+
+  def mounts(sprite), do: Sprite.mounts(sprite)
+
+  def mount_position(sprite, mount_id), do: Sprite.mount_position(sprite, mount_id)
+
 end

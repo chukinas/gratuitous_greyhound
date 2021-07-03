@@ -10,7 +10,7 @@ defmodule Chukinas.Sessions.Room do
   typedstruct enforce: true do
     field :name, String.t
     field :pretty_name, String.t
-    field :mission, Mission.t, default: MissionBuilder.online()
+    field :mission, Mission.t
   end
 
   # *** *******************************
@@ -19,7 +19,8 @@ defmodule Chukinas.Sessions.Room do
   def new(room_name) do
     %__MODULE__{
       name: room_name,
-      pretty_name: RoomName.pretty(room_name)
+      pretty_name: RoomName.pretty(room_name),
+      mission: MissionBuilder.online(room_name)
     }
   end
 

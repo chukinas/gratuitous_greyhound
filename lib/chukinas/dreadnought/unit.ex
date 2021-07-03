@@ -1,7 +1,7 @@
 defmodule Chukinas.Dreadnought.Unit do
 
   use Chukinas.PositionOrientationSize
-  alias Chukinas.Dreadnought.Sprite
+  alias Chukinas.Dreadnought.Sprites
   alias Chukinas.Dreadnought.Turret
   alias Chukinas.Dreadnought.Unit.Event, as: Ev
   alias Chukinas.Dreadnought.Unit.Status
@@ -18,7 +18,7 @@ defmodule Chukinas.Dreadnought.Unit do
     field :id, integer()
     field :name, String.t()
     field :player_id, integer
-    field :sprite, Sprite.t()
+    field :sprite, Sprites.t
     field :turrets, [Turret.t()]
     field :health, integer()
     pose_fields()
@@ -149,7 +149,6 @@ defmodule Chukinas.Dreadnought.Unit do
 
   def center_of_mass(%__MODULE__{sprite: sprite}) do
     sprite
-    |> Sprite.rect
     |> Rect.center_position
   end
 

@@ -1,14 +1,16 @@
-alias Chukinas.Dreadnought.{Unit, Sprite, Spritesheet, Turret}
-
-defmodule Unit.Builder do
+defmodule Chukinas.Dreadnought.Unit.Builder do
 
   use Chukinas.PositionOrientationSize
+  alias Chukinas.Dreadnought.Turret
+  alias Chukinas.Dreadnought.Sprites
+  alias Chukinas.Dreadnought.Unit
+
 
   def blue_merchant(id, player_id, pose, opts \\ []) do
     fields =
       [
         health: 40,
-        sprite: Spritesheet.blue("hull_blue_merchant"),
+        sprite: Sprites.blue("hull_blue_merchant"),
         turrets: [],
         name: "noname"
       ]
@@ -17,7 +19,7 @@ defmodule Unit.Builder do
   end
 
   def blue_destroyer(id, player_id, pose, opts \\ []) do
-    sprite = Spritesheet.blue("hull_blue_small")
+    sprite = Sprites.blue("hull_blue_small")
     turrets = build_turrets(sprite, {:blue, "turret_blue_2"}, [
       {1, 0},
     ])
@@ -32,7 +34,7 @@ defmodule Unit.Builder do
   end
 
   def blue_dreadnought(id, player_id, pose, name, opts \\ []) do
-    sprite = Spritesheet.blue("hull_blue_large")
+    sprite = Sprites.blue("hull_blue_large")
     turrets = build_turrets(sprite, {:blue, "turret_blue_1"}, [
       {1, 0},
       {2, 0},
@@ -50,7 +52,7 @@ defmodule Unit.Builder do
   end
 
   def red_cruiser(id, player_id, pose, opts \\ []) do
-    sprite = Spritesheet.red("ship_large")
+    sprite = Sprites.red("ship_large")
     turrets = build_turrets(sprite, {:red, "turret1"}, [
       {1, 0},
       {2, 180}
@@ -66,7 +68,7 @@ defmodule Unit.Builder do
   end
 
   def red_destroyer(id, player_id, pose, opts \\ []) do
-    sprite = Spritesheet.red("ship_small")
+    sprite = Sprites.red("ship_small")
     turrets = build_turrets(sprite, {:red, "turret1"}, [
       {1, 0}
     ])
@@ -84,11 +86,11 @@ defmodule Unit.Builder do
   # *** PRIVATE
 
   defp build_turrets(unit_sprite, {sprite_fun, sprite_name}, turret_tuples) do
-    turret_sprite = apply(Spritesheet, sprite_fun, [sprite_name])
+    turret_sprite = apply(Sprites, sprite_fun, [sprite_name])
     Enum.map(turret_tuples, fn {mount_id, rest_angle} ->
       pose =
         unit_sprite
-        |> Sprite.mount_position(mount_id)
+        |> Sprites.mount_position(mount_id)
         |> pose_new(rest_angle)
       Turret.new(mount_id, turret_sprite, pose)
     end)

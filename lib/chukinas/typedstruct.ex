@@ -33,4 +33,11 @@ defmodule Chukinas.TypedStruct do
     end
   end
 
+  defmacro rect_fields do
+    quote do
+      position_fields()
+      size_fields()
+    end
+  end
+
 end

@@ -1,13 +1,14 @@
-alias Chukinas.Dreadnought.{Unit}
-alias Chukinas.Util.Opts
-alias Unit.Event, as: Ev
-
 defmodule ChukinasWeb.DreadnoughtView do
 
   use ChukinasWeb, :view
   use ChukinasWeb.Components
   use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra
+  alias Chukinas.Dreadnought.Unit
+  alias Chukinas.Dreadnought.Unit.Event, as: Ev
+  alias Chukinas.Geometry.Rect
+  alias Chukinas.Util.Opts
+
 
   def maneuver_path(%Ev.Maneuver{} = path, unit_id) do
     assigns =
@@ -64,14 +65,14 @@ defmodule ChukinasWeb.DreadnoughtView do
   def sprite(opts \\ []) do
     # TODO I don't like this use of 'opts'. The two 'opts' are anything but. They're required.
     sprite = Keyword.fetch!(opts, :sprite)
-    rect = sprite.rect
+    rect = Rect.new(sprite)
     assigns = [
       socket: Keyword.fetch!(opts, :socket),
       rect: rect,
       image_file_path: sprite.image_file_path,
       image_size: sprite.image_size,
       image_clip_path: sprite.image_clip_path,
-      transform: sprite.image_origin |> position_add(sprite.rect) |> position_multiply(-1)
+      transform: sprite.image_origin |> position_add(sprite) |> position_multiply(-1)
     ]
     render("_sprite.html", assigns)
   end
@@ -93,7 +94,7 @@ defmodule ChukinasWeb.DreadnoughtView do
     assigns = %{
       sprite: sprite,
       socket: socket,
-      position: sprite.rect |> position_add(pose) |> position,
+      position: sprite |> position_add(pose) |> position,
       class: opts[:class],
       attributes: attributes,
       angle: angle

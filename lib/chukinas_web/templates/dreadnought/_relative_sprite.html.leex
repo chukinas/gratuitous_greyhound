@@ -6,7 +6,7 @@
     <%= if @angle do %>
     transform: rotate(<%= @angle %>deg); 
     <% end %>
-    transform-origin: <%= -@sprite.rect.x %>px <%= -@sprite.rect.y %>px;
+    transform-origin: <%= -@sprite.x %>px <%= -@sprite.y %>px;
   "
   <%= for attr <- @attributes do %>
     <%= attr.name %>="<%= attr.value %>"

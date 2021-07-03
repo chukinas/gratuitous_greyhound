@@ -3,7 +3,7 @@ defmodule Chukinas.Dreadnought.Turret do
   use Chukinas.LinearAlgebra
   use Chukinas.PositionOrientationSize
   use Chukinas.Math
-  alias Chukinas.Dreadnought.Sprite
+  alias Chukinas.Dreadnought.Sprites
   alias Chukinas.LinearAlgebra.CSys
   alias Chukinas.LinearAlgebra.HasCsys
   alias Chukinas.LinearAlgebra.Vector
@@ -13,7 +13,7 @@ defmodule Chukinas.Dreadnought.Turret do
 
   typedstruct enforce: true do
     field :id, integer()
-    field :sprite, Sprite.t()
+    field :sprite, Sprites.t
     field :max_ccw_angle, degrees :: number()
     field :max_rotation, positive_degrees :: number()
     field :rest_angle, degrees :: number()
@@ -70,7 +70,7 @@ defmodule Chukinas.Dreadnought.Turret do
   def gun_barrel_vector(%__MODULE__{sprite: sprite}) do
     %{x: x} =
       sprite
-      |> Sprite.mounts
+      |> Sprites.mounts
       |> List.first
       |> position_new
     {x, 0}
