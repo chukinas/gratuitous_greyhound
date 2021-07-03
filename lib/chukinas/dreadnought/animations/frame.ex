@@ -1,4 +1,4 @@
-defmodule Chukinas.Dreadnought.Animation.Frame do
+defmodule Chukinas.Dreadnought.AnimationFrame do
 
   alias Chukinas.Geometry.Rect
 

@@ -1,7 +1,7 @@
 defmodule Chukinas.Dreadnought.Animation do
 
   use Chukinas.PositionOrientationSize
-  alias Chukinas.Dreadnought.Animation.Frame
+  alias Chukinas.Dreadnought.AnimationFrame
   alias Chukinas.Dreadnought.Sprites
   alias Chukinas.Geometry.Rect
 
@@ -13,7 +13,7 @@ defmodule Chukinas.Dreadnought.Animation do
     field :name, String.t()
     pose_fields()
     field :delay, number()
-    field :frames, [Frame.t()], default: []
+    field :frames, [AnimationFrame.t()], default: []
     field :last_frame_fade_duration, number(), default: 0
     # number of times to repeat. -1 means infinite loop
     field :repeat, number(), default: 0
@@ -38,25 +38,25 @@ defmodule Chukinas.Dreadnought.Animation do
 
   def bounding_rect(%__MODULE__{frames: frames}) do
     frames
-    |> Enum.map(&Frame.rect/1)
+    |> Enum.map(&AnimationFrame.rect/1)
     |> Rect.bounding_rect
   end
 
   # *** *******************************
   # *** SETTERS
 
-  def put(%__MODULE__{} = animation, %Frame{} = frame) do
-    #frame = Frame.fade(frame, animation.last_frame_fade_duration)
+  def put(%__MODULE__{} = animation, %AnimationFrame{} = frame) do
+    #frame = AnimationFrame.fade(frame, animation.last_frame_fade_duration)
     frames =
       animation.frames
-      #|> Enum.map(&Frame.remove_fade/1)
+      #|> Enum.map(&AnimationFrame.remove_fade/1)
       |> Enum.concat(List.wrap(frame))
     %__MODULE__{animation | frames: frames}
   end
 
   def put_frame(animation, sprite_fun, sprite_name, duration) when is_number(duration) do
     sprite = apply(Sprites, sprite_fun, [sprite_name])
-    frame = Frame.new(sprite, duration)
+    frame = AnimationFrame.new(sprite, duration)
     put(animation, frame)
   end
 

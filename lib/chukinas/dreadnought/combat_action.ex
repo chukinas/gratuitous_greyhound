@@ -3,7 +3,7 @@ defmodule Chukinas.Dreadnought.CombatAction do
   use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra
   alias Chukinas.Collide
-  alias Chukinas.Dreadnought.Animation
+  alias Chukinas.Dreadnought.Animations
   alias Chukinas.Dreadnought.CombatAction.Accumulator, as: Acc
   alias Chukinas.Dreadnought.Turret
   alias Chukinas.Dreadnought.Unit
@@ -115,9 +115,9 @@ defmodule Chukinas.Dreadnought.CombatAction do
       |> position_new
       |> pose_new(ordnance_hit_angle)
     animations = [
-      Animation.Build.large_muzzle_flash(pose, delay_discharge),
+      Animations.large_muzzle_flash(pose, delay_discharge),
       # TODO calculate the ordnance flight time instead of guessing
-      Animation.Build.ordnance_hit(ordnance_hit_pose, delay_hit)
+      Animations.ordnance_hit(ordnance_hit_pose, delay_hit)
     ]
     Acc.put(acc, attacker, target, animations)
   end

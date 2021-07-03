@@ -1,7 +1,8 @@
-defmodule Chukinas.Dreadnought.Animation.Build do
+defmodule Chukinas.Dreadnought.Animations do
 
   use Chukinas.PositionOrientationSize
   alias Chukinas.Dreadnought.Animation
+  alias Chukinas.Dreadnought.AnimationFrame
   alias Chukinas.Dreadnought.Sprites
 
   # *** *******************************
@@ -34,11 +35,18 @@ defmodule Chukinas.Dreadnought.Animation.Build do
   end
 
   # *** *******************************
-  # *** FUNCTIONS
+  # *** API
+
+  defdelegate repeat(animation), to: Animation
+
+  defdelegate bounding_rect(animation), to: Animation
+
+  # *** *******************************
+  # *** PRIVATE
 
   defp rand_explosion_frame(duration) do
     "explosion_" <> Enum.random(~w(1 2 3))
     |> Sprites.blue
-    |> Animation.Frame.new(duration)
+    |> AnimationFrame.new(duration)
   end
 end
