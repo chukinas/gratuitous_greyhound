@@ -12,12 +12,72 @@
 </style>
 
 <%= if @mission do %>
-  <%= live_component @socket, 
-      ChukinasWeb.Dreadnought.StaticWorldComponent, 
-      id: :grid_lab, 
-      mission: @mission,
-      mission_player: @mission_player,
-      mission_playing_surface: @mission_playing_surface do %>
-    <%= @inner_content %>
-  <% end %>
+  <div
+    id="worldContainer"
+    class="fixed inset-0"
+    phx-hook="ZoomPanContainer"
+  >
+    <div
+      id="world"
+      class="relative pointer-events-none bg-cover"
+      style="width:<%= @mission.world.width %>px; height: <%= @mission.world.height %>px"
+      phx-hook="ZoomPanCover"
+    >
+      <div
+        id="fit"
+        class="absolute"
+        style="
+          left: <%= @mission.margin.width - 50 %>px;
+          top: <%= @mission.margin.height - 50 %>px;
+          width:<%= @mission.grid.width + 100 %>px;
+          height: <%= @mission.grid.height + 100 %>px
+        "
+        phx-hook="ZoomPanFit"
+      >
+      </div>
+      <svg
+        id="svg_islands"
+        viewBox="
+          <%= -@mission.margin.width %>
+          <%= -@mission.margin.height %>
+          <%=  @mission.world.width %>
+          <%=  @mission.world.height %>
+        "
+        style="
+          width:<%=  @mission.world.width  %>px;
+          height:<%= @mission.world.height %>px
+        "
+      >
+        <%= for island <- @mission.islands do %>
+        <polygon
+          id="island-<%= island.id %>"
+          points="
+            <%= for point <- island.relative_vertices do %>
+            <%= point.x + island.x %>
+            <%= point.y + island.y %>
+            <% end %>
+          "
+          style="fill:green;"
+        />
+        <% end %>
+      </svg>
+      <div
+        class="absolute"
+        style="
+          box-shadow: inset 10px 10px 50px, 2px 2px 10px aquamarine;
+          left: <%= @mission.margin.width %>px;
+          top: <%= @mission.margin.height %>px;
+          width:<%= @mission.grid.width %>px;
+          height: <%= @mission.grid.height %>px
+        "
+      >
+        <div 
+          id="arena"
+          class="relative w-full h-full"
+        >
+          <%= @inner_content %>
+        </div>
+      </div>
+    </div>
+  </div>
 <% end %>
