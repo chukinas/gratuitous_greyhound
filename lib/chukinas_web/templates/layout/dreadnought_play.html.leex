@@ -11,4 +11,13 @@
   }
 </style>
 
-<%= @inner_content %>
+<%= if @mission do %>
+  <%= live_component @socket, 
+      ChukinasWeb.Dreadnought.StaticWorldComponent, 
+      id: :grid_lab, 
+      mission: @mission,
+      mission_player: @mission_player,
+      mission_playing_surface: @mission_playing_surface do %>
+    <%= @inner_content %>
+  <% end %>
+<% end %>
