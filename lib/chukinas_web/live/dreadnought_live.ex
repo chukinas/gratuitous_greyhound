@@ -3,7 +3,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
   use ChukinasWeb, :live_view
   alias Chukinas.Sessions
   alias Chukinas.Sessions.Room
-  alias Chukinas.Sessions.Missions
 
   # *** *******************************
   # *** CALLBACKS (MOUNT/PARAMS)

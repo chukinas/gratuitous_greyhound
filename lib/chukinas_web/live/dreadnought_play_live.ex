@@ -18,7 +18,7 @@ defmodule ChukinasWeb.DreadnoughtPlayLive do
       |> maybe_redirect_to_setup
       |> assign_mission
       |> assign(page_title: "Dreadnought")
-    {:ok, socket}
+    {:ok, socket, layout: {ChukinasWeb.LayoutView, "dreadnought_play.html"}}
   end
 
   def maybe_redirect_to_setup(socket) do

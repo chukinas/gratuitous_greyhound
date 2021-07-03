@@ -1,0 +1,14 @@
+<style>
+  iframe {
+    height: 0;
+  }
+  body {
+    background-color: black;
+    touch-action: none;
+  }
+  #world {
+    background-image:url("<%= Routes.static_path @socket, "/images/ocean.png" %>")
+  }
+</style>
+
+<%= @inner_content %>
