@@ -7,6 +7,8 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
   alias Chukinas.Util.Precision
   alias ChukinasWeb.DreadnoughtPlayView, as: View
 
+  def render(template, assigns), do: View.render(template, assigns)
+
   # TODO is it a problem that there isn't a single root element here? %>
 
   @impl true
