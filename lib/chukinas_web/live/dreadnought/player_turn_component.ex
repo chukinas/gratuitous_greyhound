@@ -1,4 +1,4 @@
-defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
+defmodule ChukinasWeb.Dreadnought.PlayerTurnComponent do
 
   use ChukinasWeb, :live_component
   use ChukinasWeb.Components
