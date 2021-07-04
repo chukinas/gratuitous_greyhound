@@ -19,7 +19,6 @@
   <% end %>
 </div>
 
-
 <%# Unit Maneuvers %>
 <svg
   id="svg_paths"
@@ -33,14 +32,7 @@
   <% end %>
 </svg>
 
-
-<%# Maneuver Actions %>
-<%= for action <- @player_turn.player_actions.actions do %>
-<%= if action.mode == :maneuver and action.value != :exit_or_run_aground do %>
-<%= ChukinasWeb.DreadnoughtView.render "maneuver_location.html", position: action.value %>
-<% end %>
-<% end %>
-
+<%= render("unit_maneuver_actions.html", unit_actions: @player_turn.player_actions.actions) %>
 
 <%# Units and their selection boxes %>
 <%= for unit <- @units do %>

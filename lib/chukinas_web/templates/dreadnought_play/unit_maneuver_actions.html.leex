@@ -1,0 +1,5 @@
+<%= for action <- @unit_actions do %>
+  <%= if action.mode == :maneuver and action.value != :exit_or_run_aground do %>
+    <%= ChukinasWeb.DreadnoughtView.render "maneuver_location.html", position: action.value %>
+  <% end %>
+<% end %>
