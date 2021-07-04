@@ -32,7 +32,6 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
     field :units, [Unit.t()], default: []
     field :cmd_squares, [GridSquare.t()], default: []
     field :show_end_turn_btn?, boolean(), default: false
-    field :gunfire, [ Chukinas.Dreadnought.Gunfire.t()]
   end
 
   # *** *******************************
@@ -47,7 +46,6 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
       :units,
       :margin,
       :grid,
-      :gunfire
     ])
     |> Map.merge(%{
       player_id: player_id,
@@ -78,6 +76,14 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
 
   def foresight(%__MODULE__{player_type: :ai}), do: 3
   def foresight(_), do: 1
+
+  # *** *******************************
+  # *** API
+
+  # TODO pattern match on __MODULE__
+  def update_action_selection(player_turn, fun) do
+    Map.update!(player_turn, :player_actions, fun)
+  end
 
   # *** *******************************
   # *** PRIVATE

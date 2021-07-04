@@ -3,7 +3,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
   use ChukinasWeb, :live_component
   use ChukinasWeb.Components
   alias Chukinas.Dreadnought.ActionSelection
-  # alias Chukinas.Sessions.Missions
+  alias Chukinas.Dreadnought.PlayerTurn
   alias Chukinas.Util.Precision
   alias ChukinasWeb.DreadnoughtPlayView, as: View
 
@@ -31,13 +31,12 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
   def handle_event("select_gunnery_target", %{
     "unit_id" => unit_id,
   }, socket) do
-    player_actions =
-      socket.assigns.player_actions
-      |> ActionSelection.select_gunnery_target(Precision.coerce_int(unit_id))
-      |> maybe_end_turn
+    IOP.inspect unit_id, "this should be an integer"
+    update_player_turn = &ActionSelection.select_gunnery_target(&1, Precision.coerce_int(unit_id))
     socket =
       socket
-      |> assign(player_actions: player_actions)
+      |> update(:player_turn, update_player_turn)
+      |> maybe_end_turn
     {:noreply, socket}
   end
 
@@ -50,22 +49,25 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
     [x, y, unit_id] =
       [x, y, unit_id]
       |> Precision.coerce_int
-    player_actions =
-      socket.assigns.player_actions
-      |> ActionSelection.maneuver(unit_id, x, y)
-      |> maybe_end_turn
-      |> IOP.inspect("dyn world comp select_square")
+    update_player_turn = fn player_turn ->
+      action_update = &ActionSelection.maneuver(&1, unit_id, x, y)
+      PlayerTurn.update_action_selection(player_turn, action_update)
+    end
     socket =
       socket
-      |> assign(player_actions: player_actions)
-      |> IOP.inspect("DynamicWorldComponent select_square end")
+      |> update(:player_turn, update_player_turn)
+      |> maybe_end_turn
     {:noreply, socket}
   end
 
   @impl true
   def handle_event("end_turn", _, socket) do
-    maybe_end_turn(socket.assigns.player_actions)
-    {:noreply, socket}
+    {:noreply, socket |> maybe_end_turn}
+  end
+
+  defp maybe_end_turn(%Phoenix.LiveView.Socket{} = socket) do
+    maybe_end_turn(socket.assigns.player_turn.player_actions)
+    socket
   end
 
   defp maybe_end_turn(%ActionSelection{} = player_actions) do
@@ -79,10 +81,5 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
     player_actions
     |> IOP.inspect("DynamicWorldComponent maybe_end_turn end")
   end
-
-  #def inspect_assigns(assigns, note) do
-  #  mod_assigns =Map.drop assigns, [:socket, :flash, :grid, :id, :margin, :myself]
-  #  assigns
-  #end
 
 end

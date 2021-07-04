@@ -7,6 +7,8 @@ defmodule ChukinasWeb.DreadnoughtPlayLive do
   # TODO where and why used?
   import ChukinasWeb.DreadnoughtLive, only: [assign_uuid_and_room: 2]
 
+  def render(template, assigns), do: ChukinasWeb.DreadnoughtPlayView.render(template, assigns)
+
   # *** *******************************
   # *** CALLBACKS
 
