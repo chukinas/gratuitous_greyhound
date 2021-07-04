@@ -1,0 +1,6 @@
+<%= for unit <- @units do %>
+  <%= if unit.id in @action_selection.current_target_unit_ids do %>
+    <%= View.render_unit_selection_box(@target, unit)%>
+  <% end %>
+<% end %>
+

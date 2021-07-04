@@ -102,26 +102,6 @@ defmodule ChukinasWeb.DreadnoughtView do
     render("_center.html", assigns)
   end
 
-  def unit_selection_box(myself, %Unit{} = unit) do
-    box_size = 200
-    box_position =
-      unit
-      |> Unit.center_of_mass
-      # TODO I shouldn't have to put unit in a list
-      |> vector_inner_to_outer([unit])
-      |> position_from_vector
-      |> position_subtract(box_size / 2)
-    assigns =
-      [
-        unit_id: unit.id,
-        unit_name: unit.name,
-        size: box_size,
-        position: box_position,
-        myself: myself
-      ]
-    render("_unit_selection_box.html", assigns)
-  end
-
   #defp render_template(template, assigns, block) do
   #  assigns =
   #    assigns

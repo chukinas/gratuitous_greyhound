@@ -18,13 +18,16 @@
   <% end %>
 </div>
 
-<%= render("unit_maneuver_actions.html", unit_actions: @player_turn.player_actions.actions) %>
+<%= render "unit_maneuver_actions.html", unit_actions: @player_turn.player_actions.actions %>
+
+<%= render "target_selection_boxes.html", 
+  action_selection: @player_turn.player_actions,
+  target: @myself,
+  units: @units
+  %>
 
 <%# Units and their selection boxes %>
 <%= for unit <- @units do %>
-  <%= if unit.id in @player_turn.player_actions.current_target_unit_ids do %>
-    <%= ChukinasWeb.DreadnoughtView.unit_selection_box(@myself, unit)%>
-  <% end %>
   <%= if unit.status.render? do %>
     <%= ChukinasWeb.DreadnoughtView.render "unit.html",
       socket: @socket,
