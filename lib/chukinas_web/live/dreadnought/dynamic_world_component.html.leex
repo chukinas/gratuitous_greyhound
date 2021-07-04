@@ -4,8 +4,8 @@
   id="arenaGrid"
   class="absolute inset-0 grid"
   style="
-    grid-auto-columns: <%= @player_turn.grid.square_size %>px;
-    grid-auto-rows: <%= @player_turn.grid.square_size %>px;
+    grid-auto-columns: <%= @grid.square_size %>px;
+    grid-auto-rows: <%= @grid.square_size %>px;
   "
 >
   <%= if @player_turn.player_actions.current_mode == :maneuver do %>
@@ -24,7 +24,7 @@
 <svg
   id="svg_paths"
   class="absolute opacity-20 inset-0"
-  viewBox="0 0 <%= @player_turn.grid.width %> <%= @player_turn.grid.height %> "
+  viewBox="0 0 <%= @grid.width %> <%= @grid.height %> "
 >
   <%= for unit <- @player_turn.units do %>
     <%= for maybe_maneuver_path <- unit.events do %>

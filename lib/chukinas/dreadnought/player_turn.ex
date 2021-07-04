@@ -25,7 +25,6 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
     # TODO be more specific
     field :player_type, any()
     field :margin, Chukinas.PositionOrientationSize.Size.t()
-    field :grid, Chukinas.Geometry.Grid.t()
     # These are handled locally by the dynamic component:
     field :player_actions, ActionSelection.t()
     # These must be set by the mission each turn:
@@ -39,13 +38,13 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
 
   def new(player_id, player_type, %{
     islands: islands,
+    grid: grid,
     units: units
   } = mission) do
     mission
     |> Map.take([
       :units,
       :margin,
-      :grid,
     ])
     |> Map.merge(%{
       player_id: player_id,
@@ -53,7 +52,7 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
       player_actions: ActionSelection.new(player_id, units)
     })
     |> build_struct
-    |> calc_cmd_squares(islands)
+    |> calc_cmd_squares(islands, grid)
     |> maneuver_trapped_units
     |> if_ai_calc_commands
     |> determine_show_end_turn_btn
@@ -109,11 +108,11 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
     end
   end
 
-  defp calc_cmd_squares(player_turn, islands) do
+  defp calc_cmd_squares(player_turn, islands, grid) do
     squares =
       player_turn.units
       |> Unit.Enum.active_player_units(player_turn.player_id)
-      |> Enum.flat_map(&ManeuverPlanning.get_cmd_squares(&1, player_turn.grid, islands, foresight(player_turn)))
+      |> Enum.flat_map(&ManeuverPlanning.get_cmd_squares(&1, grid, islands, foresight(player_turn)))
     %__MODULE__{player_turn | cmd_squares: squares}
   end
 
