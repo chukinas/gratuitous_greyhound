@@ -1,0 +1,21 @@
+<%# grid, player_actions cmd_squares myself %>
+<div
+  id="arenaGrid"
+  class="absolute inset-0 grid"
+  style="
+    grid-auto-columns: <%= @square_size %>px;
+    grid-auto-rows: <%= @square_size %>px;
+  "
+>
+<%# TODO the template shouldn't have to do so much work. Put the logic in ActionSelection %>
+  <%= if @action_selection.current_mode == :maneuver do %>
+    <%= for square <- @cmd_squares do %>
+      <%= if square.unit_id == @action_selection.current_unit_id do %>
+        <%= ChukinasWeb.DreadnoughtView.render "maneuver_square.html", 
+          myself: @target, 
+          square: square %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
+

@@ -4,7 +4,6 @@ defmodule ChukinasWeb.DreadnoughtView do
   use ChukinasWeb.Components
   use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra
-  alias Chukinas.Dreadnought.Unit
   alias Chukinas.Dreadnought.Unit.Event, as: Ev
   alias Chukinas.Geometry.Rect
   alias Chukinas.Util.Opts

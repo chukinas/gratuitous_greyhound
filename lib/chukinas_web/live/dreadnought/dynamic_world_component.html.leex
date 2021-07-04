@@ -1,47 +1,35 @@
-<%# Maneuver Squares %>
-<div
-  id="arenaGrid"
-  class="absolute inset-0 grid"
-  style="
-    grid-auto-columns: <%= @grid.square_size %>px;
-    grid-auto-rows: <%= @grid.square_size %>px;
-  "
->
-  <%= if @player_turn.player_actions.current_mode == :maneuver do %>
-    <%= for square <- @player_turn.cmd_squares do %>
-      <%= if square.unit_id == @player_turn.player_actions.current_unit_id do %>
-        <%= ChukinasWeb.DreadnoughtView.render "maneuver_square.html", 
-          myself: @myself, 
-          square: square %>
-      <% end %>
-    <% end %>
-  <% end %>
-</div>
+<%=
+render "maneuver_selection.html", 
+square_size: @grid.square_size,
+action_selection: @player_turn.player_actions,
+cmd_squares: @player_turn.cmd_squares,
+target: @myself
+%>
 
 <%= render "unit_maneuver_actions.html", 
-  unit_actions: @player_turn.player_actions.actions
-  %>
+unit_actions: @player_turn.player_actions.actions
+%>
 
 <%= render "target_selection_boxes.html", 
-  action_selection: @player_turn.player_actions,
-  target: @myself,
-  units: @units
-  %>
+action_selection: @player_turn.player_actions,
+target: @myself,
+units: @units
+%>
 
 <%# Units and their selection boxes %>
 <%= for unit <- @units do %>
   <%= if unit.status.render? do %>
     <%= ChukinasWeb.DreadnoughtView.render "unit.html",
-      socket: @socket,
-      turn_number: @turn_number,
-      unit: unit %>
+    socket: @socket,
+    turn_number: @turn_number,
+    unit: unit %>
   <% end %>
 <% end %>
 
 <%= render "turn_marker_and_end_btn.html", 
-  player_turn: @player_turn,
-  target: @myself,
-  turn_number: @turn_number
-  %>
+player_turn: @player_turn,
+target: @myself,
+turn_number: @turn_number
+%>
 
 <div id="turn-number" data-turn-number="<%= @turn_number %>" phx-hook="TurnNumber"></div>
