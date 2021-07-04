@@ -18,7 +18,9 @@
   <% end %>
 </div>
 
-<%= render "unit_maneuver_actions.html", unit_actions: @player_turn.player_actions.actions %>
+<%= render "unit_maneuver_actions.html", 
+  unit_actions: @player_turn.player_actions.actions
+  %>
 
 <%= render "target_selection_boxes.html", 
   action_selection: @player_turn.player_actions,
@@ -36,18 +38,10 @@
   <% end %>
 <% end %>
 
-<%# End Turn Button %>
-<div class="absolute pointer-events-auto text-9xl text-white font-bold top-0 left-0" >
-  <%= @turn_number %>
-  <%= if @player_turn.show_end_turn_btn? do %>
-  <%= ChukinasWeb.Components.button(
-      "End Turn", 
-      id: "dynWorldCompCompleteTurnBtn",
-      "phx-target": @myself, 
-      "phx-click": "end_turn"
-      )%>
-  <% end %>
-</div>
-
+<%= render "turn_marker_and_end_btn.html", 
+  player_turn: @player_turn,
+  target: @myself,
+  turn_number: @turn_number
+  %>
 
 <div id="turn-number" data-turn-number="<%= @turn_number %>" phx-hook="TurnNumber"></div>
