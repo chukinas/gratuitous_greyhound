@@ -26,7 +26,7 @@
   class="absolute opacity-20 inset-0"
   viewBox="0 0 <%= @grid.width %> <%= @grid.height %> "
 >
-  <%= for unit <- @player_turn.units do %>
+  <%= for unit <- @units do %>
     <%= for maybe_maneuver_path <- unit.events do %>
       <%= ChukinasWeb.DreadnoughtView.maneuver_path(maybe_maneuver_path, unit.id) %>
     <% end %>
@@ -43,7 +43,7 @@
 
 
 <%# Units and their selection boxes %>
-<%= for unit <- @player_turn.units do %>
+<%= for unit <- @units do %>
   <%= if unit.id in @player_turn.player_actions.current_target_unit_ids do %>
     <%= ChukinasWeb.DreadnoughtView.unit_selection_box(@myself, unit)%>
   <% end %>

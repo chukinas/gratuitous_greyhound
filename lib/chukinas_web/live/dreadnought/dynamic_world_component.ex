@@ -20,6 +20,7 @@ defmodule ChukinasWeb.Dreadnought.DynamicWorldComponent do
       |> assign(player_turn: assigns.mission_player)
       |> assign(turn_number: assigns.mission.turn_number)
       |> assign(grid: assigns.mission.grid)
+      |> assign(units: assigns.mission.units)
     {:ok, socket}
   end
 

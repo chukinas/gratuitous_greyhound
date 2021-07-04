@@ -18,16 +18,9 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
   use TypedStruct
 
   typedstruct enforce: true do
-    # These never change throughout the mission
-    field :id, atom(), default: :dynamic_world
-    # TODO needed?
     field :player_id, integer()
-    # TODO be more specific
     field :player_type, any()
-    # These are handled locally by the dynamic component:
     field :player_actions, ActionSelection.t()
-    # These must be set by the mission each turn:
-    field :units, [Unit.t()], default: []
     field :cmd_squares, [GridSquare.t()], default: []
     field :show_end_turn_btn?, boolean(), default: false
   end
@@ -42,7 +35,6 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
   } = mission) do
     mission
     |> Map.take([
-      :units,
     ])
     |> Map.merge(%{
       player_id: player_id,
@@ -50,7 +42,7 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
       player_actions: ActionSelection.new(player_id, units)
     })
     |> build_struct
-    |> calc_cmd_squares(islands, grid)
+    |> calc_cmd_squares(islands, grid, units)
     |> maneuver_trapped_units
     |> if_ai_calc_commands
     |> determine_show_end_turn_btn
@@ -106,9 +98,9 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
     end
   end
 
-  defp calc_cmd_squares(player_turn, islands, grid) do
+  defp calc_cmd_squares(player_turn, islands, grid, units) do
     squares =
-      player_turn.units
+      units
       |> Unit.Enum.active_player_units(player_turn.player_id)
       |> Enum.flat_map(&ManeuverPlanning.get_cmd_squares(&1, grid, islands, foresight(player_turn)))
     %__MODULE__{player_turn | cmd_squares: squares}
@@ -143,7 +135,6 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
     def inspect(player, opts) do
       summary = %{
         player_actions: player.player_actions,
-        units: player.units
       }
      concat ["#Player-#{player.player_id}<", to_doc(summary, opts), ">"]
     end
