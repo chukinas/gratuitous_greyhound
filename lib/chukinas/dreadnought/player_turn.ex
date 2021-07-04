@@ -24,7 +24,6 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
     field :player_id, integer()
     # TODO be more specific
     field :player_type, any()
-    field :margin, Chukinas.PositionOrientationSize.Size.t()
     # These are handled locally by the dynamic component:
     field :player_actions, ActionSelection.t()
     # These must be set by the mission each turn:
@@ -44,7 +43,6 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
     mission
     |> Map.take([
       :units,
-      :margin,
     ])
     |> Map.merge(%{
       player_id: player_id,
