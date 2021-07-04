@@ -33,16 +33,17 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
     grid: grid,
     units: units
   } = mission) do
+    squares = cmd_squares(units, player_id, grid, islands)
     mission
     |> Map.take([
     ])
     |> Map.merge(%{
       player_id: player_id,
       player_type: player_type,
-      player_actions: ActionSelection.new(player_id, units)
+      player_actions: ActionSelection.new(player_id, units, squares)
     })
     |> build_struct
-    |> calc_cmd_squares(islands, grid, units)
+    |> put_maneuver_squares(squares)
     |> maneuver_trapped_units
     |> if_ai_calc_commands
     |> determine_show_end_turn_btn
@@ -98,11 +99,13 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
     end
   end
 
-  defp calc_cmd_squares(player_turn, islands, grid, units) do
-    squares =
-      units
-      |> Unit.Enum.active_player_units(player_turn.player_id)
-      |> Enum.flat_map(&ManeuverPlanning.get_cmd_squares(&1, grid, islands, foresight(player_turn)))
+  defp cmd_squares(units, player_id, grid, islands) do
+    units
+    |> Unit.Enum.active_player_units(player_id)
+    |> Enum.flat_map(&ManeuverPlanning.get_cmd_squares(&1, grid, islands, 1))
+  end
+
+  defp put_maneuver_squares(player_turn, squares) do
     %__MODULE__{player_turn | cmd_squares: squares}
   end
 
