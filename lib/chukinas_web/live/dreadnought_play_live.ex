@@ -6,6 +6,7 @@ defmodule ChukinasWeb.DreadnoughtPlayLive do
   alias Chukinas.Sessions.Room
   # TODO where and why used?
   import ChukinasWeb.DreadnoughtLive, only: [assign_uuid_and_room: 2]
+  alias ChukinasWeb.DreadnoughtPlayView, as: View
 
   def render(template, assigns), do: ChukinasWeb.DreadnoughtPlayView.render(template, assigns)
 

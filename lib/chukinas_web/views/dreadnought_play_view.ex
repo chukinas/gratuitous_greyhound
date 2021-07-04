@@ -1,19 +1,9 @@
 defmodule ChukinasWeb.DreadnoughtPlayView do
 
   use ChukinasWeb, :view
-  alias Chukinas.Dreadnought.Unit.Event, as: Ev
-  alias Chukinas.Geometry.Grid
+  alias Chukinas.Dreadnought.Unit.Event.Maneuver
 
-  def maneuver_paths(units, %Grid{} = grid) do
-    assigns =
-      grid
-      |> Grid.size
-      #|> Map.put(:actions, Enum.flat_map(units, &Unit.events(&1, :current)))
-      |> Map.put(:units, units)
-    render "maneuvers.html", assigns
-  end
-
-  def maneuver_path(%Ev.Maneuver{} = path, unit_id) do
+  def render_single_maneuver(%Maneuver{} = path, unit_id) do
     assigns =
       path
       |> Map.from_struct
