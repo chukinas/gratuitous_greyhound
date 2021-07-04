@@ -1,0 +1,12 @@
+<svg
+  id="svg_paths"
+  class="absolute opacity-20 inset-0"
+  viewBox="0 0 <%= @width %> <%= @height %> "
+>
+  <%= for unit <- @units do %>
+    <%= for maybe_maneuver_path <- unit.events do %>
+      <%= ChukinasWeb.DreadnoughtPlayView.maneuver_path(maybe_maneuver_path, unit.id) %>
+    <% end %>
+  <% end %>
+</svg>
+

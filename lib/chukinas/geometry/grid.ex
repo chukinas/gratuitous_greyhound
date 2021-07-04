@@ -57,10 +57,8 @@ defmodule Grid do
 
   # TODO superfluous. remove.
   def size(grid) do
-    %{
-      width: grid.square_size * grid.count.x,
-      height: grid.square_size * grid.count.y
-    }
+    grid
+    |> Map.take(~w/width height/a)
   end
 
   def squares(grid, opts \\ []) do

@@ -18,18 +18,7 @@
   <% end %>
 </div>
 
-<%# Unit Maneuvers %>
-<svg
-  id="svg_paths"
-  class="absolute opacity-20 inset-0"
-  viewBox="0 0 <%= @grid.width %> <%= @grid.height %> "
->
-  <%= for unit <- @units do %>
-    <%= for maybe_maneuver_path <- unit.events do %>
-      <%= ChukinasWeb.DreadnoughtPlayView.maneuver_path(maybe_maneuver_path, unit.id) %>
-    <% end %>
-  <% end %>
-</svg>
+<%= View.maneuver_paths @units, @grid %>
 
 <%= render("unit_maneuver_actions.html", unit_actions: @player_turn.player_actions.actions) %>
 
