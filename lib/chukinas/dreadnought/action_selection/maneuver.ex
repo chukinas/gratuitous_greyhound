@@ -8,16 +8,18 @@ defmodule Chukinas.Dreadnought.ActionSelection.Maneuver do
 
   typedstruct enforce: true do
     field :unit_id, integer
-    field :maneuver_selection_squares, [GridSquare.t], default: []
+    field :squares, [GridSquare.t], default: []
+    field :square_size, number
   end
 
   # *** *******************************
   # *** NEW
 
-  def new(unit_id, squares) do
+  def new(unit_id, [square | _] = squares) do
     %__MODULE__{
       unit_id: unit_id,
-      maneuver_selection_squares: squares
+      squares: squares,
+      square_size: GridSquare.size(square)
     }
   end
 

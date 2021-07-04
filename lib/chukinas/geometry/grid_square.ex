@@ -39,6 +39,8 @@ defmodule GridSquare do
   # TODO rename center_position
   def position(%__MODULE__{center: value}), do: value
 
+  def size(%__MODULE__{size: value}), do: value
+
   # *** *******************************
   # *** API
 

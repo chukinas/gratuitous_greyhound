@@ -5,6 +5,7 @@ defmodule ChukinasWeb.DreadnoughtPlayView do
   use Chukinas.PositionOrientationSize
   alias Chukinas.Dreadnought.Unit
   alias Chukinas.Dreadnought.Unit.Event.Maneuver
+  alias Chukinas.Dreadnought.ActionSelection, as: AS
 
   # TODO rename
   def render_single_maneuver(%Maneuver{} = path, unit_id) do
@@ -39,6 +40,14 @@ defmodule ChukinasWeb.DreadnoughtPlayView do
         myself: target
       ]
     render("_unit_selection_box.html", assigns)
+  end
+
+  def render_action_selection(action_selection, target \\ nil)
+
+  def render_action_selection(nil, _), do: nil
+
+  def render_action_selection(%AS.Maneuver{} = action_selection, target) do
+    render "action_selection_maneuver.html", action_selection: action_selection, target: target
   end
 
 end
