@@ -162,10 +162,12 @@ defmodule Chukinas.Dreadnought.ActionSelection do
   defp maybe_put_maneuver(action_selection) do
     current_action_selection = case current_mode(action_selection) do
       :maneuver ->
-        Maneuver.new(
-          current_unit_id(action_selection),
-          maneuver_squares_for_current_unit(action_selection)
-        )
+        # TODO this is pretty ugly
+        squares = maneuver_squares_for_current_unit(action_selection)
+        case Enum.count(squares) do
+          0 -> nil
+          _ -> Maneuver.new(current_unit_id(action_selection), squares)
+        end
       _ ->
         nil
     end

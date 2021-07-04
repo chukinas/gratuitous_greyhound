@@ -16,7 +16,7 @@ defmodule ChukinasWeb.DreadnoughtPlayView do
     render("maneuver_path.html", assigns)
   end
 
-  def maneuver_path(_, _) do
+  def render_single_maneuver(_, _) do
     nil
   end
 
