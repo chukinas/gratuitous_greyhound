@@ -11,8 +11,8 @@
   <%= if @action_selection.current_mode == :maneuver do %>
     <%= for square <- @cmd_squares do %>
       <%= if square.unit_id == @action_selection.current_unit_id do %>
-        <%= ChukinasWeb.DreadnoughtView.render "maneuver_square.html", 
-          myself: @target, 
+        <%= render "maneuver_selection_square.html", 
+          target: @target, 
           square: square %>
       <% end %>
     <% end %>
