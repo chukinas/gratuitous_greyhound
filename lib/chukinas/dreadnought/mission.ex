@@ -25,8 +25,6 @@ defmodule Chukinas.Dreadnought.Mission do
     field :grid, Grid.t(), enforce: true
     field :turn_number, integer(), default: 0
     # TODO deprecate
-    field :world, any
-    # TODO deprecate
     field :margin, any
     field :islands, [Island.t()], default: []
     field :units, [Unit.t()], default: []
@@ -42,7 +40,6 @@ defmodule Chukinas.Dreadnought.Mission do
     %__MODULE__{
       room_name: room_name,
       world_rect: world_rect(grid, margin),
-      world: world_rect(grid, margin) |> size_new,
       grid: grid,
       margin: margin,
     }
