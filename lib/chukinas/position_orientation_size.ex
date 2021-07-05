@@ -172,6 +172,10 @@ defmodule Chukinas.PositionOrientationSize do
 
   defdelegate size_from_positions(a, b), to: Size, as: :from_positions
 
+  def size_from_square(side_len) when is_number(side_len) do
+    size_new(side_len, side_len)
+  end
+
   defdelegate size_multiply(size, scalar), to: Size, as: :multiply
 
   defdelegate width(size), to: Size

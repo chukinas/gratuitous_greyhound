@@ -67,19 +67,45 @@ defmodule ChukinasWeb.DreadnoughtPlayView do
   end
 
   def render_rect_as_style_attrs(rect) do
-    map_to_string = fn
-      {:x, val} -> "left: #{val}px;"
-      {:y, val} -> "top: #{val}px;"
-      {:width, val} -> "width: #{val}px;"
-      {:height, val} -> "height: #{val}px;"
-    end
     rect
     |> Rect.from_rect
     |> Map.from_struct
-    |> Enum.map(map_to_string)
+    |> Enum.map(&attr_mapping/1)
     # TODO investigate using io list
     |> Enum.join(" ")
     |> IOP.inspect
   end
 
+  def left_top_from_position(position) do
+    position
+    |> position_new
+    |> Map.from_struct
+    |> Enum.map(&attr_mapping/1)
+    |> Enum.join(" ")
+    |> IOP.inspect
+  end
+
+  def width_height_from_size(size) when is_number(size) do
+    size
+    |> size_from_square
+    |> width_height_from_size
+  end
+
+  def width_height_from_size(size) do
+    size
+    |> size_new
+    |> Map.from_struct
+    |> Enum.map(&attr_mapping/1)
+    |> Enum.join(" ")
+    |> IOP.inspect
+  end
+
+  defp attr_mapping(tuple) do
+    case tuple do
+      {:x, val} -> "left: #{val}px;"
+      {:y, val} -> "top: #{val}px;"
+      {:width, val} -> "width: #{val}px;"
+      {:height, val} -> "height: #{val}px;"
+    end
+  end
 end
