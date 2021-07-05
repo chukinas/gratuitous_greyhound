@@ -10,16 +10,6 @@ target: @myself,
 units: @units
 %>
 
-<%# Units and their selection boxes %>
-<%= for unit <- @units do %>
-  <%= if unit.status.render? do %>
-    <%= ChukinasWeb.DreadnoughtView.render "unit.html",
-    socket: @socket,
-    turn_number: @turn_number,
-    unit: unit %>
-  <% end %>
-<% end %>
-
 <%= render "turn_marker_and_end_btn.html", 
 player_turn: @player_turn,
 target: @myself,

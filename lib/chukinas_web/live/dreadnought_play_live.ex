@@ -8,7 +8,7 @@ defmodule ChukinasWeb.DreadnoughtPlayLive do
   import ChukinasWeb.DreadnoughtLive, only: [assign_uuid_and_room: 2]
   alias ChukinasWeb.DreadnoughtPlayView, as: View
 
-  def render(template, assigns), do: ChukinasWeb.DreadnoughtPlayView.render(template, assigns)
+  def render(template, assigns), do: View.render(template, assigns)
 
   # *** *******************************
   # *** CALLBACKS
@@ -20,7 +20,7 @@ defmodule ChukinasWeb.DreadnoughtPlayLive do
       |> assign_uuid_and_room(session)
       |> maybe_redirect_to_setup
       |> assign_mission
-      |> assign(page_title: "Dreadnought")
+      |> assign(page_title: "Dreadnought Play")
     {:ok, socket, layout: {ChukinasWeb.LayoutView, "dreadnought_play.html"}}
   end
 
@@ -63,10 +63,11 @@ defmodule ChukinasWeb.DreadnoughtPlayLive do
 
   @impl true
   def handle_info({:update_room, room}, socket) do
+    IOP.inspect room, "DreadnoughtPlayLive handle_info update_room"
     {:noreply, assign(
       socket,
       room: room
-    )}
+    ) |> assign_mission |> IOP.inspect("DreadnoughtPlayLive update_room")}
   end
 
 end

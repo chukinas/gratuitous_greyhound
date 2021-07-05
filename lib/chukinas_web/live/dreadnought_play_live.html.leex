@@ -2,3 +2,13 @@
 
 <%= render "maneuvers.html", units: @mission.units, grid: @mission.grid %>
 <%= render "animations.html", socket: @socket, animations: @mission.gunfire %>
+
+<%= for unit <- @mission.units do %>
+  <%= if unit.status.render? do %>
+    <%= ChukinasWeb.DreadnoughtView.render "unit.html",
+    socket: @socket,
+    turn_number: @mission.turn_number,
+    unit: unit %>
+  <% end %>
+<% end %>
+
