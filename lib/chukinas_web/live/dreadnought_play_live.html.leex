@@ -1,14 +1,16 @@
-<%= live_component @socket, ChukinasWeb.Dreadnought.PlayerTurnComponent, id: :player_turn, mission: @mission, mission_player: @mission_player %>
+<%= if @mission do %>
+  <%= live_component @socket, ChukinasWeb.Dreadnought.PlayerTurnComponent, id: :player_turn, mission: @mission, mission_player: @mission_player %>
 
-<%= render "maneuvers.html", units: @mission.units, grid: @mission.grid %>
-<%= render "animations.html", socket: @socket, animations: @mission.gunfire %>
+  <%= render "maneuvers.html", units: @mission.units, grid: @mission.grid %>
+  <%= render "animations.html", socket: @socket, animations: @mission.gunfire %>
 
-<%= for unit <- @mission.units do %>
-  <%= if unit.status.render? do %>
-    <%= ChukinasWeb.DreadnoughtView.render "unit.html",
-    socket: @socket,
-    turn_number: @mission.turn_number,
-    unit: unit %>
+  <%= for unit <- @mission.units do %>
+    <%= if unit.status.render? do %>
+      <%= ChukinasWeb.DreadnoughtView.render "unit.html",
+      socket: @socket,
+      turn_number: @mission.turn_number,
+      unit: unit %>
+    <% end %>
   <% end %>
-<% end %>
 
+<% end %>

@@ -299,7 +299,7 @@ const ZoomPanContainer = {
       clearPositionAndZoom: resetData
     })
     // TODO rename
-    setTimeout(() => fitArena({zeroDuration: true})) 
+    //setTimeout(() => fitArena({zeroDuration: true})) 
   },
   // updated() {
   //   setTimeout(() => fitArena({zeroDuration: true})) 
@@ -315,11 +315,11 @@ const ZoomPanContainer = {
 const ZoomPanCover = {
   mounted() {
     elZoomPanCover = this.el
-    gsap.set(elZoomPanCover, {
-      x: -90,
-      y: -120,
-      scale: 1.05
-    })
+    // gsap.set(elZoomPanCover, {
+    //   x: -90,
+    //   y: -120,
+    //   scale: 1.05
+    // })
   }
 }
 
