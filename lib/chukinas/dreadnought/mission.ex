@@ -21,10 +21,12 @@ defmodule Chukinas.Dreadnought.Mission do
   use TypedStruct
   typedstruct do
     field :room_name, String.t, enforce: true
+    field :world_rect, Rect.t, enforce: true
+    field :grid, Grid.t(), enforce: true
     field :turn_number, integer(), default: 0
-    field :grid, Grid.t()
-    # TODO replace any with Size type
+    # TODO deprecate
     field :world, any
+    # TODO deprecate
     field :margin, any
     field :islands, [Island.t()], default: []
     field :units, [Unit.t()], default: []
@@ -37,16 +39,25 @@ defmodule Chukinas.Dreadnought.Mission do
   # *** NEW
 
   def new(room_name, %Grid{} = grid, margin) when has_size(margin) do
-    world = size_new(
-      grid.width + 2 * margin.width,
-      grid.height + 2 * margin.height
-    )
     %__MODULE__{
       room_name: room_name,
-      world: world,
+      world_rect: world_rect(grid, margin),
+      world: world_rect(grid, margin) |> size_new,
       grid: grid,
       margin: margin,
     }
+  end
+
+  defp world_rect(grid, margin) do
+    position =
+      margin
+      |> position_from_size
+      |> position_multiply(-1)
+    size =
+      margin
+      |> size_multiply(2)
+      |> size_add(grid)
+    Rect.from_position_and_size(position, size)
   end
 
   # *** *******************************
@@ -114,18 +125,9 @@ defmodule Chukinas.Dreadnought.Mission do
 
   def combats(mission), do: mission |> actions |> UnitAction.Enum.combats
 
+  # TODO rename `world_rect`
   def rect(nil), do: Rect.null()
-  def rect(%__MODULE__{margin: margin, grid: grid}) do
-    position =
-      margin
-      |> position_from_size
-      |> position_multiply(-1)
-    size =
-      margin
-      |> size_multiply(2)
-      |> size_add(grid)
-    Rect.from_position_and_size(position, size)
-  end
+  def rect(%__MODULE__{world_rect: value}), do: value
 
   def islands(nil), do: []
   def islands(%__MODULE__{islands: value}), do: value
