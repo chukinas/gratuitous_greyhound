@@ -90,15 +90,18 @@ defmodule ChukinasWeb.DreadnoughtView do
     render("_relative_sprite.html", assigns)
   end
 
-  def center(%{x: x, y: y}, opts \\ []) do
+  def center(%{x: _x, y: _y} = position, opts \\ []) do
     scale = Keyword.get(opts, :scale, 1)
     color = case Keyword.get(opts, :type, :origin) do
       :origin -> "pink"
       :mount -> "blue"
     end
     size = 20
-    assigns = [size: size, left: x * scale - size / 2, top: y * scale - size / 2, color: color]
-    render("_center.html", assigns)
+    position = position_multiply(position, scale)
+    render("_center.html",
+      rect: Rect.from_centered_square(position, size),
+      color: color
+    )
   end
 
   #defp render_template(template, assigns, block) do

@@ -7,20 +7,15 @@
     <%= @world_rect.height %>
   "
   class="relative"
-  style="
-    left: <%= @world_rect.x %>px;
-    top: <%= @world_rect.y %>px;
-    width:<%=  @world_rect.width  %>px;
-    height:<%= @world_rect.height %>px
-  "
+  style="<%= render_rect_as_style_attrs(@world_rect) %>"
 >
   <%= for island <- @islands do %>
     <polygon
       id="island-<%= island.id %>"
       points="
         <%= for point <- island.relative_vertices do %>
-        <%= point.x + island.x %>
-        <%= point.y + island.y %>
+          <%= point.x + island.x %>
+          <%= point.y + island.y %>
         <% end %>
       "
       style="fill:green;"
