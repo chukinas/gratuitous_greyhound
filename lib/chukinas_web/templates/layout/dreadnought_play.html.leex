@@ -39,7 +39,6 @@
       >
       </div>
 
-      <%= ChukinasWeb.DreadnoughtPlayView.render "islands.html", world_rect: @world_rect, islands: @islands  %>
 
       <div
         class="absolute"
@@ -55,6 +54,7 @@
           id="arena"
           class="relative w-full h-full"
         >
+          <%= ChukinasWeb.DreadnoughtPlayView.render "islands.html", world_rect: @world_rect, islands: @islands  %>
           <%= @inner_content %>
         </div>
       </div>

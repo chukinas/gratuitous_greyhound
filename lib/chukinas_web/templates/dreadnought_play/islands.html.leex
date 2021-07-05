@@ -6,7 +6,10 @@
     <%= @world_rect.width %>
     <%= @world_rect.height %>
   "
+  class="relative"
   style="
+    left: <%= @world_rect.x %>px;
+    top: <%= @world_rect.y %>px;
     width:<%=  @world_rect.width  %>px;
     height:<%= @world_rect.height %>px
   "
