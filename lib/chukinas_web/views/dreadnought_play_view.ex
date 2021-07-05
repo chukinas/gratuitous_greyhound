@@ -66,4 +66,19 @@ defmodule ChukinasWeb.DreadnoughtPlayView do
     render "zoom_pan_fit_area.html", rect: rect
   end
 
+  def render_rect_as_style_attrs(rect) do
+    map_to_string = fn
+      {:x, val} -> "left: #{val}px;"
+      {:y, val} -> "right: #{val}px;"
+      {:width, val} -> "width: #{val}px;"
+      {:height, val} -> "height: #{val}px;"
+    end
+    rect
+    |> Rect.from_rect
+    |> Map.from_struct
+    |> Enum.map(map_to_string)
+    # TODO investigate using io list
+    |> Enum.join(" ")
+  end
+
 end
