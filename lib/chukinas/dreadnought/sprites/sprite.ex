@@ -68,7 +68,7 @@ defmodule Chukinas.Dreadnought.Sprite do
     |> Map.update!(:image_size, &size_multiply(&1, scale))
     |> Map.update!(:image_clip_path, &Svg.scale(&1, scale))
     |> Map.update!(:image_origin, &position_multiply(&1, scale))
-    |> Map.update!(:rect, &Rect.scale(&1, scale))
+    |> Rect.scale(scale)
     |> Maps.map_each(:mounts, &Mount.scale(&1, scale))
   end
 

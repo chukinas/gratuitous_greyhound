@@ -66,6 +66,7 @@ defmodule ChukinasWeb.DreadnoughtPlayView do
     render "zoom_pan_fit_area.html", rect: rect
   end
 
+  # TODO move these to the Shared View
   def render_rect_as_style_attrs(rect) do
     rect
     |> Rect.from_rect
