@@ -69,7 +69,7 @@ defmodule ChukinasWeb.DreadnoughtPlayView do
   def render_rect_as_style_attrs(rect) do
     map_to_string = fn
       {:x, val} -> "left: #{val}px;"
-      {:y, val} -> "right: #{val}px;"
+      {:y, val} -> "top: #{val}px;"
       {:width, val} -> "width: #{val}px;"
       {:height, val} -> "height: #{val}px;"
     end
@@ -79,6 +79,7 @@ defmodule ChukinasWeb.DreadnoughtPlayView do
     |> Enum.map(map_to_string)
     # TODO investigate using io list
     |> Enum.join(" ")
+    |> IOP.inspect
   end
 
 end

@@ -129,6 +129,14 @@ defmodule Chukinas.Dreadnought.Mission do
   def islands(nil), do: []
   def islands(%__MODULE__{islands: value}), do: value
 
+  def arena_rect_wrt_world(nil), do: Rect.null()
+  def arena_rect_wrt_world(%__MODULE__{grid: grid, margin: margin}) do
+    position =
+      margin
+      |> position_from_size
+    Rect.from_position_and_size(position, grid)
+  end
+
   # *** *******************************
   # *** SETTERS
 

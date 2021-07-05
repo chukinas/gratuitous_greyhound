@@ -21,6 +21,7 @@ defmodule ChukinasWeb.DreadnoughtPlayLive do
       |> maybe_redirect_to_setup
       |> assign_mission
       |> assign_world_rect_and_islands
+      |> assign_relative_arena_rect
       |> assign(page_title: "Dreadnought Play")
     {:ok, socket, layout: {ChukinasWeb.LayoutView, "dreadnought_play.html"}}
   end
@@ -49,6 +50,11 @@ defmodule ChukinasWeb.DreadnoughtPlayLive do
     assign socket,
       world_rect: Mission.rect(mission) |> IOP.inspect("DreadnoughtPlayLive assign_world_rect_and_islands"),
       islands: Mission.islands(mission)
+  end
+
+  def assign_relative_arena_rect(socket) do
+    assign socket,
+      rel_arena_rect: Mission.arena_rect_wrt_world(socket.assigns.mission)
   end
 
   @impl true
