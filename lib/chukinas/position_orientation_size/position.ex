@@ -76,8 +76,8 @@ defmodule Position do
   def subtract(position, number) when is_number(number) do
     subtract(position, number, number)
   end
-  def subtract(position, translation) do
-    translate(position, {-translation.x, -translation.y})
+  def subtract(position, %{x: x, y: y}) do
+    translate(position, {-x, -y})
   end
 
   def multiply(position, value) do

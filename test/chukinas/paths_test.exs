@@ -43,7 +43,7 @@ defmodule Chukinas.PathsTest do
     actual_rect =
       path
       |> Paths.get_bounding_rect()
-    expected_rect = Rect.new(0, 0, 1, 1)
+    expected_rect = Rect.from_size(1, 1)
     assert match_numerical_map? expected_rect, actual_rect
   end
 

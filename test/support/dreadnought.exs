@@ -29,7 +29,7 @@ defmodule DreadnoughtHelpers do
   # *** BUILDERS
 
   def unit(), do: Unit.new(1, start_pose: POS.pose_new(0, 500, 0))
-  def arena(), do: Rect.new(1000, 1000)
+  def arena(), do: Rect.from_size(1000, 1000)
 
   # *** *******************************
   # *** PRIVATE

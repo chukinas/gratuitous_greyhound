@@ -54,12 +54,8 @@ defmodule GridSquare do
     %{square | path: path, path_type: path_type}
   end
 
-  def to_rect(square) do
-    half_size = square.size / 2
-    Rect.new(
-      square.center |> position_subtract(half_size),
-      square.center |> position_add(half_size)
-    )
+  def to_rect(%__MODULE__{center: position, size: size}) do
+    Rect.from_centered_square(position, size)
   end
 
   # *** *******************************

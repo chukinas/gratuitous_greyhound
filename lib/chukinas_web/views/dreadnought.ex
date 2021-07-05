@@ -53,7 +53,7 @@ defmodule ChukinasWeb.DreadnoughtView do
   def sprite(opts \\ []) do
     # TODO I don't like this use of 'opts'. The two 'opts' are anything but. They're required.
     sprite = Keyword.fetch!(opts, :sprite)
-    rect = Rect.new(sprite)
+    rect = Rect.from_rect(sprite)
     assigns = [
       socket: Keyword.fetch!(opts, :socket),
       rect: rect,

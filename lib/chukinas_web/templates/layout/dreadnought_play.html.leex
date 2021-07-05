@@ -35,32 +35,9 @@
         phx-hook="ZoomPanFit"
       >
       </div>
-      <svg
-        id="svg_islands"
-        viewBox="
-          <%= -@mission.margin.width %>
-          <%= -@mission.margin.height %>
-          <%=  @mission.world.width %>
-          <%=  @mission.world.height %>
-        "
-        style="
-          width:<%=  @mission.world.width  %>px;
-          height:<%= @mission.world.height %>px
-        "
-      >
-        <%= for island <- @mission.islands do %>
-        <polygon
-          id="island-<%= island.id %>"
-          points="
-            <%= for point <- island.relative_vertices do %>
-            <%= point.x + island.x %>
-            <%= point.y + island.y %>
-            <% end %>
-          "
-          style="fill:green;"
-        />
-        <% end %>
-      </svg>
+
+      <%= ChukinasWeb.DreadnoughtPlayView.render "islands.html", world_rect: @world_rect, islands: @islands  %>
+
       <div
         class="absolute"
         style="

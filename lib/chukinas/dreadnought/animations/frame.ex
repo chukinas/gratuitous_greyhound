@@ -27,7 +27,7 @@ defmodule Chukinas.Dreadnought.AnimationFrame do
   # *** GETTERS
 
   def rect(%__MODULE__{sprite: sprite}) do
-    Rect.new(sprite)
+    Rect.from_rect(sprite)
   end
 
   # *** *******************************

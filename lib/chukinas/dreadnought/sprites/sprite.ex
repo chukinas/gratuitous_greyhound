@@ -29,7 +29,10 @@ defmodule Chukinas.Dreadnought.Sprite do
   def from_parsed_spritesheet(sprite, image_map) do
     %{path: image_clip_path, rect: image_rect} = sprite.image_clip_path |> Interpret.interpret
     origin = position_new_rounded(sprite.origin)
-    rect = position_subtract(image_rect, origin)
+    rect =
+      image_rect
+      |> Rect.from_rect
+      |> position_subtract(origin)
     fields = %{
       name: sprite.clip_name,
       image_file_path: "/images/spritesheets/" <> image_map.path.name,
@@ -54,7 +57,7 @@ defmodule Chukinas.Dreadnought.Sprite do
   def mounts(%__MODULE__{mounts: mounts}), do: mounts
 
   def rect(%__MODULE__{} = sprite) do
-    Rect.new(sprite)
+    Rect.from_rect(sprite)
   end
 
   # *** *******************************

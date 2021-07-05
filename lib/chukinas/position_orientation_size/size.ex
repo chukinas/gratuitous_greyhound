@@ -55,9 +55,7 @@ defmodule Size do
   # *** API FOR ACTING ON WIDTH/HEIGHT KEYS
 
   def add(a, b) do
-    Enum.reduce([:width, :height], a, fn key, new_size ->
-      Map.update!(new_size, key, & &1 + b[key])
-    end)
+    %{a | width: a.width + b.width, height: a.height + b.height}
   end
 
   def subtract(a, b) do

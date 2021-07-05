@@ -164,6 +164,8 @@ defmodule Chukinas.PositionOrientationSize do
   defdelegate size_new(size), to: Size, as: :new
   defdelegate size_new(a, b), to: Size, as: :new
 
+  def size_add(a, b), do: Size.add(a, b)
+
   defdelegate size_from_position(position), to: Size, as: :from_position
 
   defdelegate size_from_positions(a, b), to: Size, as: :from_positions

@@ -14,10 +14,10 @@ defmodule CollisionTest do
       |> Enum.count
     end
     [
-      {Rect.new(10, 10, 90, 90), 1},
-      {Rect.new(10, 10, 90, 190), 2},
-      {Rect.new(10, 110, 90, 190), 1},
-      {Rect.new(150, 50, 200, 200), 0}
+      {Rect.from_positions(10, 10, 90, 90), 1},
+      {Rect.from_positions(10, 10, 90, 190), 2},
+      {Rect.from_positions(10, 110, 90, 190), 1},
+      {Rect.from_positions(150, 50, 200, 200), 0}
     ]
     |> Enum.each(fn {target, expected_count} ->
       assert expected_count == count_overlapping_squares.(target)

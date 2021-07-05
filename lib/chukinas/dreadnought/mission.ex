@@ -6,13 +6,12 @@ defmodule Chukinas.Dreadnought.Mission do
   alias Chukinas.Dreadnought.Gunfire
   alias Chukinas.Dreadnought.Island
   alias Chukinas.Dreadnought.Maneuver
-  # TODO rename playingsurface
-  alias Chukinas.Dreadnought.Mission.PlayingSurface
   alias Chukinas.Dreadnought.Player
   alias Chukinas.Dreadnought.PlayerTurn
   alias Chukinas.Dreadnought.Unit
   alias Chukinas.Dreadnought.UnitAction
   alias Chukinas.Geometry.Grid
+  alias Chukinas.Geometry.Rect
   alias Chukinas.Util.IdList
   alias Chukinas.Util.Maps
 
@@ -83,8 +82,6 @@ defmodule Chukinas.Dreadnought.Mission do
 
   def turn_number(%__MODULE__{turn_number: value}), do: value
 
-  def to_playing_surface(mission), do: PlayingSurface.new(mission)
-
   def to_player(mission), do: PlayerTurn.map(1, :human,  mission)
 
   defp turn_complete?(mission) do
@@ -117,6 +114,21 @@ defmodule Chukinas.Dreadnought.Mission do
 
   def combats(mission), do: mission |> actions |> UnitAction.Enum.combats
 
+  def rect(nil), do: Rect.null()
+  def rect(%__MODULE__{margin: margin, grid: grid}) do
+    position =
+      margin
+      |> position_from_size
+      |> position_multiply(-1)
+    size =
+      margin
+      |> size_multiply(2)
+      |> size_add(grid)
+    Rect.from_position_and_size(position, size)
+  end
+
+  def islands(nil), do: []
+  def islands(%__MODULE__{islands: value}), do: value
 
   # *** *******************************
   # *** SETTERS
