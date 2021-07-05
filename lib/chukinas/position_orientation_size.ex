@@ -119,6 +119,8 @@ defmodule Chukinas.PositionOrientationSize do
   @type position_type :: Position.t()
   @type position_list :: [position_type]
 
+  def position_null(), do: position 0, 0
+
   @spec position_new(any) :: Position.t
   defdelegate position_new(term), to: Position, as: :new
   @spec position_new(any, any) :: Position.t

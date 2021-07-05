@@ -54,8 +54,12 @@ defmodule Size do
   # *** *******************************
   # *** API FOR ACTING ON WIDTH/HEIGHT KEYS
 
-  def add(a, b) do
-    %{a | width: a.width + b.width, height: a.height + b.height}
+  def add(a, %{width: width, height: height}) do
+    %{a | width: a.width + width, height: a.height + height}
+  end
+
+  def add(a, value) do
+    %{a | width: a.width + value, height: a.height + value}
   end
 
   def subtract(a, b) do

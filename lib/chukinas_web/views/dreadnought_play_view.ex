@@ -6,6 +6,7 @@ defmodule ChukinasWeb.DreadnoughtPlayView do
   alias Chukinas.Dreadnought.Unit
   alias Chukinas.Dreadnought.Unit.Event.Maneuver
   alias Chukinas.Dreadnought.ActionSelection, as: AS
+  alias Chukinas.Geometry.Rect
 
   # TODO rename
   def render_single_maneuver(%Maneuver{} = path, unit_id) do
@@ -48,6 +49,21 @@ defmodule ChukinasWeb.DreadnoughtPlayView do
 
   def render_action_selection(%AS.Maneuver{} = action_selection, target) do
     render "action_selection_maneuver.html", action_selection: action_selection, target: target
+  end
+
+  def render_zoom_pan_fit_area(arena_size) do
+    margin = 50
+    position =
+      position_null()
+      |> position_subtract(margin)
+    size =
+      arena_size
+      |> size_add(2 * margin)
+    rect = Rect.from_position_and_size(
+      position,
+      size
+    )
+    render "zoom_pan_fit_area.html", rect: rect
   end
 
 end
