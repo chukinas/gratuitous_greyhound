@@ -21,10 +21,6 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
 
   typedstruct enforce: true do
     field :player, Player.t
-    # No need for all these fields. Just use Player struct instead
-    field :player_id, integer()
-    field :player_uuid, String.t
-    field :player_type, any()
     field :player_actions, ActionSelection.t()
     # TODO get rid of this field eventually
     field :cmd_squares, [GridSquare.t()], default: []
@@ -32,7 +28,7 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
   end
 
   # *** *******************************
-  # *** NEW
+  # *** CONSTRUCTORS
 
   def new(%Mission{} = mission, player_uuid) when is_binary(player_uuid) do
     grid = Mission.grid(mission)
@@ -43,9 +39,6 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
     squares = cmd_squares(units, player_id, grid, islands)
     %__MODULE__{
       player: player,
-      player_id: player_id,
-      player_uuid: player_uuid,
-      player_type: Player.type(player),
       player_actions: ActionSelection.new(player_id, units, squares)
     }
     |> put_maneuver_squares(squares)
@@ -59,17 +52,7 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
   end
 
   # *** *******************************
-  # *** GETTERS
-
-  def foresight(%__MODULE__{player_type: :ai}), do: 3
-  def foresight(_), do: 1
-
-  def player_uuid(%__MODULE__{player_uuid: value}), do: value
-
-  def player_id(%__MODULE__{player_id: value}), do: value
-
-  # *** *******************************
-  # *** API
+  # *** REDUCERS
 
   # TODO pattern match on __MODULE__
   def update_action_selection(player_turn, fun) do
@@ -77,34 +60,7 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
   end
 
   # *** *******************************
-  # *** PRIVATE
-
-  # TODO move the bulk of this out to the AI module
-  defp if_ai_calc_commands(player_turn) do
-    if player_turn.player_type == :ai do
-      #player_turn = Map.put(player_turn, :maneuver_foresight, 4)
-      pending_unit_ids =
-        player_turn.player_actions
-        |> ActionSelection.pending_player_unit_ids
-      unit_maneuvers = Enum.map(pending_unit_ids, fn unit_id ->
-        position =
-          player_turn.cmd_squares
-          |> Stream.filter(fn %GridSquare{unit_id: id} -> id == unit_id end)
-          |> Enum.random
-          |> GridSquare.position
-        UnitAction.move_to(unit_id, position)
-      end)
-      Map.update!(player_turn, :player_actions, &ActionSelection.put(&1, unit_maneuvers))
-    else
-      player_turn
-    end
-  end
-
-  defp cmd_squares(units, player_id, grid, islands) do
-    units
-    |> Unit.Enum.active_player_units(player_id)
-    |> Enum.flat_map(&ManeuverPlanning.get_cmd_squares(&1, grid, islands, 1))
-  end
+  # *** REDUCERS (PRIVATE)
 
   defp put_maneuver_squares(player_turn, squares) do
     %__MODULE__{player_turn | cmd_squares: squares}
@@ -129,6 +85,60 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
   defp determine_show_end_turn_btn(%__MODULE__{} = player_turn) do
     show? = player_turn.player_actions |> ActionSelection.turn_complete?
     %__MODULE__{player_turn | show_end_turn_btn?: show?}
+  end
+
+  # TODO move the bulk of this out to the AI module
+  defp if_ai_calc_commands(player_turn) do
+    if ai_player?(player_turn) do
+      #player_turn = Map.put(player_turn, :maneuver_foresight, 4)
+      pending_unit_ids =
+        player_turn.player_actions
+        |> ActionSelection.pending_player_unit_ids
+      unit_maneuvers = Enum.map(pending_unit_ids, fn unit_id ->
+        position =
+          player_turn.cmd_squares
+          |> Stream.filter(fn %GridSquare{unit_id: id} -> id == unit_id end)
+          |> Enum.random
+          |> GridSquare.position
+        UnitAction.move_to(unit_id, position)
+      end)
+      Map.update!(player_turn, :player_actions, &ActionSelection.put(&1, unit_maneuvers))
+    else
+      player_turn
+    end
+  end
+
+  # *** *******************************
+  # *** PRIVATE
+  # TODO is there a better place to put this?
+
+  defp cmd_squares(units, player_id, grid, islands) do
+    units
+    |> Unit.Enum.active_player_units(player_id)
+    |> Enum.flat_map(&ManeuverPlanning.get_cmd_squares(&1, grid, islands, 1))
+  end
+
+  # *** *******************************
+  # *** CONVERTERS
+
+  def ai_player?(%__MODULE__{} = player_turn) do
+    player_turn
+    |> player
+    |> Player.ai?
+  end
+
+  def player(%__MODULE__{player: value}), do: value
+
+  def player_id(%__MODULE__{} = player_turn) do
+    player_turn
+    |> player
+    |> Player.uuid
+  end
+
+  def player_uuid(%__MODULE__{} = player_turn) do
+    player_turn
+    |> player
+    |> Player.uuid
   end
 
   # *** *******************************
