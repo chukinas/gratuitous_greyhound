@@ -14,7 +14,7 @@ defmodule Chukinas.Dreadnought.Player do
   end
 
   # *** *******************************
-  # *** NEW
+  # *** CONSTRUCTORS
 
   defp new(id, type, uuid, name) when type in ~w(human ai)a do
     %__MODULE__{
@@ -36,25 +36,30 @@ defmodule Chukinas.Dreadnought.Player do
   end
 
   # *** *******************************
-  # *** GETTERS
+  # *** REDUCERS
 
-  def id(%__MODULE__{id: value}), do: value
-  def type(%__MODULE__{type: value}), do: value
-  def uuid(%__MODULE__{uuid: value}), do: value
-  def name(%__MODULE__{name: value}), do: value
-  def ready?(%__MODULE__{ready?: value}), do: value
-  def ai?(%__MODULE__{type: type}), do: type === :ai
+  def toggle_ready(%__MODULE__{ready?: ready?} = player) do
+    %__MODULE__{player | ready?: !ready?}
+  end
 
   # *** *******************************
-  # *** API
+  # *** CONVERTERS
+
+  def ai?(%__MODULE__{type: type}), do: type === :ai
 
   def has_uuid?(%__MODULE__{uuid: uuid}, wanted_uuid) do
     uuid == wanted_uuid
   end
 
-  def toggle_ready(%__MODULE__{ready?: ready?} = player) do
-    %__MODULE__{player | ready?: !ready?}
-  end
+  def id(%__MODULE__{id: value}), do: value
+
+  def name(%__MODULE__{name: value}), do: value
+
+  def ready?(%__MODULE__{ready?: value}), do: value
+
+  def type(%__MODULE__{type: value}), do: value
+
+  def uuid(%__MODULE__{uuid: value}), do: value
 
 end
 

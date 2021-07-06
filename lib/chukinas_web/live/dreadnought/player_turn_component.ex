@@ -4,6 +4,7 @@ defmodule ChukinasWeb.Dreadnought.PlayerTurnComponent do
   use ChukinasWeb.Components
   alias Chukinas.Dreadnought.ActionSelection
   alias Chukinas.Dreadnought.PlayerTurn
+  alias Chukinas.Sessions
   alias Chukinas.Util.Precision
   alias ChukinasWeb.DreadnoughtPlayView, as: View
 
@@ -12,16 +13,20 @@ defmodule ChukinasWeb.Dreadnought.PlayerTurnComponent do
   # TODO is it a problem that there isn't a single root element here? %>
 
   @impl true
-  # the assigns are a map of Mission.Player
   def update(assigns, socket) do
     socket =
       socket
       |> assign(id: assigns.id)
-      |> assign(player_turn: assigns.mission_player)
-      |> assign(turn_number: assigns.mission.turn_number)
-      |> assign(grid: assigns.mission.grid)
-      |> assign(units: assigns.mission.units)
+      |> assign_from_mission(assigns.mission, ~w/turn_number units room_name/a)
+      |> assign(player_turn: PlayerTurn.new(assigns.mission, assigns.player_uuid))
     {:ok, socket}
+  end
+
+  defp assign_from_mission(socket, mission, mission_keys) do
+    Enum.reduce(mission_keys, socket, fn key, socket ->
+      value = Map.fetch!(mission, key)
+      assign(socket, key, value)
+    end)
   end
 
   @impl true
@@ -67,21 +72,40 @@ defmodule ChukinasWeb.Dreadnought.PlayerTurnComponent do
     {:noreply, socket |> maybe_end_turn}
   end
 
-  defp maybe_end_turn(%Phoenix.LiveView.Socket{} = socket) do
-    maybe_end_turn(socket.assigns.player_turn.player_actions)
+  @impl true
+  def handle_event("leave_game", _, socket) do
+    socket
+    |> player_uuid
+    |> Sessions.leave_room
+    {:noreply, socket}
+  end
+
+  defp maybe_end_turn(socket) do
+    if turn_complete?(socket) do
+      socket
+      |> room_name
+      |> Sessions.complete_player_turn(action_selection(socket))
+    end
     socket
   end
 
-  defp maybe_end_turn(%ActionSelection{} = player_actions) do
-    IOP.inspect player_actions, "DynamicWorldComponent maybe_end_turn"
-    IOP.inspect self(), "DynamicWorldComponent maybe_end_turn"
-    # TODO make sure DreadnoughtLive doesn't have a handler for this
-    if ActionSelection.turn_complete?(player_actions) do
-      # Missions.complete_player_turn("the-red", player_actions)
-      send self(), {:complete_turn, player_actions}
-    end
-    player_actions
-    |> IOP.inspect("DynamicWorldComponent maybe_end_turn end")
+  # *** *******************************
+  # *** GETTERS
+
+  def action_selection(socket), do: socket.assigns.player_turn.player_actions
+
+  def player_id(socket), do: socket |> player_turn |> PlayerTurn.player_id
+
+  def player_turn(socket), do: socket.assigns.player_turn
+
+  def player_uuid(socket), do: socket |> player_turn |> PlayerTurn.player_uuid
+
+  def room_name(socket), do: socket.assigns.room_name
+
+  def turn_complete?(socket) do
+    socket
+    |> action_selection
+    |> ActionSelection.turn_complete?
   end
 
 end

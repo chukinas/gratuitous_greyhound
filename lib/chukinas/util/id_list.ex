@@ -8,10 +8,13 @@ defmodule Chukinas.Util.IdList do
     ids
     |> Enum.map(& fetch!(items, &1, key))
   end
-  def fetch!(enum, id, key) when is_integer(id) do
+  def fetch!(enum, id, key) do
     case Enum.find(enum, :not_found, &_match?(&1, id, key)) do
-      :not_found -> raise "\n\n!!!\n\nId of #{id} not found in #{inspect enum}\n\n!!!\n\n"
-      item -> item
+      :not_found ->
+        pair = %{key: key, value: id}
+        raise "\n\n!!!\n\nItem #{inspect pair} not found in #{inspect enum}\n\n!!!\n\n"
+      item ->
+        item
     end
   end
 
@@ -44,6 +47,10 @@ defmodule Chukinas.Util.IdList do
       end
     list
     |> Enum.reverse
+  end
+
+  def drop(enum, id) do
+    Enum.filter(enum, fn item -> _not_match?(item, id, :id) end)
   end
 
   # *** *******************************

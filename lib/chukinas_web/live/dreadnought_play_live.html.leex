@@ -1,5 +1,5 @@
 <%= if @mission do %>
-  <%= live_component @socket, ChukinasWeb.Dreadnought.PlayerTurnComponent, id: :player_turn, mission: @mission, mission_player: @mission_player %>
+  <%= live_component @socket, ChukinasWeb.Dreadnought.PlayerTurnComponent, id: :player_turn, mission: @mission, player_uuid: @uuid %>
 
   <%= render "maneuvers.html", units: @mission.units, grid: @mission.grid %>
   <%= render "animations.html", socket: @socket, animations: @mission.gunfire %>

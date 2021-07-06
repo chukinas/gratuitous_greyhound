@@ -115,7 +115,7 @@ defmodule Chukinas.Sessions.Room do
     |> ok
   end
 
-  def remove_player(room, player_uuid) do
+  def drop_player(room, player_uuid) do
     players = players_except(room, player_uuid)
     room = put_players(room, players)
     if empty?(room) do

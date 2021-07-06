@@ -7,7 +7,6 @@ defmodule Chukinas.Dreadnought.Mission do
   alias Chukinas.Dreadnought.Island
   alias Chukinas.Dreadnought.Maneuver
   alias Chukinas.Dreadnought.Player
-  alias Chukinas.Dreadnought.PlayerTurn
   alias Chukinas.Dreadnought.Unit
   alias Chukinas.Dreadnought.UnitAction
   alias Chukinas.Geometry.Grid
@@ -30,11 +29,12 @@ defmodule Chukinas.Dreadnought.Mission do
     field :units, [Unit.t()], default: []
     field :players, [Player.t()], default: []
     field :player_actions, [ActionSelection.t()], default: []
+    # TODO rename
     field :gunfire, [Gunfire.t()], default: []
   end
 
   # *** *******************************
-  # *** NEW
+  # *** CONSTRUCTORS
 
   def new(room_name, %Grid{} = grid, margin) when has_size(margin) do
     %__MODULE__{
@@ -58,39 +58,13 @@ defmodule Chukinas.Dreadnought.Mission do
   end
 
   # *** *******************************
-  # *** GETTERS (PLAYERS)
-
-  def players(%{players: value}), do: value
-
-  def player_ids(mission), do: IdList.ids(mission.players)
-
-  def completed_player_ids(mission) do
-    IdList.ids(mission.player_actions, :player_id)
-  end
-
-  def ai_player_ids(mission) do
-    mission
-    |> players
-    |> Stream.filter(&Player.ai?/1)
-    |> Stream.map(&Player.id/1)
-  end
-
-  def player_count(mission) do
-    mission
-    |> players
-    |> Enum.count
-  end
-
-  # *** *******************************
   # *** GETTERS
 
-  def in_progress?(mission) do
-    turn_number(mission) > 0
-  end
+  def grid(%__MODULE__{grid: value}), do: value
+
+  def in_progress?(mission), do: turn_number(mission) > 0
 
   def turn_number(%__MODULE__{turn_number: value}), do: value
-
-  def to_player(mission), do: PlayerTurn.map(1, :human,  mission)
 
   defp turn_complete?(mission) do
     player_ids = mission |> player_ids |> MapSet.new
@@ -157,17 +131,19 @@ defmodule Chukinas.Dreadnought.Mission do
   # *** *******************************
   # *** CALC
 
-  def calc_ai_commands(mission) do
-    Enum.reduce(ai_player_ids(mission), mission, fn player_id, mission ->
-      %PlayerTurn{player_actions: actions} = PlayerTurn.new(player_id, :ai, mission)
-      mission |> put(actions)
-    end)
-  end
+  # TODO when I add the ai back in, I'll have to do this elsewhere since
+  # PlayerTurn now has dependency on Mission
+  #def calc_ai_commands(mission) do
+  #  Enum.reduce(ai_player_ids(mission), mission, fn player_id, mission ->
+  #    %PlayerTurn{player_actions: actions} = PlayerTurn.new(player_id, :ai, mission)
+  #    mission |> put(actions)
+  #  end)
+  #end
 
   def start(mission) do
     mission
     |> increment_turn_number
-    |> calc_ai_commands
+    #|> calc_ai_commands
   end
 
   defp maybe_end_turn(mission) do
@@ -188,7 +164,7 @@ defmodule Chukinas.Dreadnought.Mission do
     |> calc_unit_status
     # Part 3: Prepare for this turn's planning
     |> clear_player_actions
-    |> calc_ai_commands
+    #|> calc_ai_commands
   end
 
   defp clear_gunfire(mission), do: Maps.clear(mission, :gunfire)
@@ -233,6 +209,50 @@ defmodule Chukinas.Dreadnought.Mission do
       |> Unit.Enum.active_units
       |> Enum.map(&Unit.maybe_destroyed/1)
     put(mission, units)
+  end
+
+  # *** *******************************
+  # *** REDUCERS
+
+  def remove_player(mission, player_id) do
+    fun = fn players -> IdList.drop players, player_id end
+    Map.update!(mission, :players, fun)
+  end
+
+  # *** *******************************
+  # *** CONVERTERS (PLAYERS)
+
+  def player_by_id(mission, player_id) do
+    mission
+    |> players
+    |> IdList.fetch!(player_id)
+  end
+
+  def player_by_uuid(mission, player_uuid) do
+    mission
+    |> players
+    |> IdList.fetch!(player_uuid, :uuid)
+  end
+
+  def players(%__MODULE__{players: value}), do: value
+
+  def player_ids(mission), do: IdList.ids(mission.players)
+
+  def completed_player_ids(mission) do
+    IdList.ids(mission.player_actions, :player_id)
+  end
+
+  def ai_player_ids(mission) do
+    mission
+    |> players
+    |> Stream.filter(&Player.ai?/1)
+    |> Stream.map(&Player.id/1)
+  end
+
+  def player_count(mission) do
+    mission
+    |> players
+    |> Enum.count
   end
 
   # *** *******************************

@@ -8,6 +8,8 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
 
   alias Chukinas.Dreadnought.ActionSelection
   alias Chukinas.Dreadnought.ManeuverPlanning
+  alias Chukinas.Dreadnought.Mission
+  alias Chukinas.Dreadnought.Player
   alias Chukinas.Dreadnought.Unit
   alias Chukinas.Dreadnought.UnitAction
   alias Chukinas.Geometry.GridSquare
@@ -18,9 +20,13 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
   use TypedStruct
 
   typedstruct enforce: true do
+    field :player, Player.t
+    # No need for all these fields. Just use Player struct instead
     field :player_id, integer()
+    field :player_uuid, String.t
     field :player_type, any()
     field :player_actions, ActionSelection.t()
+    # TODO get rid of this field eventually
     field :cmd_squares, [GridSquare.t()], default: []
     field :show_end_turn_btn?, boolean(), default: false
   end
@@ -28,21 +34,20 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
   # *** *******************************
   # *** NEW
 
-  def new(player_id, player_type, %{
-    islands: islands,
-    grid: grid,
-    units: units
-  } = mission) do
+  def new(%Mission{} = mission, player_uuid) when is_binary(player_uuid) do
+    grid = Mission.grid(mission)
+    islands = Mission.islands(mission)
+    units = Mission.units(mission)
+    player = Mission.player_by_uuid(mission, player_uuid)
+    player_id = Player.id(player)
     squares = cmd_squares(units, player_id, grid, islands)
-    mission
-    |> Map.take([
-    ])
-    |> Map.merge(%{
+    %__MODULE__{
+      player: player,
       player_id: player_id,
-      player_type: player_type,
+      player_uuid: player_uuid,
+      player_type: Player.type(player),
       player_actions: ActionSelection.new(player_id, units, squares)
-    })
-    |> build_struct
+    }
     |> put_maneuver_squares(squares)
     |> maneuver_trapped_units
     |> if_ai_calc_commands
@@ -53,19 +58,15 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
     # leave the game next turn
   end
 
-  # TODO remove. Keep this as a struct?
-  def map(player_id, player_type, mission) do
-    Map.from_struct(new(player_id, player_type, mission))
-  end
-
-  # TODO remove. Keep this as a struct always?
-  defp build_struct(map), do: struct!(__MODULE__, map)
-
   # *** *******************************
   # *** GETTERS
 
   def foresight(%__MODULE__{player_type: :ai}), do: 3
   def foresight(_), do: 1
+
+  def player_uuid(%__MODULE__{player_uuid: value}), do: value
+
+  def player_id(%__MODULE__{player_id: value}), do: value
 
   # *** *******************************
   # *** API

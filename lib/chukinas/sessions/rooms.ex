@@ -20,8 +20,8 @@ defmodule Chukinas.Sessions.Rooms do
     genserver_call room_join.room_name, {:add_player, room_join}
   end
 
-  def remove_player(room_name, player_uuid) when is_binary(room_name) do
-    genserver_call room_name, {:remove_player, player_uuid}
+  def drop_player(room_name, player_uuid) when is_binary(room_name) do
+    genserver_call room_name, {:drop_player, player_uuid}
   end
 
   def get(room_name) when is_binary(room_name) do

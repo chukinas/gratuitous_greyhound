@@ -43,9 +43,9 @@ defmodule Chukinas.Sessions.RoomServer do
     reply(room, :ok)
   end
 
-  def handle_call({:remove_player, player_uuid}, _from, room) do
+  def handle_call({:drop_player, player_uuid}, _from, room) do
     Players.send_room(player_uuid, nil)
-    {result, room} = Room.remove_player(room, player_uuid)
+    {result, room} = Room.drop_player(room, player_uuid)
     if result == :empty, do: Process.exit(self(), :normal)
     reply(room)
   end
@@ -84,14 +84,14 @@ defmodule Chukinas.Sessions.RoomServer do
   # *** *******************************
   # *** RETURN TUPLES
 
-  def ok(room), do: {:ok, room, send_all()}
+  defp ok(room), do: {:ok, room, send_all()}
 
-  def noreply(room), do: {:noreply, room, send_all()}
+  defp noreply(room), do: {:noreply, room, send_all()}
 
-  def reply(room), do: {:reply, room, room, send_all()}
+  defp reply(room), do: {:reply, room, room, send_all()}
 
-  def reply(room, return_value), do: {:reply, return_value, room, send_all()}
+  defp reply(room, return_value), do: {:reply, return_value, room, send_all()}
 
-  def send_all, do: {:continue, :send_all_players}
+  defp send_all, do: {:continue, :send_all_players}
 
 end

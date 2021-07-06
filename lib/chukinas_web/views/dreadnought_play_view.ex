@@ -74,7 +74,6 @@ defmodule ChukinasWeb.DreadnoughtPlayView do
     |> Enum.map(&attr_mapping/1)
     # TODO investigate using io list
     |> Enum.join(" ")
-    |> IOP.inspect
   end
 
   def left_top_from_position(position) do
@@ -83,7 +82,6 @@ defmodule ChukinasWeb.DreadnoughtPlayView do
     |> Map.from_struct
     |> Enum.map(&attr_mapping/1)
     |> Enum.join(" ")
-    |> IOP.inspect
   end
 
   def width_height_from_size(size) when is_number(size) do
@@ -98,7 +96,6 @@ defmodule ChukinasWeb.DreadnoughtPlayView do
     |> Map.from_struct
     |> Enum.map(&attr_mapping/1)
     |> Enum.join(" ")
-    |> IOP.inspect
   end
 
   defp attr_mapping(tuple) do

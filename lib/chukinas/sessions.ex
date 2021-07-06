@@ -5,8 +5,10 @@ defmodule Chukinas.Sessions do
   """
 
   alias Chukinas.Sessions.Players
-  alias Chukinas.Sessions.Rooms
   alias Chukinas.Sessions.RoomJoin
+  alias Chukinas.Sessions.Rooms
+  alias Chukinas.Dreadnought.ActionSelection
+  alias Chukinas.Dreadnought.Mission
 
   # *** *******************************
   # *** Users
@@ -18,7 +20,7 @@ defmodule Chukinas.Sessions do
   end
 
   # *** *******************************
-  # *** ROOM JOIN
+  # *** ROOM JOIN / LEAVE
 
   def room_join_types, do: RoomJoin.types()
 
@@ -31,14 +33,15 @@ defmodule Chukinas.Sessions do
     :ok = Players.set_room(room_join)
   end
 
-  # *** *******************************
-  # *** ROOM
-
   def leave_room(player_uuid) do
     room_name = Players.get_room_name(player_uuid)
+    # TODO rename `drop_player`
     Players.leave_room(player_uuid)
-    Rooms.remove_player(room_name, player_uuid)
+    Rooms.drop_player(room_name, player_uuid)
   end
+
+  # *** *******************************
+  # *** GET ROOM
 
   def get_room_from_player_uuid(player_uuid) do
     with {:ok, room_name} <- Players.fetch_room_name(player_uuid),
@@ -48,6 +51,16 @@ defmodule Chukinas.Sessions do
       _response ->
         nil
     end
+  end
+
+  # *** *******************************
+  # *** UPDATE MISSION
+
+  # TODO `Sessions` seems like the wrong name for this api...
+
+  def complete_player_turn(room_name, %ActionSelection{} = action_selection) do
+    fun = &Mission.put(&1, action_selection)
+    Rooms.update_mission(room_name, fun)
   end
 
 end
