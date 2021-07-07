@@ -34,8 +34,8 @@ defmodule Chukinas.Sessions do
   end
 
   def leave_room(player_uuid) do
+    IOP.inspect player_uuid, "Sessions.leave_room"
     room_name = Players.get_room_name(player_uuid)
-    # TODO rename `drop_player`
     Players.leave_room(player_uuid)
     Rooms.drop_player(room_name, player_uuid)
   end

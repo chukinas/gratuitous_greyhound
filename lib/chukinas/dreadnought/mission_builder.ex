@@ -29,10 +29,8 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
       mission
       |> put_fleets
       |> Mission.start
-      |> IOP.inspect("Miss build, starting game")
     else
       mission
-      |> IOP.inspect("Miss build, NOT starting game")
     end
   end
 

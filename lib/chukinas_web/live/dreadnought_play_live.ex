@@ -24,13 +24,25 @@ defmodule ChukinasWeb.DreadnoughtPlayLive do
     {:ok, socket, layout: {ChukinasWeb.LayoutView, "dreadnought_play.html"}}
   end
 
-  def maybe_redirect_to_setup(socket) do
-    if not Room.mission_in_progress?(socket.assigns.room) do
-      path = Routes.dreadnought_path(socket, :setup)
-      send self(), {:push_redirect, path}
-    end
+  @impl true
+  def handle_info({:push_redirect, path}, socket) do
     socket
+    |> push_redirect(to: path)
+    |> noreply
   end
+
+  @impl true
+  def handle_info({:update_room, room}, socket) do
+    IOP.inspect room, "DreadnoughtPlayLive handle_info update_room"
+    socket
+    |> assign(room: room)
+    |> assign_mission
+    |> maybe_redirect_to_setup
+    |> noreply
+  end
+
+  # *** *******************************
+  # *** SOCKET REDUCERS
 
   def assign_mission(socket) do
     with %Room{} = room <- socket.assigns.room,
@@ -42,33 +54,29 @@ defmodule ChukinasWeb.DreadnoughtPlayLive do
     end
   end
 
-  def assign_world_rect_and_islands(socket) do
-    mission = socket.assigns.mission
-    assign socket,
-      world_rect: Mission.rect(mission) |> IOP.inspect("DreadnoughtPlayLive assign_world_rect_and_islands"),
-      islands: Mission.islands(mission)
-  end
-
   def assign_relative_arena_rect(socket) do
     assign socket,
       rel_arena_rect: Mission.arena_rect_wrt_world(socket.assigns.mission)
   end
 
-  @impl true
-  def handle_info({:push_redirect, path}, socket) do
-    socket =
-      socket
-      |> push_redirect(to: path)
-    {:noreply, socket}
+  def assign_world_rect_and_islands(socket) do
+    mission = socket.assigns.mission
+    assign socket,
+      world_rect: Mission.rect(mission),
+      islands: Mission.islands(mission)
   end
 
-  @impl true
-  def handle_info({:update_room, room}, socket) do
-    IOP.inspect room, "DreadnoughtPlayLive handle_info update_room"
-    {:noreply, assign(
-      socket,
-      room: room
-    ) |> assign_mission |> IOP.inspect("DreadnoughtPlayLive update_room")}
+  def maybe_redirect_to_setup(socket) do
+    if not Room.mission_in_progress?(socket.assigns.room) do
+      path = Routes.dreadnought_path(socket, :setup)
+      send self(), {:push_redirect, path}
+    end
+    socket
   end
+
+  # *** *******************************
+  # *** SOCKET CONVERTERS
+
+  def noreply(socket), do: {:noreply, socket}
 
 end

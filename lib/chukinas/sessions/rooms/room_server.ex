@@ -44,6 +44,7 @@ defmodule Chukinas.Sessions.RoomServer do
   end
 
   def handle_call({:drop_player, player_uuid}, _from, room) do
+    IOP.inspect(player_uuid, "RoomServer handle_call drop_player")
     Players.send_room(player_uuid, nil)
     {result, room} = Room.drop_player(room, player_uuid)
     if result == :empty, do: Process.exit(self(), :normal)
