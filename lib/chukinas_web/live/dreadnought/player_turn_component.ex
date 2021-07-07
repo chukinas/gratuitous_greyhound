@@ -19,14 +19,8 @@ defmodule ChukinasWeb.Dreadnought.PlayerTurnComponent do
       |> assign(id: assigns.id)
       |> assign_from_mission(assigns.mission, ~w/turn_number units room_name/a)
       |> assign(player_turn: PlayerTurn.new(assigns.mission, assigns.player_uuid))
+      #|> assign_action_selection
     {:ok, socket}
-  end
-
-  defp assign_from_mission(socket, mission, mission_keys) do
-    Enum.reduce(mission_keys, socket, fn key, socket ->
-      value = Map.fetch!(mission, key)
-      assign(socket, key, value)
-    end)
   end
 
   @impl true
@@ -90,9 +84,27 @@ defmodule ChukinasWeb.Dreadnought.PlayerTurnComponent do
   end
 
   # *** *******************************
-  # *** GETTERS
+  # *** SOCKET REDUCERS
 
-  def action_selection(socket), do: socket.assigns.player_turn.player_actions
+  defp assign_from_mission(socket, mission, mission_keys) do
+    Enum.reduce(mission_keys, socket, fn key, socket ->
+      value = Map.fetch!(mission, key)
+      assign(socket, key, value)
+    end)
+  end
+
+  #defp assign_action_selection(socket) do
+  #  action_selection = socket |> player_turn |> PlayerTurn.action_selection
+  #  current_action_selection = action_selection |> ActionSelection.current_action_selection
+  #  socket
+  #  |> assign(action_selection: action_selection)
+  #  |> assign(current_action_selection: current_action_selection)
+  #end
+
+  # *** *******************************
+  # *** SOCKET CONVERTERS
+
+  def action_selection(socket), do: socket |> player_turn |> PlayerTurn.action_selection
 
   def player_id(socket), do: socket |> player_turn |> PlayerTurn.player_id
 

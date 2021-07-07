@@ -21,7 +21,7 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
 
   typedstruct enforce: true do
     field :player, Player.t
-    field :player_actions, ActionSelection.t()
+    field :action_selection, ActionSelection.t()
     # TODO get rid of this field eventually
     field :cmd_squares, [GridSquare.t()], default: []
     field :show_end_turn_btn?, boolean(), default: false
@@ -39,7 +39,7 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
     squares = cmd_squares(units, player_id, grid, islands)
     %__MODULE__{
       player: player,
-      player_actions: ActionSelection.new(player_id, units, squares)
+      action_selection: ActionSelection.new(player_id, units, squares)
     }
     |> put_maneuver_squares(squares)
     |> maneuver_trapped_units
@@ -56,7 +56,7 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
 
   # TODO pattern match on __MODULE__
   def update_action_selection(player_turn, fun) do
-    Map.update!(player_turn, :player_actions, fun)
+    Map.update!(player_turn, :action_selection, fun)
   end
 
   # *** *******************************
@@ -68,22 +68,22 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
 
   defp maneuver_trapped_units(%__MODULE__{
     cmd_squares: cmd_squares,
-    player_actions: player_actions
+    action_selection: action_selection
   } = player_turn) do
     unit_ids_that_have_cmd_squares = MapSet.new(cmd_squares, & &1.unit_id)
     trapped_unit_id? = fn id when is_integer(id) ->
       !MapSet.member?(unit_ids_that_have_cmd_squares, id)
     end
     unit_actions =
-      player_actions
+      action_selection
       |> ActionSelection.pending_player_unit_ids
       |> Stream.filter(trapped_unit_id?)
       |> Enum.map(&UnitAction.exit_or_run_aground/1)
-    Map.update!(player_turn, :player_actions, &ActionSelection.put(&1, unit_actions))
+    Map.update!(player_turn, :action_selection, &ActionSelection.put(&1, unit_actions))
   end
 
   defp determine_show_end_turn_btn(%__MODULE__{} = player_turn) do
-    show? = player_turn.player_actions |> ActionSelection.turn_complete?
+    show? = player_turn.action_selection |> ActionSelection.turn_complete?
     %__MODULE__{player_turn | show_end_turn_btn?: show?}
   end
 
@@ -92,7 +92,7 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
     if ai_player?(player_turn) do
       #player_turn = Map.put(player_turn, :maneuver_foresight, 4)
       pending_unit_ids =
-        player_turn.player_actions
+        player_turn.action_selection
         |> ActionSelection.pending_player_unit_ids
       unit_maneuvers = Enum.map(pending_unit_ids, fn unit_id ->
         position =
@@ -102,7 +102,7 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
           |> GridSquare.position
         UnitAction.move_to(unit_id, position)
       end)
-      Map.update!(player_turn, :player_actions, &ActionSelection.put(&1, unit_maneuvers))
+      Map.update!(player_turn, :action_selection, &ActionSelection.put(&1, unit_maneuvers))
     else
       player_turn
     end
@@ -120,6 +120,8 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
 
   # *** *******************************
   # *** CONVERTERS
+
+  def action_selection(%__MODULE__{action_selection: value}), do: value
 
   def ai_player?(%__MODULE__{} = player_turn) do
     player_turn
@@ -148,7 +150,7 @@ defmodule Chukinas.Dreadnought.PlayerTurn do
     import Inspect.Algebra
     def inspect(player, opts) do
       summary = %{
-        player_actions: player.player_actions,
+        action_selection: player.action_selection,
       }
      concat ["#Player-#{player.player_id}<", to_doc(summary, opts), ">"]
     end
