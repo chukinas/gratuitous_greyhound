@@ -1,24 +1,13 @@
-alias Chukinas.Dreadnought.{Unit}
-alias Chukinas.Util.Opts
-alias Unit.Event, as: Ev
-
 defmodule ChukinasWeb.DreadnoughtView do
 
   use ChukinasWeb, :view
   use ChukinasWeb.Components
   use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra
+  alias Chukinas.Dreadnought.Unit.Event, as: Ev
+  alias Chukinas.Geometry.Rect
+  alias Chukinas.Util.Opts
 
-  def maneuver_path(%Ev.Maneuver{} = path, unit_id) do
-    assigns =
-      path
-      |> Map.from_struct
-      |> Map.put(:unit_el_id, "unit-#{unit_id}")
-    render("maneuver_path.html", assigns)
-  end
-  def maneuver_path(_, _) do
-    nil
-  end
 
   def unit_event(%Ev.Maneuver{} = event) do
     standard_attributes(event, "maneuver") ++ [
@@ -64,14 +53,14 @@ defmodule ChukinasWeb.DreadnoughtView do
   def sprite(opts \\ []) do
     # TODO I don't like this use of 'opts'. The two 'opts' are anything but. They're required.
     sprite = Keyword.fetch!(opts, :sprite)
-    rect = sprite.rect
+    rect = Rect.from_rect(sprite)
     assigns = [
       socket: Keyword.fetch!(opts, :socket),
       rect: rect,
       image_file_path: sprite.image_file_path,
       image_size: sprite.image_size,
       image_clip_path: sprite.image_clip_path,
-      transform: sprite.image_origin |> position_add(sprite.rect) |> position_multiply(-1)
+      transform: sprite.image_origin |> position_add(sprite) |> position_multiply(-1)
     ]
     render("_sprite.html", assigns)
   end
@@ -93,7 +82,7 @@ defmodule ChukinasWeb.DreadnoughtView do
     assigns = %{
       sprite: sprite,
       socket: socket,
-      position: sprite.rect |> position_add(pose) |> position,
+      position: sprite |> position_add(pose) |> position,
       class: opts[:class],
       attributes: attributes,
       angle: angle
@@ -101,44 +90,18 @@ defmodule ChukinasWeb.DreadnoughtView do
     render("_relative_sprite.html", assigns)
   end
 
-  def center(%{x: x, y: y}, opts \\ []) do
+  def center(%{x: _x, y: _y} = position, opts \\ []) do
     scale = Keyword.get(opts, :scale, 1)
     color = case Keyword.get(opts, :type, :origin) do
       :origin -> "pink"
       :mount -> "blue"
     end
     size = 20
-    assigns = [size: size, left: x * scale - size / 2, top: y * scale - size / 2, color: color]
-    render("_center.html", assigns)
-  end
-
-  def button(opts \\ []) do
-    assigns = Opts.merge!(opts,
-      text: "placeholder text",
-      phx_click: nil,
-      phx_target: nil
+    position = position_multiply(position, scale)
+    render("_center.html",
+      rect: Rect.from_centered_square(position, size),
+      color: color
     )
-    render("_button.html", assigns)
-  end
-
-  def unit_selection_box(myself, %Unit{} = unit) do
-    box_size = 200
-    box_position =
-      unit
-      |> Unit.center_of_mass
-      |> coord_from_position
-      |> vector_transform_from(unit)
-      |> position
-      |> position_subtract(box_size / 2)
-    assigns =
-      [
-        unit_id: unit.id,
-        unit_name: unit.name,
-        size: box_size,
-        position: box_position,
-        myself: myself
-      ]
-    render("_unit_selection_box.html", assigns)
   end
 
   #defp render_template(template, assigns, block) do

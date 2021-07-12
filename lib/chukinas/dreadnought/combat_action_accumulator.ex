@@ -1,7 +1,9 @@
-alias Chukinas.Dreadnought.{Unit, CombatAction, Gunfire, Island}
-alias Chukinas.Util.Maps
+defmodule Chukinas.Dreadnought.CombatAction.Accumulator do
 
-defmodule CombatAction.Accumulator do
+  alias Chukinas.Dreadnought.Gunfire
+  alias Chukinas.Dreadnought.Island
+  alias Chukinas.Dreadnought.Unit
+  alias Chukinas.Util.Maps
 
   # *** *******************************
   # *** TYPES

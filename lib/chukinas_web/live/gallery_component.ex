@@ -1,10 +1,11 @@
-alias Chukinas.Dreadnought.{Spritesheet, Sprite, Animation}
-
 defmodule ChukinasWeb.GalleryComponent do
 
   use ChukinasWeb, :live_component
   use ChukinasWeb.Components
   use Chukinas.PositionOrientationSize
+  alias Chukinas.Dreadnought.Animations
+  alias Chukinas.Dreadnought.Sprites
+
 
   # *** *******************************
   # *** CALLBACKS
@@ -12,11 +13,11 @@ defmodule ChukinasWeb.GalleryComponent do
   @impl true
   def mount(socket) do
     sprites =
-      Spritesheet.all()
-      |> Enum.map(& Sprite.scale(&1, 2))
+      Sprites.all()
+      |> Enum.map(& Sprites.scale(&1, 2))
     animations = [
-      Animation.Build.simple_muzzle_flash(pose_origin()),
-      Animation.Build.large_muzzle_flash(pose_origin())
+      Animations.simple_muzzle_flash(pose_origin()),
+      Animations.large_muzzle_flash(pose_origin())
     ]
     |> Enum.map(&map_animation/1)
     socket =
@@ -27,8 +28,8 @@ defmodule ChukinasWeb.GalleryComponent do
 
   def map_animation(animation) do
     %{
-      struct: Animation.repeat(animation),
-      rect: Animation.bounding_rect(animation)
+      struct: Animations.repeat(animation),
+      rect: Animations.bounding_rect(animation)
     }
   end
 

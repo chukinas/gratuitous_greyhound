@@ -15,6 +15,7 @@ defmodule Grid do
     field :start, POS.position_type
     field :count, POS.position_type
     # Calculated Values:
+    # TODO I don't like the fact that I'm using width and height to mean something other than px w and h. It screws with my "ubiquitous language"
     size_fields()
   end
 
@@ -57,10 +58,8 @@ defmodule Grid do
 
   # TODO superfluous. remove.
   def size(grid) do
-    %{
-      width: grid.square_size * grid.count.x,
-      height: grid.square_size * grid.count.y
-    }
+    grid
+    |> Map.take(~w/width height/a)
   end
 
   def squares(grid, opts \\ []) do
@@ -81,9 +80,10 @@ defmodule Grid do
   # TODO rename ? bounding_rect
   def to_rect(grid) do
     grid.start
+    |> position_new
     |> position_subtract(1)
     |> position_multiply(grid.square_size)
-    |> Rect.new(size_new(grid))
+    |> Rect.from_position_and_size(size_new(grid))
   end
 
   # *** *******************************

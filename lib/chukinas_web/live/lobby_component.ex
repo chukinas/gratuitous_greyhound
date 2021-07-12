@@ -1,37 +1,45 @@
-alias Chukinas.Dreadnought.Player
-alias Chukinas.Sessions.{Room, User}
-
 defmodule ChukinasWeb.LobbyComponent do
+
   use ChukinasWeb, :live_component
+  use ChukinasWeb.Components
+  alias Chukinas.Dreadnought.Player
+  alias Chukinas.Sessions.Room
+  alias Chukinas.Sessions.Rooms
+
+  # *** *******************************
+  # *** CALLBACKS
 
   @impl true
   def update(assigns, socket) do
-    # TODO reduce the number of unnecessary incoming assigns
-    user = assigns.user
     room = assigns.room
-    players =
-      if room do
-        for player <- Room.players_sorted(room), do: build_player(player, user)
-      else
-        []
-      end
+    uuid = assigns.uuid
+    players = for player <- Room.players_sorted(room), do: build_player(player, uuid)
+    player_self = Room.player_from_uuid(room, uuid)
     socket =
       assign(socket,
+        room_name: Room.name(room),
         pretty_room_name: Room.pretty_name(room),
+        player_id: Player.id(player_self),
+        ready?: Player.ready?(player_self),
         players: players
       )
     {:ok, socket}
   end
 
-  # *** *******************************
-  # *** FUNCTIONS
+  @impl true
+  def handle_event("toggle_ready", _, socket) do
+    Rooms.toggle_ready(socket.assigns.room_name, socket.assigns.player_id)
+    {:noreply, socket}
+  end
 
-  def build_player(%Player{} = player, %User{} = user) do
-    %{
-      id: Player.id(player),
-      name: Player.name(player),
-      self?: Player.uuid(player) == User.uuid(user)
-    }
+  # *** *******************************
+  # *** PRIVATE
+
+  defp build_player(%Player{} = player, uuid) do
+    player
+    |> Map.from_struct
+    |> Map.take(~w/id name ready?/a)
+    |> Map.put(:self?, Player.uuid(player) == uuid)
   end
 
 end

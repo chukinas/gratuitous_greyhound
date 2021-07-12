@@ -13,6 +13,12 @@ defmodule Unit.Enum do
     |> Stream.filter(&Unit.belongs_to?(&1, player_id))
   end
 
+  def active_player_unit_count(units, player_id) do
+    units
+    |> active_player_units(player_id)
+    |> Enum.count
+  end
+
   def active_player_unit_ids(units, player_id) do
     units
     |> active_player_units(player_id)

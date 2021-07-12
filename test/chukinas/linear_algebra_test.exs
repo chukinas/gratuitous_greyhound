@@ -2,16 +2,16 @@ ExUnit.start()
 
 defmodule Chukinas.LinearAlgebraTest do
 
-  use ExUnit.Case, async: true
+  alias Chukinas.Math
+  use Chukinas.LinearAlgebra
   use Chukinas.PositionOrientationSize
   use Chukinas.TestHelpers
-  use Chukinas.LinearAlgebra
-  alias Chukinas.Math
+  use ExUnit.Case, async: true
 
   describe "vector coordinate system" do
 
     @sqrt2 :math.sqrt(2)
-    @coord_at_45 {@sqrt2/2, @sqrt2/2}
+    @coord_at_45 {@sqrt2 / 2, @sqrt2 / 2}
 
     test "inversion" do
       pose = pose_new(1, 1, -90)

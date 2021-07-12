@@ -1,57 +1,76 @@
-alias Chukinas.Dreadnought.{Unit, Mission, Island, ActionSelection, Player, PlayerTurn, UnitAction, Maneuver, CombatAction, Gunfire}
-alias Chukinas.Geometry.Grid
-alias Chukinas.Util.{Maps, IdList}
-
-defmodule Mission do
+defmodule Chukinas.Dreadnought.Mission do
 
   use Chukinas.PositionOrientationSize
+  alias Chukinas.Dreadnought.ActionSelection
+  alias Chukinas.Dreadnought.CombatAction
+  alias Chukinas.Dreadnought.Gunfire
+  alias Chukinas.Dreadnought.Island
+  alias Chukinas.Dreadnought.Maneuver
+  alias Chukinas.Dreadnought.Player
+  alias Chukinas.Dreadnought.Unit
+  alias Chukinas.Dreadnought.UnitAction
+  alias Chukinas.Geometry.Grid
+  alias Chukinas.Geometry.Rect
+  alias Chukinas.Util.IdList
+  alias Chukinas.Util.Maps
 
   # *** *******************************
   # *** TYPES
 
   use TypedStruct
   typedstruct do
-    field :turn_number, integer(), default: 1
-    field :grid, Grid.t()
-    # TODO replace any with Size type
-    field :world, any
+    field :room_name, String.t, enforce: true
+    field :world_rect, Rect.t, enforce: true
+    field :grid, Grid.t(), enforce: true
+    field :turn_number, integer(), default: 0
+    # TODO deprecate
     field :margin, any
     field :islands, [Island.t()], default: []
     field :units, [Unit.t()], default: []
     field :players, [Player.t()], default: []
     field :player_actions, [ActionSelection.t()], default: []
+    # TODO rename
     field :gunfire, [Gunfire.t()], default: []
   end
 
   # *** *******************************
-  # *** NEW
+  # *** CONSTRUCTORS
 
-  def new(%Grid{} = grid, margin) when has_size(margin) do
-    world = size_new(
-      grid.width + 2 * margin.width,
-      grid.height + 2 * margin.height
-    )
+  def new(room_name, %Grid{} = grid, margin) when has_size(margin) do
     %__MODULE__{
-      world: world,
+      room_name: room_name,
+      world_rect: world_rect(grid, margin),
       grid: grid,
       margin: margin,
     }
   end
 
+  defp world_rect(grid, margin) do
+    position =
+      margin
+      |> position_from_size
+      |> position_multiply(-1)
+    size =
+      margin
+      |> size_multiply(2)
+      |> size_add(grid)
+    Rect.from_position_and_size(position, size)
+  end
+
   # *** *******************************
   # *** GETTERS
 
-  def to_playing_surface(mission), do: Mission.PlayingSurface.new(mission)
+  def grid(%__MODULE__{grid: value}), do: value
 
-  def to_player(mission), do: PlayerTurn.map(1, :human,  mission)
+  def in_progress?(mission), do: turn_number(mission) > 0
+
+  def turn_number(%__MODULE__{turn_number: value}), do: value
 
   defp turn_complete?(mission) do
     player_ids = mission |> player_ids |> MapSet.new
     completed_player_ids = mission |> completed_player_ids |> MapSet.new
     MapSet.equal?(player_ids, completed_player_ids)
   end
-
-  def players(mission), do: mission.players
 
   defp commands(%__MODULE__{player_actions: actions}) do
     # TODO rename unit_actions
@@ -66,23 +85,31 @@ defmodule Mission do
     |> UnitAction.Enum.maneuevers
   end
 
-  def player_ids(mission), do: IdList.ids(mission.players)
-
-  def completed_player_ids(mission) do
-    IdList.ids(mission.player_actions, :player_id)
-  end
-
-  def ai_player_ids(mission) do
-    mission
-    |> players
-    |> Stream.filter(&Player.ai?/1)
-    |> Stream.map(&Player.id/1)
-  end
-
   def units(%{units: units}), do: units
+
+  @spec unit_count(t) :: integer
+  def unit_count(mission) do
+    mission
+    |> units
+    |> Enum.count
+  end
 
   def combats(mission), do: mission |> actions |> UnitAction.Enum.combats
 
+  # TODO rename `world_rect`
+  def rect(nil), do: Rect.null()
+  def rect(%__MODULE__{world_rect: value}), do: value
+
+  def islands(nil), do: []
+  def islands(%__MODULE__{islands: value}), do: value
+
+  def arena_rect_wrt_world(nil), do: Rect.null()
+  def arena_rect_wrt_world(%__MODULE__{grid: grid, margin: margin}) do
+    position =
+      margin
+      |> position_from_size
+    Rect.from_position_and_size(position, grid)
+  end
 
   # *** *******************************
   # *** SETTERS
@@ -104,16 +131,19 @@ defmodule Mission do
   # *** *******************************
   # *** CALC
 
-  def calc_ai_commands(mission) do
-    Enum.reduce(ai_player_ids(mission), mission, fn player_id, mission ->
-      %PlayerTurn{player_actions: actions} = PlayerTurn.new(player_id, :ai, mission)
-      mission |> put(actions)
-    end)
-  end
+  # TODO when I add the ai back in, I'll have to do this elsewhere since
+  # PlayerTurn now has dependency on Mission
+  #def calc_ai_commands(mission) do
+  #  Enum.reduce(ai_player_ids(mission), mission, fn player_id, mission ->
+  #    %PlayerTurn{player_actions: actions} = PlayerTurn.new(player_id, :ai, mission)
+  #    mission |> put(actions)
+  #  end)
+  #end
 
   def start(mission) do
     mission
-    |> calc_ai_commands
+    |> increment_turn_number
+    #|> calc_ai_commands
   end
 
   defp maybe_end_turn(mission) do
@@ -134,7 +164,7 @@ defmodule Mission do
     |> calc_unit_status
     # Part 3: Prepare for this turn's planning
     |> clear_player_actions
-    |> calc_ai_commands
+    #|> calc_ai_commands
   end
 
   defp clear_gunfire(mission), do: Maps.clear(mission, :gunfire)
@@ -182,6 +212,50 @@ defmodule Mission do
   end
 
   # *** *******************************
+  # *** REDUCERS
+
+  def remove_player(mission, player_id) do
+    fun = fn players -> IdList.drop players, player_id end
+    Map.update!(mission, :players, fun)
+  end
+
+  # *** *******************************
+  # *** CONVERTERS (PLAYERS)
+
+  def player_by_id(mission, player_id) do
+    mission
+    |> players
+    |> IdList.fetch!(player_id)
+  end
+
+  def player_by_uuid(mission, player_uuid) do
+    mission
+    |> players
+    |> IdList.fetch!(player_uuid, :uuid)
+  end
+
+  def players(%__MODULE__{players: value}), do: value
+
+  def player_ids(mission), do: IdList.ids(mission.players)
+
+  def completed_player_ids(mission) do
+    IdList.ids(mission.player_actions, :player_id)
+  end
+
+  def ai_player_ids(mission) do
+    mission
+    |> players
+    |> Stream.filter(&Player.ai?/1)
+    |> Stream.map(&Player.id/1)
+  end
+
+  def player_count(mission) do
+    mission
+    |> players
+    |> Enum.count
+  end
+
+  # *** *******************************
   # *** IMPLEMENTATIONS
 
   defimpl Inspect do
@@ -191,7 +265,9 @@ defmodule Mission do
       fields =
         mission
         |> Map.take([
+          :room_name,
           :units,
+          :players
         ])
         |> Enum.into([])
       IOP.struct(title, fields)

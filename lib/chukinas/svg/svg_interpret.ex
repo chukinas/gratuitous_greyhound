@@ -20,7 +20,7 @@ defmodule Interpret do
       parsed_svg
       |> to_positions
       |> position_min_max
-      |> Rect.new
+      |> Rect.from_positions
     %{
       path: to_path(parsed_svg),
       rect: rect

@@ -1,6 +1,9 @@
-alias Chukinas.Dreadnought.{UnitAction, ActionSelection, Unit}
+defmodule Chukinas.Dreadnought.ActionSelection do
 
-defmodule ActionSelection do
+  alias Chukinas.Dreadnought.ActionSelection.Maneuver
+  alias Chukinas.Dreadnought.Unit
+  alias Chukinas.Dreadnought.UnitAction
+  alias Chukinas.Geometry.GridSquare
 
   # *** *******************************
   # *** TYPES
@@ -15,16 +18,20 @@ defmodule ActionSelection do
     field :current_unit_id, integer(), enforce: false
     field :current_mode, UnitAction.mode(), enforce: false
     field :current_target_unit_ids, [integer()], default: []
+    # TODO make a protocol for this
+    field :current_action_selection, Maneuver | nil, enforce: false
+    field :maneuver_squares, [GridSquare], default: []
   end
 
   # *** *******************************
   # *** NEW
 
-  def new(player_id, units) do
+  def new(player_id, units, maneuver_squares) do
     %__MODULE__{
       player_id: player_id,
       enemy_unit_ids: Unit.Enum.enemy_unit_ids(units, player_id),
-      player_active_unit_ids: Unit.Enum.active_player_unit_ids(units, player_id)
+      player_active_unit_ids: Unit.Enum.active_player_unit_ids(units, player_id),
+      maneuver_squares: maneuver_squares
     }
     |> calc_current
   end
@@ -32,58 +39,71 @@ defmodule ActionSelection do
   # *** *******************************
   # *** GETTERS
 
-  def actions(%__MODULE__{actions: actions}), do: actions
-  def completed_player_unit_ids(player_actions) do
-    player_actions
+  def actions(%__MODULE__{actions: value}), do: value
+
+  def current_mode(%__MODULE__{current_mode: value}), do: value
+
+  def current_unit_id(%__MODULE__{current_unit_id: value}), do: value
+
+  def maneuver_squares(%__MODULE__{maneuver_squares: value}), do: value
+
+  def completed_player_unit_ids(action_selection) do
+    action_selection
     |> actions
     |> Stream.map(& &1.unit_id)
   end
-  def pending_player_unit_ids(player_actions) do
-    player_actions.player_active_unit_ids
-    |> Stream.filter(& &1 not in completed_player_unit_ids(player_actions))
+  def pending_player_unit_ids(action_selection) do
+    action_selection.player_active_unit_ids
+    |> Stream.filter(& &1 not in completed_player_unit_ids(action_selection))
   end
-  def count_player_active_units(player_actions) do
-    Enum.count(player_actions.player_active_unit_ids)
+  def count_player_active_units(action_selection) do
+    Enum.count(action_selection.player_active_unit_ids)
   end
-  def all_required_actions(player_actions) do
-    Stream.flat_map(player_actions.player_active_unit_ids, fn unit_id ->
+  def all_required_actions(action_selection) do
+    Stream.flat_map(action_selection.player_active_unit_ids, fn unit_id ->
       [:maneuver, :combat]
       |> Stream.map(&{unit_id, &1})
     end)
   end
-  def pending_actions(player_actions) do
+  def pending_actions(action_selection) do
     completed_actions =
-      player_actions
+      action_selection
       |> actions
       |> Enum.map(&UnitAction.id_and_mode/1)
-    player_actions
+    action_selection
     |> all_required_actions
     |> Stream.filter(& &1 not in completed_actions)
     |> Stream.concat([{nil, nil}])
   end
-  def next_pending_action(player_actions) do
-    player_actions
+  def next_pending_action(action_selection) do
+    action_selection
     |> pending_actions
     |> Enum.take(1)
     |> List.first
   end
-  def current_unit_id(%{current_unit_id: id}), do: id
 
   # Booleans
   def turn_complete?(action_selection), do: action_selection.current_unit_id == nil
   def combat?(%{current_mode: :combat}), do: true
   def combat?(_), do: false
 
+  def maneuver_squares_for_current_unit(action_selection) do
+    unit_id = current_unit_id(action_selection)
+    action_selection
+    |> maneuver_squares
+    |> Enum.filter(& &1.unit_id == unit_id)
+  end
+
   # *** *******************************
   # *** SETTERS
 
-  def put(%__MODULE__{} = player_actions, list) when is_list(list) do
-    Enum.reduce(list, player_actions, fn item, player_actions ->
-      player_actions |> put(item)
+  def put(%__MODULE__{} = action_selection, list) when is_list(list) do
+    Enum.reduce(list, action_selection, fn item, action_selection ->
+      action_selection |> put(item)
     end)
   end
-  def put(%__MODULE__{} = player_actions, %UnitAction{} = command) do
-    player_actions
+  def put(%__MODULE__{} = action_selection, %UnitAction{} = command) do
+    action_selection
     |> Map.update!(:actions, & [command | &1])
     |> calc_current
   end
@@ -91,48 +111,67 @@ defmodule ActionSelection do
   # *** *******************************
   # *** PLAYER-ISSUED ACTIONS
 
-  def maneuver(player_actions, unit_id, x, y) do
+  # TODO move this to Maneuver action selection?
+  def maneuver(action_selection, unit_id, x, y) do
     command = UnitAction.move_to(unit_id, position(x, y))
-    put(player_actions, command)
+    put(action_selection, command)
   end
 
-  def select_gunnery_target(player_actions, target_unit_id) when is_integer(target_unit_id) do
-    unit_id = current_unit_id(player_actions)
+  def select_gunnery_target(action_selection, target_unit_id) when is_integer(target_unit_id) do
+    unit_id = current_unit_id(action_selection)
     action = UnitAction.fire_upon(unit_id, target_unit_id)
-    player_actions |> put(action)
+    action_selection |> put(action)
   end
 
   # *** *******************************
   # *** PRIVATE
 
-  defp calc_current(player_actions) do
-    player_actions
+  defp calc_current(action_selection) do
+    action_selection
     |> calc_current_action
     |> calc_current_targets
     |> maybe_combat_noop
   end
-  defp calc_current_action(player_actions) do
-    {id, mode} = next_pending_action(player_actions)
-    %{player_actions |
+  defp calc_current_action(action_selection) do
+    {id, mode} = next_pending_action(action_selection)
+    %__MODULE__{action_selection |
       current_unit_id: id,
       current_mode: mode
     }
+    |> maybe_put_maneuver
   end
-  defp calc_current_targets(player_actions) do
-    targets = if combat?(player_actions), do: player_actions.enemy_unit_ids, else: []
-    %__MODULE__{player_actions | current_target_unit_ids: targets}
+
+  defp calc_current_targets(action_selection) do
+    targets = if combat?(action_selection), do: action_selection.enemy_unit_ids, else: []
+    %__MODULE__{action_selection | current_target_unit_ids: targets}
   end
+
   defp maybe_combat_noop(%{
     current_target_unit_ids: targets,
     current_unit_id: unit_id
-  } = player_actions) do
-    if Enum.empty?(targets) and combat?(player_actions) do
-      player_actions
+  } = action_selection) do
+    if Enum.empty?(targets) and combat?(action_selection) do
+      action_selection
       |> put(UnitAction.combat_noop(unit_id))
       |> calc_current
     else
-      player_actions
+      action_selection
     end
+  end
+
+  defp maybe_put_maneuver(action_selection) do
+    current_action_selection = case current_mode(action_selection) do
+      :maneuver ->
+        # TODO this is pretty ugly
+        squares = maneuver_squares_for_current_unit(action_selection)
+        case Enum.count(squares) do
+          0 -> nil
+          _ -> Maneuver.new(current_unit_id(action_selection), squares)
+        end
+      _ ->
+        nil
+    end
+    %__MODULE__{action_selection | current_action_selection: current_action_selection}
   end
 
   # *** *******************************

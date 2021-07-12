@@ -1,101 +1,66 @@
-alias ChukinasWeb.Router.Helpers, as: Routes
-alias Chukinas.Sessions.{Rooms, User, UserRegistry}
-
 defmodule Chukinas.Sessions do
+
   @moduledoc """
-  The Sessions context.
+  The Sessions context
   """
 
-  #import Ecto.Changeset
-  alias Chukinas.Sessions.UserSession
+  alias Chukinas.Sessions.Players
+  alias Chukinas.Sessions.RoomJoin
+  alias Chukinas.Sessions.Rooms
+  alias Chukinas.Dreadnought.ActionSelection
+  alias Chukinas.Dreadnought.Mission
 
   # *** *******************************
   # *** Users
 
-  def new_user do
-    user = User.new()
-    UserRegistry.register(user |> User.uuid)
-    user
-  end
-
-  def new_uuid do
-    Ecto.UUID.generate()
+  # TODO rename `register_liveview`?
+  # TODO or to `subscribe_to_player_uuid`?
+  def register_uuid(player_uuid) do
+    Players.subscribe(player_uuid)
   end
 
   # *** *******************************
-  # *** UserSession
+  # *** ROOM JOIN / LEAVE
 
-  def user_session_changeset(data, attrs) do
-    UserSession.Changeset.changeset(data, attrs)
+  def room_join_types, do: RoomJoin.types()
+
+  defdelegate room_join_changeset(data, attrs), to: RoomJoin, as: :changeset
+
+  defdelegate room_join_validate(attrs), to: RoomJoin, as: :validate
+
+  def join_room(room_join) do
+    :ok = Rooms.add_player(room_join)
+    :ok = Players.set_room(room_join)
   end
 
-  def list_user_sessions do
-    raise "TODO"
+  def leave_room(player_uuid) do
+    IOP.inspect player_uuid, "Sessions.leave_room"
+    room_name = Players.get_room_name(player_uuid)
+    Players.leave_room(player_uuid)
+    Rooms.drop_player(room_name, player_uuid)
   end
-
-  def create_user_session(attrs \\ %{})
-  def create_user_session(nil), do: create_user_session(%{})
-  def create_user_session(attrs) do
-    UserSession.Changeset.create_user_session(nil, attrs)
-  end
-
-  def update_user_session(user_session, attrs) do
-    UserSession.Changeset.create_user_session(user_session, attrs)
-  end
-
-  #def delete_user_session(%UserSession{} = user_session) do
-  #  raise "TODO"
-  #end
-
-  #def change_user_session(%UserSession{} = user_session, _attrs \\ %{}) do
-  #  raise "TODO"
-  #end
-
-  # TODO this should maybe accept a path helper instead....
-  # ... when is_function(func, 2)
-  # TODO swap the arguments so things pipe nicer
-  def path(socket, %UserSession{} = user_session) do
-    room = user_session |> UserSession.room
-    path(socket, room)
-  end
-  def path(socket, %Ecto.Changeset{} = user_session) do
-    room = user_session |> UserSession.Changeset.room
-    path(socket, room)
-  end
-  def path(socket, nil = _room) do
-    Routes.dreadnought_path(socket, :room)
-  end
-  def path(socket, room) when is_binary(room) do
-    Routes.dreadnought_path(socket, :room, room)
-  end
-
-  def url(socket, user_session) do
-    [
-      URI.to_string(socket.host_uri),
-      path(socket, user_session)
-    ]
-    |> Enum.join
-  end
-
-  defdelegate room(user_session), to: UserSession
 
   # *** *******************************
-  # *** ROOM
+  # *** GET ROOM
 
-  def join_room(%User{} = user, room_name)
-  when is_binary(room_name) do
-    {:member_number, player_id} =
-      # TODO maybe this function can accept a map instead?
-      Rooms.add_member(
-        room_name,
-        user |> User.uuid,
-        user |> User.name
-      )
-    user = %User{user |
-      room_name: room_name,
-      player_id: player_id
-    }
-    {:ok, user}
+  def get_room_from_player_uuid(player_uuid) do
+    with {:ok, room_name} <- Players.fetch_room_name(player_uuid),
+         {:ok, room}      <- Rooms.fetch(room_name) do
+      room
+    else
+      _response ->
+        nil
+    end
+  end
+
+  # *** *******************************
+  # *** UPDATE MISSION
+
+  # TODO `Sessions` seems like the wrong name for this api...
+
+  def complete_player_turn(room_name, %ActionSelection{} = action_selection) do
+    fun = &Mission.put(&1, action_selection)
+    Rooms.update_mission(room_name, fun)
   end
 
 end

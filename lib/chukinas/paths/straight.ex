@@ -43,11 +43,10 @@ defmodule Straight do
     |> pose_new
   end
   def bounding_rect(path) do
-    {
+    Rect.from_positions(
       start_pose(path),
       end_pose(path)
-    }
-    |> Rect.new
+    )
   end
 
   # *** *******************************

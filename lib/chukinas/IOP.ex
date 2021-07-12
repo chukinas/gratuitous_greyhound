@@ -20,6 +20,7 @@ defmodule IOP do
 
   def inspect(term, label \\ nil) do
     IO.puts ""
+    # credo:disable-for-next-line
     IO.inspect(term, Keyword.merge(@opts, label: label))
   end
 

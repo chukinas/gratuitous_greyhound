@@ -1,19 +1,19 @@
-alias Chukinas.Dreadnought.{Gunfire, Spritesheet, Turret, Unit, Sprite}
-
-defmodule Gunfire do
+defmodule Chukinas.Dreadnought.Gunfire do
 
   use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra
+  alias Chukinas.Dreadnought.Sprites
+  alias Chukinas.Dreadnought.Turret
+  alias Chukinas.Dreadnought.Unit
+
 
   # *** *******************************
   # *** TYPES
 
   typedstruct do
-    field :sprite, Sprite.t()
     pose_fields()
-    field :id_string, String.t()
-    #field :time_start, number()
-    #field :time_duration, number()
+    field :sprite, Sprites.t
+    field :id_string, String.t
   end
 
   # *** *******************************
@@ -21,18 +21,18 @@ defmodule Gunfire do
 
   def new(unit, turret_id) do
     turret = Unit.turret(unit, turret_id)
-    position_vector =
+    coord =
       turret
       |> Turret.gun_barrel_vector
       |> vector_transform_from([turret, unit])
     angle = angle_from_sum(turret, unit)
-    position_vector
+    coord
     |> pose_new(angle)
     |> new
   end
   def new(pose) do
     spritename = "explosion_" <> Enum.random(~w(1 2 3))
-    sprite = Spritesheet.blue(spritename)
+    sprite = Sprites.blue(spritename)
     fields =
       %{
         sprite: sprite,

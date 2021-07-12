@@ -1,0 +1,13 @@
+<%= View.render_action_selection @player_turn.action_selection.current_action_selection, @myself %>
+
+<%= render "target_selection_boxes.html", 
+action_selection: @player_turn.action_selection,
+target: @myself,
+units: @units
+%>
+
+<%= render "turn_marker_and_end_btn.html", 
+player_turn: @player_turn,
+target: @myself,
+turn_number: @turn_number
+%>

@@ -1,0 +1,15 @@
+<div
+  id="arenaGrid"
+  class="absolute inset-0 grid"
+  style="
+    grid-auto-columns: <%= @action_selection.square_size %>px;
+    grid-auto-rows: <%= @action_selection.square_size %>px;
+  "
+>
+  <%= for square <- @action_selection.squares do %>
+    <%= render "maneuver_selection_square.html", 
+      target: @target, 
+      square: square %>
+  <% end %>
+</div>
+

@@ -1,18 +1,19 @@
-alias Chukinas.Dreadnought.{Turret, Sprite}
-alias Chukinas.LinearAlgebra.{HasCsys, CSys, Vector}
+defmodule Chukinas.Dreadnought.Turret do
 
-defmodule Turret do
-
-  use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra
+  use Chukinas.PositionOrientationSize
   use Chukinas.Math
+  alias Chukinas.Dreadnought.Sprites
+  alias Chukinas.LinearAlgebra.CSys
+  alias Chukinas.LinearAlgebra.HasCsys
+  alias Chukinas.LinearAlgebra.Vector
 
   # *** *******************************
   # *** NEW
 
   typedstruct enforce: true do
     field :id, integer()
-    field :sprite, Sprite.t()
+    field :sprite, Sprites.t
     field :max_ccw_angle, degrees :: number()
     field :max_rotation, positive_degrees :: number()
     field :rest_angle, degrees :: number()
@@ -69,7 +70,7 @@ defmodule Turret do
   def gun_barrel_vector(%__MODULE__{sprite: sprite}) do
     %{x: x} =
       sprite
-      |> Sprite.mounts
+      |> Sprites.mounts
       |> List.first
       |> position_new
     {x, 0}
@@ -131,6 +132,7 @@ defmodule Turret do
   # *** IMPLEMENTATIONS
 
   defimpl HasCsys do
+    alias Chukinas.Dreadnought.Turret
     def get_csys(turret), do: Turret.csys(turret)
     # This no longer seems necessary, now that pose is on the item itself
     def get_angle(turret), do: Turret.current_angle(turret)

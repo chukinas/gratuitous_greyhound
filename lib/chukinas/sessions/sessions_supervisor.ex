@@ -1,7 +1,5 @@
-alias Chukinas.SessionSupervisor
-alias Chukinas.Sessions.{RoomRegistry, RoomDynamicSupervisor, UserRegistry}
+defmodule Chukinas.Sessions.SessionSupervisor do
 
-defmodule SessionSupervisor do
   use Supervisor
 
   def start_link(init_arg) do
@@ -10,19 +8,13 @@ defmodule SessionSupervisor do
 
   def init(_init_arg) do
     children = [
-      RoomRegistry,
-      RoomDynamicSupervisor,
-      UserRegistry,
+      Chukinas.Sessions.RoomBackup,
+      Chukinas.Sessions.RoomRegistry,
+      Chukinas.Sessions.RoomDynamicSupervisor,
+      Chukinas.Sessions.PlayerRegistry,
+      Chukinas.Sessions.PlayerRooms,
     ]
     Supervisor.init(children, strategy: :one_for_one)
-  end
-
-  def get_room(room_name) do
-    {_, pid, _, _} = Supervisor.which_children(__MODULE__)
-    |> Enum.find(fn {current_room_name, _, _, _} ->
-      current_room_name == room_name
-    end)
-    pid
   end
 
 end

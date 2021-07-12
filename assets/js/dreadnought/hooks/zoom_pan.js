@@ -253,9 +253,9 @@ function setPositionAndZoom() {
 }
 
 function pan(vector) {
-  logToElixir({
-    title: "pan!!"
-  })
+  // logToElixir({
+  //   title: "pan!!"
+  // })
   pinch(vector)
 }
 
@@ -289,7 +289,7 @@ const ZoomPanContainer = {
     elZoomPanContainer.onpointerout = Gestures.up;
     elZoomPanContainer.onpointerleave = Gestures.up;
     logToElixir = (params) => {
-      me.pushEvent("log", params)
+      // me.pushEvent("log", params)
     }
     Gestures.setCallbacks({
       logToElixir, 
@@ -299,7 +299,7 @@ const ZoomPanContainer = {
       clearPositionAndZoom: resetData
     })
     // TODO rename
-    setTimeout(() => fitArena({zeroDuration: true})) 
+    //setTimeout(() => fitArena({zeroDuration: true})) 
   },
   // updated() {
   //   setTimeout(() => fitArena({zeroDuration: true})) 
@@ -315,11 +315,11 @@ const ZoomPanContainer = {
 const ZoomPanCover = {
   mounted() {
     elZoomPanCover = this.el
-    gsap.set(elZoomPanCover, {
-      x: -90,
-      y: -120,
-      scale: 1.05
-    })
+    // gsap.set(elZoomPanCover, {
+    //   x: -90,
+    //   y: -120,
+    //   scale: 1.05
+    // })
   }
 }
 

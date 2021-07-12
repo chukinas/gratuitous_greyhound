@@ -11,7 +11,7 @@ defmodule Chukinas.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
-      dialyzer: [plt_add_deps: :transitive],
+      dialyzer: [pplt_file: {:no_warn, "priv/plts/dialyzer.plt"}],
     ]
   end
 
@@ -49,7 +49,7 @@ defmodule Chukinas.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:typed_struct, "~> 0.2.1"},
-      {:dialyxir, "~> 0.5.0", only: [:dev], runtime: false},
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:bamboo, "~> 2.0.1"},
       {:collision, "~> 0.3.1"},
       {:elixir_xml_to_map, "~> 2.0"},

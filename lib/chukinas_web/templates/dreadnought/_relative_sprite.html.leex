@@ -1,12 +1,11 @@
 <div 
   class="dreadnought-relative-sprite absolute <%= @class %>"
   style="
-    left: <%= @position.x %>px; 
-    top: <%= @position.y %>px; 
+    <%= ChukinasWeb.Shared.left_top_from_position(@position) %>
     <%= if @angle do %>
-    transform: rotate(<%= @angle %>deg); 
+      transform: rotate(<%= @angle %>deg); 
     <% end %>
-    transform-origin: <%= -@sprite.rect.x %>px <%= -@sprite.rect.y %>px;
+    transform-origin: <%= -@sprite.x %>px <%= -@sprite.y %>px;
   "
   <%= for attr <- @attributes do %>
     <%= attr.name %>="<%= attr.value %>"

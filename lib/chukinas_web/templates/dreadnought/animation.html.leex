@@ -2,8 +2,7 @@
   id="<%= @animation.id_string %>"
   class="absolute"
   style="
-    left: <%= @animation.x %>px;
-    top: <%= @animation.y %>px;
+    <%= ChukinasWeb.Shared.left_top_from_position(@animation) %>
     transform: rotate(<%= @animation.angle %>deg);
   "
   phx-hook="Animation"

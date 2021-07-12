@@ -1,15 +1,15 @@
-alias Chukinas.Dreadnought.{Unit, CombatAction, Turret, Animation}
-alias Chukinas.Collide
-alias Chukinas.Util.IdList
-alias Chukinas.Paths
-alias Chukinas.LinearAlgebra.Vector
-alias Unit.Event, as: Ev
-
-defmodule CombatAction do
+defmodule Chukinas.Dreadnought.CombatAction do
 
   use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra
-  alias CombatAction.Accumulator, as: Acc
+  alias Chukinas.Collide
+  alias Chukinas.Dreadnought.Animations
+  alias Chukinas.Dreadnought.CombatAction.Accumulator, as: Acc
+  alias Chukinas.Dreadnought.Turret
+  alias Chukinas.Dreadnought.Unit
+  alias Chukinas.Dreadnought.Unit.Event, as: Ev
+  alias Chukinas.Paths
+  alias Chukinas.Util.IdList
 
   # *** *******************************
   # *** API
@@ -51,12 +51,13 @@ defmodule CombatAction do
     {:ok, vector}
   end
 
+  @spec turret_angle(Acc.t, {number, number}, integer) :: {:ok, number} | {:fail, :out_of_fire_arc}
   defp turret_angle(%Acc{} = acc, target_vector, turret_id) do
     turret = Acc.turret(acc, turret_id)
     attacker = Acc.attacker(acc)
     desired_angle =
       target_vector
-      |> vector_transform_to([attacker, turret |> coord_from_position])
+      |> vector_outer_to_inner([attacker, turret |> vector_from_position])
       |> angle_from_vector
     case Turret.normalize_desired_angle(turret, desired_angle) do
       {:ok, angle} -> {:ok, angle}
@@ -114,9 +115,9 @@ defmodule CombatAction do
       |> position_new
       |> pose_new(ordnance_hit_angle)
     animations = [
-      Animation.Build.large_muzzle_flash(pose, delay_discharge),
+      Animations.large_muzzle_flash(pose, delay_discharge),
       # TODO calculate the ordnance flight time instead of guessing
-      Animation.Build.ordnance_hit(ordnance_hit_pose, delay_hit)
+      Animations.ordnance_hit(ordnance_hit_pose, delay_hit)
     ]
     Acc.put(acc, attacker, target, animations)
   end

@@ -76,8 +76,8 @@ defmodule Position do
   def subtract(position, number) when is_number(number) do
     subtract(position, number, number)
   end
-  def subtract(position, translation) do
-    translate(position, {-translation.x, -translation.y})
+  def subtract(position, %{x: x, y: y}) do
+    translate(position, {-x, -y})
   end
 
   def multiply(position, value) do
@@ -87,7 +87,7 @@ defmodule Position do
     |> Map.update!(:y, fun)
   end
 
-  def divide(position, value) when not (value == 0), do: multiply(position, 1/value)
+  def divide(position, value) when not (value == 0), do: multiply(position, 1 / value)
 
   def round_to_int(position) do
     position

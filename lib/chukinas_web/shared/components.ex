@@ -17,7 +17,7 @@ defmodule ChukinasWeb.Components do
         label: nil,
         phx_click: nil,
         phx_target: nil,
-        is_enabled?: false
+        selected?: false
       ]
       |> Keyword.merge(opts)
       |> Keyword.put(:id, id)
@@ -59,14 +59,6 @@ defmodule ChukinasWeb.Components do
     render("url_join.html", maybe_url: url, form: form, submit_class: Class.join_btn())
   end
 
-  def submit(text, form, opts \\ []) do
-    opts =
-      opts
-      |> Keyword.put_new(:class, Class.submit())
-      |> Keyword.put_new(:disabled, !valid?(form))
-    Phoenix.HTML.Form.submit(text, opts)
-  end
-
   defp merge_class_and_opts(opts, class) do
     {_, new_class} = Keyword.get_and_update(opts, :class, fn current_class ->
       new_class = case current_class do
@@ -77,4 +69,25 @@ defmodule ChukinasWeb.Components do
     end)
     new_class
   end
+
+  # *** *******************************
+  # *** BUTTONS
+
+  def submit(text, form, opts \\ []) do
+    opts =
+      opts
+      |> Keyword.put_new(:class, Class.submit())
+      |> Keyword.put_new(:disabled, !valid?(form))
+    Phoenix.HTML.Form.submit(text, opts)
+  end
+
+  def button(text, opts \\ []) do
+    attrs = Keyword.merge(opts,
+      type: "button",
+      value: text,
+      class: Class.submit()
+    )
+    Phoenix.HTML.Tag.tag(:input, attrs)
+  end
+
 end

@@ -1,0 +1,15 @@
+<div
+  class="absolute  text-4xl text-white"
+  style="<%= left_top_from_position(@position) %>"
+>
+  <div
+    id="unit-<%= @unit_id %>-select"
+    class="bg-yellow-400 animate-pulse pointer-events-auto cursor-pointer"
+    style="<%= width_height_from_size(@size) %>"
+    phx-click="select_gunnery_target"
+    phx-value-unit_id="<%= @unit_id %>"
+    phx-target="<%= @myself %>"
+  >
+  </div>
+  <%= @unit_name %>
+</div>

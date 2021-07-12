@@ -3,7 +3,7 @@
   <%= Component.toggle(
         "toggleShowMarkers",
         label: (if @show_markers?, do: "Markers Shown", else: "Markers Hidden"),
-        is_enabled?: @show_markers?,
+        selected?: @show_markers?,
         phx_click: "toggle_show_markers" )%>
 </div>
 
@@ -67,15 +67,15 @@
     <div 
       class="bg-gray-400"
       style="
-        width: <%= sprite.rect.width %>px;
-        height: <%= sprite.rect.height %>px;
+        width: <%= sprite.width %>px;
+        height: <%= sprite.height %>px;
       "
     >
       <div 
         class="relative"
         style="
-          margin-left: <%= -sprite.rect.x %>px;
-          margin-top: <%= -sprite.rect.y %>px;
+          margin-left: <%= -sprite.x %>px;
+          margin-top: <%= -sprite.y %>px;
         "
       >
         <%= ChukinasWeb.DreadnoughtView.relative_sprite sprite, @socket %>

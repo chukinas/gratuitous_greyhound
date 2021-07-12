@@ -1,6 +1,5 @@
-alias Chukinas.Sessions
-
 defmodule ChukinasWeb.Router do
+
   use ChukinasWeb, :router
 
   pipeline :browser do
@@ -30,11 +29,11 @@ defmodule ChukinasWeb.Router do
 
   scope "/dreadnought", ChukinasWeb do
     pipe_through :dreadnought
-    live "/", DreadnoughtLive
-    live "/rooms", DreadnoughtLive, :room
-    live "/rooms/:room", DreadnoughtLive, :room
-    live "/play", DreadnoughtPlayLive
+    live "/", DreadnoughtLive, :redirect_to_setup
+    live "/grid", DreadnoughtLive, :redirect_to_setup
     live "/gallery", DreadnoughtLive, :gallery
+    live "/setup", DreadnoughtLive, :setup
+    live "/play", DreadnoughtPlayLive, :index
   end
 
   # Other scopes may use custom stacks.
@@ -63,7 +62,7 @@ defmodule ChukinasWeb.Router do
     {conn, uuid} =
       case conn.req_cookies["uuid"] do
         nil ->
-          uuid = Sessions.new_uuid()
+          uuid = Ecto.UUID.generate()
           conn = put_resp_cookie(conn, "uuid", uuid, path: "/dreadnought")
           {conn, uuid}
         uuid ->
