@@ -12,11 +12,11 @@ config :chukinas, ChukinasWeb.Endpoint,
   code_reloader: true,
   check_origin: false,
   watchers: [
-    node: [
-      "node_modules/webpack/bin/webpack.js",
-      "--mode",
-      "development",
-      "--watch-stdin",
+    # https://sevenseacat.net/posts/2021/tailwind-jit-in-phoenix/
+    # This used to be node:
+    npm: [
+      "run",
+      "watch",
       cd: Path.expand("../assets", __DIR__)
     ]
   ]

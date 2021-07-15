@@ -1,0 +1,6 @@
+<div class="w-64 h-64 bg-red-200">
+  hello i love you
+</div>
+<div class="w-64 h-64 bg-red-200/50">
+  hello i love you
+</div>
