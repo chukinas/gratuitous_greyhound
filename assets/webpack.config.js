@@ -1,6 +1,6 @@
 const path = require('path');
 const glob = require('glob');
-const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
+// const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
@@ -54,6 +54,12 @@ module.exports = (env, options) => {
         pinchZoom: "pinch-zoom-element"
       })
     ]
-    .concat(devMode ? [new HardSourceWebpackPlugin()] : [])
+    // .concat(devMode ? [
+    //   new HardSourceWebpackPlugin(),
+    //   new HardSourceWebpackPlugin.ExcludeModulePlugin([{
+    //     // https://elixirforum.com/t/thinkingelixir-discussion-mental-models-for-your-elixir-and-liveview-code/38393/11
+    //     test: /mini-css-extract-plugin[\\/]dist[\\/]loader/,
+    //   }])
+    // ] : [])
   }
 };
