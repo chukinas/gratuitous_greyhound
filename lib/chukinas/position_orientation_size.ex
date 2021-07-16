@@ -129,6 +129,10 @@ defmodule Chukinas.PositionOrientationSize do
   defdelegate position(term), to: Position, as: :new
   defdelegate position(a, b), to: Position, as: :new
 
+  def position_flip(position) do
+    position |> position_subtract(-1)
+  end
+
   def position_from_vector(vector), do: Position.new(vector)
   defdelegate position_from_size(size), to: Position, as: :from_size
 

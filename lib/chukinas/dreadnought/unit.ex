@@ -84,7 +84,7 @@ defmodule Chukinas.Dreadnought.Unit do
 
 
   # *** *******************************
-  # *** GETTERS
+  # *** CONVERTERS
 
   def angle(%__MODULE__{angle: value}), do: value
 
@@ -98,6 +98,11 @@ defmodule Chukinas.Dreadnought.Unit do
     unit
     |> events(which)
     |> Enum.filter(&is_struct(&1, event_module))
+  end
+
+  def length(_unit) do
+    # TODO placeholder
+    200
   end
 
   def any_events?(unit, event_module, which \\ :all) do
@@ -195,6 +200,21 @@ defmodule Chukinas.Dreadnought.Unit do
       fadeout = Ev.Destroyed.get_fadeout(destruction)
       put(unit, [destruction, fadeout])
     end
+  end
+
+  # *** *******************************
+  # *** REDUCERS
+
+  def position_mass_center(%__MODULE__{} = unit, position \\ position_null())
+  when has_position(position) do
+    #unit.sprite
+    #|> IOP.inspect
+    translate =
+      unit
+      # TODO rename position_of_mass_center
+      |> center_of_mass
+      |> IOP.inspect("center of mass position")
+    position_subtract(unit, translate)
   end
 
   # *** *******************************

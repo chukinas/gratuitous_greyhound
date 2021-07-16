@@ -7,13 +7,13 @@
 <div class="flex items-center justify-center h-screen bg-black w-screen">
   <div class="text-white space-y-12">
     <h2 class="uppercase text-4xl">Dreadnought</h2>
-    <div class="w-full h-64 bg-red-200/25">
-      <div class="h-full bg-blue-200/25 w-full transform translate-x-1/2 translate-y-1/2 relative">
+    <div class="w-full h-32 transform scale-150" style="transform:scale(3)">
+      <div class="h-full w-full transform translate-x-1/2 translate-y-1/2 relative">
         <%= for unit <- @units do %>
           <%= ChukinasWeb.DreadnoughtView.render "unit.html",
           socket: @conn,
           turn_number: 1,
-          unit: unit %>
+          unit: unit.unit %>
         <% end %>
       </div>
     </div>
