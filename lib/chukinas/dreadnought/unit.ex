@@ -159,6 +159,10 @@ defmodule Chukinas.Dreadnought.Unit do
 
   def status(%__MODULE__{status: status}), do: status
 
+  def width(%__MODULE__{sprite: sprite}) do
+    sprite.height
+  end
+
   # *** *******************************
   # *** TRANSFORMS
 
