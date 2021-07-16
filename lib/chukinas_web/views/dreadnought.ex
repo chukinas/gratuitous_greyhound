@@ -60,7 +60,9 @@ defmodule ChukinasWeb.DreadnoughtView do
       image_file_path: sprite.image_file_path,
       image_size: sprite.image_size,
       image_clip_path: sprite.image_clip_path,
-      transform: sprite.image_origin |> position_add(sprite) |> position_multiply(-1)
+      transform: sprite.image_origin |> position_add(sprite) |> position_multiply(-1),
+      sprite_viewbox: ChukinasWeb.Shared.viewbox(sprite),
+      image_viewbox: ChukinasWeb.Shared.viewbox(sprite.image_size)
     ]
     render("_sprite.html", assigns)
   end

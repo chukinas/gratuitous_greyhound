@@ -8,9 +8,9 @@
   <div class="text-yellow-100 space-y-12">
     <h2 class="uppercase text-4xl">Dreadnought</h2>
     <div 
-      class="w-full bg-red-200/25 pointer-events-none"
+      class="w-full pointer-events-none"
       style="transform:scale(<%= @unit.scale %>); height:<%= @unit.height %>px">
-      <div class="h-full w-full bg-red-200/25 transform translate-x-1/2 translate-y-1/2 relative">
+      <div class="h-full w-full transform translate-x-1/2 translate-y-1/2 relative">
         <%= ChukinasWeb.DreadnoughtView.render "unit.html",
         socket: @conn,
         turn_number: 1,
