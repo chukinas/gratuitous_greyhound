@@ -4,6 +4,7 @@
     "lib/chukinas/dreadnought/*.ex": { "type": "dreadnought" },
     "lib/chukinas/geometry/*.ex": { "type": "geometry" },
     "lib/chukinas/linear_algebra/*.ex": { "type": "algebra" },
+    "lib/chukinas_web/templates/*.html.leex": { "type": "template" },
     "lib/chukinas_web/templates/dreadnought/*.html.leex": { "type": "template_index" },
     "lib/chukinas_web/templates/dreadnought_play/*.html.leex": { "type": "template_play" },
     "lib/chukinas_web/live/dreadnought/*_component.ex": { "type": "component" },

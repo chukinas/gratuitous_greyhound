@@ -1,5 +1,11 @@
+
 module.exports = {
-  purge: [],
+  mode: 'jit',
+  purge: [
+    '../lib/chukinas_web/templates/**/*',
+    '../lib/chukinas_web/views/**/*',
+    '../lib/chukinas_web/live/**/*',
+  ],
   darkMode: false, // or 'media' or 'class'
   theme: {
     cursor: {

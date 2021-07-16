@@ -12,4 +12,9 @@ defmodule ChukinasWeb.PageController do
   def music(conn, _params) do
     render conn, "music.html"
   end
+
+  def dev(conn, _params) do
+    render conn, "dev.html"
+  end
+
 end
