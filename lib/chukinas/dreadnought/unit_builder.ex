@@ -1,3 +1,4 @@
+# TODO rename UnitBuilder?
 defmodule Chukinas.Dreadnought.Unit.Builder do
 
   use Chukinas.PositionOrientationSize
@@ -51,7 +52,8 @@ defmodule Chukinas.Dreadnought.Unit.Builder do
     Unit.new(id, player_id, pose, fields)
   end
 
-  def red_cruiser(id, player_id, pose, opts \\ []) do
+  @spec red_cruiser(id :: integer, player_id :: integer, any, keyword) :: Unit.t
+  def red_cruiser(id, player_id, pose \\ pose_origin(), opts \\ []) do
     sprite = Sprites.red("ship_large")
     turrets = build_turrets(sprite, {:red, "turret1"}, [
       {1, 0},
@@ -61,7 +63,8 @@ defmodule Chukinas.Dreadnought.Unit.Builder do
       [
         health: 100,
         sprite: sprite,
-        turrets: turrets
+        turrets: turrets,
+        name: "noname"
       ]
       |> Keyword.merge(opts)
     Unit.new(id, player_id, pose, fields)

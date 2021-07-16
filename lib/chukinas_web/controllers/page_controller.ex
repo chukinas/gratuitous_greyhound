@@ -1,5 +1,6 @@
 defmodule ChukinasWeb.PageController do
   use ChukinasWeb, :controller
+  alias Chukinas.Dreadnought.Unit.Builder
 
   def index(conn, _params) do
     render conn, "index.html"
@@ -14,6 +15,9 @@ defmodule ChukinasWeb.PageController do
   end
 
   def dev(conn, _params) do
+    conn = assign(conn,
+      :units, [Builder.red_cruiser(1, 1)]
+    )
     render conn, "homepage.html"
   end
 
