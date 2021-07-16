@@ -14,7 +14,9 @@ defmodule ChukinasWeb.PageController do
   end
 
   def dev(conn, _params) do
-    render conn, "dev.html"
+    IO.puts Routes.static_url(conn, "/images/crinkled_paper_20210517.jpg")
+    IO.puts Routes.static_path(conn, "/images/crinkled_paper_20210517.jpg")
+    render assign(conn, :hello, "Hello, I love you"), "dev.html"
   end
 
 end
