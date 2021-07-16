@@ -1,0 +1,16 @@
+<style>
+  iframe {
+    height: 0;
+  }
+</style>
+
+<div class="flex items-center justify-center h-screen bg-black w-screen">
+  <div class="text-white space-y-12">
+    <h2 class="uppercase text-4xl">Dreadnought</h2>
+    <%= for button_text <- ~w/Play Gallery/ do %>
+      <button type="button" class="inline-flex justify-center w-full rounded-md border border-white shadow-sm px-6 py-3 text-base font-medium hover:bg-white/25 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        <%= button_text %>
+      </button>
+  <% end %>
+  </div>
+</div>
