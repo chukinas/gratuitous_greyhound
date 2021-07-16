@@ -4,13 +4,26 @@
   }
 </style>
 
-<div 
-  class="paperBackground transform rotate-2 scale-105 drop-shadow-xl"
-  style="
-    width: 400px;
-    height: 400px;
-  "
->
-  <div class="bg-blue-900/80 w-full h-full">
+<div class="fixed">
+  <div 
+    class="paperBackground drop-shadow-xl filter brightness-110"
+    style="
+      width: 700px;
+      height: 400px;
+    "
+  >
+    <div class="bg-blue-900/80 w-full h-full">
+    </div>
+  </div>
+
+  <div 
+    class="paperBackground transform rotate-2 scale-105 drop-shadow-xl filter brightness-125"
+    style="
+      width: 700px;
+      height: 700px;
+    "
+  >
+    <div class="bg-blue-900/90 w-full h-full">
+    </div>
   </div>
 </div>
