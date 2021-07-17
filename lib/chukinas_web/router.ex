@@ -34,7 +34,7 @@ defmodule ChukinasWeb.Router do
     live "/gallery", DreadnoughtLive, :gallery
     live "/setup", DreadnoughtLive, :setup
     live "/play", DreadnoughtPlayLive, :index
-    get "/dev", PageController, :dev
+    live "/dev", DreadnoughtIndexLive
   end
 
   # Other scopes may use custom stacks.

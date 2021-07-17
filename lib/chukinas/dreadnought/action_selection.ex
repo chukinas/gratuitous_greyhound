@@ -24,7 +24,7 @@ defmodule Chukinas.Dreadnought.ActionSelection do
   end
 
   # *** *******************************
-  # *** NEW
+  # *** CONSTRUCTORS
 
   def new(player_id, units, maneuver_squares) do
     %__MODULE__{
@@ -37,7 +37,7 @@ defmodule Chukinas.Dreadnought.ActionSelection do
   end
 
   # *** *******************************
-  # *** GETTERS
+  # *** CONVERTERS
 
   def actions(%__MODULE__{actions: value}), do: value
 

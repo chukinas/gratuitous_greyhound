@@ -16,6 +16,21 @@ defmodule Chukinas.Dreadnought.Player do
   # *** *******************************
   # *** CONSTRUCTORS
 
+  def new_ai(id, uuid, name) do
+    new(id, :ai, uuid, name)
+  end
+
+  def new_manual(id) do
+    new(id, :human, "", "")
+  end
+
+  def new_human(id, uuid, name) do
+    new(id, :human, uuid, name)
+  end
+
+  # *** *******************************
+  # *** PRIVATE CONSTRUCTORS
+
   defp new(id, type, uuid, name) when type in ~w(human ai)a do
     %__MODULE__{
       id: id,
@@ -25,14 +40,6 @@ defmodule Chukinas.Dreadnought.Player do
       ready?: false
     }
     |> IOP.inspect("Player new")
-  end
-
-  def new_human(id, uuid, name) do
-    new(id, :human, uuid, name)
-  end
-
-  def new_ai(id, uuid, name) do
-    new(id, :ai, uuid, name)
   end
 
   # *** *******************************
