@@ -25,7 +25,6 @@ defmodule ChukinasWeb.SpriteView do
     assigns = %{
       conn: conn,
       sprite: sprite,
-      # TODO rename attrs
       attrs: opts[:attrs],
       drop_shadow_padding: @drop_shadow_padding,
       position:
@@ -53,14 +52,27 @@ defmodule ChukinasWeb.SpriteView do
   end
 
   def drop_shadow(%Sprite{} = sprite) do
+    IOP.inspect(sprite, "sprite view")
     assigns = [
-      sprite: sprite,
-      image_size: sprite.image_size,
-      image_clip_path: sprite.image_clip_path,
-      transform: sprite.image_origin |> position_add(sprite) |> position_multiply(-1),
-      image_viewbox: ChukinasWeb.Shared.viewbox(sprite.image_size)
+      padded_image_size:
+        sprite.image_size
+        |> size_add(2 * @drop_shadow_padding)
+        |> size_new,
+      padded_image_viewbox: ChukinasWeb.Shared.viewbox(sprite.image_size, @drop_shadow_padding),
+      size:
+        sprite
+        |> size_add(2 * @drop_shadow_padding)
+        |> size_new,
+      svg_path: sprite.image_clip_path,
+      transform:
+        sprite.image_origin
+        #|> position_add(@drop_shadow_padding)
+        |> position_add(sprite)
+        |> position_multiply(-1)
+        |> position_new
     ]
-    render("static_sprite.html", assigns)
+    |> IOP.inspect
+    render("drop_shadow.html", assigns)
   end
 
 end

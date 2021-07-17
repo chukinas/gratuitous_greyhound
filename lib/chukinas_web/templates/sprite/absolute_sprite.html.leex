@@ -1,6 +1,6 @@
 <div 
   absolute_sprite
-  class="absolute <%= @class %> bg-green-500/50"
+  class="absolute <%= @class %>"
   style="
     <%= ChukinasWeb.Shared.left_top_from_position(@position) %>
     <%= if @angle do %>
@@ -16,6 +16,7 @@
       <%= ChukinasWeb.Shared.width_height_from_size(@size) %>
     "
   >
+    <%= ChukinasWeb.SpriteView.drop_shadow @sprite %>
     <!-- Static Sprite -->
     <div
       class="absolute"

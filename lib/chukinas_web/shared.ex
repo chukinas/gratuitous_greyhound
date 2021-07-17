@@ -1,7 +1,8 @@
 defmodule ChukinasWeb.Shared do
 
-  alias ChukinasWeb.DreadnoughtPlayView
   use Chukinas.PositionOrientationSize
+  alias ChukinasWeb.DreadnoughtPlayView
+  alias Chukinas.Geometry.Rect
 
   def top_left_width_height_from_rect(rect) do
     # TODO extract all these methods into this module
@@ -22,14 +23,21 @@ defmodule ChukinasWeb.Shared do
     DreadnoughtPlayView.width_height_from_size size
   end
 
-  def viewbox(rect) when has_position_and_size(rect) do
+  def viewbox(rect_or_size, margin \\ 0)
+
+  def viewbox(rect, margin) when has_position_and_size(rect) do
+    rect =
+      rect
+      |> Rect.from_rect
+      |> Rect.grow(margin)
     values = for key <- ~w/x y width height/a, do: Map.get(rect, key)
     Enum.join(values, " ")
   end
 
-  def viewbox(size) when has_size(size) do
-    values = for key <- ~w/width height/a, do: Map.get(size, key)
-    Enum.join([0, 0 | values], " ")
+  def viewbox(size, margin) when has_size(size) do
+    size
+    |> Rect.from_size
+    |> viewbox(margin)
   end
 
   def attrs(nil), do: nil

@@ -158,6 +158,15 @@ defmodule Chukinas.Geometry.Rect do
   end
 
   # *** *******************************
+  # *** REDUCERS
+
+  def grow(rect, addition) do
+    rect
+    |> position_subtract(addition)
+    |> size_add(2 * addition)
+  end
+
+  # *** *******************************
   # *** IMPLEMENTATIONS
 
   defimpl IsShape do
