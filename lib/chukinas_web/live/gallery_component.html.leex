@@ -77,7 +77,7 @@
           margin-top: <%= -sprite.y %>px;
         "
       >
-        <%= ChukinasWeb.DreadnoughtView.relative_sprite sprite, @socket %>
+        <%= ChukinasWeb.SpriteView.absolute_sprite @socket, sprite %>
         <%= if @show_markers? do %>
           <%= ChukinasWeb.DreadnoughtView.center %{x: 0, y: 0} %>
           <%= for mount <- sprite.mounts do %>

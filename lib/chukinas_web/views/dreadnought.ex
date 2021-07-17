@@ -6,7 +6,6 @@ defmodule ChukinasWeb.DreadnoughtView do
   use Chukinas.LinearAlgebra
   alias Chukinas.Dreadnought.Unit.Event, as: Ev
   alias Chukinas.Geometry.Rect
-  alias Chukinas.Util.Opts
 
 
   def unit_event(%Ev.Maneuver{} = event) do
@@ -48,31 +47,6 @@ defmodule ChukinasWeb.DreadnoughtView do
   end
   def render_event(attributes) do
     render("_unit_event.html", attributes: attributes)
-  end
-
-  def relative_sprite(sprite, socket, opts \\ []) do
-    opts = Opts.merge!(opts, [
-      attributes: [],
-      class: "",
-      pose: pose_origin()
-    ])
-    pose = opts[:pose]
-    attributes =
-      opts[:attributes]
-      |> Enum.map(fn {name, value} -> %{name: Atom.to_string(name), value: value} end)
-    angle = case pose.angle do
-      0 -> nil
-      x when is_number(x) -> x
-    end
-    assigns = %{
-      sprite: sprite,
-      socket: socket,
-      position: sprite |> position_add(pose) |> position,
-      class: opts[:class],
-      attributes: attributes,
-      angle: angle
-    }
-    render("_relative_sprite.html", assigns)
   end
 
   def center(%{x: _x, y: _y} = position, opts \\ []) do

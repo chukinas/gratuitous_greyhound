@@ -18,6 +18,23 @@ defmodule ChukinasWeb.SpriteView do
     render("static_sprite.html", assigns)
   end
 
+  def absolute_sprite(conn, %Sprite{} = sprite, opts \\ []) do
+    pose = Keyword.get(opts, :pose, pose_origin())
+    angle = case pose.angle do
+      0 -> nil
+      x when is_number(x) -> x
+    end
+    assigns = %{
+      sprite: sprite,
+      conn: conn,
+      position: sprite |> position_add(pose) |> position,
+      class: Keyword.get(opts, :class, ""),
+      attributes: opts |> Keyword.get(:attributes, []) |> attributes_to_maps,
+      angle: angle
+    }
+    render("absolute_sprite.html", assigns)
+  end
+
   def drop_shadow(%Sprite{} = sprite) do
     assigns = [
       sprite: sprite,
@@ -27,6 +44,10 @@ defmodule ChukinasWeb.SpriteView do
       image_viewbox: ChukinasWeb.Shared.viewbox(sprite.image_size)
     ]
     render("static_sprite.html", assigns)
+  end
+
+  defp attributes_to_maps(attrs) when is_list(attrs) do
+    Enum.map(attrs, fn {name, value} -> %{name: Atom.to_string(name), value: value} end)
   end
 
 end

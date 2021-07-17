@@ -15,7 +15,7 @@
   <%# Sprites %>
   <div class="relative">
     <%= for frame <- @animation.frames do %>
-      <%= ChukinasWeb.DreadnoughtView.relative_sprite frame.sprite, @socket,
+      <%= ChukinasWeb.SpriteView.absolute_sprite @socket, frame.sprite,
         class: "invisible",
         attributes: [
           "data-duration": frame.duration
