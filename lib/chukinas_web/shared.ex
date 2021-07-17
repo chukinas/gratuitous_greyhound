@@ -26,4 +26,12 @@ defmodule ChukinasWeb.Shared do
     Enum.join([0, 0 | values], " ")
   end
 
+  def attrs(nil), do: nil
+  def attrs(attrs) when is_list(attrs) do
+    assigns = [attrs: (for attr <- attrs, do: attr_to_map(attr))]
+    ChukinasWeb.SharedView.render("attrs.html", assigns)
+  end
+
+  defp attr_to_map({name, value}), do: %{name: Atom.to_string(name), value: value}
+
 end

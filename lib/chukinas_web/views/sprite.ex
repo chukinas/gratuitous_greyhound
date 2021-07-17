@@ -26,7 +26,7 @@ defmodule ChukinasWeb.SpriteView do
       conn: conn,
       sprite: sprite,
       # TODO rename attrs
-      attrs: opts |> Keyword.get(:attrs, []) |> attributes_to_maps,
+      attrs: opts[:attrs],
       drop_shadow_padding: @drop_shadow_padding,
       position:
         sprite
@@ -61,11 +61,6 @@ defmodule ChukinasWeb.SpriteView do
       image_viewbox: ChukinasWeb.Shared.viewbox(sprite.image_size)
     ]
     render("static_sprite.html", assigns)
-  end
-
-  # TODO move to CommonMarkupView
-  defp attributes_to_maps(attrs) when is_list(attrs) do
-    Enum.map(attrs, fn {name, value} -> %{name: Atom.to_string(name), value: value} end)
   end
 
 end

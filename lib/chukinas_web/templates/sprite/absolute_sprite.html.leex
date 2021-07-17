@@ -9,10 +9,7 @@
     transform-origin: <%= @transform_origin.x %>px <%= @transform_origin.y %>px;
     padding: <%= @drop_shadow_padding %>px;
   "
-  <%# TODO move this into own template %>
-  <%= for attr <- @attrs do %>
-    <%= attr.name %>="<%= attr.value %>"
-  <% end %>
+  <%= ChukinasWeb.Shared.attrs(@attrs) %>
 >
   <%= ChukinasWeb.SpriteView.static_sprite @conn, @sprite %>
 </div>
