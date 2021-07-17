@@ -8,6 +8,12 @@ defmodule ChukinasWeb.Shared do
     DreadnoughtPlayView.render_rect_as_style_attrs(rect)
   end
 
+  def left_top_from_number(number) when is_number(number) do
+    number
+    |> position_new(number)
+    |> left_top_from_position
+  end
+
   def left_top_from_position(position) do
     DreadnoughtPlayView.left_top_from_position position
   end

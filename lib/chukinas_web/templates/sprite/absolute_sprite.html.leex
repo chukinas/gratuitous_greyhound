@@ -7,9 +7,23 @@
       transform: rotate(<%= @angle %>deg); 
     <% end %>
     transform-origin: <%= @transform_origin.x %>px <%= @transform_origin.y %>px;
-    padding: <%= @drop_shadow_padding %>px;
   "
   <%= ChukinasWeb.Shared.attrs(@attrs) %>
 >
-  <%= ChukinasWeb.SpriteView.static_sprite @conn, @sprite %>
+  <div
+    class="relative"
+    style="
+      <%= ChukinasWeb.Shared.width_height_from_size(@size) %>
+    "
+  >
+    <!-- Static Sprite -->
+    <div
+      class="absolute"
+      style="
+        <%= ChukinasWeb.Shared.left_top_from_number(@drop_shadow_padding) %>
+      "
+    >
+      <%= ChukinasWeb.SpriteView.static_sprite @conn, @sprite %>
+    </div>
+  </div>
 </div>

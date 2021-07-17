@@ -41,8 +41,8 @@ defmodule ChukinasWeb.SpriteView do
         end,
       size:
         sprite
+        |> size_add(2 * @drop_shadow_padding)
         |> size_new,
-        #|> size_add(2 * @drop_shadow_padding),
       transform_origin:
         sprite
         |> position_multiply(-1)
