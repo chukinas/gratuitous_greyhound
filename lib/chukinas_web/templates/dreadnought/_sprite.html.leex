@@ -8,9 +8,20 @@
       <%= ChukinasWeb.Shared.width_height_from_size(@image_size) %>
       <%= ChukinasWeb.Shared.left_top_from_position(@transform) %>
     ">
-    <img 
-      style="clip-path: path('<%= @image_clip_path %>');"
-      src="<%= Routes.static_path @socket, @image_file_path %>">
+    <%# https://stackoverflow.com/questions/6088409/svg-drop-shadow-using-css3 %>
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="<%= @image_viewbox %>">
+      <defs>
+        <filter id="dropshadow" height="130%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="3"/> 
+          <feOffset dx="2" dy="2" result="offsetblur"/> 
+          <feMerge> 
+            <feMergeNode/>
+            <feMergeNode in="SourceGraphic"/> 
+          </feMerge>
+        </filter>
+      </defs>
+      <path d="<%= @image_clip_path %>" filter="url(#dropshadow)"/>
+    </svg>
   </div>
   <div
     class="absolute"
@@ -18,8 +29,8 @@
       <%= ChukinasWeb.Shared.width_height_from_size(@image_size) %>
       <%= ChukinasWeb.Shared.left_top_from_position(@transform) %>
     ">
-    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="<%= @image_viewbox %>">
-      <path d="<%= @image_clip_path %>" fill="#FF555500"/>
-    </svg>
+    <img 
+      style="clip-path: path('<%= @image_clip_path %>');"
+      src="<%= Routes.static_path @socket, @image_file_path %>">
   </div>
 </div>
