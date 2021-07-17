@@ -58,7 +58,7 @@ defmodule Chukinas.Dreadnought.Mission do
   end
 
   # *** *******************************
-  # *** GETTERS
+  # *** CONVERTERS
 
   def grid(%__MODULE__{grid: value}), do: value
 
@@ -87,6 +87,12 @@ defmodule Chukinas.Dreadnought.Mission do
 
   def units(%{units: units}), do: units
 
+  def unit_by_id(%__MODULE__{} = mission, id) when is_integer(id) do
+    mission
+    |> units
+    |> IdList.fetch!(id)
+  end
+
   @spec unit_count(t) :: integer
   def unit_count(mission) do
     mission
@@ -112,7 +118,7 @@ defmodule Chukinas.Dreadnought.Mission do
   end
 
   # *** *******************************
-  # *** SETTERS
+  # *** REDUCERS
 
   def put(mission, list) when is_list(list), do: Enum.reduce(list, mission, &put(&2, &1))
   def put(mission, %Unit{} = unit), do: Maps.put_by_id(mission, :units, unit)
