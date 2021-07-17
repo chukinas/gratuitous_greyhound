@@ -6,6 +6,8 @@ defmodule ChukinasWeb.SpriteView do
   use Chukinas.LinearAlgebra
   alias Chukinas.Dreadnought.Sprite
 
+  @drop_shadow_padding 10
+
   def static_sprite(conn, %Sprite{} = sprite) do
     assigns = [
       socket: conn,
@@ -20,17 +22,32 @@ defmodule ChukinasWeb.SpriteView do
 
   def absolute_sprite(conn, %Sprite{} = sprite, opts \\ []) do
     pose = Keyword.get(opts, :pose, pose_origin())
-    angle = case pose.angle do
-      0 -> nil
-      x when is_number(x) -> x
-    end
     assigns = %{
-      sprite: sprite,
       conn: conn,
-      position: sprite |> position_add(pose) |> position,
+      sprite: sprite,
+      # TODO rename attrs
+      attrs: opts |> Keyword.get(:attrs, []) |> attributes_to_maps,
+      drop_shadow_padding: @drop_shadow_padding,
+      position:
+        sprite
+        |> position_add(pose)
+        |> position_subtract(@drop_shadow_padding)
+        |> position_new,
       class: Keyword.get(opts, :class, ""),
-      attributes: opts |> Keyword.get(:attributes, []) |> attributes_to_maps,
-      angle: angle
+      angle:
+        case pose.angle do
+          0 -> nil
+          x when is_number(x) -> x
+        end,
+      size:
+        sprite
+        |> size_new,
+        #|> size_add(2 * @drop_shadow_padding),
+      transform_origin:
+        sprite
+        |> position_multiply(-1)
+        |> position_add(@drop_shadow_padding)
+        |> position_new
     }
     render("absolute_sprite.html", assigns)
   end
@@ -46,6 +63,7 @@ defmodule ChukinasWeb.SpriteView do
     render("static_sprite.html", assigns)
   end
 
+  # TODO move to CommonMarkupView
   defp attributes_to_maps(attrs) when is_list(attrs) do
     Enum.map(attrs, fn {name, value} -> %{name: Atom.to_string(name), value: value} end)
   end

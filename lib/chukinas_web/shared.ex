@@ -4,6 +4,7 @@ defmodule ChukinasWeb.Shared do
   use Chukinas.PositionOrientationSize
 
   def top_left_width_height_from_rect(rect) do
+    # TODO extract all these methods into this module
     DreadnoughtPlayView.render_rect_as_style_attrs(rect)
   end
 

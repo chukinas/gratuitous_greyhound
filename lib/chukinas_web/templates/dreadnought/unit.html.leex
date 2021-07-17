@@ -15,7 +15,7 @@
     <%= ChukinasWeb.SpriteView.absolute_sprite @socket, @unit.sprite %>
     <%= for turret <- @unit.turrets do %>
       <%= ChukinasWeb.SpriteView.absolute_sprite @socket, turret.sprite, 
-          attributes: [id: "unit-#{@unit.id}-mount-#{turret.id}"],
+          attrs: [id: "unit-#{@unit.id}-mount-#{turret.id}"],
           pose: turret %>
     <% end %>
   </div>

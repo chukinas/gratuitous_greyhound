@@ -1,13 +1,16 @@
 <div 
-  class="dreadnought-relative-sprite absolute <%= @class %>"
+  absolute_sprite
+  class="absolute <%= @class %> bg-green-500/50"
   style="
     <%= ChukinasWeb.Shared.left_top_from_position(@position) %>
     <%= if @angle do %>
       transform: rotate(<%= @angle %>deg); 
     <% end %>
-    transform-origin: <%= -@sprite.x %>px <%= -@sprite.y %>px;
+    transform-origin: <%= @transform_origin.x %>px <%= @transform_origin.y %>px;
+    padding: <%= @drop_shadow_padding %>px;
   "
-  <%= for attr <- @attributes do %>
+  <%# TODO move this into own template %>
+  <%= for attr <- @attrs do %>
     <%= attr.name %>="<%= attr.value %>"
   <% end %>
 >
