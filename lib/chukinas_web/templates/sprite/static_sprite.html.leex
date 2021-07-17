@@ -1,6 +1,6 @@
 <%# Sprite Template %>
 <div 
-  class="relative overflow-hidden"
+  class="relative"
   style="<%= ChukinasWeb.Shared.width_height_from_size(@rect) %>">
   <div
     class="absolute"
@@ -11,8 +11,8 @@
     <%# https://stackoverflow.com/questions/6088409/svg-drop-shadow-using-css3 %>
     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="<%= @image_viewbox %>">
       <defs>
-        <filter id="dropshadow" height="130%">
-          <feGaussianBlur in="SourceAlpha" stdDeviation="3"/> 
+        <filter id="dropshadow" height="160%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="2"/> 
           <feOffset dx="2" dy="2" result="offsetblur"/> 
           <feMerge> 
             <feMergeNode/>
