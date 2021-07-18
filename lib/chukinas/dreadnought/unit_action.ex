@@ -19,11 +19,11 @@ defmodule UnitAction do
     field :mode, mode()
     # TODO rename target?
     # TODO replace :exit_or_run_aground with :noop
-    field :value, :exit_or_run_aground | POS.position_type | :noop
+    field :value, :exit_or_run_aground | POS.position_type | :noop | unit_id
   end
 
   # *** *******************************
-  # *** NEW
+  # *** CONSTRUCTORS
 
   defp new(unit_id, mode, value) when is_integer(unit_id) and mode in @mode do
     %__MODULE__{
@@ -45,7 +45,7 @@ defmodule UnitAction do
   def combat_noop(unit_id), do: new(unit_id, :combat, :noop)
 
   # *** *******************************
-  # *** GETTERS
+  # *** CONVERTERS
 
   def is_maneuver?(action), do: action.mode == :maneuver
   def combat?(action), do: action.mode == :combat

@@ -37,6 +37,73 @@ defmodule Chukinas.Dreadnought.ActionSelection do
   end
 
   # *** *******************************
+  # *** REDUCERS
+
+  def put(%__MODULE__{} = action_selection, list) when is_list(list) do
+    Enum.reduce(list, action_selection, fn item, action_selection ->
+      action_selection |> put(item)
+    end)
+  end
+
+  def put(%__MODULE__{} = action_selection, %UnitAction{} = command) do
+    action_selection
+    |> Map.update!(:actions, & [command | &1])
+    |> calc_current
+  end
+
+  # *** *******************************
+  # *** REDUCERS (PRIVATE)
+
+  defp calc_current(action_selection) do
+    action_selection
+    |> calc_current_action
+    |> calc_current_targets
+    |> maybe_combat_noop
+  end
+
+  defp calc_current_action(action_selection) do
+    {id, mode} = next_pending_action(action_selection)
+    %__MODULE__{action_selection |
+      current_unit_id: id,
+      current_mode: mode
+    }
+    |> maybe_put_maneuver
+  end
+
+  defp calc_current_targets(action_selection) do
+    targets = if combat?(action_selection), do: action_selection.enemy_unit_ids, else: []
+    %__MODULE__{action_selection | current_target_unit_ids: targets}
+  end
+
+  defp maybe_combat_noop(%{
+    current_target_unit_ids: targets,
+    current_unit_id: unit_id
+  } = action_selection) do
+    if Enum.empty?(targets) and combat?(action_selection) do
+      action_selection
+      |> put(UnitAction.combat_noop(unit_id))
+      |> calc_current
+    else
+      action_selection
+    end
+  end
+
+  defp maybe_put_maneuver(action_selection) do
+    current_action_selection = case current_mode(action_selection) do
+      :maneuver ->
+        # TODO this is pretty ugly
+        squares = maneuver_squares_for_current_unit(action_selection)
+        case Enum.count(squares) do
+          0 -> nil
+          _ -> Maneuver.new(current_unit_id(action_selection), squares)
+        end
+      _ ->
+        nil
+    end
+    %__MODULE__{action_selection | current_action_selection: current_action_selection}
+  end
+
+  # *** *******************************
   # *** CONVERTERS
 
   def actions(%__MODULE__{actions: value}), do: value
@@ -95,20 +162,6 @@ defmodule Chukinas.Dreadnought.ActionSelection do
   end
 
   # *** *******************************
-  # *** SETTERS
-
-  def put(%__MODULE__{} = action_selection, list) when is_list(list) do
-    Enum.reduce(list, action_selection, fn item, action_selection ->
-      action_selection |> put(item)
-    end)
-  end
-  def put(%__MODULE__{} = action_selection, %UnitAction{} = command) do
-    action_selection
-    |> Map.update!(:actions, & [command | &1])
-    |> calc_current
-  end
-
-  # *** *******************************
   # *** PLAYER-ISSUED ACTIONS
 
   # TODO move this to Maneuver action selection?
@@ -121,57 +174,6 @@ defmodule Chukinas.Dreadnought.ActionSelection do
     unit_id = current_unit_id(action_selection)
     action = UnitAction.fire_upon(unit_id, target_unit_id)
     action_selection |> put(action)
-  end
-
-  # *** *******************************
-  # *** PRIVATE
-
-  defp calc_current(action_selection) do
-    action_selection
-    |> calc_current_action
-    |> calc_current_targets
-    |> maybe_combat_noop
-  end
-  defp calc_current_action(action_selection) do
-    {id, mode} = next_pending_action(action_selection)
-    %__MODULE__{action_selection |
-      current_unit_id: id,
-      current_mode: mode
-    }
-    |> maybe_put_maneuver
-  end
-
-  defp calc_current_targets(action_selection) do
-    targets = if combat?(action_selection), do: action_selection.enemy_unit_ids, else: []
-    %__MODULE__{action_selection | current_target_unit_ids: targets}
-  end
-
-  defp maybe_combat_noop(%{
-    current_target_unit_ids: targets,
-    current_unit_id: unit_id
-  } = action_selection) do
-    if Enum.empty?(targets) and combat?(action_selection) do
-      action_selection
-      |> put(UnitAction.combat_noop(unit_id))
-      |> calc_current
-    else
-      action_selection
-    end
-  end
-
-  defp maybe_put_maneuver(action_selection) do
-    current_action_selection = case current_mode(action_selection) do
-      :maneuver ->
-        # TODO this is pretty ugly
-        squares = maneuver_squares_for_current_unit(action_selection)
-        case Enum.count(squares) do
-          0 -> nil
-          _ -> Maneuver.new(current_unit_id(action_selection), squares)
-        end
-      _ ->
-        nil
-    end
-    %__MODULE__{action_selection | current_action_selection: current_action_selection}
   end
 
   # *** *******************************

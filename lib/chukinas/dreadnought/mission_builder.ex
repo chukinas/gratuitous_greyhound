@@ -1,10 +1,12 @@
 defmodule Chukinas.Dreadnought.MissionBuilder do
 
   use Chukinas.PositionOrientationSize
+  alias Chukinas.Dreadnought.ActionSelection
   alias Chukinas.Dreadnought.Island
   alias Chukinas.Dreadnought.Mission
   alias Chukinas.Dreadnought.Player
   alias Chukinas.Dreadnought.Unit
+  alias Chukinas.Dreadnought.UnitAction
   alias Chukinas.Dreadnought.Unit.Builder, as: UnitBuilder
   alias Chukinas.Geometry.Grid
 
@@ -17,12 +19,20 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
     inputs = [
       Player.new_manual(1),
       Player.new_manual(2),
-      UnitBuilder.red_cruiser(1, 1),
-      # TODO need to add an enemy "Unit"
     ]
-    Mission.new("homepage", grid, margin)
-    |> Mission.put(inputs)
-    |> Mission.start
+    units = [
+      UnitBuilder.red_cruiser(1, 1),
+      UnitBuilder.blue_destroyer(2, 2, pose_new(50, 300, 0))
+    ]
+    action_selection =
+      ActionSelection.new(1, units, [])
+      |> ActionSelection.put(UnitAction.fire_upon(1, 2))
+    mission =
+      Mission.new("homepage", grid, margin)
+      |> Mission.put(inputs)
+      |> Mission.put(units)
+      |> Mission.start
+      #|> Mission.put_action_selection_and_end_turn(action_selection)
   end
 
   @spec online(String.t) :: Mission.t

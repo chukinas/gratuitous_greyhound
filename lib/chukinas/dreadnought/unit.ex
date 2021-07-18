@@ -16,7 +16,7 @@ defmodule Chukinas.Dreadnought.Unit do
 
   typedstruct enforce: true do
     field :id, integer()
-    field :name, String.t()
+    field :name, String.t(), enforce: false
     field :player_id, integer
     field :sprite, Sprites.t
     field :turrets, [Turret.t()]

@@ -49,8 +49,8 @@ defmodule Chukinas.Util.IdList do
     |> Enum.reverse
   end
 
-  def drop(enum, id) do
-    Enum.filter(enum, fn item -> _not_match?(item, id, :id) end)
+  def drop(enum, id, key \\ :id) do
+    Enum.filter(enum, fn item -> _not_match?(item, id, key) end)
   end
 
   # *** *******************************

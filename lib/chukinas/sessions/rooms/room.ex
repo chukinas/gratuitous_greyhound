@@ -14,7 +14,7 @@ defmodule Chukinas.Sessions.Room do
   end
 
   # *** *******************************
-  # *** NEW
+  # *** CONSTRUCTORS
 
   def new(room_name) do
     %__MODULE__{
@@ -25,7 +25,27 @@ defmodule Chukinas.Sessions.Room do
   end
 
   # *** *******************************
-  # *** GETTERS /1
+  # *** REDUCERS
+
+  def put_mission(%__MODULE__{} = room, mission) do
+    %__MODULE__{room | mission: mission}
+  end
+
+  def put_players(%__MODULE__{} = room, players) do
+    mission = room.mission |> Mission.put(players)
+    put_mission(room, mission)
+  end
+
+  def update_players(%__MODULE__{} = room, fun) do
+    players =
+      room
+      |> players
+      |> fun.()
+    put_players(room, players)
+  end
+
+  # *** *******************************
+  # *** CONVERTERS /1
 
   def mission(%__MODULE__{mission: value}), do: value
 
@@ -63,7 +83,7 @@ defmodule Chukinas.Sessions.Room do
   end
 
   # *** *******************************
-  # *** GETTERS /2
+  # *** CONVERTERS /2
 
   def players_except(room, unwanted_player_uuid) do
     room
@@ -86,27 +106,18 @@ defmodule Chukinas.Sessions.Room do
   end
 
   # *** *******************************
-  # *** SETTERS
+  # *** CONVERTERS (PRIVATE)
 
-  def put_mission(%__MODULE__{} = room, mission) do
-    %__MODULE__{room | mission: mission}
+  @spec maybe_start_game(t) :: t
+  defp maybe_start_game(room) do
+    update_mission(room, &MissionBuilder.maybe_start/1)
   end
 
-  def put_players(%__MODULE__{} = room, players) do
-    mission = room.mission |> Mission.put(players)
-    put_mission(room, mission)
-  end
-
-  def update_players(%__MODULE__{} = room, fun) do
-    players =
-      room
-      |> players
-      |> fun.()
-    put_players(room, players)
-  end
+  @spec ok(t) :: {:ok, t}
+  defp ok(room), do: {:ok, room}
 
   # *** *******************************
-  # *** API
+  # *** BOUNDARY API
 
   @spec add_player(t, String.t, String.t) :: {:ok, t}
   def add_player(room, player_uuid, player_name) do
@@ -115,9 +126,9 @@ defmodule Chukinas.Sessions.Room do
     |> ok
   end
 
-  def drop_player(room, player_uuid) do
-    players = players_except(room, player_uuid)
-    room = put_players(room, players)
+  def drop_player(%__MODULE__{} = room, player_uuid) do
+    mission_update = &Mission.drop_player_by_uuid(&1, player_uuid)
+    room = update_mission(room, mission_update)
     if empty?(room) do
       {:empty, room}
     else
@@ -144,16 +155,5 @@ defmodule Chukinas.Sessions.Room do
     |> put_mission(room |> mission |> fun.())
     |> ok
   end
-
-  # *** *******************************
-  # *** PRIVATE
-
-  @spec maybe_start_game(t) :: t
-  defp maybe_start_game(room) do
-    Map.update!(room, :mission, &MissionBuilder.maybe_start/1)
-  end
-
-  @spec ok(t) :: {:ok, t}
-  defp ok(room), do: {:ok, room}
 
 end
