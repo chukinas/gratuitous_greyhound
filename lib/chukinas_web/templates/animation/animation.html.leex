@@ -1,4 +1,5 @@
 <div
+  animation
   id="<%= @animation.id_string %>"
   class="absolute"
   style="
@@ -13,7 +14,7 @@
 
 
   <%# Sprites %>
-  <div class="relative">
+  <div animation_frames class="relative">
     <%= for frame <- @animation.frames do %>
       <%= ChukinasWeb.SpriteView.absolute_sprite @socket, frame.sprite,
         class: "invisible",
