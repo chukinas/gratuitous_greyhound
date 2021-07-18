@@ -6,7 +6,7 @@ defmodule Chukinas.Dreadnought.Animations do
   alias Chukinas.Dreadnought.Sprites
 
   # *** *******************************
-  # *** NEW
+  # *** CONSTRUCTORS
 
   def simple_muzzle_flash(pose, delay \\ 0) when is_number(delay) do
     "simple muzzle flash"
@@ -35,14 +35,17 @@ defmodule Chukinas.Dreadnought.Animations do
   end
 
   # *** *******************************
-  # *** API
+  # *** REDUCERS
 
   defdelegate repeat(animation), to: Animation
+
+  # *** *******************************
+  # *** CONVERTERS
 
   defdelegate bounding_rect(animation), to: Animation
 
   # *** *******************************
-  # *** PRIVATE
+  # *** PRIVATE HELPERS
 
   defp rand_explosion_frame(duration) do
     "explosion_" <> Enum.random(~w(1 2 3))

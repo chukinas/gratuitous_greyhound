@@ -52,7 +52,6 @@ defmodule ChukinasWeb.SpriteView do
   end
 
   def drop_shadow(%Sprite{} = sprite) do
-    IOP.inspect(sprite, "sprite view")
     assigns = [
       padded_image_size:
         sprite.image_size
@@ -71,7 +70,6 @@ defmodule ChukinasWeb.SpriteView do
         |> position_multiply(-1)
         |> position_new
     ]
-    |> IOP.inspect
     render("drop_shadow.html", assigns)
   end
 

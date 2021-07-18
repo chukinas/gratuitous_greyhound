@@ -12,9 +12,10 @@
       style="transform:scale(<%= @unit.scale %>); height:<%= @unit.height %>px">
       <div class="h-full w-full transform translate-x-1/2 translate-y-1/2 relative">
         <%= ChukinasWeb.DreadnoughtView.render "unit.html",
-        socket: @socket,
-        turn_number: 1,
-        unit: @unit.unit %>
+          socket: @socket,
+          turn_number: 1,
+          unit: @unit.unit %>
+        <%= ChukinasWeb.AnimationView.animations @socket, @mission.gunfire %>
       </div>
     </div>
     <%= for button_text <- ~w/Play Gallery/ do %>
