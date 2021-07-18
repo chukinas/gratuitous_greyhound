@@ -46,6 +46,7 @@ defmodule ChukinasWeb.Shared do
     ChukinasWeb.SharedView.render("attrs.html", assigns)
   end
 
+  defp attr_to_map(%{name: _name, value: _value} = map), do: map
   defp attr_to_map({name, value}), do: %{name: Atom.to_string(name), value: value}
 
 end

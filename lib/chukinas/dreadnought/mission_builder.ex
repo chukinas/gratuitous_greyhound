@@ -27,12 +27,11 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
     action_selection =
       ActionSelection.new(1, units, [])
       |> ActionSelection.put(UnitAction.fire_upon(1, 2))
-    mission =
-      Mission.new("homepage", grid, margin)
-      |> Mission.put(inputs)
-      |> Mission.put(units)
-      |> Mission.start
-      #|> Mission.put_action_selection_and_end_turn(action_selection)
+    Mission.new("homepage", grid, margin)
+    |> Mission.put(inputs)
+    |> Mission.put(units)
+    |> Mission.start
+    |> Mission.put_action_selection_and_end_turn(action_selection)
   end
 
   @spec online(String.t) :: Mission.t

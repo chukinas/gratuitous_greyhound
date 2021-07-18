@@ -2,7 +2,6 @@ defmodule Chukinas.Dreadnought.CombatAction do
 
   use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra
-  alias Chukinas.Collide
   alias Chukinas.Dreadnought.Animations
   alias Chukinas.Dreadnought.CombatAction.Accumulator, as: Acc
   alias Chukinas.Dreadnought.Turret
@@ -34,7 +33,7 @@ defmodule Chukinas.Dreadnought.CombatAction do
     with(
       {:ok, target_vector} <- target_vector(acc),
       {:ok, turret_angle } <- turret_angle(acc, target_vector, turret_id),
-      {:ok, path         } <- path_to_target(acc, target_vector, turret_id),
+      {:ok, path         } <- Acc.path_to_target(acc, target_vector, turret_id),
       {:ok, range        } <- range_to_target(path)
     ) do
       fire_turret(acc, turret_id, turret_angle, range, path)
@@ -62,23 +61,6 @@ defmodule Chukinas.Dreadnought.CombatAction do
     case Turret.normalize_desired_angle(turret, desired_angle) do
       {:ok, angle} -> {:ok, angle}
       {_, _angle} -> {:fail, :out_of_fire_arc}
-    end
-  end
-
-  defp path_to_target(%Acc{} = acc, target_vector, turret_id) do
-    turret = Acc.turret(acc, turret_id)
-    attacker = Acc.attacker(acc)
-    # TODO rename turret_coord
-    turret_vector = vector_transform_from(turret, attacker)
-    path_vector = Vector.subtract(target_vector, turret_vector)
-    angle = Vector.angle(path_vector)
-    path_start_pose = pose_new(turret_vector, angle)
-    range = Vector.magnitude(path_vector)
-    path = Paths.straight_new(path_start_pose, range)
-    if Collide.avoids_collision_with?(path, Acc.islands(acc)) do
-      {:ok, path}
-    else
-      {:fail, :intervening_terrain}
     end
   end
 
