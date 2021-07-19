@@ -6,7 +6,6 @@ defmodule Circle do
   use Chukinas.Math
   use Chukinas.PositionOrientationSize
   use TypedStruct
-  alias Chukinas.LinearAlgebra
 
   # *** *******************************
   # *** TYPES
@@ -21,7 +20,7 @@ defmodule Circle do
   # *** NEW
 
   def new(csys, radius, rotation)
-  when has_csys(csys)
+  when is_csys(csys)
   and radius > 0
   and rotation in [:cw, :ccw] do
     fields =
@@ -55,10 +54,10 @@ defmodule Circle do
 
   def signed_radius(point_coords, tangent_csys)
   when is_vector(point_coords)
-  and has_csys(tangent_csys) do
+  and is_csys(tangent_csys) do
     {x, y} = _other_coordintate_wrt_tangent_csys =
       point_coords
-      |> vector_wrt_csys(tangent_csys)
+      |> vector_wrt(tangent_csys)
     (x * x + y * y) / (2 * y)
   end
 
@@ -208,7 +207,7 @@ defmodule Circle do
   """
   def traversal_angle_at_coord(circle, coord) do
     coord
-    |> LinearAlgebra.angle_of_coord_wrt_csys(circle)
+    |> vector_angle_wrt(circle)
     |> mult(circle |> sign_of_rotation)
     |> normalize_angle
   end

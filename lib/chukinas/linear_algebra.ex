@@ -2,6 +2,7 @@ defmodule Chukinas.LinearAlgebra do
 
   use Chukinas.Math
   use Chukinas.PositionOrientationSize
+  use Chukinas.LinearAlgebra.Csys.Guards
   alias Chukinas.PositionOrientationSize, as: POS
   alias Chukinas.LinearAlgebra.Angle
   alias Chukinas.LinearAlgebra.Csys
@@ -27,8 +28,10 @@ defmodule Chukinas.LinearAlgebra do
     quote do
       require Chukinas.LinearAlgebra
       import Chukinas.LinearAlgebra
-      import Chukinas.LinearAlgebra.CsysApi
       import Chukinas.LinearAlgebra.VectorApi
+      import Chukinas.LinearAlgebra.CsysApi
+      import Chukinas.LinearAlgebra.TransformApi
+      use Chukinas.LinearAlgebra.Csys.Guards
     end
   end
 
@@ -45,10 +48,6 @@ defmodule Chukinas.LinearAlgebra do
     end
   end
 
-  defguard has_csys(csys)
-    when is_map_key(csys, :orientation)
-    and is_map_key(csys, :location)
-
   defguard is_coord(vec) when Guards.is_vector(vec)
 
   defguard is_vector(vec) when Guards.is_vector(vec)
@@ -59,27 +58,6 @@ defmodule Chukinas.LinearAlgebra do
   def merge_csys(map, csys_map), do: Maps.merge(map, csys_map, Csys)
 
   def merge_csys!(map, csys_map), do: Maps.merge!(map, csys_map, Csys)
-
-  # *** *******************************
-  # *** POSE -> VECTOR
-
-  @spec vector_wrt_csys(Vector.t, Csys.t) :: Vector.t
-  def vector_wrt_csys(vector, csys) do
-    csys
-    |> CsysApi.csys_invert
-    |> Csys.transform_vector(vector)
-  end
-
-  def angle_of_coord_wrt_csys(coord, csys) do
-    Angle.of_coord_wrt_csys(coord, csys)
-  end
-
-  def vector_from_csys_and_polar(csys, angle, radius) do
-    csys
-    |> CsysApi.csys_rotate(angle)
-    |> CsysApi.csys_translate({:forward, radius})
-    |> CsysApi.csys_to_coord_vector
-  end
 
   # *** *******************************
   # *** ANGLE
@@ -111,7 +89,7 @@ defmodule Chukinas.LinearAlgebra do
   defp coerce_to_csys(pose) when has_pose(pose) do
     CsysApi.csys_from_pose(pose)
   end
-  defp coerce_to_csys(csys) when has_csys(csys) do
+  defp coerce_to_csys(csys) when is_csys(csys) do
     CsysApi.csys_from_map(csys)
   end
   defp coerce_to_csys(vector) when is_vector(vector) do
