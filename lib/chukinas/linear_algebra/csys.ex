@@ -104,9 +104,20 @@ defmodule Chukinas.LinearAlgebra.Csys do
   # *** *******************************
   # *** CONVERTERS
 
-  def orientation(%{orientation: value}), do: value
+  def angle(csys) do
+    csys
+    |> orientation_matrix
+    |> OrientationMatrix.angle
+  end
+
+  def orientation_matrix(%{orientation: value}), do: value
+
+  # TODO deprecate
+  def orientation(csys), do: orientation_matrix(csys)
 
   def location(%{location: value}), do: value
+
+  def coord(%{location: value}), do: value
 
   def pose(%{} = csys) do
     angle =

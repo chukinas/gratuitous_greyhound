@@ -183,7 +183,7 @@ defmodule Circle do
 
   def coord_after_traversing_angle(circle, angle) do
     csys_after_traversing_angle(circle, angle)
-    |> coord_from_csys
+    |> csys_to_coord_vector
   end
 
   def coord_after_traversing_distance(circle, distance) do

@@ -50,6 +50,13 @@ defmodule Chukinas.LinearAlgebra.OrientationMatrix do
   @spec y_axis(t) :: vector
   def y_axis({x, y}), do: {-y, x}
 
+  @spec angle(t) :: number
+  def angle(matrix) do
+    matrix
+    |> x_axis
+    |> VectorApi.to_angle
+  end
+
   @doc"""
   Return vector of same magnitude, but parallel to x-axis of orientation matrix
   """

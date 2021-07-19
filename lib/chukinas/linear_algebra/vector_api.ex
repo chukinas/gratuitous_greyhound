@@ -33,6 +33,8 @@ defmodule Chukinas.LinearAlgebra.VectorApi do
   # *** *******************************
   # *** CONVERTERS
 
+  def vector_to_angle(vector), do: Vector.angle(vector)
+
   def vector_to_magnitude(vector), do: Vector.magnitude(vector)
 
   def vector_to_position({x, y}), do: POS.position_new(x, y)

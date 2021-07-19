@@ -63,13 +63,6 @@ defmodule Chukinas.LinearAlgebra do
   # *** *******************************
   # *** CSYS
 
-  def csys_from_vector(vector) when is_vector(vector) do
-    Csys.new %{
-      orientation: VectorApi.vector_from_angle(0),
-      location: vector
-    }
-  end
-
   @spec csys_new(any) :: Csys.t
   defdelegate csys_new(pose_or_csys), to: Csys, as: :new
   def csys_new(x, y, angle), do: pose_new(x, y, angle) |> csys_new
@@ -93,20 +86,6 @@ defmodule Chukinas.LinearAlgebra do
   defdelegate csys_invert(csys), to: Csys, as: :invert
 
   # *** *******************************
-  # *** CSYS -> VECTOR
-
-  def coord_from_csys(csys), do: position_vector_from_csys(csys)
-
-  # replace this with the above *from* functino?
-  def coord_of_csys(csys), do: position_vector_from_csys(csys)
-
-  def position_vector_from_csys(csys), do: Csys.location(csys)
-
-  def angle_from_csys_orientation(csys) do
-    csys |> Csys.orientation |> Vector.angle
-  end
-
-  # *** *******************************
   # *** POSE -> VECTOR
 
   # TODO rename these e.g. position_vector_forward?
@@ -114,7 +93,7 @@ defmodule Chukinas.LinearAlgebra do
     pose_or_csys
     |> csys_new
     |> csys_forward(distance)
-    |> position_vector_from_csys
+    |> CsysApi.csys_to_coord_vector
   end
 
   def vector_left(pose_or_csys, distance) do
@@ -154,7 +133,7 @@ defmodule Chukinas.LinearAlgebra do
     csys
     |> csys_rotate(angle)
     |> csys_forward(radius)
-    |> coord_of_csys
+    |> CsysApi.csys_to_coord_vector
   end
 
   # *** *******************************
@@ -196,7 +175,7 @@ defmodule Chukinas.LinearAlgebra do
     csys_new(csys)
   end
   defp coerce_to_csys(vector) when is_vector(vector) do
-    csys_from_vector vector
+    CsysApi.csys_from_coord(vector)
   end
 
 
