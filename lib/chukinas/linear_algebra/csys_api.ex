@@ -86,6 +86,10 @@ defmodule Chukinas.LinearAlgebra.CsysApi do
   # TODO needed?
   def csys_translate(csys, {:forward, distance}), do: Csys.forward(csys, distance)
 
+  def csys_translate(csys, vector) when is_vector(vector) do
+    Csys.translate(csys, vector)
+  end
+
   def csys_translate_forward(csys, distance), do: Csys.forward(csys, distance)
 
   # *** *******************************

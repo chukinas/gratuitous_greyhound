@@ -6,13 +6,6 @@ defmodule Chukinas.LinearAlgebra.TransformApi do
   alias Chukinas.LinearAlgebra.Csys
   alias Chukinas.LinearAlgebra.CsysApi
   alias Chukinas.LinearAlgebra.VectorApi
-  #alias Chukinas.LinearAlgebra.VectorApi
-  #alias Chukinas.LinearAlgebra.OrientationMatrix
-  #alias Chukinas.Math
-  #alias Chukinas.PositionOrientationSize, as: POS
-
-  # *** *******************************
-  # *** CONSTRUCTORS
 
   # *** *******************************
   # *** REDUCERS
@@ -74,8 +67,5 @@ defmodule Chukinas.LinearAlgebra.TransformApi do
     end
     Csys.transform_vector(observer, vector)
   end
-
-  # *** *******************************
-  # *** CONVERTERS
 
 end

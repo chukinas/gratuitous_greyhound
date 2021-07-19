@@ -66,19 +66,17 @@ defmodule Chukinas.LinearAlgebra.Csys do
     |> Vector.sum(location)
   end
 
+  def put_coord(csys, coord) do
+    Map.put(csys, :location, coord)
+  end
+
   def rotate(csys, angle) do
     Map.update!(csys, :orientation, &VectorApi.vector_rotate(&1, angle))
   end
 
-  def transform_vector(%__MODULE__{} = csys, vector)
-  when is_vector(vector) do
-    coord_vector =
-      csys
-      |> orientation
-      |> OrientationMatrix.to_rotated_vector(vector)
-    csys
-    |> coord_vector
-    |> VectorApi.vector_add(coord_vector)
+  def translate(csys, vector) do
+    new_coord = transform_vector(csys, vector)
+    put_coord(csys, new_coord)
   end
 
   # *** *******************************
@@ -115,6 +113,17 @@ defmodule Chukinas.LinearAlgebra.Csys do
     csys
     |> location
     |> POS.position_new
+  end
+
+  def transform_vector(%__MODULE__{} = csys, vector)
+  when is_vector(vector) do
+    coord_vector =
+      csys
+      |> orientation
+      |> OrientationMatrix.to_rotated_vector(vector)
+    csys
+    |> coord_vector
+    |> VectorApi.vector_add(coord_vector)
   end
 
 end

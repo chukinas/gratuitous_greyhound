@@ -25,7 +25,6 @@ defmodule Chukinas.LinearAlgebra do
   # *** USING
 
   defmacro __using__(_opts) do
-    # TODO do something with opts
     quote do
       require Chukinas.LinearAlgebra
       import Chukinas.LinearAlgebra
@@ -33,6 +32,7 @@ defmodule Chukinas.LinearAlgebra do
       import Chukinas.LinearAlgebra.CsysApi
       import Chukinas.LinearAlgebra.TransformApi
       use Chukinas.LinearAlgebra.Csys.Guards
+      use Chukinas.LinearAlgebra.Vector.Guards
     end
   end
 
@@ -49,16 +49,10 @@ defmodule Chukinas.LinearAlgebra do
     end
   end
 
-  defguard is_coord(vec) when Guards.is_vector(vec)
-
-  defguard is_vector(vec) when Guards.is_vector(vec)
-
   # *** *******************************
   # *** MERGE
 
   def merge_csys(map, csys_map), do: Maps.merge(map, csys_map, Csys)
-
-  def merge_csys!(map, csys_map), do: Maps.merge!(map, csys_map, Csys)
 
   # *** *******************************
   # *** ANGLE
@@ -68,21 +62,6 @@ defmodule Chukinas.LinearAlgebra do
   end
 
   def angle_between_vectors(a, b), do: Angle.between_vectors(a, b)
-
-  # *** *******************************
-  # *** IN-PlACE RELATIVE POSE TRANSLATIONS
-
-  @spec update_position_translate_right!(p, number) :: p when p: POS.position_map
-  def update_position_translate_right!(poseable, distance) do
-    fun = &position_translate_right(&1, distance)
-    update_position!(poseable, fun)
-  end
-
-  @spec update_position_translate!(p, Vector.t) :: p when p: POS.position_map
-  def update_position_translate!(poseable, vector) do
-    fun = &position_translate(&1, vector)
-    update_position!(poseable, fun)
-  end
 
   # *** *******************************
   # *** RELATIVE POSITION TRANSLATIONS

@@ -1,8 +1,7 @@
-alias Chukinas.Geometry.Circle
-
-defmodule Circle do
+defmodule Chukinas.Geometry.Circle do
 
   use Chukinas.LinearAlgebra
+  # TODO don't 'use'
   use Chukinas.Math
   use Chukinas.PositionOrientationSize
   use TypedStruct

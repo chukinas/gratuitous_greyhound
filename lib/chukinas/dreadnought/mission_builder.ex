@@ -1,5 +1,6 @@
 defmodule Chukinas.Dreadnought.MissionBuilder do
 
+  use Chukinas.LinearAlgebra
   use Chukinas.PositionOrientationSize
   alias Chukinas.Dreadnought.ActionSelection
   alias Chukinas.Dreadnought.Island
@@ -190,14 +191,13 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
   end
 
   def build_fleet(:red, starting_id, player_id, pose) do
-    use Chukinas.LinearAlgebra
     formation =
       [
         {  0,   0},
         {-50,  50},
         {-50, -50},
       ]
-    poses = for rel_vector <- formation, do: update_position_translate!(pose, rel_vector)
+    poses = for unit_coord <-formation, do: formation_to_pose(pose, unit_coord)
     [
       UnitBuilder.build(:red_cruiser, starting_id, player_id, Enum.at(poses, 0), name: "Navarin"),
       UnitBuilder.build(:red_destroyer, starting_id + 1, player_id, Enum.at(poses, 1), name: "Potemkin"),
@@ -206,18 +206,16 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
   end
 
   def build_fleet(:blue, starting_id, player_id, pose) do
-    use Chukinas.LinearAlgebra
-    dreadnought_position =
-      pose
-      |> csys_from_pose
-      |> csys_translate({:forward, 100})
-      |> csys_to_pose
-    dreadnought =
-      UnitBuilder.build(:blue_dreadnought, starting_id, player_id, dreadnought_position, name: "Washington")
-    destroyer =
-      UnitBuilder.build(:blue_destroyer, starting_id + 1, player_id, dreadnought_position, name: "Detroit")
-      |> update_position_translate_right!(75)
-    [dreadnought, destroyer]
+    formation =
+      [
+        {  0,   0},
+        {-50,  50},
+      ]
+    poses = for unit_coord <-formation, do: formation_to_pose(pose, unit_coord)
+    [
+      UnitBuilder.build(:blue_dreadnought, starting_id, player_id, Enum.at(poses, 0), name: "Washington"),
+      UnitBuilder.build(:blue_destroyer, starting_id + 1, player_id, Enum.at(poses, 1), name: "Detroit")
+    ]
   end
 
   def human_and_ai_players do
@@ -225,6 +223,13 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
       Player.new_human(1, "PLACEHOLDER", "Billy Jane"),
       Player.new_ai(2, "PLACEHOLDER", "R2-D2")
     ]
+  end
+
+  def formation_to_pose(lead_pose, unit_coord_wrt_pose) when has_pose(lead_pose) and is_vector(unit_coord_wrt_pose) do
+    lead_pose
+    |> csys_from_pose
+    |> csys_translate(unit_coord_wrt_pose)
+    |> csys_to_pose
   end
 
 end
