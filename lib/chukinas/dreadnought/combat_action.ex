@@ -1,7 +1,7 @@
 defmodule Chukinas.Dreadnought.CombatAction do
 
-  use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra
+  use Chukinas.PositionOrientationSize
   alias Chukinas.Dreadnought.Animations
   alias Chukinas.Dreadnought.CombatAction.Accumulator, as: Acc
   alias Chukinas.Dreadnought.Turret
@@ -56,7 +56,7 @@ defmodule Chukinas.Dreadnought.CombatAction do
     attacker = Acc.attacker(acc)
     desired_angle =
       target_vector
-      |> vector_outer_to_inner([attacker, turret |> vector_from_position])
+      |> vector_wrt_inner_observer([attacker, turret |> vector_from_position])
       |> vector_to_angle
     case Turret.normalize_desired_angle(turret, desired_angle) do
       {:ok, angle} -> {:ok, angle}

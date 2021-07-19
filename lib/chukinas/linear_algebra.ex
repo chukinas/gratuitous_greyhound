@@ -96,19 +96,6 @@ defmodule Chukinas.LinearAlgebra do
     CsysApi.csys_from_coord(vector)
   end
 
-
-  #@spec something() :: [Csys.t]
-  #def something do
-  #  poseable = %{
-  #    x: 1,
-  #    y: 2,
-  #    angle: 0,
-  #    somethsraino: "ntesrai"
-  #  }
-  #  vector_inner_to_outer({0, 0}, poseable)
-  #  #coerce_to_csys_list(poseable)
-  #end
-
   # *** *******************************
   # *** COORD RELATIVE TO OUTER CSYS
 
@@ -139,37 +126,6 @@ defmodule Chukinas.LinearAlgebra do
     csys
     |> Csys.transform_vector(vector)
     |> do_vector_transform_to_outer(remaining_csys)
-  end
-
-  # *** *******************************
-  # *** COORD RELATIVE TO INNER CSYS
-
-  @doc """
-  Translate an outer coord (e.g. target wrt world) to inner coord (e.g. target wrt turret)
-  """
-  @spec vector_outer_to_inner(coord, pose_or_csys_s) :: Vector.t
-  def vector_outer_to_inner(coord, pose_or_csys) do
-    vector_transform_to(coord, pose_or_csys)
-  end
-
-  # TODO deprecate
-  @spec vector_transform_to(coord, pose_or_csys_s) :: Vector.t
-  def vector_transform_to(coord, from) do
-    do_vector_transform_to_inner(
-      coord |> coerce_to_vector,
-      from  |> coerce_to_csys_list
-    )
-  end
-
-  defp do_vector_transform_to_inner(vector, []) do
-    vector
-  end
-
-  defp do_vector_transform_to_inner(vector, [csys | remaining_csys]) do
-    csys
-    |> Csys.invert
-    |> Csys.transform_vector(vector)
-    |> do_vector_transform_to_inner(remaining_csys)
   end
 
   # *** *******************************

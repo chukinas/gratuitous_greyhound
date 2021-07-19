@@ -11,7 +11,6 @@ defmodule Chukinas.LinearAlgebraTest do
   describe "vector coordinate system" do
 
     @sqrt2 :math.sqrt(2)
-    @coord_at_45 {@sqrt2 / 2, @sqrt2 / 2}
 
     test "inversion" do
       pose = pose_new(1, 1, -90)
@@ -62,15 +61,15 @@ defmodule Chukinas.LinearAlgebraTest do
     def mount, do: pose_new(2, 0, 180)
 
     test "get world origin wrt unit" do
-      assert_approx_equal :vector, {-1, 1}, vector_transform_to(vector_origin(), unit())
+      assert_approx_equal :vector, {-1, 1}, vector_wrt_inner_observer(vector_origin(), unit())
     end
 
     test "get world origin wrt mount" do
-      assert_approx_equal {3, -1}, vector_transform_to(vector_origin(), [unit(), mount()])
+      assert_approx_equal {3, -1}, vector_wrt_inner_observer(vector_origin(), [unit(), mount()])
     end
 
     test "get world {10, 10} wrt mount" do
-      assert_approx_equal {-7, 9}, vector_transform_to({10, 10}, [unit(), mount()])
+      assert_approx_equal {-7, 9}, vector_wrt_inner_observer({10, 10}, [unit(), mount()])
     end
 
     test "get angle b/w mount and target" do
@@ -79,7 +78,7 @@ defmodule Chukinas.LinearAlgebraTest do
       target = {2, 4}
       turret = mount() |> vector_from_position
       actual_angle = Math.normalize_angle(-45)
-      assert actual_angle == vector_transform_to(target, [unit(), turret]) |> vector_to_angle
+      assert actual_angle == vector_wrt_inner_observer(target, [unit(), turret]) |> vector_to_angle
     end
 
     test "get world coord for gun barrel" do

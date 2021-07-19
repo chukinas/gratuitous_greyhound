@@ -18,17 +18,24 @@ defmodule Chukinas.LinearAlgebra.TransformApi do
   # *** REDUCERS
 
   def position_wrt(position, observer) when has_position(position) do
+    # TODO deprecate?
     position
     |> VectorApi.vector_from_position
     |> vector_wrt(observer)
     |> VectorApi.vector_to_position
   end
 
+  def vector_wrt_inner_observer(vector, observer) when is_vector(vector) do
+    do_vector_wrt(vector, observer, :wrt_inner)
+  end
+
   def vector_wrt(vector, observer) when is_vector(vector) do
-    do_vector_wrt(vector, observer)
+    # TODO deprecate
+    vector_wrt_inner_observer(vector, observer)
   end
 
   def vector_angle_wrt(vector, observer) do
+    # TODO deprecate
     vector
     |> vector_wrt(observer)
     |> VectorApi.vector_to_angle
@@ -37,18 +44,27 @@ defmodule Chukinas.LinearAlgebra.TransformApi do
   # *** *******************************
   # *** REDUCERS (PRIVATE)
 
-  def do_vector_wrt(vector, []), do: vector
+  @type direction :: :wrt_inner | :wrt_outer
+  @spec do_vector_wrt(any, any, direction) :: any
 
-  def do_vector_wrt(vector, [first_observer | others]) do
+  defp do_vector_wrt(vector, [], _), do: vector
+
+  defp do_vector_wrt(vector, [first_observer | others], direction) do
     vector
-    |> do_vector_wrt(first_observer)
-    |> do_vector_wrt(others)
+    |> do_vector_wrt(first_observer, direction)
+    |> do_vector_wrt(others, direction)
   end
 
-  def do_vector_wrt(vector, observer) when is_csys(observer) do
-    observer
-    |> CsysApi.csys_invert
-    |> Csys.transform_vector(vector)
+  defp do_vector_wrt(vector, observer, direction) when has_pose(observer) do
+    do_vector_wrt(vector, CsysApi.csys_from_pose(observer), direction)
+  end
+
+  defp do_vector_wrt(vector, observer, direction) when is_csys(observer) do
+    observer = case direction do
+      :wrt_outer -> observer
+      :wrt_inner -> CsysApi.csys_invert(observer)
+    end
+    Csys.transform_vector(observer, vector)
   end
 
   # *** *******************************
