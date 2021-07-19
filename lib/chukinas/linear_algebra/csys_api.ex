@@ -5,6 +5,7 @@ defmodule Chukinas.LinearAlgebra.CsysApi do
   alias Chukinas.LinearAlgebra.Csys
   alias Chukinas.LinearAlgebra.VectorApi
   alias Chukinas.LinearAlgebra.OrientationMatrix
+  alias Chukinas.Math
   alias Chukinas.PositionOrientationSize, as: POS
 
   # *** *******************************
@@ -33,6 +34,24 @@ defmodule Chukinas.LinearAlgebra.CsysApi do
 
   # *** *******************************
   # *** REDUCERS
+
+  defdelegate csys_invert(csys), to: Csys, as: :invert
+
+  def csys_rotate(csys, :left), do: Csys.rotate(csys, -90)
+
+  def csys_rotate(csys, :right), do: Csys.rotate(csys, 90)
+
+  def csys_rotate(csys, :flip), do: Csys.rotate(csys, 180)
+
+  def csys_rotate(csys, {:right_angle, sign}) when is_number(sign) do
+    angle =
+      sign
+      |> Math.sign
+      |> Math.mult(90)
+    Csys.rotate(csys, angle)
+  end
+
+  def csys_rotate(csys, angle) when is_number(angle), do: Csys.rotate(csys, angle)
 
   # *** *******************************
   # *** CONVERTERS

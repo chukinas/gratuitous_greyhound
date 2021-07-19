@@ -62,18 +62,15 @@ defmodule Circle do
     (x * x + y * y) / (2 * y)
   end
 
-  def center_csys(tangent_csys, radius, :cw) do
-    tangent_csys
-    |> csys_right
-    |> csys_forward(radius)
-    |> csys_180
-  end
+  def center_csys(tangent_csys, radius, :cw), do: do_center_csys(tangent_csys, radius, :right)
 
-  def center_csys(tangent_csys, radius, :ccw) do
+  def center_csys(tangent_csys, radius, :ccw), do: do_center_csys(tangent_csys, radius, :left)
+
+  defp do_center_csys(tangent_csys, radius, direction) do
     tangent_csys
-    |> csys_left
+    |> csys_rotate(direction)
     |> csys_forward(radius)
-    |> csys_180
+    |> csys_rotate(:flip)
   end
 
   # *** *******************************
@@ -171,7 +168,7 @@ defmodule Circle do
     |> rotate_in_direction_of_rotation(angle)
     |> csys_new
     |> csys_forward(circle |> radius)
-    |> csys_90(circle |> sign_of_rotation)
+    |> csys_rotate({:right_angle, circle |> sign_of_rotation})
   end
 
   def csys_after_traversing_distance(circle, distance) do

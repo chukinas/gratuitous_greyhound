@@ -57,7 +57,7 @@ defmodule Chukinas.Dreadnought.CombatAction do
     desired_angle =
       target_vector
       |> vector_outer_to_inner([attacker, turret |> vector_from_position])
-      |> angle_from_vector
+      |> vector_to_angle
     case Turret.normalize_desired_angle(turret, desired_angle) do
       {:ok, angle} -> {:ok, angle}
       {_, _angle} -> {:fail, :out_of_fire_arc}

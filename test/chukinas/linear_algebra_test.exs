@@ -84,7 +84,7 @@ defmodule Chukinas.LinearAlgebraTest do
       target = {2, 4}
       turret = csys_new(2, 0, 0) |> coord_from_csys
       actual_angle = Math.normalize_angle(-45)
-      assert actual_angle == vector_transform_to(target, [unit(), turret]) |> angle_from_vector
+      assert actual_angle == vector_transform_to(target, [unit(), turret]) |> vector_to_angle
     end
 
     test "get world coord for gun barrel" do

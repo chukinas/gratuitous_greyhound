@@ -73,18 +73,6 @@ defmodule Chukinas.LinearAlgebra do
 
   defdelegate csys_forward(csys, distance), to: Csys, as: :forward
 
-  def csys_left(csys), do: Csys.rotate(csys, -90)
-
-  def csys_right(csys), do: Csys.rotate(csys, 90)
-
-  def csys_90(csys, signed_number), do: Csys.rotate_90(csys, signed_number)
-
-  def csys_180(csys), do: Csys.rotate(csys, 180)
-
-  def csys_rotate(csys, angle), do: Csys.rotate(csys, angle)
-
-  defdelegate csys_invert(csys), to: Csys, as: :invert
-
   # *** *******************************
   # *** POSE -> VECTOR
 
@@ -99,14 +87,14 @@ defmodule Chukinas.LinearAlgebra do
   def vector_left(pose_or_csys, distance) do
     pose_or_csys
     |> csys_new
-    |> csys_left
+    |> CsysApi.csys_rotate(:left)
     |> vector_forward(distance)
   end
 
   def vector_right(pose_or_csys, distance) do
     pose_or_csys
     |> csys_new
-    |> csys_right
+    |> CsysApi.csys_rotate(:right)
     |> vector_forward(distance)
   end
 
@@ -121,7 +109,7 @@ defmodule Chukinas.LinearAlgebra do
   @spec vector_wrt_csys(Vector.t, Csys.t) :: Vector.t
   def vector_wrt_csys(vector, csys) do
     csys
-    |> csys_invert
+    |> CsysApi.csys_invert
     |> Csys.transform_vector(vector)
   end
 
@@ -131,17 +119,13 @@ defmodule Chukinas.LinearAlgebra do
 
   def vector_from_csys_and_polar(csys, angle, radius) do
     csys
-    |> csys_rotate(angle)
+    |> CsysApi.csys_rotate(angle)
     |> csys_forward(radius)
     |> CsysApi.csys_to_coord_vector
   end
 
   # *** *******************************
   # *** ANGLE
-
-  def angle_from_vector(vector) do
-    Angle.from_vector(vector, {1, 0})
-  end
 
   def angle_relative_to_vector(to_vector, from_vector) do
     Angle.from_vector(to_vector, from_vector)
