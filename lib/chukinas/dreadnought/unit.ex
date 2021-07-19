@@ -249,7 +249,7 @@ defimpl Chukinas.LinearAlgebra.HasCsys, for: Chukinas.Dreadnought.Unit do
   use Chukinas.LinearAlgebra
 
   def get_csys(unit) do
-    csys_new unit
+    csys_from_pose unit
   end
 
   # TODO rename `angle`

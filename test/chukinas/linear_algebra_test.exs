@@ -15,10 +15,10 @@ defmodule Chukinas.LinearAlgebraTest do
 
     test "inversion" do
       pose = pose_new(1, 1, -90)
-      csys = csys_new(pose)
+      csys = csys_from_pose(pose)
       should_inverted_csys =
         pose_new(1, -1, 90)
-        |> csys_new
+        |> csys_from_pose
       actual_inverted_csys =
         csys
         |> csys_invert
@@ -81,8 +81,10 @@ defmodule Chukinas.LinearAlgebraTest do
     end
 
     test "get angle b/w mount and target" do
+      # Note, it is irrelevant the current orientation of the turret.
+      # When getting mount angles, the angle is the angle wrt unit orientation
       target = {2, 4}
-      turret = csys_new(2, 0, 0) |> coord_from_csys
+      turret = mount() |> vector_from_position
       actual_angle = Math.normalize_angle(-45)
       assert actual_angle == vector_transform_to(target, [unit(), turret]) |> vector_to_angle
     end
@@ -98,6 +100,17 @@ defmodule Chukinas.LinearAlgebraTest do
         ])
       expected_world_coord = {0, 20}
       assert expected_world_coord == actual_coord
+    end
+
+  end
+
+  describe "csys api" do
+
+    test "coord origin" do
+      coord_vector =
+        csys_origin()
+        |> csys_to_coord_vector
+      assert {0, 0} == coord_vector
     end
 
   end

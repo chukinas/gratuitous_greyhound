@@ -1,11 +1,9 @@
 defmodule Chukinas.LinearAlgebra.Csys do
 
   require Chukinas.PositionOrientationSize.Guards
-  import Chukinas.PositionOrientationSize.Guards
   use TypedStruct
   use Chukinas.LinearAlgebra
   alias Chukinas.LinearAlgebra.Vector
-  alias Chukinas.Math
   alias Chukinas.PositionOrientationSize, as: POS
   alias Chukinas.LinearAlgebra.OrientationMatrix
   alias Chukinas.LinearAlgebra.VectorApi
@@ -24,20 +22,9 @@ defmodule Chukinas.LinearAlgebra.Csys do
   # *** *******************************
   # *** CONSTRUCTORS
 
-  def new(%__MODULE__{} = csys), do: csys
+  def from_map(%__MODULE__{} = csys), do: csys
 
-  # TODO use guard has_csys
-  def new(%{orientation: orient, location: loc}) do
-    new(orient, loc)
-  end
-
-  # TODO remove
-  def new(pose) when has_pose(pose) do
-    new(
-      _orientation = pose |> POS.get_angle |> Vector.from_angle,
-      _location = pose |> POS.position_to_tuple
-    )
-  end
+  def from_map(%{orientation: orient, location: coord}), do: new(orient, coord)
 
   @spec new(orientation, location) :: t
   def new(orientation, location) when is_vector(location) do
@@ -50,12 +37,6 @@ defmodule Chukinas.LinearAlgebra.Csys do
 
   # *** *******************************
   # *** REDUCERS
-
-  def add_csys_location(vector, %__MODULE__{} = csys) do
-    csys
-    |> location
-    |> Vector.sum(vector)
-  end
 
   def forward(csys, distance) do
     location = location_after_moving_fwd(csys, distance)
@@ -89,16 +70,15 @@ defmodule Chukinas.LinearAlgebra.Csys do
     Map.update!(csys, :orientation, &VectorApi.vector_rotate(&1, angle))
   end
 
-  def rotate_90(csys, direction) do
-    rotate(csys, 90 * Math.sign(direction))
-  end
-
   def transform_vector(%__MODULE__{} = csys, vector)
   when is_vector(vector) do
+    coord_vector =
+      csys
+      |> orientation
+      |> OrientationMatrix.to_rotated_vector(vector)
     csys
-    |> orientation
-    |> OrientationMatrix.to_rotated_vector(vector)
-    |> add_csys_location(csys)
+    |> coord_vector
+    |> VectorApi.vector_add(coord_vector)
   end
 
   # *** *******************************
@@ -117,7 +97,9 @@ defmodule Chukinas.LinearAlgebra.Csys do
 
   def location(%{location: value}), do: value
 
-  def coord(%{location: value}), do: value
+  def coord(csys), do: coord_vector(csys)
+
+  def coord_vector(%{location: value}), do: value
 
   def pose(%{} = csys) do
     angle =

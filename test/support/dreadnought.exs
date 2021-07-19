@@ -1,6 +1,5 @@
 alias Chukinas.Dreadnought.{Mission, Unit}
 alias Chukinas.Geometry.{Rect}
-alias Chukinas.PositionOrientationSize, as: POS
 
 defmodule DreadnoughtHelpers do
   defmacro __using__(_options) do

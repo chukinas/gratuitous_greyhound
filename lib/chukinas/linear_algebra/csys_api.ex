@@ -11,11 +11,29 @@ defmodule Chukinas.LinearAlgebra.CsysApi do
   # *** *******************************
   # *** CONSTRUCTORS
 
+  def csys_from_angle(angle) when is_number(angle) do
+    csys_new(0, 0, angle)
+  end
+
   def csys_from_coord(vector) when is_vector(vector) do
     Csys.new(
       OrientationMatrix.from_angle(0),
       vector
     )
+  end
+
+  def csys_from_coord_and_angle(vector, angle)
+  when is_vector(vector)
+  and is_number(angle) do
+    Csys.new(
+      OrientationMatrix.from_angle(angle),
+      vector
+    )
+  end
+
+  def csys_from_orientation_and_coord(orientation, coord) do
+    # TODO swap the 2 params
+    Csys.new(orientation, coord)
   end
 
   def csys_from_pose(pose) when has_pose(pose) do
@@ -25,9 +43,21 @@ defmodule Chukinas.LinearAlgebra.CsysApi do
     )
   end
 
+  def csys_from_position(position) when has_position(position) do
+    position
+    |> POS.pose_new
+    |> csys_from_pose
+  end
+
+  def csys_from_map(csys), do: Csys.from_map(csys)
+
+  def csys_new(x, y, angle \\ 0) do
+    csys_from_coord_and_angle({x, y}, angle)
+  end
+
   def csys_origin do
     Csys.new(
-      VectorApi.vector_origin(),
+      OrientationMatrix.origin(),
       VectorApi.vector_origin()
     )
   end

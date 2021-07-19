@@ -61,17 +61,6 @@ defmodule Chukinas.LinearAlgebra do
   def merge_csys!(map, csys_map), do: Maps.merge!(map, csys_map, Csys)
 
   # *** *******************************
-  # *** CSYS
-
-  @spec csys_new(any) :: Csys.t
-  defdelegate csys_new(pose_or_csys), to: Csys, as: :new
-  def csys_new(x, y, angle), do: pose_new(x, y, angle) |> csys_new
-
-  def csys_from_orientation_and_coord(orientation, coord) do
-    Csys.new(orientation, coord)
-  end
-
-  # *** *******************************
   # *** POSE -> VECTOR
 
   @spec vector_wrt_csys(Vector.t, Csys.t) :: Vector.t
@@ -119,12 +108,11 @@ defmodule Chukinas.LinearAlgebra do
     [coerce_to_csys item]
   end
 
-  # TODO replace with simply `csys_new`
   defp coerce_to_csys(pose) when has_pose(pose) do
     CsysApi.csys_from_pose(pose)
   end
   defp coerce_to_csys(csys) when has_csys(csys) do
-    csys_new(csys)
+    CsysApi.csys_from_map(csys)
   end
   defp coerce_to_csys(vector) when is_vector(vector) do
     CsysApi.csys_from_coord(vector)

@@ -13,35 +13,30 @@ defmodule LinearAlgebra.CsysTest do
 
     test "moving along x-axis" do
       assert {1, 0} ==
-        pose_origin()
-        |> csys_new
-        |> csys_forward(1)
-        |> coord_from_csys
+        csys_origin()
+        |> csys_translate_forward(1)
+        |> csys_to_coord_vector
     end
 
     test "moving along y-axis" do
       assert {0, 1} ==
-        pose(0, 0, 90)
-        |> csys_new
-        |> csys_forward(1)
-        |> coord_from_csys
+        csys_from_angle(90)
+        |> csys_translate_forward(1)
+        |> csys_to_coord_vector
     end
 
     test "rotating 45deg" do
       assert {0, 0} ==
-        pose_origin()
-        |> csys_new
-        |> csys_rotate(45)
-        |> coord_from_csys
+        csys_from_angle(45)
+        |> csys_to_coord_vector
     end
 
     test "rotating and moving a vcsys" do
       position_vector =
-        pose_origin()
-        |> csys_new
+        csys_origin()
         |> csys_rotate(45)
-        |> csys_forward(@sqrt2)
-        |> coord_from_csys
+        |> csys_translate_forward(@sqrt2)
+        |> csys_to_coord_vector
       assert_tuple_approx_equal {1, 1}, position_vector
     end
 

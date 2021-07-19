@@ -23,7 +23,7 @@ defmodule Chukinas.LinearAlgebra.Vector do
   def flip_sign_y({x, y}), do: {x, -y}
 
   def normalize({a, b} = vector) do
-    magnitude = magnitude vector
+    magnitude = magnitude(vector)
     (for var <- [a, b], do: var / magnitude)
     |> List.to_tuple
   end

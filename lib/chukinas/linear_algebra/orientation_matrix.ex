@@ -41,6 +41,9 @@ defmodule Chukinas.LinearAlgebra.OrientationMatrix do
   @spec from_vector(vector) :: t
   def from_vector(vector), do: Vector.normalize(vector)
 
+  @spec origin :: t
+  def origin, do: {1, 0}
+
   # *** *******************************
   # *** CONVERTERS
 
@@ -54,7 +57,7 @@ defmodule Chukinas.LinearAlgebra.OrientationMatrix do
   def angle(matrix) do
     matrix
     |> x_axis
-    |> VectorApi.to_angle
+    |> Vector.angle
   end
 
   @doc"""

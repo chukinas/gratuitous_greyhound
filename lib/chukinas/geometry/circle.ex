@@ -103,7 +103,7 @@ defmodule Circle do
   # *** *******************************
   # *** GETTERS
 
-  def csys(circle), do: circle |> csys_new
+  def csys(circle), do: circle |> csys_from_map
 
   def radius(%__MODULE__{radius: value}), do: value
 
@@ -166,7 +166,7 @@ defmodule Circle do
   def csys_after_traversing_angle(circle, angle) do
     circle
     |> rotate_in_direction_of_rotation(angle)
-    |> csys_new
+    |> csys
     |> csys_translate_forward(circle |> radius)
     |> csys_rotate({:right_angle, circle |> sign_of_rotation})
   end

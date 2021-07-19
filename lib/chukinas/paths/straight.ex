@@ -104,7 +104,7 @@ defmodule Chukinas.Paths.Straight do
   defimpl HasCsys do
 
     def get_csys(%{start: pose}) do
-      csys_new(pose)
+      csys_from_pose(pose)
     end
 
     def get_angle(%{angle: value}), do: value

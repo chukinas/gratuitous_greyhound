@@ -79,12 +79,12 @@ defmodule Chukinas.Dreadnought.Turret do
 
   def get_position(turret), do: position_new(turret)
 
-  def csys(turret), do: turret |> csys_new
+  def csys(turret), do: turret |> csys_from_pose
 
   def position_csys(turret) do
     turret
     |> get_position
-    |> csys_new
+    |> csys_from_position
   end
 
   # *** *******************************
