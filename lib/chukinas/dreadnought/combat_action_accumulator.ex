@@ -51,7 +51,10 @@ defmodule Chukinas.Dreadnought.CombatAction.Accumulator do
   def path_to_target(%__MODULE__{} = acc, target_vector, turret_id) do
     turret = turret(acc, turret_id)
     attacker = attacker(acc)
-    turret_coord = vector_transform_from(turret, attacker)
+    turret_coord =
+      turret
+      |> vector_from_position
+      |> vector_wrt_outer_observer(attacker)
     # rename `projectile_vector`?
     path_vector = vector_subtract(target_vector, turret_coord)
     angle = vector_to_angle(path_vector)

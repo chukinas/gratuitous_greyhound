@@ -29,6 +29,10 @@ defmodule Chukinas.LinearAlgebra.TransformApi do
     do_vector_wrt(vector, observer, :wrt_inner)
   end
 
+  def vector_wrt_outer_observer(vector, observer) when is_vector(vector) do
+    do_vector_wrt(vector, observer, :wrt_outer)
+  end
+
   def vector_wrt(vector, observer) when is_vector(vector) do
     # TODO deprecate
     vector_wrt_inner_observer(vector, observer)
@@ -57,6 +61,10 @@ defmodule Chukinas.LinearAlgebra.TransformApi do
 
   defp do_vector_wrt(vector, observer, direction) when has_pose(observer) do
     do_vector_wrt(vector, CsysApi.csys_from_pose(observer), direction)
+  end
+
+  defp do_vector_wrt(vector, observer, direction) when is_vector(observer) do
+    do_vector_wrt(vector, CsysApi.csys_from_coord(observer), direction)
   end
 
   defp do_vector_wrt(vector, observer, direction) when is_csys(observer) do

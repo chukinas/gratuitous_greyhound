@@ -133,6 +133,7 @@ defmodule Chukinas.PositionOrientationSize do
     position |> position_subtract(-1)
   end
 
+  # TODO superseded by LinearAlgebra
   def position_from_vector(vector), do: Position.new(vector)
   defdelegate position_from_size(size), to: Position, as: :from_size
 

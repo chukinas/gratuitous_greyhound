@@ -110,7 +110,7 @@ defmodule Chukinas.Dreadnought.CombatAction do
     angle = angle_from_sum(turret, unit)
     turret
     |> Turret.gun_barrel_vector
-    |> vector_transform_from([turret, unit])
+    |> vector_wrt_outer_observer([turret, unit])
     |> pose_new(angle)
   end
 

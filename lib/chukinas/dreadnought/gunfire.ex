@@ -24,7 +24,7 @@ defmodule Chukinas.Dreadnought.Gunfire do
     coord =
       turret
       |> Turret.gun_barrel_vector
-      |> vector_transform_from([turret, unit])
+      |> vector_wrt_outer_observer([turret, unit])
     angle = angle_from_sum(turret, unit)
     coord
     |> pose_new(angle)

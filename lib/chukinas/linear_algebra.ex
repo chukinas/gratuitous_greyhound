@@ -1,15 +1,16 @@
 defmodule Chukinas.LinearAlgebra do
 
+  # TODO don't use `use`
   use Chukinas.Math
   use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra.Csys.Guards
   alias Chukinas.PositionOrientationSize, as: POS
   alias Chukinas.LinearAlgebra.Angle
   alias Chukinas.LinearAlgebra.Csys
-  alias Chukinas.LinearAlgebra.CsysApi
   alias Chukinas.LinearAlgebra.Vector
   alias Chukinas.LinearAlgebra.Vector.Guards
   alias Chukinas.LinearAlgebra.VectorApi
+  alias Chukinas.LinearAlgebra.TransformApi
   alias Chukinas.Util.Maps
   require Guards
 
@@ -69,66 +70,6 @@ defmodule Chukinas.LinearAlgebra do
   def angle_between_vectors(a, b), do: Angle.between_vectors(a, b)
 
   # *** *******************************
-  # *** HELPERS
-
-  # TODO where do these belong?
-  defp coerce_to_vector(position) when has_position(position) do
-    VectorApi.vector_from_position(position)
-  end
-  defp coerce_to_vector(vector) when is_vector(vector) do
-    vector
-  end
-
-  defp coerce_to_csys_list(list) when is_list(list) do
-    for item <- list, do: coerce_to_csys(item)
-  end
-  defp coerce_to_csys_list(item) do
-    [coerce_to_csys item]
-  end
-
-  defp coerce_to_csys(pose) when has_pose(pose) do
-    CsysApi.csys_from_pose(pose)
-  end
-  defp coerce_to_csys(csys) when is_csys(csys) do
-    CsysApi.csys_from_map(csys)
-  end
-  defp coerce_to_csys(vector) when is_vector(vector) do
-    CsysApi.csys_from_coord(vector)
-  end
-
-  # *** *******************************
-  # *** COORD RELATIVE TO OUTER CSYS
-
-  @doc """
-  Translate an inner coord (e.g. turret position wrt ship) to outer coord (e.g. turret wrt world)
-  """
-  @spec vector_inner_to_outer(coord, pose_or_csys_s) :: Vector.t
-  def vector_inner_to_outer(coord, pose_or_csys) do
-    a = coerce_to_vector(coord)
-    b = coerce_to_csys_list(pose_or_csys)
-    do_vector_transform_to_outer(a, b)
-  end
-
-  # TODO deprecate
-  @spec vector_transform_from(coord, pose_or_csys_s) :: Vector.t
-  def vector_transform_from(coord, from) do
-    do_vector_transform_to_outer(
-      coord |> coerce_to_vector,
-      from  |> coerce_to_csys_list
-    )
-  end
-
-  defp do_vector_transform_to_outer(vector, []) do
-    vector
-  end
-
-  defp do_vector_transform_to_outer(vector, [csys | remaining_csys]) do
-    csys
-    |> Csys.transform_vector(vector)
-    |> do_vector_transform_to_outer(remaining_csys)
-  end
-
-  # *** *******************************
   # *** IN-PlACE RELATIVE POSE TRANSLATIONS
 
   @spec update_position_translate_right!(p, number) :: p when p: POS.position_map
@@ -158,8 +99,8 @@ defmodule Chukinas.LinearAlgebra do
 
   def position_translate(poseable, {_x_rel, _y_rel} = rel_position) do
     rel_position
-    |> vector_inner_to_outer(poseable)
-    |> position_from_vector
+    |> TransformApi.vector_wrt_outer_observer(poseable)
+    |> VectorApi.vector_to_position
   end
 
 end
