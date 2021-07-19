@@ -36,10 +36,9 @@ defmodule Chukinas.Paths.Straight do
   def length(straight), do: straight.len
   def end_pose(%__MODULE__{len: len} = path) do
     path
-    |> vector_forward(len)
-    |> position_new
-    |> merge_position_into!(path)
-    |> pose_new
+    |> csys_from_pose
+    |> csys_translate({:forward, len})
+    |> csys_to_pose
   end
   def bounding_rect(path) do
     Rect.from_positions(
@@ -86,11 +85,18 @@ defmodule Chukinas.Paths.Straight do
   defimpl Collide.IsShape do
     def to_coords(straight) do
       end_pose = PathLike.pose_end(straight)
+      coord_vector = fn pose, angle ->
+        pose
+        |> csys_from_pose
+        |> csys_rotate(angle)
+        |> csys_translate_forward(20)
+        |> csys_to_coord_vector
+      end
       [
-        straight |> vector_left(20),
-        straight |> vector_right(20),
-        end_pose |> vector_right(20),
-        end_pose |> vector_left(20)
+        coord_vector.(straight, :left),
+        coord_vector.(straight, :right),
+        coord_vector.(end_pose, :right),
+        coord_vector.(end_pose, :left)
       ]
     end
   end

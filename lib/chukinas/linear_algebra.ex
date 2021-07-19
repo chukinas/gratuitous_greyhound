@@ -71,40 +71,8 @@ defmodule Chukinas.LinearAlgebra do
     Csys.new(orientation, coord)
   end
 
-  defdelegate csys_forward(csys, distance), to: Csys, as: :forward
-
   # *** *******************************
   # *** POSE -> VECTOR
-
-  # TODO rename these e.g. position_vector_forward?
-  def vector_forward(pose_or_csys, distance) do
-    pose_or_csys
-    |> csys_new
-    |> csys_forward(distance)
-    |> CsysApi.csys_to_coord_vector
-  end
-
-  def vector_left(pose_or_csys, distance) do
-    pose_or_csys
-    |> csys_new
-    |> CsysApi.csys_rotate(:left)
-    |> vector_forward(distance)
-  end
-
-  def vector_right(pose_or_csys, distance) do
-    pose_or_csys
-    |> csys_new
-    |> CsysApi.csys_rotate(:right)
-    |> vector_forward(distance)
-  end
-
-  def vector_90(pose_or_csys, distance, angle) do
-    func = case normalize_angle(angle) do
-      angle when angle < 180 -> &vector_right/2
-      angle when angle > 180 -> &vector_left/2
-    end
-    func.(pose_or_csys, distance)
-  end
 
   @spec vector_wrt_csys(Vector.t, Csys.t) :: Vector.t
   def vector_wrt_csys(vector, csys) do
@@ -120,7 +88,7 @@ defmodule Chukinas.LinearAlgebra do
   def vector_from_csys_and_polar(csys, angle, radius) do
     csys
     |> CsysApi.csys_rotate(angle)
-    |> csys_forward(radius)
+    |> CsysApi.csys_translate({:forward, radius})
     |> CsysApi.csys_to_coord_vector
   end
 

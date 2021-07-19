@@ -69,7 +69,7 @@ defmodule Circle do
   defp do_center_csys(tangent_csys, radius, direction) do
     tangent_csys
     |> csys_rotate(direction)
-    |> csys_forward(radius)
+    |> csys_translate({:forward, radius})
     |> csys_rotate(:flip)
   end
 
@@ -167,7 +167,7 @@ defmodule Circle do
     circle
     |> rotate_in_direction_of_rotation(angle)
     |> csys_new
-    |> csys_forward(circle |> radius)
+    |> csys_translate_forward(circle |> radius)
     |> csys_rotate({:right_angle, circle |> sign_of_rotation})
   end
 

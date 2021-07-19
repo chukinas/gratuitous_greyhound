@@ -210,7 +210,7 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
     dreadnought_position =
       pose
       |> csys_from_pose
-      |> csys_forward(100)
+      |> csys_translate({:forward, 100})
       |> csys_to_pose
     dreadnought =
       UnitBuilder.build(:blue_dreadnought, starting_id, player_id, dreadnought_position, name: "Washington")

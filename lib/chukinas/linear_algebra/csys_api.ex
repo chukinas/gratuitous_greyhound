@@ -53,6 +53,11 @@ defmodule Chukinas.LinearAlgebra.CsysApi do
 
   def csys_rotate(csys, angle) when is_number(angle), do: Csys.rotate(csys, angle)
 
+  # TODO needed?
+  def csys_translate(csys, {:forward, distance}), do: Csys.forward(csys, distance)
+
+  def csys_translate_forward(csys, distance), do: Csys.forward(csys, distance)
+
   # *** *******************************
   # *** CONVERTERS
 
