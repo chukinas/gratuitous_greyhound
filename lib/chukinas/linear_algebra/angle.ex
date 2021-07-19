@@ -2,6 +2,7 @@ defmodule Chukinas.LinearAlgebra.Angle do
 
   alias Chukinas.LinearAlgebra.Csys
   alias Chukinas.LinearAlgebra.Vector
+  alias Chukinas.LinearAlgebra.VectorApi
   alias Chukinas.Math
 
   # TODO add guards (which need new source file)
@@ -11,7 +12,7 @@ defmodule Chukinas.LinearAlgebra.Angle do
       |> between_vectors(to_vector)
     sign =
       from_vector
-      |> Vector.rotate(90)
+      |> VectorApi.vector_rotate(90)
       |> Vector.dot(to_vector)
       |> Math.sign
     Math.normalize_angle(abs_angle * sign)

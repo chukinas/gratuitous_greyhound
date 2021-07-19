@@ -1,18 +1,15 @@
 defmodule Chukinas.LinearAlgebra.VectorApi do
 
-  use Chukinas.Math
-  use Chukinas.PositionOrientationSize
   alias Chukinas.LinearAlgebra.Vector
-  alias Chukinas.LinearAlgebra.Vector.Guards
-  require Guards
+  alias Chukinas.LinearAlgebra.OrientationMatrix
+  alias Chukinas.PositionOrientationSize, as: POS
 
   # *** *******************************
   # *** CONSTRUCTORS
 
   def vector_from_angle(angle), do: Vector.from_angle(angle)
 
-  # TODO alias instead of use
-  def vector_from_position(position), do: position_to_tuple(position)
+  def vector_from_position(position), do: POS.position_to_tuple(position)
 
   def vector_origin, do: Vector.new(0, 0)
 
@@ -26,6 +23,12 @@ defmodule Chukinas.LinearAlgebra.VectorApi do
   def vector_subtract(a, b), do: Vector.subtract(a, b)
 
   def vector_to_unit_vector(vector), do: Vector.normalize(vector)
+
+  def vector_rotate(vector, angle) do
+    angle
+    |> OrientationMatrix.from_angle
+    |> OrientationMatrix.to_rotated_vector(vector)
+  end
 
   # *** *******************************
   # *** CONVERTERS

@@ -7,6 +7,7 @@ defmodule Chukinas.LinearAlgebra.Csys do
   alias Chukinas.LinearAlgebra.Vector
   alias Chukinas.Math
   alias Chukinas.PositionOrientationSize, as: POS
+  alias Chukinas.LinearAlgebra.OrientationMatrix
   alias Chukinas.LinearAlgebra.VectorApi
 
   # *** *******************************
@@ -76,7 +77,7 @@ defmodule Chukinas.LinearAlgebra.Csys do
       |> Vector.flip_sign
     position =
       orientation
-      |> Vector.matrix_dot_vector(intermediate_vector)
+      |> OrientationMatrix.to_rotated_vector(intermediate_vector)
     new(orientation, position)
   end
 
@@ -89,7 +90,7 @@ defmodule Chukinas.LinearAlgebra.Csys do
   end
 
   def rotate(csys, angle) do
-    Map.update!(csys, :orientation, &Vector.rotate(&1, angle))
+    Map.update!(csys, :orientation, &VectorApi.vector_rotate(&1, angle))
   end
 
   def rotate_90(csys, direction) do
@@ -100,7 +101,7 @@ defmodule Chukinas.LinearAlgebra.Csys do
   when is_vector(vector) do
     csys
     |> orientation
-    |> Vector.matrix_dot_vector(vector)
+    |> OrientationMatrix.to_rotated_vector(vector)
     |> add_csys_location(csys)
   end
 
