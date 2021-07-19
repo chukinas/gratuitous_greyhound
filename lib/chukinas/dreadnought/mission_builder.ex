@@ -21,7 +21,7 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
       Player.new_manual(2),
     ]
     units = [
-      UnitBuilder.red_cruiser(1, 1),
+      UnitBuilder.red_cruiser(1, 1) |> Unit.position_mass_center,
       UnitBuilder.blue_destroyer(2, 2, pose_new(50, -300, 0))
     ]
     action_selection =

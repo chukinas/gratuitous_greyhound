@@ -31,7 +31,6 @@ defmodule ChukinasWeb.DreadnoughtIndexLive do
   end
 
   defp unit_to_positioning_map(%Unit{} = unit) do
-    unit = Unit.position_mass_center(unit)
     scale = 3
     %{
       unit: unit,

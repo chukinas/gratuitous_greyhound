@@ -101,7 +101,7 @@ const UnitEvents = {
 const Animation = {
   mounted() {
     const animation = this.el
-    const frames = [...animation.querySelectorAll(".js-absolute-sprite")]
+    const frames = [...animation.querySelectorAll(".js-animation-frame-sprite")]
     const timeline = gsap.timeline({
       delay: animation.dataset.delay * ANIMATIONDURATION,
       repeat: animation.dataset.repeat,

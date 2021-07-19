@@ -17,7 +17,7 @@
   <div animation_frames class="relative">
     <%= for frame <- @animation.frames do %>
       <%= ChukinasWeb.SpriteView.absolute_sprite @socket, frame.sprite,
-        class: "invisible",
+        class: "js-animation-frame-sprite invisible",
         attrs: [
           "data-duration": frame.duration
         ] %>
