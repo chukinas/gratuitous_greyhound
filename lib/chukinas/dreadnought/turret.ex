@@ -4,7 +4,6 @@ defmodule Chukinas.Dreadnought.Turret do
   use Chukinas.PositionOrientationSize
   use Chukinas.Math
   alias Chukinas.Dreadnought.Sprites
-  alias Chukinas.LinearAlgebra.CSys
   alias Chukinas.LinearAlgebra.HasCsys
   alias Chukinas.LinearAlgebra.Vector
 
@@ -80,12 +79,12 @@ defmodule Chukinas.Dreadnought.Turret do
 
   def get_position(turret), do: position_new(turret)
 
-  def csys(turret), do: turret |> CSys.new
+  def csys(turret), do: turret |> csys_new
 
   def position_csys(turret) do
     turret
     |> get_position
-    |> CSys.new
+    |> csys_new
   end
 
   # *** *******************************

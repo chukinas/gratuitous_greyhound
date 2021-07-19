@@ -1,14 +1,13 @@
-alias Chukinas.Geometry.Rect
-alias Chukinas.LinearAlgebra
-alias Chukinas.LinearAlgebra.{HasCsys, CSys}
-alias Chukinas.Paths.{Straight, PathLike}
-alias Chukinas.Collide
+defmodule Chukinas.Paths.Straight do
 
-defmodule Straight do
-
-  import LinearAlgebra
+  import Chukinas.LinearAlgebra
   use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra
+  alias Chukinas.Collide
+  alias Chukinas.Geometry.Rect
+  alias Chukinas.LinearAlgebra.HasCsys
+  alias Chukinas.Paths.PathLike
+  alias Chukinas.Paths.Straight
 
   # *** *******************************
   # *** TYPES
@@ -19,7 +18,7 @@ defmodule Straight do
   end
 
   # *** *******************************
-  # *** NEW
+  # *** CONSTRUCTORS
 
   def new(start_pose, len) do
     %{len: len}
@@ -30,7 +29,7 @@ defmodule Straight do
   def new(x, y, angle, len), do: new(pose(x, y, angle), len)
 
   # *** *******************************
-  # *** GETTERS
+  # *** CONVERTERS
 
   def angle(straight), do: straight |> get_angle
   def start_pose(straight), do: straight |> pose_new
@@ -99,7 +98,7 @@ defmodule Straight do
   defimpl HasCsys do
 
     def get_csys(%{start: pose}) do
-      CSys.new(pose)
+      csys_new(pose)
     end
 
     def get_angle(%{angle: value}), do: value
