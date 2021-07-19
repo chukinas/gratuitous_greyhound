@@ -15,7 +15,7 @@
           socket: @socket,
           turn_number: 1,
           unit: @unit.unit %>
-        <%= ChukinasWeb.AnimationView.animations @socket, @mission.gunfire %>
+        <%= ChukinasWeb.AnimationView.muzzle_flashes @socket, @mission.gunfire %>
       </div>
     </div>
     <%= for button_text <- ~w/Play Gallery/ do %>

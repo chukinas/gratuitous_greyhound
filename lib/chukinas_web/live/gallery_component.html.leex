@@ -35,9 +35,7 @@
           margin-top: <%= -animation.rect.y %>px;
         "
       >
-        <%= ChukinasWeb.DreadnoughtView.render "animation.html",
-          socket: @socket,
-          animation: animation.struct %>
+        <%= ChukinasWeb.AnimationView.single(@socket, animation.struct) %>
         <%= if @show_markers? do %>
           <%= ChukinasWeb.DreadnoughtView.center %{x: 0, y: 0} %>
         <% end %>
