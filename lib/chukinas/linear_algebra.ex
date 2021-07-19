@@ -61,13 +61,6 @@ defmodule Chukinas.LinearAlgebra do
   def merge_csys!(map, csys_map), do: Maps.merge!(map, csys_map, Csys)
 
   # *** *******************************
-  # *** POS
-
-  defdelegate pose_from_csys(csys), to: Csys, as: :pose
-
-  def position_from_coord(coord), do: position_new(coord)
-
-  # *** *******************************
   # *** CSYS
 
   def csys_from_vector(vector) when is_vector(vector) do

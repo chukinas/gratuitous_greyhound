@@ -49,7 +49,7 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
   def rand_position do
     #csys_new(0, 0, Enum.random(1..360))
     #|> csys_forward(1000)
-    #|> pose_from_csys
+    #|> csys_to_pose
     position_new(600, 500)
   end
 
@@ -211,7 +211,7 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
       pose
       |> csys_from_pose
       |> csys_forward(100)
-      |> pose_from_csys
+      |> csys_to_pose
     dreadnought =
       UnitBuilder.build(:blue_dreadnought, starting_id, player_id, dreadnought_position, name: "Washington")
     destroyer =

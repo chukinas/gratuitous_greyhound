@@ -155,7 +155,7 @@ defmodule Circle do
     IO.warn "tangent_pose_after_len is deprecated"
     circle
     |> csys_after_traversing_distance(arclen)
-    |> pose_from_csys
+    |> csys_to_pose
   end
 
   def rotate_in_direction_of_rotation(circle, angle) do

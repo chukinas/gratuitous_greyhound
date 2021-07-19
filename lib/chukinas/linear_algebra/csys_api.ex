@@ -29,4 +29,8 @@ defmodule Chukinas.LinearAlgebra.CsysApi do
   # *** *******************************
   # *** CONVERTERS
 
+  def csys_to_pose(csys) do
+    Csys.pose(csys)
+  end
+
 end

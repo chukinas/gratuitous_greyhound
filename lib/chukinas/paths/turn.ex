@@ -51,7 +51,7 @@ defmodule Turn do
     start_pose =
       circle
       |> Circle.csys_after_traversing_angle(trav_angle)
-      |> pose_from_csys
+      |> csys_to_pose
     %{
       circle: circle,
       traversal_angle: trav_angle
@@ -78,7 +78,7 @@ defmodule Turn do
     path
     |> circle
     |> Circle.csys_after_traversing_angle(path |> traversal_angle)
-    |> pose_from_csys
+    |> csys_to_pose
   end
 
   # TODO remove
@@ -88,7 +88,7 @@ defmodule Turn do
     # TODO alias Circle, don't import
     # TODO rename Circle.coord
     |> Circle.coord
-    |> position_from_coord
+    |> vector_to_position
     |> Rect.from_centered_square(path |> circle |> Circle.diameter)
   end
 

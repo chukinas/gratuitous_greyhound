@@ -35,4 +35,6 @@ defmodule Chukinas.LinearAlgebra.VectorApi do
 
   def vector_to_magnitude(vector), do: Vector.magnitude(vector)
 
+  def vector_to_position({x, y}), do: POS.position_new(x, y)
+
 end
