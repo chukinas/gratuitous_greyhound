@@ -9,6 +9,12 @@ defmodule Chukinas.LinearAlgebra.VectorApi do
 
   def vector_from_angle(angle), do: Vector.from_angle(angle)
 
+  def vector_from_polar(radius, angle) do
+    angle
+    |> vector_from_angle
+    |> Vector.scalar(radius)
+  end
+
   def vector_from_position(position), do: POS.position_to_tuple(position)
 
   def vector_origin, do: Vector.new(0, 0)

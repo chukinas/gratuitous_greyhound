@@ -48,10 +48,7 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
   end
 
   def rand_position do
-    #csys_from_pose(0, 0, Enum.random(1..360))
-    #|> csys_forward(1000)
-    #|> csys_to_pose
-    position_new(600, 500)
+    vector_from_polar(500, Enum.random(1..360))
   end
 
   @spec online(String.t) :: Mission.t
