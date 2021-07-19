@@ -6,8 +6,7 @@ defmodule Chukinas.LinearAlgebra do
   alias Chukinas.LinearAlgebra.Angle
   alias Chukinas.LinearAlgebra.Vector
   alias Chukinas.LinearAlgebra.Vector.Guards
-  # TODO is this still used?
-  alias Chukinas.LinearAlgebra.VectorCsys, as: Csys
+  alias Chukinas.LinearAlgebra.Csys
   alias Chukinas.Util.Maps
   require Guards
 

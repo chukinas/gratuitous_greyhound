@@ -1,8 +1,8 @@
-alias Chukinas.LinearAlgebra.{Angle, Vector}
-alias Chukinas.LinearAlgebra.VectorCsys, as: Csys
-alias Chukinas.Math
+defmodule Chukinas.LinearAlgebra.Angle do
 
-defmodule Angle do
+  alias Chukinas.LinearAlgebra.Csys
+  alias Chukinas.LinearAlgebra.Vector
+  alias Chukinas.Math
 
   # TODO add guards (which need new source file)
   def from_vector(to_vector, from_vector) do

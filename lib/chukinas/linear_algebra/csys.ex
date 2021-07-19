@@ -1,13 +1,12 @@
-alias Chukinas.LinearAlgebra.{Vector}
-alias Chukinas.Math
+defmodule Chukinas.LinearAlgebra.Csys do
 
-defmodule Chukinas.LinearAlgebra.VectorCsys do
-
-  alias Chukinas.PositionOrientationSize, as: POS
-  require POS.Guards
-  import POS.Guards
+  require Chukinas.PositionOrientationSize.Guards
+  import Chukinas.PositionOrientationSize.Guards
   use TypedStruct
   use Chukinas.LinearAlgebra
+  alias Chukinas.LinearAlgebra.Vector
+  alias Chukinas.Math
+  alias Chukinas.PositionOrientationSize, as: POS
 
   # *** *******************************
   # *** TYPES
@@ -23,7 +22,7 @@ defmodule Chukinas.LinearAlgebra.VectorCsys do
   end
 
   # *** *******************************
-  # *** NEW
+  # *** CONSTRUCTORS
   #
   # TODO move all the various NEWs to main linear_algebra file
 
@@ -52,7 +51,18 @@ defmodule Chukinas.LinearAlgebra.VectorCsys do
   end
 
   # *** *******************************
-  # *** TRANSFORMATIONS
+  # *** REDUCERS
+
+  def add_csys_location(vector, %__MODULE__{} = csys) do
+    csys
+    |> location
+    |> Vector.sum(vector)
+  end
+
+  def forward(csys, distance) do
+    location = location_after_moving_fwd(csys, distance)
+    %__MODULE__{csys | location: location}
+  end
 
   def invert(csys) do
     orientation =
@@ -69,8 +79,32 @@ defmodule Chukinas.LinearAlgebra.VectorCsys do
     new(orientation, position)
   end
 
+  def location_after_moving_fwd(csys, distance) do
+    location = csys |> location
+    csys
+    |> orientation
+    |> Vector.scalar(distance)
+    |> Vector.sum(location)
+  end
+
+  def rotate(csys, angle) do
+    Map.update!(csys, :orientation, &Vector.rotate(&1, angle))
+  end
+
+  def rotate_90(csys, direction) do
+    rotate(csys, 90 * Math.sign(direction))
+  end
+
+  def transform_vector(%__MODULE__{} = csys, vector)
+  when is_vector(vector) do
+    csys
+    |> orientation
+    |> Vector.matrix_dot_vector(vector)
+    |> add_csys_location(csys)
+  end
+
   # *** *******************************
-  # *** GETTERS
+  # *** CONVERTERS
 
   def orientation(%{orientation: value}), do: value
 
@@ -90,44 +124,6 @@ defmodule Chukinas.LinearAlgebra.VectorCsys do
     csys
     |> location
     |> POS.position_new
-  end
-
-  # *** *******************************
-  # *** API
-
-  def rotate(csys, angle) do
-    Map.update!(csys, :orientation, &Vector.rotate(&1, angle))
-  end
-
-  def rotate_90(csys, direction) do
-    rotate(csys, 90 * Math.sign(direction))
-  end
-
-  def forward(csys, distance) do
-    location = location_after_moving_fwd(csys, distance)
-    %__MODULE__{csys | location: location}
-  end
-
-  def location_after_moving_fwd(csys, distance) do
-    location = csys |> location
-    csys
-    |> orientation
-    |> Vector.scalar(distance)
-    |> Vector.sum(location)
-  end
-
-  def add_csys_location(vector, %__MODULE__{} = csys) do
-    csys
-    |> location
-    |> Vector.sum(vector)
-  end
-
-  def transform_vector(%__MODULE__{} = csys, vector)
-  when is_vector(vector) do
-    csys
-    |> orientation
-    |> Vector.matrix_dot_vector(vector)
-    |> add_csys_location(csys)
   end
 
 end

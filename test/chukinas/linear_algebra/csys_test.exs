@@ -1,6 +1,6 @@
 ExUnit.start()
 
-defmodule LinearAlgebra.VectorCsysTest do
+defmodule LinearAlgebra.CsysTest do
 
   use ExUnit.Case, async: true
   use Chukinas.PositionOrientationSize
