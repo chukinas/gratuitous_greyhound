@@ -210,13 +210,10 @@ defmodule Chukinas.Dreadnought.Unit do
 
   def position_mass_center(%__MODULE__{} = unit, position \\ position_null())
   when has_position(position) do
-    #unit.sprite
-    #|> IOP.inspect
     translate =
       unit
       # TODO rename position_of_mass_center
       |> center_of_mass
-      |> IOP.inspect("center of mass position")
     position_subtract(unit, translate)
   end
 

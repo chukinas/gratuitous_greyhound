@@ -39,7 +39,6 @@ defmodule Chukinas.Dreadnought.Player do
       name: name,
       ready?: false
     }
-    |> IOP.inspect("Player new")
   end
 
   # *** *******************************

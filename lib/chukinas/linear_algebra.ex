@@ -4,22 +4,12 @@ defmodule Chukinas.LinearAlgebra do
   use Chukinas.Math
   use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra.Csys.Guards
-  alias Chukinas.PositionOrientationSize, as: POS
   alias Chukinas.LinearAlgebra.Angle
   alias Chukinas.LinearAlgebra.Csys
   alias Chukinas.LinearAlgebra.Vector
   alias Chukinas.LinearAlgebra.Vector.Guards
-  alias Chukinas.LinearAlgebra.VectorApi
-  alias Chukinas.LinearAlgebra.TransformApi
   alias Chukinas.Util.Maps
   require Guards
-
-  # *** *******************************
-  # *** TYPES
-
-  @type coord :: POS.position_map | Vector.t
-  @type pose_or_csys :: POS.pose_map | Csys.t
-  @type pose_or_csys_s :: [pose_or_csys]
 
   # *** *******************************
   # *** USING
@@ -62,24 +52,5 @@ defmodule Chukinas.LinearAlgebra do
   end
 
   def angle_between_vectors(a, b), do: Angle.between_vectors(a, b)
-
-  # *** *******************************
-  # *** RELATIVE POSITION TRANSLATIONS
-
-  # TODO I don't like how this end-use pose functions are split b/w this and POS.ex
-
-  def position_translate_right(poseable, distance) do
-    position_translate(poseable, 0, distance)
-  end
-
-  def position_translate(poseable, x_rel, y_rel) do
-    position_translate(poseable, {x_rel, y_rel})
-  end
-
-  def position_translate(poseable, {_x_rel, _y_rel} = rel_position) do
-    rel_position
-    |> TransformApi.vector_wrt_outer_observer(poseable)
-    |> VectorApi.vector_to_position
-  end
 
 end
