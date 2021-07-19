@@ -59,7 +59,7 @@ defmodule Chukinas.Geometry.CircleTest do
     test "from_tangent_and_position" do
       start_pose = pose_new(1125, 425, 225)
       should_end_position = position_new(775, 275)
-      end_coord = should_end_position |> coord_from_position
+      end_coord = should_end_position |> vector_from_position
       circle = Circle.from_tangent_and_position(start_pose, should_end_position)
       trav_angle_at_end_position = Circle.traversal_angle_at_coord(circle, end_coord)
       actual_end_coord = Circle.coord_after_traversing_angle(circle, trav_angle_at_end_position)

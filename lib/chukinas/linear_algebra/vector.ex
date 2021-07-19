@@ -26,8 +26,6 @@ defmodule Vector do
 
   def new(%{x: x, y: y}), do: {x, y}
 
-  def origin, do: new(0, 0)
-
   def from_angle(degrees) do
     {sin, cos} = sin_and_cos(degrees)
     {cos, sin}
@@ -102,7 +100,7 @@ defmodule Vector do
   end
 
   # *** *******************************
-  # *** API
+  # *** REDUCERS
 
   # TODO rename flip_sign
   def flip(vector), do: scalar(vector, -1)
@@ -115,9 +113,9 @@ defmodule Vector do
 
   def dot({a, b}, {c, d}), do: a * c + b * d
 
-  def sum({a, b}, {c, d}), do: {a + c, b + d}
-
   def subtract(a, b), do: b |> flip |> sum(a)
+
+  def sum({a, b}, {c, d}), do: {a + c, b + d}
 
   # TODO rename ? `unit_vector`?
   def normalize({a, b} = vector) do

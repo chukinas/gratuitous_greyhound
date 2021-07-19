@@ -56,7 +56,7 @@ defmodule Chukinas.Dreadnought.CombatAction.Accumulator do
     path_vector = vector_subtract(target_vector, turret_coord)
     angle = angle_from_vector(path_vector)
     path_start_pose = pose_new(turret_coord, angle)
-    range = magnitude_from_vector(path_vector)
+    range = vector_to_magnitude(path_vector)
     path = Paths.straight_new(path_start_pose, range)
     if Collide.avoids_collision_with?(path, islands(acc)) do
       {:ok, path}

@@ -37,7 +37,7 @@ defmodule Turn do
   when has_pose(start_pose)
   and has_position(end_position) do
     circle = Circle.from_tangent_and_position(start_pose, end_position)
-    end_coord = end_position |> coord_from_position
+    end_coord = end_position |> vector_from_position
     trav_angle = Circle.traversal_angle_at_coord(circle, end_coord)
     %{
       circle: circle,

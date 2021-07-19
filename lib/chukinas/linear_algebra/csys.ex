@@ -7,6 +7,7 @@ defmodule Chukinas.LinearAlgebra.Csys do
   alias Chukinas.LinearAlgebra.Vector
   alias Chukinas.Math
   alias Chukinas.PositionOrientationSize, as: POS
+  alias Chukinas.LinearAlgebra.VectorApi
 
   # *** *******************************
   # *** TYPES
@@ -45,7 +46,7 @@ defmodule Chukinas.LinearAlgebra.Csys do
   def new(orientation, location) when is_vector(location) do
     %__MODULE__{
       # TODO need unit vector
-      orientation: orientation |> unit_vector_from_vector,
+      orientation: orientation |> VectorApi.vector_to_unit_vector,
       location: location
     }
   end

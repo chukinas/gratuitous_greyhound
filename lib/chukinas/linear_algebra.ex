@@ -4,9 +4,10 @@ defmodule Chukinas.LinearAlgebra do
   use Chukinas.PositionOrientationSize
   alias Chukinas.PositionOrientationSize, as: POS
   alias Chukinas.LinearAlgebra.Angle
+  alias Chukinas.LinearAlgebra.Csys
   alias Chukinas.LinearAlgebra.Vector
   alias Chukinas.LinearAlgebra.Vector.Guards
-  alias Chukinas.LinearAlgebra.Csys
+  alias Chukinas.LinearAlgebra.VectorApi
   alias Chukinas.Util.Maps
   require Guards
 
@@ -25,6 +26,7 @@ defmodule Chukinas.LinearAlgebra do
     quote do
       require Chukinas.LinearAlgebra
       import Chukinas.LinearAlgebra
+      import Chukinas.LinearAlgebra.VectorApi
     end
   end
 
@@ -64,17 +66,6 @@ defmodule Chukinas.LinearAlgebra do
   def position_from_coord(coord), do: position_new(coord)
 
   # *** *******************************
-  # *** COORD
-
-  def coord_new(x, y), do: {x, y}
-
-  def coord_origin(), do: coord_new(0, 0)
-
-  def unit_vector_from_vector(vector), do: Vector.normalize(vector)
-
-  def coord_from_position(position), do: position_to_tuple(position)
-
-  # *** *******************************
   # *** CSYS
 
   def csys_origin, do: pose_origin() |> csys_new
@@ -83,7 +74,7 @@ defmodule Chukinas.LinearAlgebra do
 
   def csys_from_vector(vector) when is_vector(vector) do
     Csys.new %{
-      orientation: Vector.from_angle(0),
+      orientation: VectorApi.vector_from_angle(0),
       location: vector
     }
   end
@@ -164,8 +155,6 @@ defmodule Chukinas.LinearAlgebra do
     |> Csys.transform_vector(vector)
   end
 
-  def vector_from_position(position), do: position_to_tuple(position)
-
   def angle_of_coord_wrt_csys(coord, csys) do
     Angle.of_coord_wrt_csys(coord, csys)
   end
@@ -191,26 +180,11 @@ defmodule Chukinas.LinearAlgebra do
   def angle_between_vectors(a, b), do: Angle.between_vectors(a, b)
 
   # *** *******************************
-  # *** VECTOR
-
-  def vector_origin, do: {0, 0}
-
-  def magnitude_from_vector(vector) do
-    Vector.magnitude(vector)
-  end
-
-  defdelegate vector_add(a, b), to: Vector, as: :sum
-
-  def vector_subtract(from_vector, vector) do
-    Vector.subtract(from_vector, vector)
-  end
-
-  # *** *******************************
   # *** HELPERS
 
   # TODO where do these belong?
   defp coerce_to_vector(position) when has_position(position) do
-    coord_from_position position
+    VectorApi.vector_from_position(position)
   end
   defp coerce_to_vector(vector) when is_vector(vector) do
     vector

@@ -62,7 +62,7 @@ defmodule Chukinas.Paths.Straight do
       end_position
       |> position_subtract(start_pose)
       |> vector_from_position
-      |> magnitude_from_vector
+      |> vector_to_magnitude
     proposed_path = new(start_pose, distance)
     if proposed_path |> end_pose |> position_new |> approx_equal(end_position) do
       proposed_path

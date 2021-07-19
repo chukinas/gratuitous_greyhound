@@ -1,8 +1,3 @@
-alias Chukinas.Paths
-alias Paths.{Straight, Turn}
-alias Chukinas.Svg.{Interpret}
-alias Chukinas.LinearAlgebra
-
 defmodule Chukinas.Svg do
   @moduledoc"""
   This module converts path structs to svg path strings for use in eex templates.
@@ -11,6 +6,11 @@ defmodule Chukinas.Svg do
   import Chukinas.Util.Precision, only: [values_to_int: 1]
   import Chukinas.PositionOrientationSize
   use Chukinas.Math
+  use Chukinas.LinearAlgebra
+  alias Chukinas.Paths
+  alias Chukinas.Paths.Straight
+  alias Chukinas.Paths.Turn
+  alias Chukinas.Svg.Interpret
 
   # *** *******************************
   # *** API
@@ -26,11 +26,11 @@ defmodule Chukinas.Svg do
 
   def get_path_string(%Turn{} = path) do
     #IO.warn "where called from"
-    {start_x, start_y} = path |> Paths.pose_at_start |> LinearAlgebra.coord_from_position
+    {start_x, start_y} = path |> Paths.pose_at_start |> vector_from_position
     {end_x, end_y} =
       path
       |> Paths.pose_at_end
-      |> LinearAlgebra.coord_from_position
+      |> vector_from_position
     rx = ry = _radius = path |> Paths.radius
     large_arc_flag = if Paths.traversal_angle(path) > 180, do: 1, else: 0
     sweep_flag =

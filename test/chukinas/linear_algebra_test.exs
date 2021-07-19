@@ -52,7 +52,7 @@ defmodule Chukinas.LinearAlgebraTest do
 
     test "angle wrt a csys, small" do
       csys = csys_origin()
-      coord = coord_new(1, -1)
+      coord = vector_new(1, -1)
       assert_in_delta(
         Math.normalize_angle(-45),
         angle_of_coord_wrt_csys(coord, csys),

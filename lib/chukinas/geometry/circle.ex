@@ -41,7 +41,7 @@ defmodule Circle do
   and has_position(other_position_on_circle) do
     # TODO deprecate these two from funcs, replace w/ similar that take linalg args
     tangent_csys = csys_from_pose tangent_pose
-    coord = other_position_on_circle |> coord_from_position
+    coord = other_position_on_circle |> vector_from_position
     from_tangent_csys_and_other_coord(tangent_csys, coord)
   end
 

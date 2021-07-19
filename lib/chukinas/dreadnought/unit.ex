@@ -1,15 +1,14 @@
 defmodule Chukinas.Dreadnought.Unit do
 
+  use Chukinas.LinearAlgebra
   use Chukinas.PositionOrientationSize
   alias Chukinas.Dreadnought.Sprites
   alias Chukinas.Dreadnought.Turret
   alias Chukinas.Dreadnought.Unit.Event, as: Ev
   alias Chukinas.Dreadnought.Unit.Status
   alias Chukinas.Geometry.Rect
-  alias Chukinas.LinearAlgebra
   alias Chukinas.Util.IdList
   alias Chukinas.Util.Maps
-
 
   # *** *******************************
   # *** TYPES
@@ -140,7 +139,7 @@ defmodule Chukinas.Dreadnought.Unit do
   def gunnery_target_vector(unit) do
     unit
     |> position
-    |> LinearAlgebra.vector_from_position
+    |> vector_from_position
   end
 
   @spec turret(t, integer) :: Turret.t

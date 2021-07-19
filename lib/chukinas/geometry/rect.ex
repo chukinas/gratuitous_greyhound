@@ -95,7 +95,7 @@ defmodule Chukinas.Geometry.Rect do
       position_add_x(position_top_left, relative_position_br),
       bottom_right_position(rect),
       position_add_y(position_top_left, relative_position_br)
-    ], do: coord_from_position(position)
+    ], do: vector_from_position(position)
   end
 
   def center_position(rect) do
