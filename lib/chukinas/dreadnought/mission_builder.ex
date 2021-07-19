@@ -7,7 +7,7 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
   alias Chukinas.Dreadnought.Player
   alias Chukinas.Dreadnought.Unit
   alias Chukinas.Dreadnought.UnitAction
-  alias Chukinas.Dreadnought.Unit.Builder, as: UnitBuilder
+  alias Chukinas.Dreadnought.UnitBuilder
   alias Chukinas.Geometry.Grid
 
   # *** *******************************
@@ -21,8 +21,8 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
       Player.new_manual(2),
     ]
     units = [
-      UnitBuilder.red_cruiser(1, 1) |> Unit.position_mass_center,
-      UnitBuilder.blue_destroyer(2, 2, pose_new(50, -300, 0))
+      UnitBuilder.build(:blue_destroyer, 1, 1) |> Unit.position_mass_center,
+      UnitBuilder.build(:blue_destroyer, 2, 2, pose_new(50, -300, 0))
     ]
     action_selection =
       ActionSelection.new(1, units, [])
@@ -171,7 +171,6 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
   end
 
   def build_fleet(:red, starting_id, player_id, pose) do
-    import Unit.Builder
     use Chukinas.LinearAlgebra
     formation =
       [
@@ -181,24 +180,23 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
       ]
     poses = for rel_vector <- formation, do: update_position_translate!(pose, rel_vector)
     [
-      red_cruiser(starting_id, player_id, Enum.at(poses, 0), name: "Navarin"),
-      red_destroyer(starting_id + 1, player_id, Enum.at(poses, 1), name: "Potemkin"),
-      red_destroyer(starting_id + 2, player_id, Enum.at(poses, 2), name: "Sissoi"),
+      UnitBuilder.build(:red_cruiser, starting_id, player_id, Enum.at(poses, 0), name: "Navarin"),
+      UnitBuilder.build(:red_destroyer, starting_id + 1, player_id, Enum.at(poses, 1), name: "Potemkin"),
+      UnitBuilder.build(:red_destroyer, starting_id + 2, player_id, Enum.at(poses, 2), name: "Sissoi")
     ]
   end
 
   def build_fleet(:blue, starting_id, player_id, pose) do
     use Chukinas.LinearAlgebra
-    import Unit.Builder
     dreadnought_position =
       pose
       |> csys_from_pose
       |> csys_forward(100)
       |> pose_from_csys
     dreadnought =
-      blue_dreadnought(starting_id, player_id, dreadnought_position, name: "Washington")
+      UnitBuilder.build(:blue_dreadnought, starting_id, player_id, dreadnought_position, name: "Washington")
     destroyer =
-      blue_destroyer(starting_id + 1, player_id, dreadnought_position, name: "Detroit")
+      UnitBuilder.build(:blue_destroyer, starting_id + 1, player_id, dreadnought_position, name: "Detroit")
       |> update_position_translate_right!(75)
     [dreadnought, destroyer]
   end

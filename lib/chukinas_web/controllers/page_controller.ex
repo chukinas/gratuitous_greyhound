@@ -1,7 +1,5 @@
 defmodule ChukinasWeb.PageController do
   use ChukinasWeb, :controller
-  alias Chukinas.Dreadnought.Unit
-  alias Chukinas.Dreadnought.Unit.Builder
 
   def index(conn, _params) do
     render conn, "index.html"

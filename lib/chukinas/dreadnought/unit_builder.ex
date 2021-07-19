@@ -1,13 +1,25 @@
-# TODO rename UnitBuilder?
-defmodule Chukinas.Dreadnought.Unit.Builder do
+defmodule Chukinas.Dreadnought.UnitBuilder do
 
   use Chukinas.PositionOrientationSize
   alias Chukinas.Dreadnought.Turret
   alias Chukinas.Dreadnought.Sprites
   alias Chukinas.Dreadnought.Unit
 
+  # *** *******************************
+  # *** CONSTRUCTORS
 
-  def blue_merchant(id, player_id, pose, opts \\ []) do
+  def combat_unit_atom_list do
+    [
+      :blue_destroyer,
+      :blue_dreadnought,
+      :red_cruiser,
+      :red_destroyer
+    ]
+  end
+
+  def build(hull_name, unit_id, player_id, pose \\ pose_origin(), opts \\ [])
+
+  def build(:blue_merchant, id, player_id, pose, opts) do
     fields =
       [
         health: 40,
@@ -19,7 +31,7 @@ defmodule Chukinas.Dreadnought.Unit.Builder do
     Unit.new(id, player_id, pose, fields)
   end
 
-  def blue_destroyer(id, player_id, pose, opts \\ []) do
+  def build(:blue_destroyer, id, player_id, pose, opts) do
     sprite = Sprites.blue("hull_blue_small")
     turrets = build_turrets(sprite, {:blue, "turret_blue_2"}, [
       {1, 0},
@@ -34,7 +46,7 @@ defmodule Chukinas.Dreadnought.Unit.Builder do
     Unit.new(id, player_id, pose, fields)
   end
 
-  def blue_dreadnought(id, player_id, pose, name, opts \\ []) do
+  def build(:blue_dreadnought, id, player_id, pose, opts) do
     sprite = Sprites.blue("hull_blue_large")
     turrets = build_turrets(sprite, {:blue, "turret_blue_1"}, [
       {1, 0},
@@ -46,14 +58,12 @@ defmodule Chukinas.Dreadnought.Unit.Builder do
         health: 150,
         sprite: sprite,
         turrets: turrets,
-        name: name
       ]
       |> Keyword.merge(opts)
     Unit.new(id, player_id, pose, fields)
   end
 
-  @spec red_cruiser(id :: integer, player_id :: integer, any, keyword) :: Unit.t
-  def red_cruiser(id, player_id, pose \\ pose_origin(), opts \\ []) do
+  def build(:red_cruiser, id, player_id, pose, opts) do
     sprite = Sprites.red("ship_large")
     turrets = build_turrets(sprite, {:red, "turret1"}, [
       {1, 0},
@@ -70,7 +80,7 @@ defmodule Chukinas.Dreadnought.Unit.Builder do
     Unit.new(id, player_id, pose, fields)
   end
 
-  def red_destroyer(id, player_id, pose, opts \\ []) do
+  def build(:red_destroyer, id, player_id, pose, opts) do
     sprite = Sprites.red("ship_small")
     turrets = build_turrets(sprite, {:red, "turret1"}, [
       {1, 0}
@@ -86,7 +96,7 @@ defmodule Chukinas.Dreadnought.Unit.Builder do
   end
 
   # *** *******************************
-  # *** PRIVATE
+  # *** PRIVATE HELPERS
 
   defp build_turrets(unit_sprite, {sprite_fun, sprite_name}, turret_tuples) do
     turret_sprite = apply(Sprites, sprite_fun, [sprite_name])
