@@ -5,6 +5,7 @@ defmodule Chukinas.LinearAlgebra do
   alias Chukinas.PositionOrientationSize, as: POS
   alias Chukinas.LinearAlgebra.Angle
   alias Chukinas.LinearAlgebra.Csys
+  alias Chukinas.LinearAlgebra.CsysApi
   alias Chukinas.LinearAlgebra.Vector
   alias Chukinas.LinearAlgebra.Vector.Guards
   alias Chukinas.LinearAlgebra.VectorApi
@@ -26,6 +27,7 @@ defmodule Chukinas.LinearAlgebra do
     quote do
       require Chukinas.LinearAlgebra
       import Chukinas.LinearAlgebra
+      import Chukinas.LinearAlgebra.CsysApi
       import Chukinas.LinearAlgebra.VectorApi
     end
   end
@@ -67,10 +69,6 @@ defmodule Chukinas.LinearAlgebra do
 
   # *** *******************************
   # *** CSYS
-
-  def csys_origin, do: pose_origin() |> csys_new
-
-  def csys_from_pose(pose), do: Csys.new(pose)
 
   def csys_from_vector(vector) when is_vector(vector) do
     Csys.new %{
@@ -199,7 +197,7 @@ defmodule Chukinas.LinearAlgebra do
 
   # TODO replace with simply `csys_new`
   defp coerce_to_csys(pose) when has_pose(pose) do
-    csys_from_pose pose
+    CsysApi.csys_from_pose(pose)
   end
   defp coerce_to_csys(csys) when has_csys(csys) do
     csys_new(csys)

@@ -22,7 +22,6 @@ defmodule Chukinas.LinearAlgebra.Vector do
 
   def flip_sign_y({x, y}), do: {x, -y}
 
-  # TODO rename ? `unit_vector`?
   def normalize({a, b} = vector) do
     magnitude = magnitude vector
     (for var <- [a, b], do: var / magnitude)

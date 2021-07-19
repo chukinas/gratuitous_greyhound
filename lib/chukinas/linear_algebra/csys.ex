@@ -17,16 +17,12 @@ defmodule Chukinas.LinearAlgebra.Csys do
   @type location :: Vector.t
 
   typedstruct enforce: true do
-    # TODO replace with csys_fields?
     field :orientation, Vector.t
-    # TODO rename coord
     field :location, Vector.t
   end
 
   # *** *******************************
   # *** CONSTRUCTORS
-  #
-  # TODO move all the various NEWs to main linear_algebra file
 
   def new(%__MODULE__{} = csys), do: csys
 
