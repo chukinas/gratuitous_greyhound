@@ -102,6 +102,11 @@ defmodule Chukinas.Dreadnought.Mission do
     %__MODULE__{mission | players: players}
   end
 
+  def update_unit(mission, unit_id, fun) do
+    update_units = &IdList.update!(&1, unit_id, fun)
+    Map.update!(mission, :units, update_units)
+  end
+
   # *** *******************************
   # ***  REDUCERS (PRIVATE)
 

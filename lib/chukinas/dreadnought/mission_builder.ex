@@ -22,16 +22,35 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
     ]
     units = [
       UnitBuilder.build(:blue_destroyer, 1, 1) |> Unit.position_mass_center,
-      UnitBuilder.build(:blue_destroyer, 2, 2, pose_new(50, -300, 0))
+      UnitBuilder.build(:blue_destroyer, 2, 2)
     ]
-    action_selection =
-      ActionSelection.new(1, units, [])
-      |> ActionSelection.put(UnitAction.fire_upon(1, 2))
     Mission.new("homepage", grid, margin)
     |> Mission.put(inputs)
     |> Mission.put(units)
     |> Mission.start
+    |> homepage_1_fire_upon_2
+  end
+
+  def homepage_1_fire_upon_2(mission) do
+    units = Mission.units(mission)
+    action_selection =
+      ActionSelection.new(1, units, [])
+      |> ActionSelection.put(UnitAction.fire_upon(1, 2))
+    mission
+    |> homepage_rand_target_pose
     |> Mission.put_action_selection_and_end_turn(action_selection)
+  end
+
+  def homepage_rand_target_pose(mission) do
+    pose = rand_position() |> pose_new(0)
+    Mission.update_unit mission, 2, &merge_pose!(&1, pose)
+  end
+
+  def rand_position do
+    #csys_new(0, 0, Enum.random(1..360))
+    #|> csys_forward(1000)
+    #|> pose_from_csys
+    position_new(600, 500)
   end
 
   @spec online(String.t) :: Mission.t
