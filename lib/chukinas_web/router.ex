@@ -29,12 +29,11 @@ defmodule ChukinasWeb.Router do
 
   scope "/dreadnought", ChukinasWeb do
     pipe_through :dreadnought
-    live "/", DreadnoughtLive, :redirect_to_setup
+    live "/", DreadnoughtIndexLive
     live "/grid", DreadnoughtLive, :redirect_to_setup
     live "/gallery", DreadnoughtLive, :gallery
     live "/setup", DreadnoughtLive, :setup
     live "/play", DreadnoughtPlayLive, :index
-    live "/dev", DreadnoughtIndexLive
   end
 
   # Other scopes may use custom stacks.

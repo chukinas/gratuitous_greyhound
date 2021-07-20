@@ -4,7 +4,7 @@
   }
 </style>
 
-<div class="flex items-center justify-center h-screen w-screen" style="background-color: #006699">
+<div class="flex items-center justify-center h-screen w-screen" style="background-color: #213540">
   <div class="text-yellow-100 space-y-12">
     <h2 class="uppercase text-4xl">Dreadnought</h2>
     <div 
@@ -18,9 +18,15 @@
         <%= ChukinasWeb.AnimationView.muzzle_flashes @socket, @mission.gunfire %>
       </div>
     </div>
-    <%= for button_text <- ~w/Play Gallery/ do %>
-      <button type="button" class="inline-flex justify-center w-full rounded-md border-2 border-yellow-100 shadow-sm px-6 py-3 text-lg font-medium hover:bg-white/25 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-        <%= button_text %>
+
+    <%# BUTTONS %>
+    <%= for button <- @buttons do %>
+      <button 
+           phx-click="redirect"
+           value="<%= button.action %>"
+           type="button" 
+           class="inline-flex justify-center w-full rounded-md border-2 border-yellow-100 shadow-sm px-6 py-3 text-lg font-medium hover:bg-white/25 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        <%= button.title %>
       </button>
   <% end %>
   </div>

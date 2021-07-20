@@ -22,7 +22,7 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
       Player.new_manual(2),
     ]
     units = [
-      UnitBuilder.build(:blue_destroyer, 1, 1) |> Unit.position_mass_center,
+      UnitBuilder.build(:red_cruiser, 1, 1) |> Unit.position_mass_center,
       UnitBuilder.build(:blue_destroyer, 2, 2)
     ]
     Mission.new("homepage", grid, margin)
