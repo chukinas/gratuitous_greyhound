@@ -8,7 +8,6 @@ defmodule Chukinas.LinearAlgebra do
   alias Chukinas.LinearAlgebra.Csys
   alias Chukinas.LinearAlgebra.Vector
   alias Chukinas.LinearAlgebra.Vector.Guards
-  alias Chukinas.Util.Maps
   require Guards
 
   # *** *******************************
@@ -42,7 +41,12 @@ defmodule Chukinas.LinearAlgebra do
   # *** *******************************
   # *** MERGE
 
-  def merge_csys(map, csys_map), do: Maps.merge(map, csys_map, Csys)
+  def merge_csys(map, csys_map) do
+    %Csys{orientation: orient, location: coord} = Csys.from_map(csys_map)
+    map
+    |> Map.put(:orientation, orient)
+    |> Map.put(:location, coord)
+  end
 
   # *** *******************************
   # *** ANGLE

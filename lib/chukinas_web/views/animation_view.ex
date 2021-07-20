@@ -4,7 +4,7 @@ defmodule ChukinasWeb.AnimationView do
   alias Chukinas.Dreadnought.Animations
 
   def muzzle_flashes(socket, animations) do
-    render_all(socket, animations |> Animations.list_muzzle_flashes)
+    render_all(socket, animations |> Animations.list_muzzle_flashes |> IOP.inspect("view ani"))
   end
 
   def render_all(socket, animations) when is_list(animations) do

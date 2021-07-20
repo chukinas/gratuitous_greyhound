@@ -2,8 +2,8 @@ defmodule Chukinas.LinearAlgebra.Csys do
 
   require Chukinas.PositionOrientationSize.Guards
   use TypedStruct
-  use Chukinas.LinearAlgebra
   use Chukinas.PositionOrientationSize
+  use Chukinas.LinearAlgebra.Vector.Guards
   alias Chukinas.LinearAlgebra.Vector
   alias Chukinas.PositionOrientationSize, as: POS
   alias Chukinas.LinearAlgebra.OrientationMatrix

@@ -71,10 +71,9 @@ defmodule Chukinas.Dreadnought.Unit do
 
   def rotate_turret(unit, mount_id, angle) do
     mount = turret(unit, mount_id)
-    travel = Turret.travel_from_current_angle(mount, angle)
+    travel = Turret.travel_from_current_angle(mount, angle |> IOP.inspect("unit tur angle"))
     put(unit, [
-      # TODO validate angle?
-      Turret.put_angle(mount, angle),
+      angle_replace!(mount, angle),
       Ev.MountRotation.new(mount.id, angle, travel)
     ])
   end

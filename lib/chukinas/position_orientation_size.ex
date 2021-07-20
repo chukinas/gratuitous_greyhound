@@ -17,12 +17,14 @@ defmodule Chukinas.PositionOrientationSize do
     alias Chukinas.PositionOrientationSize, as: POS
     quote do
       require POS.Guards
-      import POS.Guards
       require POS
       import POS
       alias POS, as: POS
+      # TODO remove this
       use Chukinas.TypedStruct
-      import Chukinas.PositionOrientationSize.PoseApi
+      import POS.AngleApi
+      import POS.Guards
+      import POS.PoseApi
     end
   end
 
@@ -100,9 +102,6 @@ defmodule Chukinas.PositionOrientationSize do
   def merge_position_into!(pos_map, struct), do: merge_position!(struct, pos_map)
   def merge_pose_into!(pos_map, struct), do: merge_pose!(struct, pos_map)
   def merge_size_into!(pos_map, struct), do: merge_size!(struct, pos_map)
-
-  def put_angle!(struct, angle), do: %{struct | angle: angle}
-  def put_angle(map, angle), do: Map.put(map, :angle, angle)
 
   def into_struct!(fields, module), do: struct!(module, fields)
 

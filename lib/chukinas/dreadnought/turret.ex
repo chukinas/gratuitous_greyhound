@@ -76,8 +76,8 @@ defmodule Chukinas.Dreadnought.Turret do
   def angle_current(turret), do: get_angle(turret)
 
   def angle_random_in_arc(%__MODULE__{max_rotation: max_rotation} = turret) do
-    rotation = max_rotation * Enum.random(1..99) / 100
-    angle_for_given_rotation(turret, rotation)
+    rotation = (max_rotation * Enum.random(1..99) / 100) |> IOP.inspect("turret rotation")
+    angle_for_given_rotation(turret, rotation) |> IOP.inspect("turret angle")
   end
 
   def gun_barrel_vector(%__MODULE__{sprite: sprite}) do
@@ -124,12 +124,6 @@ defmodule Chukinas.Dreadnought.Turret do
   end
 
   # *** *******************************
-  # *** REDUCERS
-
-  # TODO eliminate
-  defdelegate put_angle(mount, angle), to: POS, as: :put_angle!
-
-  # *** *******************************
   # *** BOUNDARY
 
   def normalize_desired_angle(%__MODULE__{} = mount, angle) when is_number(angle) do
@@ -156,11 +150,11 @@ defmodule Chukinas.Dreadnought.Turret do
   end
 
   defimpl Inspect do
-    alias Chukinas.PositionOrientationSize, as: POS
+    use Chukinas.PositionOrientationSize
     require IOP
     def inspect(turret, opts) do
       IOP.struct("Turret-#{turret.id}", [
-        pose: POS.pose_from_map(turret)
+        pose: pose_from_map(turret)
       ])
     end
   end

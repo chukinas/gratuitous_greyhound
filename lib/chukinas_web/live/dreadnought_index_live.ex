@@ -32,19 +32,20 @@ defmodule ChukinasWeb.DreadnoughtIndexLive do
     socket
     |> assign(mission: mission)
     |> assign(unit: mission |> Mission.unit_by_id(1) |> wrap_unit)
+    |> assign(turn_number: Mission.turn_number(mission))
   end
 
   defp wrap_unit(%Unit{} = unit) do
     scale = 3
     %{
-      unit: unit,
+      unit: unit |> IOP.inspect("live - unit 1"),
       scale: scale,
       height: scale * Unit.width(unit)
     }
   end
 
   defp start_new_turn_timer do
-    Process.send_after self(), :new_turn, 3_000
+    Process.send_after self(), :new_turn, 100_000
   end
 
 end

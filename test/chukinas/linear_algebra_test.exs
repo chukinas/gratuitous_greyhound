@@ -86,7 +86,7 @@ defmodule Chukinas.LinearAlgebraTest do
       turret_csys = csys_new(20, 0, 90)
       unit_csys = csys_new(20, 0, 90)
       actual_coord =
-        vector_transform_from(turret_barrel, [
+        vector_wrt_outer_observer(turret_barrel, [
           turret_csys,
           unit_csys
         ])

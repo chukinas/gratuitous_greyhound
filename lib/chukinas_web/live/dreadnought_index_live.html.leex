@@ -13,7 +13,7 @@
       <div class="h-full w-full transform translate-x-1/2 translate-y-1/2 relative">
         <%= ChukinasWeb.DreadnoughtView.render "unit.html",
           socket: @socket,
-          turn_number: 1,
+          turn_number: @turn_number,
           unit: @unit.unit %>
         <%= ChukinasWeb.AnimationView.muzzle_flashes @socket, @mission.gunfire %>
       </div>

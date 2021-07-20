@@ -55,17 +55,13 @@ defmodule Chukinas.LinearAlgebra.CsysApi do
     csys_from_coord_and_angle({x, y}, angle)
   end
 
-  def csys_origin do
-    Csys.new(
-      OrientationMatrix.origin(),
-      VectorApi.vector_origin()
-    )
-  end
+  def csys_origin, do: csys_new(0, 0, 0)
 
   # *** *******************************
   # *** REDUCERS
 
-  defdelegate csys_invert(csys), to: Csys, as: :invert
+  def csys_invert(csys), do: Csys.invert(csys)
+  #defdelegate csys_invert(csys), to: Csys, as: :invert
 
   def csys_rotate(csys, :left), do: Csys.rotate(csys, -90)
 
