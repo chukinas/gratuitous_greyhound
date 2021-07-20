@@ -63,6 +63,7 @@ function fade(eventEl, unitId) {
 }
 
 function rotateMount(eventEl, unitId) {
+  console.log("rotateMount", eventEl)
   const data = eventEl.dataset
   const rotatingElId = `unit-${unitId}-mount-${data.mountId}`
   const rotatingEl = document.getElementById(rotatingElId)

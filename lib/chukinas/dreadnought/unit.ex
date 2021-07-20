@@ -231,31 +231,33 @@ defmodule Chukinas.Dreadnought.Unit do
     position_subtract(unit, translate)
   end
 
-  # *** *******************************
-  # *** IMPLEMENTATIONS
-
-  defimpl Inspect do
-    require IOP
-    def inspect(unit, opts) do
-      title = "Unit-#{unit.id}"
-      fields =
-        unit
-        |> Map.take([
-          :events,
-          :past_events
-        ])
-        |> Enum.into([])
-        |> Keyword.merge(
-          health: unit.health
-          #percent_health: Unit.percent_health(unit)
-        )
-      IOP.struct(title, fields)
-    end
-  end
-
 end
 
-defimpl Chukinas.LinearAlgebra.HasCsys, for: Chukinas.Dreadnought.Unit do
+# *** *******************************
+# *** IMPLEMENTATIONS
+
+alias Chukinas.Dreadnought.Unit
+
+defimpl Inspect, for: Unit do
+  require IOP
+  def inspect(unit, opts) do
+    title = "Unit-#{unit.id}"
+    fields =
+      unit
+      |> Map.take([
+        :events,
+        :past_events
+      ])
+      |> Enum.into([])
+      |> Keyword.merge(
+        health: unit.health
+        #percent_health: Unit.percent_health(unit)
+      )
+    IOP.struct(title, fields)
+  end
+end
+
+defimpl Chukinas.LinearAlgebra.HasCsys, for: Unit do
 
   use Chukinas.LinearAlgebra
 

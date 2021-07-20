@@ -49,9 +49,7 @@ defmodule Chukinas.LinearAlgebraTest do
       expected_angle = Math.normalize_angle(-44)
       actual_angle =
         vector_wrt_inner_observer(@target_coord, @observer_csys)
-        |> IOP.inspect
         |> vector_to_angle
-        |> IOP.inspect
       assert_in_delta(expected_angle, actual_angle, 1)
     end
 

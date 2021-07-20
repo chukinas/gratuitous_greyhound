@@ -21,7 +21,8 @@ defmodule ChukinasWeb.DreadnoughtIndexLive do
   @impl true
   def handle_info(:new_turn, socket) do
     start_new_turn_timer()
-    socket = update(socket, :mission, &MissionBuilder.homepage_1_fire_upon_2/1)
+    mission = MissionBuilder.homepage_1_fire_upon_2(socket.assigns.mission)
+    socket = assign_mission_and_unit(socket, mission)
     {:noreply, socket}
   end
 
@@ -45,7 +46,7 @@ defmodule ChukinasWeb.DreadnoughtIndexLive do
   end
 
   defp start_new_turn_timer do
-    Process.send_after self(), :new_turn, 100_000
+    Process.send_after self(), :new_turn, 5_000
   end
 
 end
