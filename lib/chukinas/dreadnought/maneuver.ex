@@ -31,7 +31,7 @@ defmodule Maneuver do
   end
 
   def move_to(unit, position) do
-    path = Paths.get_connecting_path(pose_new(unit), position)
+    path = Paths.get_connecting_path(pose_from_map(unit), position)
     maneuver = Ev.Maneuver.new(path)
     Unit.put(unit, maneuver)
   end

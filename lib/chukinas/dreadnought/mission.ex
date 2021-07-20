@@ -73,6 +73,7 @@ defmodule Chukinas.Dreadnought.Mission do
     |> maybe_end_turn
   end
 
+  # TODO decouple the update and the new turn
   def put_action_selection_and_end_turn(mission, %ActionSelection{} = actions) do
     mission
     |> Maps.put_by_id(:player_actions, actions, :player_id)

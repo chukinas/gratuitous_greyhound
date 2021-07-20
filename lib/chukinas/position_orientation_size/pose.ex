@@ -13,21 +13,15 @@ defmodule Pose do
   # *** *******************************
   # *** NEW
 
-  # arity-1
-
   def new(%{x: x, y: y, angle: angle}), do: new(x, y, angle)
 
   def new(%__MODULE__{} = pose), do: pose
 
   def new({x, y, angle}), do: new(x, y, angle)
 
-  # arity-2
-
   def new(%{x: x, y: y}, angle), do: new(x, y, angle)
 
   def new({x, y}, angle), do: new(x, y, angle)
-
-  # arity-3
 
   def new(x, y, angle) do
     %__MODULE__{
@@ -36,10 +30,6 @@ defmodule Pose do
       angle: angle
     }
   end
-
-  # Helpers
-
-  def origin(), do: new(0, 0, 0)
 
   # *** *******************************
   # *** GETTERS

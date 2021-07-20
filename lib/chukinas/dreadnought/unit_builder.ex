@@ -104,7 +104,7 @@ defmodule Chukinas.Dreadnought.UnitBuilder do
       pose =
         unit_sprite
         |> Sprites.mount_position(mount_id)
-        |> pose_new(rest_angle)
+        |> pose_from_position(rest_angle)
       Turret.new(mount_id, turret_sprite, pose)
     end)
   end

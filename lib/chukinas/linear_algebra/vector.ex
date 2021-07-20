@@ -1,6 +1,7 @@
 defmodule Chukinas.LinearAlgebra.Vector do
 
   import Chukinas.Math
+  alias Chukinas.PositionOrientationSize, as: POS
 
   @x {1, 0}
   @type t() :: {number(), number()}
@@ -56,5 +57,7 @@ defmodule Chukinas.LinearAlgebra.Vector do
     |> Enum.sum
     |> :math.sqrt
   end
+
+  def vector_to_position({x, y}), do: POS.position_new(x, y)
 
 end

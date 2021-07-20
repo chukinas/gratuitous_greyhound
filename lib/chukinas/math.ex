@@ -88,10 +88,6 @@ defmodule Chukinas.Math do
     when angle >= 0
     and angle < 360
 
-  defguard angle_is_normal_non_zero(angle)
-    when angle > 0
-    and angle < 360
-
   def normalize_angle(angle) do
     cond do
       angle < 0 ->

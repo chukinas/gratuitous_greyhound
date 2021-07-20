@@ -38,17 +38,17 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
       ActionSelection.new(1, units, [])
       |> ActionSelection.put(UnitAction.fire_upon(1, 2))
     mission
-    |> homepage_rand_target_pose
+    |> position_target_randomly_within_arc
     |> Mission.put_action_selection_and_end_turn(action_selection)
   end
 
-  def homepage_rand_target_pose(mission) do
-    pose = rand_position() |> pose_new(0)
-    Mission.update_unit mission, 2, &merge_pose!(&1, pose)
-  end
-
-  def rand_position do
-    vector_from_polar(500, Enum.random(1..360))
+  defp position_target_randomly_within_arc(mission) do
+    target_pose =
+      mission
+      |> Mission.unit_by_id(1)
+      |> Unit.world_coord_random_in_arc(500)
+      |> pose_from_vector
+    Mission.update_unit mission, 2, &merge_pose!(&1, target_pose)
   end
 
   @spec online(String.t) :: Mission.t
@@ -58,46 +58,6 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
     |> Map.put(:islands, islands())
     # Still needs players, units, and needs to be started
   end
-
-  #def dev do
-  #  {grid, margin} = medium_map()
-  #  units = [
-  #    Unit.Builder.red_cruiser(1, 1, pose_new(0, 0, 0), name: "Prince Eugene"),
-  #    Unit.Builder.blue_merchant(2, 2, pose_new(position_from_size(grid), 225))
-  #  ]
-  #  Mission.new("dev", grid, margin)
-  #  |> Map.put(:islands, islands())
-  #  |> Mission.put(units)
-  #  |> Mission.put(human_and_ai_players())
-  #  |> Mission.start
-  #end
-
-  #def build do
-  #  # Config
-  #  square_size = 50
-  #  arena = %{
-  #    width: 3000,
-  #    height: 2000
-  #  #  width: 700,
-  #  #  height: 400
-  #  }
-  #  margin = size_new(arena.height, arena.width)
-  #  #margin = size_new(200, 100)
-  #  [square_count_x, square_count_y] =
-  #    [arena.width, arena.height]
-  #    |> Enum.map(&round(&1 / square_size))
-  #  grid = Grid.new(square_size, position_new(square_count_x, square_count_y))
-  #  units = [
-  #    Unit.Builder.red_destroyer(1, 1, pose_new(0, 0, 0), name: "Prince Eugene"),
-  #    #Unit.Builder.red_cruiser(2, pose_new(800, 155, 75), name: "Billy"),
-  #    Unit.Builder.blue_merchant(3, 2, pose_new(position_from_size(grid), 225))
-  #  ]
-  #  Mission.new("something...", grid, margin)
-  #  |> Map.put(:islands, islands())
-  #  |> Mission.put(units)
-  #  |> Mission.put(human_and_ai_players())
-  #  |> Mission.start
-  #end
 
   # *** *******************************
   # *** REDUCERS

@@ -95,7 +95,7 @@ defmodule Chukinas.Dreadnought.CombatAction do
       target
       # TODO position_new is redundant
       |> position_new
-      |> pose_new(ordnance_hit_angle)
+      |> pose_from_position(ordnance_hit_angle)
     animations = [
       Animations.large_muzzle_flash(pose, delay_discharge),
       # TODO calculate the ordnance flight time instead of guessing
@@ -111,7 +111,7 @@ defmodule Chukinas.Dreadnought.CombatAction do
     turret
     |> Turret.gun_barrel_vector
     |> vector_wrt_outer_observer([turret, unit])
-    |> pose_new(angle)
+    |> pose_from_vector(angle)
   end
 
   def move_turret_to_neutral(acc, _turret_id) do

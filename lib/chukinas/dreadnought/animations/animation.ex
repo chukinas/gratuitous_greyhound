@@ -88,7 +88,7 @@ defmodule Chukinas.Dreadnought.Animation do
       title = "Animation"
       fields = [
         name: animation.name,
-        pose: animation |> pose_new,
+        pose: animation |> pose_from_map,
         frames: animation.frames
       ]
       IOP.struct(title, fields)

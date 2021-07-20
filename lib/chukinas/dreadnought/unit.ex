@@ -147,6 +147,14 @@ defmodule Chukinas.Dreadnought.Unit do
     IdList.fetch!(unit.turrets, turret_id)
   end
 
+  def turret_random(unit) do
+    mount_id =
+      unit
+      |> all_turret_mount_ids
+      |> Enum.random
+    turret(unit, mount_id)
+  end
+
   def all_turret_mount_ids(%__MODULE__{turrets: turrets}) do
     Enum.map(turrets, & &1.id)
   end
@@ -160,6 +168,13 @@ defmodule Chukinas.Dreadnought.Unit do
 
   def width(%__MODULE__{sprite: sprite}) do
     sprite.height
+  end
+
+  def world_coord_random_in_arc(%__MODULE__{} = unit, distance) do
+    turret = turret_random unit
+    angle = Turret.angle_random_in_arc turret
+    target_coord_wrt_turret_loc = vector_from_polar(distance, angle)
+    vector_wrt_outer_observer(target_coord_wrt_turret_loc, [turret |> position_new, unit])
   end
 
   # *** *******************************

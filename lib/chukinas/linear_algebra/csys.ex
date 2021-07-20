@@ -3,6 +3,7 @@ defmodule Chukinas.LinearAlgebra.Csys do
   require Chukinas.PositionOrientationSize.Guards
   use TypedStruct
   use Chukinas.LinearAlgebra
+  use Chukinas.PositionOrientationSize
   alias Chukinas.LinearAlgebra.Vector
   alias Chukinas.PositionOrientationSize, as: POS
   alias Chukinas.LinearAlgebra.OrientationMatrix
@@ -106,7 +107,7 @@ defmodule Chukinas.LinearAlgebra.Csys do
       |> Vector.angle
     csys
     |> location
-    |> POS.pose_new(angle)
+    |> pose_from_vector(angle)
   end
 
   def position(%{} = csys) do

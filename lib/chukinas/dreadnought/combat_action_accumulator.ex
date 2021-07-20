@@ -58,7 +58,7 @@ defmodule Chukinas.Dreadnought.CombatAction.Accumulator do
     # rename `projectile_vector`?
     path_vector = vector_subtract(target_vector, turret_coord)
     angle = vector_to_angle(path_vector)
-    path_start_pose = pose_new(turret_coord, angle)
+    path_start_pose = pose_from_vector(turret_coord, angle)
     range = vector_to_magnitude(path_vector)
     path = Paths.straight_new(path_start_pose, range)
     if Collide.avoids_collision_with?(path, islands(acc)) do

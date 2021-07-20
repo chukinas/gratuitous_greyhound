@@ -72,7 +72,7 @@ defmodule Turn do
     |> Circle.traversal_distance_after_traversing_angle(angle)
   end
 
-  def start_pose(path), do: pose_new(path)
+  def start_pose(path), do: pose_from_map(path)
 
   def end_pose(path) do
     path
@@ -141,7 +141,7 @@ end
 
 defimpl PathLike, for: Turn do
   use Chukinas.PositionOrientationSize
-  def pose_start(path), do: path |> pose_new
+  def pose_start(path), do: path |> pose_from_map
   def pose_end(path), do: Turn.end_pose(path)
   def len(path), do: Turn.traversal_distance(path)
   def get_bounding_rect(path), do: Turn.bounding_rect(path)

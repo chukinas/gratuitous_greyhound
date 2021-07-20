@@ -45,7 +45,7 @@ defmodule Chukinas.LinearAlgebra.CsysApi do
 
   def csys_from_position(position) when has_position(position) do
     position
-    |> POS.pose_new
+    |> pose_from_position
     |> csys_from_pose
   end
 

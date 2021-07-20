@@ -56,6 +56,10 @@ defmodule Chukinas.LinearAlgebra.TransformApi do
     do_vector_wrt(vector, CsysApi.csys_from_pose(observer), direction)
   end
 
+  defp do_vector_wrt(vector, observer, direction) when has_position(observer) do
+    do_vector_wrt(vector, CsysApi.csys_from_position(observer), direction)
+  end
+
   defp do_vector_wrt(vector, observer, direction) when is_vector(observer) do
     do_vector_wrt(vector, CsysApi.csys_from_coord(observer), direction)
   end

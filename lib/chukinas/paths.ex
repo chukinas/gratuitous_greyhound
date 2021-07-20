@@ -69,10 +69,9 @@ defmodule Paths do
   defdelegate deceeds_angle(path, angle), to: PathLike, as: :deceeds_angle
 
   def get_connecting_path(start_pose, final_position) do
-    possible_straight_path = Straight.get_connecting_path start_pose, final_position
-    case possible_straight_path do
-      nil -> Turn.connecting_path! start_pose, final_position
-      _ -> possible_straight_path
+    case Straight.fetch_connecting_path(start_pose, final_position) do
+      :error -> Turn.connecting_path! start_pose, final_position
+      {:ok, straight_path} -> straight_path
     end
   end
 

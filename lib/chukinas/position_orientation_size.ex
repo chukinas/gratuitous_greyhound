@@ -6,6 +6,7 @@ defmodule Chukinas.PositionOrientationSize do
   alias Chukinas.Math
   alias Chukinas.PositionOrientationSize.IsPos
   alias Chukinas.PositionOrientationSize.Pose
+  alias Chukinas.PositionOrientationSize.PoseApi
   alias Chukinas.PositionOrientationSize.Position
   alias Chukinas.PositionOrientationSize.Size
   alias Chukinas.Util.Maps
@@ -21,6 +22,7 @@ defmodule Chukinas.PositionOrientationSize do
       import POS
       alias POS, as: POS
       use Chukinas.TypedStruct
+      import Chukinas.PositionOrientationSize.PoseApi
     end
   end
 
@@ -60,7 +62,7 @@ defmodule Chukinas.PositionOrientationSize do
 
   def pose_set_precision(pose, precision) do
     pose
-    |> pose_new
+    |> PoseApi.pose_from_map
     |> pos_set_precision(precision)
   end
 
@@ -218,23 +220,5 @@ defmodule Chukinas.PositionOrientationSize do
   defdelegate orientation_rotate(orientation, angle), to: Pose, as: :rotate
 
   def angle_from_sum(%{angle: a}, %{angle: b}), do: a + b
-
-  # *** *******************************
-  # *** POSE
-
-  # TODO is this redundant?
-  def pose_new({x, y}, angle), do: Pose.new(x, y, angle)
-  defdelegate pose_new(term), to: Pose, as: :new
-  defdelegate pose_new(position, angle), to: Pose, as: :new
-  defdelegate pose_new(x, y, angle), to: Pose, as: :new
-
-  def pose(item) do
-    IO.warn "DEPRECATED: PositionOrientationSize.pose/1"
-    Pose.new(item)
-  end
-
-  defdelegate pose(x, y, angle), to: Pose, as: :new
-
-  defdelegate pose_origin(), to: Pose, as: :origin
 
 end
