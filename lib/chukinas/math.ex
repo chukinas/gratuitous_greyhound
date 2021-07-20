@@ -14,9 +14,13 @@ defmodule Chukinas.Math do
   # *** *******************************
   # *** FUNCTIONS
 
-  def sign(x) when x <  0, do: -1
-  def sign(x) when x == 0, do:  0
-  def sign(x) when x >  0, do:  1
+  def sign(x) when is_number(x) do
+    cond do
+      x <  0 -> -1
+      x == 0 ->  0
+      x >  0 ->  1
+    end
+  end
 
   def flip_sign(x), do: x * sign(x)
 
@@ -88,7 +92,7 @@ defmodule Chukinas.Math do
     when angle >= 0
     and angle < 360
 
-  def normalize_angle(angle) do
+  def normalize_angle(angle) when is_number(angle) do
     cond do
       angle < 0 ->
         normalize_angle(angle + 360)

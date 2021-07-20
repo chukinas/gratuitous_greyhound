@@ -1,9 +1,10 @@
 defmodule Chukinas.LinearAlgebra.Vector do
 
-  import Chukinas.Math
+  alias Chukinas.Math
   alias Chukinas.PositionOrientationSize, as: POS
 
   @x {1, 0}
+  @y {0, 1}
   @type t() :: {number(), number()}
 
   # *** *******************************
@@ -12,7 +13,7 @@ defmodule Chukinas.LinearAlgebra.Vector do
   def new(x, y), do: {x, y}
 
   def from_angle(degrees) do
-    {sin, cos} = sin_and_cos(degrees)
+    {sin, cos} = Math.sin_and_cos(degrees)
     {cos, sin}
   end
 
@@ -41,12 +42,16 @@ defmodule Chukinas.LinearAlgebra.Vector do
   # *** CONVERTERS
 
   def angle(vector) do
-    vector
-    |> normalize
-    |> dot(@x)
-    |> acos
-    |> mult(sign(vector))
-    |> normalize_angle
+    unsigned_angle =
+      vector
+      |> normalize
+      |> dot(@x)
+      |> Math.acos
+    y_axis_projection_sign =
+      vector
+      |> dot(@y)
+      |> Math.sign
+    Math.normalize_angle(unsigned_angle * y_axis_projection_sign)
   end
 
   def dot({a, b}, {c, d}), do: a * c + b * d

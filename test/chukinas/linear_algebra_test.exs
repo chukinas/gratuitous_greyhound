@@ -8,38 +8,51 @@ defmodule Chukinas.LinearAlgebraTest do
   use Chukinas.TestHelpers
   use ExUnit.Case, async: true
 
-  describe "vector coordinate system" do
+  describe "VectorApi:" do
+
+    test "vector_to_angle" do
+      vector = vector_new(61, -61)
+      expected_angle = 360 - 45
+      actual_angle = vector_to_angle(vector)
+      assert_in_delta(expected_angle, actual_angle, 0.5)
+    end
+
+  end
+
+  describe "TransformApi:" do
 
     @sqrt2 :math.sqrt(2)
 
-    test "inversion" do
+    test "invert" do
       pose = pose_new(1, 1, -90)
       csys = csys_from_pose(pose)
-      should_inverted_csys =
+      expected_inverted_csys =
         pose_new(1, -1, 90)
         |> csys_from_pose
       actual_inverted_csys =
         csys
         |> csys_invert
-      assert should_inverted_csys == actual_inverted_csys
+      assert expected_inverted_csys == actual_inverted_csys
     end
 
-    @csys csys_from_orientation_and_coord({1, -1}, {762.5, 787.5})
-    @coord {775, 275}
+    @observer_csys csys_from_orientation_and_coord({1, -1}, {762.5, 787.5})
+    @target_coord {775, 275}
 
     test "coord wrt a csys" do
       assert_tuple_approx_equal(
         {371.2, -353.6},
-        vector_wrt(@coord, @csys)
+        vector_wrt_inner_observer(@target_coord, @observer_csys)
       )
     end
 
-    test "angle wrt a csys, large" do
-      assert_in_delta(
-        Math.normalize_angle(-44),
-        vector_angle_wrt(@coord, @csys),
-        1
-      )
+    test "polar coord angle of target as seen from observer" do
+      expected_angle = Math.normalize_angle(-44)
+      actual_angle =
+        vector_wrt_inner_observer(@target_coord, @observer_csys)
+        |> IOP.inspect
+        |> vector_to_angle
+        |> IOP.inspect
+      assert_in_delta(expected_angle, actual_angle, 1)
     end
 
     test "angle wrt a csys, small" do
@@ -47,7 +60,7 @@ defmodule Chukinas.LinearAlgebraTest do
       coord = vector_new(1, -1)
       assert_in_delta(
         Math.normalize_angle(-45),
-        vector_angle_wrt(coord, csys),
+        vector_wrt_outer_observer(coord, csys) |> vector_to_angle,
         1
       )
     end

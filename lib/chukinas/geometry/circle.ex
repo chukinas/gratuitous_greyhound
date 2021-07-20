@@ -56,7 +56,7 @@ defmodule Chukinas.Geometry.Circle do
   and is_csys(tangent_csys) do
     {x, y} = _other_coordintate_wrt_tangent_csys =
       point_coords
-      |> vector_wrt(tangent_csys)
+      |> vector_wrt_outer_observer(tangent_csys)
     (x * x + y * y) / (2 * y)
   end
 
@@ -206,7 +206,8 @@ defmodule Chukinas.Geometry.Circle do
   """
   def traversal_angle_at_coord(circle, coord) do
     coord
-    |> vector_angle_wrt(circle)
+    |> vector_wrt_outer_observer(circle)
+    |> vector_to_angle
     |> mult(circle |> sign_of_rotation)
     |> normalize_angle
   end

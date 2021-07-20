@@ -5,18 +5,9 @@ defmodule Chukinas.LinearAlgebra.TransformApi do
   use Chukinas.LinearAlgebra.Vector.Guards
   alias Chukinas.LinearAlgebra.Csys
   alias Chukinas.LinearAlgebra.CsysApi
-  alias Chukinas.LinearAlgebra.VectorApi
 
   # *** *******************************
   # *** REDUCERS
-
-  def position_wrt(position, observer) when has_position(position) do
-    # TODO deprecate?
-    position
-    |> VectorApi.vector_from_position
-    |> vector_wrt(observer)
-    |> VectorApi.vector_to_position
-  end
 
   def vector_wrt_inner_observer(vector, observer) when is_vector(vector) do
     do_vector_wrt(vector, observer, :wrt_inner)
@@ -24,18 +15,6 @@ defmodule Chukinas.LinearAlgebra.TransformApi do
 
   def vector_wrt_outer_observer(vector, observer) when is_vector(vector) do
     do_vector_wrt(vector, observer, :wrt_outer)
-  end
-
-  def vector_wrt(vector, observer) when is_vector(vector) do
-    # TODO deprecate
-    vector_wrt_inner_observer(vector, observer)
-  end
-
-  def vector_angle_wrt(vector, observer) do
-    # TODO deprecate
-    vector
-    |> vector_wrt(observer)
-    |> VectorApi.vector_to_angle
   end
 
   # *** *******************************
