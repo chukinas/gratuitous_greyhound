@@ -21,8 +21,6 @@ defmodule Chukinas.LinearAlgebraTest do
 
   describe "TransformApi:" do
 
-    @sqrt2 :math.sqrt(2)
-
     test "invert" do
       pose = pose_new(1, 1, -90)
       csys = csys_from_pose(pose)
