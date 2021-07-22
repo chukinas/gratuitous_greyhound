@@ -83,7 +83,6 @@ defmodule Chukinas.Dreadnought.Animation do
 
   defimpl Inspect do
     require IOP
-    import Chukinas.PositionOrientationSize
     def inspect(animation, opts) do
       title = "Animation"
       fields = [

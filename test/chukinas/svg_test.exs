@@ -4,7 +4,6 @@ ExUnit.start()
 
 defmodule Chukinas.SvgTest do
   use ExUnit.Case, async: true
-  use DreadnoughtHelpers
   use Chukinas.PositionOrientationSize
 
   test "svg path string from straight path" do

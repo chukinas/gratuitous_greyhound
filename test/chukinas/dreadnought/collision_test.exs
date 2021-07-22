@@ -3,7 +3,6 @@ ExUnit.start()
 defmodule CollisionTest do
 
   use ExUnit.Case, async: true
-  use DreadnoughtHelpers
   use Chukinas.PositionOrientationSize
 
   test "get squares which include a target shape" do
