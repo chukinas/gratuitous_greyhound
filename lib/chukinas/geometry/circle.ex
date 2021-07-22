@@ -86,7 +86,7 @@ defmodule Chukinas.Geometry.Circle do
   and is_csys(tangent_csys) do
     {x, y} = _other_coordintate_wrt_tangent_csys =
       point_coords
-      |> vector_wrt_outer_observer(tangent_csys)
+      |> vector_wrt_inner_observer(tangent_csys)
     (x * x + y * y) / (2 * y)
   end
 

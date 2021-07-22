@@ -2,11 +2,11 @@ ExUnit.start()
 
 defmodule Chukinas.Geometry.CircleTest do
 
-  use ExUnit.Case, async: true
+  #use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
   use Chukinas.PositionOrientationSize
   use Chukinas.TestHelpers
   use Chukinas.LinearAlgebra
-  alias Chukinas.Math
   alias Chukinas.Geometry.Circle
 
   describe "circle" do
