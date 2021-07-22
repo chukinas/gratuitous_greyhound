@@ -32,9 +32,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
   def handle_params(_params, _url, socket) do
     live_action = socket.assigns.live_action
     cond do
-      live_action == :redirect_to_setup ->
-        path = Routes.dreadnought_path(socket, :setup)
-        send self(), {:push_patch, path}
       live_action == :gallery ->
         :ok
       Room.mission_in_progress?(socket.assigns.room) ->
