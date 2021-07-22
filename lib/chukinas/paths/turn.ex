@@ -1,11 +1,9 @@
-alias Chukinas.Geometry.{Rect, Circle}
-alias Chukinas.Paths.{PathLike, Turn}
-alias Chukinas.Collide.IsShape
-
-defmodule Turn do
+defmodule Chukinas.Paths.Turn do
 
   use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra
+  alias Chukinas.Geometry.Circle
+  alias Chukinas.Geometry.Rect
 
   typedstruct enforce: true do
     # Fully define path:
@@ -16,7 +14,7 @@ defmodule Turn do
   end
 
   # *** *******************************
-  # *** NEW
+  # *** CONSTRUCTORS
 
   def new(pose, trav_distance, signed_trav_angle) do
     trav_angle = signed_trav_angle |> abs
@@ -61,7 +59,7 @@ defmodule Turn do
   end
 
   # *** *******************************
-  # *** GETTERS
+  # *** CONVERTERS
 
   def traversal_angle(%__MODULE__{traversal_angle: value}), do: value
 
@@ -96,20 +94,11 @@ defmodule Turn do
 
   def radius(turn), do: turn |> circle |> Circle.radius
 
-  #def rotation_direction(%__MODULE__{} = turn) do
-  #  turn
-  #  |> circle
-  #  |> Circle.rotation_direction
-  #end
-
-  # *** *******************************
-  # *** API
-
   # TODO this only works for angles smaller than that of the turn's
-  def split(path, angle) do
+  def split(turn, angle) do
     trav_angle_1 = angle
-    trav_angle_2 = (path |> traversal_angle) - angle
-    circle_1 = path |> circle
+    trav_angle_2 = (turn |> traversal_angle) - angle
+    circle_1 = turn |> circle
     circle_2 = circle_1 |> Circle.rotate_in_direction_of_rotation(trav_angle_1)
     {
       from_circle_and_angle(circle_1, trav_angle_1),
@@ -119,12 +108,17 @@ defmodule Turn do
 
 end
 
+# *** *******************************
+# *** IMPLEMENTATIONS
 
-defimpl IsShape, for: Turn do
+alias Chukinas.Paths.Turn
+
+defimpl Chukinas.Collide.IsShape, for: Turn do
   use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra
+  alias Chukinas.Geometry.Circle
   def to_coords(turn) do
-    circle = Turn.circle(turn)
+    circle = Chukinas.Paths.Turn.circle(turn)
     trav_angle = turn |> Turn.traversal_angle
     [
       0,
@@ -138,8 +132,7 @@ defimpl IsShape, for: Turn do
   end
 end
 
-
-defimpl PathLike, for: Turn do
+defimpl Chukinas.Paths.PathLike, for: Turn do
   use Chukinas.PositionOrientationSize
   def pose_start(path), do: path |> pose_from_map
   def pose_end(path), do: Turn.end_pose(path)
@@ -153,4 +146,3 @@ defimpl PathLike, for: Turn do
     turn |> Turn.traversal_angle < rotation
   end
 end
-

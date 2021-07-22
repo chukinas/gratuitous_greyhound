@@ -25,20 +25,6 @@ defmodule Chukinas.Geometry.CircleTest do
       assert circle == @origin_circle
     end
 
-    test "from tangent, arclen, and rotation" do
-      pose = pose_new(1, 0, 270)
-      # Assuming a 90deg turn...
-      radius = 1
-      arclen = Math.arclen_from_radius_and_angle(radius, 90)
-      rotation = -90
-      circle = Circle.from_tangent_len_rotation(pose, arclen, rotation)
-      assert circle == @origin_circle
-      assert 1 == Circle.radius(circle)
-      assert 2 * :math.pi() == Circle.circumference(circle)
-      assert :ccw == circle.rotation
-      assert 1 == circle |> Circle.radius
-    end
-
     test "get props from circle" do
       assert_tuple_approx_equal(
         {0, -1},
