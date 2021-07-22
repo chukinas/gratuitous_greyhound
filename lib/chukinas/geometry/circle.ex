@@ -184,7 +184,7 @@ defmodule Chukinas.Geometry.Circle do
   """
   def traversal_angle_at_coord(circle, coord) do
     coord
-    |> vector_wrt_outer_observer(circle)
+    |> vector_wrt_inner_observer(circle)
     |> vector_to_angle
     |> mult(circle |> sign_of_rotation)
     |> normalize_angle
