@@ -19,7 +19,7 @@ defmodule Shape do
   # *** NEW
 
   def from_coords(coords) when length(coords) > 2 do
-    Enum.each(coords, fn coord -> true = is_coord(coord) end)
+    Enum.each(coords, fn coord -> true = is_vector(coord) end)
     %__MODULE__{
       coords: coords
     }

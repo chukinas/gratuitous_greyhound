@@ -3,6 +3,7 @@ defmodule ChukinasWeb.PageControllerTest do
 
   test "GET /", %{conn: conn} do
     conn = get(conn, "/")
-    assert html_response(conn, 200) =~ "Jonathan Chukinas"
+    assert redirected_to(conn) =~ "/dreadnought"
+    #assert html_response(conn, 200) =~ "Jonathan Chukinas"
   end
 end

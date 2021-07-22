@@ -1,12 +1,9 @@
-alias Chukinas.Geometry.Circle
-
-defmodule Circle do
+defmodule Chukinas.Geometry.Circle do
 
   use Chukinas.LinearAlgebra
   use Chukinas.Math
   use Chukinas.PositionOrientationSize
   use TypedStruct
-  alias Chukinas.LinearAlgebra
 
   # *** *******************************
   # *** TYPES
@@ -18,10 +15,10 @@ defmodule Circle do
   end
 
   # *** *******************************
-  # *** NEW
+  # *** CONSTRUCTORS
 
   def new(csys, radius, rotation)
-  when has_csys(csys)
+  when is_csys(csys)
   and radius > 0
   and rotation in [:cw, :ccw] do
     fields =
@@ -33,18 +30,6 @@ defmodule Circle do
     struct!(__MODULE__, fields)
   end
 
-  # *** *******************************
-  # *** FROM TANGENT AND POSITION
-
-  def from_tangent_and_position(tangent_pose, other_position_on_circle)
-  when has_pose(tangent_pose)
-  and has_position(other_position_on_circle) do
-    # TODO deprecate these two from funcs, replace w/ similar that take linalg args
-    tangent_csys = csys_from_pose tangent_pose
-    coord = other_position_on_circle |> coord_from_position
-    from_tangent_csys_and_other_coord(tangent_csys, coord)
-  end
-
   def from_tangent_csys_and_other_coord(tangent_csys, coord) do
     signed_radius = signed_radius(coord, tangent_csys)
     radius = abs(signed_radius)
@@ -53,31 +38,14 @@ defmodule Circle do
     new(center_csys, radius, rotation)
   end
 
-  def signed_radius(point_coords, tangent_csys)
-  when is_vector(point_coords)
-  and has_csys(tangent_csys) do
-    {x, y} = _other_coordintate_wrt_tangent_csys =
-      point_coords
-      |> vector_wrt_csys(tangent_csys)
-    (x * x + y * y) / (2 * y)
+  def from_tangent_and_position(tangent_pose, other_position_on_circle)
+  when has_pose(tangent_pose)
+  and has_position(other_position_on_circle) do
+    # TODO deprecate these two from funcs, replace w/ similar that take linalg args
+    tangent_csys = csys_from_pose tangent_pose
+    coord = other_position_on_circle |> vector_from_position
+    from_tangent_csys_and_other_coord(tangent_csys, coord)
   end
-
-  def center_csys(tangent_csys, radius, :cw) do
-    tangent_csys
-    |> csys_right
-    |> csys_forward(radius)
-    |> csys_180
-  end
-
-  def center_csys(tangent_csys, radius, :ccw) do
-    tangent_csys
-    |> csys_left
-    |> csys_forward(radius)
-    |> csys_180
-  end
-
-  # *** *******************************
-  # *** FROM TANGENT, ARC LENGTH, ROTATION
 
   def from_tangent_distance_angle_direction(tangent_csys, trav_distance, trav_angle, direction)
   # TODO guard for tangent_csys
@@ -89,24 +57,11 @@ defmodule Circle do
     new(center_csys, radius, direction)
   end
 
-  def from_tangent_len_rotation(tangent_pose, arc_len, rotation)
-  when has_pose(tangent_pose)
-  and arc_len > 0
-  and is_number(rotation) do
-    IO.warn "DEPRECATED Circle.from_tangent_len_rotation"
-    radius = radius_from_angle_and_arclen(abs(rotation), arc_len)
-    rotation = rotation_direction(rotation)
-    csys =
-      tangent_pose
-      |> csys_from_pose
-      |> center_csys(radius, rotation)
-    new(csys, radius, rotation)
-  end
-
   # *** *******************************
-  # *** GETTERS
+  # *** CONVERTERS
 
-  def csys(circle), do: circle |> csys_new
+  # TODO use LinAlg fun instead
+  def csys(circle), do: circle |> csys_from_map
 
   def radius(%__MODULE__{radius: value}), do: value
 
@@ -123,16 +78,34 @@ defmodule Circle do
 
   def coord(%__MODULE__{location: value}), do: value
 
+  # *** *******************************
+  # *** PRIVATE HELPERS
+
+  defp signed_radius(point_coords, tangent_csys)
+  when is_vector(point_coords)
+  and is_csys(tangent_csys) do
+    {x, y} = _other_coordintate_wrt_tangent_csys =
+      point_coords
+      |> vector_wrt_inner_observer(tangent_csys)
+    (x * x + y * y) / (2 * y)
+  end
+
+  defp center_csys(tangent_csys, radius, :cw), do: do_center_csys(tangent_csys, radius, :right)
+
+  defp center_csys(tangent_csys, radius, :ccw), do: do_center_csys(tangent_csys, radius, :left)
+
+  defp do_center_csys(tangent_csys, radius, direction) do
+    tangent_csys
+    |> csys_rotate(direction)
+    |> csys_translate({:forward, radius})
+    |> csys_rotate(:flip)
+  end
+
   def rotation_direction(%__MODULE__{rotation: value}), do: value
 
-  # *** *******************************
-  # *** FUNCTIONS
-
   def rotation_direction(signed_rotation) when signed_rotation > 0, do: :cw
-  def rotation_direction(signed_rotation) when signed_rotation < 0, do: :ccw
 
-  # *** *******************************
-  # *** API
+  def rotation_direction(signed_rotation) when signed_rotation < 0, do: :ccw
 
   @doc"""
   Returns a signed angle for a given arc length
@@ -155,7 +128,7 @@ defmodule Circle do
     IO.warn "tangent_pose_after_len is deprecated"
     circle
     |> csys_after_traversing_distance(arclen)
-    |> pose_from_csys
+    |> csys_to_pose
   end
 
   def rotate_in_direction_of_rotation(circle, angle) do
@@ -164,14 +137,15 @@ defmodule Circle do
   end
 
   # *** *******************************
-  # *** API
+  # *** REDUCERS
 
   def csys_after_traversing_angle(circle, angle) do
     circle
     |> rotate_in_direction_of_rotation(angle)
-    |> csys_new
-    |> csys_forward(circle |> radius)
-    |> csys_90(circle |> sign_of_rotation)
+    # TODO use a LinAlg func instead
+    |> csys
+    |> csys_translate_forward(circle |> radius)
+    |> csys_rotate({:right_angle, circle |> sign_of_rotation})
   end
 
   def csys_after_traversing_distance(circle, distance) do
@@ -181,9 +155,12 @@ defmodule Circle do
     csys_after_traversing_angle(circle, trav_angle)
   end
 
+  # *** *******************************
+  # *** REDUCERS
+
   def coord_after_traversing_angle(circle, angle) do
     csys_after_traversing_angle(circle, angle)
-    |> coord_from_csys
+    |> csys_to_coord_vector
   end
 
   def coord_after_traversing_distance(circle, distance) do
@@ -191,10 +168,6 @@ defmodule Circle do
       circle
       |> traversal_angle_after_traversing_distance(distance)
     coord_after_traversing_angle(circle, trav_angle)
-  end
-
-  def traversal_distance_after_traversing_angle(circle, trav_angle) do
-    arclen_from_radius_and_angle(circle |> radius, trav_angle)
   end
 
   def traversal_angle_after_traversing_distance(circle, distance) do
@@ -211,9 +184,14 @@ defmodule Circle do
   """
   def traversal_angle_at_coord(circle, coord) do
     coord
-    |> LinearAlgebra.angle_of_coord_wrt_csys(circle)
+    |> vector_wrt_inner_observer(circle)
+    |> vector_to_angle
     |> mult(circle |> sign_of_rotation)
     |> normalize_angle
+  end
+
+  def traversal_distance_after_traversing_angle(circle, trav_angle) do
+    arclen_from_radius_and_angle(circle |> radius, trav_angle)
   end
 
   def traversal_distance_at_coord(circle, coord) do

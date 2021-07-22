@@ -95,7 +95,7 @@ defmodule Chukinas.Geometry.Rect do
       position_add_x(position_top_left, relative_position_br),
       bottom_right_position(rect),
       position_add_y(position_top_left, relative_position_br)
-    ], do: coord_from_position(position)
+    ], do: vector_from_position(position)
   end
 
   def center_position(rect) do
@@ -155,6 +155,15 @@ defmodule Chukinas.Geometry.Rect do
   def merge_rect(map, rect_map) do
     rect = from_rect(rect_map) |> Map.from_struct
     Map.merge(map, rect)
+  end
+
+  # *** *******************************
+  # *** REDUCERS
+
+  def grow(rect, addition) do
+    rect
+    |> position_subtract(addition)
+    |> size_add(2 * addition)
   end
 
   # *** *******************************

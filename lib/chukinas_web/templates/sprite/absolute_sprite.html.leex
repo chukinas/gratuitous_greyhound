@@ -1,0 +1,30 @@
+<div 
+  absolute_sprite
+  class="absolute <%= @class %>"
+  style="
+    <%= ChukinasWeb.Shared.left_top_from_position(@position) %>
+    <%= if @angle do %>
+      transform: rotate(<%= @angle %>deg); 
+    <% end %>
+    transform-origin: <%= @transform_origin.x %>px <%= @transform_origin.y %>px;
+  "
+  <%= ChukinasWeb.Shared.attrs(@attrs) %>
+>
+  <div
+    class="relative"
+    style="
+      <%= ChukinasWeb.Shared.width_height_from_size(@size) %>
+    "
+  >
+    <%= ChukinasWeb.SpriteView.drop_shadow @sprite %>
+    <!-- Static Sprite -->
+    <div
+      class="absolute"
+      style="
+        <%= ChukinasWeb.Shared.left_top_from_number(@drop_shadow_padding) %>
+      "
+    >
+      <%= ChukinasWeb.SpriteView.static_sprite @conn, @sprite %>
+    </div>
+  </div>
+</div>

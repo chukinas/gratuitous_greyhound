@@ -12,6 +12,8 @@ alias Chukinas.Sessions.RoomDynamicSupervisor, as: DS
 
 alias Chukinas.LinearAlgebra
 alias Chukinas.PositionOrientationSize
+use Chukinas.LinearAlgebra
+use Chukinas.PositionOrientationSize
 
 
 alias Chukinas.Sessions.RoomJoin

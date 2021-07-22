@@ -58,61 +58,11 @@ defmodule Chukinas.Dreadnought.Mission do
   end
 
   # *** *******************************
-  # *** GETTERS
+  # *** REDUCERS
 
-  def grid(%__MODULE__{grid: value}), do: value
-
-  def in_progress?(mission), do: turn_number(mission) > 0
-
-  def turn_number(%__MODULE__{turn_number: value}), do: value
-
-  defp turn_complete?(mission) do
-    player_ids = mission |> player_ids |> MapSet.new
-    completed_player_ids = mission |> completed_player_ids |> MapSet.new
-    MapSet.equal?(player_ids, completed_player_ids)
+  def drop_player_by_uuid(mission, player_uuid) do
+    update_players(mission, &IdList.drop(&1, player_uuid, :uuid))
   end
-
-  defp commands(%__MODULE__{player_actions: actions}) do
-    # TODO rename unit_actions
-    Stream.flat_map(actions, &ActionSelection.actions/1)
-  end
-
-  defp actions(mission), do: commands(mission)
-
-  defp maneuver_actions(%__MODULE__{} = mission) do
-    mission
-    |> commands
-    |> UnitAction.Enum.maneuevers
-  end
-
-  def units(%{units: units}), do: units
-
-  @spec unit_count(t) :: integer
-  def unit_count(mission) do
-    mission
-    |> units
-    |> Enum.count
-  end
-
-  def combats(mission), do: mission |> actions |> UnitAction.Enum.combats
-
-  # TODO rename `world_rect`
-  def rect(nil), do: Rect.null()
-  def rect(%__MODULE__{world_rect: value}), do: value
-
-  def islands(nil), do: []
-  def islands(%__MODULE__{islands: value}), do: value
-
-  def arena_rect_wrt_world(nil), do: Rect.null()
-  def arena_rect_wrt_world(%__MODULE__{grid: grid, margin: margin}) do
-    position =
-      margin
-      |> position_from_size
-    Rect.from_position_and_size(position, grid)
-  end
-
-  # *** *******************************
-  # *** SETTERS
 
   def put(mission, list) when is_list(list), do: Enum.reduce(list, mission, &put(&2, &1))
   def put(mission, %Unit{} = unit), do: Maps.put_by_id(mission, :units, unit)
@@ -123,13 +73,12 @@ defmodule Chukinas.Dreadnought.Mission do
     |> maybe_end_turn
   end
 
-  def push_gunfire(mission, gunfire) do
-    Maps.push(mission, :gunfire, gunfire)
+  # TODO decouple the update and the new turn
+  def put_action_selection_and_end_turn(mission, %ActionSelection{} = actions) do
+    mission
+    |> Maps.put_by_id(:player_actions, actions, :player_id)
+    |> begin_new_turn
   end
-
-
-  # *** *******************************
-  # *** CALC
 
   # TODO when I add the ai back in, I'll have to do this elsewhere since
   # PlayerTurn now has dependency on Mission
@@ -146,8 +95,28 @@ defmodule Chukinas.Dreadnought.Mission do
     #|> calc_ai_commands
   end
 
+  def update_players(mission, fun) do
+    players =
+      mission
+      |> players
+      |> fun.()
+    %__MODULE__{mission | players: players}
+  end
+
+  def update_unit(mission, unit_id, fun) do
+    update_units = &IdList.update!(&1, unit_id, fun)
+    Map.update!(mission, :units, update_units)
+  end
+
+  # *** *******************************
+  # ***  REDUCERS (PRIVATE)
+
   defp maybe_end_turn(mission) do
     if turn_complete?(mission), do: begin_new_turn(mission), else: mission
+  end
+
+  defp push_gunfire(mission, gunfire) do
+    Maps.push(mission, :gunfire, gunfire)
   end
 
   defp begin_new_turn(mission) do
@@ -212,14 +181,6 @@ defmodule Chukinas.Dreadnought.Mission do
   end
 
   # *** *******************************
-  # *** REDUCERS
-
-  def remove_player(mission, player_id) do
-    fun = fn players -> IdList.drop players, player_id end
-    Map.update!(mission, :players, fun)
-  end
-
-  # *** *******************************
   # *** CONVERTERS (PLAYERS)
 
   def player_by_id(mission, player_id) do
@@ -253,6 +214,66 @@ defmodule Chukinas.Dreadnought.Mission do
     mission
     |> players
     |> Enum.count
+  end
+
+  # *** *******************************
+  # *** CONVERTERS (OTHER)
+
+  def grid(%__MODULE__{grid: value}), do: value
+
+  def in_progress?(mission), do: turn_number(mission) > 0
+
+  def turn_number(%__MODULE__{turn_number: value}), do: value
+
+  defp turn_complete?(mission) do
+    player_ids = mission |> player_ids |> MapSet.new
+    completed_player_ids = mission |> completed_player_ids |> MapSet.new
+    MapSet.equal?(player_ids, completed_player_ids)
+  end
+
+  defp commands(%__MODULE__{player_actions: actions}) do
+    # TODO rename unit_actions
+    Stream.flat_map(actions, &ActionSelection.actions/1)
+  end
+
+  defp actions(mission), do: commands(mission)
+
+  defp maneuver_actions(%__MODULE__{} = mission) do
+    mission
+    |> commands
+    |> UnitAction.Enum.maneuevers
+  end
+
+  def units(%{units: units}), do: units
+
+  def unit_by_id(%__MODULE__{} = mission, id) when is_integer(id) do
+    mission
+    |> units
+    |> IdList.fetch!(id)
+  end
+
+  @spec unit_count(t) :: integer
+  def unit_count(mission) do
+    mission
+    |> units
+    |> Enum.count
+  end
+
+  def combats(mission), do: mission |> actions |> UnitAction.Enum.combats
+
+  # TODO rename `world_rect`
+  def rect(nil), do: Rect.null()
+  def rect(%__MODULE__{world_rect: value}), do: value
+
+  def islands(nil), do: []
+  def islands(%__MODULE__{islands: value}), do: value
+
+  def arena_rect_wrt_world(nil), do: Rect.null()
+  def arena_rect_wrt_world(%__MODULE__{grid: grid, margin: margin}) do
+    position =
+      margin
+      |> position_from_size
+    Rect.from_position_and_size(position, grid)
   end
 
   # *** *******************************

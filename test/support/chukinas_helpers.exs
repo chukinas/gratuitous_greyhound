@@ -2,11 +2,20 @@ defmodule Chukinas.TestHelpers do
 
   use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra
+  alias Chukinas.Util.Precision
 
   defmacro __using__(_options) do
     quote do
       require Chukinas.TestHelpers
       import Chukinas.TestHelpers
+      alias Chukinas.Dreadnought.Arena
+      alias Chukinas.Dreadnought.Mission
+      alias Chukinas.Dreadnought.Sprite
+      alias Chukinas.Dreadnought.Sprites
+      alias Chukinas.Dreadnought.Unit
+      alias Chukinas.Geometry.Grid
+      alias Chukinas.Geometry.Rect
+      alias Chukinas.Svg
     end
   end
 
@@ -50,6 +59,12 @@ defmodule Chukinas.TestHelpers do
   when has_pose(a) == has_pose(b) do
     [a, b] = for pose <- [a, b], do: pose_set_precision(pose, @precision)
     assert a == b
+  end
+
+  def match_numerical_map?(expected, actual) do
+    expected = expected |> Precision.set_precision()
+    actual = Map.take(actual, Map.keys(expected)) |> Precision.set_precision()
+    Map.equal?(expected, actual)
   end
 
 end

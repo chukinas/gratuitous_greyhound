@@ -3,7 +3,7 @@ ExUnit.start()
 defmodule Chukinas.PathsTest do
 
   use ExUnit.Case, async: true
-  use DreadnoughtHelpers
+  use Chukinas.TestHelpers
   use Chukinas.PositionOrientationSize
   import Chukinas.Math
   alias Chukinas.Paths
@@ -100,6 +100,29 @@ defmodule Chukinas.PathsTest do
       |> Paths.get_end_pose()
     expected_end_pose = pose_new(1, 0, 90)
     assert match_numerical_map? expected_end_pose, actual_end_pose
+  end
+
+  describe "turn path" do
+
+    test "connecting to a point" do
+      # TODO move this to more general PathsTest
+      start_pose = pose_new(1, 0, 90)
+      should_end_pose = pose_new(0, 1, 180)
+      connecting_path = Paths.get_connecting_path(start_pose, should_end_pose)
+      actual_end_pose = Paths.pose_at_end(connecting_path)
+      assert_pose_approx_equal should_end_pose, actual_end_pose
+    end
+
+    test "connecting to a real point" do
+      # TODO move this to more general PathsTest
+      start_pose = pose_new(1125, 425, 225)
+      should_end_position = position_new(775, 275)
+      connecting_path = Paths.get_connecting_path(start_pose, should_end_position)
+      actual_end_position = Paths.position_at_end(connecting_path)
+      assert (connecting_path |> Paths.length_from_path) > 0
+      assert_position_approx_equal should_end_position, actual_end_position
+    end
+
   end
 
 end

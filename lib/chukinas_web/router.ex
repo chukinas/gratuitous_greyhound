@@ -22,19 +22,18 @@ defmodule ChukinasWeb.Router do
 
   scope "/", ChukinasWeb do
     pipe_through :browser
-    get "/", PageController, :index
-    get "/minis", PageController, :minis
-    get "/music", PageController, :music
+    get "/", PageController, :redirect_to_dreadnought
+    get "/minis", PageController, :redirect_to_dreadnought
+    get "/music", PageController, :redirect_to_dreadnought
   end
 
   scope "/dreadnought", ChukinasWeb do
     pipe_through :dreadnought
-    live "/", DreadnoughtLive, :redirect_to_setup
-    live "/grid", DreadnoughtLive, :redirect_to_setup
+    live "/", DreadnoughtIndexLive, :home
+    get "/grid", PageController, :redirect_to_dreadnought
     live "/gallery", DreadnoughtLive, :gallery
     live "/setup", DreadnoughtLive, :setup
     live "/play", DreadnoughtPlayLive, :index
-    get "/dev", PageController, :dev
   end
 
   # Other scopes may use custom stacks.

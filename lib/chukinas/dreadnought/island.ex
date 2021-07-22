@@ -61,7 +61,7 @@ defmodule Island do
     island
     |> position_new
     |> position_add(relative_position)
-    |> coord_from_position
+    |> vector_from_position
   end
 
   # *** *******************************

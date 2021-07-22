@@ -35,9 +35,7 @@
           margin-top: <%= -animation.rect.y %>px;
         "
       >
-        <%= ChukinasWeb.DreadnoughtView.render "animation.html",
-          socket: @socket,
-          animation: animation.struct %>
+        <%= ChukinasWeb.AnimationView.single(@socket, animation.struct) %>
         <%= if @show_markers? do %>
           <%= ChukinasWeb.DreadnoughtView.center %{x: 0, y: 0} %>
         <% end %>
@@ -65,7 +63,6 @@
 
     <%# SPRITE %>
     <div 
-      class="bg-gray-400"
       style="
         width: <%= sprite.width %>px;
         height: <%= sprite.height %>px;
@@ -78,7 +75,7 @@
           margin-top: <%= -sprite.y %>px;
         "
       >
-        <%= ChukinasWeb.DreadnoughtView.relative_sprite sprite, @socket %>
+        <%= ChukinasWeb.SpriteView.absolute_sprite @socket, sprite %>
         <%= if @show_markers? do %>
           <%= ChukinasWeb.DreadnoughtView.center %{x: 0, y: 0} %>
           <%= for mount <- sprite.mounts do %>

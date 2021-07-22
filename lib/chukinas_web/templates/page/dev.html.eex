@@ -1,9 +1,29 @@
-<div class="w-64 h-64 bg-red-200 filter -hue-rotate-90">
-  <div class="w-32 h-32 bg-blue-200">
-    hello i love you
+<style>
+  .paperBackground {
+    background-image:url("<%= Routes.static_path @conn, "/images/crinkled_paper_20210517.jpg" %>")
+  }
+</style>
+
+<div class="fixed">
+  <div 
+    class="paperBackground drop-shadow-xl filter brightness-110"
+    style="
+      width: 700px;
+      height: 400px;
+    "
+  >
+    <div class="bg-blue-900/80 w-full h-full">
+    </div>
   </div>
-  hello i love you
-</div>
-<div class="w-64 h-64 bg-green-700">
-  hello i love you
+
+  <div 
+    class="paperBackground transform rotate-2 scale-105 drop-shadow-xl filter brightness-125"
+    style="
+      width: 700px;
+      height: 700px;
+    "
+  >
+    <div class="bg-blue-900/90 w-full h-full">
+    </div>
+  </div>
 </div>

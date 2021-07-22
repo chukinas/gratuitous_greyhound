@@ -3,8 +3,8 @@ ExUnit.start()
 defmodule CollisionTest do
 
   use ExUnit.Case, async: true
-  use DreadnoughtHelpers
   use Chukinas.PositionOrientationSize
+  use Chukinas.TestHelpers
 
   test "get squares which include a target shape" do
     count_overlapping_squares = fn target ->

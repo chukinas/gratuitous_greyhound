@@ -1,14 +1,55 @@
 defmodule Chukinas.Dreadnought.MissionBuilder do
 
+  use Chukinas.LinearAlgebra
   use Chukinas.PositionOrientationSize
+  alias Chukinas.Dreadnought.ActionSelection
   alias Chukinas.Dreadnought.Island
   alias Chukinas.Dreadnought.Mission
   alias Chukinas.Dreadnought.Player
   alias Chukinas.Dreadnought.Unit
+  alias Chukinas.Dreadnought.UnitAction
+  alias Chukinas.Dreadnought.UnitBuilder
   alias Chukinas.Geometry.Grid
 
   # *** *******************************
-  # *** ONLINE GAME
+  # *** CONSTRUCTORS
+
+  @spec homepage :: Mission.t
+  def homepage do
+    {grid, margin} = medium_map()
+    inputs = [
+      Player.new_manual(1),
+      Player.new_manual(2),
+    ]
+    units = [
+      UnitBuilder.build(:red_cruiser, 1, 1) |> Unit.position_mass_center,
+      UnitBuilder.build(:blue_destroyer, 2, 2)
+    ]
+    Mission.new("homepage", grid, margin)
+    |> Mission.put(inputs)
+    |> Mission.put(units)
+    |> Mission.start
+    |> homepage_1_fire_upon_2
+  end
+
+  def homepage_1_fire_upon_2(mission) do
+    units = Mission.units(mission)
+    action_selection =
+      ActionSelection.new(1, units, [])
+      |> ActionSelection.put(UnitAction.fire_upon(1, 2))
+    mission
+    |> position_target_randomly_within_arc
+    |> Mission.put_action_selection_and_end_turn(action_selection)
+  end
+
+  defp position_target_randomly_within_arc(mission) do
+    target_pose =
+      mission
+      |> Mission.unit_by_id(1)
+      |> Unit.world_coord_random_in_arc(500)
+      |> pose_from_vector
+    Mission.update_unit mission, 2, &merge_pose!(&1, target_pose)
+  end
 
   @spec online(String.t) :: Mission.t
   def online(room_name) do
@@ -17,6 +58,9 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
     |> Map.put(:islands, islands())
     # Still needs players, units, and needs to be started
   end
+
+  # *** *******************************
+  # *** REDUCERS
 
   def add_player(%Mission{} = mission, player_uuid, player_name) do
     player_id = 1 + Mission.player_count(mission)
@@ -34,6 +78,31 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
     end
   end
 
+  # *** *******************************
+  # *** PRIVATE CONVERTERS
+
+  @spec all_players_ready?(Mission.t) :: boolean
+  defp all_players_ready?(mission) do
+    mission
+    |> Mission.players
+    |> Enum.all?(&Player.ready?/1)
+  end
+
+  @spec put_fleets(Mission.t) :: Mission.t
+  defp put_fleets(%Mission{} = mission) do
+    player_ids_and_fleet_colors = Enum.zip([
+      Mission.player_ids(mission),
+      [:red, :blue],
+      # TODO second pose needs to be relative to bl corner of play area
+      [pose_new(100, 100, 45), pose_new(500, 500, -135)]
+    ])
+    Enum.reduce(player_ids_and_fleet_colors, mission, fn {player_id, color, pose}, mission ->
+      next_unit_id = Mission.unit_count(mission) + 1
+      units = build_fleet(color, next_unit_id, player_id, pose)
+      Mission.put(mission, units)
+    end)
+  end
+
   @spec ready?(Mission.t) :: boolean
   defp ready?(%Mission{} = mission) do
     with true <- Mission.player_count(mission) in 1..2,
@@ -44,39 +113,8 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
     end
   end
 
-  @spec all_players_ready?(Mission.t) :: boolean
-  def all_players_ready?(mission) do
-    mission
-    |> Mission.players
-    |> Enum.all?(&Player.ready?/1)
-  end
-
-  #@spec each_player_has_at_least_one_unit(Mission.t) :: boolean
-  #defp each_player_has_at_least_one_unit(mission) do
-  #  units = Mission.units(mission)
-  #  mission
-  #  |> Mission.player_ids
-  #  |> Enum.all?(&Unit.Enum.active_player_unit_count(units, &1) > 0)
-  #end
-
   # *** *******************************
-  # *** DEV
-
-  def dev do
-    {grid, margin} = medium_map()
-    units = [
-      Unit.Builder.red_cruiser(1, 1, pose_new(0, 0, 0), name: "Prince Eugene"),
-      Unit.Builder.blue_merchant(2, 2, pose_new(position_from_size(grid), 225))
-    ]
-    Mission.new("dev", grid, margin)
-    |> Map.put(:islands, islands())
-    |> Mission.put(units)
-    |> Mission.put(human_and_ai_players())
-    |> Mission.start
-  end
-
-  # *** *******************************
-  # *** PRIVATE
+  # *** PRIVATE HELPERS
 
   defp islands do
     [
@@ -89,33 +127,6 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
       position = position_shake position
       Island.random(index, position)
     end)
-  end
-
-  def build do
-    # Config
-    square_size = 50
-    arena = %{
-      width: 3000,
-      height: 2000
-    #  width: 700,
-    #  height: 400
-    }
-    margin = size_new(arena.height, arena.width)
-    #margin = size_new(200, 100)
-    [square_count_x, square_count_y] =
-      [arena.width, arena.height]
-      |> Enum.map(&round(&1 / square_size))
-    grid = Grid.new(square_size, position_new(square_count_x, square_count_y))
-    units = [
-      Unit.Builder.red_destroyer(1, 1, pose_new(0, 0, 0), name: "Prince Eugene"),
-      #Unit.Builder.red_cruiser(2, pose_new(800, 155, 75), name: "Billy"),
-      Unit.Builder.blue_merchant(3, 2, pose_new(position_from_size(grid), 225))
-    ]
-    Mission.new("something...", grid, margin)
-    |> Map.put(:islands, islands())
-    |> Mission.put(units)
-    |> Mission.put(human_and_ai_players())
-    |> Mission.start
   end
 
   def small_map, do: grid_and_margin(800, 500)
@@ -136,65 +147,46 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
     {grid, margin}
   end
 
-  # *** *******************************
-  # *** UNITS
-
-  @spec put_fleets(Mission.t) :: Mission.t
-  def put_fleets(%Mission{} = mission) do
-    player_ids_and_fleet_colors = Enum.zip([
-      Mission.player_ids(mission),
-      [:red, :blue],
-      # TODO second pose needs to be relative to bl corner of play area
-      [pose_new(100, 100, 45), pose_new(500, 500, -135)]
-    ])
-    Enum.reduce(player_ids_and_fleet_colors, mission, fn {player_id, color, pose}, mission ->
-      next_unit_id = Mission.unit_count(mission) + 1
-      units = build_fleet(color, next_unit_id, player_id, pose)
-      Mission.put(mission, units)
-    end)
-  end
-
   def build_fleet(:red, starting_id, player_id, pose) do
-    import Unit.Builder
-    use Chukinas.LinearAlgebra
     formation =
       [
         {  0,   0},
         {-50,  50},
         {-50, -50},
       ]
-    poses = for rel_vector <- formation, do: update_position_translate!(pose, rel_vector)
+    poses = for unit_coord <-formation, do: formation_to_pose(pose, unit_coord)
     [
-      red_cruiser(starting_id, player_id, Enum.at(poses, 0), name: "Navarin"),
-      red_destroyer(starting_id + 1, player_id, Enum.at(poses, 1), name: "Potemkin"),
-      red_destroyer(starting_id + 2, player_id, Enum.at(poses, 2), name: "Sissoi"),
+      UnitBuilder.build(:red_cruiser, starting_id, player_id, Enum.at(poses, 0), name: "Navarin"),
+      UnitBuilder.build(:red_destroyer, starting_id + 1, player_id, Enum.at(poses, 1), name: "Potemkin"),
+      UnitBuilder.build(:red_destroyer, starting_id + 2, player_id, Enum.at(poses, 2), name: "Sissoi")
     ]
   end
 
   def build_fleet(:blue, starting_id, player_id, pose) do
-    use Chukinas.LinearAlgebra
-    import Unit.Builder
-    dreadnought_position =
-      pose
-      |> csys_from_pose
-      |> csys_forward(100)
-      |> pose_from_csys
-    dreadnought =
-      blue_dreadnought(starting_id, player_id, dreadnought_position, name: "Washington")
-    destroyer =
-      blue_destroyer(starting_id + 1, player_id, dreadnought_position, name: "Detroit")
-      |> update_position_translate_right!(75)
-    [dreadnought, destroyer]
+    formation =
+      [
+        {  0,   0},
+        {-50,  50},
+      ]
+    poses = for unit_coord <-formation, do: formation_to_pose(pose, unit_coord)
+    [
+      UnitBuilder.build(:blue_dreadnought, starting_id, player_id, Enum.at(poses, 0), name: "Washington"),
+      UnitBuilder.build(:blue_destroyer, starting_id + 1, player_id, Enum.at(poses, 1), name: "Detroit")
+    ]
   end
-
-  # *** *******************************
-  # *** COMMON BUILDS
 
   def human_and_ai_players do
     [
       Player.new_human(1, "PLACEHOLDER", "Billy Jane"),
       Player.new_ai(2, "PLACEHOLDER", "R2-D2")
     ]
+  end
+
+  def formation_to_pose(lead_pose, unit_coord_wrt_pose) when has_pose(lead_pose) and is_vector(unit_coord_wrt_pose) do
+    lead_pose
+    |> csys_from_pose
+    |> csys_translate(unit_coord_wrt_pose)
+    |> csys_to_pose
   end
 
 end

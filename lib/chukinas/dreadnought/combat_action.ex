@@ -1,8 +1,7 @@
 defmodule Chukinas.Dreadnought.CombatAction do
 
-  use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra
-  alias Chukinas.Collide
+  use Chukinas.PositionOrientationSize
   alias Chukinas.Dreadnought.Animations
   alias Chukinas.Dreadnought.CombatAction.Accumulator, as: Acc
   alias Chukinas.Dreadnought.Turret
@@ -34,7 +33,7 @@ defmodule Chukinas.Dreadnought.CombatAction do
     with(
       {:ok, target_vector} <- target_vector(acc),
       {:ok, turret_angle } <- turret_angle(acc, target_vector, turret_id),
-      {:ok, path         } <- path_to_target(acc, target_vector, turret_id),
+      {:ok, path         } <- Acc.path_to_target(acc, target_vector, turret_id),
       {:ok, range        } <- range_to_target(path)
     ) do
       fire_turret(acc, turret_id, turret_angle, range, path)
@@ -57,28 +56,11 @@ defmodule Chukinas.Dreadnought.CombatAction do
     attacker = Acc.attacker(acc)
     desired_angle =
       target_vector
-      |> vector_outer_to_inner([attacker, turret |> vector_from_position])
-      |> angle_from_vector
+      |> vector_wrt_inner_observer([attacker, turret |> vector_from_position])
+      |> vector_to_angle
     case Turret.normalize_desired_angle(turret, desired_angle) do
       {:ok, angle} -> {:ok, angle}
       {_, _angle} -> {:fail, :out_of_fire_arc}
-    end
-  end
-
-  defp path_to_target(%Acc{} = acc, target_vector, turret_id) do
-    turret = Acc.turret(acc, turret_id)
-    attacker = Acc.attacker(acc)
-    # TODO rename turret_coord
-    turret_vector = vector_transform_from(turret, attacker)
-    path_vector = Vector.subtract(target_vector, turret_vector)
-    angle = Vector.angle(path_vector)
-    path_start_pose = pose_new(turret_vector, angle)
-    range = Vector.magnitude(path_vector)
-    path = Paths.straight_new(path_start_pose, range)
-    if Collide.avoids_collision_with?(path, Acc.islands(acc)) do
-      {:ok, path}
-    else
-      {:fail, :intervening_terrain}
     end
   end
 
@@ -113,7 +95,7 @@ defmodule Chukinas.Dreadnought.CombatAction do
       target
       # TODO position_new is redundant
       |> position_new
-      |> pose_new(ordnance_hit_angle)
+      |> pose_from_position(ordnance_hit_angle)
     animations = [
       Animations.large_muzzle_flash(pose, delay_discharge),
       # TODO calculate the ordnance flight time instead of guessing
@@ -128,8 +110,8 @@ defmodule Chukinas.Dreadnought.CombatAction do
     angle = angle_from_sum(turret, unit)
     turret
     |> Turret.gun_barrel_vector
-    |> vector_transform_from([turret, unit])
-    |> pose_new(angle)
+    |> vector_wrt_outer_observer([turret, unit])
+    |> pose_from_vector(angle)
   end
 
   def move_turret_to_neutral(acc, _turret_id) do

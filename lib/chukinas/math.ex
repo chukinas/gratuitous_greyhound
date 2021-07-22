@@ -14,9 +14,13 @@ defmodule Chukinas.Math do
   # *** *******************************
   # *** FUNCTIONS
 
-  def sign(x) when x <  0, do: -1
-  def sign(x) when x == 0, do:  0
-  def sign(x) when x >  0, do:  1
+  def sign(x) when is_number(x) do
+    cond do
+      x <  0 -> -1
+      x == 0 ->  0
+      x >  0 ->  1
+    end
+  end
 
   def flip_sign(x), do: x * sign(x)
 
@@ -28,16 +32,16 @@ defmodule Chukinas.Math do
   # *** *******************************
   # *** ARCS
 
-  def radius_from_angle_and_arclen(angle, arclen) do
-    (360 * arclen) / (2 * :math.pi() * angle)
-  end
-
   def angle_from_radius_and_arclen(radius, arclen) do
     (360 * arclen) / (2 * :math.pi() * radius)
   end
 
   def arclen_from_radius_and_angle(radius, angle) do
     (2 * :math.pi() * radius * angle) / 360
+  end
+
+  def radius_from_angle_and_arclen(angle, arclen) do
+    (360 * arclen) / (2 * :math.pi() * angle)
   end
 
   # *** *******************************
@@ -88,11 +92,7 @@ defmodule Chukinas.Math do
     when angle >= 0
     and angle < 360
 
-  defguard angle_is_normal_non_zero(angle)
-    when angle > 0
-    and angle < 360
-
-  def normalize_angle(angle) do
+  def normalize_angle(angle) when is_number(angle) do
     cond do
       angle < 0 ->
         normalize_angle(angle + 360)

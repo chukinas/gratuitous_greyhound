@@ -24,12 +24,13 @@ defmodule Chukinas.Dreadnought.Gunfire do
     coord =
       turret
       |> Turret.gun_barrel_vector
-      |> vector_transform_from([turret, unit])
+      |> vector_wrt_outer_observer([turret, unit])
     angle = angle_from_sum(turret, unit)
     coord
-    |> pose_new(angle)
+    |> pose_from_vector(angle)
     |> new
   end
+
   def new(pose) do
     spritename = "explosion_" <> Enum.random(~w(1 2 3))
     sprite = Sprites.blue(spritename)
@@ -58,7 +59,7 @@ defmodule Chukinas.Dreadnought.Gunfire do
       title = "Gunfire"
       fields =
         [
-          pose: pose_new(gunfire)
+          pose: pose_from_map(gunfire)
         ]
       IOP.struct(title, fields)
     end

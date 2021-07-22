@@ -1,4 +1,5 @@
 
+
 module.exports = {
   mode: 'jit',
   purge: [
@@ -12,13 +13,6 @@ module.exports = {
       pointer: 'pointer',
       grab: 'grab',
       'not-allowed': 'not-allowed',
-    },
-    scale: {
-      '25': '.25',
-      '50': '.50',
-      '75': '.75',
-      '100': '1',
-      '400': '4',
     },
     extend: {
       backgroundImage: theme => ({

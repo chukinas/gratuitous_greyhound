@@ -1,0 +1,3 @@
+<%= for attr <- @attrs do %>
+  <%= attr.name %>="<%= attr.value %>"
+<% end %>

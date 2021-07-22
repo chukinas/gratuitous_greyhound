@@ -12,11 +12,11 @@
 
   <%# Sprites %>
   <div class="relative">
-    <%= ChukinasWeb.DreadnoughtView.relative_sprite @unit.sprite, @socket %>
+    <%= ChukinasWeb.SpriteView.absolute_sprite @socket, @unit.sprite %>
     <%= for turret <- @unit.turrets do %>
-    <%= ChukinasWeb.DreadnoughtView.relative_sprite turret.sprite, @socket, 
-        attributes: [id: "unit-#{@unit.id}-mount-#{turret.id}"],
-        pose: turret %>
+      <%= ChukinasWeb.SpriteView.absolute_sprite @socket, turret.sprite, 
+          attrs: [id: "unit-#{@unit.id}-mount-#{turret.id}"],
+          pose: turret %>
     <% end %>
   </div>
 

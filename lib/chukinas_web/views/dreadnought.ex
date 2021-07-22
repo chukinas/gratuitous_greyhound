@@ -6,7 +6,6 @@ defmodule ChukinasWeb.DreadnoughtView do
   use Chukinas.LinearAlgebra
   alias Chukinas.Dreadnought.Unit.Event, as: Ev
   alias Chukinas.Geometry.Rect
-  alias Chukinas.Util.Opts
 
 
   def unit_event(%Ev.Maneuver{} = event) do
@@ -48,46 +47,6 @@ defmodule ChukinasWeb.DreadnoughtView do
   end
   def render_event(attributes) do
     render("_unit_event.html", attributes: attributes)
-  end
-
-  def sprite(opts \\ []) do
-    # TODO I don't like this use of 'opts'. The two 'opts' are anything but. They're required.
-    sprite = Keyword.fetch!(opts, :sprite)
-    rect = Rect.from_rect(sprite)
-    assigns = [
-      socket: Keyword.fetch!(opts, :socket),
-      rect: rect,
-      image_file_path: sprite.image_file_path,
-      image_size: sprite.image_size,
-      image_clip_path: sprite.image_clip_path,
-      transform: sprite.image_origin |> position_add(sprite) |> position_multiply(-1)
-    ]
-    render("_sprite.html", assigns)
-  end
-
-  def relative_sprite(sprite, socket, opts \\ []) do
-    opts = Opts.merge!(opts, [
-      attributes: [],
-      class: "",
-      pose: pose_origin()
-    ])
-    pose = opts[:pose]
-    attributes =
-      opts[:attributes]
-      |> Enum.map(fn {name, value} -> %{name: Atom.to_string(name), value: value} end)
-    angle = case pose.angle do
-      0 -> nil
-      x when is_number(x) -> x
-    end
-    assigns = %{
-      sprite: sprite,
-      socket: socket,
-      position: sprite |> position_add(pose) |> position,
-      class: opts[:class],
-      attributes: attributes,
-      angle: angle
-    }
-    render("_relative_sprite.html", assigns)
   end
 
   def center(%{x: _x, y: _y} = position, opts \\ []) do

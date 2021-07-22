@@ -27,8 +27,8 @@ defmodule ChukinasWeb.DreadnoughtPlayView do
     box_position =
       unit
       |> Unit.center_of_mass
-      # TODO I shouldn't have to put unit in a list
-      |> vector_inner_to_outer([unit])
+      |> vector_from_position
+      |> vector_wrt_outer_observer(unit)
       |> position_from_vector
       |> position_subtract(box_size / 2)
     assigns =

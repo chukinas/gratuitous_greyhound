@@ -6,6 +6,7 @@ defmodule Chukinas.PositionOrientationSize do
   alias Chukinas.Math
   alias Chukinas.PositionOrientationSize.IsPos
   alias Chukinas.PositionOrientationSize.Pose
+  alias Chukinas.PositionOrientationSize.PoseApi
   alias Chukinas.PositionOrientationSize.Position
   alias Chukinas.PositionOrientationSize.Size
   alias Chukinas.Util.Maps
@@ -16,11 +17,14 @@ defmodule Chukinas.PositionOrientationSize do
     alias Chukinas.PositionOrientationSize, as: POS
     quote do
       require POS.Guards
-      import POS.Guards
       require POS
       import POS
       alias POS, as: POS
+      # TODO remove this
       use Chukinas.TypedStruct
+      import POS.AngleApi
+      import POS.Guards
+      import POS.PoseApi
     end
   end
 
@@ -60,7 +64,7 @@ defmodule Chukinas.PositionOrientationSize do
 
   def pose_set_precision(pose, precision) do
     pose
-    |> pose_new
+    |> PoseApi.pose_from_map
     |> pos_set_precision(precision)
   end
 
@@ -99,9 +103,6 @@ defmodule Chukinas.PositionOrientationSize do
   def merge_pose_into!(pos_map, struct), do: merge_pose!(struct, pos_map)
   def merge_size_into!(pos_map, struct), do: merge_size!(struct, pos_map)
 
-  def put_angle!(struct, angle), do: %{struct | angle: angle}
-  def put_angle(map, angle), do: Map.put(map, :angle, angle)
-
   def into_struct!(fields, module), do: struct!(module, fields)
 
   # *** *******************************
@@ -129,6 +130,11 @@ defmodule Chukinas.PositionOrientationSize do
   defdelegate position(term), to: Position, as: :new
   defdelegate position(a, b), to: Position, as: :new
 
+  def position_flip(position) do
+    position |> position_subtract(-1)
+  end
+
+  # TODO superseded by LinearAlgebra
   def position_from_vector(vector), do: Position.new(vector)
   defdelegate position_from_size(size), to: Position, as: :from_size
 
@@ -213,23 +219,5 @@ defmodule Chukinas.PositionOrientationSize do
   defdelegate orientation_rotate(orientation, angle), to: Pose, as: :rotate
 
   def angle_from_sum(%{angle: a}, %{angle: b}), do: a + b
-
-  # *** *******************************
-  # *** POSE
-
-  # TODO is this redundant?
-  def pose_new({x, y}, angle), do: Pose.new(x, y, angle)
-  defdelegate pose_new(term), to: Pose, as: :new
-  defdelegate pose_new(position, angle), to: Pose, as: :new
-  defdelegate pose_new(x, y, angle), to: Pose, as: :new
-
-  def pose(item) do
-    IO.warn "DEPRECATED: PositionOrientationSize.pose/1"
-    Pose.new(item)
-  end
-
-  defdelegate pose(x, y, angle), to: Pose, as: :new
-
-  defdelegate pose_origin(), to: Pose, as: :origin
 
 end

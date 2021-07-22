@@ -2,11 +2,11 @@ ExUnit.start()
 
 defmodule Chukinas.Geometry.CircleTest do
 
-  use ExUnit.Case, async: true
+  #use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
   use Chukinas.PositionOrientationSize
   use Chukinas.TestHelpers
   use Chukinas.LinearAlgebra
-  alias Chukinas.Math
   alias Chukinas.Geometry.Circle
 
   describe "circle" do
@@ -23,20 +23,6 @@ defmodule Chukinas.Geometry.CircleTest do
       position = position_new(0, 1)
       circle = Circle.from_tangent_and_position(pose, position)
       assert circle == @origin_circle
-    end
-
-    test "from tangent, arclen, and rotation" do
-      pose = pose_new(1, 0, 270)
-      # Assuming a 90deg turn...
-      radius = 1
-      arclen = Math.arclen_from_radius_and_angle(radius, 90)
-      rotation = -90
-      circle = Circle.from_tangent_len_rotation(pose, arclen, rotation)
-      assert circle == @origin_circle
-      assert 1 == Circle.radius(circle)
-      assert 2 * :math.pi() == Circle.circumference(circle)
-      assert :ccw == circle.rotation
-      assert 1 == circle |> Circle.radius
     end
 
     test "get props from circle" do
@@ -59,7 +45,7 @@ defmodule Chukinas.Geometry.CircleTest do
     test "from_tangent_and_position" do
       start_pose = pose_new(1125, 425, 225)
       should_end_position = position_new(775, 275)
-      end_coord = should_end_position |> coord_from_position
+      end_coord = should_end_position |> vector_from_position
       circle = Circle.from_tangent_and_position(start_pose, should_end_position)
       trav_angle_at_end_position = Circle.traversal_angle_at_coord(circle, end_coord)
       actual_end_coord = Circle.coord_after_traversing_angle(circle, trav_angle_at_end_position)
