@@ -7,8 +7,10 @@
 <div class="flex items-center justify-center h-screen w-screen" style="background-color: #213540">
   <div class="text-yellow-100 space-y-12">
     <h2 class="uppercase text-4xl">Dreadnought</h2>
+
+    <%# UNIT %>
     <div 
-      class="w-full pointer-events-none"
+      class="w-full pointer-events-none overflow-hidden"
       style="transform:scale(<%= @unit.scale %>); height:<%= @unit.height %>px">
       <div class="h-full w-full transform translate-x-1/2 translate-y-1/2 relative">
         <%= ChukinasWeb.DreadnoughtView.render "unit.html",
