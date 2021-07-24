@@ -1,11 +1,9 @@
-<style>
-  .paper-background {
-    background-image:url("<%= Routes.static_path @socket, "/images/crinkled_paper_20210517.jpg" %>")
-  }
-</style>
+<div id="background" phx-hook="BackgroundSizeMatch" class="absolute w-screen overflow-hidden" style="background-color: #213540">
+  <img class="mix-blend-soft-light w-full h-full object-cover" src="<%= Routes.static_path @socket, "/images/crinkled_paper_20210517.jpg" %>" />
+</div>
 
-<div class="paper-background bg-blend-soft-light bg-cover bg-center" style="background-color: #213540">
-  <div class="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 text-yellow-100">
+<div class="js-background-size-match absolute">
+  <div class="w-screen min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 text-yellow-100">
 
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
       <h2 class="mt-6 text-center text-4xl uppercase font-extrabold tracking-widest">
