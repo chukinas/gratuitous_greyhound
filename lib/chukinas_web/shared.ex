@@ -49,4 +49,16 @@ defmodule ChukinasWeb.Shared do
   defp attr_to_map(%{name: _name, value: _value} = map), do: map
   defp attr_to_map({name, value}), do: %{name: Atom.to_string(name), value: value}
 
+  def hide_livereload_iframe do
+    import Phoenix.HTML
+    ~E"""
+    <style>
+      iframe {
+        width: 0;
+        height: 0;
+      }
+    </style>
+    """
+  end
+
 end

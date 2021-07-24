@@ -14,7 +14,7 @@ defmodule ChukinasWeb.PageController do
   end
 
   def dev(conn, _params) do
-    render conn, "dev.html"
+    render conn, "test_homepage.html"
   end
 
   def redirect_to_dreadnought(conn, _params) do
