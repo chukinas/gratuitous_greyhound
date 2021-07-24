@@ -34,6 +34,71 @@
   </div>
 </div>
 
-<div class="fixed w-screen h-screen bg-red-500" style="background-color: #213540">
+<div class="w-screen h-32 bg-red-500 overflow-hidden" style="background-color: #213540">
+  <img class="mix-blend-normal w-screen h-screen object-cover" src="<%= Routes.static_path @conn, "/images/crinkled_paper_20210517.jpg" %>" />
+</div>
+
+<div class="w-screen h-32 bg-red-500 overflow-hidden" style="background-color: #213540">
+  <img class="mix-blend-multiply w-screen h-screen object-cover" src="<%= Routes.static_path @conn, "/images/crinkled_paper_20210517.jpg" %>" />
+</div>
+
+<div class="w-screen h-32 bg-red-500 overflow-hidden" style="background-color: #213540">
+  <img class="mix-blend-screen w-screen h-screen object-cover" src="<%= Routes.static_path @conn, "/images/crinkled_paper_20210517.jpg" %>" />
+</div>
+
+<div class="w-screen h-32 bg-red-500 overflow-hidden" style="background-color: #213540">
+  overlay
   <img class="mix-blend-overlay w-screen h-screen object-cover" src="<%= Routes.static_path @conn, "/images/crinkled_paper_20210517.jpg" %>" />
 </div>
+
+<div class="w-screen h-32 bg-red-500 overflow-hidden" style="background-color: #213540">
+  <img class="mix-blend-darken w-screen h-screen object-cover" src="<%= Routes.static_path @conn, "/images/crinkled_paper_20210517.jpg" %>" />
+</div>
+
+<div class="w-screen h-32 bg-red-500 overflow-hidden" style="background-color: #213540">
+  <img class="mix-blend-lighten w-screen h-screen object-cover" src="<%= Routes.static_path @conn, "/images/crinkled_paper_20210517.jpg" %>" />
+</div>
+
+<div class="w-screen h-32 bg-red-500 overflow-hidden" style="background-color: #213540">
+  <img class="mix-blend-color-dodge w-screen h-screen object-cover" src="<%= Routes.static_path @conn, "/images/crinkled_paper_20210517.jpg" %>" />
+</div>
+
+<div class="w-screen h-32 bg-red-500 overflow-hidden" style="background-color: #213540">
+  color burn
+  <img class="mix-blend-color-burn w-screen h-screen object-cover" src="<%= Routes.static_path @conn, "/images/crinkled_paper_20210517.jpg" %>" />
+</div>
+
+<div class="w-screen h-32 bg-red-500 overflow-hidden" style="background-color: #213540">
+  <img class="mix-blend-hard-light w-screen h-screen object-cover" src="<%= Routes.static_path @conn, "/images/crinkled_paper_20210517.jpg" %>" />
+</div>
+
+<div class="w-screen h-32 bg-red-500 overflow-hidden" style="background-color: #213540">
+  soft light
+  <img class="mix-blend-soft-light w-screen h-screen object-cover" src="<%= Routes.static_path @conn, "/images/crinkled_paper_20210517.jpg" %>" />
+</div>
+
+<div class="w-screen h-32 bg-red-500 overflow-hidden" style="background-color: #213540">
+  <img class="mix-blend-difference w-screen h-screen object-cover" src="<%= Routes.static_path @conn, "/images/crinkled_paper_20210517.jpg" %>" />
+</div>
+
+<div class="w-screen h-32 bg-red-500 overflow-hidden" style="background-color: #213540">
+  <img class="mix-blend-exclusion w-screen h-screen object-cover" src="<%= Routes.static_path @conn, "/images/crinkled_paper_20210517.jpg" %>" />
+</div>
+
+<div class="w-screen h-32 bg-red-500 overflow-hidden" style="background-color: #213540">
+  <img class="mix-blend-hue w-screen h-screen object-cover" src="<%= Routes.static_path @conn, "/images/crinkled_paper_20210517.jpg" %>" />
+</div>
+
+<div class="w-screen h-32 bg-red-500 overflow-hidden" style="background-color: #213540">
+  <img class="mix-blend-saturation w-screen h-screen object-cover" src="<%= Routes.static_path @conn, "/images/crinkled_paper_20210517.jpg" %>" />
+</div>
+
+<div class="w-screen h-32 bg-red-500 overflow-hidden" style="background-color: #213540">
+  <img class="mix-blend-color w-screen h-screen object-cover" src="<%= Routes.static_path @conn, "/images/crinkled_paper_20210517.jpg" %>" />
+</div>
+
+<div class="w-screen h-32 bg-red-500 overflow-hidden" style="background-color: #213540">
+  luminosity
+  <img class="mix-blend-luminosity w-screen h-screen object-cover" src="<%= Routes.static_path @conn, "/images/crinkled_paper_20210517.jpg" %>" />
+</div>
+
