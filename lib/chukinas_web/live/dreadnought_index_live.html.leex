@@ -1,4 +1,10 @@
-<div class="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 text-yellow-100" style="background-color: #213540">
+<style>
+  .paper-background {
+    background-image:url("<%= Routes.static_path @socket, "/images/crinkled_paper_20210517.jpg" %>")
+  }
+</style>
+
+<div class="paper-background bg-blend-soft-light bg-cover bg-center min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 text-yellow-100" style="background-color: #213540">
 
   <div class="sm:mx-auto sm:w-full sm:max-w-md">
     <h2 class="mt-6 text-center text-4xl uppercase font-extrabold tracking-widest">
