@@ -21,6 +21,11 @@ defmodule ChukinasWeb.DreadnoughtIndexLive do
   end
 
   @impl true
+  def render(assigns) do
+    ChukinasWeb.PageView.render("test_homepage.html", assigns)
+  end
+
+  @impl true
   def handle_info(:new_turn, socket) do
     mission = MissionBuilder.homepage_1_fire_upon_2(socket.assigns.mission)
     socket = assign_mission_and_start_timer(socket, mission)
@@ -72,7 +77,7 @@ defmodule ChukinasWeb.DreadnoughtIndexLive do
     %{
       unit: unit,
       scale: scale,
-      height: scale * Unit.width(unit)
+      height: scale * Unit.width(unit) + 100
     }
   end
 
