@@ -1,12 +1,13 @@
-<div class="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-  <div class="sm:mx-auto sm:w-full sm:max-w-md bg-red-300">
-    <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+<div class="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 text-yellow-100" style="background-color: #213540">
+
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <h2 class="mt-6 text-center text-4xl uppercase font-extrabold">
       Dreadnought
     </h2>
   </div>
 
-  <div class="sm:mx-auto w-full sm:max-w-md bg-blue-400 h-12 overflow-hidden h-40">
-    <div class="h-full w-full transform translate-x-1/2 translate-y-1/2 relative bg-green-300/25">
+  <div class="sm:mx-auto w-full sm:max-w-md overflow-hidden h-56">
+    <div class="h-full w-full transform translate-x-1/2 translate-y-1/2 relative scale-150 origin-top-left">
       <%= ChukinasWeb.DreadnoughtView.render "unit.html",
         socket: @socket,
         turn_number: @turn_number,
@@ -15,19 +16,16 @@
     </div>
   </div>
 
-  <div class="sm:mx-auto sm:w-full sm:max-w-md bg-red-400">
-    <div class="pb-8 px-4 sm:px-10 bg-green-200">
-      <form class="space-y-6" action="#" method="POST">
-
-
-        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-          Sign in
-        </button>
-        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-          Sign in
-        </button>
-      </form>
-
-    </div>
+  <div class="sm:mx-auto sm:w-full sm:max-w-md pb-8 px-4 sm:px-10 space-y-6">
+    <%= for button <- @buttons do %>
+      <button 
+           phx-click="redirect"
+           value="<%= button.action %>"
+           type="button" 
+           class="w-full flex justify-center rounded-md border-2 border-yellow-100 shadow-sm px-6 py-3 text-lg font-medium hover:bg-white/25 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        <%= button.title %>
+      </button>
+    <% end %>
   </div>
+
 </div>
