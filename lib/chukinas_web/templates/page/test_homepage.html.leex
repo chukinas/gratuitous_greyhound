@@ -5,8 +5,18 @@
     </h2>
   </div>
 
-  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md bg-red-400">
-    <div class="py-8 px-4 sm:px-10">
+  <div class="sm:mx-auto w-full sm:max-w-md bg-blue-400 h-12 overflow-hidden h-40">
+    <div class="h-full w-full transform translate-x-1/2 translate-y-1/2 relative bg-green-300/25">
+      <%= ChukinasWeb.DreadnoughtView.render "unit.html",
+        socket: @socket,
+        turn_number: @turn_number,
+        unit: @unit.unit %>
+      <%= ChukinasWeb.AnimationView.muzzle_flashes @socket, @mission.gunfire %>
+    </div>
+  </div>
+
+  <div class="sm:mx-auto sm:w-full sm:max-w-md bg-red-400">
+    <div class="pb-8 px-4 sm:px-10 bg-green-200">
       <form class="space-y-6" action="#" method="POST">
 
 
