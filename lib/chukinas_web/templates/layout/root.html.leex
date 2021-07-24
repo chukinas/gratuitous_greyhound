@@ -12,8 +12,9 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@500&display=swap" rel="stylesheet"> 
   </head>
-  <body class="bg-cover">
+  <body>
     <%= @inner_content %>
     <%= ChukinasWeb.SharedComponents.import_gsap() %>
+    <%= ChukinasWeb.Shared.hide_livereload_iframe() %>
   </body>
 </html>

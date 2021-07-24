@@ -72,7 +72,7 @@ defmodule ChukinasWeb.DreadnoughtIndexLive do
     %{
       unit: unit,
       scale: scale,
-      height: scale * Unit.width(unit)
+      height: scale * Unit.width(unit) + 100
     }
   end
 

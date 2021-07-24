@@ -25,6 +25,7 @@ defmodule ChukinasWeb.Router do
     get "/", PageController, :redirect_to_dreadnought
     get "/minis", PageController, :redirect_to_dreadnought
     get "/music", PageController, :redirect_to_dreadnought
+    get "/dev", PageController, :dev
   end
 
   scope "/dreadnought", ChukinasWeb do
