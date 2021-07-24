@@ -1,29 +1,31 @@
-<div class="flex items-center justify-center h-screen w-screen overflow-x-hidden" style="background-color: #213540">
-  <div class="text-yellow-100 space-y-12 bg-red-100/25 my-16">
-    <h2 class="uppercase text-4xl">Dreadnought</h2>
+<div class="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 text-yellow-100" style="background-color: #213540">
 
-    <%# UNIT %>
-    <div 
-      class="w-full pointer-events-none overflow-hidden bg-yellow-300/25"
-      style="transform:scale(<%= @unit.scale %>); height:<%= @unit.height %>px">
-      <div class="h-full w-full transform translate-x-1/2 translate-y-1/2 relative">
-        <%= ChukinasWeb.DreadnoughtView.render "unit.html",
-          socket: @socket,
-          turn_number: @turn_number,
-          unit: @unit.unit %>
-        <%= ChukinasWeb.AnimationView.muzzle_flashes @socket, @mission.gunfire %>
-      </div>
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <h2 class="mt-6 text-center text-4xl uppercase font-extrabold tracking-widest">
+      Dreadnought
+    </h2>
+  </div>
+
+  <div class="sm:mx-auto w-full sm:max-w-md overflow-hidden h-56">
+    <div class="h-full w-full transform translate-x-1/2 translate-y-1/2 relative scale-150 origin-top-left">
+      <%= ChukinasWeb.DreadnoughtView.render "unit.html",
+        socket: @socket,
+        turn_number: @turn_number,
+        unit: @unit.unit %>
+      <%= ChukinasWeb.AnimationView.muzzle_flashes @socket, @mission.gunfire %>
     </div>
+  </div>
 
-    <%# BUTTONS %>
+  <div class="sm:mx-auto sm:w-full sm:max-w-md pb-8 px-4 sm:px-10 space-y-6">
     <%= for button <- @buttons do %>
       <button 
            phx-click="redirect"
            value="<%= button.action %>"
            type="button" 
-           class="inline-flex justify-center w-full rounded-md border-2 border-yellow-100 shadow-sm px-6 py-3 text-lg font-medium hover:bg-white/25 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+           class="w-full flex justify-center rounded-md border-2 border-yellow-100 shadow-sm px-6 py-3 text-lg font-medium hover:bg-white/25 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
         <%= button.title %>
       </button>
-  <% end %>
+    <% end %>
   </div>
+
 </div>
