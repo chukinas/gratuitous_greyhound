@@ -31,6 +31,15 @@ function delayAndDuration(data) {
   }
 }
 
+function mount_recoil(mountEl) {
+  // TODO this class name is overly specific?
+  const el = mountEl.getElementsByClassName('js-mount-recoil')[0]
+  console.log(el)
+  gsap.from(el, {
+    x: -5
+  })
+}
+
 // --------------------------------------------------------
 // UNIT EVENTS
 
@@ -65,14 +74,17 @@ function fade(eventEl, unitId) {
 function rotateMount(eventEl, unitId) {
   const data = eventEl.dataset
   const rotatingElId = `unit-${unitId}-mount-${data.mountId}`
-  const rotatingEl = document.getElementById(rotatingElId)
-  gsap.fromTo(rotatingEl, {
+  const mountEl = document.getElementById(rotatingElId)
+  gsap.fromTo(mountEl, {
     rotation: data.startAngle
   }, {
     rotation: `${data.endAngle}_${data.direction}`,
     ease: "none",
     delay: data.delay * ANIMATIONDURATION,
     duration: data.duration * ANIMATIONDURATION,
+    // TODO This approack assumes that a mount is always only ever rotated in order to fire it.
+    // But there will probably come a day when I want to rotate a turret without firing it
+    onComplete: () => mount_recoil(mountEl)
   })
 }
 
