@@ -17,7 +17,7 @@ defmodule ChukinasWeb.DreadnoughtIndexLive do
       socket
       |> assign_buttons
       |> assign_mission_and_start_timer(MissionBuilder.homepage())
-    {:ok, socket}
+    {:ok, socket, layout: {ChukinasWeb.LayoutView, "ocean.html"}}
   end
 
   @impl true

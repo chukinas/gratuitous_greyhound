@@ -1,0 +1,11 @@
+<div>
+  <%= ChukinasWeb.LayoutView.render "flash_messages.html", flash: @flash %>
+
+  <div id="background" phx-hook="BackgroundSizeMatch" class="absolute w-screen overflow-hidden" style="background-color: #213540">
+    <img class="mix-blend-soft-light w-full h-full object-cover" src="<%= Routes.static_path @socket, "/images/crinkled_paper_20210517.jpg" %>" />
+  </div>
+
+  <div class="js-background-size-match absolute">
+    <%= @inner_content %>
+  </div>
+</div>
