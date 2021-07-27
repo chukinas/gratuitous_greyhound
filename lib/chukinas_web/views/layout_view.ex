@@ -5,9 +5,9 @@ defmodule ChukinasWeb.LayoutView do
   use Chukinas.LinearAlgebra
   alias ChukinasWeb.LayoutView.OceanTile
 
-  @col_count 2
-  @row_count 5
-  @ocean_tiles OceanTile.Enum.from_col_and_row_counts(@col_count, @row_count, 200)
+  @col_count 1
+  @row_count 1
+  @ocean_tiles OceanTile.Enum.from_col_and_row_counts(@col_count, @row_count)
 
 
   def crinkled_paper_path(socket) do

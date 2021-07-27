@@ -13,11 +13,12 @@ defmodule ChukinasWeb.LayoutView.OceanTile do
   use TypedStruct
 
   typedstruct enforce: true do
-    field :rect, Rect.t
     field :viewbox, String.t
     field :style, String.t
     field :path, String.t
   end
+
+  def paper_size, do: @paper_size
 
   # *** *******************************
   # *** CONSTRUCTORS
@@ -25,12 +26,10 @@ defmodule ChukinasWeb.LayoutView.OceanTile do
   def from_position(position) when has_position(position) do
     size = size_from_square(@paper_size)
     rect = Rect.from_position_and_size(position, size)
-    style = ChukinasWeb.Shared.top_left_width_height_from_rect(rect)
     %__MODULE__{
-      rect: rect,
       viewbox: viewbox(),
-      style: style,
-      path: build_square()
+      style: ChukinasWeb.Shared.top_left_width_height_from_rect(rect),
+      path: path(position)
     }
   end
 
@@ -41,27 +40,31 @@ defmodule ChukinasWeb.LayoutView.OceanTile do
   end
 
   # *** *******************************
-  # *** ENUM
-
-  def build_square do
-    "M 0 0 L 190 5 L 200 180 L 0 200 Z"
-  end
-
-  def build_square(position) when has_position(position) do
-    [
-      {0,                     0},
-      {@paper_size,           0},
-      {@paper_size, @paper_size},
-      {0,           @paper_size}
-    ]
-    |> Enum.map(&vector_to_position/1)
-    |> Enum.map(&position_add(&1, position))
-  end
-
-  # *** *******************************
   # *** PRIVATE HELPERS
 
   defp viewbox, do: [0, 0, @paper_size, @paper_size] |> Enum.join(" ")
+
+  def path(position) do
+    vertices = position |> vector_from_position |> vertices
+    vertex_as_list = fn index ->
+      vertices
+      |> Enum.at(index)
+      |> Tuple.to_list
+    end
+    [
+      "M",
+      vertex_as_list.(0),
+      "L",
+      vertex_as_list.(1),
+      "L",
+      vertex_as_list.(2),
+      "L",
+      vertex_as_list.(3),
+      "Z"
+    ]
+    |> List.flatten
+    |> Enum.join(" ")
+  end
 
   def vertices(coord) when is_vector(coord) do
     [
@@ -83,9 +86,9 @@ defmodule ChukinasWeb.LayoutView.OceanTile.Enum do
   # *** *******************************
   # *** CONSTRUCTORS
 
-  def from_col_and_row_counts(col_count, row_count, paper_size) do
-    for col <- 0..col_count, row <- 0..row_count do
-      position_new(col, row) |> position_multiply(paper_size)
+  def from_col_and_row_counts(col_count, row_count) do
+    for col <- 0..(col_count - 1), row <- 0..(row_count - 1) do
+      position_new(col, row) |> position_multiply(OceanTile.paper_size())
     end
     |> Enum.shuffle
     |> Enum.map(&OceanTile.from_position/1)
