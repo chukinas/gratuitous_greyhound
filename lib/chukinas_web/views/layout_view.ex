@@ -3,12 +3,11 @@ defmodule ChukinasWeb.LayoutView do
   use ChukinasWeb.Components
   use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra
-  alias ChukinasWeb.LayoutView.OceanSquare, as: OceanTile
+  alias ChukinasWeb.LayoutView.OceanTile
 
   @col_count 2
   @row_count 5
-  #@ocean_tiles OceanSquare.Enum.from_col_and_row_counts(@col_count, @row_count)
-  @ocean_tiles [OceanTile.from_position position_origin()]
+  @ocean_tiles OceanTile.Enum.from_col_and_row_counts(@col_count, @row_count, 200)
 
 
   def crinkled_paper_path(socket) do

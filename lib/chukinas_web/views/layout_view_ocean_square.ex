@@ -1,5 +1,4 @@
-# TODO rename OceanTile
-defmodule ChukinasWeb.LayoutView.OceanSquare do
+defmodule ChukinasWeb.LayoutView.OceanTile do
   use ChukinasWeb, :view
   use ChukinasWeb.Components
   use Chukinas.PositionOrientationSize
@@ -76,9 +75,10 @@ defmodule ChukinasWeb.LayoutView.OceanSquare do
 
 end
 
-defmodule ChukinasWeb.LayoutView.OceanSquare.Enum do
+defmodule ChukinasWeb.LayoutView.OceanTile.Enum do
 
   use Chukinas.PositionOrientationSize
+  alias ChukinasWeb.LayoutView.OceanTile
 
   # *** *******************************
   # *** CONSTRUCTORS
@@ -88,6 +88,7 @@ defmodule ChukinasWeb.LayoutView.OceanSquare.Enum do
       position_new(col, row) |> position_multiply(paper_size)
     end
     |> Enum.shuffle
+    |> Enum.map(&OceanTile.from_position/1)
   end
 
 end
