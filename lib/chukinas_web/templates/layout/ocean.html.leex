@@ -10,21 +10,8 @@
         <svg viewBox="<%= tile.viewbox %>">
           <defs>
             <clipPath id="clip_<%= tile.id %>">
-              <style>
-                circle {
-                  fill: black;
-                }
-              </style>
               <path d="<%= tile.path %>"/>
             </clipPath>
-            <filter id="dropshadow" height="160%">
-              <feGaussianBlur in="SourceAlpha" stdDeviation="1"/> 
-              <feOffset dx="1" dy="1" result="offsetblur"/> 
-              <feMerge> 
-                <feMergeNode/>
-                <feMergeNode in="SourceGraphic"/> 
-              </feMerge>
-            </filter>
           </defs>
           <path d="<%= tile.path %>" filter="url(#dropshadow)"/>
           <image height="100%" preserveAspectRatio="xMinYMin slice" width"100%" xlink:href="<%= crinkled_paper_path @socket %>" clip-path="url(#clip_<%= tile.id %>)" />
@@ -33,20 +20,18 @@
     <% end %>
     </div>
 
-    <input type="hidden" class="
-      -rotate-0
-      -rotate-1
-      -rotate-2
-      -rotate-3
-      -rotate-6
-      -rotate-12
-       rotate-0
-       rotate-1
-       rotate-2
-       rotate-3
-       rotate-6
-       rotate-12
-    ">
+    <svg>
+      <defs>
+        <filter id="dropshadow" height="160%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="1"/> 
+          <feOffset dx="1" dy="1" result="offsetblur"/> 
+          <feMerge> 
+            <feMergeNode/>
+            <feMergeNode in="SourceGraphic"/> 
+          </feMerge>
+        </filter>
+      </defs>
+    </svg>
 
   </div>
 
