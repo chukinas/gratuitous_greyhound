@@ -5,8 +5,8 @@ defmodule ChukinasWeb.LayoutView do
   use Chukinas.LinearAlgebra
   alias ChukinasWeb.LayoutView.OceanTile
 
-  @col_count 1
-  @row_count 1
+  @col_count 10
+  @row_count 10
   @ocean_tiles OceanTile.Enum.from_col_and_row_counts(@col_count, @row_count)
 
 

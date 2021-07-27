@@ -13,30 +13,25 @@ defmodule ChukinasWeb.LayoutView.OceanTile do
   use TypedStruct
 
   typedstruct enforce: true do
+    field :id, String.t
     field :viewbox, String.t
     field :style, String.t
     field :path, String.t
   end
 
-  def paper_size, do: @paper_size
-
   # *** *******************************
   # *** CONSTRUCTORS
 
-  def from_position(position) when has_position(position) do
+  def from_col_and_row(col, row) do
+    position = position_new(col, row) |> position_multiply(@paper_size)
     size = size_from_square(@paper_size)
     rect = Rect.from_position_and_size(position, size)
     %__MODULE__{
+      id: "#{col}_#{row}",
       viewbox: viewbox(),
       style: ChukinasWeb.Shared.top_left_width_height_from_rect(rect),
       path: path(position)
     }
-  end
-
-  def from_col_and_row(col, row) do
-    position_new(col, row)
-    |> position_multiply(@paper_size)
-    |> from_position
   end
 
   # *** *******************************
@@ -66,7 +61,7 @@ defmodule ChukinasWeb.LayoutView.OceanTile do
     |> Enum.join(" ")
   end
 
-  def vertices(coord) when is_vector(coord) do
+  def vertices(_coord) do
     radius = 10
     min_size = radius
     max_size = @paper_size - radius
@@ -76,7 +71,6 @@ defmodule ChukinasWeb.LayoutView.OceanTile do
       {max_size, max_size},
       {min_size, max_size}
     ]
-    |> Enum.map(&vector_add(&1, coord))
     |> Enum.map(&vector_rand_within(&1, radius))
     |> Enum.map(&vector_round/1)
   end
@@ -93,10 +87,9 @@ defmodule ChukinasWeb.LayoutView.OceanTile.Enum do
 
   def from_col_and_row_counts(col_count, row_count) do
     for col <- 0..(col_count - 1), row <- 0..(row_count - 1) do
-      position_new(col, row) |> position_multiply(OceanTile.paper_size())
+      OceanTile.from_col_and_row(col, row)
     end
     |> Enum.shuffle
-    |> Enum.map(&OceanTile.from_position/1)
   end
 
 end

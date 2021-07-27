@@ -9,7 +9,7 @@
       <div style="<%= tile.style %>" class="transform scale-105 absolute">
         <svg viewBox="<%= tile.viewbox %>">
           <defs>
-            <clipPath id="clip">
+            <clipPath id="clip_<%= tile.id %>">
               <style>
                 circle {
                   fill: black;
@@ -27,7 +27,7 @@
             </filter>
           </defs>
           <path d="<%= tile.path %>" filter="url(#dropshadow)"/>
-          <image height="200%" preserveAspectRatio="xMinYMin slice" width"100%" xlink:href="<%= crinkled_paper_path @socket %>" clip-path="url(#clip)" />
+          <image height="200%" preserveAspectRatio="xMinYMin slice" width"100%" xlink:href="<%= crinkled_paper_path @socket %>" clip-path="url(#clip_<%= tile.id %>)" />
         </svg>
       </div>
     <% end %>
