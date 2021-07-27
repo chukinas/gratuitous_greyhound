@@ -24,13 +24,6 @@ module.exports = {
     },
   },
   variants: {
-    extend: {
-      backgroundColor: ['disabled'],
-      cursor: ['disabled'],
-      opacity: ['disabled'],
-      padding: ['hover'],
-      textColor: ['visited', 'disabled']
-    },
   },
   plugins: [
     require('@tailwindcss/forms'),

@@ -2,11 +2,11 @@
   <%= ChukinasWeb.LayoutView.render "flash_messages.html", flash: @flash %>
 
   <div id="background" phx-hook="BackgroundSizeMatch" class="absolute w-screen overflow-hidden" style="background-color: #213540">
-    <img class="sm:hidden mix-blend-soft-light w-full h-full object-cover" src="<%= crinkled_paper_path @socket %>" />
+    <img class="hidden mix-blend-soft-light w-full h-full object-cover" src="<%= crinkled_paper_path @socket %>" />
 
-    <div class="mix-blend-soft-light hidden sm:block">
+    <div class="mix-blend-soft-light">
       <%= for tile <- ocean_tiles() do %>
-      <div style="<%= tile.style %>" class="transform scale-105 absolute">
+        <div style="<%= tile.style %>" class="transform scale-125 absolute <%= tile.rotate_class %>">
         <svg viewBox="<%= tile.viewbox %>">
           <defs>
             <clipPath id="clip_<%= tile.id %>">
@@ -27,11 +27,26 @@
             </filter>
           </defs>
           <path d="<%= tile.path %>" filter="url(#dropshadow)"/>
-          <image height="200%" preserveAspectRatio="xMinYMin slice" width"100%" xlink:href="<%= crinkled_paper_path @socket %>" clip-path="url(#clip_<%= tile.id %>)" />
+          <image height="100%" preserveAspectRatio="xMinYMin slice" width"100%" xlink:href="<%= crinkled_paper_path @socket %>" clip-path="url(#clip_<%= tile.id %>)" />
         </svg>
       </div>
     <% end %>
     </div>
+
+    <input type="hidden" class="
+      -rotate-0
+      -rotate-1
+      -rotate-2
+      -rotate-3
+      -rotate-6
+      -rotate-12
+       rotate-0
+       rotate-1
+       rotate-2
+       rotate-3
+       rotate-6
+       rotate-12
+    ">
 
   </div>
 

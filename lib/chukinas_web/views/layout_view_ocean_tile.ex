@@ -4,8 +4,9 @@ defmodule ChukinasWeb.LayoutView.OceanTile do
   use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra
   alias Chukinas.Geometry.Rect
+  alias Chukinas.Math
 
-  @paper_size 200
+  @paper_size 400
 
   # *** *******************************
   # *** TYPES
@@ -17,6 +18,7 @@ defmodule ChukinasWeb.LayoutView.OceanTile do
     field :viewbox, String.t
     field :style, String.t
     field :path, String.t
+    field :rotate_class, String.t
   end
 
   # *** *******************************
@@ -30,12 +32,24 @@ defmodule ChukinasWeb.LayoutView.OceanTile do
       id: "#{col}_#{row}",
       viewbox: viewbox(),
       style: ChukinasWeb.Shared.top_left_width_height_from_rect(rect),
-      path: path(position)
+      path: path(position),
+      rotate_class: rand_rotate_class()
     }
   end
 
   # *** *******************************
   # *** PRIVATE HELPERS
+
+  defp rand_rotate_class do
+    sign = Math.rand_sign()
+    angle = Enum.random [0, 1, 2, 3, 6, 12]
+    [
+      (if sign > 0, do: "", else: "-"),
+      "rotate-",
+      angle
+    ]
+    |> Enum.join("")
+  end
 
   defp viewbox, do: [0, 0, @paper_size, @paper_size] |> Enum.join(" ")
 
