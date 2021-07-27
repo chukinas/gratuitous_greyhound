@@ -14,6 +14,6 @@ defmodule ChukinasWeb.LayoutView do
     Routes.static_path socket, "/images/crinkled_paper_20210517.jpg"
   end
 
-  def ocean_tiles, do: @ocean_tiles
+  def ocean_tiles, do: @ocean_tiles |> IOP.inspect
 
 end

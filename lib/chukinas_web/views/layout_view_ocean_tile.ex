@@ -67,13 +67,18 @@ defmodule ChukinasWeb.LayoutView.OceanTile do
   end
 
   def vertices(coord) when is_vector(coord) do
+    radius = 10
+    min_size = radius
+    max_size = @paper_size - radius
     [
-      {0,                     0},
-      {@paper_size,           0},
-      {@paper_size, @paper_size},
-      {0,           @paper_size}
+      {min_size, min_size},
+      {max_size, min_size},
+      {max_size, max_size},
+      {min_size, max_size}
     ]
     |> Enum.map(&vector_add(&1, coord))
+    |> Enum.map(&vector_rand_within(&1, radius))
+    |> Enum.map(&vector_round/1)
   end
 
 end

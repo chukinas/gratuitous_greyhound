@@ -3,6 +3,7 @@ defmodule Chukinas.LinearAlgebra.Vector do
   alias Chukinas.Math
   alias Chukinas.PositionOrientationSize, as: POS
 
+
   @x {1, 0}
   @y {0, 1}
   @type t() :: {number(), number()}
