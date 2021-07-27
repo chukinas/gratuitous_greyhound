@@ -4,7 +4,7 @@
   <div id="background" phx-hook="BackgroundSizeMatch" class="absolute w-screen overflow-hidden" style="background-color: #213540">
     <img class="sm:hidden mix-blend-soft-light w-full h-full object-cover" src="<%= crinkled_paper_path @socket %>" />
 
-    <div class="mix-blend-soft-light">
+    <div class="mix-blend-soft-light hidden sm:block">
       <%= for tile <- ocean_tiles() do %>
       <div style="<%= tile.style %>" class="transform scale-105 absolute">
         <svg viewBox="<%= tile.viewbox %>">
