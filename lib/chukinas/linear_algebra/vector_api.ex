@@ -26,14 +26,30 @@ defmodule Chukinas.LinearAlgebra.VectorApi do
 
   def vector_add(a, b), do: Vector.sum(a, b)
 
-  def vector_subtract(a, b), do: Vector.subtract(a, b)
+  def vector_multiply(vector, scalar) do
+    Vector.scalar(vector, scalar)
+  end
 
-  def vector_to_unit_vector(vector), do: Vector.normalize(vector)
+  def vector_rand_within(vector, radius) when is_number(radius) do
+    1..360
+    |> Enum.random
+    |> vector_from_angle
+    |> vector_multiply(radius)
+    |> vector_add(vector)
+  end
 
   def vector_rotate(vector, angle) do
     angle
     |> OrientationMatrix.from_angle
     |> OrientationMatrix.to_rotated_vector(vector)
+  end
+
+  def vector_subtract(a, b), do: Vector.subtract(a, b)
+
+  def vector_to_unit_vector(vector), do: Vector.normalize(vector)
+
+  def vector_round({x, y}) do
+    {round(x), round(y)}
   end
 
   # *** *******************************

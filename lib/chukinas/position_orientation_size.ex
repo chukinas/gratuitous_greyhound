@@ -25,6 +25,7 @@ defmodule Chukinas.PositionOrientationSize do
       import POS.AngleApi
       import POS.Guards
       import POS.PoseApi
+      import POS.PositionApi
     end
   end
 

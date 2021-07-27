@@ -32,12 +32,8 @@ function delayAndDuration(data) {
 }
 
 function mount_recoil(mountEl) {
-  // TODO this class name is overly specific?
   const el = mountEl.getElementsByClassName('js-mount-recoil')[0]
-  console.log(el)
-  gsap.from(el, {
-    x: -5
-  })
+  gsap.from(el, { x: -5 })
 }
 
 // --------------------------------------------------------

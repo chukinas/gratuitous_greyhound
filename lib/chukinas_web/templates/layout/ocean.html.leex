@@ -1,0 +1,42 @@
+<div>
+  <%= ChukinasWeb.LayoutView.render "flash_messages.html", flash: @flash %>
+
+  <div id="background" phx-hook="BackgroundSizeMatch" class="absolute w-screen overflow-hidden" style="background-color: #213540">
+    <img class="hidden mix-blend-soft-light w-full h-full object-cover" src="<%= crinkled_paper_path @socket %>" />
+
+    <div class="mix-blend-soft-light">
+      <%= for tile <- ocean_tiles() do %>
+        <div style="<%= tile.style %>" class="transform scale-125 absolute <%= tile.rotate_class %>">
+        <svg viewBox="<%= tile.viewbox %>">
+          <defs>
+            <clipPath id="clip_<%= tile.id %>">
+              <path d="<%= tile.path %>"/>
+            </clipPath>
+          </defs>
+          <path d="<%= tile.path %>" filter="url(#dropshadow)"/>
+          <image height="100%" preserveAspectRatio="xMinYMin slice" width"100%" xlink:href="<%= crinkled_paper_path @socket %>" clip-path="url(#clip_<%= tile.id %>)" />
+        </svg>
+      </div>
+    <% end %>
+    </div>
+
+    <svg>
+      <defs>
+        <filter id="dropshadow" height="160%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="1"/> 
+          <feOffset dx="1" dy="1" result="offsetblur"/> 
+          <feMerge> 
+            <feMergeNode/>
+            <feMergeNode in="SourceGraphic"/> 
+          </feMerge>
+        </filter>
+      </defs>
+    </svg>
+
+  </div>
+
+  <div class="js-background-size-match absolute">
+    <%= @inner_content %>
+  </div>
+
+</div>

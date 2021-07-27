@@ -22,6 +22,10 @@ defmodule Chukinas.Math do
     end
   end
 
+  def rand_sign do
+    Enum.random [-1, 1]
+  end
+
   def flip_sign(x), do: x * sign(x)
 
   def split_with_ratio(value, ratio) do
