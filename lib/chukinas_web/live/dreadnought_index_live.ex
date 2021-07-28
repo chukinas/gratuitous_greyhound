@@ -42,7 +42,7 @@ defmodule ChukinasWeb.DreadnoughtIndexLive do
   @impl true
   def handle_event("next_unit", _, socket) do
     mission = HomepageMission.next_unit(socket.assigns.mission)
-    socket = assign_mission_and_start_timer(socket, mission)
+    socket = assign_mission(socket, mission)
     {:noreply, socket}
   end
 
@@ -67,6 +67,10 @@ defmodule ChukinasWeb.DreadnoughtIndexLive do
 
   defp assign_mission_and_start_timer(socket, mission) do
     Process.send_after self(), :new_turn, Enum.random(3..5) * 1_000
+    assign_mission(socket, mission)
+  end
+
+  defp assign_mission(socket, mission) do
     socket
     |> assign(mission: mission)
     |> assign(unit: mission |> HomepageMission.main_unit |> wrap_unit)

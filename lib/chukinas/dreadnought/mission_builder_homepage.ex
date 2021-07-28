@@ -24,6 +24,11 @@ defmodule Chukinas.Dreadnought.MissionBuilder.Homepage do
 
   @spec new :: Mission.t
   def new do
+    new_no_gunfire(:red_cruiser, @starting_main_unit_id)
+    |> next_gunfire
+  end
+
+  defp new_no_gunfire(hull, main_unit_id) do
     {grid, margin} = MissionBuilder.medium_map()
     inputs = [
       Player.new_manual(@main_player_id),
@@ -32,9 +37,8 @@ defmodule Chukinas.Dreadnought.MissionBuilder.Homepage do
     Mission.new("homepage", grid, margin)
     |> Mission.put(inputs)
     |> put_target_unit
-    |> put_main_unit(:red_cruiser)
+    |> put_main_unit(hull, main_unit_id)
     |> Mission.start
-    |> next_gunfire
   end
 
   # *** *******************************
@@ -51,7 +55,8 @@ defmodule Chukinas.Dreadnought.MissionBuilder.Homepage do
   end
 
   def next_unit(mission) do
-    mission |> put_main_unit(:red_destroyer)
+    unit_id = next_main_unit_id(mission)
+    new_no_gunfire(:red_destroyer, unit_id)
   end
 
   # *** *******************************
@@ -74,8 +79,7 @@ defmodule Chukinas.Dreadnought.MissionBuilder.Homepage do
     Mission.put(mission, unit)
   end
 
-  defp put_main_unit(mission, hull) do
-    unit_id = next_main_unit_id(mission)
+  defp put_main_unit(mission, hull, unit_id) do
     units =
       [
         target_unit(mission),
