@@ -1,5 +1,4 @@
-# TODO rename *.Homepage
-defmodule ChukinasWeb.DreadnoughtIndexLive do
+defmodule ChukinasWeb.DreadnoughtLive.Homepage do
 
   use ChukinasWeb, :live_view
   use Chukinas.LinearAlgebra
