@@ -5,7 +5,7 @@ defmodule ChukinasWeb.DreadnoughtIndexLive do
   use Chukinas.LinearAlgebra
   use Chukinas.PositionOrientationSize
   alias Chukinas.Dreadnought.Mission
-  alias Chukinas.Dreadnought.MissionBuilder
+  alias Chukinas.Dreadnought.MissionBuilder.Homepage
   alias Chukinas.Dreadnought.Unit
 
   # *** *******************************
@@ -16,13 +16,13 @@ defmodule ChukinasWeb.DreadnoughtIndexLive do
     socket =
       socket
       |> assign_buttons
-      |> assign_mission_and_start_timer(MissionBuilder.homepage())
+      |> assign_mission_and_start_timer(Homepage.new())
     {:ok, socket, layout: {ChukinasWeb.LayoutView, "ocean.html"}}
   end
 
   @impl true
   def handle_info(:new_turn, socket) do
-    mission = MissionBuilder.homepage_1_fire_upon_2(socket.assigns.mission)
+    mission = Homepage.homepage_1_fire_upon_2(socket.assigns.mission)
     socket = assign_mission_and_start_timer(socket, mission)
     {:noreply, socket}
   end
