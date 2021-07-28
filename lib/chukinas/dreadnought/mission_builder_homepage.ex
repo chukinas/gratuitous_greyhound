@@ -18,13 +18,16 @@ defmodule Chukinas.Dreadnought.MissionBuilder.Homepage do
   @target_unit_id 1
   @main_player_id 2
   @starting_main_unit_id 2
+  @hulls ~w/red_cruiser blue_dreadnought red_destroyer blue_destroyer/a
 
   # *** *******************************
   # *** CONSTRUCTORS
 
   @spec new :: Mission.t
   def new do
-    new_no_gunfire(:red_cruiser, @starting_main_unit_id)
+    @starting_main_unit_id
+    |> hull_by_unit_id
+    |> new_no_gunfire(@starting_main_unit_id)
     |> next_gunfire
   end
 
@@ -56,7 +59,9 @@ defmodule Chukinas.Dreadnought.MissionBuilder.Homepage do
 
   def next_unit(mission) do
     unit_id = next_main_unit_id(mission)
-    new_no_gunfire(:red_destroyer, unit_id)
+    unit_id
+    |> hull_by_unit_id
+    |> new_no_gunfire(unit_id)
   end
 
   # *** *******************************
@@ -115,5 +120,15 @@ defmodule Chukinas.Dreadnought.MissionBuilder.Homepage do
   end
 
   defp target_unit(mission), do: Mission.unit_by_id(mission, @target_unit_id)
+
+  # *** *******************************
+  # *** PRIVATE HELPERS
+
+  defp hull_by_unit_id(unit_id) do
+    index =
+      (unit_id - @starting_main_unit_id)
+      |> rem(Enum.count(@hulls))
+    Enum.at(@hulls, index)
+  end
 
 end
