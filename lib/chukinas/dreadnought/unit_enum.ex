@@ -1,10 +1,17 @@
-alias Chukinas.Dreadnought.Unit
+defmodule Chukinas.Dreadnought.Unit.Enum do
 
-defmodule Unit.Enum do
+  alias Chukinas.Dreadnought.Unit
+  alias Chukinas.Dreadnought.Unit.Status
+  alias Chukinas.Util.IdList
+
+  def unit_ids(units) do
+    units
+    |> IdList.ids
+  end
 
   def active_units(units) do
     units
-    |> Stream.filter(& &1 |> Unit.status |> Unit.Status.active?)
+    |> Stream.filter(& &1 |> Unit.status |> Status.active?)
   end
 
   def active_player_units(units, player_id) do

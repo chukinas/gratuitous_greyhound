@@ -4,8 +4,7 @@ defmodule ChukinasWeb.DreadnoughtIndexLive do
   use ChukinasWeb, :live_view
   use Chukinas.LinearAlgebra
   use Chukinas.PositionOrientationSize
-  alias Chukinas.Dreadnought.Mission
-  alias Chukinas.Dreadnought.MissionBuilder.Homepage
+  alias Chukinas.Dreadnought.MissionBuilder.Homepage, as: HomepageMission
   alias Chukinas.Dreadnought.Unit
 
   # *** *******************************
@@ -16,13 +15,13 @@ defmodule ChukinasWeb.DreadnoughtIndexLive do
     socket =
       socket
       |> assign_buttons
-      |> assign_mission_and_start_timer(Homepage.new())
+      |> assign_mission_and_start_timer(HomepageMission.new())
     {:ok, socket, layout: {ChukinasWeb.LayoutView, "ocean.html"}}
   end
 
   @impl true
   def handle_info(:new_turn, socket) do
-    mission = Homepage.homepage_1_fire_upon_2(socket.assigns.mission)
+    mission = HomepageMission.next_gunfire(socket.assigns.mission)
     socket = assign_mission_and_start_timer(socket, mission)
     {:noreply, socket}
   end
@@ -42,7 +41,8 @@ defmodule ChukinasWeb.DreadnoughtIndexLive do
 
   @impl true
   def handle_event("next_unit", _, socket) do
-    IO.puts "show next unit!"
+    mission = HomepageMission.next_unit(socket.assigns.mission)
+    socket = assign_mission_and_start_timer(socket, mission)
     {:noreply, socket}
   end
 
@@ -69,8 +69,8 @@ defmodule ChukinasWeb.DreadnoughtIndexLive do
     Process.send_after self(), :new_turn, Enum.random(3..5) * 1_000
     socket
     |> assign(mission: mission)
-    |> assign(unit: mission |> Mission.unit_by_id(1) |> wrap_unit)
-    |> assign(turn_number: Mission.turn_number(mission))
+    |> assign(unit: mission |> HomepageMission.main_unit |> wrap_unit)
+    |> assign(turn_number: HomepageMission.turn_number(mission))
   end
 
   defp wrap_unit(%Unit{} = unit) do

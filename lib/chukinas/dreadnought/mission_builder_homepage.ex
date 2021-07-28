@@ -9,6 +9,15 @@ defmodule Chukinas.Dreadnought.MissionBuilder.Homepage do
   alias Chukinas.Dreadnought.Unit
   alias Chukinas.Dreadnought.UnitAction
   alias Chukinas.Dreadnought.UnitBuilder
+  alias Chukinas.Util.IdList
+
+  # *** *******************************
+  # *** TYPES
+
+  @target_player_id 1
+  @target_unit_id 1
+  @main_player_id 2
+  @starting_main_unit_id 2
 
   # *** *******************************
   # *** CONSTRUCTORS
@@ -17,43 +26,90 @@ defmodule Chukinas.Dreadnought.MissionBuilder.Homepage do
   def new do
     {grid, margin} = MissionBuilder.medium_map()
     inputs = [
-      Player.new_manual(1),
-      Player.new_manual(2),
-    ]
-    units = [
-      UnitBuilder.build(:red_cruiser, 1, 1) |> Unit.position_mass_center,
-      UnitBuilder.build(:blue_destroyer, 2, 2)
+      Player.new_manual(@main_player_id),
+      Player.new_manual(@target_player_id),
     ]
     Mission.new("homepage", grid, margin)
     |> Mission.put(inputs)
-    |> Mission.put(units)
+    |> put_target_unit
+    |> put_main_unit(:red_cruiser)
     |> Mission.start
-    |> homepage_1_fire_upon_2
+    |> next_gunfire
   end
 
   # *** *******************************
   # *** REDUCERS
 
-  def homepage_1_fire_upon_2(mission) do
+  def next_gunfire(mission) do
     units = Mission.units(mission)
     action_selection =
-      ActionSelection.new(1, units, [])
-      |> ActionSelection.put(UnitAction.fire_upon(1, 2))
+      ActionSelection.new(main_unit_id(mission), units, [])
+      |> ActionSelection.put(UnitAction.fire_upon(main_unit_id(mission), @target_unit_id))
     mission
     |> position_target_randomly_within_arc
     |> Mission.put_action_selection_and_end_turn(action_selection)
   end
 
+  def next_unit(mission) do
+    mission |> put_main_unit(:red_destroyer)
+  end
+
+  # *** *******************************
+  # *** CONVERTERS
+
+  def main_unit(mission) do
+    unit_id = main_unit_id(mission)
+    Mission.unit_by_id(mission, unit_id)
+  end
+
+  defdelegate turn_number(mission), to: Mission
+
   # *** *******************************
   # *** PRIVATE REDUCERS
+
+  defp put_target_unit(mission) do
+    unit =
+      :blue_destroyer
+      |> UnitBuilder.build(@target_unit_id, @target_player_id)
+    Mission.put(mission, unit)
+  end
+
+  defp put_main_unit(mission, hull) do
+    unit_id = next_main_unit_id(mission)
+    units =
+      [
+        target_unit(mission),
+        UnitBuilder.build(hull, unit_id, @main_player_id) |> Unit.position_mass_center
+      ]
+    %Mission{mission | units: units}
+  end
 
   defp position_target_randomly_within_arc(mission) do
     target_pose =
       mission
-      |> Mission.unit_by_id(1)
+      |> main_unit
       |> Unit.world_coord_random_in_arc(500)
       |> pose_from_vector
-    Mission.update_unit mission, 2, &merge_pose!(&1, target_pose)
+    Mission.update_unit mission, @target_unit_id, &merge_pose!(&1, target_pose)
   end
+
+  # *** *******************************
+  # *** PRIVATE CONVERTERS
+
+  defp main_unit_id(mission) do
+    mission
+    |> Mission.units
+    |> IdList.ids
+    |> Enum.max
+  end
+
+  defp next_main_unit_id(mission) do
+    case Mission.units(mission) do
+      [] -> @starting_main_unit_id
+      _units -> main_unit_id(mission) + 1
+    end
+  end
+
+  defp target_unit(mission), do: Mission.unit_by_id(mission, @target_unit_id)
 
 end
