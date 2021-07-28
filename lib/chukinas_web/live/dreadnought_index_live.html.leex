@@ -6,7 +6,7 @@
     </h2>
   </div>
 
-  <div class="sm:mx-auto w-full sm:max-w-md overflow-hidden h-56">
+  <div class="sm:mx-auto w-full sm:max-w-md overflow-hidden h-56 cursor-pointer hover:bg-white/25" phx-click="next_unit">
     <div class="h-full w-full transform translate-x-1/2 translate-y-1/2 relative scale-150 origin-top-left">
       <%= ChukinasWeb.DreadnoughtView.render "unit.html",
 socket: @socket,

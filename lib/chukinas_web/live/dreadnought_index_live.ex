@@ -40,6 +40,12 @@ defmodule ChukinasWeb.DreadnoughtIndexLive do
     }
   end
 
+  @impl true
+  def handle_event("next_unit", _, socket) do
+    IO.puts "show next unit!"
+    {:noreply, socket}
+  end
+
   # *** *******************************
   # *** PRIVATE HELPERS
 
