@@ -108,8 +108,17 @@ defmodule Chukinas.Dreadnought.Mission do
     Map.update!(mission, :units, update_units)
   end
 
+  def clear_units(mission) do
+    mission
+    |> clear_gunfire
+    |> Maps.clear(:units)
+    |> Maps.clear(:player_actions)
+  end
+
   # *** *******************************
   # ***  REDUCERS (PRIVATE)
+
+  defp clear_gunfire(mission), do: Maps.clear(mission, :gunfire)
 
   defp maybe_end_turn(mission) do
     if turn_complete?(mission), do: begin_new_turn(mission), else: mission
@@ -123,7 +132,7 @@ defmodule Chukinas.Dreadnought.Mission do
     mission
     # Part 1: Clean up and increment
     |> increment_turn_number
-    |> clear_units
+    |> reset_units
     |> clear_gunfire
     # Part 2: Execute previous turn's planning
     |> put_tentative_maneuvers
@@ -136,13 +145,11 @@ defmodule Chukinas.Dreadnought.Mission do
     #|> calc_ai_commands
   end
 
-  defp clear_gunfire(mission), do: Maps.clear(mission, :gunfire)
-
   defp clear_player_actions(mission) do
     %__MODULE__{mission | player_actions: []}
   end
 
-  defp clear_units(mission), do: Maps.map_each(mission, :units, &Unit.clear/1)
+  defp reset_units(mission), do: Maps.map_each(mission, :units, &Unit.clear/1)
 
   defp increment_turn_number(mission) do
     Map.update!(mission, :turn_number, & &1 + 1)

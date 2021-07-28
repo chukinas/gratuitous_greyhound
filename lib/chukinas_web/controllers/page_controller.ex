@@ -18,7 +18,7 @@ defmodule ChukinasWeb.PageController do
   end
 
   def redirect_to_dreadnought(conn, _params) do
-    redirect(conn, to: Routes.dreadnought_index_path(conn, :home))
+    redirect(conn, to: Routes.dreadnought_homepage_path(conn, :home))
   end
 
 end

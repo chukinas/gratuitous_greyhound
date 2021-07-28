@@ -25,7 +25,11 @@ defmodule ChukinasWeb.LayoutView.OceanTile do
   # *** CONSTRUCTORS
 
   def from_col_and_row(col, row) do
-    position = position_new(col, row) |> position_multiply(@paper_size)
+    position =
+      vector_new(col, row)
+      |> vector_multiply(@paper_size)
+      |> vector_rand_within(30)
+      |> vector_to_position
     size = size_from_square(@paper_size)
     rect = Rect.from_position_and_size(position, size)
     %__MODULE__{
@@ -42,7 +46,7 @@ defmodule ChukinasWeb.LayoutView.OceanTile do
 
   defp rand_rotate_class do
     sign = Math.rand_sign()
-    angle = Enum.random [0, 1, 2, 3, 6, 12]
+    angle = Enum.random [0, 3, 6]
     [
       (if sign > 0, do: "", else: "-"),
       "rotate-",
