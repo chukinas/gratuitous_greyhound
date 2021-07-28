@@ -12,7 +12,7 @@ defmodule Chukinas.Dreadnought.MissionBuilder.Homepage do
   alias Chukinas.Util.IdList
 
   # *** *******************************
-  # *** TYPES
+  # *** TYPES & CONSTANTS
 
   @target_player_id 1
   @target_unit_id 1
@@ -27,11 +27,10 @@ defmodule Chukinas.Dreadnought.MissionBuilder.Homepage do
   def new do
     @starting_main_unit_id
     |> hull_by_unit_id
-    |> new_no_gunfire(@starting_main_unit_id)
-    |> next_gunfire
+    |> do_new(@starting_main_unit_id)
   end
 
-  defp new_no_gunfire(hull, main_unit_id) do
+  defp do_new(hull, main_unit_id) do
     {grid, margin} = MissionBuilder.medium_map()
     inputs = [
       Player.new_manual(@main_player_id),
@@ -61,7 +60,7 @@ defmodule Chukinas.Dreadnought.MissionBuilder.Homepage do
     unit_id = next_main_unit_id(mission)
     unit_id
     |> hull_by_unit_id
-    |> new_no_gunfire(unit_id)
+    |> do_new(unit_id)
   end
 
   # *** *******************************

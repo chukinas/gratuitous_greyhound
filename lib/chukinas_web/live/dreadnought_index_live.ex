@@ -15,7 +15,7 @@ defmodule ChukinasWeb.DreadnoughtIndexLive do
     socket =
       socket
       |> assign_buttons
-      |> assign_mission_and_start_timer(HomepageMission.new())
+      |> assign_mission_and_start_timer(HomepageMission.new(), 0)
     {:ok, socket, layout: {ChukinasWeb.LayoutView, "ocean.html"}}
   end
 
@@ -65,8 +65,8 @@ defmodule ChukinasWeb.DreadnoughtIndexLive do
     }
   end
 
-  defp assign_mission_and_start_timer(socket, mission) do
-    Process.send_after self(), :new_turn, Enum.random(3..5) * 1_000
+  defp assign_mission_and_start_timer(socket, mission, delay \\ nil) do
+    Process.send_after self(), :new_turn, delay || Enum.random(3..5) * 1_000
     assign_mission(socket, mission)
   end
 
