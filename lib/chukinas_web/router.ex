@@ -30,8 +30,8 @@ defmodule ChukinasWeb.Router do
 
   scope "/dreadnought", ChukinasWeb do
     pipe_through :dreadnought
-    live "/", DreadnoughtLive.Index, :homepage
-    live "/gallery", DreadnoughtLive.Index, :gallery
+    live "/", DreadnoughtLive.Index, :homepage, as: :dreadnought_homepage
+    live "/gallery", DreadnoughtLive.Index, :gallery, as: :dreadnought_gallery
     get "/grid", PageController, :redirect_to_dreadnought
     live "/setup", DreadnoughtLive, :setup
     live "/play", DreadnoughtPlayLive, :index
