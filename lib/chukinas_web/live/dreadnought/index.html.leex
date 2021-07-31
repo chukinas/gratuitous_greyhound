@@ -1,0 +1,6 @@
+<%= live_component(
+      @socket, 
+      ChukinasWeb.GalleryComponent, 
+      id: :gallery_component,
+      show_markers?: assigns[:show_markers?]
+    )%>
