@@ -11,19 +11,22 @@ defmodule ChukinasWeb.DreadnoughtLive.HomepageComponent do
 
   @impl true
   def mount(socket) do
+    IO.puts "mounting homepage!"
     socket =
       socket
       |> assign_buttons
-      |> assign_mission_and_start_timer(HomepageMission.new(), 0)
+      |> assign_mission(HomepageMission.new())
     {:ok, socket}
   end
 
-  #@impl true
-  #def handle_info(:new_turn, socket) do
-  #  mission = HomepageMission.next_gunfire(socket.assigns.mission)
-  #  socket = assign_mission_and_start_timer(socket, mission)
-  #  {:noreply, socket}
-  #end
+  @impl true
+  def update(assigns, socket) do
+    msg = {:update_child_component, __MODULE__, id: assigns.id}
+    Process.send_after self(), msg, 3500
+    mission = HomepageMission.next_gunfire(socket.assigns.mission)
+    socket = assign_mission(socket, mission)
+    {:ok, socket}
+  end
 
   @impl true
   def handle_event("redirect", %{"value" => action}, socket) do
@@ -62,11 +65,6 @@ defmodule ChukinasWeb.DreadnoughtLive.HomepageComponent do
       title: title,
       action: title |> String.downcase
     }
-  end
-
-  defp assign_mission_and_start_timer(socket, mission, delay \\ nil) do
-    #Process.send_after self(), :new_turn, delay || Enum.random(3..5) * 1_000
-    assign_mission(socket, mission)
   end
 
   defp assign_mission(socket, mission) do

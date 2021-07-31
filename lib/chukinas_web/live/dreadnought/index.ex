@@ -32,4 +32,10 @@ defmodule ChukinasWeb.DreadnoughtLive.Index do
     {:noreply, socket}
   end
 
+  @impl true
+  def handle_info({:update_child_component, live_component, assigns}, socket) do
+    send_update(live_component, assigns)
+    {:noreply, socket}
+  end
+
 end
