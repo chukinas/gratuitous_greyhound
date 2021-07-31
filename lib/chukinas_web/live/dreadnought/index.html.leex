@@ -5,10 +5,19 @@
     </h2>
   </div>
 
-  <%= live_component(
-        @socket, 
-        ChukinasWeb.GalleryComponent, 
-        id: :gallery_component,
-        show_markers?: assigns[:show_markers?]
-      )%>
+  <%= case @live_action do %>
+    <%= :homepage -> %>
+      <%= live_component(
+            @socket, 
+            ChukinasWeb.DreadnoughtLive.HomepageComponent, 
+            id: :homepage_component
+          )%>
+    <%= :gallery -> %>
+      <%= live_component(
+            @socket, 
+            ChukinasWeb.GalleryComponent, 
+            id: :gallery_component,
+            show_markers?: assigns[:show_markers?]
+          )%>
+  <% end %>
 </div>

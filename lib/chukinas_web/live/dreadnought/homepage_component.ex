@@ -1,6 +1,6 @@
-defmodule ChukinasWeb.DreadnoughtLive.Homepage do
+defmodule ChukinasWeb.DreadnoughtLive.HomepageComponent do
 
-  use ChukinasWeb, :live_view
+  use ChukinasWeb, :live_component
   use Chukinas.LinearAlgebra
   use Chukinas.PositionOrientationSize
   alias Chukinas.Dreadnought.MissionBuilder.Homepage, as: HomepageMission
@@ -10,20 +10,20 @@ defmodule ChukinasWeb.DreadnoughtLive.Homepage do
   # *** CALLBACKS (MOUNT/PARAMS)
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(socket) do
     socket =
       socket
       |> assign_buttons
       |> assign_mission_and_start_timer(HomepageMission.new(), 0)
-    {:ok, socket, layout: {ChukinasWeb.LayoutView, "ocean.html"}}
+    {:ok, socket}
   end
 
-  @impl true
-  def handle_info(:new_turn, socket) do
-    mission = HomepageMission.next_gunfire(socket.assigns.mission)
-    socket = assign_mission_and_start_timer(socket, mission)
-    {:noreply, socket}
-  end
+  #@impl true
+  #def handle_info(:new_turn, socket) do
+  #  mission = HomepageMission.next_gunfire(socket.assigns.mission)
+  #  socket = assign_mission_and_start_timer(socket, mission)
+  #  {:noreply, socket}
+  #end
 
   @impl true
   def handle_event("redirect", %{"value" => action}, socket) do
@@ -65,7 +65,7 @@ defmodule ChukinasWeb.DreadnoughtLive.Homepage do
   end
 
   defp assign_mission_and_start_timer(socket, mission, delay \\ nil) do
-    Process.send_after self(), :new_turn, delay || Enum.random(3..5) * 1_000
+    #Process.send_after self(), :new_turn, delay || Enum.random(3..5) * 1_000
     assign_mission(socket, mission)
   end
 
