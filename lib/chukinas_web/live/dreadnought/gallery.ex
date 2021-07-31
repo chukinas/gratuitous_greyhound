@@ -1,4 +1,4 @@
-defmodule ChukinasWeb.DreadnoughtLive.Index do
+defmodule ChukinasWeb.DreadnoughtLive.Gallery do
 
   use ChukinasWeb, :live_view
 
