@@ -1,6 +1,14 @@
-<%= live_component(
-      @socket, 
-      ChukinasWeb.GalleryComponent, 
-      id: :gallery_component,
-      show_markers?: assigns[:show_markers?]
-    )%>
+<div class="w-screen min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 text-yellow-100">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <h2 class="mt-6 text-center text-4xl uppercase font-extrabold tracking-widest">
+      <%= @header %>
+    </h2>
+  </div>
+
+  <%= live_component(
+        @socket, 
+        ChukinasWeb.GalleryComponent, 
+        id: :gallery_component,
+        show_markers?: assigns[:show_markers?]
+      )%>
+</div>

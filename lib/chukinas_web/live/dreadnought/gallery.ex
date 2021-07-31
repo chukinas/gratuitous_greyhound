@@ -9,6 +9,7 @@ defmodule ChukinasWeb.DreadnoughtLive.Gallery do
   def mount(_params, _session, socket) do
     socket =
       socket
+      |> assign(header: "Gallery")
     {:ok, socket, layout: {ChukinasWeb.LayoutView, "ocean.html"}}
   end
 
