@@ -1,4 +1,4 @@
-defmodule ChukinasWeb.DreadnoughtLive.Gallery do
+defmodule ChukinasWeb.DreadnoughtLive.Index do
 
   use ChukinasWeb, :live_view
 
@@ -7,10 +7,18 @@ defmodule ChukinasWeb.DreadnoughtLive.Gallery do
 
   @impl true
   def mount(_params, _session, socket) do
-    socket =
-      socket
-      |> assign(header: "Gallery")
     {:ok, socket, layout: {ChukinasWeb.LayoutView, "ocean.html"}}
+  end
+
+  @impl true
+  def handle_params(_params, _url, socket) do
+    header =
+      case socket.assigns.live_action do
+        :homepage -> "Dreadnought"
+        :gallery -> "Gallery"
+      end
+    socket = assign(socket, header: header)
+    {:noreply, socket}
   end
 
   # *** *******************************

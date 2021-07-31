@@ -30,7 +30,7 @@ defmodule ChukinasWeb.DreadnoughtLive.Homepage do
     route =
       case action do
         "play" -> Routes.dreadnought_path(socket, :setup)
-        "gallery" -> Routes.live_path(socket, ChukinasWeb.DreadnoughtLive.Gallery)
+        "gallery" -> Routes.dreadnought_index_path(socket, :gallery)
       end
     {
       :noreply,
