@@ -40,6 +40,8 @@ defmodule ChukinasWeb.Shared do
     |> viewbox(margin)
   end
 
+  # TODO rename render_attrs
+  # TODO move to SharedView
   def attrs(nil), do: nil
   def attrs(attrs) when is_list(attrs) do
     assigns = [attrs: (for attr <- attrs, do: attr_to_map(attr))]

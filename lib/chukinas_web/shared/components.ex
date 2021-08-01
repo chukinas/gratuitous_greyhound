@@ -1,3 +1,4 @@
+# TODO rename ChukinasWeb.ComponentsView
 defmodule ChukinasWeb.Components do
   use Phoenix.HTML
   use ChukinasWeb, :view
@@ -11,16 +12,14 @@ defmodule ChukinasWeb.Components do
     end
   end
 
-  def toggle(id, opts \\ []) do
+  def toggle(id, label, selected?, attrs \\ []) do
     assigns =
       [
-        label: nil,
-        phx_click: nil,
-        phx_target: nil,
-        selected?: false
+        id: id,
+        label: label,
+        selected?: selected?,
+        attrs: attrs
       ]
-      |> Keyword.merge(opts)
-      |> Keyword.put(:id, id)
     render("toggle.html", assigns)
   end
 

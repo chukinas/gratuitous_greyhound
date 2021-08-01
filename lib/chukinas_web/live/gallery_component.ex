@@ -26,11 +26,33 @@ defmodule ChukinasWeb.GalleryComponent do
     {:ok, socket}
   end
 
-  def map_animation(animation) do
+  # *** *******************************
+  # *** HELPERS
+
+  defp map_animation(animation) do
     %{
       struct: Animations.repeat(animation),
       rect: Animations.bounding_rect(animation)
     }
+  end
+
+  defp render_markers_toggle(show_markers?) do
+    label =
+      if show_markers? do
+        "Markers Shown"
+      else
+        "Markers Hidden"
+      end
+    attrs =
+      [
+        "phx-click": "toggle_show_markers"
+      ]
+    ChukinasWeb.Components.toggle(
+      "toggleShowMarkers",
+      label,
+      show_markers?,
+      attrs
+    )
   end
 
 end
