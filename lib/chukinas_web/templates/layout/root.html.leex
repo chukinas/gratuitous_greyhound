@@ -14,7 +14,7 @@
   </head>
   <body>
     <%= @inner_content %>
-    <%= ChukinasWeb.SharedComponents.import_gsap() %>
+    <%= ChukinasWeb.ComponentView.render_gsap_import() %>
     <%= ChukinasWeb.Shared.hide_livereload_iframe() %>
   </body>
 </html>
