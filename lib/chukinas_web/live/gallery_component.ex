@@ -1,6 +1,3 @@
-# height
-# width
-#
 defmodule ChukinasWeb.GalleryComponent do
 
   use ChukinasWeb, :live_component
@@ -19,27 +16,20 @@ defmodule ChukinasWeb.GalleryComponent do
     sprites =
       Sprites.all()
       |> Enum.map(& Sprites.scale(&1, 2))
-    animations = [
-      Animations.simple_muzzle_flash(pose_origin()),
-      Animations.large_muzzle_flash(pose_origin())
-    ]
-    |> Enum.map(&map_animation/1)
+    animations =
+      [
+        Animations.simple_muzzle_flash(pose_origin()),
+        Animations.large_muzzle_flash(pose_origin())
+      ]
+      |> Enum.map(&Animations.repeat/1)
     socket =
       socket
-      |> assign(sprites: sprites, animations: animations)
-      |> assign(sprites_and_animations: animations ++ sprites)
+      |> assign(sprites_and_animations: Enum.map(animations ++ sprites, &wrap_item/1))
     {:ok, socket}
   end
 
   # *** *******************************
   # *** HELPERS
-
-  defp map_animation(animation) do
-    %{
-      struct: Animations.repeat(animation),
-      rect: BoundingRect.of(animation)
-    }
-  end
 
   defp render_markers_toggle(show_markers?) do
     label =
@@ -63,7 +53,7 @@ defmodule ChukinasWeb.GalleryComponent do
   defp wrap_item(item) do
     %{
       item: item,
-      rect: BoundingRect.of(item)
+      rect: BoundingRect.of(item) |> position_flip
     }
   end
 

@@ -10,6 +10,10 @@ defmodule Chukinas.PositionOrientationSize.PositionApi do
   # *** *******************************
   # *** REDUCERS
 
+  defdelegate position_multiply(position, scalar), to: Position, as: :multiply
+
+  def position_flip(position), do: position |> position_multiply(-1)
+
   # *** *******************************
   # *** CONVERTERS
 

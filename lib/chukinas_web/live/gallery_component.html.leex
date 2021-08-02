@@ -3,94 +3,38 @@
   <%= render_markers_toggle(@show_markers?) %>
 </div>
 
-
-
-
-
-<%# grid %>
+<%# GRID %>
 <%# based on horizontal link cards %>
-<div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+<div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
 
   <%# SPRITE ANIMATIONS %>
-  <%= for animation <- @animations do %>
+  <%= for term <- @sprites_and_animations do %>
   <%# single animation card %>
   <div class="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex flex-col items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-yellow-500">
 
-
     <%# SPRITE ANIMATION %>
-    <div 
-      style="
-        width: <%= animation.rect.width %>px;
-        height: <%= animation.rect.height %>px;
-      "
-    >
+    <div class="overflow-hidden" style="<%= ChukinasWeb.Shared.width_height_from_size(term.rect) %>" >
       <div 
         class="relative"
-        style="
-          margin-left: <%= -animation.rect.x %>px;
-          margin-top: <%= -animation.rect.y %>px;
-        "
+        style="<%= ChukinasWeb.Shared.left_top_from_position(term.rect) %>"
       >
-        <%= ChukinasWeb.AnimationView.single(@socket, animation.struct) %>
+        <%= ChukinasWeb.AnimationView.render_animation_or_sprite(@socket, term.item) %>
         <%= if @show_markers? do %>
           <%= ChukinasWeb.DreadnoughtView.center %{x: 0, y: 0} %>
         <% end %>
       </div>
     </div>
 
-
     <%# DESCRIPTIVE TEXT %>
     <div class="flex-1 min-w-0">
       <a href="#" class="focus:outline-none">
         <span class="absolute inset-0" aria-hidden="true"></span>
         <p class="text-sm font-medium text-gray-900">
-          <%= animation.struct.name %>
+          <%= term.item.name %>
         </p>
       </a>
     </div>
   </div>
   <% end %>
 
-  <%# SPRITES %>
-  <%= for sprite <- @sprites do %>
-  <%# single sprite card %>
-  <div class="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex flex-col items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-yellow-500">
-
-
-    <%# SPRITE %>
-    <div 
-      style="
-        width: <%= sprite.width %>px;
-        height: <%= sprite.height %>px;
-      "
-    >
-      <div 
-        class="relative"
-        style="
-          margin-left: <%= -sprite.x %>px;
-          margin-top: <%= -sprite.y %>px;
-        "
-      >
-        <%= ChukinasWeb.SpriteView.absolute_sprite @socket, sprite %>
-        <%= if @show_markers? do %>
-          <%= ChukinasWeb.DreadnoughtView.center %{x: 0, y: 0} %>
-          <%= for mount <- sprite.mounts do %>
-            <%= ChukinasWeb.DreadnoughtView.center mount, type: :mount %>
-          <% end %>
-        <% end %>
-      </div>
-    </div>
-
-
-    <%# DESCRIPTIVE TEXT %>
-    <div class="flex-1 min-w-0">
-      <a href="#" class="focus:outline-none">
-        <span class="absolute inset-0" aria-hidden="true"></span>
-        <p class="text-sm font-medium text-gray-900">
-          <%= sprite.name %>
-        </p>
-      </a>
-    </div>
-  </div>
-  <% end %>
 </div>
