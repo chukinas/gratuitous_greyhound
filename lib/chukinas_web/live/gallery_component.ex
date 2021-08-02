@@ -47,7 +47,7 @@ defmodule ChukinasWeb.GalleryComponent do
       [
         "phx-click": "toggle_show_markers"
       ]
-    ChukinasWeb.Components.toggle(
+    ChukinasWeb.ComponentView.render_toggle(
       "toggleShowMarkers",
       label,
       show_markers?,

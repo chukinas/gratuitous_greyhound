@@ -12,17 +12,6 @@ defmodule ChukinasWeb.Components do
     end
   end
 
-  def toggle(id, label, selected?, attrs \\ []) do
-    assigns =
-      [
-        id: id,
-        label: label,
-        selected?: selected?,
-        attrs: attrs
-      ]
-    render("toggle.html", assigns)
-  end
-
   def error_paragraph(form, field) do
     class = Class.error_paragraph()
     Enum.map(Keyword.get_values(form.errors, field), fn error ->
