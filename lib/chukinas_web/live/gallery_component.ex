@@ -51,9 +51,18 @@ defmodule ChukinasWeb.GalleryComponent do
   end
 
   defp wrap_item(item) do
+    rect = BoundingRect.of(item)
+    colspan =
+      case rect.width do
+        x when x > 200 -> 3
+        x when x > 100 -> 2
+        _ -> 1
+      end
     %{
       item: item,
-      rect: BoundingRect.of(item) |> position_flip
+      rect: rect |> position_flip,
+      colspan: colspan,
+      rowspan: (if rect.height > 45, do: 1, else: 1)
     }
   end
 
