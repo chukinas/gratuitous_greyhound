@@ -269,6 +269,7 @@ defmodule Chukinas.Dreadnought.Mission do
   def combats(mission), do: mission |> actions |> UnitAction.Enum.combats
 
   # TODO rename `world_rect`
+  # TODO can I implement BoundingRect protocol instead?
   def rect(nil), do: Rect.null()
   def rect(%__MODULE__{world_rect: value}), do: value
 

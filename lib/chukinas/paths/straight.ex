@@ -30,13 +30,6 @@ defmodule Chukinas.Paths.Straight do
 
   def angle(straight), do: straight |> get_angle
 
-  def bounding_rect(path) do
-    Rect.from_positions(
-      start_pose(path),
-      end_pose(path)
-    )
-  end
-
   def end_pose(%__MODULE__{len: len} = path) do
     path
     |> csys_from_pose
@@ -83,9 +76,18 @@ defimpl PathLike, for: Straight do
   def pose_start(path), do: Straight.start_pose(path)
   def pose_end(path), do: Straight.end_pose(path)
   def len(path), do: Straight.length(path)
-  def get_bounding_rect(path), do: Straight.bounding_rect(path)
   def exceeds_angle(_straight, _angle), do: false
   def deceeds_angle(_straight, _angle), do: true
+end
+
+defimpl Chukinas.BoundingRect, for: Straight do
+  alias Chukinas.Geometry.Rect
+  def of(path) do
+    Rect.from_positions(
+      Straight.start_pose(path),
+      Straight.end_pose(path)
+    )
+  end
 end
 
 defimpl Chukinas.Collide.IsShape, for: Straight do

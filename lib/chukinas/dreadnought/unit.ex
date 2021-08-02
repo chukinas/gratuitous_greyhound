@@ -14,13 +14,13 @@ defmodule Chukinas.Dreadnought.Unit do
   # *** TYPES
 
   typedstruct enforce: true do
+    pose_fields()
     field :id, integer()
     field :name, String.t(), enforce: false
     field :player_id, integer
     field :sprite, Sprites.t
     field :turrets, [Turret.t()]
     field :health, integer()
-    pose_fields()
     field :status, Status.t()
     field :events, [Ev.t()], default: []
     field :past_events, [Ev.t()], default: []

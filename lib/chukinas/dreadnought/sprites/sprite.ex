@@ -12,6 +12,7 @@ defmodule Chukinas.Dreadnought.Sprite do
   # *** TYPES
 
   typedstruct enforce: true do
+    rect_fields()
     field :name, String.t()
     field :image_file_path, String.t()
     # TODO change to size type
@@ -19,7 +20,6 @@ defmodule Chukinas.Dreadnought.Sprite do
     # TODO change to position type
     field :image_origin, any
     field :image_clip_path, String.t()
-    rect_fields()
     field :mounts, [Mount.t()]
   end
 
@@ -55,10 +55,6 @@ defmodule Chukinas.Dreadnought.Sprite do
   end
   def base_filename(%__MODULE__{image_file_path: path}), do: Path.basename(path)
   def mounts(%__MODULE__{mounts: mounts}), do: mounts
-
-  def rect(%__MODULE__{} = sprite) do
-    Rect.from_rect(sprite)
-  end
 
   # *** *******************************
   # *** API

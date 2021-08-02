@@ -79,17 +79,6 @@ defmodule Chukinas.Paths.Turn do
     |> csys_to_pose
   end
 
-  # TODO remove
-  def bounding_rect(path) do
-    path
-    |> circle
-    # TODO alias Circle, don't import
-    # TODO rename Circle.coord
-    |> Circle.coord
-    |> vector_to_position
-    |> Rect.from_centered_square(path |> circle |> Circle.diameter)
-  end
-
   def circle(%__MODULE__{circle: value}), do: value
 
   def radius(turn), do: turn |> circle |> Circle.radius
@@ -112,6 +101,19 @@ end
 # *** IMPLEMENTATIONS
 
 alias Chukinas.Paths.Turn
+
+defimpl Chukinas.BoundingRect, for: Turn do
+  use Chukinas.LinearAlgebra
+  alias Chukinas.Geometry.Rect
+  alias Chukinas.Geometry.Circle
+  def of(turn) do
+    turn
+    |> Turn.circle
+    |> Circle.coord
+    |> vector_to_position
+    |> Rect.from_centered_square(turn |> Turn.circle |> Circle.diameter)
+  end
+end
 
 defimpl Chukinas.Collide.IsShape, for: Turn do
   use Chukinas.PositionOrientationSize
@@ -137,7 +139,6 @@ defimpl Chukinas.Paths.PathLike, for: Turn do
   def pose_start(path), do: path |> pose_from_map
   def pose_end(path), do: Turn.end_pose(path)
   def len(path), do: Turn.traversal_distance(path)
-  def get_bounding_rect(path), do: Turn.bounding_rect(path)
   # TODO these should end in question mark
   def exceeds_angle(turn, rotation) do
     turn |> Turn.traversal_angle > rotation

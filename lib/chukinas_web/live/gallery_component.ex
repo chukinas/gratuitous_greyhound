@@ -1,8 +1,12 @@
+# height
+# width
+#
 defmodule ChukinasWeb.GalleryComponent do
 
   use ChukinasWeb, :live_component
   use ChukinasWeb.Components
   use Chukinas.PositionOrientationSize
+  alias Chukinas.BoundingRect
   alias Chukinas.Dreadnought.Animations
   alias Chukinas.Dreadnought.Sprites
 
@@ -23,6 +27,7 @@ defmodule ChukinasWeb.GalleryComponent do
     socket =
       socket
       |> assign(sprites: sprites, animations: animations)
+      |> assign(sprites_and_animations: animations ++ sprites)
     {:ok, socket}
   end
 
@@ -32,7 +37,7 @@ defmodule ChukinasWeb.GalleryComponent do
   defp map_animation(animation) do
     %{
       struct: Animations.repeat(animation),
-      rect: Animations.bounding_rect(animation)
+      rect: BoundingRect.of(animation)
     }
   end
 
@@ -53,6 +58,13 @@ defmodule ChukinasWeb.GalleryComponent do
       show_markers?,
       attrs
     )
+  end
+
+  defp wrap_item(item) do
+    %{
+      item: item,
+      rect: BoundingRect.of(item)
+    }
   end
 
 end

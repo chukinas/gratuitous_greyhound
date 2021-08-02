@@ -1,5 +1,4 @@
 alias Chukinas.Geometry.{GridSquare, Rect}
-alias Chukinas.Collide.IsShape
 alias Chukinas.Paths
 
 defmodule GridSquare do
@@ -54,18 +53,24 @@ defmodule GridSquare do
     %{square | path: path, path_type: path_type}
   end
 
-  def to_rect(%__MODULE__{center: position, size: size}) do
+end
+
+# *** *******************************
+# *** IMPLEMENTATIONS
+
+alias Chukinas.Geometry.GridSquare
+
+defimpl Chukinas.BoundingRect, for: GridSquare do
+  alias Chukinas.Geometry.Rect
+  def of(%GridSquare{center: position, size: size}) do
     Rect.from_centered_square(position, size)
   end
+end
 
-  # *** *******************************
-  # *** IMPLEMENTATIONS
-
-  defimpl IsShape do
-    def to_coords(grid_square) do
-      grid_square
-      |> GridSquare.to_rect
-      |> Rect.to_coords
-    end
+defimpl Chukinas.Collide.IsShape, for: GridSquare do
+  def to_coords(grid_square) do
+    grid_square
+    |> Chukinas.BoundingRect.of
+    |> Rect.to_coords
   end
 end
