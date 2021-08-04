@@ -1,4 +1,4 @@
-defmodule ChukinasWeb.DreadnoughtView do
+defmodule ChukinasWeb.UnitView do
 
   use ChukinasWeb, :view
   use ChukinasWeb.Components
@@ -44,7 +44,7 @@ defmodule ChukinasWeb.DreadnoughtView do
     ]
   end
   def render_event(attributes) do
-    render("_unit_event.html", attributes: attributes)
+    render("unit_event.html", attributes: attributes)
   end
 
 end
