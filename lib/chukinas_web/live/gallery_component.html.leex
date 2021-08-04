@@ -31,6 +31,9 @@
         <%= ChukinasWeb.AnimationView.render_animation_or_sprite(@socket, term.item) %>
         <%= if @show_markers? do %>
           <%= ChukinasWeb.ComponentView.render_rotation_center_dot() %>
+          <%= for position <- term.mount_positions do %>
+            <%= ChukinasWeb.ComponentView.render_mount_dot(position) %>
+          <% end %>
         <% end %>
       </div>
     </div>

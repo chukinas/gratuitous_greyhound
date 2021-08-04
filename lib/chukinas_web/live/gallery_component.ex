@@ -58,9 +58,15 @@ defmodule ChukinasWeb.GalleryComponent do
         x when x > 100 -> 2
         _ -> 1
       end
+    mount_positions =
+      case item do
+        %{mounts: mounts} -> mounts
+        _ -> []
+      end
     %{
       item: item,
       rect: rect |> position_flip,
+      mount_positions: mount_positions,
       colspan: colspan,
       rowspan: (if rect.height > 45, do: 1, else: 1)
     }
