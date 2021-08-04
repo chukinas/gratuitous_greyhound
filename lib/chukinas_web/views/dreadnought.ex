@@ -5,8 +5,6 @@ defmodule ChukinasWeb.DreadnoughtView do
   use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra
   alias Chukinas.Dreadnought.Unit.Event, as: Ev
-  alias Chukinas.Geometry.Rect
-
 
   def unit_event(%Ev.Maneuver{} = event) do
     standard_attributes(event, "maneuver") ++ [
@@ -48,27 +46,5 @@ defmodule ChukinasWeb.DreadnoughtView do
   def render_event(attributes) do
     render("_unit_event.html", attributes: attributes)
   end
-
-  def center(%{x: _x, y: _y} = position, opts \\ []) do
-    scale = Keyword.get(opts, :scale, 1)
-    color = case Keyword.get(opts, :type, :origin) do
-      :origin -> "pink"
-      :mount -> "blue"
-    end
-    size = 20
-    position = position_multiply(position, scale)
-    render("_center.html",
-      rect: Rect.from_centered_square(position, size),
-      color: color
-    )
-  end
-
-  #defp render_template(template, assigns, block) do
-  #  assigns =
-  #    assigns
-  #    |> Map.new()
-  #    |> Map.put(:inner_content, block)
-  #  render template, assigns
-  #end
 
 end
