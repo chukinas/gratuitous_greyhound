@@ -14,7 +14,8 @@ defmodule ChukinasWeb.PageController do
   end
 
   def dev(conn, _params) do
-    render conn, "menu2.html", [team: "Teamxxxx"]
+    menu_items = for title <- ["Home", "Setup", "Gallery"], do: ChukinasWeb.MenuItem.new(title)
+    render conn, "menu2.html", menu_items: menu_items
   end
 
   def redirect_to_dreadnought(conn, _params) do
