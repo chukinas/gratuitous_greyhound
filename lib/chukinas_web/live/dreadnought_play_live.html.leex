@@ -6,12 +6,7 @@
   <%= ChukinasWeb.AnimationView.render_all @socket, @mission.gunfire %>
 
   <%= for unit <- @mission.units do %>
-    <%= if unit.status.render? do %>
-      <%= ChukinasWeb.UnitView.render "unit.html",
-      socket: @socket,
-      turn_number: @mission.turn_number,
-      unit: unit %>
-    <% end %>
+    <%= ChukinasWeb.UnitView.render_unit(@socket, unit, @mission.turn_number) %>
   <% end %>
 
 <% end %>

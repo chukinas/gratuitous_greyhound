@@ -116,6 +116,10 @@ defmodule Chukinas.Dreadnought.Unit do
     Stream.concat(current, past)
   end
 
+  def render?(%__MODULE__{status: status}) do
+    status.render?
+  end
+
   def starting_health(%__MODULE__{health: value}), do: value
 
   def percent_health(unit) do

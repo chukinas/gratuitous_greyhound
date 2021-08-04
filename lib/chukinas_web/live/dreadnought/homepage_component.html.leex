@@ -4,11 +4,8 @@
      phx-target="<%= @myself %>"
      >
   <div class="h-full w-full transform translate-x-1/2 translate-y-1/2 relative scale-150 origin-top-left">
-    <%= ChukinasWeb.UnitView.render "unit.html",
-      socket: @socket,
-      turn_number: @turn_number,
-      unit: @unit.unit %>
-      <%= ChukinasWeb.AnimationView.muzzle_flashes @socket, @mission.gunfire %>
+    <%= ChukinasWeb.UnitView.render_unit(@socket, @unit.unit, @turn_number) %>
+    <%= ChukinasWeb.AnimationView.muzzle_flashes(@socket, @mission.gunfire) %>
   </div>
 </div>
 

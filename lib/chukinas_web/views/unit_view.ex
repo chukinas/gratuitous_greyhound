@@ -4,6 +4,7 @@ defmodule ChukinasWeb.UnitView do
   use ChukinasWeb.Components
   use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra
+  alias Chukinas.Dreadnought.Unit
   alias Chukinas.Dreadnought.Unit.Event, as: Ev
 
   def unit_event(%Ev.Maneuver{} = event) do
@@ -45,6 +46,10 @@ defmodule ChukinasWeb.UnitView do
   end
   def render_event(attributes) do
     render("unit_event.html", attributes: attributes)
+  end
+
+  def render_unit(socket, %Unit{} = unit, turn_number \\ 0) do
+    if Unit.render?(unit), do: render("unit.html", socket: socket, turn_number: turn_number, unit: unit)
   end
 
 end
