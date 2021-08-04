@@ -15,31 +15,11 @@ defmodule ChukinasWeb.PageController do
 
   def dev(conn, _params) do
     menu_items = for title <- ["Home", "Setup", "Gallery"], do: ChukinasWeb.MenuItem.new(title)
-    render conn, "menu2.html", menu_items: menu_items
+    render conn, "menu.html", menu_items: menu_items
   end
 
   def redirect_to_dreadnought(conn, _params) do
     redirect(conn, to: Routes.dreadnought_homepage_path(conn, :homepage))
-  end
-
-end
-
-defmodule ChukinasWeb.MenuItem do
-
-  use TypedStruct
-
-  # *** *******************************
-  # *** TYPES
-
-  typedstruct enforce: true do
-    field :title, String.t
-  end
-
-  # *** *******************************
-  # *** NEW
-
-  def new(title) do
-    %__MODULE__{title: title}
   end
 
 end
