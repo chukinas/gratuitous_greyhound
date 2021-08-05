@@ -21,4 +21,8 @@ defmodule ChukinasWeb.PageController do
     redirect(conn, to: Routes.dreadnought_homepage_path(conn, :home))
   end
 
+  def redirect_to_goodreads_elixir(conn, _params) do
+    redirect(conn, external: "https://www.goodreads.com/review/list/131896976-jonathan-chukinas?shelf=full-stack-web-developer")
+  end
+
 end
