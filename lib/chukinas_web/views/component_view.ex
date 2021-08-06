@@ -33,7 +33,16 @@ defmodule ChukinasWeb.ComponentView do
   end
 
   def render_content_button(content, attrs \\ []) do
-    class = "w-full flex justify-center rounded-md border-2 border-yellow-100 shadow-sm px-6 py-3 text-lg font-medium hover:bg-white/25 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+    class = """
+    flex justify-center
+    rounded-md
+    border-2 border-yellow-300
+    shadow-sm
+    w-full px-6 py-3
+    text-lg font-medium text-yellow-200 hover:text-yellow-900 hover:font-bold
+    hover:bg-yellow-100/50 focus:outline-none
+    focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500
+    """
     Phoenix.HTML.Tag.content_tag :button, content, attrs ++ [class: class]
   end
 
