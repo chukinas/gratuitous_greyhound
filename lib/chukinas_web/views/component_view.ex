@@ -46,4 +46,15 @@ defmodule ChukinasWeb.ComponentView do
     Phoenix.HTML.Tag.content_tag :button, content, attrs ++ [class: class]
   end
 
+  def render_label(form, field, display \\ nil) do
+    class = """
+    text-yellow-200
+    """
+    if display do
+      label form, field, display, class: class
+    else
+      label form, field, class: class
+    end
+  end
+
 end
