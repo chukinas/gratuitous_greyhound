@@ -1,12 +1,18 @@
 <nav class="" 
-     x-data="{ isOpen: false }">
-  <div class="fixed top-4 right-4 inline-block text-left bg-red-400/25">
+     >
+<style>
+  [x-cloak] { display: none !important; }
+</style>
+  <div 
+     x-data="{ isOpen: false }"
+              @click="isOpen = !isOpen"
+         @click.outside="isOpen = false"
+    class="fixed top-4 right-4 inline-block text-left">
     
     <%# ELIPSIS %>
     <div>
       <button type="button" 
               id="menu-button" 
-              @click="isOpen = !isOpen"
               aria-expanded="true" 
               aria-haspopup="true"
               class="bg-gray-100 rounded-full flex items-center text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500" >
@@ -24,14 +30,7 @@
          aria-orientation="vertical" 
          aria-labelledby="menu-button" 
          x-show="isOpen"
-         @click.outside="isOpen = false"
-         x-transition:enter="transition ease-out duration-100 transform"
-         x-transition:enter-start="opacity-0 scale-95"
-         x-transition:enter-end="opacity-100 scale-100"
-         x-transition:leave="transition ease-in duration-75 transform"
-         x-transition:leave-start="opacity-100 scale-100"
-         x-transition:leave-end="opacity-0 scale-95"
-         class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none hidden">
+         class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none ">
       <div class="py-1" role="none">
         <%= for menu_item <- @menu_items do %>
           <%= live_patch menu_item.title, to: menu_item.route, tabindex: "-1", class: "text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900" %>
