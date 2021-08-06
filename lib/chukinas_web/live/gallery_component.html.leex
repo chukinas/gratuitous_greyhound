@@ -9,36 +9,28 @@
 
   <%# SPRITE ANIMATIONS %>
   <%= for term <- @sprites_and_animations do %>
-  <%# single animation card %>
-  <div class="col-span-<%= term.colspan  %> row-span-<%= term.rowspan %> relative rounded-lg px-6 py-5 shadow-sm flex flex-col items-center justify-start space-x-3 ">
+    <div class="col-span-<%= term.colspan  %> row-span-<%= term.rowspan %> relative rounded-lg px-6 py-5 shadow-sm flex flex-col items-center justify-start space-x-3 ">
 
-    <%# DESCRIPTIVE TEXT %>
-    <div class="min-w-0 mb-4">
-      <a href="#" class="focus:outline-none">
-        <span class="absolute inset-0" aria-hidden="true"></span>
-        <p class="text-sm font-medium text-yellow-100">
-          <%= term.item.name %>
-        </p>
-      </a>
-    </div>
-
-    <%# SPRITE ANIMATION %>
-    <div class="" style="<%= ChukinasWeb.Shared.width_height_from_size(term.rect) %>" >
-      <div 
-        class="relative"
-        style="<%= ChukinasWeb.Shared.left_top_from_position(term.rect) %>"
-      >
-        <%= ChukinasWeb.AnimationView.render_animation_or_sprite(@socket, term.item) %>
-        <%= if @show_markers? do %>
-          <%= ChukinasWeb.ComponentView.render_rotation_center_dot() %>
-          <%= for position <- term.mount_positions do %>
-            <%= ChukinasWeb.ComponentView.render_mount_dot(position) %>
-          <% end %>
-        <% end %>
+      <%# DESCRIPTIVE TEXT %>
+      <div class="min-w-0 mb-4">
+        <%= ChukinasWeb.ComponentView.render_p term.item.name %>
       </div>
-    </div>
 
-  </div>
+      <%# SPRITE ANIMATION %>
+      <div style="<%= ChukinasWeb.Shared.width_height_from_size(term.rect) %>" >
+        <div style="<%= ChukinasWeb.Shared.left_top_from_position(term.rect) %>"
+             class="relative">
+          <%= ChukinasWeb.AnimationView.render_animation_or_sprite(@socket, term.item) %>
+          <%= if @show_markers? do %>
+            <%= ChukinasWeb.ComponentView.render_rotation_center_dot() %>
+            <%= for position <- term.mount_positions do %>
+              <%= ChukinasWeb.ComponentView.render_mount_dot(position) %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+
+    </div>
   <% end %>
 
 </div>

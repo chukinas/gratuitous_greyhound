@@ -57,4 +57,11 @@ defmodule ChukinasWeb.ComponentView do
     end
   end
 
+  def render_p(text) do
+    class = """
+    text-yellow-200
+    """
+    Phoenix.HTML.Tag.content_tag :p, text, class: class
+  end
+
 end
