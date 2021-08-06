@@ -10,7 +10,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
   @impl true
   def mount(_params, session, socket) do
     socket = assign_uuid_and_room(socket, session)
-    {:ok, socket, layout: {ChukinasWeb.LayoutView, "dreadnought_menu.html"}}
+    {:ok, socket, layout: {ChukinasWeb.LayoutView, "ocean.html"}}
   end
 
   @spec assign_uuid_and_room(Phoenix.LiveView.Socket.t, map) :: Phoenix.LiveView.Socket.t

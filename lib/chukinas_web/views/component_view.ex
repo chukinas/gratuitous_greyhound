@@ -36,7 +36,7 @@ defmodule ChukinasWeb.ComponentView do
     class = """
     flex justify-center
     rounded-md
-    border-2 border-yellow-300
+    border-2 border-yellow-200
     shadow-sm
     w-full px-6 py-3
     text-lg font-medium text-yellow-200 hover:text-yellow-900 hover:font-bold
