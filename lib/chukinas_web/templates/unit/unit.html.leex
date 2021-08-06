@@ -29,7 +29,7 @@
     data-unit-id="<%= @unit.id %>"
   >
     <%= for event <- @unit.events do %>
-      <%= ChukinasWeb.DreadnoughtView.unit_event(event) %>
+      <%= ChukinasWeb.UnitView.unit_event(event) %>
     <% end %>
   </ul>
 

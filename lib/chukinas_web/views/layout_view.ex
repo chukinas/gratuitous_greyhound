@@ -16,4 +16,15 @@ defmodule ChukinasWeb.LayoutView do
 
   def ocean_tiles, do: @ocean_tiles
 
+  #def ocean_with_header(socket, flash, do) do
+  #end
+
+  def render_layout(layout, assigns, do: content) do
+    assigns =
+      assigns
+      |> Map.new
+      |> Map.put(:inner_content, content)
+    render(layout, assigns)
+  end
+
 end

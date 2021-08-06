@@ -3,7 +3,6 @@ defmodule Chukinas.Dreadnought.Animation do
   use Chukinas.PositionOrientationSize
   alias Chukinas.Dreadnought.AnimationFrame
   alias Chukinas.Dreadnought.Sprites
-  alias Chukinas.Geometry.Rect
 
   # *** *******************************
   # *** TYPES
@@ -12,9 +11,9 @@ defmodule Chukinas.Dreadnought.Animation do
   @type categories :: :muzzle_flash | :hit
 
   typedstruct enfore: true do
+    pose_fields()
     field :id_string, String.t()
     field :name, String.t()
-    pose_fields()
     field :delay, number()
     field :frames, [AnimationFrame.t()], default: []
     field :last_frame_fade_duration, number(), default: 0
@@ -70,27 +69,31 @@ defmodule Chukinas.Dreadnought.Animation do
   # *** *******************************
   # *** CONVERTERS
 
-  def bounding_rect(%__MODULE__{frames: frames}) do
-    frames
-    |> Enum.map(&AnimationFrame.rect/1)
-    |> Rect.bounding_rect
-  end
-
   def muzzle_flash?(%__MODULE__{category: category}), do: category == :muzzle_flash
 
-  # *** *******************************
-  # *** IMPLEMENTATIONS
+end
 
-  defimpl Inspect do
-    require IOP
-    def inspect(animation, opts) do
-      title = "Animation"
-      fields = [
-        name: animation.name,
-        pose: animation |> pose_from_map,
-        frames: animation.frames
-      ]
-      IOP.struct(title, fields)
-    end
+# *** *******************************
+# *** IMPLEMENTATIONS
+
+alias Chukinas.Dreadnought.Animation
+
+defimpl Inspect, for: Animation do
+  require IOP
+  use Chukinas.PositionOrientationSize
+  def inspect(animation, opts) do
+    title = "Animation"
+    fields = [
+      name: animation.name,
+      pose: animation |> pose_from_map,
+      frames: animation.frames
+    ]
+    IOP.struct(title, fields)
+  end
+end
+
+defimpl Chukinas.BoundingRect, for: Animation do
+  def of(%Animation{frames: frames}) do
+    Chukinas.BoundingRect.of(frames)
   end
 end

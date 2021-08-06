@@ -77,15 +77,6 @@ defmodule Grid do
     |> exclude(opts.exclude)
   end
 
-  # TODO rename ? bounding_rect
-  def to_rect(grid) do
-    grid.start
-    |> position_new
-    |> position_subtract(1)
-    |> position_multiply(grid.square_size)
-    |> Rect.from_position_and_size(size_new(grid))
-  end
-
   # *** *******************************
   # *** PRIVATE
 
@@ -156,14 +147,28 @@ defmodule Grid do
     {half, number - half}
   end
 
-  # *** *******************************
-  # *** IMPLEMENTATIONS
+end
 
-  defimpl Collide.IsShape do
-    def to_coords(grid) do
-      grid
-      |> Grid.to_rect
-      |> Rect.to_coords
-    end
+# *** *******************************
+# *** IMPLEMENTATIONS
+
+alias Chukinas.Geometry.Grid
+
+defimpl Chukinas.BoundingRect, for: Grid do
+  use Chukinas.PositionOrientationSize
+  def of(%Grid{} = grid) do
+    grid.start
+    |> position_new
+    |> position_subtract(1)
+    |> position_multiply(grid.square_size)
+    |> Rect.from_position_and_size(size_new(grid))
+  end
+end
+
+defimpl Chukinas.Collide.IsShape, for: Grid do
+  def to_coords(grid) do
+    grid
+    |> Chukinas.BoundingRect.of
+    |> Rect.to_coords
   end
 end

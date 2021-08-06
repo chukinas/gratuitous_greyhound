@@ -8,13 +8,14 @@
     <%= live_title_tag assigns[:page_title] || "chukinas.com", suffix: "" %>
     <link phx-track-static rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.2.3/dist/cdn.min.js"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@500&display=swap" rel="stylesheet"> 
   </head>
   <body>
     <%= @inner_content %>
-    <%= ChukinasWeb.SharedComponents.import_gsap() %>
+    <%= ChukinasWeb.ComponentView.render_gsap_import() %>
     <%= ChukinasWeb.Shared.hide_livereload_iframe() %>
   </body>
 </html>

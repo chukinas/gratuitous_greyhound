@@ -27,7 +27,7 @@ defmodule Chukinas.Geometry.Rect do
   end
 
   def from_position_and_size(%{x: x, y: y}, %{width: width, height: height}) do
-    do_new(x, y, width, height)
+    new(x, y, width, height)
   end
 
   def from_positions({min_position, max_position}) do
@@ -51,22 +51,26 @@ defmodule Chukinas.Geometry.Rect do
   def from_rect(%__MODULE__{} = rect), do: rect
 
   def from_rect(%{x: x, y: y, width: width, height: height}) do
-    do_new(x, y, width, height)
+    new(x, y, width, height)
+  end
+
+  def from_map(%{x: x, y: y, width: width, height: height}) do
+    new(x, y, width, height)
   end
 
   def from_size(%{width: width, height: height}) do
-    do_new(0, 0, width, height)
+    new(0, 0, width, height)
   end
 
   def from_size(width, height) when is_number(width) and is_number(height) do
-    do_new(0, 0, abs(width), abs(height))
+    new(0, 0, abs(width), abs(height))
   end
 
   def null do
-    do_new(0, 0, 0, 0)
+    new(0, 0, 0, 0)
   end
 
-  defp do_new(x, y, width, height) do
+  def new(x, y, width, height) do
     %__MODULE__{
       x: x,
       y: y,

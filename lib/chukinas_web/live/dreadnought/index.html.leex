@@ -1,0 +1,27 @@
+<div class="w-screen min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 text-yellow-100">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <h2 class="mt-6 text-center text-5xl uppercase font-extrabold tracking-widest text-yellow-400">
+      <%= @header %>
+    </h2>
+  </div>
+
+  <%= case @live_action do %>
+    <%= :homepage -> %>
+      <%= live_component(
+            @socket, 
+            ChukinasWeb.DreadnoughtLive.HomepageComponent, 
+            id: :homepage
+          )%>
+    <%= :gallery -> %>
+      <%= live_component(
+            @socket, 
+            ChukinasWeb.GalleryComponent, 
+            id: :gallery_component,
+            show_markers?: assigns[:show_markers?]
+          )%>
+  <% end %>
+</div>
+
+<%= if @live_action != :homepage do %>
+  <%= live_component(@socket, ChukinasWeb.DreadnoughtLive.NavComponent, id: "nav") %>
+<% end %>

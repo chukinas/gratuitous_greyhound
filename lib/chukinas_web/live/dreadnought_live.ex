@@ -116,7 +116,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
       },
       %{
         title: "Gallery",
-        path: Routes.dreadnought_path(socket, :gallery),
+        path: Routes.dreadnought_gallery_path(socket, :gallery),
         current?: gallery?,
         show_header: true
       },

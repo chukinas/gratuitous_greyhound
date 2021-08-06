@@ -12,7 +12,6 @@ import "../css/app.scss"
 //     import {Socket} from "phoenix"
 //     import socket from "./socket"
 //
-import "alpinejs"
 import "phoenix_html"
 import {Socket} from "phoenix"
 import NProgress from "nprogress"
@@ -20,7 +19,17 @@ import {LiveSocket} from "phoenix_live_view"
 import hooks from "./dreadnought/main.js"
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, {hooks, params: {_csrf_token: csrfToken}})
+let liveSocket = new LiveSocket("/live", Socket, {
+  hooks, 
+  params: {_csrf_token: csrfToken},
+  // Allow AlpineJS to work nicely with LiveView:
+  // https://dockyard.com/blog/2020/12/21/optimizing-user-experience-with-liveview
+  dom: {
+    onBeforeElUpdated(from, to){
+      if(from.__x){ Alpine.clone(from.__x, to) }
+    }
+  }
+})
 
 // Show progress bar on live navigation and form submits
 window.addEventListener("phx:page-loading-start", info => NProgress.start())

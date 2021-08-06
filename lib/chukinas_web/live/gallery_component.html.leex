@@ -1,100 +1,46 @@
 <%# 'show markers' toggle %>
 <div class="my-4">
-  <%= Component.toggle(
-        "toggleShowMarkers",
-        label: (if @show_markers?, do: "Markers Shown", else: "Markers Hidden"),
-        selected?: @show_markers?,
-        phx_click: "toggle_show_markers" )%>
+  <%= render_markers_toggle(@show_markers?) %>
 </div>
 
-
-
-
-
-<%# grid %>
+<%# GRID %>
 <%# based on horizontal link cards %>
-<div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+<div class="grid grid-flow-row-dense grid-cols-3 gap-4 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 overflow-hidden">
 
   <%# SPRITE ANIMATIONS %>
-  <%= for animation <- @animations do %>
+  <%= for term <- @sprites_and_animations do %>
   <%# single animation card %>
-  <div class="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex flex-col items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-yellow-500">
-
-
-    <%# SPRITE ANIMATION %>
-    <div 
-      style="
-        width: <%= animation.rect.width %>px;
-        height: <%= animation.rect.height %>px;
-      "
-    >
-      <div 
-        class="relative"
-        style="
-          margin-left: <%= -animation.rect.x %>px;
-          margin-top: <%= -animation.rect.y %>px;
-        "
-      >
-        <%= ChukinasWeb.AnimationView.single(@socket, animation.struct) %>
-        <%= if @show_markers? do %>
-          <%= ChukinasWeb.DreadnoughtView.center %{x: 0, y: 0} %>
-        <% end %>
-      </div>
-    </div>
-
+  <div class="col-span-<%= term.colspan  %> row-span-<%= term.rowspan %> relative rounded-lg px-6 py-5 shadow-sm flex flex-col items-center justify-start space-x-3 ">
 
     <%# DESCRIPTIVE TEXT %>
-    <div class="flex-1 min-w-0">
+    <div class="min-w-0 mb-4">
       <a href="#" class="focus:outline-none">
         <span class="absolute inset-0" aria-hidden="true"></span>
-        <p class="text-sm font-medium text-gray-900">
-          <%= animation.struct.name %>
+        <p class="text-sm font-medium text-yellow-100">
+          <%= term.item.name %>
         </p>
       </a>
     </div>
-  </div>
-  <% end %>
 
-  <%# SPRITES %>
-  <%= for sprite <- @sprites do %>
-  <%# single sprite card %>
-  <div class="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex flex-col items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-yellow-500">
-
-
-    <%# SPRITE %>
-    <div 
-      style="
-        width: <%= sprite.width %>px;
-        height: <%= sprite.height %>px;
-      "
-    >
+    <%# SPRITE ANIMATION %>
+    <div class="" style="<%= ChukinasWeb.Shared.width_height_from_size(term.rect) %>" >
       <div 
         class="relative"
-        style="
-          margin-left: <%= -sprite.x %>px;
-          margin-top: <%= -sprite.y %>px;
-        "
+        style="<%= ChukinasWeb.Shared.left_top_from_position(term.rect) %>"
       >
-        <%= ChukinasWeb.SpriteView.absolute_sprite @socket, sprite %>
+        <%= ChukinasWeb.AnimationView.render_animation_or_sprite(@socket, term.item) %>
         <%= if @show_markers? do %>
-          <%= ChukinasWeb.DreadnoughtView.center %{x: 0, y: 0} %>
-          <%= for mount <- sprite.mounts do %>
-            <%= ChukinasWeb.DreadnoughtView.center mount, type: :mount %>
+          <%= ChukinasWeb.ComponentView.render_rotation_center_dot() %>
+          <%= for position <- term.mount_positions do %>
+            <%= ChukinasWeb.ComponentView.render_mount_dot(position) %>
           <% end %>
         <% end %>
       </div>
     </div>
 
-
-    <%# DESCRIPTIVE TEXT %>
-    <div class="flex-1 min-w-0">
-      <a href="#" class="focus:outline-none">
-        <span class="absolute inset-0" aria-hidden="true"></span>
-        <p class="text-sm font-medium text-gray-900">
-          <%= sprite.name %>
-        </p>
-      </a>
-    </div>
   </div>
   <% end %>
+
 </div>
+
+<input type="hidden" class="col-span-1 col-span-2 col-span-3 row-span-1 row-span-2 row-span-3">

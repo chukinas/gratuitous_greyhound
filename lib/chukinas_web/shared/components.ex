@@ -1,3 +1,4 @@
+# TODO rename ChukinasWeb.ComponentsView
 defmodule ChukinasWeb.Components do
   use Phoenix.HTML
   use ChukinasWeb, :view
@@ -9,19 +10,6 @@ defmodule ChukinasWeb.Components do
       alias ChukinasWeb.Components, as: Component
       alias ChukinasWeb.CssClasses, as: Class
     end
-  end
-
-  def toggle(id, opts \\ []) do
-    assigns =
-      [
-        label: nil,
-        phx_click: nil,
-        phx_target: nil,
-        selected?: false
-      ]
-      |> Keyword.merge(opts)
-      |> Keyword.put(:id, id)
-    render("toggle.html", assigns)
   end
 
   def error_paragraph(form, field) do

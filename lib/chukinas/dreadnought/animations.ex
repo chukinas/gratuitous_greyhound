@@ -47,11 +47,6 @@ defmodule Chukinas.Dreadnought.Animations do
   end
 
   # *** *******************************
-  # *** CONVERTERS
-
-  defdelegate bounding_rect(animation), to: Animation
-
-  # *** *******************************
   # *** PRIVATE HELPERS
 
   defp rand_explosion_frame(duration) do

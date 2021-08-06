@@ -64,7 +64,6 @@ defmodule Paths do
     |> position_new
   end
 
-  defdelegate get_bounding_rect(path), to: PathLike, as: :get_bounding_rect
   defdelegate exceeds_angle(path, angle), to: PathLike, as: :exceeds_angle
   defdelegate deceeds_angle(path, angle), to: PathLike, as: :deceeds_angle
 

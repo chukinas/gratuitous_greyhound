@@ -1,0 +1,30 @@
+<div 
+  class="flex items-center"
+>
+
+  <button 
+    id="<%= @id %>"
+    type="button" 
+    class="<%= if @selected?, do: "bg-green-400", else: "bg-gray-200/50" %> relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-400" 
+    role="switch" 
+    <%= ChukinasWeb.Shared.attrs @attrs %>
+  >
+    <span 
+      aria-hidden="true" 
+      class="<%= if @selected?, do: "translate-x-5", else: "translate-x-0" %> pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200"
+      ></span>
+  </button>
+
+  <span class="ml-3">
+    <label
+      for="<%= @id %>"
+      class="text-sm font-bold select-none cursor-pointer text-yellow-100 <%= if !@selected?, do: "text-opacity-50" %>">
+      <%= @label %>
+    </label>
+    <span class="text-sm text-gray-500 hidden">Use this text later...</span>
+  </span>
+
+  <%# TODO Needed? %>
+  <input type="hidden" class="translate-x-5 translate-x-0 text-yellow-50"/>
+
+</div>

@@ -3,6 +3,7 @@ ExUnit.start()
 defmodule Chukinas.PathsTest do
 
   use ExUnit.Case, async: true
+  use Chukinas.BoundingRect
   use Chukinas.TestHelpers
   use Chukinas.PositionOrientationSize
   import Chukinas.Math
@@ -40,9 +41,7 @@ defmodule Chukinas.PathsTest do
 
   test "bounding rect of 45deg straight path" do
     path = Paths.new_straight(0, 0, 45, :math.sqrt(2))
-    actual_rect =
-      path
-      |> Paths.get_bounding_rect()
+    actual_rect = BoundingRect.of(path)
     expected_rect = Rect.from_size(1, 1)
     assert match_numerical_map? expected_rect, actual_rect
   end

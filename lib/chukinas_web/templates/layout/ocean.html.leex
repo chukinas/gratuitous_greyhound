@@ -1,7 +1,7 @@
 <div>
   <%= ChukinasWeb.LayoutView.render "flash_messages.html", flash: @flash %>
 
-  <div id="background" phx-hook="BackgroundSizeMatch" class="absolute w-screen overflow-hidden" style="background-color: #213540">
+  <div id="background" phx-hook="BackgroundSizeMatch" class="absolute w-screen h-screen overflow-hidden bg-ocean">
     <img class="hidden mix-blend-soft-light w-full h-full object-cover" src="<%= crinkled_paper_path @socket %>" />
 
     <div class="mix-blend-soft-light">
