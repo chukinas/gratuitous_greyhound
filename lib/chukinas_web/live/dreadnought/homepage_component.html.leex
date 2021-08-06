@@ -8,13 +8,5 @@
 </div>
 
 <div class="sm:mx-auto sm:w-full sm:max-w-md pb-8 px-4 sm:px-10 space-y-6">
-  <%= for button <- @buttons do %>
-    <button type="button" 
-            value="<%= button.action %>"
-            phx-click="redirect"
-            phx-target="<%= @myself %>"
-            class="w-full flex justify-center rounded-md border-2 border-yellow-100 shadow-sm px-6 py-3 text-lg font-medium hover:bg-white/25 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-     <%= button.title %>
-    </button>
-  <% end %>
+  <%= for button <- @buttons, do: ChukinasWeb.ComponentView.render_content_button(button.content, button.attrs) %>
 </div>

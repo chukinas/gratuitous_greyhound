@@ -54,16 +54,20 @@ defmodule ChukinasWeb.DreadnoughtLive.HomepageComponent do
   defp assign_buttons(socket) do
     buttons =
       [
-        button_map("Play"),
-        button_map("Gallery")
+        button_map(socket,"Play"),
+        button_map(socket,"Gallery")
       ]
     assign(socket, buttons: buttons)
   end
 
-  defp button_map(title) do
+  defp button_map(socket, title) do
     %{
-      title: title,
-      action: title |> String.downcase
+      content: title,
+      attrs: [
+        phx_click: "redirect",
+        phx_target: socket.assigns.myself,
+        value: title |> String.downcase
+      ]
     }
   end
 
