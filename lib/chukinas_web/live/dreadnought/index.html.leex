@@ -22,4 +22,6 @@
   <% end %>
 </div>
 
-<%= live_component(@socket, ChukinasWeb.DreadnoughtLive.NavComponent, id: "nav") %>
+<%= if @live_action != :homepage do %>
+  <%= live_component(@socket, ChukinasWeb.DreadnoughtLive.NavComponent) %>
+<% end %>

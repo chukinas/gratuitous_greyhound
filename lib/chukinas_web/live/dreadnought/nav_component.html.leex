@@ -1,5 +1,8 @@
-<nav class="fixed top-4 right-4" x-data="{ isOpen: false }">
-  <div class="relative inline-block text-left">
+<nav class="" 
+     x-data="{ isOpen: false }">
+  <div class="fixed top-4 right-4 inline-block text-left bg-red-400/25">
+    
+    <%# ELIPSIS %>
     <div>
       <button type="button" 
               id="menu-button" 
@@ -15,29 +18,26 @@
       </button>
     </div>
 
+    <%# DROPDOWN %>
     <div tabindex="-1"
          role="menu" 
          aria-orientation="vertical" 
          aria-labelledby="menu-button" 
          x-show="isOpen"
+         @click.outside="isOpen = false"
          x-transition:enter="transition ease-out duration-100 transform"
          x-transition:enter-start="opacity-0 scale-95"
          x-transition:enter-end="opacity-100 scale-100"
          x-transition:leave="transition ease-in duration-75 transform"
          x-transition:leave-start="opacity-100 scale-100"
          x-transition:leave-end="opacity-0 scale-95"
-         class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" >
+         class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none hidden">
       <div class="py-1" role="none">
         <%= for menu_item <- @menu_items do %>
-          <a href="#" 
-             role="menuitem" 
-             tabindex="-1" 
-             id="menu-item-0"
-             class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900" >
-            <%= menu_item.title %>
-          </a>
+          <%= live_patch menu_item.title, to: menu_item.route, tabindex: "-1", class: "text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900" %>
         <% end %>
       </div>
     </div>
+
   </div>
 </nav>
