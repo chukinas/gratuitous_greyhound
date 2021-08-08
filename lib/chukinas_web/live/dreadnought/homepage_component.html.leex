@@ -8,5 +8,5 @@
 </div>
 
 <div class="sm:mx-auto sm:w-full sm:max-w-md pb-8 px-4 sm:px-10 space-y-6">
-  <%= for button <- @buttons, do: render_content_button(button.content, button.attrs) %>
+  <%= for button <- @buttons, do: render_button(button.content, button.attrs) %>
 </div>
