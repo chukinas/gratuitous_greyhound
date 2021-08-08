@@ -12,7 +12,7 @@
     <div class="col-span-<%= term.colspan  %> row-span-<%= term.rowspan %> relative rounded-lg px-6 py-5 shadow-sm flex flex-col items-center justify-start space-x-3 ">
 
       <%# DESCRIPTIVE TEXT %>
-      <%= ChukinasWeb.ComponentView.render_p term.item.name, "min-w-0 mb-4" %>
+      <%= render_p term.item.name, "min-w-0 mb-4" %>
 
       <%# SPRITE ANIMATION %>
       <div style="<%= ChukinasWeb.Shared.width_height_from_size(term.rect) %>" >
@@ -20,7 +20,7 @@
              class="relative">
           <%= ChukinasWeb.AnimationView.render_animation_or_sprite(@socket, term.item) %>
           <%= if @show_markers? do %>
-            <%= ChukinasWeb.ComponentView.render_rotation_center_dot() %>
+            <%= render_rotation_center_dot() %>
             <%= for position <- term.mount_positions do %>
               <%= render_mount_dot(position) %>
             <% end %>
