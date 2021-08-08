@@ -47,7 +47,7 @@ defmodule ChukinasWeb.LobbyComponent do
     [
       "Player #{player.id}: #{player.name}",
       (if player.ready?, do: " (ready)", else: ""),
-      (if Player.uuid(player) == uuid, do: " (self)", else: "")
+      (if Player.uuid(player) == uuid, do: " (you)", else: "")
     ]
   end
 

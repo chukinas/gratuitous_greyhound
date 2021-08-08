@@ -128,8 +128,9 @@ defmodule ChukinasWeb.ComponentView do
     w-full px-6 py-3
     text-3xl
     text-yellow-300
-    font-medium hover:font-bold disabled:font-medium
+    font-medium
     hover:bg-yellow-100/10 disabled:bg-transparent focus:outline-none
+    transition-transform duration-75 transform hover:scale-105
     focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500
     disabled:opacity-50 disabled:cursor-not-allowed
     """
