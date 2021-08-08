@@ -1,19 +1,17 @@
-<%= case @live_action do %>
-  <% :gallery -> %>
-    <%= live_component(
-          @socket, 
-          ChukinasWeb.GalleryComponent, 
-          id: :gallery_component,
-          show_markers?: assigns[:show_markers?]
-        )%>
-  <% :setup -> %>
-    <%= if @room do %>
-      <%= live_component(@socket, ChukinasWeb.LobbyComponent, id: :lobby_component, uuid: @uuid, room: @room) %>
-    <% else %>
-      <%= live_component(@socket, ChukinasWeb.RoomJoinComponent, id: :join_component, uuid: @uuid) %>
+<div class="w-screen min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <%= render_header(@header, "sm:mx-auto sm:w-full sm:max-w-md mt-6 text-center") %>
+  <div class="mt-8 sm:mx-auto sm:w-full max-w-2xl">
+    <%= case @live_action do %>
+      <% :setup -> %>
+        <%= if @room do %>
+          <%= live_component(@socket, ChukinasWeb.LobbyComponent, id: :lobby_component, uuid: @uuid, room: @room) %>
+        <% else %>
+          <%= live_component(@socket, ChukinasWeb.RoomJoinComponent, id: :join_component, uuid: @uuid) %>
+        <% end %>
+      <% _ -> %>
+        Hi!
     <% end %>
-  <% _ -> %>
-    Hi!
-<% end %>
+  </div>
+</div>
 
 <%= live_component(@socket, ChukinasWeb.DreadnoughtLive.NavComponent, id: "nav") %>

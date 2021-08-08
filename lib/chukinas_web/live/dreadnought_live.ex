@@ -40,7 +40,10 @@ defmodule ChukinasWeb.DreadnoughtLive do
       true ->
         :ok
     end
-    socket = standard_assigns(socket)
+    socket =
+      socket
+      |> standard_assigns
+      |> assign_header
     {:noreply, socket}
   end
 
@@ -98,12 +101,22 @@ defmodule ChukinasWeb.DreadnoughtLive do
       else
         socket
         |> assign(room: room)
+        |> assign_header
       end
     {:noreply, socket}
   end
 
   # *** *******************************
   # *** FUNCTIONS
+
+  def assign_header(socket) do
+    header =
+      case room(socket) do
+        nil -> "Join Room"
+        _ -> "Lobby"
+      end
+    assign(socket, header: header)
+  end
 
   def standard_assigns(socket) do
     gallery? = socket.assigns.live_action == :gallery
@@ -136,5 +149,10 @@ defmodule ChukinasWeb.DreadnoughtLive do
       header: if(active_tab.show_header, do: title, else: nil)
     )
   end
+
+  # *** *******************************
+  # *** SOCKET CONVERTERS
+
+  def room(socket), do: socket.assigns.room
 
 end
