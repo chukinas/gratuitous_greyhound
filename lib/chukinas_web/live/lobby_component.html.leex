@@ -1,12 +1,9 @@
-<div id="lobbyComponent">
-  <p>Your room: <b><%= @pretty_room_name %></b></p>
-  <h1 class="font-bold" >Players</h1>
-  <%= for player <- @players do %>
+<div id="lobbyComponent" class="space-y-12">
 
-    <%# PLAYER NAME AND READY BUTTON %>
-    <p>Player <%= player.id %>: <%= player.name %> <%= if player.ready?, do: "(ready)" %><%= if player.self?, do: " (you)" %></p>
-  <% end %>
-  <%= Component.button((if @ready?, do: "I'm Not Ready", else: "I'm ready"), phx_click: "toggle_ready", phx_target: @myself) %>
-  <%# TODO this handler should be in lobby component %>
-  <%= Component.button("Leave Room", phx_click: "leave_room") %>
+  <%= render_large_text "Room: #{@pretty_room_name}" %>
+  <%= for player_text <- @players_text, do: render_large_text(player_text) %>
+  
+  <%= render_button @ready_button_text, phx_click: "toggle_ready", phx_target: @myself %>
+  <%= render_button "Leave Room", phx_click: "leave_room", phx_target: @myself %>
+
 </div>

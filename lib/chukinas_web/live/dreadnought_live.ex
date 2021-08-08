@@ -40,26 +40,23 @@ defmodule ChukinasWeb.DreadnoughtLive do
       true ->
         :ok
     end
-    socket = standard_assigns(socket)
+    socket =
+      socket
+      |> standard_assigns
+      |> assign_header
     {:noreply, socket}
   end
 
   # *** *******************************
   # *** CALLBACKS (EVENTS)
 
-  @impl true
-  def handle_event("toggle_show_markers", _, socket) do
-    socket =
-      socket
-      |> assign(show_markers?: !socket.assigns[:show_markers?])
-    {:noreply, socket}
-  end
-
-  @impl true
-  def handle_event("leave_room", _, socket) do
-    Sessions.leave_room(socket.assigns.uuid)
-    {:noreply, socket}
-  end
+  #@impl true
+  #def handle_event("toggle_show_markers", _, socket) do
+  #  socket =
+  #    socket
+  #    |> assign(show_markers?: !socket.assigns[:show_markers?])
+  #  {:noreply, socket}
+  #end
 
   # *** *******************************
   # *** CALLBACKS (INFO)
@@ -98,12 +95,22 @@ defmodule ChukinasWeb.DreadnoughtLive do
       else
         socket
         |> assign(room: room)
+        |> assign_header
       end
     {:noreply, socket}
   end
 
   # *** *******************************
   # *** FUNCTIONS
+
+  def assign_header(socket) do
+    header =
+      case room(socket) do
+        nil -> "Join Room"
+        _ -> "Lobby"
+      end
+    assign(socket, header: "Dreadnought")
+  end
 
   def standard_assigns(socket) do
     gallery? = socket.assigns.live_action == :gallery
@@ -136,5 +143,10 @@ defmodule ChukinasWeb.DreadnoughtLive do
       header: if(active_tab.show_header, do: title, else: nil)
     )
   end
+
+  # *** *******************************
+  # *** SOCKET CONVERTERS
+
+  def room(socket), do: socket.assigns.room
 
 end

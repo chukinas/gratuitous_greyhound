@@ -1,6 +1,6 @@
 <div class="w-screen min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
 
-  <%= render_header(@header, "sm:mx-auto sm:w-full sm:max-w-md mt-6 text-center") %>
+  <%= render_header(@header) %>
 
   <%= case @live_action do %>
     <%= :homepage -> %>
@@ -19,6 +19,4 @@
   <% end %>
 </div>
 
-<%= if @live_action != :homepage do %>
-  <%= live_component(@socket, ChukinasWeb.DreadnoughtLive.NavComponent, id: "nav") %>
-<% end %>
+<%= live_component(@socket, ChukinasWeb.DreadnoughtLive.NavComponent, id: "nav") %>

@@ -73,10 +73,11 @@ defmodule ChukinasWeb.ComponentView do
   # *** *******************************
   # *** TEXT
 
-  def render_header(value, class) do
+  def render_header(value, class \\ "") do
     attrs = []
     class = """
     text-4xl sm:text-6xl uppercase font-extrabold tracking-widest text-yellow-400
+    sm:mx-auto sm:w-full mt-6 text-center
     #{class}
     """
     Phoenix.HTML.Tag.content_tag :h1, value, attrs ++ [class: class]
@@ -84,7 +85,7 @@ defmodule ChukinasWeb.ComponentView do
 
   def render_label(form, field, display \\ nil) do
     class = """
-    text-xl text-yellow-200
+    text-xl text-yellow-300
     """
     if display do
       label form, field, display, class: class
@@ -93,12 +94,16 @@ defmodule ChukinasWeb.ComponentView do
     end
   end
 
-  def render_p(text, attrs) do
+  def render_p(text, attrs \\ "") do
     class = """
-    text-yellow-200
+    text-yellow-300
     #{attrs}
     """
     Phoenix.HTML.Tag.content_tag :p, text, class: class
+  end
+
+  def render_large_text(text) do
+    render_p(text, "text-4xl")
   end
 
   # *** *******************************
@@ -123,17 +128,53 @@ defmodule ChukinasWeb.ComponentView do
   defp __button_classes__ do
     """
     rounded-md
-    border-2 border-yellow-200
-    shadow-sm
+    border-2 border-yellow-300
     w-full px-6 py-3
-    text-3xl
-    text-yellow-200
-    font-medium hover:font-bold disabled:font-medium
-    hover:bg-yellow-100/10 disabled:bg-transparent focus:outline-none
+    text-3xl text-yellow-300 font-medium
+    #{__hover_bg__()}
+    focus:outline-none
+    transition-transform duration-75 transform hover:scale-105 disabled:scale-100
     focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500
     disabled:opacity-50 disabled:cursor-not-allowed
     """
   end
+
+  # *** *******************************
+  # *** DROPDOWN
+
+  def dropdown_button_class do
+    """
+    inline-flex items-center justify-center
+    p-2
+    rounded-md
+    text-yellow-300
+    focus:outline-none focus:ring-2 focus:ring-inset focus:ring-yellow-300
+    #{__hover_bg__()}
+    """
+  end
+
+  def dropdown_class do
+    """
+    origin-top-right absolute right-0 mt-1 w-72
+    bg-gray-800/90
+    rounded-md
+    text-yellow-300 text-center
+    border-2 border-yellow-300
+    """
+  end
+
+  def dropdown_item_class do
+    """
+    block px-4 py-2
+    text-lg
+    #{__hover_bg__()}
+    """
+  end
+
+  # *** *******************************
+  # *** COMMON CLASSES
+
+  defp __hover_bg__, do: "hover:bg-yellow-400/10 /10 disabled:bg-transparent"
 
   # *** *******************************
   # *** PRIVATE HELPERS

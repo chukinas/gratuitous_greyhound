@@ -6,7 +6,7 @@
   <!-- MENU BUTTON -->
   <button
     type="button"
-    class="inline-flex items-center justify-center p-2 rounded-md text-yellow-300 hover:bg-yellow-400/25 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-yellow-300">
+    class="<%= dropdown_button_class() %>">
     <!-- Icon when menu is closed.  Heroicon name: outline/menu -->
     <svg class="h-6 w-6" 
          x-show="!isOpen"
@@ -35,10 +35,12 @@
        aria-orientation="vertical" 
        aria-labelledby="menu-button" 
        x-show="isOpen"
-       class="origin-top-right absolute right-0 mt-1 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none ">
+       class="<%= dropdown_class() %>">
     <div class="py-1" role="none">
       <%= for menu_item <- @menu_items do %>
-        <%= live_patch menu_item.title, to: menu_item.route, tabindex: "-1", class: "text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900" %>
+        <%= live_patch menu_item.title, to: menu_item.route, 
+              tabindex: "-1", 
+              class: dropdown_item_class() %>
       <% end %>
     </div>
   </div>
