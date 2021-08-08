@@ -12,9 +12,7 @@
     <div class="col-span-<%= term.colspan  %> row-span-<%= term.rowspan %> relative rounded-lg px-6 py-5 shadow-sm flex flex-col items-center justify-start space-x-3 ">
 
       <%# DESCRIPTIVE TEXT %>
-      <div class="min-w-0 mb-4">
-        <%= ChukinasWeb.ComponentView.render_p term.item.name %>
-      </div>
+      <%= ChukinasWeb.ComponentView.render_p term.item.name, "min-w-0 mb-4" %>
 
       <%# SPRITE ANIMATION %>
       <div style="<%= ChukinasWeb.Shared.width_height_from_size(term.rect) %>" >
@@ -24,7 +22,7 @@
           <%= if @show_markers? do %>
             <%= ChukinasWeb.ComponentView.render_rotation_center_dot() %>
             <%= for position <- term.mount_positions do %>
-              <%= ChukinasWeb.ComponentView.render_mount_dot(position) %>
+              <%= Component.mount_dot(position) %>
             <% end %>
           <% end %>
         </div>

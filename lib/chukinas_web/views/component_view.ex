@@ -1,6 +1,6 @@
 defmodule ChukinasWeb.ComponentView do
 
-  use ChukinasWeb, :view
+  use ChukinasWeb, :base_view
   use Chukinas.PositionOrientationSize
   alias Chukinas.Geometry.Rect
 
@@ -21,8 +21,12 @@ defmodule ChukinasWeb.ComponentView do
     render_dot(position_origin(), "pink")
   end
 
-  def render_mount_dot(position) when has_position(position) do
+  def mount_dot(position) when has_position(position) do
     render_dot(position, "blue")
+  end
+
+  def render_mount_dot(position) do
+    mount_dot(position)
   end
 
   defp render_dot(position, color) do
@@ -48,7 +52,7 @@ defmodule ChukinasWeb.ComponentView do
 
   def render_label(form, field, display \\ nil) do
     class = """
-    text-yellow-200
+    text-lg text-yellow-200
     """
     if display do
       label form, field, display, class: class
@@ -57,11 +61,20 @@ defmodule ChukinasWeb.ComponentView do
     end
   end
 
-  def render_p(text) do
+  def render_p(text, attrs) do
     class = """
     text-yellow-200
+    #{attrs}
     """
     Phoenix.HTML.Tag.content_tag :p, text, class: class
   end
+
+  # *** *******************************
+  # *** PRIVATE HELPERS
+
+  #defp add_classes_to_attrs(attrs, class) do
+  #  attrs = Enum.into input_attrs, []
+  #  #input_classes =
+  #end
 
 end

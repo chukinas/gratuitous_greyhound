@@ -1,7 +1,6 @@
 defmodule ChukinasWeb.GalleryComponent do
 
   use ChukinasWeb, :live_component
-  use ChukinasWeb.Components
   use Chukinas.PositionOrientationSize
   alias Chukinas.BoundingRect
   alias Chukinas.Dreadnought.Animations

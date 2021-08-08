@@ -27,7 +27,7 @@ defmodule ChukinasWeb do
     end
   end
 
-  def view do
+  def base_view do
     quote do
       use Phoenix.View,
         root: "lib/chukinas_web/templates",
@@ -42,12 +42,20 @@ defmodule ChukinasWeb do
     end
   end
 
+  def view do
+    quote do
+      unquote(base_view())
+      unquote(my_custom_view_helpers())
+    end
+  end
+
   def live_view do
     quote do
       use Phoenix.LiveView,
         layout: {ChukinasWeb.LayoutView, "live.html"}
 
       unquote(view_helpers())
+      unquote(my_custom_view_helpers())
     end
   end
 
@@ -56,6 +64,7 @@ defmodule ChukinasWeb do
       use Phoenix.LiveComponent
 
       unquote(view_helpers())
+      unquote(my_custom_view_helpers())
     end
   end
 
@@ -90,6 +99,12 @@ defmodule ChukinasWeb do
       import ChukinasWeb.ErrorHelpers
       import ChukinasWeb.Gettext
       alias ChukinasWeb.Router.Helpers, as: Routes
+    end
+  end
+
+  defp my_custom_view_helpers do
+    quote do
+      alias ChukinasWeb.ComponentView, as: Component
     end
   end
 

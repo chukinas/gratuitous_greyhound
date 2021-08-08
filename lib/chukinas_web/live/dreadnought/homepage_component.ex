@@ -11,7 +11,6 @@ defmodule ChukinasWeb.DreadnoughtLive.HomepageComponent do
 
   @impl true
   def mount(socket) do
-    IO.puts "mounting homepage!"
     socket =
       socket
       |> assign_buttons
