@@ -50,19 +50,13 @@ defmodule ChukinasWeb.DreadnoughtLive do
   # *** *******************************
   # *** CALLBACKS (EVENTS)
 
-  @impl true
-  def handle_event("toggle_show_markers", _, socket) do
-    socket =
-      socket
-      |> assign(show_markers?: !socket.assigns[:show_markers?])
-    {:noreply, socket}
-  end
-
-  @impl true
-  def handle_event("leave_room", _, socket) do
-    Sessions.leave_room(socket.assigns.uuid)
-    {:noreply, socket}
-  end
+  #@impl true
+  #def handle_event("toggle_show_markers", _, socket) do
+  #  socket =
+  #    socket
+  #    |> assign(show_markers?: !socket.assigns[:show_markers?])
+  #  {:noreply, socket}
+  #end
 
   # *** *******************************
   # *** CALLBACKS (INFO)

@@ -84,7 +84,7 @@ defmodule ChukinasWeb.ComponentView do
 
   def render_label(form, field, display \\ nil) do
     class = """
-    text-xl text-yellow-200
+    text-xl text-yellow-300
     """
     if display do
       label form, field, display, class: class
@@ -95,7 +95,7 @@ defmodule ChukinasWeb.ComponentView do
 
   def render_p(text, attrs \\ "") do
     class = """
-    text-yellow-200
+    text-yellow-300
     #{attrs}
     """
     Phoenix.HTML.Tag.content_tag :p, text, class: class
@@ -123,11 +123,11 @@ defmodule ChukinasWeb.ComponentView do
   defp __button_classes__ do
     """
     rounded-md
-    border-2 border-yellow-200
+    border-2 border-yellow-300
     shadow-sm
     w-full px-6 py-3
     text-3xl
-    text-yellow-200
+    text-yellow-300
     font-medium hover:font-bold disabled:font-medium
     hover:bg-yellow-100/10 disabled:bg-transparent focus:outline-none
     focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500

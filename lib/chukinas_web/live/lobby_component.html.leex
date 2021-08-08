@@ -1,9 +1,9 @@
 <div id="lobbyComponent" class="space-y-12">
+
   <%= render_p "Room: #{@pretty_room_name}" %>
-  <%= for player_text <- @players_text do %>
-    <%= render_p player_text %>
-  <% end %>
+  <%= for player_text <- @players_text, do: render_p(player_text) %>
+  
   <%= render_button @ready_button_text, phx_click: "toggle_ready", phx_target: @myself %>
-  <%# TODO this handler should be in lobby component %>
-  <%= render_button "Leave Room", phx_click: "leave_room" %>
+  <%= render_button "Leave Room", phx_click: "leave_room", phx_target: @myself %>
+
 </div>
