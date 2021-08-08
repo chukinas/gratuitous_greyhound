@@ -15,12 +15,14 @@ defmodule ChukinasWeb.LobbyComponent do
     uuid = assigns.uuid
     players = for player <- Room.players_sorted(room), do: build_player(player, uuid)
     player_self = Room.player_from_uuid(room, uuid)
+    ready? = Player.ready? player_self
     socket =
       assign(socket,
         room_name: Room.name(room),
         pretty_room_name: Room.pretty_name(room),
         player_id: Player.id(player_self),
-        ready?: Player.ready?(player_self),
+        ready?: ready?,
+        ready_button_text: (if ready?, do: "I'm not ready", else: "I'm ready"),
         players: players
       )
     {:ok, socket}
