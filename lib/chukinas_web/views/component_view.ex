@@ -38,20 +38,6 @@ defmodule ChukinasWeb.ComponentView do
     )
   end
 
-  def render_content_button(content, attrs \\ []) do
-    class = """
-    flex justify-center
-    rounded-md
-    border-2 border-yellow-200
-    shadow-sm
-    w-full px-6 py-3
-    text-lg font-medium text-yellow-200 hover:text-yellow-900 hover:font-bold
-    hover:bg-yellow-100/50 focus:outline-none
-    focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500
-    """
-    Phoenix.HTML.Tag.content_tag :button, content, attrs ++ [class: class]
-  end
-
   def render_label(form, field, display \\ nil) do
     class = """
     text-lg text-yellow-200
@@ -72,11 +58,45 @@ defmodule ChukinasWeb.ComponentView do
   end
 
   # *** *******************************
+  # *** BUTTONS
+
+  # TODO rename `render_button`
+  def render_content_button(content, attrs \\ []) do
+    Phoenix.HTML.Tag.content_tag :button, content, attrs ++ [class: __button_classes__()]
+  end
+
+  def render_submit(form, value, attrs \\ []) do
+    opts =
+      attrs
+      |> Keyword.put_new(:class, __button_classes__())
+      |> Keyword.put_new(:disabled, !valid?(form))
+    Phoenix.HTML.Form.submit(value, opts)
+  end
+
+  defp __button_classes__ do
+    """
+    flex justify-center
+    rounded-md
+    border-2 border-yellow-200
+    shadow-sm
+    w-full px-6 py-3
+    text-lg
+    text-yellow-200 hover:text-yellow-900 disabled:text-yellow-200
+    font-medium hover:font-bold disabled:font-medium
+    hover:bg-yellow-100/50 disabled:bg-transparent focus:outline-none
+    focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500
+    disabled:opacity-50 disabled:cursor-not-allowed
+    """
+  end
+
+  # *** *******************************
   # *** PRIVATE HELPERS
 
   #defp add_classes_to_attrs(attrs, class) do
   #  attrs = Enum.into input_attrs, []
   #  #input_classes =
   #end
+
+  defp valid?(form), do: form.source.valid?
 
 end

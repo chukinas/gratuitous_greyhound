@@ -39,8 +39,8 @@
           <%= Component.error_paragraph f, :room_name %>
         </div>
 
-        <%# URL and JOIN button %>
-        <%= Component.url_join f, @maybe_url %>
+        <%# JOIN button %>
+        <%= render_submit f, "Join" %>
 
       </form>
 
