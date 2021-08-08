@@ -23,7 +23,8 @@ defmodule ChukinasWeb.LobbyComponent do
         player_id: Player.id(player_self),
         ready?: ready?,
         ready_button_text: (if ready?, do: "I'm not ready", else: "I'm ready"),
-        players: players
+        players: players,
+        players_text: (for player <- Room.players_sorted(room), do: build_player_text(player))
       )
     {:ok, socket}
   end
@@ -42,6 +43,14 @@ defmodule ChukinasWeb.LobbyComponent do
     |> Map.from_struct
     |> Map.take(~w/id name ready?/a)
     |> Map.put(:self?, Player.uuid(player) == uuid)
+  end
+
+  defp build_player_text(%Player{} = player) do
+    [
+      "Player #{player.id}: #{player.name}",
+      (if player.ready?, do: " (ready)", else: "")
+      #(if player.self?, do: " (self)")
+    ]
   end
 
 end

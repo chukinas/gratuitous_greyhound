@@ -93,7 +93,7 @@ defmodule ChukinasWeb.ComponentView do
     end
   end
 
-  def render_p(text, attrs) do
+  def render_p(text, attrs \\ "") do
     class = """
     text-yellow-200
     #{attrs}
