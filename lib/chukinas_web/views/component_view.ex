@@ -26,10 +26,10 @@ defmodule ChukinasWeb.ComponentView do
   def render_text_input(form, field) do
     class = """
     block
-    w-full mt-1 px-3 py-2
+    w-full mt-1 px-6 py-3
     rounded-md
     shadow-sm
-    text-xl text-yellow-300
+    text-3xl text-yellow-300
     appearance-none
     bg-transparent
     border-2 border-yellow-300
@@ -76,7 +76,7 @@ defmodule ChukinasWeb.ComponentView do
   def render_header(value, class) do
     attrs = []
     class = """
-    text-4xl sm:text-5xl uppercase font-extrabold tracking-widest text-yellow-400
+    text-4xl sm:text-6xl uppercase font-extrabold tracking-widest text-yellow-400
     #{class}
     """
     Phoenix.HTML.Tag.content_tag :h1, value, attrs ++ [class: class]

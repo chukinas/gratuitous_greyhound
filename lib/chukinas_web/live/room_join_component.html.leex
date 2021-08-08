@@ -12,24 +12,23 @@
                 phx_submit: :join, 
                 phx_target: @myself, 
                 as: "room_join", 
-                class: "space-y-12") %>
+                class: "space-y-24") %>
 
-        <%# USER NAME %>
-        <div>
-          <%= render_label f, :player_name %>
-          <%= render_text_input f, :player_name %>
-          <%= render_error f, :player_name %>
+        <div id="room_join_inputs" class="space-y-6">
+          <div id="input_user_name" >
+            <%= render_label f, :player_name %>
+            <%= render_text_input f, :player_name %>
+            <%= render_error f, :player_name %>
+          </div>
+
+          <div id="input_room_name">
+            <%= render_label f, :room_name_raw, "Room" %>
+            <%= render_text_input f, :room_name_raw %>
+            <%= render_error f, :room_name_raw %>
+            <%= render_error f, :room_name %>
+          </div>
         </div>
 
-        <%# ROOM %>
-        <div>
-          <%= render_label f, :room_name_raw, "Room" %>
-          <%= render_text_input f, :room_name_raw %>
-          <%= render_error f, :room_name_raw %>
-          <%= render_error f, :room_name %>
-        </div>
-
-        <%# JOIN button %>
         <%= render_submit f, "Join" %>
 
       </form>
