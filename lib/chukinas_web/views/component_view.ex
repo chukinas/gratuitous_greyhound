@@ -4,6 +4,12 @@ defmodule ChukinasWeb.ComponentView do
   use Chukinas.PositionOrientationSize
   alias Chukinas.Geometry.Rect
 
+  defmacro __using__(_opts) do
+    quote do
+      import ChukinasWeb.ComponentView, except: [render: 1, render: 2, template_not_found: 2]
+    end
+  end
+
   def render_gsap_import, do: render("gsap_import.html", [])
 
   def render_toggle(id, label, selected?, attrs \\ []) do
@@ -21,12 +27,8 @@ defmodule ChukinasWeb.ComponentView do
     render_dot(position_origin(), "pink")
   end
 
-  def mount_dot(position) when has_position(position) do
+  def render_mount_dot(position) when has_position(position) do
     render_dot(position, "blue")
-  end
-
-  def render_mount_dot(position) do
-    mount_dot(position)
   end
 
   defp render_dot(position, color) do

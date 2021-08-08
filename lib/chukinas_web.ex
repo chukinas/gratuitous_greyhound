@@ -104,7 +104,8 @@ defmodule ChukinasWeb do
 
   defp my_custom_view_helpers do
     quote do
-      alias ChukinasWeb.ComponentView, as: Component
+      #alias ChukinasWeb.ComponentView, as: Component
+      use ChukinasWeb.ComponentView
     end
   end
 

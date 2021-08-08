@@ -22,7 +22,7 @@
           <%= if @show_markers? do %>
             <%= ChukinasWeb.ComponentView.render_rotation_center_dot() %>
             <%= for position <- term.mount_positions do %>
-              <%= Component.mount_dot(position) %>
+              <%= render_mount_dot(position) %>
             <% end %>
           <% end %>
         </div>
