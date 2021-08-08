@@ -109,7 +109,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
         nil -> "Join Room"
         _ -> "Lobby"
       end
-    assign(socket, header: header)
+    assign(socket, header: "Dreadnought")
   end
 
   def standard_assigns(socket) do
