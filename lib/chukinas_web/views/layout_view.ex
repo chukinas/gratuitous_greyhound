@@ -1,6 +1,5 @@
 defmodule ChukinasWeb.LayoutView do
   use ChukinasWeb, :view
-  use ChukinasWeb.Components
   use Chukinas.PositionOrientationSize
   use Chukinas.LinearAlgebra
   alias ChukinasWeb.LayoutView.OceanTile

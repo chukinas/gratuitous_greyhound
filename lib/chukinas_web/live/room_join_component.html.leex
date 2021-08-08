@@ -1,14 +1,9 @@
-<div id="joinComponent" class="h-fell flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+<div id="joinComponent" class="w-screen min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
 
-  <div class="sm:mx-auto sm:w-full sm:max-w-md">
-    <h2 class="mt-6 text-center text-3xl font-extrabold text-yellow-900">
-      Join Room
-    </h2>
-  </div>
+  <%= render_header("Room Join", "sm:mx-auto sm:w-full sm:max-w-md mt-6 text-center") %>
 
-  <%# old class: "mt-8 sm:mx-auto sm:w-full sm:max-w-md" %>
   <div class="mt-8 sm:mx-auto sm:w-full max-w-2xl">
-    <div class="<%= Class.bg :light %> py-8 px-4 shadow sm:rounded-lg sm:px-10">
+    <div class="py-8 px-4 sm:px-10">
 
       <%= f = form_for(
                 @changeset, 
@@ -17,32 +12,24 @@
                 phx_submit: :join, 
                 phx_target: @myself, 
                 as: "room_join", 
-                class: "space-y-6") %>
+                class: "space-y-24") %>
 
-        <%# USER NAME %>
-        <div>
-          <%= label f, :player_name, class: Class.label() %>
-          <div class="mt-1 relative rounded-md shadow-sm">
-            <%= Component.text_input f, :player_name, autofocus: true %>
-            <%= Component.error_icon_text_input f, :player_name %>
+        <div id="room_join_inputs" class="space-y-6">
+          <div id="input_user_name" >
+            <%= render_label f, :player_name %>
+            <%= render_text_input f, :player_name %>
+            <%= render_error f, :player_name %>
           </div>
-          <%= Component.error_paragraph f, :player_name %>
+
+          <div id="input_room_name">
+            <%= render_label f, :room_name_raw, "Room" %>
+            <%= render_text_input f, :room_name_raw %>
+            <%= render_error f, :room_name_raw %>
+            <%= render_error f, :room_name %>
+          </div>
         </div>
 
-        <%# ROOM %>
-        <div>
-          <%= label f, :room_name_raw, "Room", class: Class.label() %>
-          <div class="mt-1 relative rounded-md shadow-sm">
-            <%= Component.text_input f, :room_name_raw %>
-            <%= Component.error_icon_text_input f, :room_name_raw %>
-            <%= Component.error_icon_text_input f, :room_name %>
-          </div>
-          <%= Component.error_paragraph f, :room_name_raw %>
-          <%= Component.error_paragraph f, :room_name %>
-        </div>
-
-        <%# URL and JOIN button %>
-        <%= Component.url_join f, @maybe_url %>
+        <%= render_submit f, "Join" %>
 
       </form>
 

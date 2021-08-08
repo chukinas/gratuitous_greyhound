@@ -1,8 +1,6 @@
-<div
-     class="sm:mx-auto w-full sm:max-w-md overflow-hidden h-56 cursor-pointer hover:bg-white/25"
-     phx-click="next_unit"
+<div phx-click="next_unit"
      phx-target="<%= @myself %>"
-     >
+     class="sm:mx-auto w-full sm:max-w-md overflow-hidden h-56 cursor-pointer" >
   <div class="h-full w-full transform translate-x-1/2 translate-y-1/2 relative scale-150 origin-top-left">
     <%= ChukinasWeb.UnitView.render_unit(@socket, @unit.unit, @turn_number) %>
     <%= ChukinasWeb.AnimationView.muzzle_flashes(@socket, @mission.gunfire) %>
@@ -10,14 +8,5 @@
 </div>
 
 <div class="sm:mx-auto sm:w-full sm:max-w-md pb-8 px-4 sm:px-10 space-y-6">
-  <%= for button <- @buttons do %>
-    <button 
-     phx-click="redirect"
-     phx-target="<%= @myself %>"
-     value="<%= button.action %>"
-     type="button" 
-     class="w-full flex justify-center rounded-md border-2 border-yellow-100 shadow-sm px-6 py-3 text-lg font-medium hover:bg-white/25 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-     <%= button.title %>
-    </button>
-  <% end %>
+  <%= for button <- @buttons, do: render_button(button.content, button.attrs) %>
 </div>

@@ -1,7 +1,6 @@
 defmodule ChukinasWeb.GalleryComponent do
 
   use ChukinasWeb, :live_component
-  use ChukinasWeb.Components
   use Chukinas.PositionOrientationSize
   alias Chukinas.BoundingRect
   alias Chukinas.Dreadnought.Animations
@@ -42,7 +41,7 @@ defmodule ChukinasWeb.GalleryComponent do
       [
         "phx-click": "toggle_show_markers"
       ]
-    ChukinasWeb.ComponentView.render_toggle(
+    render_toggle(
       "toggleShowMarkers",
       label,
       show_markers?,
