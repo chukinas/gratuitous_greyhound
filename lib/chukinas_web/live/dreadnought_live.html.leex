@@ -1,5 +1,7 @@
 <div class="w-screen min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-  <%= render_header(@header, "sm:mx-auto sm:w-full sm:max-w-md mt-6 text-center") %>
+
+  <%= render_header(@header) %>
+  
   <div class="mt-8 sm:mx-auto sm:w-full max-w-2xl">
     <%= case @live_action do %>
       <% :setup -> %>

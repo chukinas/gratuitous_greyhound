@@ -73,10 +73,11 @@ defmodule ChukinasWeb.ComponentView do
   # *** *******************************
   # *** TEXT
 
-  def render_header(value, class) do
+  def render_header(value, class \\ "") do
     attrs = []
     class = """
     text-4xl sm:text-6xl uppercase font-extrabold tracking-widest text-yellow-400
+    sm:mx-auto sm:w-full mt-6 text-center
     #{class}
     """
     Phoenix.HTML.Tag.content_tag :h1, value, attrs ++ [class: class]
@@ -154,7 +155,8 @@ defmodule ChukinasWeb.ComponentView do
 
   def dropdown_class do
     """
-    origin-top-right absolute right-0 mt-1 w-48
+    origin-top-right absolute right-0 mt-1 w-72
+    bg-gray-800/90
     rounded-md
     text-yellow-300 text-center
     border-2 border-yellow-300
