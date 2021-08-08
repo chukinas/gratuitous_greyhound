@@ -101,6 +101,10 @@ defmodule ChukinasWeb.ComponentView do
     Phoenix.HTML.Tag.content_tag :p, text, class: class
   end
 
+  def render_large_text(text) do
+    render_p(text, "text-4xl")
+  end
+
   # *** *******************************
   # *** BUTTONS
 
