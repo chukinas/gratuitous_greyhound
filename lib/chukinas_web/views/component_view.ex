@@ -128,17 +128,51 @@ defmodule ChukinasWeb.ComponentView do
     """
     rounded-md
     border-2 border-yellow-300
-    shadow-sm
     w-full px-6 py-3
-    text-3xl
-    text-yellow-300
-    font-medium
-    hover:bg-yellow-100/10 disabled:bg-transparent focus:outline-none
-    transition-transform duration-75 transform hover:scale-105
+    text-3xl text-yellow-300 font-medium
+    #{__hover_bg__()}
+    focus:outline-none
+    transition-transform duration-75 transform hover:scale-105 disabled:scale-100
     focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500
     disabled:opacity-50 disabled:cursor-not-allowed
     """
   end
+
+  # *** *******************************
+  # *** DROPDOWN
+
+  def dropdown_button_class do
+    """
+    inline-flex items-center justify-center
+    p-2
+    rounded-md
+    text-yellow-300
+    focus:outline-none focus:ring-2 focus:ring-inset focus:ring-yellow-300
+    #{__hover_bg__()}
+    """
+  end
+
+  def dropdown_class do
+    """
+    origin-top-right absolute right-0 mt-1 w-48
+    rounded-md
+    text-yellow-300 text-center
+    border-2 border-yellow-300
+    """
+  end
+
+  def dropdown_item_class do
+    """
+    block px-4 py-2
+    text-lg
+    #{__hover_bg__()}
+    """
+  end
+
+  # *** *******************************
+  # *** COMMON CLASSES
+
+  defp __hover_bg__, do: "hover:bg-yellow-400/10 /10 disabled:bg-transparent"
 
   # *** *******************************
   # *** PRIVATE HELPERS
