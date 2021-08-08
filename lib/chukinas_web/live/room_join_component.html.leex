@@ -3,7 +3,7 @@
   <%= render_header("Room Join", "sm:mx-auto sm:w-full sm:max-w-md mt-6 text-center") %>
 
   <div class="mt-8 sm:mx-auto sm:w-full max-w-2xl">
-    <div class="<%= Class.bg :light %> py-8 px-4 shadow sm:rounded-lg sm:px-10">
+    <div class="py-8 px-4 sm:px-10">
 
       <%= f = form_for(
                 @changeset, 
@@ -12,28 +12,21 @@
                 phx_submit: :join, 
                 phx_target: @myself, 
                 as: "room_join", 
-                class: "space-y-6") %>
+                class: "space-y-12") %>
 
         <%# USER NAME %>
         <div>
           <%= render_label f, :player_name %>
-          <div class="mt-1 relative rounded-md shadow-sm">
-            <%= Component.text_input f, :player_name, autofocus: true %>
-            <%= Component.error_icon_text_input f, :player_name %>
-          </div>
-          <%= Component.error_paragraph f, :player_name %>
+          <%= render_text_input f, :player_name %>
+          <%= render_error f, :player_name %>
         </div>
 
         <%# ROOM %>
         <div>
           <%= render_label f, :room_name_raw, "Room" %>
-          <div class="mt-1 relative rounded-md shadow-sm">
-            <%= Component.text_input f, :room_name_raw %>
-            <%= Component.error_icon_text_input f, :room_name_raw %>
-            <%= Component.error_icon_text_input f, :room_name %>
-          </div>
-          <%= Component.error_paragraph f, :room_name_raw %>
-          <%= Component.error_paragraph f, :room_name %>
+          <%= render_text_input f, :room_name_raw %>
+          <%= render_error f, :room_name_raw %>
+          <%= render_error f, :room_name %>
         </div>
 
         <%# JOIN button %>

@@ -23,6 +23,33 @@ defmodule ChukinasWeb.ComponentView do
     render("toggle.html", assigns)
   end
 
+  def render_text_input(form, field) do
+    class = """
+    block
+    w-full mt-1 px-3 py-2
+    rounded-md
+    shadow-sm
+    text-xl text-yellow-300
+    appearance-none
+    bg-transparent
+    border-2 border-yellow-300
+    focus:outline-none focus:ring-2 focus:ring-yellow-300
+    """
+    Phoenix.HTML.Form.text_input(form, field, class: class)
+  end
+
+  def render_error(form, field) do
+    class = """
+    text-red-300 font-bold
+    """
+    Enum.map(Keyword.get_values(form.errors, field), fn error ->
+      content_tag(:p, translate_error(error),
+        class: "invalid-feedback " <> class,
+        phx_feedback_for: input_id(form, field)
+      )
+    end)
+  end
+
   # *** *******************************
   # *** DOTS
   #     These are currently only used in the Gallery.
@@ -57,7 +84,7 @@ defmodule ChukinasWeb.ComponentView do
 
   def render_label(form, field, display \\ nil) do
     class = """
-    text-lg text-yellow-200
+    text-xl text-yellow-200
     """
     if display do
       label form, field, display, class: class
@@ -82,9 +109,12 @@ defmodule ChukinasWeb.ComponentView do
   end
 
   def render_submit(form, value) do
+    class = """
+    disabled:animate-none
+    """
     opts =
       [
-        class: __button_classes__(),
+        class: [class, " ", __button_classes__()],
         disabled: !valid?(form)
       ]
     Phoenix.HTML.Form.submit(value, opts)
@@ -97,9 +127,9 @@ defmodule ChukinasWeb.ComponentView do
     shadow-sm
     w-full px-6 py-3
     text-3xl
-    text-yellow-200 hover:text-yellow-900 disabled:text-yellow-200
+    text-yellow-200
     font-medium hover:font-bold disabled:font-medium
-    hover:bg-yellow-100/50 disabled:bg-transparent focus:outline-none
+    hover:bg-yellow-100/10 disabled:bg-transparent focus:outline-none
     focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500
     disabled:opacity-50 disabled:cursor-not-allowed
     """
