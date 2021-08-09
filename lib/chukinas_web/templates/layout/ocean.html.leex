@@ -1,10 +1,9 @@
 <div>
   <%= ChukinasWeb.LayoutView.render "flash_messages.html", flash: @flash %>
 
-  <div id="background" phx-hook="BackgroundSizeMatch" class="absolute w-screen h-screen overflow-hidden bg-ocean">
-    <img class="hidden mix-blend-soft-light w-full h-full object-cover" src="<%= crinkled_paper_path @socket %>" />
+  <div id="background" phx-hook="BackgroundSizeMatch" class="absolute w-screen h-screen overflow-hidden bg-ocean-bg">
 
-    <div class="mix-blend-soft-light">
+    <div class="mix-blend-overlay">
       <%= for tile <- ocean_tiles() do %>
         <div style="<%= tile.style %>" class="transform scale-125 absolute <%= tile.rotate_class %>">
         <svg viewBox="<%= tile.viewbox %>">
@@ -34,19 +33,6 @@
     </svg>
 
   </div>
-
-  <input type="hidden" class="
-    -rotate-0
-    -rotate-1
-    -rotate-2
-    -rotate-3
-    -rotate-6
-     rotate-0
-     rotate-1
-     rotate-2
-     rotate-3
-     rotate-6
-  ">
 
   <div class="js-background-size-match absolute">
     <%= @inner_content %>

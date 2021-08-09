@@ -16,7 +16,8 @@ module.exports = {
     },
     extend: {
       backgroundColor: theme => ({
-        'ocean': '#08296f',
+        'ocean-bg': '#08296f',
+        'ocean': '#0b3794',
       }),
       backgroundImage: theme => ({
         'cat': "url('https://cdn.glitch.com/d824d0c2-e771-4c9f-9fe2-a66b3ac139c5%2Fcats.jpg?1541801135989')",
