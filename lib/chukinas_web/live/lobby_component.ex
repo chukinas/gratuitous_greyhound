@@ -12,9 +12,9 @@ defmodule ChukinasWeb.LobbyComponent do
 
   @impl true
   def update(assigns, socket) do
-    room = assigns.room
+    mission = assigns.mission
     uuid = assigns.uuid
-    player_self = Room.player_from_uuid(room, uuid)
+    player_self = Mission.player_by_uuid(mission, uuid)
     ready? = Player.ready? player_self
     socket =
       assign(socket,

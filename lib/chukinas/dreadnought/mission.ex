@@ -19,7 +19,8 @@ defmodule Chukinas.Dreadnought.Mission do
 
   use TypedStruct
   typedstruct do
-    field :room_name, String.t, enforce: true
+    field :name, String.t, enforce: true
+    field :name_pretty, String.t, enforce: true
     field :world_rect, Rect.t, enforce: true
     field :grid, Grid.t(), enforce: true
     field :turn_number, integer(), default: 0
@@ -55,6 +56,21 @@ defmodule Chukinas.Dreadnought.Mission do
       |> size_multiply(2)
       |> size_add(grid)
     Rect.from_position_and_size(position, size)
+  end
+
+  # *** *******************************
+  # *** REDUCERS (PLAYERS)
+
+  def toggle_ready(%__MODULE__{} = mission, player_id) do
+    player_update =
+      fn players ->
+        IdList.update!(players, player_id, &Player.toggle_ready/1)
+      end
+    room =
+      room
+      |> update_players(player_update)
+      |> Mission.maybe_start
+    {:ok, room}
   end
 
   # *** *******************************
@@ -202,9 +218,17 @@ defmodule Chukinas.Dreadnought.Mission do
     |> IdList.fetch!(player_uuid, :uuid)
   end
 
+  def player_uuids(mission), do: (for player <- players(mission), do: Player.uuid(player))
+
   def players(%__MODULE__{players: value}), do: value
 
   def player_ids(mission), do: IdList.ids(mission.players)
+
+  def players_sorted(mission) do
+    mission
+    |> players
+    |> Enum.sort_by(&Player.id/1, :asc)
+  end
 
   def completed_player_ids(mission) do
     IdList.ids(mission.player_actions, :player_id)
@@ -225,6 +249,8 @@ defmodule Chukinas.Dreadnought.Mission do
 
   # *** *******************************
   # *** CONVERTERS (OTHER)
+
+  def empty?(mission), do: player_count(mission) == 0
 
   def grid(%__MODULE__{grid: value}), do: value
 
