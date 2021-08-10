@@ -9,9 +9,9 @@ defmodule ChukinasWeb.DreadnoughtLive.NavComponent do
   def mount(socket) do
     menu_items =
       [
-        ChukinasWeb.MenuItem.new("Home", Routes.dreadnought_homepage_path(socket, :homepage)),
+        ChukinasWeb.MenuItem.new("Home", Routes.dreadnought_main_path(socket, :homepage)),
         ChukinasWeb.MenuItem.new("Join a Game", Routes.dreadnought_path(socket, :setup)),
-        ChukinasWeb.MenuItem.new("Gallery", Routes.dreadnought_gallery_path(socket, :gallery)),
+        ChukinasWeb.MenuItem.new("Gallery", Routes.dreadnought_main_path(socket, :gallery)),
       ]
     socket =
       assign(socket, menu_items: menu_items)

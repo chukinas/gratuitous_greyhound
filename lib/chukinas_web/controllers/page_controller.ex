@@ -19,7 +19,7 @@ defmodule ChukinasWeb.PageController do
   end
 
   def redirect_to_dreadnought(conn, _params) do
-    redirect(conn, to: Routes.dreadnought_homepage_path(conn, :homepage))
+    redirect(conn, to: Routes.dreadnought_main_path(conn, :homepage))
   end
 
   def redirect_to_goodreads_elixir(conn, _params) do

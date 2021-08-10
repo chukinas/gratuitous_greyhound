@@ -32,7 +32,7 @@ defmodule ChukinasWeb.DreadnoughtLive.HomepageComponent do
     route =
       case action do
         "play" -> Routes.dreadnought_path(socket, :setup)
-        "gallery" -> Routes.dreadnought_gallery_path(socket, :gallery)
+        "gallery" -> Routes.dreadnought_main_path(socket, :gallery)
       end
     {
       :noreply,
