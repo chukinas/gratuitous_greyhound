@@ -1,5 +1,4 @@
-# TODO rename MissionBackup?
-defmodule Chukinas.Sessions.RoomBackup do
+defmodule Chukinas.Sessions.MissionBackup do
 
   use Agent
   alias Chukinas.Dreadnought.Mission

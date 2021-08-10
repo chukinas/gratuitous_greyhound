@@ -1,8 +1,7 @@
-alias Chukinas.Sessions.RoomDynamicSupervisor
-alias Chukinas.Sessions.RoomServer
+defmodule Chukinas.Sessions.MissionDynamicSupervisor do
 
-defmodule RoomDynamicSupervisor do
   use DynamicSupervisor
+  alias Chukinas.Sessions.MissionServer
 
   # *** *******************************
   # *** CONSTRUCTORS
@@ -23,7 +22,7 @@ defmodule RoomDynamicSupervisor do
 
   @spec new_room(String.t) :: {:ok, pid}
   def new_room(room_name) do
-    child_spec = RoomServer.child_spec(room_name)
+    child_spec = MissionServer.child_spec(room_name)
     DynamicSupervisor.start_child(__MODULE__, child_spec)
   end
 

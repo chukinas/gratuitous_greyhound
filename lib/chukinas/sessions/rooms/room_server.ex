@@ -1,10 +1,11 @@
-defmodule Chukinas.Sessions.RoomServer do
+# TODO move of rename directory?
+defmodule Chukinas.Sessions.MissionServer do
 
   alias Chukinas.Dreadnought.Mission
   alias Chukinas.Dreadnought.MissionBuilder
   alias Chukinas.Sessions.Players
-  alias Chukinas.Sessions.RoomBackup
-  alias Chukinas.Sessions.RoomRegistry
+  alias Chukinas.Sessions.MissionBackup
+  alias Chukinas.Sessions.MissionRegistry
   use GenServer
 
   # *** *******************************
@@ -21,7 +22,7 @@ defmodule Chukinas.Sessions.RoomServer do
     GenServer.start_link(
       __MODULE__,
       room_name,
-      name: RoomRegistry.build_name(room_name)
+      name: MissionRegistry.build_name(room_name)
     )
   end
 
@@ -29,7 +30,7 @@ defmodule Chukinas.Sessions.RoomServer do
   # *** CALLBACKS
 
   def init(room_name) when is_binary(room_name) do
-    room = case RoomBackup.fetch_and_pop(room_name) do
+    room = case MissionBackup.fetch_and_pop(room_name) do
       {:ok, room} -> room
       :error -> MissionBuilder.online(room_name)
     end
@@ -45,7 +46,7 @@ defmodule Chukinas.Sessions.RoomServer do
   end
 
   def handle_call({:drop_player, player_uuid}, _from, mission) do
-    IOP.inspect(player_uuid, "RoomServer handle_call drop_player")
+    IOP.inspect(player_uuid, "MissionServer handle_call drop_player")
     Players.send_room(player_uuid, nil)
     mission = Mission.drop_player_by_uuid(mission, player_uuid)
     if Mission.empty?(mission), do: Process.exit(self(), :normal)
@@ -67,7 +68,7 @@ defmodule Chukinas.Sessions.RoomServer do
   end
 
   def handle_continue(:send_all_players, mission) do
-    IOP.inspect mission, "RoomServer continue send all players"
+    IOP.inspect mission, "MissionServer continue send all players"
     for uuid <- Mission.player_uuids(mission) do
       Players.send_room(uuid, mission)
     end
@@ -80,7 +81,7 @@ defmodule Chukinas.Sessions.RoomServer do
 
   def terminate(reason, room) do
     IOP.inspect {reason, room}, "Room Server terminate args"
-    RoomBackup.put(room)
+    MissionBackup.put(room)
   end
 
   # *** *******************************

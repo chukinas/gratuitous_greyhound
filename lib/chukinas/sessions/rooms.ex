@@ -1,9 +1,9 @@
 defmodule Chukinas.Sessions.Rooms do
 
   alias Chukinas.Dreadnought.Mission
-  alias Chukinas.Sessions.RoomDynamicSupervisor
+  alias Chukinas.Sessions.MissionDynamicSupervisor
   alias Chukinas.Sessions.RoomJoin
-  alias Chukinas.Sessions.RoomRegistry
+  alias Chukinas.Sessions.MissionRegistry
 
   # *** *******************************
   # *** GETTERS
@@ -59,8 +59,8 @@ defmodule Chukinas.Sessions.Rooms do
   end
 
   defp room_pid_from_name(room_name) when is_binary(room_name) do
-    with :error <- RoomRegistry.fetch_pid(room_name),
-         {:ok, pid} <- RoomDynamicSupervisor.new_room(room_name) do
+    with :error <- MissionRegistry.fetch_pid(room_name),
+         {:ok, pid} <- MissionDynamicSupervisor.new_room(room_name) do
       pid
     else
       {:ok, pid} -> pid

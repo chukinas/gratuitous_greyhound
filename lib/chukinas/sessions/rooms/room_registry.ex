@@ -1,6 +1,4 @@
-alias Chukinas.Sessions.RoomRegistry
-
-defmodule RoomRegistry do
+defmodule Chukinas.Sessions.MissionRegistry do
 
   @me Registry.Rooms
 
