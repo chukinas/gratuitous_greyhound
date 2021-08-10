@@ -34,7 +34,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
     cond do
       live_action == :gallery ->
         :ok
-      Mission.in_progress?(socket.assigns.mission) ->
+      mission_in_progress?(socket) ->
         path = Routes.dreadnought_play_path(socket, :index)
         send self(), {:push_redirect, path}
       true ->
@@ -89,7 +89,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
   @impl true
   def handle_info({:update_room, mission}, socket) do
     socket =
-      if Mission.in_progress?(mission) do
+      if mission_in_progress?(mission) do
         path = Routes.dreadnought_play_path(socket, :index)
         Phoenix.LiveView.push_redirect(socket, to: path)
       else
@@ -142,6 +142,18 @@ defmodule ChukinasWeb.DreadnoughtLive do
   # *** *******************************
   # *** SOCKET CONVERTERS
 
-  def mission(socket), do: socket.assigns.mission
+  # TODO this is ugly
+  def mission(nil), do: nil
+  def mission(%Mission{} = value), do: value
+  def mission(socket), do: socket.assigns[:mission]
+
+  defp mission_in_progress?(socket) do
+    with %Mission{} = mission <- mission(socket),
+         true <- Mission.in_progress?(mission) do
+      true
+    else
+      _ -> false
+    end
+  end
 
 end
