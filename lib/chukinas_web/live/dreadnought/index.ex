@@ -12,6 +12,7 @@ defmodule ChukinasWeb.DreadnoughtLive.Index do
 
   @impl true
   def handle_params(_params, _url, socket) do
+    IOP.inspect self()
     header =
       case socket.assigns.live_action do
         :homepage -> "Dreadnought"

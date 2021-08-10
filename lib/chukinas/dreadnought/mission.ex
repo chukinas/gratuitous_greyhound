@@ -257,7 +257,7 @@ defmodule Chukinas.Dreadnought.Mission do
   # *** *******************************
   # *** CONVERTERS (OTHER)
 
-  def empty?(mission), do: player_count(mission) == 0
+  def empty?(mission), do: (player_count(mission) == 0) |> IOP.inspect("mission empty?")
 
   def grid(%__MODULE__{grid: value}), do: value
 

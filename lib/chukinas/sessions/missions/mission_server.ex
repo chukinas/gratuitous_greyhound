@@ -42,15 +42,18 @@ defmodule Chukinas.Sessions.MissionServer do
     player_uuid: player_uuid,
   }}, _from, mission) do
     mission = MissionBuilder.add_player(mission, player_uuid, player_name)
-    reply(mission, :ok)
+    reply_and_send_all(mission, :ok)
   end
 
   def handle_call({:drop_player, player_uuid}, _from, mission) do
     IOP.inspect(player_uuid, "MissionServer handle_call drop_player")
     Players.send_room(player_uuid, nil)
+    IO.puts "plyaers send room"
     mission = Mission.drop_player_by_uuid(mission, player_uuid)
-    if Mission.empty?(mission), do: Process.exit(self(), :normal)
-    reply(mission)
+              |> IOP.inspect("mission after dropping")
+    if Mission.empty?(mission), do: Process.exit(self() |> IOP.inspect("self"), :normal)
+    IO.puts "was mission empty?"
+    reply_and_send_all(mission)
   end
 
   def handle_call(:get, _from, mission) do
@@ -73,6 +76,7 @@ defmodule Chukinas.Sessions.MissionServer do
     for uuid <- Mission.player_uuids(mission) do
       Players.send_room(uuid, mission)
     end
+    IO.puts "done handle cont"
     {:noreply, mission}
   end
 
@@ -92,9 +96,9 @@ defmodule Chukinas.Sessions.MissionServer do
 
   defp noreply(room), do: {:noreply, room, send_all()}
 
-  defp reply(mission), do: {:reply, mission, mission, send_all()}
+  defp reply_and_send_all(mission), do: {:reply, mission, mission, send_all()}
 
-  defp reply(mission, return_value), do: {:reply, return_value, mission, send_all()}
+  defp reply_and_send_all(mission, return_value), do: {:reply, return_value, mission, send_all()}
 
   defp send_all, do: {:continue, :send_all_players}
 
