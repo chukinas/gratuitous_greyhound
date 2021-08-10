@@ -14,7 +14,7 @@ defmodule ChukinasWeb.PageController do
   end
 
   def dev(conn, _params) do
-    menu_items = for title <- ["Home", "Setup", "Gallery"], do: ChukinasWeb.MenuItem.new(title)
+    menu_items = []
     render conn, "menu.html", menu_items: menu_items
   end
 
