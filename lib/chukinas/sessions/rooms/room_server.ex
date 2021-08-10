@@ -1,7 +1,8 @@
 defmodule Chukinas.Sessions.RoomServer do
 
+  alias Chukinas.Dreadnought.Mission
+  alias Chukinas.Dreadnought.MissionBuilder
   alias Chukinas.Sessions.Players
-  alias Chukinas.Sessions.Room
   alias Chukinas.Sessions.RoomBackup
   alias Chukinas.Sessions.RoomRegistry
   use GenServer
@@ -30,7 +31,7 @@ defmodule Chukinas.Sessions.RoomServer do
   def init(room_name) when is_binary(room_name) do
     room = case RoomBackup.fetch_and_pop(room_name) do
       {:ok, room} -> room
-      :error -> Room.new(room_name)
+      :error -> MissionBuilder.online(room_name)
     end
     ok(room)
   end
@@ -38,17 +39,17 @@ defmodule Chukinas.Sessions.RoomServer do
   def handle_call({:add_player, %{
     player_name: player_name,
     player_uuid: player_uuid,
-  }}, _from, room) do
-    {:ok, room} = Room.add_player(room, player_uuid, player_name)
-    reply(room, :ok)
+  }}, _from, mission) do
+    {:ok, mission} = MissionBuilder.add_player(mission, player_uuid, player_name)
+    reply(mission, :ok)
   end
 
-  def handle_call({:drop_player, player_uuid}, _from, room) do
+  def handle_call({:drop_player, player_uuid}, _from, mission) do
     IOP.inspect(player_uuid, "RoomServer handle_call drop_player")
     Players.send_room(player_uuid, nil)
-    {result, room} = Room.drop_player(room, player_uuid)
-    if result == :empty, do: Process.exit(self(), :normal)
-    reply(room)
+    mission = Mission.drop_player_by_uuid(mission, player_uuid)
+    if Mission.empty?(mission), do: Process.exit(self(), :normal)
+    reply(mission)
   end
 
   def handle_call(:get, _from, room) do
@@ -56,21 +57,21 @@ defmodule Chukinas.Sessions.RoomServer do
   end
 
   def handle_cast({:toggle_ready, player_id}, room) do
-    {:ok, room} = Room.toggle_ready(room, player_id)
+    {:ok, room} = Mission.toggle_ready(room, player_id)
     noreply(room)
   end
 
-  def handle_cast({:update_mission, func}, room) do
-    {:ok, room} = Room.update_mission(room, func)
-    noreply(room)
+  # TODO deprecate
+  def handle_cast({:update_mission, func}, mission) do
+    func.(mission) |> noreply
   end
 
-  def handle_continue(:send_all_players, room) do
-    IOP.inspect room, "RoomServer continue send all players"
-    for uuid <- Room.player_uuids(room) do
-      Players.send_room(uuid, room)
+  def handle_continue(:send_all_players, mission) do
+    IOP.inspect mission, "RoomServer continue send all players"
+    for uuid <- Mission.player_uuids(mission) do
+      Players.send_room(uuid, mission)
     end
-    {:noreply, room}
+    {:noreply, mission}
   end
 
   def terminate(:normal, _room) do
