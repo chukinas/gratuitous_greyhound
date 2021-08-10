@@ -1,9 +1,8 @@
 defmodule ChukinasWeb.DreadnoughtPlayLive do
 
   use ChukinasWeb, :live_view
+  import ChukinasWeb.DreadnoughtLive, only: [assign_uuid_and_mission: 2]
   alias Chukinas.Dreadnought.Mission
-  alias Chukinas.Sessions.Room
-  import ChukinasWeb.DreadnoughtLive, only: [assign_uuid_and_room: 2]
   alias ChukinasWeb.DreadnoughtPlayView, as: View
 
   def render(template, assigns), do: View.render(template, assigns)
@@ -15,7 +14,7 @@ defmodule ChukinasWeb.DreadnoughtPlayLive do
   def mount(_params, session, socket) do
     socket =
       socket
-      |> assign_uuid_and_room(session)
+      |> assign_uuid_and_mission(session)
       |> maybe_redirect_to_setup
       |> assign_mission
       |> assign_world_rect_and_islands
@@ -45,13 +44,14 @@ defmodule ChukinasWeb.DreadnoughtPlayLive do
   # *** SOCKET REDUCERS
 
   def assign_mission(socket) do
-    with %Room{} = room <- socket.assigns.room,
-         %Mission{} = mission <- Room.mission(room) do
-      socket
-      |> assign(mission: mission)
-    else
-      _ -> assign(socket, mission: nil)
-    end
+    #with %Room{} = room <- socket.assigns.room,
+    #     %Mission{} = mission <- Room.mission(room) do
+    #  socket
+    #  |> assign(mission: mission)
+    #else
+    #  _ -> assign(socket, mission: nil)
+    #end
+    socket
   end
 
   def assign_relative_arena_rect(socket) do

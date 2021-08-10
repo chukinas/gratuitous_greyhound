@@ -41,9 +41,9 @@ defmodule Chukinas.Sessions do
   end
 
   # *** *******************************
-  # *** GET ROOM
+  # *** GET MISSION
 
-  def get_room_from_player_uuid(player_uuid) do
+  def get_mission_from_player_uuid(player_uuid) do
     with {:ok, room_name} <- Players.fetch_room_name(player_uuid),
          {:ok, room}      <- Rooms.fetch(room_name) do
       room
