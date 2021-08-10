@@ -59,7 +59,7 @@ defmodule Chukinas.Sessions do
 
   def complete_player_turn(room_name, %ActionSelection{} = action_selection) do
     fun = &Mission.put(&1, action_selection)
-    Missions.update_mission(room_name, fun)
+    Missions.update_then_send_all(room_name, fun)
   end
 
 end

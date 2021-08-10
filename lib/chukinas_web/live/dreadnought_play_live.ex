@@ -1,8 +1,6 @@
 defmodule ChukinasWeb.DreadnoughtPlayLive do
 
-  use ChukinasWeb, :live_view
-  import ChukinasWeb.DreadnoughtLive, only: [assign_uuid_and_mission: 2, mission_in_progress?: 1]
-  alias Chukinas.Dreadnought.Mission
+  use ChukinasWeb.DreadnoughtLiveViewHelpers
   alias ChukinasWeb.DreadnoughtPlayView, as: View
 
   def render(template, assigns), do: View.render(template, assigns)
@@ -21,13 +19,6 @@ defmodule ChukinasWeb.DreadnoughtPlayLive do
       |> assign_relative_arena_rect
       |> assign(page_title: "Dreadnought Play")
     {:ok, socket, layout: {ChukinasWeb.LayoutView, "dreadnought_play.html"}}
-  end
-
-  @impl true
-  def handle_info({:push_redirect, path}, socket) do
-    socket
-    |> push_redirect(to: path)
-    |> noreply
   end
 
   @impl true

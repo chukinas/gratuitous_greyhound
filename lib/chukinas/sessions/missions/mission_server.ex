@@ -72,9 +72,10 @@ defmodule Chukinas.Sessions.MissionServer do
     |> noreply_then_send_all
   end
 
-  # TODO deprecate
-  def handle_cast({:update_mission, func}, mission) do
-    func.(mission) |> noreply_then_send_all
+  def handle_cast({:update_then_send_all, func}, mission) do
+    mission
+    |> func.()
+    |> noreply_then_send_all
   end
 
   # *** *******************************

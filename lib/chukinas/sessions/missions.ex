@@ -39,8 +39,8 @@ defmodule Chukinas.Sessions.Missions do
     genserver_cast room_name, {:toggle_ready, player_id}
   end
 
-  def update_mission(room_name, fun) do
-    genserver_cast room_name, {:update_mission, fun}
+  def update_then_send_all(room_name, fun) do
+    genserver_cast room_name, {:update_then_send_all, fun}
   end
 
   # *** *******************************
