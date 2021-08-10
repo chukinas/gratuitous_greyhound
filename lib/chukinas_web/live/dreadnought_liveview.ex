@@ -33,29 +33,21 @@ defmodule ChukinasWeb.DreadnoughtLiveViewHelpers do
 
       @impl true
       def handle_info({:update_mission, nil}, socket) do
-        if socket.assigns.live_action == :play do
-          socket
-          |> push_redirect(to: Routes.dreadnought_main_path(socket, :setup))
-          |> noreply
-        else
-          socket
-          |> assign(mission: nil)
-          |> noreply
-        end
+        socket
+        |> push_redirect(to: Routes.dreadnought_main_path(socket, :homepage))
+        |> noreply
       end
 
       @impl true
       def handle_info({:update_mission, %Mission{} = mission}, socket) do
-        cond do
-          mission_in_progress?(mission) ->
-            path = Routes.dreadnought_main_path(socket, :play)
-            socket
-            |> push_redirect(to: path)
-            |> noreply
-          true ->
-            socket
-            |> assign(mission: mission)
-            |> noreply
+        if mission_in_progress?(mission) && socket.assigns.live_action != :play do
+          socket
+          |> push_redirect(to: Routes.dreadnought_main_path(socket, :play))
+          |> noreply
+        else
+          socket
+          |> assign(mission: mission)
+          |> noreply
         end
       end
 
