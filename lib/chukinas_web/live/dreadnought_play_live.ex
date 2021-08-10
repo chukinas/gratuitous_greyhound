@@ -1,7 +1,7 @@
 defmodule ChukinasWeb.DreadnoughtPlayLive do
 
   use ChukinasWeb, :live_view
-  import ChukinasWeb.DreadnoughtLive, only: [assign_uuid_and_mission: 2]
+  import ChukinasWeb.DreadnoughtLive, only: [assign_uuid_and_mission: 2, mission_in_progress?: 1]
   alias Chukinas.Dreadnought.Mission
   alias ChukinasWeb.DreadnoughtPlayView, as: View
 
@@ -67,7 +67,7 @@ defmodule ChukinasWeb.DreadnoughtPlayLive do
   end
 
   def maybe_redirect_to_setup(socket) do
-    if not Mission.in_progress?(socket.assigns.room) do
+    if not mission_in_progress?(socket) do
       path = Routes.dreadnought_path(socket, :setup)
       send self(), {:push_redirect, path}
     end

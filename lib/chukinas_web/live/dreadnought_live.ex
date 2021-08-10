@@ -147,7 +147,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
   def mission(%Mission{} = value), do: value
   def mission(socket), do: socket.assigns[:mission]
 
-  defp mission_in_progress?(socket) do
+  def mission_in_progress?(socket) do
     with %Mission{} = mission <- mission(socket),
          true <- Mission.in_progress?(mission) do
       true
