@@ -5,7 +5,7 @@ defmodule ChukinasWeb.LobbyComponent do
   alias Chukinas.Dreadnought.Mission
   alias Chukinas.Dreadnought.Player
   alias Chukinas.Sessions
-  alias Chukinas.Sessions.Rooms
+  alias Chukinas.Sessions.Missions
 
   # *** *******************************
   # *** CALLBACKS
@@ -30,7 +30,7 @@ defmodule ChukinasWeb.LobbyComponent do
 
   @impl true
   def handle_event("toggle_ready", _, socket) do
-    Rooms.toggle_ready(socket.assigns.room_name, socket.assigns.player_id)
+    Missions.toggle_ready(socket.assigns.room_name, socket.assigns.player_id)
     {:noreply, socket}
   end
 

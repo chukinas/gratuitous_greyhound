@@ -1,4 +1,4 @@
-defmodule Chukinas.Sessions.Rooms do
+defmodule Chukinas.Sessions.Missions do
 
   alias Chukinas.Dreadnought.Mission
   alias Chukinas.Sessions.MissionDynamicSupervisor

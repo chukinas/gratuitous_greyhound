@@ -1,6 +1,6 @@
 defmodule Chukinas.Sessions.MissionRegistry do
 
-  @me Registry.Rooms
+  @me Registry.Missions
 
   def child_spec(_init_arg) do
     Registry.child_spec(keys: :unique, name: @me)
