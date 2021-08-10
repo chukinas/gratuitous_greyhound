@@ -34,7 +34,7 @@ defmodule ChukinasWeb.Router do
     live "/", DreadnoughtLive.Index, :homepage, as: :dreadnought_main
     live "/gallery", DreadnoughtLive.Index, :gallery, as: :dreadnought_main
     get "/grid", PageController, :redirect_to_dreadnought
-    live "/setup", DreadnoughtLive, :setup
+    live "/setup", DreadnoughtLive, :setup, as: :dreadnought_main
     live "/play", DreadnoughtPlayLive, :index
   end
 

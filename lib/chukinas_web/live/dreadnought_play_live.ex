@@ -68,7 +68,7 @@ defmodule ChukinasWeb.DreadnoughtPlayLive do
 
   def maybe_redirect_to_setup(socket) do
     if not mission_in_progress?(socket) do
-      path = Routes.dreadnought_path(socket, :setup)
+      path = Routes.dreadnought_main_path(socket, :setup)
       send self(), {:push_redirect, path}
     end
     socket

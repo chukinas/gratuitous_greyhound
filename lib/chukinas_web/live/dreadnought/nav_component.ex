@@ -7,15 +7,20 @@ defmodule ChukinasWeb.DreadnoughtLive.NavComponent do
 
   @impl true
   def mount(socket) do
+    build_menu_item =
+      fn title, live_action ->
+        route = Routes.dreadnought_main_path(socket, live_action)
+        ChukinasWeb.MenuItem.new(title, route)
+      end
     menu_items =
       [
-        ChukinasWeb.MenuItem.new("Home", Routes.dreadnought_main_path(socket, :homepage)),
-        ChukinasWeb.MenuItem.new("Join a Game", Routes.dreadnought_path(socket, :setup)),
-        ChukinasWeb.MenuItem.new("Gallery", Routes.dreadnought_main_path(socket, :gallery)),
+        build_menu_item.("Home", :homepage),
+        build_menu_item.("Join a Game", :setup),
+        build_menu_item.("Gallery", :gallery)
       ]
-    socket =
-      assign(socket, menu_items: menu_items)
-    {:ok, socket}
+    socket
+    |> assign(menu_items: menu_items)
+    |> ok
   end
 
 end
@@ -36,7 +41,10 @@ defmodule ChukinasWeb.MenuItem do
   # *** NEW
 
   def new(title, route) do
-    %__MODULE__{title: title, route: route}
+    %__MODULE__{
+      title: title,
+      route: route
+    }
   end
 
 end

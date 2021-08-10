@@ -65,6 +65,7 @@ defmodule ChukinasWeb do
 
       unquote(view_helpers())
       unquote(my_custom_view_helpers())
+      unquote(genserver_helpers())
     end
   end
 
@@ -102,6 +103,12 @@ defmodule ChukinasWeb do
     end
   end
 
+  defp genserver_helpers do
+    quote do
+      defp ok(socket), do: {:ok, socket}
+    end
+  end
+
   defp my_custom_view_helpers do
     quote do
       use ChukinasWeb.ComponentView
@@ -114,4 +121,5 @@ defmodule ChukinasWeb do
   defmacro __using__(which) when is_atom(which) do
     apply(__MODULE__, which, [])
   end
+
 end

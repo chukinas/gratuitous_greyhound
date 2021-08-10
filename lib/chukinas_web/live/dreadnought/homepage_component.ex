@@ -31,7 +31,7 @@ defmodule ChukinasWeb.DreadnoughtLive.HomepageComponent do
   def handle_event("redirect", %{"value" => action}, socket) do
     route =
       case action do
-        "play" -> Routes.dreadnought_path(socket, :setup)
+        "play" -> Routes.dreadnought_main_path(socket, :setup)
         "gallery" -> Routes.dreadnought_main_path(socket, :gallery)
       end
     {
