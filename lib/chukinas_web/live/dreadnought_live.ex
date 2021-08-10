@@ -17,7 +17,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
   def handle_params(_params, _url, socket) do
     IOP.inspect self()
     if live_action?(socket, :setup) && mission_in_progress?(socket) do
-      path = Routes.dreadnought_play_path(socket, :index)
+      path = Routes.dreadnought_main_path(socket, :play)
       send self(), {:push_redirect, path}
     end
     header =
@@ -45,10 +45,9 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def handle_info({:push_redirect, path}, socket) do
-    socket =
-      socket
-      |> push_redirect(to: path)
-    {:noreply, socket}
+    socket
+    |> push_redirect(to: path)
+    |> noreply
   end
 
   @impl true
@@ -60,15 +59,16 @@ defmodule ChukinasWeb.DreadnoughtLive do
   # TODO does the user struct still need the room name, etc?
   @impl true
   def handle_info({:update_room, mission}, socket) do
-    socket =
-      if mission_in_progress?(mission) do
-        path = Routes.dreadnought_play_path(socket, :index)
-        Phoenix.LiveView.push_redirect(socket, to: path)
-      else
-        socket
-        |> assign(mission: mission)
-      end
-    {:noreply, socket}
+    if mission_in_progress?(mission) do
+      path = Routes.dreadnought_main_path(socket, :play)
+      socket
+      |> Phoenix.LiveView.push_redirect(to: path)
+      |> noreply
+    else
+      socket
+      |> assign(mission: mission)
+      |> noreply
+    end
   end
 
   # *** *******************************
