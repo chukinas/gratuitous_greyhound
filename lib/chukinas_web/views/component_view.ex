@@ -148,6 +148,7 @@ defmodule ChukinasWeb.ComponentView do
     p-2
     rounded-md
     text-yellow-300
+    bg-gray-800/70
     focus:outline-none focus:ring-2 focus:ring-inset focus:ring-yellow-300
     #{__hover_bg__()}
     """

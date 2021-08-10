@@ -14,12 +14,12 @@ defmodule ChukinasWeb.PageController do
   end
 
   def dev(conn, _params) do
-    menu_items = for title <- ["Home", "Setup", "Gallery"], do: ChukinasWeb.MenuItem.new(title)
+    menu_items = []
     render conn, "menu.html", menu_items: menu_items
   end
 
   def redirect_to_dreadnought(conn, _params) do
-    redirect(conn, to: Routes.dreadnought_homepage_path(conn, :homepage))
+    redirect(conn, to: Routes.dreadnought_main_path(conn, :homepage))
   end
 
   def redirect_to_goodreads_elixir(conn, _params) do

@@ -17,7 +17,7 @@ defmodule ChukinasWeb.Dreadnought.PlayerTurnComponent do
     socket =
       socket
       |> assign(id: assigns.id)
-      |> assign_from_mission(assigns.mission, ~w/turn_number units room_name/a)
+      |> assign_from_mission(assigns.mission, ~w/turn_number units name/a)
       |> assign(player_turn: PlayerTurn.new(assigns.mission, assigns.player_uuid))
       #|> assign_action_selection
     {:ok, socket}
@@ -32,7 +32,6 @@ defmodule ChukinasWeb.Dreadnought.PlayerTurnComponent do
   def handle_event("select_gunnery_target", %{
     "unit_id" => unit_id,
   }, socket) do
-    IOP.inspect unit_id, "this should be an integer"
     update_player_turn = &ActionSelection.select_gunnery_target(&1, Precision.coerce_int(unit_id))
     socket =
       socket
@@ -77,7 +76,7 @@ defmodule ChukinasWeb.Dreadnought.PlayerTurnComponent do
   defp maybe_end_turn(socket) do
     if turn_complete?(socket) do
       socket
-      |> room_name
+      |> name
       |> Sessions.complete_player_turn(action_selection(socket))
     end
     socket
@@ -112,7 +111,7 @@ defmodule ChukinasWeb.Dreadnought.PlayerTurnComponent do
 
   def player_uuid(socket), do: socket |> player_turn |> PlayerTurn.player_uuid
 
-  def room_name(socket), do: socket.assigns.room_name
+  def name(socket), do: socket.assigns.name
 
   def turn_complete?(socket) do
     socket

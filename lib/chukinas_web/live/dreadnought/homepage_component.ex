@@ -7,7 +7,7 @@ defmodule ChukinasWeb.DreadnoughtLive.HomepageComponent do
   alias Chukinas.Dreadnought.Unit
 
   # *** *******************************
-  # *** CALLBACKS (MOUNT/PARAMS)
+  # *** MOUNT, PARAMS, UPDATE
 
   @impl true
   def mount(socket) do
@@ -18,6 +18,13 @@ defmodule ChukinasWeb.DreadnoughtLive.HomepageComponent do
     {:ok, socket}
   end
 
+  @doc"""
+  This callback fires after mount and every ___ seconds.
+  Because a live component cannot send a timed event to itself.
+  In order to regularly update the unit's turrets,
+  I have to send a message to the parent liveview that forces
+  this child to update.
+  """
   @impl true
   def update(assigns, socket) do
     msg = {:update_child_component, __MODULE__, id: assigns.id}
@@ -27,12 +34,15 @@ defmodule ChukinasWeb.DreadnoughtLive.HomepageComponent do
     {:ok, socket}
   end
 
+  # *** *******************************
+  # *** HANDLE_EVENT
+
   @impl true
   def handle_event("redirect", %{"value" => action}, socket) do
     route =
       case action do
-        "play" -> Routes.dreadnought_path(socket, :setup)
-        "gallery" -> Routes.dreadnought_gallery_path(socket, :gallery)
+        "play" -> Routes.dreadnought_main_path(socket, :setup)
+        "gallery" -> Routes.dreadnought_main_path(socket, :gallery)
       end
     {
       :noreply,

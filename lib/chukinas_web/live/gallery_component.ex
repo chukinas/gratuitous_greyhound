@@ -28,9 +28,19 @@ defmodule ChukinasWeb.GalleryComponent do
   end
 
   # *** *******************************
+  # *** HANDLE_EVENT
+
+  @impl true
+  def handle_event("toggle_show_markers", _, socket) do
+    socket
+    |> assign(show_markers?: !socket.assigns[:show_markers?])
+    |> noreply
+  end
+
+  # *** *******************************
   # *** HELPERS
 
-  defp render_markers_toggle(show_markers?) do
+  defp render_markers_toggle(show_markers?, target) do
     label =
       if show_markers? do
         "Markers Shown"
@@ -39,7 +49,8 @@ defmodule ChukinasWeb.GalleryComponent do
       end
     attrs =
       [
-        "phx-click": "toggle_show_markers"
+        "phx-click": "toggle_show_markers",
+        "phx-target": target
       ]
     render_toggle(
       "toggleShowMarkers",

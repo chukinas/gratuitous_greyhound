@@ -29,7 +29,7 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
   end
 
   def maybe_start(%Mission{} = mission) do
-    if ready?(mission) do
+    if Mission.ready?(mission) do
       mission
       |> put_fleets
       |> Mission.start
@@ -40,13 +40,6 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
 
   # *** *******************************
   # *** PRIVATE CONVERTERS
-
-  @spec all_players_ready?(Mission.t) :: boolean
-  defp all_players_ready?(mission) do
-    mission
-    |> Mission.players
-    |> Enum.all?(&Player.ready?/1)
-  end
 
   @spec put_fleets(Mission.t) :: Mission.t
   defp put_fleets(%Mission{} = mission) do
@@ -61,16 +54,6 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
       units = build_fleet(color, next_unit_id, player_id, pose)
       Mission.put(mission, units)
     end)
-  end
-
-  @spec ready?(Mission.t) :: boolean
-  defp ready?(%Mission{} = mission) do
-    with true <- Mission.player_count(mission) in 1..2,
-         true <- all_players_ready?(mission) do
-      true
-    else
-      false -> false
-    end
   end
 
   # *** *******************************

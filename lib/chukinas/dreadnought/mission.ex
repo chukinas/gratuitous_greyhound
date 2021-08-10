@@ -19,7 +19,8 @@ defmodule Chukinas.Dreadnought.Mission do
 
   use TypedStruct
   typedstruct do
-    field :room_name, String.t, enforce: true
+    field :name, String.t, enforce: true
+    field :name_pretty, String.t, enforce: true
     field :world_rect, Rect.t, enforce: true
     field :grid, Grid.t(), enforce: true
     field :turn_number, integer(), default: 0
@@ -36,9 +37,11 @@ defmodule Chukinas.Dreadnought.Mission do
   # *** *******************************
   # *** CONSTRUCTORS
 
-  def new(room_name, %Grid{} = grid, margin) when has_size(margin) do
+  def new(name, %Grid{} = grid, margin) when has_size(margin) do
     %__MODULE__{
-      room_name: room_name,
+      name: name,
+      # TODO I shouldn't have to call to Sessions
+      name_pretty: Chukinas.Sessions.RoomName.pretty(name),
       world_rect: world_rect(grid, margin),
       grid: grid,
       margin: margin,
@@ -89,10 +92,24 @@ defmodule Chukinas.Dreadnought.Mission do
   #  end)
   #end
 
+  def maybe_start(mission) do
+    if ready?(mission), do: start(mission), else: mission
+  end
+
   def start(mission) do
     mission
     |> increment_turn_number
     #|> calc_ai_commands
+  end
+
+  def toggle_player_ready_by_id(%__MODULE__{} = mission, player_id) do
+    player_update =
+      fn players ->
+        IdList.update!(players, player_id, &Player.toggle_ready/1)
+      end
+    mission
+    |> update_players(player_update)
+    |> maybe_start
   end
 
   def update_players(mission, fun) do
@@ -202,9 +219,17 @@ defmodule Chukinas.Dreadnought.Mission do
     |> IdList.fetch!(player_uuid, :uuid)
   end
 
+  def player_uuids(mission), do: (for player <- players(mission), do: Player.uuid(player))
+
   def players(%__MODULE__{players: value}), do: value
 
   def player_ids(mission), do: IdList.ids(mission.players)
+
+  def players_sorted(mission) do
+    mission
+    |> players
+    |> Enum.sort_by(&Player.id/1, :asc)
+  end
 
   def completed_player_ids(mission) do
     IdList.ids(mission.player_actions, :player_id)
@@ -223,12 +248,33 @@ defmodule Chukinas.Dreadnought.Mission do
     |> Enum.count
   end
 
+  defp players_ready?(mission) do
+    mission
+    |> players
+    |> Enum.all?(&Player.ready?/1)
+  end
+
   # *** *******************************
   # *** CONVERTERS (OTHER)
+
+  def empty?(mission), do: (player_count(mission) == 0)
 
   def grid(%__MODULE__{grid: value}), do: value
 
   def in_progress?(mission), do: turn_number(mission) > 0
+
+  def name(%__MODULE__{name: value}), do: value
+
+  def pretty_name(%__MODULE__{name_pretty: value}), do: value
+
+  def ready?(mission) do
+    with true <- player_count(mission) in 1..2,
+         true <- players_ready?(mission) do
+      true
+    else
+      false -> false
+    end
+  end
 
   def turn_number(%__MODULE__{turn_number: value}), do: value
 
@@ -294,7 +340,7 @@ defmodule Chukinas.Dreadnought.Mission do
       fields =
         mission
         |> Map.take([
-          :room_name,
+          :name,
           :units,
           :players
         ])

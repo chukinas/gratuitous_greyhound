@@ -5,7 +5,7 @@ defmodule Chukinas.Sessions.Players do
 
   def send_room(player_uuid, room) do
     for pid <- PlayerRegistry.pids(player_uuid) do
-      send pid, {:update_room, room}
+      send pid, {:update_mission, room}
     end
   end
 

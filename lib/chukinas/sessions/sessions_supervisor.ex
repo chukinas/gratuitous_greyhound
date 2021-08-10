@@ -8,9 +8,9 @@ defmodule Chukinas.Sessions.SessionSupervisor do
 
   def init(_init_arg) do
     children = [
-      Chukinas.Sessions.RoomBackup,
-      Chukinas.Sessions.RoomRegistry,
-      Chukinas.Sessions.RoomDynamicSupervisor,
+      Chukinas.Sessions.MissionBackup,
+      Chukinas.Sessions.MissionDynamicSupervisor,
+      Chukinas.Sessions.MissionRegistry,
       Chukinas.Sessions.PlayerRegistry,
       Chukinas.Sessions.PlayerRooms,
     ]

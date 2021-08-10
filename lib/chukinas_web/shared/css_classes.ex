@@ -14,16 +14,6 @@ defmodule ChukinasWeb.CssClasses do
   def join_btn, do: join btn_common(), "-ml-px inline-flex items-center space-x-2 border-gray-300 rounded-l-none focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
   def btn_common, do: "py-2 px-4 border rounded-md text-sm text-white disabled:text-gray-400 font-medium bg-yellow-700 hover:bg-yellow-800 disabled:bg-gray-200 disabled:cursor-not-allowed "
 
-  def menu_tab(true = _active?), do: join(menu_tab(:both), "border-yellow-700 text-yellow-900 font-bold")
-  def menu_tab(false = _active?), do: join(menu_tab(:both), "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300")
-  def menu_tab(:both), do: "inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-
-  def menu_profile_mobile(true = _active?), do: join(menu_profile_mobile(:both), "bg-yellow-200 border-yellow-500 #{text :dark} font-bold")
-  def menu_profile_mobile(false = _active?), do: join(menu_profile_mobile(:both), "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800")
-  def menu_profile_mobile(:both), do: "block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
-
-  def menu_nav, do: "#{bg(:light)} shadow-sm"
-
   def bg(:light), do: "bg-yellow-50"
 
   def text(:dark), do: "text-yellow-900"

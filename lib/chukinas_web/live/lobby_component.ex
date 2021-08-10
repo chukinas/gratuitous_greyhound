@@ -2,27 +2,27 @@ defmodule ChukinasWeb.LobbyComponent do
 
   use ChukinasWeb, :live_component
   use ChukinasWeb.Components
+  alias Chukinas.Dreadnought.Mission
   alias Chukinas.Dreadnought.Player
   alias Chukinas.Sessions
-  alias Chukinas.Sessions.Room
-  alias Chukinas.Sessions.Rooms
+  alias Chukinas.Sessions.Missions
 
   # *** *******************************
   # *** CALLBACKS
 
   @impl true
   def update(assigns, socket) do
-    room = assigns.room
+    mission = assigns.mission
     uuid = assigns.uuid
-    player_self = Room.player_from_uuid(room, uuid)
+    player_self = Mission.player_by_uuid(mission, uuid)
     ready? = Player.ready? player_self
     socket =
       assign(socket,
-        room_name: Room.name(room),
-        pretty_room_name: Room.pretty_name(room),
+        room_name: Mission.name(mission),
+        pretty_room_name: Mission.pretty_name(mission),
         player_id: Player.id(player_self),
         uuid: uuid,
-        players_text: (for player <- Room.players_sorted(room), do: build_player_text(player, uuid)),
+        players_text: (for player <- Mission.players_sorted(mission), do: build_player_text(player, uuid)),
         ready_button_text: (if ready?, do: "I'm not ready", else: "I'm ready")
       )
     {:ok, socket}
@@ -30,7 +30,7 @@ defmodule ChukinasWeb.LobbyComponent do
 
   @impl true
   def handle_event("toggle_ready", _, socket) do
-    Rooms.toggle_ready(socket.assigns.room_name, socket.assigns.player_id)
+    Missions.toggle_ready(socket.assigns.room_name, socket.assigns.player_id)
     {:noreply, socket}
   end
 

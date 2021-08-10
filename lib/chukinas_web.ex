@@ -56,6 +56,7 @@ defmodule ChukinasWeb do
 
       unquote(view_helpers())
       unquote(my_custom_view_helpers())
+      unquote(genserver_helpers())
     end
   end
 
@@ -65,6 +66,7 @@ defmodule ChukinasWeb do
 
       unquote(view_helpers())
       unquote(my_custom_view_helpers())
+      unquote(genserver_helpers())
     end
   end
 
@@ -102,6 +104,15 @@ defmodule ChukinasWeb do
     end
   end
 
+  defp genserver_helpers do
+    quote do
+      defp live_action(socket), do: socket.assigns.live_action
+      defp live_action?(socket, live_action), do: socket.assigns.live_action == live_action
+      defp ok(socket), do: {:ok, socket}
+      defp noreply(socket), do: {:noreply, socket}
+    end
+  end
+
   defp my_custom_view_helpers do
     quote do
       use ChukinasWeb.ComponentView
@@ -114,4 +125,5 @@ defmodule ChukinasWeb do
   defmacro __using__(which) when is_atom(which) do
     apply(__MODULE__, which, [])
   end
+
 end

@@ -1,16 +1,16 @@
-defmodule Chukinas.Sessions.Rooms do
+defmodule Chukinas.Sessions.Missions do
 
-  alias Chukinas.Sessions.Room
-  alias Chukinas.Sessions.RoomDynamicSupervisor
+  alias Chukinas.Dreadnought.Mission
+  alias Chukinas.Sessions.MissionDynamicSupervisor
   alias Chukinas.Sessions.RoomJoin
-  alias Chukinas.Sessions.RoomRegistry
+  alias Chukinas.Sessions.MissionRegistry
 
   # *** *******************************
   # *** GETTERS
 
   def room_name(%RoomJoin{room_name: value}), do: value
 
-  def room_name(%Room{name: value}), do: value
+  def room_name(mission), do: Mission.name(mission)
 
   # *** *******************************
   # *** API
@@ -21,7 +21,7 @@ defmodule Chukinas.Sessions.Rooms do
   end
 
   def drop_player(room_name, player_uuid) when is_binary(room_name) do
-    genserver_call room_name, {:drop_player, player_uuid}
+    genserver_cast(room_name, {:drop_player, player_uuid})
   end
 
   def get(room_name) when is_binary(room_name) do
@@ -39,8 +39,8 @@ defmodule Chukinas.Sessions.Rooms do
     genserver_cast room_name, {:toggle_ready, player_id}
   end
 
-  def update_mission(room_name, fun) do
-    genserver_cast room_name, {:update_mission, fun}
+  def update_then_send_all(room_name, fun) do
+    genserver_cast room_name, {:update_then_send_all, fun}
   end
 
   # *** *******************************
@@ -59,8 +59,8 @@ defmodule Chukinas.Sessions.Rooms do
   end
 
   defp room_pid_from_name(room_name) when is_binary(room_name) do
-    with :error <- RoomRegistry.fetch_pid(room_name),
-         {:ok, pid} <- RoomDynamicSupervisor.new_room(room_name) do
+    with :error <- MissionRegistry.fetch_pid(room_name),
+         {:ok, pid} <- MissionDynamicSupervisor.new_room(room_name) do
       pid
     else
       {:ok, pid} -> pid
