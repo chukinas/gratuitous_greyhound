@@ -61,21 +61,6 @@ defmodule Chukinas.Dreadnought.Mission do
   end
 
   # *** *******************************
-  # *** REDUCERS (PLAYERS)
-
-  def toggle_ready(%__MODULE__{} = mission, player_id) do
-    player_update =
-      fn players ->
-        IdList.update!(players, player_id, &Player.toggle_ready/1)
-      end
-    mission =
-      mission
-      |> update_players(player_update)
-      |> maybe_start
-    {:ok, mission}
-  end
-
-  # *** *******************************
   # *** REDUCERS
 
   def drop_player_by_uuid(mission, player_uuid) do
@@ -115,6 +100,16 @@ defmodule Chukinas.Dreadnought.Mission do
     mission
     |> increment_turn_number
     #|> calc_ai_commands
+  end
+
+  def toggle_player_ready_by_id(%__MODULE__{} = mission, player_id) do
+    player_update =
+      fn players ->
+        IdList.update!(players, player_id, &Player.toggle_ready/1)
+      end
+    mission
+    |> update_players(player_update)
+    |> maybe_start
   end
 
   def update_players(mission, fun) do

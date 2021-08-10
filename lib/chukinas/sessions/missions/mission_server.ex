@@ -30,18 +30,18 @@ defmodule Chukinas.Sessions.MissionServer do
   # *** CALLBACKS
 
   def init(room_name) when is_binary(room_name) do
-    room = case MissionBackup.fetch_and_pop(room_name) do
-      {:ok, room} -> room
+    mission = case MissionBackup.fetch_and_pop(room_name) do
+      {:ok, mission} -> mission
       :error -> MissionBuilder.online(room_name)
     end
-    ok(room)
+    ok(mission)
   end
 
   def handle_call({:add_player, %{
     player_name: player_name,
     player_uuid: player_uuid,
   }}, _from, mission) do
-    {:ok, mission} = MissionBuilder.add_player(mission, player_uuid, player_name)
+    mission = MissionBuilder.add_player(mission, player_uuid, player_name)
     reply(mission, :ok)
   end
 
@@ -53,13 +53,14 @@ defmodule Chukinas.Sessions.MissionServer do
     reply(mission)
   end
 
-  def handle_call(:get, _from, room) do
-    {:reply, room, room}
+  def handle_call(:get, _from, mission) do
+    {:reply, mission, mission}
   end
 
-  def handle_cast({:toggle_ready, player_id}, room) do
-    {:ok, room} = Mission.toggle_ready(room, player_id)
-    noreply(room)
+  def handle_cast({:toggle_ready, player_id}, mission) do
+    mission
+    |> Mission.toggle_player_ready_by_id(player_id)
+    |> noreply
   end
 
   # TODO deprecate
@@ -91,9 +92,9 @@ defmodule Chukinas.Sessions.MissionServer do
 
   defp noreply(room), do: {:noreply, room, send_all()}
 
-  defp reply(room), do: {:reply, room, room, send_all()}
+  defp reply(mission), do: {:reply, mission, mission, send_all()}
 
-  defp reply(room, return_value), do: {:reply, return_value, room, send_all()}
+  defp reply(mission, return_value), do: {:reply, return_value, mission, send_all()}
 
   defp send_all, do: {:continue, :send_all_players}
 
