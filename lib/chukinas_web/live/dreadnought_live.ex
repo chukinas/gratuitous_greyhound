@@ -5,13 +5,74 @@ defmodule ChukinasWeb.DreadnoughtLive do
   alias Chukinas.Dreadnought.Mission
 
   # *** *******************************
-  # *** CALLBACKS (MOUNT/PARAMS)
+  # *** MOUNT, PARAMS
 
   @impl true
   def mount(_params, session, socket) do
     socket = assign_uuid_and_mission(socket, session)
     {:ok, socket, layout: {ChukinasWeb.LayoutView, "ocean.html"}}
   end
+
+  @impl true
+  def handle_params(_params, _url, socket) do
+    IOP.inspect self()
+    if live_action?(socket, :setup) && mission_in_progress?(socket) do
+      path = Routes.dreadnought_play_path(socket, :index)
+      send self(), {:push_redirect, path}
+    end
+    header =
+      case socket.assigns.live_action do
+        :gallery -> "Gallery"
+        _ -> "Dreadnought"
+      end
+    socket
+    |> assign(header: header)
+    |> noreply
+  end
+
+  # *** *******************************
+  # *** HANDLE_EVENT
+
+  @impl true
+  def handle_event("toggle_show_markers", _, socket) do
+    socket
+    |> assign(show_markers?: !socket.assigns[:show_markers?])
+    |> noreply
+  end
+
+  # *** *******************************
+  # *** HANDLE_INFO
+
+  @impl true
+  def handle_info({:push_redirect, path}, socket) do
+    socket =
+      socket
+      |> push_redirect(to: path)
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_info({:update_child_component, live_component, assigns}, socket) do
+    send_update(live_component, assigns)
+    {:noreply, socket}
+  end
+
+  # TODO does the user struct still need the room name, etc?
+  @impl true
+  def handle_info({:update_room, mission}, socket) do
+    socket =
+      if mission_in_progress?(mission) do
+        path = Routes.dreadnought_play_path(socket, :index)
+        Phoenix.LiveView.push_redirect(socket, to: path)
+      else
+        socket
+        |> assign(mission: mission)
+      end
+    {:noreply, socket}
+  end
+
+  # *** *******************************
+  # *** HELPERS
 
   @spec assign_uuid_and_mission(Phoenix.LiveView.Socket.t, map) :: Phoenix.LiveView.Socket.t
   def assign_uuid_and_mission(socket, session) do
@@ -29,96 +90,9 @@ defmodule ChukinasWeb.DreadnoughtLive do
     end
   end
 
-  @impl true
-  def handle_params(_params, _url, socket) do
-    live_action = socket.assigns.live_action
-    cond do
-      live_action == :gallery ->
-        :ok
-      mission_in_progress?(socket) ->
-        path = Routes.dreadnought_play_path(socket, :index)
-        send self(), {:push_redirect, path}
-      true ->
-        :ok
-    end
-    socket =
-      socket
-      |> standard_assigns
-      |> assign_header
-    {:noreply, socket}
-  end
-
-  # *** *******************************
-  # *** CALLBACKS (EVENTS)
-
-  #@impl true
-  #def handle_event("toggle_show_markers", _, socket) do
-  #  socket =
-  #    socket
-  #    |> assign(show_markers?: !socket.assigns[:show_markers?])
-  #  {:noreply, socket}
-  #end
-
-  # *** *******************************
-  # *** CALLBACKS (INFO)
-
-  @impl true
-  def handle_info({:push_patch, path}, socket) do
-    socket =
-      socket
-      |> push_patch(to: path)
-    {:noreply, socket}
-  end
-
-  @impl true
-  def handle_info({:push_redirect, path}, socket) do
-    socket =
-      socket
-      |> push_redirect(to: path)
-    {:noreply, socket}
-  end
-
-  @impl true
-  def handle_info({:update_assigns, new_assigns}, socket) do
-    socket =
-      socket
-      |> assign(new_assigns)
-    {:noreply, socket}
-  end
-
-  # TODO does the user struct still need the room name, etc?
-  @impl true
-  def handle_info({:update_room, mission}, socket) do
-    socket =
-      if mission_in_progress?(mission) do
-        path = Routes.dreadnought_play_path(socket, :index)
-        Phoenix.LiveView.push_redirect(socket, to: path)
-      else
-        socket
-        |> assign(mission: mission)
-        |> assign_header
-      end
-    {:noreply, socket}
-  end
-
-  # *** *******************************
-  # *** FUNCTIONS
-
-  def assign_header(socket) do
-    assign(socket, header: "Dreadnought")
-  end
-
-  def standard_assigns(socket) do
-    page_title = "Dreadnought"
-    assign(socket, page_title: page_title)
-  end
-
-  # *** *******************************
-  # *** SOCKET CONVERTERS
-
   # TODO this is ugly
-  def mission(nil), do: nil
-  def mission(%Mission{} = value), do: value
+  #def mission(nil), do: nil
+  #def mission(%Mission{} = value), do: value
   def mission(socket), do: socket.assigns[:mission]
 
   def mission_in_progress?(socket) do

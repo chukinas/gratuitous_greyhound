@@ -1,19 +1,22 @@
 <div class="w-screen min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
 
   <%= render_header(@header) %>
-  
+
   <div class="mt-8 sm:mx-auto sm:w-full max-w-2xl">
     <%= case @live_action do %>
+      <% :homepage -> %>
+        <%= live_component( @socket, ChukinasWeb.DreadnoughtLive.HomepageComponent, id: :homepage_component) %>
+      <% :gallery -> %>
+        <%= live_component( @socket, ChukinasWeb.GalleryComponent, id: :gallery_component, show_markers?: assigns[:show_markers?]) %>
       <% :setup -> %>
         <%= if @mission do %>
           <%= live_component(@socket, ChukinasWeb.LobbyComponent, id: :lobby_component, uuid: @uuid, mission: @mission) %>
         <% else %>
-          <%= live_component(@socket, ChukinasWeb.RoomJoinComponent, id: :join_component, uuid: @uuid) %>
+          <%= live_component(@socket, ChukinasWeb.RoomJoinComponent, id: :room_join_component, uuid: @uuid) %>
         <% end %>
-      <% _ -> %>
-        Hi!
     <% end %>
   </div>
 </div>
 
 <%= live_component(@socket, ChukinasWeb.DreadnoughtLive.NavComponent, id: "nav") %>
+

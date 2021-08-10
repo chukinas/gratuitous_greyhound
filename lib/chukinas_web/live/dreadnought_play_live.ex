@@ -74,9 +74,4 @@ defmodule ChukinasWeb.DreadnoughtPlayLive do
     socket
   end
 
-  # *** *******************************
-  # *** SOCKET CONVERTERS
-
-  def noreply(socket), do: {:noreply, socket}
-
 end
