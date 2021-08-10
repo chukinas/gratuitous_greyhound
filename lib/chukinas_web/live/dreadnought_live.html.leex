@@ -5,8 +5,8 @@
   <div class="mt-8 sm:mx-auto sm:w-full max-w-2xl">
     <%= case @live_action do %>
       <% :setup -> %>
-        <%= if @room do %>
-          <%= live_component(@socket, ChukinasWeb.LobbyComponent, id: :lobby_component, uuid: @uuid, room: @room) %>
+        <%= if @mission do %>
+          <%= live_component(@socket, ChukinasWeb.LobbyComponent, id: :lobby_component, uuid: @uuid, mission: @mission) %>
         <% else %>
           <%= live_component(@socket, ChukinasWeb.RoomJoinComponent, id: :join_component, uuid: @uuid) %>
         <% end %>

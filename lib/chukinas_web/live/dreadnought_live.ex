@@ -2,29 +2,28 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   use ChukinasWeb, :live_view
   alias Chukinas.Sessions
-  alias Chukinas.Sessions.Room
 
   # *** *******************************
   # *** CALLBACKS (MOUNT/PARAMS)
 
   @impl true
   def mount(_params, session, socket) do
-    socket = assign_uuid_and_room(socket, session)
+    socket = assign_uuid_and_mission(socket, session)
     {:ok, socket, layout: {ChukinasWeb.LayoutView, "ocean.html"}}
   end
 
-  @spec assign_uuid_and_room(Phoenix.LiveView.Socket.t, map) :: Phoenix.LiveView.Socket.t
-  def assign_uuid_and_room(socket, session) do
+  @spec assign_uuid_and_mission(Phoenix.LiveView.Socket.t, map) :: Phoenix.LiveView.Socket.t
+  def assign_uuid_and_mission(socket, session) do
     uuid = Map.fetch!(session, "uuid")
     if socket.connected? do
       Sessions.register_uuid(uuid)
       socket
       |> assign(uuid: uuid)
-      |> assign(room: Sessions.get_room_from_player_uuid(uuid))
+      |> assign(mission: Sessions.get_mission_from_player_uuid(uuid))
     else
       socket
       |> assign(uuid: uuid)
-      |> assign(room: nil)
+      |> assign(mission: nil)
     end
   end
 
@@ -34,7 +33,7 @@ defmodule ChukinasWeb.DreadnoughtLive do
     cond do
       live_action == :gallery ->
         :ok
-      Room.mission_in_progress?(socket.assigns.room) ->
+      Mission.in_progress?(socket.assigns.mission) ->
         path = Routes.dreadnought_play_path(socket, :index)
         send self(), {:push_redirect, path}
       true ->
@@ -87,14 +86,14 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   # TODO does the user struct still need the room name, etc?
   @impl true
-  def handle_info({:update_room, room}, socket) do
+  def handle_info({:update_room, mission}, socket) do
     socket =
-      if Room.mission_in_progress?(room) do
+      if Mission.in_progress?(mission) do
         path = Routes.dreadnought_play_path(socket, :index)
         Phoenix.LiveView.push_redirect(socket, to: path)
       else
         socket
-        |> assign(room: room)
+        |> assign(mission: mission)
         |> assign_header
       end
     {:noreply, socket}
@@ -104,11 +103,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
   # *** FUNCTIONS
 
   def assign_header(socket) do
-    header =
-      case room(socket) do
-        nil -> "Join Room"
-        _ -> "Lobby"
-      end
     assign(socket, header: "Dreadnought")
   end
 
@@ -147,6 +141,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
   # *** *******************************
   # *** SOCKET CONVERTERS
 
-  def room(socket), do: socket.assigns.room
+  def mission(socket), do: socket.assigns.mission
 
 end

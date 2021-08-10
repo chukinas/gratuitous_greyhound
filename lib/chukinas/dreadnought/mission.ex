@@ -37,9 +37,11 @@ defmodule Chukinas.Dreadnought.Mission do
   # *** *******************************
   # *** CONSTRUCTORS
 
-  def new(room_name, %Grid{} = grid, margin) when has_size(margin) do
+  def new(name, %Grid{} = grid, margin) when has_size(margin) do
     %__MODULE__{
-      room_name: room_name,
+      name: name,
+      # TODO I shouldn't have to call to Sessions
+      name_pretty: Chukinas.Sessions.RoomName.pretty(name),
       world_rect: world_rect(grid, margin),
       grid: grid,
       margin: margin,
@@ -66,11 +68,11 @@ defmodule Chukinas.Dreadnought.Mission do
       fn players ->
         IdList.update!(players, player_id, &Player.toggle_ready/1)
       end
-    room =
-      room
+    mission =
+      mission
       |> update_players(player_update)
       |> Mission.maybe_start
-    {:ok, room}
+    {:ok, mission}
   end
 
   # *** *******************************
@@ -320,7 +322,7 @@ defmodule Chukinas.Dreadnought.Mission do
       fields =
         mission
         |> Map.take([
-          :room_name,
+          :name,
           :units,
           :players
         ])
