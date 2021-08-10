@@ -1,6 +1,6 @@
 defmodule Chukinas.Sessions.Rooms do
 
-  alias Chukinas.Sessions.Room
+  alias Chukinas.Dreadnought.Mission
   alias Chukinas.Sessions.RoomDynamicSupervisor
   alias Chukinas.Sessions.RoomJoin
   alias Chukinas.Sessions.RoomRegistry
@@ -10,7 +10,7 @@ defmodule Chukinas.Sessions.Rooms do
 
   def room_name(%RoomJoin{room_name: value}), do: value
 
-  def room_name(%Room{name: value}), do: value
+  def room_name(mission), do: Mission.name(mission)
 
   # *** *******************************
   # *** API

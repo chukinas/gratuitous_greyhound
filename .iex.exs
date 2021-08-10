@@ -6,7 +6,6 @@ alias Chukinas.Geometry, as: G
 
 alias Chukinas.Sessions
 alias Chukinas.Sessions.RoomRegistry, as: Reg
-alias Chukinas.Sessions.Room
 alias Chukinas.Sessions.Rooms
 alias Chukinas.Sessions.RoomDynamicSupervisor, as: DS
 

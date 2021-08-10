@@ -71,7 +71,7 @@ defmodule Chukinas.Dreadnought.Mission do
     mission =
       mission
       |> update_players(player_update)
-      |> Mission.maybe_start
+      |> maybe_start
     {:ok, mission}
   end
 
@@ -106,6 +106,10 @@ defmodule Chukinas.Dreadnought.Mission do
   #    mission |> put(actions)
   #  end)
   #end
+
+  def maybe_start(mission) do
+    if ready?(mission), do: start(mission), else: mission
+  end
 
   def start(mission) do
     mission
@@ -249,6 +253,12 @@ defmodule Chukinas.Dreadnought.Mission do
     |> Enum.count
   end
 
+  defp players_ready?(mission) do
+    mission
+    |> players
+    |> Enum.all?(&Player.ready?/1)
+  end
+
   # *** *******************************
   # *** CONVERTERS (OTHER)
 
@@ -257,6 +267,19 @@ defmodule Chukinas.Dreadnought.Mission do
   def grid(%__MODULE__{grid: value}), do: value
 
   def in_progress?(mission), do: turn_number(mission) > 0
+
+  def name(%__MODULE__{name: value}), do: value
+
+  def pretty_name(%__MODULE__{name_pretty: value}), do: value
+
+  def ready?(mission) do
+    with true <- player_count(mission) in 1..2,
+         true <- players_ready?(mission) do
+      true
+    else
+      false -> false
+    end
+  end
 
   def turn_number(%__MODULE__{turn_number: value}), do: value
 
