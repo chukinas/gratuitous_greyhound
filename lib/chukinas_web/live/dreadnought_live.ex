@@ -1,13 +1,16 @@
 defmodule ChukinasWeb.DreadnoughtLive do
 
-  use ChukinasWeb.DreadnoughtLiveViewHelpers
+  use ChukinasWeb.DreadnoughtLiveViewHelpers, :menus
 
   # *** *******************************
   # *** MOUNT, PARAMS
 
   @impl true
   def mount(_params, session, socket) do
-    socket = assign_uuid_and_mission(socket, session)
+    socket =
+      socket
+      |> assign_page_title
+      |> assign_uuid_and_mission(session)
     {:ok, socket, layout: {ChukinasWeb.LayoutView, "ocean.html"}}
   end
 
