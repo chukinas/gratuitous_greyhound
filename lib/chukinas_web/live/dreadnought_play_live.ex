@@ -32,7 +32,6 @@ defmodule ChukinasWeb.DreadnoughtPlayLive do
 
   @impl true
   def handle_info({:update_room, room}, socket) do
-    IOP.inspect room, "DreadnoughtPlayLive handle_info update_room"
     socket
     |> assign(room: room)
     |> assign_mission

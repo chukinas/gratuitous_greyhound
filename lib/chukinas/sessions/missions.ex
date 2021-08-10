@@ -21,7 +21,7 @@ defmodule Chukinas.Sessions.Missions do
   end
 
   def drop_player(room_name, player_uuid) when is_binary(room_name) do
-    genserver_call room_name, {:drop_player, player_uuid}
+    genserver_cast(room_name, {:drop_player, player_uuid})
   end
 
   def get(room_name) when is_binary(room_name) do

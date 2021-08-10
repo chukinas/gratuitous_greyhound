@@ -15,7 +15,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @impl true
   def handle_params(_params, _url, socket) do
-    IOP.inspect self()
     if live_action?(socket, :setup) && mission_in_progress?(socket) do
       path = Routes.dreadnought_main_path(socket, :play)
       send self(), {:push_redirect, path}
@@ -66,7 +65,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
 
   @spec assign_uuid_and_mission(Phoenix.LiveView.Socket.t, map) :: Phoenix.LiveView.Socket.t
   def assign_uuid_and_mission(socket, session) do
-    IOP.inspect self()
     uuid = Map.fetch!(session, "uuid")
     if socket.connected? do
       Sessions.register_uuid(uuid)
@@ -81,8 +79,8 @@ defmodule ChukinasWeb.DreadnoughtLive do
   end
 
   # TODO this is ugly
-  #def mission(nil), do: nil
-  #def mission(%Mission{} = value), do: value
+  def mission(nil), do: nil
+  def mission(%Mission{} = value), do: value
   def mission(socket), do: socket.assigns[:mission]
 
   def mission_in_progress?(socket) do

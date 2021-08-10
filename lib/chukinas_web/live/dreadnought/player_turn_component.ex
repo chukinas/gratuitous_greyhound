@@ -32,7 +32,6 @@ defmodule ChukinasWeb.Dreadnought.PlayerTurnComponent do
   def handle_event("select_gunnery_target", %{
     "unit_id" => unit_id,
   }, socket) do
-    IOP.inspect unit_id, "this should be an integer"
     update_player_turn = &ActionSelection.select_gunnery_target(&1, Precision.coerce_int(unit_id))
     socket =
       socket
