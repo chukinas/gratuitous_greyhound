@@ -31,16 +31,6 @@ defmodule ChukinasWeb.DreadnoughtLive do
   end
 
   # *** *******************************
-  # *** HANDLE_EVENT
-
-  @impl true
-  def handle_event("toggle_show_markers", _, socket) do
-    socket
-    |> assign(show_markers?: !socket.assigns[:show_markers?])
-    |> noreply
-  end
-
-  # *** *******************************
   # *** HANDLE_INFO
 
   @impl true
