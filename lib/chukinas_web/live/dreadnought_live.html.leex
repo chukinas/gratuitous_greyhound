@@ -6,14 +6,16 @@
     <%= case @live_action do %>
       <% :homepage -> %>
         <%= live_component( @socket, ChukinasWeb.HomepageComponent, id: :homepage_component) %>
-      <% :gallery -> %>
-        <%= live_component( @socket, ChukinasWeb.GalleryComponent, id: :gallery_component, show_markers?: assigns[:show_markers?]) %>
       <% :setup -> %>
         <%= if @mission do %>
           <%= live_component(@socket, ChukinasWeb.LobbyComponent, id: :lobby_component, uuid: @uuid, mission: @mission) %>
         <% else %>
           <%= live_component(@socket, ChukinasWeb.RoomJoinComponent, id: :room_join_component, uuid: @uuid) %>
         <% end %>
+      <% :demo -> %>
+        <%= live_component( @socket, ChukinasWeb.DemoComponent, id: :demo_component) %>
+      <% :gallery -> %>
+        <%= live_component( @socket, ChukinasWeb.GalleryComponent, id: :gallery_component, show_markers?: assigns[:show_markers?]) %>
     <% end %>
   </div>
 </div>

@@ -23,8 +23,8 @@ defmodule ChukinasWeb.DreadnoughtLiveTest do
     view
     |> element("#link-demo")
     |> render_click()
-    assert has_element?(view, "#unit-1")
     assert has_element?(view, "#player_turn_component")
+    assert has_element?(view, "#unit-1")
   end
 
   # *** *******************************

@@ -1,3 +1,4 @@
+# TODO rename Chukinas.Play ?
 defmodule Chukinas.Sessions do
 
   @moduledoc """
