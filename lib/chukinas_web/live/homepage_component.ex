@@ -39,7 +39,7 @@ defmodule ChukinasWeb.HomepageComponent do
 
   @impl true
   def handle_event("button_click", %{"route" => route}, socket) do
-    {:noreply, redirect(socket, to: route)}
+    {:noreply, push_patch(socket, to: route)}
   end
 
   @impl true
@@ -55,17 +55,18 @@ defmodule ChukinasWeb.HomepageComponent do
   defp assign_buttons(socket) do
     buttons =
       [
-        button_map(socket, "Play", :setup),
-        button_map(socket, "Quick Demo", :demo),
-        button_map(socket, "Gallery", :gallery)
+        button_map(socket, "Play", "link-play", :setup),
+        button_map(socket, "Quick Demo", "link-demo", :demo),
+        button_map(socket, "Gallery", "link-gallery", :gallery)
       ]
     assign(socket, buttons: buttons)
   end
 
-  defp button_map(socket, title, live_action) do
+  defp button_map(socket, title, html_id, live_action) do
     %{
       content: title,
       attrs: [
+        id: html_id,
         phx_click: "button_click",
         phx_target: socket.assigns.myself,
         phx_value_route: Routes.dreadnought_main_path(socket, live_action)

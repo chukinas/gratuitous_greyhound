@@ -1,7 +1,8 @@
 defmodule ChukinasWeb.DreadnoughtLiveTest do
   use ChukinasWeb.ConnCase
 
-  #import Phoenix.LiveViewTest
+  import Phoenix.LiveViewTest
+
 
   # *** *******************************
   # *** ACTIONS
@@ -108,10 +109,19 @@ defmodule ChukinasWeb.DreadnoughtLiveTest do
   #  assert has_element?(view, "#unit-2")
   #end
 
-  #   test "Start game.", %{conn: conn} do
-  #     {:ok, view, _html} = live(conn, "/dreadnought/disclaimer")
-  #     element(view, "#message-button") |> render_click()
-  #     assert has_element?(view, "#unit--2")
-  #   end
+  # TODO test for / to /dreadnought redirect
+  test "Gallery from Homepage", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/dreadnought")
+    assert view
+    |> element("#link-gallery")
+    |> render_click() =~ "Gallery"
+  end
+
+  #test "Quick Demo", %{conn: conn} do
+  #  {:ok, view, _html} = live(conn, "/dreadnought")
+  #  element(view, "#link-demo") |> render_click()
+  #  assert has_element?(view, "#unit-1")
+  #  assert has_element?(view, "#player_turn_component")
+  #end
 
 end
