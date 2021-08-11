@@ -1,25 +1,10 @@
-defmodule ChukinasWeb.DreadnoughtLive.HomepageComponent do
+defmodule ChukinasWeb.HomepageComponent do
 
   use ChukinasWeb, :live_component
   use Chukinas.LinearAlgebra
   use Chukinas.PositionOrientationSize
   alias Chukinas.Dreadnought.MissionBuilder.Homepage, as: HomepageMission
   alias Chukinas.Dreadnought.Unit
-
-  @buttons %{
-    play: %{
-      build_route: &Routes.dreadnought_main_path(&1, :play),
-      value: "Play"
-    },
-    demo: %{
-      build_route: &Routes.dreadnought_main_path(&1, :demo),
-      value: "Quick Demo"
-    },
-    gallery: %{
-      build_route: &Routes.dreadnought_main_path(&1, :gallery),
-      value: "Gallery"
-    }
-  }
 
   # *** *******************************
   # *** MOUNT, PARAMS, UPDATE
@@ -53,7 +38,7 @@ defmodule ChukinasWeb.DreadnoughtLive.HomepageComponent do
   # *** HANDLE_EVENT
 
   @impl true
-  def handle_event("redirect", %{"route" => route}, socket) do
+  def handle_event("button_click", %{"route" => route}, socket) do
     {:noreply, redirect(socket, to: route)}
   end
 
@@ -81,7 +66,7 @@ defmodule ChukinasWeb.DreadnoughtLive.HomepageComponent do
     %{
       content: title,
       attrs: [
-        phx_click: "redirect",
+        phx_click: "button_click",
         phx_target: socket.assigns.myself,
         phx_value_route: Routes.dreadnought_main_path(socket, live_action)
       ]

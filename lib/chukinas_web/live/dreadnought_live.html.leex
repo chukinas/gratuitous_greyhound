@@ -5,7 +5,7 @@
   <div class="mt-8 sm:mx-auto sm:w-full max-w-2xl">
     <%= case @live_action do %>
       <% :homepage -> %>
-        <%= live_component( @socket, ChukinasWeb.DreadnoughtLive.HomepageComponent, id: :homepage_component) %>
+        <%= live_component( @socket, ChukinasWeb.HomepageComponent, id: :homepage_component) %>
       <% :gallery -> %>
         <%= live_component( @socket, ChukinasWeb.GalleryComponent, id: :gallery_component, show_markers?: assigns[:show_markers?]) %>
       <% :setup -> %>
@@ -18,5 +18,4 @@
   </div>
 </div>
 
-<%= live_component(@socket, ChukinasWeb.DreadnoughtLive.NavComponent, id: "nav") %>
-
+<%= live_component(@socket, ChukinasWeb.NavComponent, id: "nav") %>

@@ -1,4 +1,4 @@
-defmodule ChukinasWeb.DreadnoughtLive.NavComponent do
+defmodule ChukinasWeb.NavComponent do
 
   use ChukinasWeb, :live_component
 
