@@ -32,10 +32,11 @@ defmodule ChukinasWeb.Router do
   scope "/dreadnought", ChukinasWeb do
     pipe_through :dreadnought
     live "/", DreadnoughtLive, :homepage, as: :dreadnought_main
+    live "/play", DreadnoughtPlayLive, :play, as: :dreadnought_main
+    live "/demo", DreadnoughtLive, :demo, as: :dreadnought_main
     live "/gallery", DreadnoughtLive, :gallery, as: :dreadnought_main
     get "/grid", PageController, :redirect_to_dreadnought
     live "/setup", DreadnoughtLive, :setup, as: :dreadnought_main
-    live "/play", DreadnoughtPlayLive, :play, as: :dreadnought_main
   end
 
   # Other scopes may use custom stacks.

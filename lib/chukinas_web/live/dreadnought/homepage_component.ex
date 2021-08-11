@@ -6,6 +6,21 @@ defmodule ChukinasWeb.DreadnoughtLive.HomepageComponent do
   alias Chukinas.Dreadnought.MissionBuilder.Homepage, as: HomepageMission
   alias Chukinas.Dreadnought.Unit
 
+  @buttons %{
+    play: %{
+      build_route: &Routes.dreadnought_main_path(&1, :play),
+      value: "Play"
+    },
+    demo: %{
+      build_route: &Routes.dreadnought_main_path(&1, :demo),
+      value: "Quick Demo"
+    },
+    gallery: %{
+      build_route: &Routes.dreadnought_main_path(&1, :gallery),
+      value: "Gallery"
+    }
+  }
+
   # *** *******************************
   # *** MOUNT, PARAMS, UPDATE
 
@@ -38,16 +53,8 @@ defmodule ChukinasWeb.DreadnoughtLive.HomepageComponent do
   # *** HANDLE_EVENT
 
   @impl true
-  def handle_event("redirect", %{"value" => action}, socket) do
-    route =
-      case action do
-        "play" -> Routes.dreadnought_main_path(socket, :setup)
-        "gallery" -> Routes.dreadnought_main_path(socket, :gallery)
-      end
-    {
-      :noreply,
-      redirect(socket, to: route)
-    }
+  def handle_event("redirect", %{"route" => route}, socket) do
+    {:noreply, redirect(socket, to: route)}
   end
 
   @impl true
@@ -63,19 +70,20 @@ defmodule ChukinasWeb.DreadnoughtLive.HomepageComponent do
   defp assign_buttons(socket) do
     buttons =
       [
-        button_map(socket,"Play"),
-        button_map(socket,"Gallery")
+        button_map(socket, "Play", :setup),
+        button_map(socket, "Quick Demo", :demo),
+        button_map(socket, "Gallery", :gallery)
       ]
     assign(socket, buttons: buttons)
   end
 
-  defp button_map(socket, title) do
+  defp button_map(socket, title, live_action) do
     %{
       content: title,
       attrs: [
         phx_click: "redirect",
         phx_target: socket.assigns.myself,
-        value: title |> String.downcase
+        phx_value_route: Routes.dreadnought_main_path(socket, live_action)
       ]
     }
   end
