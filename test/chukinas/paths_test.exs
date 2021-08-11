@@ -3,10 +3,10 @@ ExUnit.start()
 defmodule Chukinas.PathsTest do
 
   use ExUnit.Case, async: true
-  use Chukinas.BoundingRect
   use Chukinas.TestHelpers
   use Chukinas.PositionOrientationSize
   import Chukinas.Math
+  alias Chukinas.BoundingRect
   alias Chukinas.Paths
 
   # TODO move this out to helpers module
