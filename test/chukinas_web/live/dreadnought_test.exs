@@ -117,11 +117,13 @@ defmodule ChukinasWeb.DreadnoughtLiveTest do
     |> render_click() =~ "Gallery"
   end
 
-  #test "Quick Demo", %{conn: conn} do
-  #  {:ok, view, _html} = live(conn, "/dreadnought")
-  #  element(view, "#link-demo") |> render_click()
-  #  assert has_element?(view, "#unit-1")
-  #  assert has_element?(view, "#player_turn_component")
-  #end
+  test "Quick Demo", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/dreadnought")
+    view
+    |> element("#link-demo")
+    |> render_click()
+    assert has_element?(view, "#unit-1")
+    assert has_element?(view, "#player_turn_component")
+  end
 
 end
