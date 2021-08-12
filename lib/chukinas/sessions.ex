@@ -12,15 +12,6 @@ defmodule Chukinas.Sessions do
   alias Chukinas.Dreadnought.Mission
 
   # *** *******************************
-  # *** Users
-
-  # TODO rename `register_liveview`?
-  # TODO or to `subscribe_to_player_uuid`?
-  def register_uuid(player_uuid) do
-    Players.subscribe(player_uuid)
-  end
-
-  # *** *******************************
   # *** ROOM JOIN / LEAVE
 
   def room_join_types, do: RoomJoin.types()

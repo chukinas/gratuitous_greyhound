@@ -57,9 +57,9 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
   end
 
   # *** *******************************
-  # *** PRIVATE HELPERS
+  # *** HELPERS
 
-  defp islands do
+  def islands do
     [
       position_new(500, 500),
       position_new(2500, 1200),
@@ -75,6 +75,9 @@ defmodule Chukinas.Dreadnought.MissionBuilder do
   def small_map, do: grid_and_margin(800, 500)
   def medium_map, do: grid_and_margin(1400, 700)
   def large_map, do: grid_and_margin(3000, 2000)
+
+  # *** *******************************
+  # *** PRIVATE HELPERS
 
   def grid_and_margin(width, height) do
     square_size = 50

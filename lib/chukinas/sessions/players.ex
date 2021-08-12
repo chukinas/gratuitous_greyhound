@@ -9,7 +9,10 @@ defmodule Chukinas.Sessions.Players do
     end
   end
 
-  def subscribe(player_uuid) do
+  @doc"""
+  Subscribe a LiveView to a Player UUID.
+  """
+  def register_liveview(player_uuid) do
     PlayerRegistry.register(player_uuid)
   end
 

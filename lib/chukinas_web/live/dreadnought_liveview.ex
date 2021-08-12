@@ -13,9 +13,7 @@ defmodule ChukinasWeb.DreadnoughtLiveViewHelpers do
 
   @opts Map.keys @live_action_mapping
 
-
   defmacro __using__(opts) when opts in @opts do
-
     quote do
 
       use ChukinasWeb, :live_view
@@ -52,13 +50,14 @@ defmodule ChukinasWeb.DreadnoughtLiveViewHelpers do
       end
 
       # *** *******************************
-      # *** HELPERS
+      # *** SOCKET REDUCERS
+
+      def assign_page_title(socket), do: assign(socket, page_title: "Dreadnought")
 
       @spec assign_uuid_and_mission(Phoenix.LiveView.Socket.t, map) :: Phoenix.LiveView.Socket.t
-      def assign_uuid_and_mission(socket, session) do
-        uuid = Map.fetch!(session, "uuid")
+      def assign_uuid_and_mission(socket, %{"uuid" => uuid} = _session) do
         if socket.connected? do
-          Sessions.register_uuid(uuid)
+          Players.register_liveview(uuid)
           socket
           |> assign(uuid: uuid)
           |> assign(mission: Sessions.get_mission_from_player_uuid(uuid))
@@ -69,6 +68,17 @@ defmodule ChukinasWeb.DreadnoughtLiveViewHelpers do
         end
       end
 
+      def maybe_redirect_to_setup(socket) do
+        if not mission_in_progress?(socket) do
+          path = Routes.dreadnought_main_path(socket, :setup)
+          send self(), {:push_redirect, path}
+        end
+        socket
+      end
+
+      # *** *******************************
+      # *** SOCKET CONVERTERS
+
       def mission_in_progress?(socket) do
         with %Chukinas.Dreadnought.Mission{} = mission <- mission(socket),
              true <- Chukinas.Dreadnought.Mission.in_progress?(mission) do
@@ -78,20 +88,13 @@ defmodule ChukinasWeb.DreadnoughtLiveViewHelpers do
         end
       end
 
+      # *** *******************************
+      # *** HELPERS
+
       # TODO this is ugly
       def mission(nil), do: nil
       def mission(%Chukinas.Dreadnought.Mission{} = value), do: value
       def mission(socket), do: socket.assigns[:mission]
-
-      def maybe_redirect_to_setup(socket) do
-        if not mission_in_progress?(socket) do
-          path = Routes.dreadnought_main_path(socket, :setup)
-          send self(), {:push_redirect, path}
-        end
-        socket
-      end
-
-      def assign_page_title(socket), do: assign(socket, page_title: "Dreadnought")
 
     end
   end
