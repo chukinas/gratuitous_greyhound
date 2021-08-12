@@ -1,6 +1,6 @@
-defmodule DreadnoughtWeb.DreadnoughtLive do
+defmodule DreadnoughtWeb.MainLive do
 
-  use DreadnoughtWeb.DreadnoughtLiveViewHelpers, :menus
+  use DreadnoughtWeb.LiveHelpers, :menus
 
   # *** *******************************
   # *** MOUNT, PARAMS

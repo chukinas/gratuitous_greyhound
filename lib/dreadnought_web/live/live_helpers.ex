@@ -1,4 +1,4 @@
-defmodule DreadnoughtWeb.DreadnoughtLiveViewHelpers do
+defmodule DreadnoughtWeb.LiveHelpers do
   @moduledoc"""
   Provides common functions to DreadnoughtLive and DreadnoughtPlayLive
   """

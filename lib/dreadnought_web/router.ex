@@ -31,12 +31,12 @@ defmodule DreadnoughtWeb.Router do
 
   scope "/dreadnought", DreadnoughtWeb do
     pipe_through :dreadnought
-    live "/", DreadnoughtLive, :homepage, as: :dreadnought_main
-    live "/play", DreadnoughtPlayLive, :play, as: :dreadnought_main
-    live "/demo", DreadnoughtLive, :demo, as: :dreadnought_main
-    live "/gallery", DreadnoughtLive, :gallery, as: :dreadnought_main
+    live "/", MainLive, :homepage, as: :dreadnought_main
+    live "/play", PlayLive, :play, as: :dreadnought_main
+    live "/demo", MainLive, :demo, as: :dreadnought_main
+    live "/gallery", MainLive, :gallery, as: :dreadnought_main
     get "/grid", PageController, :redirect_to_dreadnought
-    live "/setup", DreadnoughtLive, :setup, as: :dreadnought_main
+    live "/setup", MainLive, :setup, as: :dreadnought_main
   end
 
   # Other scopes may use custom stacks.

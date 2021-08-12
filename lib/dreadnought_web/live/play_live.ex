@@ -1,6 +1,6 @@
-defmodule DreadnoughtWeb.DreadnoughtPlayLive do
+defmodule DreadnoughtWeb.PlayLive do
 
-  use DreadnoughtWeb.DreadnoughtLiveViewHelpers, :play
+  use DreadnoughtWeb.LiveHelpers, :play
   alias DreadnoughtWeb.DreadnoughtPlayView, as: View
 
   def render(template, assigns), do: View.render(template, assigns)
