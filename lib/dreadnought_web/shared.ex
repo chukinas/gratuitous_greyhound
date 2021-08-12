@@ -1,12 +1,12 @@
 defmodule DreadnoughtWeb.Shared do
 
   use Dreadnought.PositionOrientationSize
-  alias DreadnoughtWeb.DreadnoughtPlayView
+  alias DreadnoughtWeb.PlayView
   alias Dreadnought.Geometry.Rect
 
   def top_left_width_height_from_rect(rect) do
     # TODO extract all these methods into this module
-    DreadnoughtPlayView.render_rect_as_style_attrs(rect)
+    PlayView.render_rect_as_style_attrs(rect)
   end
 
   def left_top_from_number(number) when is_number(number) do
@@ -16,11 +16,11 @@ defmodule DreadnoughtWeb.Shared do
   end
 
   def left_top_from_position(position) do
-    DreadnoughtPlayView.left_top_from_position position
+    PlayView.left_top_from_position position
   end
 
   def width_height_from_size(size) do
-    DreadnoughtPlayView.width_height_from_size size
+    PlayView.width_height_from_size size
   end
 
   def viewbox(rect_or_size, margin \\ 0)

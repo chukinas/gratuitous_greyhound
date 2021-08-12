@@ -6,7 +6,7 @@ defmodule DreadnoughtWeb.Dreadnought.PlayerTurnComponent do
   alias Dreadnought.Core.PlayerTurn
   alias Dreadnought.Sessions
   alias Dreadnought.Util.Precision
-  alias DreadnoughtWeb.DreadnoughtPlayView, as: View
+  alias DreadnoughtWeb.PlayView, as: View
 
   def render(template, assigns), do: View.render(template, assigns)
 

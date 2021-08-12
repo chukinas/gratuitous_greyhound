@@ -1,4 +1,4 @@
-defmodule DreadnoughtWeb.DreadnoughtPlayView do
+defmodule DreadnoughtWeb.PlayView do
 
   use DreadnoughtWeb, :view
   use Dreadnought.LinearAlgebra
