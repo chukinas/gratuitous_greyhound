@@ -13,6 +13,7 @@ defmodule Dreadnought.Core.Mission do
   alias Dreadnought.Geometry.Rect
   alias Dreadnought.Util.IdList
   alias Dreadnought.Util.Maps
+  alias Dreadnought.Util.Slugs
 
   # *** *******************************
   # *** TYPES
@@ -41,7 +42,7 @@ defmodule Dreadnought.Core.Mission do
     %__MODULE__{
       name: name,
       # TODO I shouldn't have to call to Sessions
-      name_pretty: Dreadnought.Sessions.RoomName.pretty(name),
+      name_pretty: Slugs.pretty(name),
       world_rect: world_rect(grid, margin),
       grid: grid,
       margin: margin,

@@ -1,6 +1,4 @@
-alias Dreadnought.Sessions.RoomName
-
-defmodule RoomName do
+defmodule Dreadnought.Util.Slugs do
 
   def slugify(nil), do: ""
   def slugify(string) do
@@ -8,18 +6,6 @@ defmodule RoomName do
     |> String.downcase()
     |> String.replace(~r/[^[:alnum:]]+/u, "-")
     |> String.trim("-")
-  end
-
-  def to_alnum(string) do
-    string
-    |> slugify
-    |> String.replace("-", "")
-  end
-
-  def count_alnum(string) do
-    string
-    |> to_alnum
-    |> String.length
   end
 
   def pretty(slug) do
