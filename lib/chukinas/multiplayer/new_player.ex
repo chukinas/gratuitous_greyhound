@@ -1,4 +1,4 @@
-defmodule Chukinas.Sessions.RoomJoin do
+defmodule Chukinas.Multiplayer.NewPlayer do
 
   use Ecto.Schema
   @primary_key false

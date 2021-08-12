@@ -5,20 +5,20 @@ defmodule Chukinas.Sessions do
   The Sessions context
   """
 
-  alias Chukinas.Sessions.Players
-  alias Chukinas.Sessions.RoomJoin
-  alias Chukinas.Sessions.Missions
   alias Chukinas.Dreadnought.ActionSelection
   alias Chukinas.Dreadnought.Mission
+  alias Chukinas.Multiplayer.NewPlayer
+  alias Chukinas.Sessions.Players
+  alias Chukinas.Sessions.Missions
 
   # *** *******************************
   # *** ROOM JOIN / LEAVE
 
-  def room_join_types, do: RoomJoin.types()
+  def room_join_types, do: NewPlayer.types()
 
-  defdelegate room_join_changeset(data, attrs), to: RoomJoin, as: :changeset
+  defdelegate room_join_changeset(data, attrs), to: NewPlayer, as: :changeset
 
-  defdelegate room_join_validate(attrs), to: RoomJoin, as: :validate
+  defdelegate room_join_validate(attrs), to: NewPlayer, as: :validate
 
   def join_room(room_join) do
     :ok = Missions.add_player(room_join)

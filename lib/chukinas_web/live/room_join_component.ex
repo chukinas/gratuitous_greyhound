@@ -1,3 +1,4 @@
+# rename MissionNewPlayer? or JoinMission?
 defmodule ChukinasWeb.RoomJoinComponent do
 
   use ChukinasWeb, :live_component

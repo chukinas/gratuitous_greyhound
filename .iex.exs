@@ -12,7 +12,6 @@ use Chukinas.LinearAlgebra
 use Chukinas.PositionOrientationSize
 
 
-alias Chukinas.Sessions.RoomJoin
 attrs = %{room_name: "the-white", player_uuid: "ntsreani", player_name: "tnsra"}
 billy = %{room_name: "the-white", player_uuid: "ntsreani", player_name: "tnsra", billy: "trsa"}
 alias Ecto.Changeset
