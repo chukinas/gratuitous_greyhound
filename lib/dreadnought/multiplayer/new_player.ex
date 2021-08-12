@@ -1,3 +1,4 @@
+# TODO rename Player?
 defmodule Dreadnought.Multiplayer.NewPlayer do
 
   use Ecto.Schema

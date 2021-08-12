@@ -5,12 +5,13 @@ defmodule Dreadnought.Core.Player do
 
   use TypedStruct
 
-  typedstruct enforce: true do
-    field :id, integer()
+  typedstruct enforce: false do
+    field :id, integer
     field :type, :human | :ai
     field :uuid, String.t
     field :name, String.t
-    field :ready?, boolean
+    field :mission_name, String.t
+    field :ready?, boolean, default: false
   end
 
   # *** *******************************
@@ -37,7 +38,6 @@ defmodule Dreadnought.Core.Player do
       type: type,
       uuid: uuid,
       name: name,
-      ready?: false
     }
   end
 
