@@ -329,7 +329,7 @@
        style="display:inline"
        sodipodi:insensitive="true">
       <image
-         sodipodi:absref="/home/jc/projects/chukinas/assets/static/images/spritesheets/red.png"
+         sodipodi:absref="/home/jc/projects/dreadnought/assets/static/images/spritesheets/red.png"
          xlink:href="red.png"
          y="0"
          x="0"
@@ -520,7 +520,7 @@
        inkscape:label="image"
        sodipodi:insensitive="true">
       <image
-         sodipodi:absref="/home/jc/projects/chukinas/assets/static/images/spritesheets/test.png"
+         sodipodi:absref="/home/jc/projects/dreadnought/assets/static/images/spritesheets/test.png"
          xlink:href="test.png"
          width="33.333332"
          height="33.333332"
@@ -585,7 +585,7 @@
        style="display:inline"
        sodipodi:insensitive="true">
       <image
-         sodipodi:absref="/home/jc/projects/chukinas/assets/static/images/spritesheets/blue.png"
+         sodipodi:absref="/home/jc/projects/dreadnought/assets/static/images/spritesheets/blue.png"
          xlink:href="blue.png"
          y="0"
          x="0"

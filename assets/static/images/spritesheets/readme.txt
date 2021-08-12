@@ -1,4 +1,4 @@
-The images and the inkscape file must follow the following conventions to make Chukinas.Dreadnought.Spritesheet compile correctly.
+The images and the inkscape file must follow the following conventions to make Dreadnought.Core.Spritesheet compile correctly.
 
 IMAGE SIZE
 Image size is dictated by the scaling in the SVG file, so the size of the actual image doesn't matter.
@@ -221,7 +221,7 @@ Each sublayer (w/in a layer) ...
                     "-width" => "122",
                     "-x" => "0",
                     "-y" => "0",
-                    "-{http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd}absref" => "/home/jc/projects/chukinas/assets/static/spritesheets/red1.png",
+                    "-{http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd}absref" => "/home/jc/projects/dreadnought/assets/static/spritesheets/red1.png",
                     "-{http://www.w3.org/1999/xlink}href" => "red1.png"
                   }
                 },

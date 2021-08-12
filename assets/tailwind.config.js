@@ -3,9 +3,9 @@
 module.exports = {
   mode: 'jit',
   purge: [
-    '../lib/chukinas_web/templates/**/*',
-    '../lib/chukinas_web/views/**/*',
-    '../lib/chukinas_web/live/**/*',
+    '../lib/dreadnought_web/templates/**/*',
+    '../lib/dreadnought_web/views/**/*',
+    '../lib/dreadnought_web/live/**/*',
   ],
   darkMode: false, // or 'media' or 'class'
   theme: {

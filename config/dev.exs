@@ -6,7 +6,7 @@ use Mix.Config
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
-config :chukinas, ChukinasWeb.Endpoint,
+config :dreadnought, DreadnoughtWeb.Endpoint,
   http: [port: 4000],
   debug_errors: true,
   code_reloader: true,
@@ -46,13 +46,13 @@ config :chukinas, ChukinasWeb.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :chukinas, ChukinasWeb.Endpoint,
+config :dreadnought, DreadnoughtWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/chukinas_web/(live|views)/.*(ex)$",
-      ~r"lib/chukinas_web/templates/.*(eex)$"
+      ~r"lib/dreadnought_web/(live|views)/.*(ex)$",
+      ~r"lib/dreadnought_web/templates/.*(eex)$"
     ]
   ]
 

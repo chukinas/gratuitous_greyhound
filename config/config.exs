@@ -8,11 +8,11 @@
 use Mix.Config
 
 # Configures the endpoint
-config :chukinas, ChukinasWeb.Endpoint,
+config :dreadnought, DreadnoughtWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "zZwwhFZNgMm5ObJ5k7iJAyRH27UZQX4aL+6Cfw54p3jZdUS0K/hg1SYNOA1MPkac",
-  render_errors: [view: ChukinasWeb.ErrorView, accepts: ~w(html json), layout: false],
-  pubsub_server: Chukinas.PubSub,
+  render_errors: [view: DreadnoughtWeb.ErrorView, accepts: ~w(html json), layout: false],
+  pubsub_server: Dreadnought.PubSub,
   live_view: [signing_salt: "4bfIP8sz"]
 
 # Configures Elixir's Logger
@@ -24,7 +24,7 @@ config :logger, :console,
 config :phoenix, :json_library, Jason
 
 # Email configuration
-config :chukinas, Chukinas.Mailer,
+config :dreadnought, Dreadnought.Mailer,
   adapter: Bamboo.SendGridAdapter,
   api_key: {:system, "SENDGRID_API_KEY"}
 

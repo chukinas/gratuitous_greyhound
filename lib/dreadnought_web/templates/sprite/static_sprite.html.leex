@@ -1,0 +1,15 @@
+<div 
+  static_sprite
+  class="relative"
+  style="<%= DreadnoughtWeb.Shared.width_height_from_size(@sprite) %>">
+  <div
+    class="absolute"
+    style="
+      <%= DreadnoughtWeb.Shared.width_height_from_size(@image_size) %>
+      <%= DreadnoughtWeb.Shared.left_top_from_position(@transform) %>
+    ">
+    <img 
+      style="clip-path: path('<%= @image_clip_path %>');"
+      src="<%= Routes.static_path @socket, @image_file_path %>">
+  </div>
+</div>

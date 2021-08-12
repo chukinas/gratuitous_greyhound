@@ -1,0 +1,27 @@
+<div
+  animation
+  id="<%= @animation.id_string %>"
+  class="absolute"
+  style="
+    <%= DreadnoughtWeb.Shared.left_top_from_position(@animation) %>
+    transform: rotate(<%= @animation.angle %>deg);
+  "
+  phx-hook="Animation"
+  data-delay="<%= @animation.delay %>"
+  data-fade="<%= @animation.last_frame_fade_duration %>"
+  data-repeat="<%= @animation.repeat %>"
+>
+
+
+  <%# Sprites %>
+  <div animation_frames class="relative">
+    <%= for frame <- @animation.frames do %>
+      <%= DreadnoughtWeb.SpriteView.absolute_sprite @socket, frame.sprite,
+        class: "js-animation-frame-sprite invisible",
+        attrs: [
+          "data-duration": frame.duration
+        ] %>
+    <% end %>
+  </div>
+
+</div>
