@@ -11,9 +11,9 @@ defmodule Dreadnought.Multiplayer.NewPlayer do
   # *** TYPES
 
   @types %{
-    room_name: :string,
-    player_uuid: :string,
-    player_name: :string
+    name: :string,
+    uuid: :string,
+    mission_name: :string
   }
 
   @required_fields Map.keys @types
@@ -25,35 +25,35 @@ defmodule Dreadnought.Multiplayer.NewPlayer do
   end
 
   @type t :: %__MODULE__{
-    room_name: String.t,
-    player_uuid: String.t,
-    player_name: String.t
+    name: String.t,
+    uuid: String.t,
+    mission_name: String.t
   }
 
   # *** *******************************
   # *** API
 
-  def changeset(data \\ %__MODULE__{}, attrs) do
-    path_len_msg = "path should be 5 - 20 characters"
-    data
+  def changeset(%__MODULE__{} = player, attrs) do
+    player
     |> Changeset.cast(attrs, @required_fields)
-    |> Changeset.update_change(:player_name, &String.trim/1)
-    |> Changeset.update_change(:room_name, &Slugs.slugify/1)
+    |> Changeset.update_change(:name, &String.trim/1)
+    |> Changeset.update_change(:mission_name, &Slugs.slugify_then_beautify/1)
     |> Changeset.validate_required(@required_fields)
-    |> Changeset.validate_length(:player_name, min: 2, max: 15)
-    |> Changeset.validate_length(:room_name, min: 5, max: 20, message: path_len_msg)
+    |> Changeset.validate_length(:name, min: 2, max: 15)
+    |> Changeset.validate_length(:mission_name, min: 5, max: 20)
   end
 
-  def validate(data \\ %__MODULE__{}, attrs) do
-    changeset = changeset(data, attrs)
-    if changeset.valid? do
-      join_room = Changeset.apply_changes(changeset)
-      {:ok, join_room}
-    else
-      {:error, changeset}
-    end
-  end
+  #def validate(data \\ %__MODULE__{}, attrs) do
+  #  changeset = changeset(data, attrs)
+  #  if changeset.valid? do
+  #    join_room = Changeset.apply_changes(changeset)
+  #    {:ok, join_room}
+  #  else
+  #    {:error, changeset}
+  #  end
+  #end
 
-  def types, do: @types
+  # TODO if this ends up no longer being needed, remove from Player
+  #def types, do: @types
 
 end

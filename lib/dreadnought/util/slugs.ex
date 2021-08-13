@@ -14,4 +14,11 @@ defmodule Dreadnought.Util.Slugs do
     |> Stream.map(&String.capitalize/1)
     |> Enum.join(" ")
   end
+
+  def slugify_then_beautify(string) do
+    string
+    |> slugify
+    |> pretty
+  end
+
 end

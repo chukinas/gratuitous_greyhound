@@ -8,15 +8,15 @@ defmodule Dreadnought.Sessions.Missions do
   # *** *******************************
   # *** GETTERS
 
-  def room_name(%NewPlayer{room_name: value}), do: value
+  def room_name(%NewPlayer{mission_name: value}), do: value
 
   def room_name(mission), do: Mission.name(mission)
 
   # *** *******************************
   # *** API
 
-  def add_player(%NewPlayer{} = room_join) do
-    genserver_call(room_join.room_name, {:add_player, room_join})
+  def add_player(%NewPlayer{mission_name: mission_name} = new_player) do
+    genserver_call(mission_name, {:add_player, new_player})
   end
 
   def drop_player(room_name, player_uuid) when is_binary(room_name) do

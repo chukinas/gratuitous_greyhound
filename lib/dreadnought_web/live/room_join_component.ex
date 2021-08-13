@@ -1,11 +1,16 @@
-# rename MissionNewPlayer? or JoinMission?
+# rename NewPlayerComponent
 defmodule DreadnoughtWeb.RoomJoinComponent do
 
   use DreadnoughtWeb, :live_component
+  # TODO remove?
   use DreadnoughtWeb.Components
+  # TODO remove?
   use Phoenix.HTML
-  alias Dreadnought.Sessions
-  alias Ecto.Changeset
+  # TODO remove
+  #alias Dreadnought.Sessions
+  #alias Ecto.Changeset
+  alias Dreadnought.Multiplayer
+  alias Dreadnought.Multiplayer.NewPlayer
 
   #use Ecto.Schema
   # http://blog.plataformatec.com.br/2016/05/ectos-insert_all-and-schemaless-queries/
@@ -14,89 +19,107 @@ defmodule DreadnoughtWeb.RoomJoinComponent do
   # *** CALLBACKS
 
   @impl true
-  def update(assigns, socket) do
-    socket =
+  def update(%{uuid: uuid} = _assigns, socket) do
+    #socket =
+    #  socket
+    #  |> assign
+    #  |> assign(player_uuid: uuid)
+    #  |> assign_changeset_and_url(%{}, false)
+    {:ok,
       socket
-      |> assign(player_uuid: assigns.uuid)
-      |> assign_changeset_and_url(%{}, false)
-    {:ok, socket}
+      |> assign(uuid: uuid)
+      |> assign_new_player
+      |> assign_changeset
+    }
   end
 
   @impl true
-  def handle_event("validate", %{"room_join" => params}, socket) do
-    socket = assign_changeset_and_url(socket, params)
-    {:noreply, socket}
+  def handle_event(
+      "validate",
+      %{"new_player" => new_player_params},
+      %{assigns: %{new_player: new_player}} = socket) do
+    changeset =
+      new_player
+      |> Multiplayer.change_new_player(new_player_params)
+      |> Map.put(:action, :validate)
+    {:noreply,
+      socket
+      |> assign(changeset: changeset)}
   end
 
-  def handle_event("join", %{"room_join" => params}, socket) do
-    attrs = params_to_attrs(params, socket)
-    socket =
-      case Sessions.room_join_validate(attrs) do
-        {:ok, room_join} ->
-          :ok = Sessions.join_room(room_join)
+  def handle_event(
+      "add_player",
+      %{"new_player" => new_player_params},
+      %{assigns: %{new_player: new_player}} = socket) do
+    case Multiplayer.add_player(new_player, new_player_params) do
+      {:ok, _new_player} ->
+        {:noreply,
           socket
-        {:error, _changeset} ->
-          assign_changeset_and_url(socket, params)
-      end
-    {:noreply, socket}
+          #|> put_flash(:info, "Joined Mission!")
+          |> assign_changeset}
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply,
+          socket
+          #|> put_flash(:info, "Failed to add player")
+          |> assign(changeset: changeset)}
+    end
   end
 
   # *** *******************************
-  # *** PRIVATE
+  # *** PRIVATE (NEW)
 
-  defp assign_changeset_and_url(socket, changeset_or_params, show_errors? \\ true)
-
-  defp assign_changeset_and_url(socket, %Changeset{} = changeset, show_errors?) do
-    changeset = if show_errors? do
-      # TODO I shouldn't be manipulating the raw map..?
-      Map.put(changeset, :action, :insert)
-    else
-      changeset
-    end
+  def assign_new_player(%{assigns: %{uuid: uuid}} = socket) do
     socket
-    |> assign(changeset: changeset)
-    |> assign_url
+    |> assign(new_player: %NewPlayer{uuid: uuid})
   end
 
-  defp assign_changeset_and_url(socket, params, show_errors?) do
-    attrs = params_to_attrs(params, socket)
-    changeset =
-      changeset_data()
-      |> Sessions.room_join_changeset(attrs)
-    # TODO is this necessary?
-      |> Changeset.cast(attrs, [:room_name_raw])
-    assign_changeset_and_url(socket, changeset, show_errors?)
+  def assign_changeset(%{assigns: %{new_player: new_player}} = socket) do
+    socket
+    |> assign(changeset: Multiplayer.change_new_player(new_player))
   end
 
-  defp params_to_attrs(params, socket) do
-    params
-    |> Map.put("room_name", params["room_name_raw"])
-    |> Map.put("player_uuid", socket.assigns.player_uuid)
-  end
+  # *** *******************************
+  # *** PRIVATE (OLD)
 
-  defp assign_url(socket) do
-    assign(socket, maybe_url: build_url(socket))
-  end
+  #defp assign_changeset_and_url(socket, params, show_errors?) do
+  #  attrs = params_to_attrs(params, socket)
+  #  changeset =
+  #    changeset_data()
+  #    |> Sessions.room_join_changeset(attrs)
+  #  # TODO is this necessary?
+  #    |> Changeset.cast(attrs, [:room_name_raw])
+  #  assign_changeset_and_url(socket, changeset, show_errors?)
+  #end
 
-  defp build_url(socket) do
-    Enum.join [
-      URI.to_string(socket.host_uri),
-      build_path(socket),
-    ]
-  end
+  #defp params_to_attrs(params, socket) do
+  #  params
+  #  |> Map.put("room_name", params["room_name_raw"])
+  #  |> Map.put("player_uuid", socket.assigns.player_uuid)
+  #end
 
-  defp build_path(socket) do
-    Enum.join [
-      Routes.dreadnought_main_path(socket, :setup),
-      Changeset.get_field(socket.assigns.changeset, :room_name)
-    ], "/"
-  end
+  #defp assign_url(socket) do
+  #  assign(socket, maybe_url: build_url(socket))
+  #end
 
-  defp changeset_data do
-    types =
-      Sessions.room_join_types()
-      |> Map.put(:room_name_raw, :string)
-    {%{}, types}
-  end
+  #defp build_url(socket) do
+  #  Enum.join [
+  #    URI.to_string(socket.host_uri),
+  #    build_path(socket),
+  #  ]
+  #end
+
+  #defp build_path(socket) do
+  #  Enum.join [
+  #    Routes.dreadnought_main_path(socket, :setup),
+  #    Changeset.get_field(socket.assigns.changeset, :room_name)
+  #  ], "/"
+  #end
+
+  #defp changeset_data do
+  #  types =
+  #    Sessions.room_join_types()
+  #    |> Map.put(:room_name_raw, :string)
+  #  {%{}, types}
+  #end
 
 end
