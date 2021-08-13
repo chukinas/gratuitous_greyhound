@@ -1,4 +1,4 @@
-defmodule Dreadnought.Sessions.SessionSupervisor do
+defmodule Dreadnought.Missions.Supervisor do
 
   use Supervisor
 
@@ -11,8 +11,6 @@ defmodule Dreadnought.Sessions.SessionSupervisor do
       Dreadnought.Missions.Backup,
       Dreadnought.Missions.DynamicSupervisor,
       Dreadnought.Missions.Registry,
-      Dreadnought.Sessions.PlayerRegistry,
-      Dreadnought.Sessions.PlayerRooms,
     ]
     Supervisor.init(children, strategy: :one_for_one)
   end

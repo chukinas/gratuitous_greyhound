@@ -3,7 +3,7 @@ defmodule Dreadnought.Missions do
   alias Dreadnought.Core.ActionSelection
   alias Dreadnought.Core.Mission
   alias Dreadnought.Missions
-  alias Dreadnought.Sessions.Players
+  alias Dreadnought.Players
 
   alias Dreadnought.Core.Player
   alias Dreadnought.Missions.DynamicSupervisor, as: MissionDynamicSupervisor

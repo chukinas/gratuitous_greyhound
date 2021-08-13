@@ -41,7 +41,6 @@ defmodule Dreadnought.Core.Mission do
   def new(name, %Grid{} = grid, margin) when has_size(margin) do
     %__MODULE__{
       name: name,
-      # TODO I shouldn't have to call to Sessions
       name_pretty: Slugs.pretty(name),
       world_rect: world_rect(grid, margin),
       grid: grid,

@@ -68,7 +68,7 @@ defmodule DreadnoughtWeb.NewPlayerComponent do
   #  attrs = params_to_attrs(params, socket)
   #  changeset =
   #    changeset_data()
-  #    |> Sessions.room_join_changeset(attrs)
+  #    |> xxxSessions.room_join_changeset(attrs)
   #  # TODO is this necessary?
   #    |> Changeset.cast(attrs, [:room_name_raw])
   #  assign_changeset_and_url(socket, changeset, show_errors?)
@@ -100,7 +100,7 @@ defmodule DreadnoughtWeb.NewPlayerComponent do
 
   #defp changeset_data do
   #  types =
-  #    Sessions.room_join_types()
+  #    xxxSessions.room_join_types()
   #    |> Map.put(:room_name_raw, :string)
   #  {%{}, types}
   #end

@@ -1,6 +1,4 @@
-# TODO rename PlayerProcesses?
-
-defmodule Dreadnought.Sessions.PlayerRegistry do
+defmodule Dreadnought.Players.Registry do
   @moduledoc"""
   Maps player UUIDs to PIDs
 

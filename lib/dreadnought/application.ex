@@ -3,7 +3,6 @@ defmodule Dreadnought.Application do
   # for more information on OTP Applications
   @moduledoc false
 
-  alias Dreadnought.Sessions.SessionSupervisor
   use Application
 
   def start(_type, _args) do
@@ -14,7 +13,8 @@ defmodule Dreadnought.Application do
       {Phoenix.PubSub, name: Dreadnought.PubSub},
       # Start the Endpoint (http/https)
       DreadnoughtWeb.Endpoint,
-      {SessionSupervisor, []},
+      {Dreadnought.Players.Supervisor, []},
+      {Dreadnought.Missions.Supervisor, []},
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -1,4 +1,4 @@
-defmodule Dreadnought.Sessions.PlayerRooms do
+defmodule Dreadnought.Players.Missions do
 
   use Agent
 

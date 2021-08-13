@@ -5,7 +5,7 @@ defmodule DreadnoughtWeb.LiveHelpers do
 
   alias DreadnoughtWeb.Router.Helpers, as: Routes
   alias Dreadnought.Missions
-  alias Dreadnought.Sessions.Players
+  alias Dreadnought.Players
 
   @live_action_mapping %{
     menus: :setup,

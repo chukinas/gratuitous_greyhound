@@ -5,7 +5,7 @@ defmodule Dreadnought.Missions.Server do
   alias Dreadnought.Core.Player
   alias Dreadnought.Missions.Backup
   alias Dreadnought.Missions.Registry, as: MissionRegistry
-  alias Dreadnought.Sessions.Players
+  alias Dreadnought.Players
   use GenServer
 
   # *** *******************************

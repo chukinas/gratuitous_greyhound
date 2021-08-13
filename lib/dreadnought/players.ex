@@ -1,8 +1,8 @@
-defmodule Dreadnought.Sessions.Players do
+defmodule Dreadnought.Players do
 
   alias Dreadnought.Core.Player
-  alias Dreadnought.Sessions.PlayerRegistry
-  alias Dreadnought.Sessions.PlayerRooms
+  alias Dreadnought.Players.Registry, as: PlayerRegistry
+  alias Dreadnought.Players.Missions, as: PlayerRooms
 
   def send_room(player_uuid, room) do
     for pid <- PlayerRegistry.pids(player_uuid) do

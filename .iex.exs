@@ -4,8 +4,6 @@ alias Dreadnought.Core.Mission
 alias Dreadnought.Core.MissionBuilder
 alias Dreadnought.Geometry, as: G
 
-alias Dreadnought.Sessions
-
 alias Dreadnought.LinearAlgebra
 alias Dreadnought.PositionOrientationSize
 use Dreadnought.LinearAlgebra
