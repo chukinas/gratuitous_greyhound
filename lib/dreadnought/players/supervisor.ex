@@ -8,8 +8,8 @@ defmodule Dreadnought.Players.Supervisor do
 
   def init(_init_arg) do
     children = [
-      Dreadnought.Players.Registry,
-      Dreadnought.Players.Missions,
+      Dreadnought.Players.MissionNameRegistry,
+      Dreadnought.Players.ProcessRegistry,
     ]
     Supervisor.init(children, strategy: :one_for_one)
   end

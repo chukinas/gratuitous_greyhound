@@ -61,7 +61,7 @@ defmodule DreadnoughtWeb.LiveHelpers do
           Players.register_liveview(uuid)
           socket
           |> assign(uuid: uuid)
-          |> assign(mission: Missions.get_mission_from_player_uuid(uuid))
+          |> assign(mission: Missions.get_by_player_uuid(uuid))
         else
           socket
           |> assign(uuid: uuid)

@@ -1,4 +1,4 @@
-defmodule Dreadnought.Players.Missions do
+defmodule Dreadnought.Players.MissionNameRegistry do
 
   use Agent
 

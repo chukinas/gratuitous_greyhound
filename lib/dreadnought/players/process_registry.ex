@@ -1,4 +1,4 @@
-defmodule Dreadnought.Players.ProcessRegistry do
+defmodule Dreadnought.Players.Registry do
   @moduledoc"""
   Maps player UUIDs to PIDs
 
