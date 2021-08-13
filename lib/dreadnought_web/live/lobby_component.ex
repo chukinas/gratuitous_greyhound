@@ -4,8 +4,7 @@ defmodule DreadnoughtWeb.LobbyComponent do
   use DreadnoughtWeb.Components
   alias Dreadnought.Core.Mission
   alias Dreadnought.Core.Player
-  alias Dreadnought.Sessions
-  alias Dreadnought.Sessions.Missions
+  alias Dreadnought.Missions
 
   # *** *******************************
   # *** CALLBACKS
@@ -36,7 +35,7 @@ defmodule DreadnoughtWeb.LobbyComponent do
 
   @impl true
   def handle_event("leave_room", _, socket) do
-    Sessions.leave_room(socket.assigns.uuid)
+    Missions.drop_player(socket.assigns.uuid)
     {:noreply, socket}
   end
 

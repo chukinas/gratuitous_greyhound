@@ -8,9 +8,9 @@ defmodule Dreadnought.Sessions.SessionSupervisor do
 
   def init(_init_arg) do
     children = [
-      Dreadnought.Sessions.MissionBackup,
-      Dreadnought.Sessions.MissionDynamicSupervisor,
-      Dreadnought.Sessions.MissionRegistry,
+      Dreadnought.Missions.Backup,
+      Dreadnought.Missions.DynamicSupervisor,
+      Dreadnought.Missions.Registry,
       Dreadnought.Sessions.PlayerRegistry,
       Dreadnought.Sessions.PlayerRooms,
     ]

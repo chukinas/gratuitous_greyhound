@@ -1,5 +1,6 @@
 defmodule Dreadnought.Sessions.Players do
 
+  alias Dreadnought.Core.Player
   alias Dreadnought.Sessions.PlayerRegistry
   alias Dreadnought.Sessions.PlayerRooms
 
@@ -16,8 +17,7 @@ defmodule Dreadnought.Sessions.Players do
     PlayerRegistry.register(player_uuid)
   end
 
-  @spec set_room(any) :: :ok
-  def set_room(%{player_uuid: player_uuid, room_name: room_name}) do
+  def set_room(%Player{uuid: player_uuid, mission_name: room_name}) do
     PlayerRooms.register(player_uuid, room_name)
   end
 

@@ -1,12 +1,11 @@
-# TODO rename Dreadnought.Missions.Server
-defmodule Dreadnought.Sessions.MissionServer do
+defmodule Dreadnought.Missions.Server do
 
   alias Dreadnought.Core.Mission
   alias Dreadnought.Core.MissionBuilder
   alias Dreadnought.Core.Player
+  alias Dreadnought.Missions.Backup
+  alias Dreadnought.Missions.Registry, as: MissionRegistry
   alias Dreadnought.Sessions.Players
-  alias Dreadnought.Sessions.MissionBackup
-  alias Dreadnought.Sessions.MissionRegistry
   use GenServer
 
   # *** *******************************
@@ -32,7 +31,7 @@ defmodule Dreadnought.Sessions.MissionServer do
 
   @impl true
   def init(room_name) when is_binary(room_name) do
-    mission = case MissionBackup.fetch_and_pop(room_name) do
+    mission = case Backup.fetch_and_pop(room_name) do
       {:ok, mission} -> mission
       :error -> MissionBuilder.online(room_name)
     end
@@ -97,7 +96,7 @@ defmodule Dreadnought.Sessions.MissionServer do
 
   @impl true
   def terminate(_reason, mission) do
-    MissionBackup.put(mission)
+    Backup.put(mission)
   end
 
   # *** *******************************

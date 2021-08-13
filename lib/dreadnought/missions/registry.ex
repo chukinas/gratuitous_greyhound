@@ -1,4 +1,4 @@
-defmodule Dreadnought.Sessions.MissionRegistry do
+defmodule Dreadnought.Missions.Registry do
 
   @me Registry.Missions
 

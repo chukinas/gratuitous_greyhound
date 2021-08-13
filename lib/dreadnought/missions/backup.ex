@@ -1,4 +1,4 @@
-defmodule Dreadnought.Sessions.MissionBackup do
+defmodule Dreadnought.Missions.Backup do
 
   use Agent
   alias Dreadnought.Core.Mission

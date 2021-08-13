@@ -4,7 +4,7 @@ defmodule DreadnoughtWeb.Dreadnought.PlayerTurnComponent do
   use DreadnoughtWeb.Components
   alias Dreadnought.Core.ActionSelection
   alias Dreadnought.Core.PlayerTurn
-  alias Dreadnought.Sessions
+  alias Dreadnought.Missions
   alias Dreadnought.Util.Precision
   alias DreadnoughtWeb.PlayView, as: View
 
@@ -69,7 +69,7 @@ defmodule DreadnoughtWeb.Dreadnought.PlayerTurnComponent do
   def handle_event("leave_game", _, socket) do
     socket
     |> player_uuid
-    |> Sessions.leave_room
+    |> Missions.drop_player
     {:noreply, socket}
   end
 
@@ -77,7 +77,7 @@ defmodule DreadnoughtWeb.Dreadnought.PlayerTurnComponent do
     if turn_complete?(socket) do
       socket
       |> name
-      |> Sessions.complete_player_turn(action_selection(socket))
+      |> Missions.complete_player_turn(action_selection(socket))
     end
     socket
   end

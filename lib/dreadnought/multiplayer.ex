@@ -1,7 +1,7 @@
 defmodule Dreadnought.Multiplayer do
 
+  alias Dreadnought.Missions
   alias Dreadnought.Multiplayer.NewPlayer
-  alias Dreadnought.Sessions.Missions
 
   def change_new_player(%NewPlayer{} = new_player, attrs \\ %{}) do
     NewPlayer.changeset(new_player, attrs)
@@ -18,7 +18,6 @@ defmodule Dreadnought.Multiplayer do
       new_player
       |> struct(changeset.changes)
       |> NewPlayer.to_player
-      |> IOP.inspect("Multiplayer")
       |> Missions.add_player
     else
       {:error, changeset}

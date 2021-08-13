@@ -4,7 +4,7 @@ defmodule DreadnoughtWeb.LiveHelpers do
   """
 
   alias DreadnoughtWeb.Router.Helpers, as: Routes
-  alias Dreadnought.Sessions
+  alias Dreadnought.Missions
   alias Dreadnought.Sessions.Players
 
   @live_action_mapping %{
@@ -61,7 +61,7 @@ defmodule DreadnoughtWeb.LiveHelpers do
           Players.register_liveview(uuid)
           socket
           |> assign(uuid: uuid)
-          |> assign(mission: Sessions.get_mission_from_player_uuid(uuid))
+          |> assign(mission: Missions.get_mission_from_player_uuid(uuid))
         else
           socket
           |> assign(uuid: uuid)

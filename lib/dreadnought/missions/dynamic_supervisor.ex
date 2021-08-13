@@ -1,7 +1,7 @@
-defmodule Dreadnought.Sessions.MissionDynamicSupervisor do
+defmodule Dreadnought.Missions.DynamicSupervisor do
 
   use DynamicSupervisor
-  alias Dreadnought.Sessions.MissionServer
+  alias Dreadnought.Missions.Server, as: MissionServer
 
   # *** *******************************
   # *** CONSTRUCTORS
