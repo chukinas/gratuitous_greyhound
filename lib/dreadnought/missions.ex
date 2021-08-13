@@ -34,7 +34,7 @@ defmodule Dreadnought.Missions do
 
   def get_by_player_uuid(player_uuid) do
     with {:ok, mission_name} <- Players.fetch_mission_name(player_uuid),
-         {:ok, room}      <- Missions.fetch(mission_name) do
+         {:ok, room}      <- fetch(mission_name) do
       room
     else
       _response ->

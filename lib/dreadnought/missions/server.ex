@@ -5,24 +5,25 @@ defmodule Dreadnought.Missions.Server do
   alias Dreadnought.Core.Player
   alias Dreadnought.Missions.Backup
   alias Dreadnought.Missions.Registry, as: MissionRegistry
+  alias Dreadnought.Multiplayer
   alias Dreadnought.Players
   use GenServer
 
   # *** *******************************
   # *** CLIENT
 
-  def child_spec(room_name) do
+  def child_spec(mission_name) do
     %{
-      id: room_name,
-      start: {__MODULE__, :start_link, [room_name]}
+      id: mission_name,
+      start: {__MODULE__, :start_link, [mission_name]}
     }
   end
 
-  def start_link(room_name) do
+  def start_link(mission_name) do
     GenServer.start_link(
       __MODULE__,
-      room_name,
-      name: MissionRegistry.build_name(room_name)
+      mission_name,
+      name: MissionRegistry.build_name(mission_name)
     )
   end
 
@@ -30,10 +31,10 @@ defmodule Dreadnought.Missions.Server do
   # *** CALLBACKS: INIT
 
   @impl true
-  def init(room_name) when is_binary(room_name) do
-    mission = case Backup.fetch_and_pop(room_name) do
+  def init(mission_name) when is_binary(mission_name) do
+    mission = case Backup.fetch_and_pop(mission_name) do
       {:ok, mission} -> mission
-      :error -> MissionBuilder.online(room_name)
+      :error -> Multiplayer.new_mission(mission_name)
     end
     ok_then_send_all(mission)
   end

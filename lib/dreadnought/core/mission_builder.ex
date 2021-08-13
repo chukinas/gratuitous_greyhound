@@ -9,17 +9,6 @@ defmodule Dreadnought.Core.MissionBuilder do
   alias Dreadnought.Geometry.Grid
 
   # *** *******************************
-  # *** CONSTRUCTORS
-
-  @spec online(String.t) :: Mission.t
-  def online(room_name) do
-    {grid, margin} = medium_map()
-    Mission.new(room_name, grid, margin)
-    |> Map.put(:islands, islands())
-    # Still needs players, units, and needs to be started
-  end
-
-  # *** *******************************
   # *** REDUCERS
 
   def add_player(%Mission{} = mission, player_uuid, player_name) do
