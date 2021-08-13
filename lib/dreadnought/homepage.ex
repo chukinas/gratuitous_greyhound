@@ -1,4 +1,5 @@
-defmodule Dreadnought.Core.MissionBuilder.Homepage do
+# TODO rename HomepageMission?
+defmodule Dreadnought.Homepage do
 
   use Dreadnought.LinearAlgebra
   use Dreadnought.PositionOrientationSize

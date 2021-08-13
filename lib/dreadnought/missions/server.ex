@@ -92,6 +92,7 @@ defmodule Dreadnought.Missions.Server do
 
   @impl true
   def terminate(:normal, _room) do
+    # TODO remove from Backup
   end
 
   @impl true

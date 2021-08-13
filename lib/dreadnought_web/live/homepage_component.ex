@@ -3,7 +3,7 @@ defmodule DreadnoughtWeb.HomepageComponent do
   use DreadnoughtWeb, :live_component
   use Dreadnought.LinearAlgebra
   use Dreadnought.PositionOrientationSize
-  alias Dreadnought.Core.MissionBuilder.Homepage, as: HomepageMission
+  alias Dreadnought.Homepage, as: HomepageMission
   alias Dreadnought.Core.Unit
 
   # *** *******************************
