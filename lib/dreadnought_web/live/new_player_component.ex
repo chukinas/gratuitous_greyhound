@@ -1,18 +1,9 @@
-# rename NewPlayerComponent
-defmodule DreadnoughtWeb.RoomJoinComponent do
+defmodule DreadnoughtWeb.NewPlayerComponent do
 
   use DreadnoughtWeb, :live_component
-  # TODO remove?
-  use DreadnoughtWeb.Components
-  # TODO remove?
-  use Phoenix.HTML
-  # TODO remove
-  #alias Dreadnought.Sessions
-  #alias Ecto.Changeset
   alias Dreadnought.Multiplayer
   alias Dreadnought.Multiplayer.NewPlayer
 
-  #use Ecto.Schema
   # http://blog.plataformatec.com.br/2016/05/ectos-insert_all-and-schemaless-queries/
 
   # *** *******************************
@@ -20,11 +11,6 @@ defmodule DreadnoughtWeb.RoomJoinComponent do
 
   @impl true
   def update(%{uuid: uuid} = _assigns, socket) do
-    #socket =
-    #  socket
-    #  |> assign
-    #  |> assign(player_uuid: uuid)
-    #  |> assign_changeset_and_url(%{}, false)
     {:ok,
       socket
       |> assign(uuid: uuid)
@@ -66,7 +52,7 @@ defmodule DreadnoughtWeb.RoomJoinComponent do
   end
 
   # *** *******************************
-  # *** PRIVATE (NEW)
+  # *** PRIVATE
 
   def assign_new_player(%{assigns: %{uuid: uuid}} = socket) do
     socket
@@ -77,9 +63,6 @@ defmodule DreadnoughtWeb.RoomJoinComponent do
     socket
     |> assign(changeset: Multiplayer.change_new_player(new_player))
   end
-
-  # *** *******************************
-  # *** PRIVATE (OLD)
 
   #defp assign_changeset_and_url(socket, params, show_errors?) do
   #  attrs = params_to_attrs(params, socket)
