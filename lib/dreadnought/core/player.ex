@@ -6,7 +6,7 @@ defmodule Dreadnought.Core.Player do
   use TypedStruct
 
   typedstruct enforce: false do
-    field :id, integer
+    field :id, integer | nil, default: nil
     field :type, :human | :ai
     field :uuid, String.t
     field :name, String.t
@@ -27,6 +27,16 @@ defmodule Dreadnought.Core.Player do
 
   def new_human(id, uuid, name) do
     new(id, :human, uuid, name)
+  end
+
+  def from_new_player(%{
+      uuid: _uuid,
+      name: _name,
+      mission_name: _mission_name} = new_player) do
+    player =
+      new_player
+      |> Map.put(:type, :human)
+    struct!(__MODULE__, player)
   end
 
   # *** *******************************

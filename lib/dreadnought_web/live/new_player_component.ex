@@ -38,7 +38,7 @@ defmodule DreadnoughtWeb.NewPlayerComponent do
       %{"new_player" => new_player_params},
       %{assigns: %{new_player: new_player}} = socket) do
     case Multiplayer.add_player(new_player, new_player_params) do
-      {:ok, _new_player} ->
+      :ok ->
         {:noreply,
           socket
           #|> put_flash(:info, "Joined Mission!")

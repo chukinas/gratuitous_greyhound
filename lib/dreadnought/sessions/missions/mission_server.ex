@@ -1,8 +1,9 @@
-# TODO move of rename directory?
+# TODO rename Dreadnought.Missions.Server
 defmodule Dreadnought.Sessions.MissionServer do
 
   alias Dreadnought.Core.Mission
   alias Dreadnought.Core.MissionBuilder
+  alias Dreadnought.Core.Player
   alias Dreadnought.Sessions.Players
   alias Dreadnought.Sessions.MissionBackup
   alias Dreadnought.Sessions.MissionRegistry
@@ -42,11 +43,10 @@ defmodule Dreadnought.Sessions.MissionServer do
   # *** CALLBACKS: HANDLE_CALL
 
   @impl true
-  def handle_call({:add_player, %{
-    player_name: player_name,
-    player_uuid: player_uuid,
-  }}, _from, mission) do
-    mission = MissionBuilder.add_player(mission, player_uuid, player_name)
+  def handle_call({:add_player, %Player{uuid: uuid, name: name}}, _from, mission) do
+    # TODO this fun should take Player struct
+    mission = MissionBuilder.add_player(mission, uuid, name)
+    # TODO replay with ok tuple?
     reply_then_send_all(mission, :ok)
   end
 

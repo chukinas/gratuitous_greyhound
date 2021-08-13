@@ -12,10 +12,13 @@ defmodule Dreadnought.Multiplayer do
     changeset =
       new_player
       |> change_new_player(attrs)
+      # TODO use Changeset.apply_changes instead?
       |> Map.put(:action, :validate)
     if changeset.valid? do
       new_player
       |> struct(changeset.changes)
+      |> NewPlayer.to_player
+      |> IOP.inspect("Multiplayer")
       |> Missions.add_player
     else
       {:error, changeset}

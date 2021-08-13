@@ -1,6 +1,7 @@
 defmodule Dreadnought.Sessions.Missions do
 
   alias Dreadnought.Core.Mission
+  alias Dreadnought.Core.Player
   alias Dreadnought.Sessions.MissionDynamicSupervisor
   alias Dreadnought.Multiplayer.NewPlayer
   alias Dreadnought.Sessions.MissionRegistry
@@ -8,6 +9,7 @@ defmodule Dreadnought.Sessions.Missions do
   # *** *******************************
   # *** GETTERS
 
+  # TODO delete these?
   def room_name(%NewPlayer{mission_name: value}), do: value
 
   def room_name(mission), do: Mission.name(mission)
@@ -15,8 +17,8 @@ defmodule Dreadnought.Sessions.Missions do
   # *** *******************************
   # *** API
 
-  def add_player(%NewPlayer{mission_name: mission_name} = new_player) do
-    genserver_call(mission_name, {:add_player, new_player})
+  def add_player(%Player{mission_name: mission_name} = player) do
+    genserver_call(mission_name, {:add_player, player})
   end
 
   def drop_player(room_name, player_uuid) when is_binary(room_name) do

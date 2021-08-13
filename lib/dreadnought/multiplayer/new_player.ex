@@ -4,6 +4,7 @@ defmodule Dreadnought.Multiplayer.NewPlayer do
   use Ecto.Schema
   @primary_key false
 
+  alias Dreadnought.Core.Player
   alias Dreadnought.Util.Slugs
   alias Ecto.Changeset
 
@@ -43,17 +44,10 @@ defmodule Dreadnought.Multiplayer.NewPlayer do
     |> Changeset.validate_length(:mission_name, min: 5, max: 20)
   end
 
-  #def validate(data \\ %__MODULE__{}, attrs) do
-  #  changeset = changeset(data, attrs)
-  #  if changeset.valid? do
-  #    join_room = Changeset.apply_changes(changeset)
-  #    {:ok, join_room}
-  #  else
-  #    {:error, changeset}
-  #  end
-  #end
-
-  # TODO if this ends up no longer being needed, remove from Player
-  #def types, do: @types
+  def to_player(%__MODULE__{} = new_player) do
+    new_player
+    |> Map.from_struct
+    |> Player.from_new_player
+  end
 
 end
