@@ -61,15 +61,36 @@ defmodule Dreadnought.Core.Mission do
   end
 
   # *** *******************************
-  # *** REDUCERS
+  # *** REDUCERS (PLAYERS)
+
+  def add_player(%__MODULE__{} = mission, %Player{} = player) do
+    player_id = 1 + player_count(mission)
+    put(mission, %Player{player | id: player_id})
+  end
 
   def drop_player_by_uuid(mission, player_uuid) do
     update_players(mission, &IdList.drop(&1, player_uuid, :uuid))
   end
 
+  def toggle_player_ready_by_id(%__MODULE__{} = mission, player_id) do
+    player_update =
+      fn players ->
+        IdList.update!(players, player_id, &Player.toggle_ready/1)
+      end
+    mission
+    |> update_players(player_update)
+    |> maybe_start
+  end
+
+  # *** *******************************
+  # *** REDUCERS
+
   def put(mission, list) when is_list(list), do: Enum.reduce(list, mission, &put(&2, &1))
   def put(mission, %Unit{} = unit), do: Maps.put_by_id(mission, :units, unit)
-  def put(mission, %Player{} = player), do: Maps.put_by_id(mission, :players, player)
+  def put(mission, %Player{id: id} = player) when is_integer(id) do
+    # TODO should I check more than just the id?
+    Maps.put_by_id(mission, :players, player)
+  end
   def put(mission, %ActionSelection{} = player_actions) do
     mission
     |> Maps.put_by_id(:player_actions, player_actions, :player_id)
@@ -100,24 +121,6 @@ defmodule Dreadnought.Core.Mission do
     mission
     |> increment_turn_number
     #|> calc_ai_commands
-  end
-
-  def toggle_player_ready_by_id(%__MODULE__{} = mission, player_id) do
-    player_update =
-      fn players ->
-        IdList.update!(players, player_id, &Player.toggle_ready/1)
-      end
-    mission
-    |> update_players(player_update)
-    |> maybe_start
-  end
-
-  def update_players(mission, fun) do
-    players =
-      mission
-      |> players
-      |> fun.()
-    %__MODULE__{mission | players: players}
   end
 
   def update_unit(mission, unit_id, fun) do
@@ -167,6 +170,14 @@ defmodule Dreadnought.Core.Mission do
   end
 
   defp reset_units(mission), do: Maps.map_each(mission, :units, &Unit.clear/1)
+
+  defp update_players(mission, fun) do
+    players =
+      mission
+      |> players
+      |> fun.()
+    %__MODULE__{mission | players: players}
+  end
 
   defp increment_turn_number(mission) do
     Map.update!(mission, :turn_number, & &1 + 1)

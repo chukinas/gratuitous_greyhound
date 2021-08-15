@@ -55,7 +55,7 @@ defmodule DreadnoughtWeb.HomepageComponent do
   defp assign_buttons(socket) do
     buttons =
       [
-        button_map(socket, "Play", "link-play", :setup),
+        button_map(socket, "Play", "link-multiplayer", :setup),
         button_map(socket, "Quick Demo", "link-demo", :demo),
         button_map(socket, "Gallery", "link-gallery", :gallery)
       ]

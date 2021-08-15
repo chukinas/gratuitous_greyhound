@@ -10,9 +10,10 @@ defmodule DreadnoughtWeb.NewPlayerComponent do
   # *** CALLBACKS
 
   @impl true
-  def update(%{uuid: uuid} = _assigns, socket) do
+  def update(%{id: id, uuid: uuid} = _assigns, socket) do
     {:ok,
       socket
+      |> assign(id: id)
       |> assign(uuid: uuid)
       |> assign_new_player
       |> assign_changeset

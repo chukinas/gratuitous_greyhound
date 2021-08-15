@@ -1,7 +1,6 @@
 defmodule Dreadnought.Missions.Server do
 
   alias Dreadnought.Core.Mission
-  alias Dreadnought.Core.MissionBuilder
   alias Dreadnought.Core.Player
   alias Dreadnought.Missions.Backup
   alias Dreadnought.Missions.Registry, as: MissionRegistry
@@ -43,9 +42,8 @@ defmodule Dreadnought.Missions.Server do
   # *** CALLBACKS: HANDLE_CALL
 
   @impl true
-  def handle_call({:add_player, %Player{uuid: uuid, name: name}}, _from, mission) do
-    # TODO this fun should take Player struct
-    mission = MissionBuilder.add_player(mission, uuid, name)
+  def handle_call({:add_player, %Player{} = player}, _from, mission) do
+    mission = Mission.add_player(mission, player)
     # TODO replay with ok tuple?
     reply_then_send_all(mission, :ok)
   end

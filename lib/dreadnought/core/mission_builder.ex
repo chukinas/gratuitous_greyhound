@@ -11,12 +11,6 @@ defmodule Dreadnought.Core.MissionBuilder do
   # *** *******************************
   # *** REDUCERS
 
-  def add_player(%Mission{} = mission, player_uuid, player_name) do
-    player_id = 1 + Mission.player_count(mission)
-    player = Player.new_human(player_id, player_uuid, player_name)
-    Mission.put(mission, player)
-  end
-
   def maybe_start(%Mission{} = mission) do
     if Mission.ready?(mission) do
       mission

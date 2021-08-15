@@ -1,6 +1,6 @@
-defmodule DreadnoughtWeb.DreadnoughtLiveTest do
-  use DreadnoughtWeb.ConnCase
+defmodule DreadnoughtWeb.MainLiveTest do
 
+  use DreadnoughtWeb.ConnCase
   import Phoenix.LiveViewTest
 
   # *** *******************************
@@ -18,6 +18,13 @@ defmodule DreadnoughtWeb.DreadnoughtLiveTest do
     |> render_click() =~ "Gallery"
   end
 
+  test "Multiplayer from Homepage", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/dreadnought")
+    view
+    |> click("#link-multiplayer")
+    |> assert_element("#new_player_component")
+  end
+
   test "Quick Demo", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/dreadnought")
     view
@@ -30,10 +37,18 @@ defmodule DreadnoughtWeb.DreadnoughtLiveTest do
   # *** *******************************
   # *** ASSERTS - GENERAL HTML
 
-  #defp assert_element(view, selector) do
-  #  assert has_element?(view, selector)
-  #  view
-  #end
+  # TODO move these to a helper module
+  defp assert_element(view, selector) do
+    assert has_element?(view, selector)
+    view
+  end
+
+  defp click(view, selector) do
+    view
+    |> element(selector)
+    |> render_click
+    view
+  end
 
   #defp refute_element(view, selector, text_filter \\ nil) do
   #  refute has_element?(view, selector, text_filter)
