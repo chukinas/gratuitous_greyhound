@@ -77,9 +77,10 @@ defmodule Dreadnought.Missions do
     |> GenServer.cast(msg)
   end
 
+  # TODO rename mission_pid_from_name
   defp room_pid_from_name(mission_name) when is_binary(mission_name) do
     with :error <- MissionRegistry.fetch_pid(mission_name),
-         {:ok, pid} <- MissionDynamicSupervisor.new_room(mission_name) do
+         {:ok, pid} <- MissionDynamicSupervisor.new_mission(mission_name) do
       pid
     else
       {:ok, pid} -> pid

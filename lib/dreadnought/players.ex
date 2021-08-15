@@ -19,6 +19,7 @@ defmodule Dreadnought.Players do
 
   def register_mission_name(%Player{uuid: player_uuid, mission_name: room_name}) do
     MissionNameRegistry.register(player_uuid, room_name)
+    |> IOP.inspect("Players.register_mission_name")
   end
 
   def fetch_mission_name(player_uuid) do

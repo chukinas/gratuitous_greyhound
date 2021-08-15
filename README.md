@@ -18,3 +18,6 @@ This is the project for my personal website. As of Jan 2021, I am using it mainl
 # View app on device on home network
   * run `ifconfig` in terminal. Note the inet addr.
   * On device, go to <inet addr>:4000
+
+# Updating Phoenix
+  * see www.phoenixdiff.org

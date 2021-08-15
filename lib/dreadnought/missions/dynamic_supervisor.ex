@@ -20,9 +20,9 @@ defmodule Dreadnought.Missions.DynamicSupervisor do
   # *** *******************************
   # *** API
 
-  @spec new_room(String.t) :: {:ok, pid}
-  def new_room(room_name) do
-    child_spec = MissionServer.child_spec(room_name)
+  @spec new_mission(String.t) :: {:ok, pid}
+  def new_mission(mission_name) do
+    child_spec = MissionServer.child_spec(mission_name)
     DynamicSupervisor.start_child(__MODULE__, child_spec)
   end
 

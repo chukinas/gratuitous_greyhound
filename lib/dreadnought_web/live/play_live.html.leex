@@ -1,5 +1,5 @@
 <%= if @mission do %>
-  <%= live_component @socket, DreadnoughtWeb.Dreadnought.PlayerTurnComponent, id: :player_turn, mission: @mission, player_uuid: @uuid %>
+  <%= live_component @socket, DreadnoughtWeb.Dreadnought.PlayerTurnComponent, id: "player_turn_component", mission: @mission, player_uuid: @uuid %>
 
   <%= render "maneuvers.html", units: @mission.units, grid: @mission.grid %>
   <%# TODO rename mission.gunfire to mission.animations %>

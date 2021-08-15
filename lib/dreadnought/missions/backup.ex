@@ -1,5 +1,7 @@
 defmodule Dreadnought.Missions.Backup do
 
+  # TODO delete backups when the mission is terminated
+
   use Agent
   alias Dreadnought.Core.Mission
 

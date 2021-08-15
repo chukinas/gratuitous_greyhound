@@ -11,18 +11,15 @@ defmodule DreadnoughtWeb.MainLiveTest do
     assert html_response(conn, 302) =~ "/dreadnought"
   end
 
-  test "Gallery from Homepage", %{conn: conn} do
-    {:ok, view, _html} = live(conn, "/dreadnought")
-    assert view
-    |> element("#link-gallery")
-    |> render_click() =~ "Gallery"
-  end
-
   test "Multiplayer from Homepage", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/dreadnought")
     view
     |> click("#link-multiplayer")
     |> assert_element("#new_player_component")
+    |> form_submit("#add-player", new_player: %{name: "Billy the Kid", mission_name: "flippy slippy"})
+    |> assert_element("#lobby_component")
+    |> click("#toggle-ready")
+    #|> assert_element("#player_turn_component")
   end
 
   test "Quick Demo", %{conn: conn} do
@@ -32,6 +29,13 @@ defmodule DreadnoughtWeb.MainLiveTest do
     |> render_click()
     assert has_element?(view, "#player_turn_component")
     assert has_element?(view, "#unit-1")
+  end
+
+  test "Gallery from Homepage", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/dreadnought")
+    assert view
+    |> element("#link-gallery")
+    |> render_click() =~ "Gallery"
   end
 
   # *** *******************************
@@ -47,6 +51,13 @@ defmodule DreadnoughtWeb.MainLiveTest do
     view
     |> element(selector)
     |> render_click
+    view
+  end
+
+  defp form_submit(view, selector, form_data) do
+    view
+    |> form(selector, form_data)
+    |> render_submit
     view
   end
 

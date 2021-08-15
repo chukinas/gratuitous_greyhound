@@ -10,13 +10,16 @@ defmodule DreadnoughtWeb.LobbyComponent do
   # *** CALLBACKS
 
   @impl true
-  def update(assigns, socket) do
+  def update(
+    %{id: id} = assigns,
+    socket) do
     mission = assigns.mission
     uuid = assigns.uuid
     player_self = Mission.player_by_uuid(mission, uuid)
     ready? = Player.ready? player_self
     socket =
       assign(socket,
+        id: id,
         room_name: Mission.name(mission),
         pretty_room_name: Mission.pretty_name(mission),
         player_id: Player.id(player_self),

@@ -10,7 +10,7 @@
         <%= if @mission do %>
           <%= live_component(@socket, DreadnoughtWeb.LobbyComponent, id: :lobby_component, uuid: @uuid, mission: @mission) %>
         <% else %>
-          <%= live_component(@socket, DreadnoughtWeb.NewPlayerComponent, id: :room_join_component, uuid: @uuid) %>
+          <%= live_component(@socket, DreadnoughtWeb.NewPlayerComponent, id: :new_player_component, uuid: @uuid) %>
         <% end %>
       <% :demo -> %>
         <%= live_component( @socket, DreadnoughtWeb.DemoComponent, id: :demo_component) %>

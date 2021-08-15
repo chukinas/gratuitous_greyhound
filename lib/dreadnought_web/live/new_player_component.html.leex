@@ -1,7 +1,7 @@
 <div id="<%= @id %>" class="py-8 px-4 sm:px-10">
 
   <%= f = form_for @changeset, "#", 
-    id: "add-player-form",
+    id: "add-player",
     phx_change: "validate", 
     phx_submit: "add_player", 
     phx_target: @myself, 
