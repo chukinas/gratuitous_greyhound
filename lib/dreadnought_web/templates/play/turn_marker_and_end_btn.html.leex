@@ -1,0 +1,19 @@
+<div class="absolute pointer-events-auto text-9xl text-white font-bold top-0 left-0" >
+  <%= @turn_number %>
+  <div class="space-y-2">
+    <%= if @player_turn.show_end_turn_btn? do %>
+      <%= DreadnoughtWeb.Components.button(
+          "End Turn", 
+          id: "dynWorldCompCompleteTurnBtn",
+          "phx-target": @target, 
+          "phx-click": "end_turn"
+          )%>
+    <% end %>
+    <%= DreadnoughtWeb.Components.button(
+        "Leave Game", 
+        id: "leaveGameBtn",
+        "phx-target": @target, 
+        "phx-click": "leave_game"
+        )%>
+  </div>
+</div>

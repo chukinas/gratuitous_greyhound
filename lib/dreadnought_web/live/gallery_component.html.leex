@@ -1,0 +1,38 @@
+<div id="<%= @id %>">
+  <%# 'show markers' toggle %>
+  <div class="my-4">
+    <%= render_markers_toggle(@show_markers?, @myself) %>
+  </div>
+
+  <%# GRID %>
+  <%# based on horizontal link cards %>
+  <div class="grid grid-flow-row-dense grid-cols-3 gap-4 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 overflow-hidden">
+
+    <%# SPRITE ANIMATIONS %>
+    <%= for term <- @sprites_and_animations do %>
+      <div class="col-span-<%= term.colspan  %> row-span-<%= term.rowspan %> relative rounded-lg px-6 py-5 shadow-sm flex flex-col items-center justify-start space-x-3 ">
+
+        <%# DESCRIPTIVE TEXT %>
+        <%= render_p term.item.name, "min-w-0 mb-4" %>
+
+        <%# SPRITE ANIMATION %>
+        <div style="<%= DreadnoughtWeb.Shared.width_height_from_size(term.rect) %>" >
+          <div style="<%= DreadnoughtWeb.Shared.left_top_from_position(term.rect) %>"
+               class="relative">
+            <%= DreadnoughtWeb.AnimationView.render_animation_or_sprite(@socket, term.item) %>
+            <%= if @show_markers? do %>
+              <%= render_rotation_center_dot() %>
+              <%= for position <- term.mount_positions do %>
+                <%= render_mount_dot(position) %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+
+      </div>
+    <% end %>
+
+  </div>
+
+  <input type="hidden" class="col-span-1 col-span-2 col-span-3 row-span-1 row-span-2 row-span-3">
+</div>
