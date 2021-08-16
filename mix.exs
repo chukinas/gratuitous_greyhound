@@ -38,7 +38,7 @@ defmodule Dreadnought.MixProject do
       {:phoenix_ecto, "~> 4.0"},
       #{:ecto, "~> 3.3.4"},
       {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
-      {:phoenix_live_view, "~> 0.15.0"},
+      {:phoenix_live_view, "~> 0.15.7"},
       {:floki, ">= 0.27.0", only: :test},
       {:phoenix_html, "~> 2.11"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},

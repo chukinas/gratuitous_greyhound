@@ -57,7 +57,7 @@ defmodule DreadnoughtWeb.LiveHelpers do
 
       @spec assign_uuid_and_mission(Phoenix.LiveView.Socket.t, map) :: Phoenix.LiveView.Socket.t
       def assign_uuid_and_mission(socket, %{"uuid" => uuid} = _session) do
-        if socket.connected? do
+        if connected?(socket) do
           Players.register_liveview(uuid)
           socket
           |> assign(uuid: uuid)
