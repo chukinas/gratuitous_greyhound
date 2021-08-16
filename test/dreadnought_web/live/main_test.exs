@@ -11,14 +11,20 @@ defmodule DreadnoughtWeb.MainLiveTest do
     assert html_response(conn, 302) =~ "/dreadnought"
   end
 
+  # TODO follow the redirect to /dreadnought/play and test for player turn comp
   test "Multiplayer from Homepage", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/dreadnought")
+    new_player = %{name: "Billy the Kid", mission_name: "flippy slippy"}
     view
     |> click("#link-multiplayer")
     |> assert_element("#new_player_component")
-    |> form_submit("#add-player", new_player: %{name: "Billy the Kid", mission_name: "flippy slippy"})
+    |> form_submit("#add-player", new_player: new_player)
     |> assert_element("#lobby_component")
+    #|> IOP.inspect
     |> click("#toggle-ready")
+
+    {path, flash} = assert_redirect(view)
+    #|> IOP.inspect
     #|> assert_element("#player_turn_component")
   end
 
@@ -51,6 +57,7 @@ defmodule DreadnoughtWeb.MainLiveTest do
     view
     |> element(selector)
     |> render_click
+    #|> IOP.inspect("click on #{selector}")
     view
   end
 

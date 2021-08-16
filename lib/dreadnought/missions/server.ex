@@ -44,7 +44,6 @@ defmodule Dreadnought.Missions.Server do
 
   @impl true
   def handle_call({:add_player, %Player{} = player}, _from, mission) do
-    IO.puts "Missions.Server.handle_call add_player"
     mission = Mission.add_player(mission, player)
     # TODO replay with ok tuple?
     reply_then_send_all(mission, :ok)
@@ -97,7 +96,7 @@ defmodule Dreadnought.Missions.Server do
   end
 
   @impl true
-  def terminate(reason, mission) do
+  def terminate(_reason, mission) do
     Backup.put(mission)
   end
 
@@ -114,9 +113,9 @@ defmodule Dreadnought.Missions.Server do
   # *** *******************************
   # *** RETURN TUPLES
 
-  defp ok_then_send_all(room) do
-    {:ok, room, {:continue, :send_all_players}}
-  end
+  #defp ok_then_send_all(room) do
+  #  {:ok, room, {:continue, :send_all_players}}
+  #end
 
   defp noreply(mission) do
     {:noreply, mission}
