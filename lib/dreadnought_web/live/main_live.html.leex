@@ -5,19 +5,19 @@
   <div class="mt-8 sm:mx-auto sm:w-full max-w-2xl">
     <%= case @live_action do %>
       <% :homepage -> %>
-        <%= live_component( @socket, DreadnoughtWeb.HomepageComponent, id: :homepage_component) %>
+        <%= live_component(DreadnoughtWeb.HomepageComponent, id: :homepage_component) %>
       <% :setup -> %>
         <%= if @mission do %>
-          <%= live_component(@socket, DreadnoughtWeb.LobbyComponent, id: :lobby_component, uuid: @uuid, mission: @mission) %>
+          <%= live_component(DreadnoughtWeb.LobbyComponent, id: :lobby_component, uuid: @uuid, mission: @mission) %>
         <% else %>
-          <%= live_component(@socket, DreadnoughtWeb.NewPlayerComponent, id: :new_player_component, uuid: @uuid) %>
+          <%= live_component(DreadnoughtWeb.NewPlayerComponent, id: :new_player_component, uuid: @uuid) %>
         <% end %>
       <% :demo -> %>
-        <%= live_component( @socket, DreadnoughtWeb.DemoComponent, id: :demo_component) %>
+        <%= live_component(DreadnoughtWeb.DemoComponent, id: :demo_component) %>
       <% :gallery -> %>
-        <%= live_component( @socket, DreadnoughtWeb.GalleryComponent, id: :gallery_component, show_markers?: assigns[:show_markers?]) %>
+        <%= live_component(DreadnoughtWeb.GalleryComponent, id: :gallery_component, show_markers?: assigns[:show_markers?]) %>
     <% end %>
   </div>
 </div>
 
-<%= live_component(@socket, DreadnoughtWeb.NavComponent, id: "nav_component") %>
+<%= live_component(DreadnoughtWeb.NavComponent, id: "nav_component") %>
