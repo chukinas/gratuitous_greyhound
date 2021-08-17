@@ -1,3 +1,5 @@
+#https://elixirforum.com/t/loading-modules-in-test-helper-exs-file/16609
+
 defmodule Dreadnought.TestHelpers do
 
   use Dreadnought.PositionOrientationSize
@@ -21,9 +23,18 @@ defmodule Dreadnought.TestHelpers do
 
   require ExUnit.Assertions
   import ExUnit.Assertions
+  import Phoenix.LiveViewTest
 
   # *** *******************************
   # *** API
+
+  def click(view, selector) do
+    view
+    |> element(selector)
+    |> render_click
+    #|> IOP.inspect("click on #{selector}")
+    view
+  end
 
   @precision 1
 

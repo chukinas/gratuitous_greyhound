@@ -1,6 +1,7 @@
 defmodule DreadnoughtWeb.MainLiveTest do
 
   use DreadnoughtWeb.ConnCase
+  use Dreadnought.TestHelpers
   import Phoenix.LiveViewTest
 
   # *** *******************************
@@ -11,7 +12,6 @@ defmodule DreadnoughtWeb.MainLiveTest do
     assert html_response(conn, 302) =~ "/dreadnought"
   end
 
-  # TODO follow the redirect to /dreadnought/play and test for player turn comp
   test "Multiplayer from Homepage", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/dreadnought")
     new_player = %{name: "Billy the Kid", mission_name: "flippy slippy"}
@@ -20,23 +20,17 @@ defmodule DreadnoughtWeb.MainLiveTest do
     |> assert_element("#new_player_component")
     |> form_submit("#add-player", new_player: new_player)
     |> assert_element("#lobby_component")
-    #|> IOP.inspect
     |> click("#toggle-ready")
-
-    assert_redirect(view, "/dreadnought/play")
-    #view
-    #|> IOP.inspect
-    #|> assert_element("#player_turn_component")
+    |> assert_redirect("/dreadnought/play")
   end
 
-  #test "Quick Demo", %{conn: conn} do
-  #  {:ok, view, _html} = live(conn, "/dreadnought")
-  #  view
-  #  |> element("#link-demo")
-  #  |> render_click()
-  #  assert has_element?(view, "#player_turn_component")
-  #  assert has_element?(view, "#unit-1")
-  #end
+  test "Quick Demo", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/dreadnought")
+    view
+    |> click("#link-demo")
+    |> assert_redirect("/dreadnought/demo")
+    assert has_element?(view, "#unit-1")
+  end
 
   test "Gallery from Homepage", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/dreadnought")
@@ -51,14 +45,6 @@ defmodule DreadnoughtWeb.MainLiveTest do
   # TODO move these to a helper module
   defp assert_element(view, selector) do
     assert has_element?(view, selector)
-    view
-  end
-
-  defp click(view, selector) do
-    view
-    |> element(selector)
-    |> render_click
-    #|> IOP.inspect("click on #{selector}")
     view
   end
 
