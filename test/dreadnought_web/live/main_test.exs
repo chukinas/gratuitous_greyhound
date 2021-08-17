@@ -1,7 +1,7 @@
 defmodule DreadnoughtWeb.MainLiveTest do
 
   use DreadnoughtWeb.ConnCase
-  use Dreadnought.TestHelpers
+  import DreadnoughtWeb.TestHelpers
   import Phoenix.LiveViewTest
 
   # *** *******************************
@@ -38,26 +38,5 @@ defmodule DreadnoughtWeb.MainLiveTest do
     |> element("#link-gallery")
     |> render_click() =~ "Gallery"
   end
-
-  # *** *******************************
-  # *** ASSERTS - GENERAL HTML
-
-  # TODO move these to a helper module
-  defp assert_element(view, selector) do
-    assert has_element?(view, selector)
-    view
-  end
-
-  defp form_submit(view, selector, form_data) do
-    view
-    |> form(selector, form_data)
-    |> render_submit
-    view
-  end
-
-  #defp refute_element(view, selector, text_filter \\ nil) do
-  #  refute has_element?(view, selector, text_filter)
-  #  view
-  #end
 
 end

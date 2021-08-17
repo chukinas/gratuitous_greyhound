@@ -2,11 +2,11 @@ ExUnit.start()
 
 defmodule Dreadnought.LinearAlgebraTest do
 
-  alias Dreadnought.Math
   use Dreadnought.LinearAlgebra
   use Dreadnought.PositionOrientationSize
-  use Dreadnought.TestHelpers
   use ExUnit.Case, async: true
+  import Dreadnought.TestHelpers
+  alias Dreadnought.Math
 
   describe "VectorApi:" do
 

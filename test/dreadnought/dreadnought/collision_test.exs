@@ -4,7 +4,8 @@ defmodule CollisionTest do
 
   use ExUnit.Case, async: true
   use Dreadnought.PositionOrientationSize
-  use Dreadnought.TestHelpers
+  alias Dreadnought.Geometry.Rect
+  alias Dreadnought.Geometry.Grid
 
   test "get squares which include a target shape" do
     count_overlapping_squares = fn target ->

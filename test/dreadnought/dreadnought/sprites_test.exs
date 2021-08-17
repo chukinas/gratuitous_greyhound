@@ -3,7 +3,8 @@ ExUnit.start()
 defmodule Dreadnought.Core.SpritesTest do
 
   use ExUnit.Case, async: true
-  use Dreadnought.TestHelpers
+  alias Dreadnought.Core.Sprite
+  alias Dreadnought.Core.Sprites
 
   test "Sprites has a function called `test`" do
     Sprites.test("sprite_1")

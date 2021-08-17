@@ -3,10 +3,11 @@ ExUnit.start()
 defmodule Dreadnought.PathsTest do
 
   use ExUnit.Case, async: true
-  use Dreadnought.TestHelpers
   use Dreadnought.PositionOrientationSize
   import Dreadnought.Math
+  import Dreadnought.TestHelpers
   alias Dreadnought.BoundingRect
+  alias Dreadnought.Geometry.Rect
   alias Dreadnought.Paths
 
   # TODO move this out to helpers module

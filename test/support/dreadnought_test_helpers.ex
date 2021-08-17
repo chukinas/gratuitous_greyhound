@@ -6,41 +6,10 @@ defmodule Dreadnought.TestHelpers do
   use Dreadnought.LinearAlgebra
   alias Dreadnought.Util.Precision
 
-  defmacro __using__(_options) do
-    quote do
-      require Dreadnought.TestHelpers
-      import Dreadnought.TestHelpers
-      alias Dreadnought.Core.Arena
-      alias Dreadnought.Core.Mission
-      alias Dreadnought.Core.Sprite
-      alias Dreadnought.Core.Sprites
-      alias Dreadnought.Core.Unit
-      alias Dreadnought.Geometry.Grid
-      alias Dreadnought.Geometry.Rect
-      alias Dreadnought.Svg
-    end
-  end
-
   require ExUnit.Assertions
   import ExUnit.Assertions
-  import Phoenix.LiveViewTest
-
-  # *** *******************************
-  # *** API
-
-  def click(view, selector) do
-    view
-    |> element(selector)
-    |> render_click
-    #|> IOP.inspect("click on #{selector}")
-    view
-  end
 
   @precision 1
-
-  def compare_nums(a, b) do
-    assert a == b
-  end
 
   def assert_approx_equal(a, b) when is_vector(a) and is_vector(b) do
     assert_tuple_approx_equal(a, b)

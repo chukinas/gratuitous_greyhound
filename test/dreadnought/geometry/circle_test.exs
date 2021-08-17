@@ -4,8 +4,8 @@ defmodule Dreadnought.Geometry.CircleTest do
 
   use ExUnit.Case, async: true
   use Dreadnought.PositionOrientationSize
-  use Dreadnought.TestHelpers
   use Dreadnought.LinearAlgebra
+  import Dreadnought.TestHelpers
   alias Dreadnought.Geometry.Circle
 
   describe "circle" do
