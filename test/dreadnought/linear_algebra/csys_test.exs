@@ -1,5 +1,3 @@
-ExUnit.start()
-
 defmodule LinearAlgebra.CsysTest do
 
   use ExUnit.Case, async: true

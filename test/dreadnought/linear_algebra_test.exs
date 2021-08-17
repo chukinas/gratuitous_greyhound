@@ -1,5 +1,3 @@
-ExUnit.start()
-
 defmodule Dreadnought.LinearAlgebraTest do
 
   use Dreadnought.LinearAlgebra

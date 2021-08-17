@@ -1,5 +1,3 @@
-ExUnit.start()
-
 defmodule CollisionTest do
 
   use ExUnit.Case, async: true

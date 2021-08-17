@@ -1,5 +1,3 @@
-ExUnit.start()
-
 defmodule Dreadnought.Geometry.CircleTest do
 
   use ExUnit.Case, async: true
