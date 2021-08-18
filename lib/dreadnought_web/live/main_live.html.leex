@@ -13,7 +13,7 @@
           <%= live_component(DreadnoughtWeb.NewPlayerComponent, id: :new_player_component, uuid: @uuid) %>
         <% end %>
       <% :demo -> %>
-        <%= live_component(DreadnoughtWeb.DemoComponent, id: :demo_component) %>
+        <%= live_component(DreadnoughtWeb.DemoComponent, id: :demo_component, uuid: @uuid) %>
       <% :gallery -> %>
         <%= live_component(DreadnoughtWeb.GalleryComponent, id: :gallery_component, show_markers?: assigns[:show_markers?]) %>
     <% end %>

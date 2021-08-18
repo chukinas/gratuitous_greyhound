@@ -18,6 +18,7 @@ defmodule Dreadnought.Core.Player do
   # *** *******************************
   # *** CONSTRUCTORS
 
+  # TODO These need to take a mission_spec?
   def new_ai(id, uuid, name) do
     new(id, :ai, uuid, name)
   end

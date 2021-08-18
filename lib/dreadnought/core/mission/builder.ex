@@ -1,6 +1,6 @@
 defmodule Dreadnought.Core.Mission.Builder do
 
-  use Dreadnought.Core.Mission.Spec
+    use Dreadnought.Core.Mission.Spec
   alias Dreadnought.Core.Mission
 
   defmacro __using__(_opts) do

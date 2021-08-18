@@ -1,6 +1,6 @@
 defmodule Dreadnought.Missions do
 
-  use Dreadnought.Core.Mission.Spec
+    use Dreadnought.Core.Mission.Spec
   alias Dreadnought.Core.ActionSelection
   alias Dreadnought.Core.Mission
   alias Dreadnought.Core.Player
