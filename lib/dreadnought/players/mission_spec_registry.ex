@@ -1,4 +1,4 @@
-defmodule Dreadnought.Players.MissionNameRegistry do
+defmodule Dreadnought.Players.MissionSpecRegistry do
 
   use Agent
   use Dreadnought.Core.Mission.Spec
