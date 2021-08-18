@@ -67,13 +67,31 @@ defmodule Dreadnought.Core.Mission do
   # *** *******************************
   # *** REDUCERS (PLAYERS)
 
-  def add_player(%__MODULE__{} = mission, %Player{} = player) do
-    player_id = 1 + player_count(mission)
-    put(mission, %Player{player | id: player_id})
+  def add_player(%__MODULE__{} = mission, player) do
+    player_id = next_player_id(mission)
+    mission
+    |> drop_player(player)
+    |> put(Player.put_id(player, player_id))
   end
 
-  def drop_player_by_uuid(mission, player_uuid) do
-    update_players(mission, &IdList.drop(&1, player_uuid, :uuid))
+  def drop_player(mission, %Player{} = player) do
+    uuid = Player.uuid(player)
+    drop_player_by_uuid(mission, uuid)
+  end
+
+  def drop_player_by_uuid(mission, uuid) do
+    update_players(mission, &Player.Enum.exclude_uuid(&1, uuid))
+  end
+
+  def next_player_id(%__MODULE__{} = mission) do
+    1 + max(highest_player_id(mission), player_count(mission))
+  end
+
+  def highest_player_id(mission) do
+    mission
+    |> players
+    |> Stream.map(&Player.id/1)
+    |> Enum.max(fn -> 0 end)
   end
 
   def toggle_player_ready_by_id(%__MODULE__{} = mission, player_id) do

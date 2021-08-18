@@ -56,6 +56,8 @@ defmodule Dreadnought.Core.Player do
   # *** *******************************
   # *** REDUCERS
 
+  def put_id(player, id), do: %__MODULE__{player | id: id}
+
   def toggle_ready(%__MODULE__{ready?: ready?} = player) do
     %__MODULE__{player | ready?: !ready?}
   end
@@ -92,6 +94,10 @@ defmodule Dreadnought.Core.Player.Enum do
 
   def by_uuid(players, uuid) do
     Enum.find(players, & Player.uuid(&1) == uuid)
+  end
+
+  def exclude_uuid(players, uuid) do
+    Enum.filter(players, fn player -> !Player.has_uuid?(player, uuid) end)
   end
 
 end
