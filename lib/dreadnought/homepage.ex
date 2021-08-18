@@ -8,14 +8,14 @@ defmodule Dreadnought.Homepage do
   alias Dreadnought.Core.Mission
   alias Dreadnought.Core.Unit
   alias Dreadnought.Core.UnitAction
-  alias Dreadnought.Homepage.MissionBuilder
+  alias Dreadnought.Homepage.Mission, as: HomepageMission
   alias Dreadnought.Util.IdList
 
   # *** *******************************
   # *** CONSTRUCTORS
 
   def build_mission do
-    MissionBuilder.new(@mission_name)
+    HomepageMission.build(@mission_name)
   end
 
   # *** *******************************
@@ -35,7 +35,7 @@ defmodule Dreadnought.Homepage do
     unit_id = next_main_unit_id(mission)
     unit_id
     |> hull_by_unit_id
-    |> MissionBuilder.do_new(unit_id, @mission_name)
+    |> HomepageMission.do_new(unit_id, @mission_name)
   end
 
   # *** *******************************

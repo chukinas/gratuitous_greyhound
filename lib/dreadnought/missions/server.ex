@@ -3,6 +3,7 @@ defmodule Dreadnought.Missions.Server do
   use Dreadnought.Core.Mission.Spec
   use GenServer
   alias Dreadnought.Core.Mission
+  alias Dreadnought.Core.Mission.Builder
   alias Dreadnought.Core.Player
   alias Dreadnought.Missions.Backup
   alias Dreadnought.Missions.Registry, as: MissionRegistry
@@ -36,16 +37,10 @@ defmodule Dreadnought.Missions.Server do
         {:ok, mission} ->
           mission
         :error ->
-          build_mission(mission_spec)
+          Builder.build(mission_spec)
       end
     #ok_then_send_all(mission)
     {:ok, mission}
-  end
-
-  # TODO move to Mission.Builder
-  defp build_mission({mission_builder_module, mission_name} = mission_spec)
-  when is_mission_spec(mission_spec) do
-    apply(mission_builder_module, :new, [mission_name])
   end
 
   # *** *******************************

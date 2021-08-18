@@ -1,7 +1,6 @@
 alias Dreadnought.Core, as: D
 alias Dreadnought.Core.Player
 alias Dreadnought.Core.Mission
-alias Dreadnought.Core.MissionBuilder
 alias Dreadnought.Geometry, as: G
 
 alias Dreadnought.LinearAlgebra

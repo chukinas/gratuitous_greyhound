@@ -6,7 +6,7 @@ defmodule Dreadnought.Multiplayer.NewPlayer do
 
   use Dreadnought.Core.Mission.Spec
   alias Dreadnought.Core.Player
-  alias Dreadnought.Multiplayer.MissionBuilder
+  alias Dreadnought.Multiplayer.Mission
   alias Dreadnought.Util.Slugs
   alias Ecto.Changeset
 
@@ -50,7 +50,7 @@ defmodule Dreadnought.Multiplayer.NewPlayer do
     new_player
     |> Map.from_struct
     |> Map.drop([:mission_name])
-    |> Map.put(:mission_spec, MissionBuilder.mission_spec(mission_name))
+    |> Map.put(:mission_spec, Mission.mission_spec(mission_name))
     |> Player.from_new_player
   end
 

@@ -1,43 +1,35 @@
-defmodule Dreadnought.Homepage.MissionBuilder do
+defmodule Dreadnought.Homepage.Mission do
 
-  use Dreadnought.Core.Mission.Spec
+  use Dreadnought.Core.Mission.Builder
   use Dreadnought.PositionOrientationSize
   use Dreadnought.Homepage.Helpers
   alias Dreadnought.Core.Mission
-  alias Dreadnought.Core.Mission.Builder, as: MissionBuilder
-  alias Dreadnought.Core.MissionHelpers
+  alias Dreadnought.Core.Mission.Helpers
   alias Dreadnought.Core.Player
   alias Dreadnought.Core.Unit
   alias Dreadnought.Core.UnitBuilder
 
-  @behaviour MissionBuilder
-
   # *** *******************************
   # *** CONSTRUCTORS
 
-  @impl MissionBuilder
-  def new(mission_name) do
+  @impl Builder
+  def build(mission_name) do
     @starting_main_unit_id
     |> hull_by_unit_id
     |> do_new(@starting_main_unit_id, mission_name)
   end
 
   def do_new(hull, main_unit_id, mission_name) do
-    {grid, margin} = MissionHelpers.medium_map()
+    {grid, margin} = Helpers.medium_map()
     inputs = [
       Player.new_manual(@main_player_id),
       Player.new_manual(@target_player_id),
     ]
-    Mission.new(new_mission_spec(__MODULE__, mission_name), grid, margin)
+    Mission.new(mission_spec(mission_name), grid, margin)
     |> Mission.put(inputs)
     |> put_target_unit
     |> put_main_unit(hull, main_unit_id)
     |> Mission.start
-  end
-
-  @impl MissionBuilder
-  def mission_spec(mission_name) when is_binary(mission_name) do
-    new_mission_spec(__MODULE__, mission_name)
   end
 
   # *** *******************************

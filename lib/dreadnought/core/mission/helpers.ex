@@ -1,5 +1,4 @@
-# TODO rename Mission.Helpers
-defmodule Dreadnought.Core.MissionHelpers do
+defmodule Dreadnought.Core.Mission.Helpers do
 
   use Dreadnought.LinearAlgebra
   use Dreadnought.PositionOrientationSize

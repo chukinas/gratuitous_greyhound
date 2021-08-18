@@ -83,7 +83,7 @@ defmodule Dreadnought.Missions do
 
   defp pid_from_mission_spec(mission_spec) when is_mission_spec(mission_spec) do
     with :error <- MissionRegistry.fetch_pid(mission_spec),
-         {:ok, pid} <- MissionDynamicSupervisor.new_mission(mission_spec) do
+         {:ok, pid} <- MissionDynamicSupervisor.start_mission(mission_spec) do
       pid
     else
       {:ok, pid} -> pid
