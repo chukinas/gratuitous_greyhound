@@ -1,9 +1,9 @@
 <div id="<%= @id %>" class="space-y-12">
 
-  <%= render_large_text "Room: #{@pretty_room_name}" %>
+  <%= render_large_text "Room: #{@pretty_mission_name}" %>
   <%= for player_text <- @players_text, do: render_large_text(player_text) %>
   
   <%= render_button @ready_button_text, id: "toggle-ready", phx_click: "toggle_ready", phx_target: @myself %>
-  <%= render_button "Leave Room", phx_click: "leave_room", phx_target: @myself %>
+  <%= render_button "Leave Room", phx_click: "leave_mission", phx_target: @myself %>
 
 </div>

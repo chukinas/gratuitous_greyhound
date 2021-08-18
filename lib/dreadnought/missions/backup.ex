@@ -23,7 +23,7 @@ defmodule Dreadnought.Missions.Backup do
   def fetch_and_pop(mission_spec) when is_mission_spec(mission_spec) do
     case pop(mission_spec) do
       nil -> :error
-      room -> {:ok, room}
+      mission -> {:ok, mission}
     end
     |> IOP.inspect(__MODULE__)
   end

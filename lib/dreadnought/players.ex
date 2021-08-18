@@ -2,13 +2,16 @@ defmodule Dreadnought.Players do
 
   use Dreadnought.Core.Mission.Spec
   alias Dreadnought.Core.Player
+  alias Dreadnought.Core.Mission
   alias Dreadnought.Players.MissionNameRegistry
   alias Dreadnought.Players.ProcessRegistry
 
-  # TODO rename `send_mission`
-  def send_room(player_uuid, room) do
+  def send_mission(player_uuid, %Mission{} = mission), do: do_send_mission(player_uuid, mission)
+  def send_mission(player_uuid, nil), do: do_send_mission(player_uuid, nil)
+
+  defp do_send_mission(player_uuid, mission_or_nil) do
     for pid <- ProcessRegistry.pids(player_uuid) do
-      send pid, {:update_mission, room}
+      send pid, {:update_mission, mission_or_nil}
     end
   end
 

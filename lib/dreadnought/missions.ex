@@ -35,8 +35,8 @@ defmodule Dreadnought.Missions do
 
   def get_by_player_uuid(player_uuid) do
     with {:ok, mission_spec} <- Players.fetch_mission_spec(player_uuid),
-         {:ok, room}      <- fetch(mission_spec) do
-      room
+         {:ok, mission}      <- fetch(mission_spec) do
+      mission
     else
       _response ->
         nil
@@ -46,7 +46,7 @@ defmodule Dreadnought.Missions do
   def fetch(mission_spec) when is_mission_spec(mission_spec) do
     case get_by_mission_spec(mission_spec) do
       nil -> :error
-      room -> {:ok, room}
+      mission -> {:ok, mission}
     end
   end
 
@@ -68,18 +68,17 @@ defmodule Dreadnought.Missions do
 
   defp call_mission_server(mission_spec, msg) do
     mission_spec
-    |> room_pid_from_name
+    |> pid_from_mission_spec
     |> GenServer.call(msg)
   end
 
   defp cast_mission_server(mission_spec, msg) do
     mission_spec
-    |> room_pid_from_name
+    |> pid_from_mission_spec
     |> GenServer.cast(msg)
   end
 
-  # TODO rename mission_pid_from_mission_spec
-  defp room_pid_from_name(mission_spec) when is_mission_spec(mission_spec) do
+  defp pid_from_mission_spec(mission_spec) when is_mission_spec(mission_spec) do
     IOP.inspect mission_spec, __MODULE__
     with :error <- MissionRegistry.fetch_pid(mission_spec),
          {:ok, pid} <- MissionDynamicSupervisor.new_mission(mission_spec)  |> IOP.inspect(__MODULE__) do

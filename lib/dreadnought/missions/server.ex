@@ -68,7 +68,7 @@ defmodule Dreadnought.Missions.Server do
 
   @impl true
   def handle_cast({:drop_player, player_uuid}, mission) do
-    Players.send_room(player_uuid, nil)
+    Players.send_mission(player_uuid, nil)
     mission = Mission.drop_player_by_uuid(mission, player_uuid)
     if Mission.empty?(mission), do: Process.exit(self(), :normal)
     noreply_then_send_all(mission)
@@ -101,7 +101,7 @@ defmodule Dreadnought.Missions.Server do
   # *** CALLBACKS: TERMINATE
 
   @impl true
-  def terminate(:normal, _room) do
+  def terminate(:normal, _mission) do
     # TODO remove from Backup
   end
 
@@ -115,7 +115,7 @@ defmodule Dreadnought.Missions.Server do
 
   def send_all(mission) do
     for uuid <- Mission.player_uuids(mission) do
-      Players.send_room(uuid, mission)
+      Players.send_mission(uuid, mission)
     end
     mission
   end
@@ -123,8 +123,8 @@ defmodule Dreadnought.Missions.Server do
   # *** *******************************
   # *** RETURN TUPLES
 
-  #defp ok_then_send_all(room) do
-  #  {:ok, room, {:continue, :send_all_players}}
+  #defp ok_then_send_all(mission) do
+  #  {:ok, mission, {:continue, :send_all_players}}
   #end
 
   defp noreply(mission) do
