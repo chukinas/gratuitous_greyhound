@@ -29,8 +29,7 @@ defmodule DreadnoughtWeb.MainLiveTest do
     {:ok, view, _html} = live(conn, "/dreadnought")
     view
     |> click("#link-demo")
-    |> assert_redirect("/dreadnought/demo")
-    assert has_element?(view, "#unit-1")
+    |> assert_redirect("/dreadnought/play")
   end
 
   test "Gallery from Homepage", %{conn: conn} do
