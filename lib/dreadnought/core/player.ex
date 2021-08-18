@@ -1,22 +1,24 @@
 defmodule Dreadnought.Core.Player do
 
+  use TypedStruct
+  use Dreadnought.Core.Mission.Spec
+
   # *** *******************************
   # *** TYPES
-
-  use TypedStruct
 
   typedstruct enforce: false do
     field :id, integer | nil, default: nil
     field :type, :human | :ai
     field :uuid, String.t
     field :name, String.t
-    field :mission_name, String.t
+    field :mission_spec, mission_spec
     field :ready?, boolean, default: false
   end
 
   # *** *******************************
   # *** CONSTRUCTORS
 
+  # TODO These need to take a mission_spec?
   def new_ai(id, uuid, name) do
     new(id, :ai, uuid, name)
   end
@@ -32,7 +34,7 @@ defmodule Dreadnought.Core.Player do
   def from_new_player(%{
       uuid: _uuid,
       name: _name,
-      mission_name: _mission_name} = new_player) do
+      mission_spec: _mission_spec} = new_player) do
     player =
       new_player
       |> Map.put(:type, :human)
@@ -53,6 +55,8 @@ defmodule Dreadnought.Core.Player do
 
   # *** *******************************
   # *** REDUCERS
+
+  def put_id(player, id), do: %__MODULE__{player | id: id}
 
   def toggle_ready(%__MODULE__{ready?: ready?} = player) do
     %__MODULE__{player | ready?: !ready?}
@@ -90,6 +94,10 @@ defmodule Dreadnought.Core.Player.Enum do
 
   def by_uuid(players, uuid) do
     Enum.find(players, & Player.uuid(&1) == uuid)
+  end
+
+  def exclude_uuid(players, uuid) do
+    Enum.filter(players, fn player -> !Player.has_uuid?(player, uuid) end)
   end
 
 end

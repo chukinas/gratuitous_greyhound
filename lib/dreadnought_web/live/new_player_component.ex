@@ -65,22 +65,6 @@ defmodule DreadnoughtWeb.NewPlayerComponent do
     |> assign(changeset: Multiplayer.change_new_player(new_player))
   end
 
-  #defp assign_changeset_and_url(socket, params, show_errors?) do
-  #  attrs = params_to_attrs(params, socket)
-  #  changeset =
-  #    changeset_data()
-  #    |> xxxSessions.room_join_changeset(attrs)
-  #  # TODO is this necessary?
-  #    |> Changeset.cast(attrs, [:room_name_raw])
-  #  assign_changeset_and_url(socket, changeset, show_errors?)
-  #end
-
-  #defp params_to_attrs(params, socket) do
-  #  params
-  #  |> Map.put("room_name", params["room_name_raw"])
-  #  |> Map.put("player_uuid", socket.assigns.player_uuid)
-  #end
-
   #defp assign_url(socket) do
   #  assign(socket, maybe_url: build_url(socket))
   #end
@@ -90,20 +74,6 @@ defmodule DreadnoughtWeb.NewPlayerComponent do
   #    URI.to_string(socket.host_uri),
   #    build_path(socket),
   #  ]
-  #end
-
-  #defp build_path(socket) do
-  #  Enum.join [
-  #    Routes.dreadnought_main_path(socket, :setup),
-  #    Changeset.get_field(socket.assigns.changeset, :room_name)
-  #  ], "/"
-  #end
-
-  #defp changeset_data do
-  #  types =
-  #    xxxSessions.room_join_types()
-  #    |> Map.put(:room_name_raw, :string)
-  #  {%{}, types}
   #end
 
 end

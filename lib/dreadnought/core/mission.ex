@@ -1,6 +1,8 @@
 defmodule Dreadnought.Core.Mission do
 
+  use Dreadnought.Core.Mission.Spec
   use Dreadnought.PositionOrientationSize
+  use TypedStruct
   alias Dreadnought.Core.ActionSelection
   alias Dreadnought.Core.CombatAction
   alias Dreadnought.Core.Gunfire
@@ -18,9 +20,8 @@ defmodule Dreadnought.Core.Mission do
   # *** *******************************
   # *** TYPES
 
-  use TypedStruct
   typedstruct do
-    field :name, String.t, enforce: true
+    field :mission_spec, mission_spec
     field :name_pretty, String.t, enforce: true
     field :world_rect, Rect.t, enforce: true
     field :grid, Grid.t(), enforce: true
@@ -38,16 +39,19 @@ defmodule Dreadnought.Core.Mission do
   # *** *******************************
   # *** CONSTRUCTORS
 
-  def new(name, %Grid{} = grid, margin) when has_size(margin) do
+  def new(mission_spec, %Grid{} = grid, margin)
+  when has_size(margin)
+  and is_mission_spec(mission_spec) do
     %__MODULE__{
-      name: name,
-      name_pretty: Slugs.pretty(name),
+      mission_spec: mission_spec,
+      name_pretty: mission_spec |> name_from_mission_spec |> Slugs.pretty,
       world_rect: world_rect(grid, margin),
       grid: grid,
-      margin: margin,
+      margin: margin
     }
   end
 
+  # TODO move somewhere else
   defp world_rect(grid, margin) do
     position =
       margin
@@ -63,16 +67,43 @@ defmodule Dreadnought.Core.Mission do
   # *** *******************************
   # *** REDUCERS (PLAYERS)
 
-  def add_player(%__MODULE__{} = mission, %Player{} = player) do
-    player_id = 1 + player_count(mission)
-    put(mission, %Player{player | id: player_id})
+  def add_player(%__MODULE__{} = mission, player) do
+    player_id = next_player_id(mission)
+    mission
+    |> drop_player(player)
+    |> put(Player.put_id(player, player_id))
   end
 
-  def drop_player_by_uuid(mission, player_uuid) do
-    update_players(mission, &IdList.drop(&1, player_uuid, :uuid))
+  def drop_player(mission, %Player{} = player) do
+    uuid = Player.uuid(player)
+    drop_player_by_uuid(mission, uuid)
   end
 
-  def toggle_player_ready_by_id(%__MODULE__{} = mission, player_id) do
+  def drop_player_by_uuid(mission, uuid) do
+    update_players(mission, &Player.Enum.exclude_uuid(&1, uuid))
+  end
+
+  def next_player_id(%__MODULE__{} = mission) do
+    1 + max(highest_player_id(mission), player_count(mission))
+  end
+
+  def highest_player_id(mission) do
+    mission
+    |> players
+    |> Stream.map(&Player.id/1)
+    |> Enum.max(fn -> 0 end)
+  end
+
+  def toggle_player_ready(%__MODULE__{} = mission, player_or_player_id) do
+    player_id =
+      case player_or_player_id do
+        %Player{} = player ->
+          mission
+          |> player_by_uuid(player)
+          |> Player.id
+        player_id when is_integer(player_id) ->
+          player_id
+      end
     player_update =
       fn players ->
         IdList.update!(players, player_id, &Player.toggle_ready/1)
@@ -274,7 +305,12 @@ defmodule Dreadnought.Core.Mission do
 
   def in_progress?(mission), do: turn_number(mission) > 0
 
-  def name(%__MODULE__{name: value}), do: value
+  # TODO deprecate
+  def mission_spec(%__MODULE__{mission_spec: value}), do: value
+
+  def name(%__MODULE__{mission_spec: mission_spec}) do
+    name_from_mission_spec(mission_spec)
+  end
 
   def pretty_name(%__MODULE__{name_pretty: value}), do: value
 
@@ -286,6 +322,8 @@ defmodule Dreadnought.Core.Mission do
       false -> false
     end
   end
+
+  def spec(%__MODULE__{mission_spec: value}), do: value
 
   def turn_number(%__MODULE__{turn_number: value}), do: value
 

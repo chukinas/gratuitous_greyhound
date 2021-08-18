@@ -1,5 +1,6 @@
 defmodule Dreadnought.Missions.DynamicSupervisor do
 
+  use Dreadnought.Core.Mission.Spec
   use DynamicSupervisor
   alias Dreadnought.Missions.Server, as: MissionServer
 
@@ -20,14 +21,10 @@ defmodule Dreadnought.Missions.DynamicSupervisor do
   # *** *******************************
   # *** API
 
-  @spec new_mission(String.t) :: {:ok, pid}
-  def new_mission(mission_name) do
-    child_spec = MissionServer.child_spec(mission_name)
+  @spec start_mission(mission_spec) :: {:ok, pid}
+  def start_mission(mission_spec) when is_mission_spec(mission_spec) do
+    child_spec = MissionServer.child_spec(mission_spec)
     DynamicSupervisor.start_child(__MODULE__, child_spec)
-  end
-
-  def print_children_info do
-    DynamicSupervisor.which_children(__MODULE__)
   end
 
 end

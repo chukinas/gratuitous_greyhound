@@ -1,28 +1,29 @@
 defmodule Dreadnought.Missions.Server do
 
+  use Dreadnought.Core.Mission.Spec
+  use GenServer
   alias Dreadnought.Core.Mission
+  alias Dreadnought.Core.Mission.Builder
   alias Dreadnought.Core.Player
   alias Dreadnought.Missions.Backup
   alias Dreadnought.Missions.Registry, as: MissionRegistry
-  alias Dreadnought.Multiplayer
   alias Dreadnought.Players
-  use GenServer
 
   # *** *******************************
   # *** CLIENT
 
-  def child_spec(mission_name) do
+  def child_spec(mission_spec) when is_mission_spec(mission_spec) do
     %{
-      id: mission_name,
-      start: {__MODULE__, :start_link, [mission_name]}
+      id: mission_spec,
+      start: {__MODULE__, :start_link, [mission_spec]}
     }
   end
 
-  def start_link(mission_name) do
+  def start_link(mission_spec) when is_mission_spec(mission_spec) do
     GenServer.start_link(
       __MODULE__,
-      mission_name,
-      name: MissionRegistry.build_name(mission_name)
+      mission_spec,
+      name: MissionRegistry.build_name(mission_spec)
     )
   end
 
@@ -30,11 +31,14 @@ defmodule Dreadnought.Missions.Server do
   # *** CALLBACKS: INIT
 
   @impl true
-  def init(mission_name) when is_binary(mission_name) do
-    mission = case Backup.fetch_and_pop(mission_name) do
-      {:ok, mission} -> mission
-      :error -> Multiplayer.new_mission(mission_name)
-    end
+  def init(mission_spec) when is_mission_spec(mission_spec) do
+    mission =
+      case Backup.fetch_and_pop(mission_spec) do
+        {:ok, mission} ->
+          mission
+        :error ->
+          Builder.build(mission_spec)
+      end
     #ok_then_send_all(mission)
     {:ok, mission}
   end
@@ -58,16 +62,16 @@ defmodule Dreadnought.Missions.Server do
 
   @impl true
   def handle_cast({:drop_player, player_uuid}, mission) do
-    Players.send_room(player_uuid, nil)
+    Players.send_mission(player_uuid, nil)
     mission = Mission.drop_player_by_uuid(mission, player_uuid)
     if Mission.empty?(mission), do: Process.exit(self(), :normal)
     noreply_then_send_all(mission)
   end
 
   @impl true
-  def handle_cast({:toggle_ready, player_id}, mission) do
+  def handle_cast({:toggle_ready, player_or_player_id}, mission) do
     mission
-    |> Mission.toggle_player_ready_by_id(player_id)
+    |> Mission.toggle_player_ready(player_or_player_id)
     |> noreply_then_send_all
   end
 
@@ -91,7 +95,7 @@ defmodule Dreadnought.Missions.Server do
   # *** CALLBACKS: TERMINATE
 
   @impl true
-  def terminate(:normal, _room) do
+  def terminate(:normal, _mission) do
     # TODO remove from Backup
   end
 
@@ -105,7 +109,7 @@ defmodule Dreadnought.Missions.Server do
 
   def send_all(mission) do
     for uuid <- Mission.player_uuids(mission) do
-      Players.send_room(uuid, mission)
+      Players.send_mission(uuid, mission)
     end
     mission
   end
@@ -113,8 +117,8 @@ defmodule Dreadnought.Missions.Server do
   # *** *******************************
   # *** RETURN TUPLES
 
-  #defp ok_then_send_all(room) do
-  #  {:ok, room, {:continue, :send_all_players}}
+  #defp ok_then_send_all(mission) do
+  #  {:ok, mission, {:continue, :send_all_players}}
   #end
 
   defp noreply(mission) do

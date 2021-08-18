@@ -1,8 +1,10 @@
 defmodule DreadnoughtWeb.Dreadnought.PlayerTurnComponent do
 
+  use Dreadnought.Core.Mission.Spec
   use DreadnoughtWeb, :live_component
   use DreadnoughtWeb.Components
   alias Dreadnought.Core.ActionSelection
+  alias Dreadnought.Core.Mission
   alias Dreadnought.Core.PlayerTurn
   alias Dreadnought.Missions
   alias Dreadnought.Util.Precision
@@ -14,12 +16,15 @@ defmodule DreadnoughtWeb.Dreadnought.PlayerTurnComponent do
 
   @impl true
   def update(assigns, socket) do
+    %Mission{} = mission = assigns.mission
     socket =
       socket
       |> assign(id: assigns.id)
-      |> assign_from_mission(assigns.mission, ~w/turn_number units name/a)
+      |> assign(mission_spec: Mission.mission_spec(mission))
+      |> assign(turn_number: Mission.turn_number(mission))
+      |> assign(units: Mission.units(mission))
+      |> assign(name: Mission.name(mission))
       |> assign(player_turn: PlayerTurn.new(assigns.mission, assigns.player_uuid))
-      #|> assign_action_selection
     {:ok, socket}
   end
 
@@ -76,34 +81,18 @@ defmodule DreadnoughtWeb.Dreadnought.PlayerTurnComponent do
   defp maybe_end_turn(socket) do
     if turn_complete?(socket) do
       socket
-      |> name
+      |> mission_spec
       |> Missions.complete_player_turn(action_selection(socket))
     end
     socket
   end
 
   # *** *******************************
-  # *** SOCKET REDUCERS
-
-  defp assign_from_mission(socket, mission, mission_keys) do
-    Enum.reduce(mission_keys, socket, fn key, socket ->
-      value = Map.fetch!(mission, key)
-      assign(socket, key, value)
-    end)
-  end
-
-  #defp assign_action_selection(socket) do
-  #  action_selection = socket |> player_turn |> PlayerTurn.action_selection
-  #  current_action_selection = action_selection |> ActionSelection.current_action_selection
-  #  socket
-  #  |> assign(action_selection: action_selection)
-  #  |> assign(current_action_selection: current_action_selection)
-  #end
-
-  # *** *******************************
   # *** SOCKET CONVERTERS
 
   def action_selection(socket), do: socket |> player_turn |> PlayerTurn.action_selection
+
+  def mission_spec(%{assigns: %{mission_spec: value}}) when is_mission_spec(value), do: value
 
   def player_id(socket), do: socket |> player_turn |> PlayerTurn.player_id
 
@@ -111,8 +100,10 @@ defmodule DreadnoughtWeb.Dreadnought.PlayerTurnComponent do
 
   def player_uuid(socket), do: socket |> player_turn |> PlayerTurn.player_uuid
 
+  @spec name(any) :: String.t
   def name(socket), do: socket.assigns.name
 
+  @spec turn_complete?(any) :: boolean
   def turn_complete?(socket) do
     socket
     |> action_selection

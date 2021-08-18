@@ -1,3 +1,4 @@
+# TODO rename Dreadnought.Core.Sprites.Sprite?
 defmodule Dreadnought.Core.Sprite do
 
   use Dreadnought.PositionOrientationSize

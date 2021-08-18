@@ -1,11 +1,9 @@
-ExUnit.start()
-
 defmodule LinearAlgebra.CsysTest do
 
   use ExUnit.Case, async: true
   use Dreadnought.PositionOrientationSize
   use Dreadnought.LinearAlgebra
-  use Dreadnought.TestHelpers
+  import Dreadnought.TestHelpers
 
   describe "vector coordinate system" do
 

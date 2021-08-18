@@ -1,10 +1,8 @@
-alias Dreadnought.Paths
-
-ExUnit.start()
-
 defmodule Dreadnought.SvgTest do
+
   use ExUnit.Case, async: true
   use Dreadnought.PositionOrientationSize
+  alias Dreadnought.Paths
   alias Dreadnought.Svg
 
   test "svg path string from straight path" do

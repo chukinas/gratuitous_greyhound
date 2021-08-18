@@ -8,14 +8,14 @@
     as: "new_player", 
     class: "space-y-24" %>
 
-    <div id="room_join_inputs" class="space-y-6">
+    <div id="new_player_inputs" class="space-y-6">
       <div id="input_user_name" >
         <%= render_label f, :name %>
         <%= render_text_input f, :name %>
         <%= render_error f, :name %>
       </div>
 
-      <div id="input_room_name">
+      <div id="input_mission_name">
         <%= render_label f, :mission_name, "Room" %>
         <%= render_text_input f, :mission_name %>
         <%= render_error f, :mission_name %>

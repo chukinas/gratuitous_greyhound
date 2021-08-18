@@ -3,7 +3,7 @@ defmodule DreadnoughtWeb.HomepageComponent do
   use DreadnoughtWeb, :live_component
   use Dreadnought.LinearAlgebra
   use Dreadnought.PositionOrientationSize
-  alias Dreadnought.Homepage, as: HomepageMission
+  alias Dreadnought.Homepage
   alias Dreadnought.Core.Unit
 
   # *** *******************************
@@ -14,7 +14,7 @@ defmodule DreadnoughtWeb.HomepageComponent do
     socket =
       socket
       |> assign_buttons
-      |> assign_mission(HomepageMission.new())
+      |> assign_mission(Homepage.build_mission())
     {:ok, socket}
   end
 
@@ -29,7 +29,7 @@ defmodule DreadnoughtWeb.HomepageComponent do
   def update(assigns, socket) do
     msg = {:update_child_component, __MODULE__, id: assigns.id}
     Process.send_after self(), msg, 3500
-    mission = HomepageMission.next_gunfire(socket.assigns.mission)
+    mission = Homepage.next_gunfire(socket.assigns.mission)
     socket = assign_mission(socket, mission)
     {:ok, socket}
   end
@@ -44,7 +44,7 @@ defmodule DreadnoughtWeb.HomepageComponent do
 
   @impl true
   def handle_event("next_unit", _, socket) do
-    mission = HomepageMission.next_unit(socket.assigns.mission)
+    mission = Homepage.next_unit(socket.assigns.mission)
     socket = assign_mission(socket, mission)
     {:noreply, socket}
   end
@@ -77,8 +77,8 @@ defmodule DreadnoughtWeb.HomepageComponent do
   defp assign_mission(socket, mission) do
     socket
     |> assign(mission: mission)
-    |> assign(unit: mission |> HomepageMission.main_unit |> wrap_unit)
-    |> assign(turn_number: HomepageMission.turn_number(mission))
+    |> assign(unit: mission |> Homepage.main_unit |> wrap_unit)
+    |> assign(turn_number: Homepage.turn_number(mission))
   end
 
   defp wrap_unit(%Unit{} = unit) do

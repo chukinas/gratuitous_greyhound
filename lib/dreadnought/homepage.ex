@@ -1,47 +1,21 @@
-# TODO rename HomepageMission?
 defmodule Dreadnought.Homepage do
 
+  use Dreadnought.Core.Mission.Spec
+  use Dreadnought.Homepage.Helpers
   use Dreadnought.LinearAlgebra
   use Dreadnought.PositionOrientationSize
   alias Dreadnought.Core.ActionSelection
   alias Dreadnought.Core.Mission
-  alias Dreadnought.Core.MissionBuilder
-  alias Dreadnought.Core.Player
   alias Dreadnought.Core.Unit
   alias Dreadnought.Core.UnitAction
-  alias Dreadnought.Core.UnitBuilder
+  alias Dreadnought.Homepage.Mission, as: HomepageMission
   alias Dreadnought.Util.IdList
-
-  # *** *******************************
-  # *** TYPES & CONSTANTS
-
-  @target_player_id 1
-  @target_unit_id 1
-  @main_player_id 2
-  @starting_main_unit_id 2
-  @hulls ~w/red_cruiser blue_dreadnought red_destroyer blue_destroyer/a
 
   # *** *******************************
   # *** CONSTRUCTORS
 
-  @spec new :: Mission.t
-  def new do
-    @starting_main_unit_id
-    |> hull_by_unit_id
-    |> do_new(@starting_main_unit_id)
-  end
-
-  defp do_new(hull, main_unit_id) do
-    {grid, margin} = MissionBuilder.medium_map()
-    inputs = [
-      Player.new_manual(@main_player_id),
-      Player.new_manual(@target_player_id),
-    ]
-    Mission.new("homepage", grid, margin)
-    |> Mission.put(inputs)
-    |> put_target_unit
-    |> put_main_unit(hull, main_unit_id)
-    |> Mission.start
+  def build_mission do
+    HomepageMission.build(@mission_name)
   end
 
   # *** *******************************
@@ -61,7 +35,7 @@ defmodule Dreadnought.Homepage do
     unit_id = next_main_unit_id(mission)
     unit_id
     |> hull_by_unit_id
-    |> do_new(unit_id)
+    |> HomepageMission.do_new(unit_id, @mission_name)
   end
 
   # *** *******************************
@@ -76,22 +50,6 @@ defmodule Dreadnought.Homepage do
 
   # *** *******************************
   # *** PRIVATE REDUCERS
-
-  defp put_target_unit(mission) do
-    unit =
-      :blue_destroyer
-      |> UnitBuilder.build(@target_unit_id, @target_player_id)
-    Mission.put(mission, unit)
-  end
-
-  defp put_main_unit(mission, hull, unit_id) do
-    units =
-      [
-        target_unit(mission),
-        UnitBuilder.build(hull, unit_id, @main_player_id) |> Unit.position_mass_center
-      ]
-    %Mission{mission | units: units}
-  end
 
   defp position_target_randomly_within_arc(mission) do
     target_pose =
@@ -117,18 +75,6 @@ defmodule Dreadnought.Homepage do
       [] -> @starting_main_unit_id
       _units -> main_unit_id(mission) + 1
     end
-  end
-
-  defp target_unit(mission), do: Mission.unit_by_id(mission, @target_unit_id)
-
-  # *** *******************************
-  # *** PRIVATE HELPERS
-
-  defp hull_by_unit_id(unit_id) do
-    index =
-      (unit_id - @starting_main_unit_id)
-      |> rem(Enum.count(@hulls))
-    Enum.at(@hulls, index)
   end
 
 end
