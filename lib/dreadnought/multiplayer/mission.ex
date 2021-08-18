@@ -13,6 +13,7 @@ defmodule Dreadnought.Multiplayer.Mission do
     {grid, margin} = MissionHelpers.medium_map()
     Mission.new(new_mission_spec(__MODULE__, mission_name), grid, margin)
     |> Map.put(:islands, MissionHelpers.islands())
+    |> IOP.inspect(__MODULE__)
     # Still needs players, units, and needs to be started
   end
 

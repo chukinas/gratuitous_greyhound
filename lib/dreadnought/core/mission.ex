@@ -278,6 +278,7 @@ defmodule Dreadnought.Core.Mission do
 
   def in_progress?(mission), do: turn_number(mission) > 0
 
+  # TODO deprecate
   def mission_spec(%__MODULE__{mission_spec: value}), do: value
 
   def name(%__MODULE__{mission_spec: mission_spec}) do
@@ -294,6 +295,8 @@ defmodule Dreadnought.Core.Mission do
       false -> false
     end
   end
+
+  def spec(%__MODULE__{mission_spec: value}), do: value
 
   def turn_number(%__MODULE__{turn_number: value}), do: value
 

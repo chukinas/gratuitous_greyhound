@@ -50,15 +50,18 @@ defmodule Dreadnought.Missions do
     end
   end
 
-  def toggle_ready(mission_spec, player_id) when is_integer(player_id) do
+  def toggle_ready(mission_spec, player_id)
+  when is_mission_spec(mission_spec)
+  and is_integer(player_id) do
     cast_mission_server mission_spec, {:toggle_ready, player_id}
   end
 
-  def update_then_send_all(mission_spec, fun) do
+  def update_then_send_all(mission_spec, fun) when is_mission_spec(mission_spec) do
     cast_mission_server mission_spec, {:update_then_send_all, fun}
   end
 
-  def complete_player_turn(mission_spec, %ActionSelection{} = action_selection) do
+  def complete_player_turn(mission_spec, %ActionSelection{} = action_selection)
+  when is_mission_spec(mission_spec) do
     fun = &Mission.put(&1, action_selection)
     update_then_send_all(mission_spec, fun)
   end
@@ -66,13 +69,13 @@ defmodule Dreadnought.Missions do
   # *** *******************************
   # *** PRIVATE
 
-  defp call_mission_server(mission_spec, msg) do
+  defp call_mission_server(mission_spec, msg) when is_mission_spec(mission_spec) do
     mission_spec
     |> pid_from_mission_spec
     |> GenServer.call(msg)
   end
 
-  defp cast_mission_server(mission_spec, msg) do
+  defp cast_mission_server(mission_spec, msg) when is_mission_spec(mission_spec) do
     mission_spec
     |> pid_from_mission_spec
     |> GenServer.cast(msg)

@@ -20,7 +20,9 @@ defmodule DreadnoughtWeb.LobbyComponent do
     socket =
       assign(socket,
         id: id,
+        # TODO not needed...?
         mission_name: Mission.name(mission),
+        mission_spec: Mission.spec(mission),
         pretty_mission_name: Mission.pretty_name(mission),
         player_id: Player.id(player_self),
         uuid: uuid,
@@ -32,7 +34,7 @@ defmodule DreadnoughtWeb.LobbyComponent do
 
   @impl true
   def handle_event("toggle_ready", _, socket) do
-    Missions.toggle_ready(socket.assigns.mission_name, socket.assigns.player_id)
+    Missions.toggle_ready(socket.assigns.mission_spec, socket.assigns.player_id)
     {:noreply, socket}
   end
 

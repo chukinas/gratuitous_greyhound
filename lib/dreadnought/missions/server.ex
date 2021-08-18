@@ -34,19 +34,29 @@ defmodule Dreadnought.Missions.Server do
   @impl true
   def init(mission_spec) when is_mission_spec(mission_spec) do
     IOP.inspect "init", __MODULE__
-    mission = case Backup.fetch_and_pop(mission_spec) do
-      {:ok, mission} -> mission |> IOP.inspect(__MODULE__)
-      :error -> build_mission(mission_spec) |> IOP.inspect(__MODULE__)
-    end
+    mission =
+      case Backup.fetch_and_pop(mission_spec) do
+        {:ok, mission} ->
+          IO.puts "#{__MODULE__} backup found"
+          mission
+          |> IOP.inspect(__MODULE__)
+        :error ->
+          IO.puts "#{__MODULE__} backup not found"
+          build_mission(mission_spec)
+          |> IOP.inspect(__MODULE__)
+      end
+      |> IOP.inspect("Mission.Server mission")
     #ok_then_send_all(mission)
     {:ok, mission}
-    IOP.inspect "init", __MODULE__
+    |> IOP.inspect(__MODULE__)
   end
 
   # TODO move to Mission.Builder
   defp build_mission({mission_builder_module, mission_name} = mission_spec)
   when is_mission_spec(mission_spec) do
+    IO.puts "build_mission"
     apply(mission_builder_module, :new, [mission_name])
+    |> IOP.inspect("build_mission")
   end
 
   # *** *******************************
