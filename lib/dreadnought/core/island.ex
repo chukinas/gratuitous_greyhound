@@ -1,28 +1,25 @@
-alias Dreadnought.Collide.IsShape
-alias Dreadnought.LinearAlgebra.Vector
-alias Dreadnought.Core.Island
-
-defmodule Island do
+defmodule Dreadnought.Core.Island do
   @moduledoc"""
   Handles rendering and collision of islands for ships and players to interact with
   """
 
-  use Dreadnought.PositionOrientationSize
-  use Dreadnought.LinearAlgebra
+    use Dreadnought.LinearAlgebra
+    use Dreadnought.PositionOrientationSize
+  alias Dreadnought.Core.Island
+  alias Dreadnought.LinearAlgebra.Vector
 
   # *** *******************************
   # *** TYPES
 
   typedstruct do
-    # ID must be unique within the world
-    field :id, integer()
+    field :id, integer
     # TODO rename position_points ?
     field :relative_vertices, list(POS.position_struct)
     position_fields()
   end
 
   # *** *******************************
-  # *** NEW
+  # *** CONSTRUCTORS
 
   def new(id, location, points) do
     fields =
@@ -33,9 +30,6 @@ defmodule Island do
       |> merge_position(location)
     struct!(__MODULE__, fields)
   end
-
-  # *** *******************************
-  # *** RANDOMIZER
 
   def random(id, location) when has_position(location) do
     radius = 250
@@ -55,7 +49,9 @@ defmodule Island do
   end
 
   # *** *******************************
-  # *** API
+  # *** CONVERTERS
+
+  def position_points(%__MODULE__{relative_vertices: val}), do: val
 
   def world_coord(island, relative_position) do
     island
@@ -64,19 +60,18 @@ defmodule Island do
     |> vector_from_position
   end
 
-  # *** *******************************
-  # *** GETTERS
+end
 
-  def position_points(%__MODULE__{relative_vertices: val}), do: val
+# *** *******************************
+# *** IMPLEMENTATIONS
 
-  # *** *******************************
-  # *** IMPLEMENTATIONS
+alias Dreadnought.Core.Island
 
-  defimpl IsShape do
-    def to_coords(island) do
-      island
-      |> Island.position_points
-      |> Enum.map(&Island.world_coord(island, &1))
-    end
+defimpl Dreadnought.Collide.IsShape, for: Island do
+  def to_coords(island) do
+    island
+    |> Island.position_points
+    |> Enum.map(&Island.world_coord(island, &1))
   end
 end
+
