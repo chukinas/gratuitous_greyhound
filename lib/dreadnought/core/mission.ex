@@ -94,7 +94,16 @@ defmodule Dreadnought.Core.Mission do
     |> Enum.max(fn -> 0 end)
   end
 
-  def toggle_player_ready_by_id(%__MODULE__{} = mission, player_id) do
+  def toggle_player_ready(%__MODULE__{} = mission, player_or_player_id) do
+    player_id =
+      case player_or_player_id do
+        %Player{} = player ->
+          mission
+          |> player_by_uuid(player)
+          |> Player.id
+        player_id when is_integer(player_id) ->
+          player_id
+      end
     player_update =
       fn players ->
         IdList.update!(players, player_id, &Player.toggle_ready/1)

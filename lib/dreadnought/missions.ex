@@ -50,6 +50,11 @@ defmodule Dreadnought.Missions do
     end
   end
 
+  def toggle_ready(mission_spec, %Player{} = player)
+  when is_mission_spec(mission_spec) do
+    cast_mission_server mission_spec, {:toggle_ready, player}
+  end
+
   def toggle_ready(mission_spec, player_id)
   when is_mission_spec(mission_spec)
   and is_integer(player_id) do

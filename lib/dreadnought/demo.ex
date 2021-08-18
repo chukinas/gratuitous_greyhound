@@ -5,10 +5,10 @@ defmodule Dreadnought.Demo do
   alias Dreadnought.Demo.Player, as: DemoPlayer
 
   def start(player_uuid) do
-    player_uuid
-    |> DemoMission.mission_spec
-    |> DemoPlayer.build(player_uuid)
-    |> Missions.add_player
+    mission_spec = DemoMission.mission_spec(player_uuid)
+    player = DemoPlayer.build(mission_spec, player_uuid)
+    Missions.add_player(player)
+    Missions.toggle_ready(mission_spec, player)
   end
 
 end

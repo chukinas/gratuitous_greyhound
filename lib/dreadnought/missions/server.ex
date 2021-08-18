@@ -69,9 +69,9 @@ defmodule Dreadnought.Missions.Server do
   end
 
   @impl true
-  def handle_cast({:toggle_ready, player_id}, mission) do
+  def handle_cast({:toggle_ready, player_or_player_id}, mission) do
     mission
-    |> Mission.toggle_player_ready_by_id(player_id)
+    |> Mission.toggle_player_ready(player_or_player_id)
     |> noreply_then_send_all
   end
 

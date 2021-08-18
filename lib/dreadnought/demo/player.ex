@@ -8,8 +8,7 @@ defmodule Dreadnought.Demo.Player do
       type: :human,
       uuid: uuid,
       name: "Demo Player",
-      mission_spec: mission_spec,
-      ready?: true
+      mission_spec: mission_spec
     }
   end
 
