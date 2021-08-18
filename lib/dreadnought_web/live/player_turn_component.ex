@@ -1,5 +1,6 @@
 defmodule DreadnoughtWeb.Dreadnought.PlayerTurnComponent do
 
+  use Dreadnought.Core.Mission.Spec
   use DreadnoughtWeb, :live_component
   use DreadnoughtWeb.Components
   alias Dreadnought.Core.ActionSelection
@@ -19,6 +20,7 @@ defmodule DreadnoughtWeb.Dreadnought.PlayerTurnComponent do
     socket =
       socket
       |> assign(id: assigns.id)
+      |> assign(mission_spec: Mission.mission_spec(mission))
       |> assign(turn_number: Mission.turn_number(mission))
       |> assign(units: Mission.units(mission))
       |> assign(name: Mission.name(mission))
@@ -79,7 +81,7 @@ defmodule DreadnoughtWeb.Dreadnought.PlayerTurnComponent do
   defp maybe_end_turn(socket) do
     if turn_complete?(socket) do
       socket
-      |> name
+      |> mission_spec
       |> Missions.complete_player_turn(action_selection(socket))
     end
     socket
@@ -90,14 +92,18 @@ defmodule DreadnoughtWeb.Dreadnought.PlayerTurnComponent do
 
   def action_selection(socket), do: socket |> player_turn |> PlayerTurn.action_selection
 
+  def mission_spec(%{assigns: %{mission_spec: value}}) when is_mission_spec(value), do: value
+
   def player_id(socket), do: socket |> player_turn |> PlayerTurn.player_id
 
   def player_turn(socket), do: socket.assigns.player_turn
 
   def player_uuid(socket), do: socket |> player_turn |> PlayerTurn.player_uuid
 
+  @spec name(any) :: String.t
   def name(socket), do: socket.assigns.name
 
+  @spec turn_complete?(any) :: boolean
   def turn_complete?(socket) do
     socket
     |> action_selection
