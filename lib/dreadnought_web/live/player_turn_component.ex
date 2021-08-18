@@ -3,6 +3,7 @@ defmodule DreadnoughtWeb.Dreadnought.PlayerTurnComponent do
   use DreadnoughtWeb, :live_component
   use DreadnoughtWeb.Components
   alias Dreadnought.Core.ActionSelection
+  alias Dreadnought.Core.Mission
   alias Dreadnought.Core.PlayerTurn
   alias Dreadnought.Missions
   alias Dreadnought.Util.Precision
@@ -14,12 +15,14 @@ defmodule DreadnoughtWeb.Dreadnought.PlayerTurnComponent do
 
   @impl true
   def update(assigns, socket) do
+    %Mission{} = mission = assigns.mission
     socket =
       socket
       |> assign(id: assigns.id)
-      |> assign_from_mission(assigns.mission, ~w/turn_number units name/a)
+      |> assign(turn_number: Mission.turn_number(mission))
+      |> assign(units: Mission.units(mission))
+      |> assign(name: Mission.name(mission))
       |> assign(player_turn: PlayerTurn.new(assigns.mission, assigns.player_uuid))
-      #|> assign_action_selection
     {:ok, socket}
   end
 
@@ -81,24 +84,6 @@ defmodule DreadnoughtWeb.Dreadnought.PlayerTurnComponent do
     end
     socket
   end
-
-  # *** *******************************
-  # *** SOCKET REDUCERS
-
-  defp assign_from_mission(socket, mission, mission_keys) do
-    Enum.reduce(mission_keys, socket, fn key, socket ->
-      value = Map.fetch!(mission, key)
-      assign(socket, key, value)
-    end)
-  end
-
-  #defp assign_action_selection(socket) do
-  #  action_selection = socket |> player_turn |> PlayerTurn.action_selection
-  #  current_action_selection = action_selection |> ActionSelection.current_action_selection
-  #  socket
-  #  |> assign(action_selection: action_selection)
-  #  |> assign(current_action_selection: current_action_selection)
-  #end
 
   # *** *******************************
   # *** SOCKET CONVERTERS

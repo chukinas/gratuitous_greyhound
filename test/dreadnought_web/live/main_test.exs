@@ -12,6 +12,7 @@ defmodule DreadnoughtWeb.MainLiveTest do
     assert html_response(conn, 302) =~ "/dreadnought"
   end
 
+  # TODO test for presence of play component
   test "Multiplayer from Homepage", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/dreadnought")
     new_player = %{name: "Billy the Kid", mission_name: "flippy slippy"}
