@@ -26,9 +26,7 @@ defmodule Dreadnought.Multiplayer do
   end
 
   def new_mission(mission_name) do
-    IOP.inspect(mission_name, __MODULE__)
     MissionBuilder.new(mission_name)
-    |> IOP.inspect(__MODULE__)
   end
 
 end

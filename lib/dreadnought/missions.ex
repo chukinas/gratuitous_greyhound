@@ -82,9 +82,8 @@ defmodule Dreadnought.Missions do
   end
 
   defp pid_from_mission_spec(mission_spec) when is_mission_spec(mission_spec) do
-    IOP.inspect mission_spec, __MODULE__
     with :error <- MissionRegistry.fetch_pid(mission_spec),
-         {:ok, pid} <- MissionDynamicSupervisor.new_mission(mission_spec)  |> IOP.inspect(__MODULE__) do
+         {:ok, pid} <- MissionDynamicSupervisor.new_mission(mission_spec) do
       pid
     else
       {:ok, pid} -> pid

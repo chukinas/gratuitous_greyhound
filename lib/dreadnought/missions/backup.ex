@@ -25,7 +25,6 @@ defmodule Dreadnought.Missions.Backup do
       nil -> :error
       mission -> {:ok, mission}
     end
-    |> IOP.inspect(__MODULE__)
   end
 
 end

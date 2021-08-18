@@ -23,9 +23,8 @@ defmodule Dreadnought.Missions.DynamicSupervisor do
 
   @spec new_mission(mission_spec) :: {:ok, pid}
   def new_mission(mission_spec) when is_mission_spec(mission_spec) do
-    child_spec = MissionServer.child_spec(mission_spec) |> IOP.inspect("DynamicSupervisor child_spec")
+    child_spec = MissionServer.child_spec(mission_spec)
     DynamicSupervisor.start_child(__MODULE__, child_spec)
-    |> IOP.inspect(__MODULE__)
   end
 
   def print_children_info do
