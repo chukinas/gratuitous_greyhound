@@ -4,7 +4,9 @@ defmodule Dreadnought.Multiplayer.NewPlayer do
   use Ecto.Schema
   @primary_key false
 
+  use Dreadnought.Core.Mission.Spec
   alias Dreadnought.Core.Player
+  alias Dreadnought.Multiplayer.Mission, as: MissionBuilder
   alias Dreadnought.Util.Slugs
   alias Ecto.Changeset
 
@@ -44,9 +46,12 @@ defmodule Dreadnought.Multiplayer.NewPlayer do
     |> Changeset.validate_length(:mission_name, min: 5, max: 20)
   end
 
-  def to_player(%__MODULE__{} = new_player) do
+  def to_player(%__MODULE__{mission_name: mission_name} = new_player) do
+    mission_spec = new_mission_spec(MissionBuilder, mission_name)
     new_player
     |> Map.from_struct
+    |> Map.drop([:mission_name])
+    |> Map.put(:mission_spec, mission_spec)
     |> Player.from_new_player
   end
 

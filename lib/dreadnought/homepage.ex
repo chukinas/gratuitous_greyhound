@@ -1,11 +1,12 @@
 # TODO rename HomepageMission?
 defmodule Dreadnought.Homepage do
 
+  use Dreadnought.Core.Mission.Spec
   use Dreadnought.LinearAlgebra
   use Dreadnought.PositionOrientationSize
   alias Dreadnought.Core.ActionSelection
   alias Dreadnought.Core.Mission
-  alias Dreadnought.Core.MissionBuilder
+  alias Dreadnought.Core.MissionHelpers
   alias Dreadnought.Core.Player
   alias Dreadnought.Core.Unit
   alias Dreadnought.Core.UnitAction
@@ -24,6 +25,7 @@ defmodule Dreadnought.Homepage do
   # *** *******************************
   # *** CONSTRUCTORS
 
+  # TODO move to Dreadnought.Homepage.MissionBuilder
   @spec new :: Mission.t
   def new do
     @starting_main_unit_id
@@ -32,12 +34,12 @@ defmodule Dreadnought.Homepage do
   end
 
   defp do_new(hull, main_unit_id) do
-    {grid, margin} = MissionBuilder.medium_map()
+    {grid, margin} = MissionHelpers.medium_map()
     inputs = [
       Player.new_manual(@main_player_id),
       Player.new_manual(@target_player_id),
     ]
-    Mission.new("homepage", grid, margin)
+    Mission.new(new_mission_spec(__MODULE__, "homepage"), grid, margin)
     |> Mission.put(inputs)
     |> put_target_unit
     |> put_main_unit(hull, main_unit_id)

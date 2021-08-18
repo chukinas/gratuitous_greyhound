@@ -1,16 +1,17 @@
 defmodule Dreadnought.Core.Player do
 
+  use TypedStruct
+  use Dreadnought.Core.Mission.Spec
+
   # *** *******************************
   # *** TYPES
-
-  use TypedStruct
 
   typedstruct enforce: false do
     field :id, integer | nil, default: nil
     field :type, :human | :ai
     field :uuid, String.t
     field :name, String.t
-    field :mission_name, String.t
+    field :mission_spec, mission_spec
     field :ready?, boolean, default: false
   end
 
@@ -32,7 +33,7 @@ defmodule Dreadnought.Core.Player do
   def from_new_player(%{
       uuid: _uuid,
       name: _name,
-      mission_name: _mission_name} = new_player) do
+      mission_spec: _mission_spec} = new_player) do
     player =
       new_player
       |> Map.put(:type, :human)

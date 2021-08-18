@@ -1,6 +1,8 @@
 defmodule Dreadnought.Core.Mission do
 
+  use Dreadnought.Core.Mission.Spec
   use Dreadnought.PositionOrientationSize
+  use TypedStruct
   alias Dreadnought.Core.ActionSelection
   alias Dreadnought.Core.CombatAction
   alias Dreadnought.Core.Gunfire
@@ -18,9 +20,8 @@ defmodule Dreadnought.Core.Mission do
   # *** *******************************
   # *** TYPES
 
-  use TypedStruct
   typedstruct do
-    field :name, String.t, enforce: true
+    field :mission_spec, mission_spec
     field :name_pretty, String.t, enforce: true
     field :world_rect, Rect.t, enforce: true
     field :grid, Grid.t(), enforce: true
@@ -38,16 +39,19 @@ defmodule Dreadnought.Core.Mission do
   # *** *******************************
   # *** CONSTRUCTORS
 
-  def new(name, %Grid{} = grid, margin) when has_size(margin) do
+  def new(mission_spec, %Grid{} = grid, margin)
+  when has_size(margin)
+  and is_mission_spec(mission_spec) do
     %__MODULE__{
-      name: name,
-      name_pretty: Slugs.pretty(name),
+      mission_spec: mission_spec,
+      name_pretty: mission_spec |> name_from_mission_spec |> Slugs.pretty,
       world_rect: world_rect(grid, margin),
       grid: grid,
-      margin: margin,
+      margin: margin
     }
   end
 
+  # TODO move somewhere else
   defp world_rect(grid, margin) do
     position =
       margin
@@ -274,7 +278,11 @@ defmodule Dreadnought.Core.Mission do
 
   def in_progress?(mission), do: turn_number(mission) > 0
 
-  def name(%__MODULE__{name: value}), do: value
+  def mission_spec(%__MODULE__{mission_spec: value}), do: value
+
+  def name(%__MODULE__{mission_spec: mission_spec}) do
+    name_from_mission_spec(mission_spec)
+  end
 
   def pretty_name(%__MODULE__{name_pretty: value}), do: value
 

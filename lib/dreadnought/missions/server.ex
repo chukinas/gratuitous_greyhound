@@ -1,28 +1,30 @@
 defmodule Dreadnought.Missions.Server do
 
+  use Dreadnought.Core.Mission.Spec
+  use GenServer
   alias Dreadnought.Core.Mission
   alias Dreadnought.Core.Player
   alias Dreadnought.Missions.Backup
   alias Dreadnought.Missions.Registry, as: MissionRegistry
-  alias Dreadnought.Multiplayer
   alias Dreadnought.Players
-  use GenServer
 
   # *** *******************************
   # *** CLIENT
 
-  def child_spec(mission_name) do
+  def child_spec(mission_spec) when is_mission_spec(mission_spec) do
+    IOP.inspect "child_spec", __MODULE__
     %{
-      id: mission_name,
-      start: {__MODULE__, :start_link, [mission_name]}
+      id: mission_spec,
+      start: {__MODULE__, :start_link, [mission_spec]}
     }
   end
 
-  def start_link(mission_name) do
+  def start_link(mission_spec) when is_mission_spec(mission_spec) do
+    IOP.inspect mission_spec, __MODULE__
     GenServer.start_link(
       __MODULE__,
-      mission_name,
-      name: MissionRegistry.build_name(mission_name)
+      mission_spec,
+      name: MissionRegistry.build_name(mission_spec) |> IOP.inspect(__MODULE__)
     )
   end
 
@@ -30,13 +32,21 @@ defmodule Dreadnought.Missions.Server do
   # *** CALLBACKS: INIT
 
   @impl true
-  def init(mission_name) when is_binary(mission_name) do
-    mission = case Backup.fetch_and_pop(mission_name) do
-      {:ok, mission} -> mission
-      :error -> Multiplayer.new_mission(mission_name)
+  def init(mission_spec) when is_mission_spec(mission_spec) do
+    IOP.inspect "init", __MODULE__
+    mission = case Backup.fetch_and_pop(mission_spec) do
+      {:ok, mission} -> mission |> IOP.inspect(__MODULE__)
+      :error -> build_mission(mission_spec) |> IOP.inspect(__MODULE__)
     end
     #ok_then_send_all(mission)
     {:ok, mission}
+    IOP.inspect "init", __MODULE__
+  end
+
+  # TODO move to Mission.Builder
+  defp build_mission({mission_builder_module, mission_name} = mission_spec)
+  when is_mission_spec(mission_spec) do
+    apply(mission_builder_module, :new, [mission_name])
   end
 
   # *** *******************************

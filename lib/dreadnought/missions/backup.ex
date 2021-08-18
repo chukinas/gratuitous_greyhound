@@ -3,6 +3,7 @@ defmodule Dreadnought.Missions.Backup do
   # TODO delete backups when the mission is terminated
 
   use Agent
+  use Dreadnought.Core.Mission.Spec
   alias Dreadnought.Core.Mission
 
   def start_link(_init_arg) do
@@ -11,19 +12,20 @@ defmodule Dreadnought.Missions.Backup do
 
   @spec put(Mission.t) :: :ok
   def put(%Mission{} = mission) do
-    Agent.update(__MODULE__, &Map.put(&1, Mission.name(mission), mission))
+    Agent.update(__MODULE__, &Map.put(&1, Mission.mission_spec(mission), mission))
   end
 
-  @spec pop(String.t) :: Mission.t | nil
-  def pop(room_name) do
-    Agent.get_and_update(__MODULE__, &Map.pop(&1, room_name))
+  @spec pop(tuple) :: Mission.t | nil
+  def pop(mission_spec) when is_mission_spec(mission_spec) do
+    Agent.get_and_update(__MODULE__, &Map.pop(&1, mission_spec))
   end
 
-  def fetch_and_pop(room_name) do
-    case pop(room_name) do
+  def fetch_and_pop(mission_spec) when is_mission_spec(mission_spec) do
+    case pop(mission_spec) do
       nil -> :error
       room -> {:ok, room}
     end
+    |> IOP.inspect(__MODULE__)
   end
 
 end

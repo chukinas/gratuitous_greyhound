@@ -2,7 +2,7 @@ defmodule Dreadnought.Multiplayer do
 
   alias Dreadnought.Missions
   alias Dreadnought.Multiplayer.NewPlayer
-  alias Dreadnought.Multiplayer.Mission
+  alias Dreadnought.Multiplayer.Mission, as: MissionBuilder
 
   def change_new_player(%NewPlayer{} = new_player, attrs \\ %{}) do
     NewPlayer.changeset(new_player, attrs)
@@ -25,6 +25,10 @@ defmodule Dreadnought.Multiplayer do
     end
   end
 
-  def new_mission(mission_name), do: Mission.new(mission_name)
+  def new_mission(mission_name) do
+    IOP.inspect(mission_name, __MODULE__)
+    MissionBuilder.new(mission_name)
+    |> IOP.inspect(__MODULE__)
+  end
 
 end
