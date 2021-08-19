@@ -13,7 +13,7 @@
             </clipPath>
           </defs>
           <path d="<%= tile.path %>" filter="url(#dropshadow)"/>
-          <image height="100%" preserveAspectRatio="xMinYMin slice" width"100%" xlink:href="<%= crinkled_paper_path @socket %>" clip-path="url(#clip_<%= tile.id %>)" />
+          <image height="100%" preserveAspectRatio="xMinYMin slice" width"100%" xlink:href="<%= DreadnoughtWeb.TerrainView.crinkled_paper_path @socket %>" clip-path="url(#clip_<%= tile.id %>)" />
         </svg>
       </div>
     <% end %>

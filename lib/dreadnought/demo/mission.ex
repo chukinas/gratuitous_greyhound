@@ -14,7 +14,7 @@ defmodule Dreadnought.Demo.Mission do
     {grid, margin} = Helpers.medium_map()
     mission_spec = mission_spec(player_uuid)
     Mission.new(mission_spec, grid, margin)
-    |> Map.put(:islands, Helpers.islands())
+    #|> Map.put(:islands, Helpers.islands())
     |> Mission.put(UnitBuilder.build(:blue_destroyer, 1, 1, pose_new(100, 100, 45)))
   end
 
