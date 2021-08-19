@@ -8,6 +8,10 @@ defmodule DreadnoughtWeb.PlayView do
   alias Dreadnought.Core.ActionSelection, as: AS
   alias Dreadnought.Geometry.Rect
 
+  def render_islands(socket) do
+    render("islands2.html", socket: socket)
+  end
+
   # TODO rename
   def render_single_maneuver(%Maneuver{} = path, unit_id) do
     assigns =
