@@ -1,0 +1,24 @@
+<svg
+  id="svg_islands"
+  viewBox="
+    <%= @world_rect.x %>
+    <%= @world_rect.y %>
+    <%= @world_rect.width %>
+    <%= @world_rect.height %>
+  "
+  class="relative"
+  style="<%= render_rect_as_style_attrs(@world_rect) %>"
+>
+  <%= for island <- @islands do %>
+    <polygon
+      id="island-<%= island.id %>"
+      points="
+        <%= for point <- island.relative_points do %>
+          <%= point.x + island.x %>
+          <%= point.y + island.y %>
+        <% end %>
+      "
+      style="fill:green;"
+    />
+  <% end %>
+</svg>
