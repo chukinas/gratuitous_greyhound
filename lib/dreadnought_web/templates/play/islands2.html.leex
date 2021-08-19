@@ -1,6 +1,10 @@
 <svg id="islands2" width=500 height=500 viewBox="0 0 500 500" class="absolute top-0 left-0" >
-  <polygon
-    points="250 250, 500 250, 500 500, 250 500"
-    style="fill:green;"
-  />
+  <defs>
+    <polygon
+      id="island-shape"
+      points="210 270, 400 270, 480 250, 500 500, 250 500"
+      style="fill:green;"
+    />
+  </defs>
+  <use href="#island-shape" x="0" y="0" fill="green"/>
 </svg>
