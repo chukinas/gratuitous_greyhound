@@ -13,7 +13,7 @@
     <polygon
       id="island-<%= island.id %>"
       points="
-        <%= for point <- island.relative_vertices do %>
+        <%= for point <- island.relative_points do %>
           <%= point.x + island.x %>
           <%= point.y + island.y %>
         <% end %>

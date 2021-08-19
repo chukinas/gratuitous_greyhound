@@ -26,6 +26,8 @@ defmodule Dreadnought.PositionOrientationSize do
       import POS.Guards
       import POS.PoseApi
       import POS.PositionApi
+
+      @type position :: Position.t
     end
   end
 

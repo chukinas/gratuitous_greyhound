@@ -3,61 +3,66 @@ defmodule Dreadnought.Core.Island do
   Handles rendering and collision of islands for ships and players to interact with
   """
 
-    use Dreadnought.LinearAlgebra
-    use Dreadnought.PositionOrientationSize
-  alias Dreadnought.Core.Island
-  alias Dreadnought.LinearAlgebra.Vector
+  use Dreadnought.LinearAlgebra
+  use Dreadnought.PositionOrientationSize
 
   # *** *******************************
   # *** TYPES
 
   typedstruct do
     field :id, integer
-    # TODO rename position_points ?
-    field :relative_vertices, list(POS.position_struct)
+    field :relative_points, [position]
     position_fields()
   end
 
   # *** *******************************
   # *** CONSTRUCTORS
 
-  def new(id, location, points) do
+  def new(id, position, relative_points)
+  when is_integer(id)
+  and has_position(position)
+  and is_list(relative_points) do
     fields =
       %{
         id: id,
-        relative_vertices: points
+        relative_points: relative_points
       }
-      |> merge_position(location)
+      |> merge_position(position)
     struct!(__MODULE__, fields)
   end
 
-  def random(id, location) when has_position(location) do
+  def random(id, position) do
     radius = 250
     sides = 7
     angle = 360 / sides
-    points =
+    relative_points =
       0..(sides - 1)
       |> Stream.map(fn i ->
         (i * angle)
-        |> Vector.from_angle
-        |> Vector.scalar(radius)
+        |> vector_from_angle
+        |> vector_multiply(radius)
         |> position_new
         |> position_shake
       end)
       |> Enum.to_list
-    new(id, location, points)
+    new(id, position, relative_points)
   end
 
   # *** *******************************
   # *** CONVERTERS
 
-  def position_points(%__MODULE__{relative_vertices: val}), do: val
+  def relative_points(%__MODULE__{relative_points: val}), do: val
 
-  def world_coord(island, relative_position) do
+  def absolute_points(island) do
     island
-    |> position_new
-    |> position_add(relative_position)
-    |> vector_from_position
+    |> relative_points
+    |> Enum.map(&position_add(&1, island))
+  end
+
+  def absolute_coords(island) do
+    island
+    |> absolute_points
+    |> Enum.map(&position_to_tuple/1)
   end
 
 end
@@ -68,10 +73,6 @@ end
 alias Dreadnought.Core.Island
 
 defimpl Dreadnought.Collide.IsShape, for: Island do
-  def to_coords(island) do
-    island
-    |> Island.position_points
-    |> Enum.map(&Island.world_coord(island, &1))
-  end
+  def to_coords(island), do: Island.absolute_coords(island)
 end
 
