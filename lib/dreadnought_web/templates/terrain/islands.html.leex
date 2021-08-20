@@ -1,5 +1,4 @@
 <svg id="islands2" width=500 height=500 viewBox="0 0 500 500" class="absolute top-0 left-0" >
-  <%= render_dropshadow_def("islandsdropshadow") %>
   <defs>
     <polygon id="island-shape" points="210 270, 400 270, 480 250, 500 500, 250 500" />
     <rect id="island-half" width="360" height="600" x="0" y="0" fill="red" />
@@ -8,6 +7,6 @@
       <rect id="island-half" width="360" height="600" x="0" y="0" />
     </clipPath>
   </defs>
-  <use href="#island-shape" <%= render_dropshadow_filter("islandsdropshadow") %> />
+  <use href="#island-shape" <%= render_dropshadow_filter() %> />
   <image href="<%= crinkled_paper_path(@socket) %>" x="0" y="0" clip-path="url(#left-clip)" />
 </svg>

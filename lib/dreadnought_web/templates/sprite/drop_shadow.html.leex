@@ -8,9 +8,7 @@
       <%= DreadnoughtWeb.Shared.left_top_from_position(@transform) %>
     ">
     <svg viewBox="<%= @padded_image_viewbox %>">
-      <%# TODO This id will end up not being unique in html document %>
-      <%= render_dropshadow_def("spritedropshadow") %>
-      <path d="<%= @svg_path %>" <%= render_dropshadow_filter("spritedropshadow") %> />
+      <path d="<%= @svg_path %>" <%= render_dropshadow_filter() %> />
     </svg>
   </div>
 </div>

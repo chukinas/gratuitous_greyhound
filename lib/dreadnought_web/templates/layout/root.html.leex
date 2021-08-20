@@ -14,6 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@500&display=swap" rel="stylesheet"> 
   </head>
   <body>
+    <svg class="w-0 h-0" ><%= render_dropshadow_def() %></svg>
     <%= @inner_content %>
     <%= render_gsap_import() %>
     <%= DreadnoughtWeb.Shared.hide_livereload_iframe() %>
