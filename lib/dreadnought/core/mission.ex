@@ -368,6 +368,7 @@ defmodule Dreadnought.Core.Mission do
   def rect(nil), do: Rect.null()
   def rect(%__MODULE__{world_rect: value}), do: value
 
+  # TODO remove the nil func clause here and elsewhere
   def islands(nil), do: []
   def islands(%__MODULE__{islands: value}), do: value
 

@@ -22,7 +22,7 @@ defmodule DreadnoughtWeb.WorldLive do
   # *** HELPERS
 
   def build(mission_name) do
-    {grid, margin} = Helpers.medium_map()
+    {grid, margin} = Helpers.small_map()
     mission_spec = mission_spec(mission_name)
     Mission.new(mission_spec, grid, margin)
     #|> Map.put(:islands, Helpers.islands())
