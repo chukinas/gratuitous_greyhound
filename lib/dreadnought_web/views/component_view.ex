@@ -56,7 +56,11 @@ defmodule DreadnoughtWeb.ComponentView do
 
   def render_dropshadow_def, do: render("dropshadow_def.html", [])
 
-  def render_dropshadow_filter, do: ~s/filter="url(#paperdropshadow)"/
+  def render_dropshadow_filter do
+    ~e"""
+    filter="url(#paperdropshadow)"
+    """
+  end
 
   def render_gsap_import, do: render("gsap_import.html", [])
 
