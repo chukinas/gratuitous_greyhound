@@ -23,10 +23,12 @@ defmodule Dreadnought.Core.Mission do
   typedstruct do
     field :mission_spec, mission_spec
     field :name_pretty, String.t, enforce: true
+    # play area + margin:
     field :world_rect, Rect.t, enforce: true
+    # TODO deprectate. Replace with grid square size
     field :grid, Grid.t(), enforce: true
     field :turn_number, integer(), default: 0
-    # TODO deprecate
+    # TODO deprecate?
     field :margin, any
     field :islands, [Island.t()], default: []
     field :units, [Unit.t()], default: []
