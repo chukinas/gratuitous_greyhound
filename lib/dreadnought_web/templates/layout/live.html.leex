@@ -1,16 +1,5 @@
 <div>
-  <svg >
-    <defs>
-      <filter id="dropshadow" height="160%">
-        <feGaussianBlur in="SourceAlpha" stdDeviation="1"/> 
-        <feOffset dx="1" dy="1" result="offsetblur"/> 
-        <feMerge> 
-          <feMergeNode/>
-          <feMergeNode in="SourceGraphic"/> 
-        </feMerge>
-      </filter>
-    </defs>
-  </svg>
-  <%= DreadnoughtWeb.LayoutView.render "flash_messages.html", flash: @flash %>
+  <%= render_dropshadow_def("livetemplatedropshadow") %>
+  <%= render "flash_messages.html", flash: @flash %>
   <%= @inner_content %>
 </div>

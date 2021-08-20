@@ -1,4 +1,7 @@
 defmodule DreadnoughtWeb.ComponentView do
+  @moduledoc"""
+  A catch-all for fragments, chunks
+  """
 
   use DreadnoughtWeb, :base_view
   use Dreadnought.PositionOrientationSize
@@ -9,8 +12,6 @@ defmodule DreadnoughtWeb.ComponentView do
       import DreadnoughtWeb.ComponentView, except: [render: 1, render: 2, template_not_found: 2]
     end
   end
-
-  def render_gsap_import, do: render("gsap_import.html", [])
 
   def render_toggle(id, label, selected?, attrs \\ []) do
     assigns =
@@ -49,6 +50,15 @@ defmodule DreadnoughtWeb.ComponentView do
       )
     end)
   end
+
+  # *** *******************************
+  # *** FRAGMENTS
+
+  def render_dropshadow_def(id), do: render("dropshadow_def.html", id: id)
+
+  def render_dropshadow_filter(id), do: render("dropshadow_filter.html", id: id)
+
+  def render_gsap_import, do: render("gsap_import.html", [])
 
   # *** *******************************
   # *** DOTS

@@ -7,6 +7,13 @@ defmodule DreadnoughtWeb.TerrainView do
     Routes.static_path socket, "/images/crinkled_paper_20210517.jpg"
   end
 
+  def dropshadow(socket) do
+    assigns = %{path: Routes.static_path(socket, "/defs.svg"), __changed__: false}
+    ~L"""
+    filter="url(<%= @path %>#dropshadow)"
+    """
+  end
+
   def render_islands(socket) do
     render("islands.html", socket: socket)
   end

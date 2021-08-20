@@ -8,11 +8,12 @@
         <div style="<%= tile.style %>" class="transform scale-125 absolute <%= tile.rotate_class %>">
         <svg viewBox="<%= tile.viewbox %>">
           <defs>
+            <%= render_dropshadow_def("ocean-dropshadow") %>
             <clipPath id="clip_<%= tile.id %>">
               <path d="<%= tile.path %>"/>
             </clipPath>
           </defs>
-          <path d="<%= tile.path %>" filter="url(#dropshadow)"/>
+          <path d="<%= tile.path %>" <%= render_dropshadow_filter("ocean-dropshadow") %> />
           <image height="100%" preserveAspectRatio="xMinYMin slice" width"100%" xlink:href="<%= DreadnoughtWeb.TerrainView.crinkled_paper_path @socket %>" clip-path="url(#clip_<%= tile.id %>)" />
         </svg>
       </div>
