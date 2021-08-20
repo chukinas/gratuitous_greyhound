@@ -10,9 +10,11 @@ defmodule DreadnoughtWeb.WorldLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    socket =
-      socket
-      |> assign(mission: build("world"))
+    socket = assign(socket,
+      mission: build("world"),
+      width: 300,
+      height: 300
+    )
     {:ok, socket}
   end
 
