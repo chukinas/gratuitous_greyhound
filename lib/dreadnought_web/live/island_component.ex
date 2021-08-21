@@ -34,7 +34,7 @@ defmodule DreadnoughtWeb.IslandComponent do
         <% end %>
       </defs>
       <%= for use <- @uses do %>
-        <use href="<%= use.href %>" x="<%= use.pose.x %>" y="<%= use.pose.y %>" transform="rotate(<%= use.pose.angle %>,<%= use.pose.x %>,<%= use.pose.y %>)" />
+        <use href="<%= use.href %>" <%= render_pose(use.pose) %> />
       <% end %>
     </svg>
     """

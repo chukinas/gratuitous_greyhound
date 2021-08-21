@@ -187,6 +187,15 @@ defmodule DreadnoughtWeb.ComponentView do
   end
 
   # *** *******************************
+  # *** SVG
+
+  def render_pose(%{x: x, y: y, angle: angle} = pose) when has_pose(pose) do
+    ~E"""
+    x="<%= x %>" y="<%= y %>" transform="rotate(<%= angle %>,<%= x %>,<%= y %>)"
+    """
+  end
+
+  # *** *******************************
   # *** COMMON CLASSES
 
   defp __hover_bg__, do: "hover:bg-yellow-400/10 /10 disabled:bg-transparent"
