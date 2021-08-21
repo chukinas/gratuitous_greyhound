@@ -1,4 +1,4 @@
-<svg viewbox="-<%= @margin %> -<%= @margin %> <%= @board_size.width %> <%= @board_size.height %>" width="<%= @board_size.width %>" height="<%= @board_size.height %>" class="m-12" >
+<svg viewbox="-<%= @margin %> -<%= @margin %> <%= @board_size.width %> <%= @board_size.height %>" width="<%= @board_size.width %>" height="<%= @board_size.height %>" class="m-12" overflow="visible" >
   <rect id="board-area" width="<%= @board_size.width %>" height="<%= @board_size.height %>" fill="grey" stroke="red" x="<%= -@margin %>" y="<%= -@margin %>" stroke-width="10" />
   <rect id="play-area" width="<%= @play_area_size.width %>" height="<%= @play_area_size.height %>" x="0" y="0" fill="blue" />
   <text x="<%= 10 - @margin %>" y="<%= 20 - @margin %>" >Grey = Total Board Area (margin)</text>

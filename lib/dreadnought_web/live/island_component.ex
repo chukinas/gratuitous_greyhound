@@ -25,7 +25,7 @@ defmodule DreadnoughtWeb.IslandComponent do
   def render(assigns) do
     ~L"""
     <%# TODO use dynamic values %>
-    <svg viewbox="0 0 1000 1000" width="1000" height="1000" >
+    <svg viewbox="0 0 1000 1000" width="1000" height="1000" overflow="visible" >
       <defs>
         <%= for def <- @defs do %>
           <%# TODO replace with a Phoenix tag builder? %>
