@@ -28,9 +28,8 @@ defmodule DreadnoughtWeb.IslandComponent do
     <svg id="island_component" viewbox="0 0 1000 1000" width="1000" height="1000" overflow="visible" >
       <defs>
         <%= for def <- @defs do %>
-          <%# TODO replace with a Phoenix tag builder? %>
           <%# TODO add an SvgView that renders this kinda stuff? %>
-          <polygon id="<%= def.id %>" points="<%= def.polygon_points %>" fill="green" opacity="0.7" />
+          <%= tag :polygon, id: def.id, points: def.polygon_points, fill: "green", opacity: 0.7 %>
         <% end %>
       </defs>
       <%= for use <- @uses do %>
