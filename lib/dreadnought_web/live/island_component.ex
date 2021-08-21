@@ -26,9 +26,7 @@ defmodule DreadnoughtWeb.IslandComponent do
     ~L"""
     <%# TODO use dynamic values %>
     <svg id="island_component" viewbox="0 0 1000 1000" width="1000" height="1000" overflow="visible" >
-      <defs>
-        <%= for def <- @defs, do: tag(:polygon, Keyword.merge(def, fill: "green", opacity: 0.7)) %>
-      </defs>
+      <defs><%= @defs %></defs>
       <%= for use <- @uses do %>
         <use href="<%= use.href %>" <%= render_pose(use.pose) %> />
       <% end %>
@@ -54,10 +52,12 @@ defmodule DreadnoughtWeb.IslandComponent do
   # *** SPEC CONVERTERS
 
   def build_def(island_spec) do
-    [
+    tag(:polygon,
       id: element_id(island_spec),
-      points: Builder.svg_polygon_points_string(island_spec)
-    ]
+      points: Builder.svg_polygon_points_string(island_spec),
+      fill: "green",
+      opacity: 0.7
+    )
   end
 
   def build_use(island_spec) do
