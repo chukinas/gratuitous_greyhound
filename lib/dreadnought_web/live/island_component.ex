@@ -29,7 +29,7 @@ defmodule DreadnoughtWeb.IslandComponent do
       <defs>
         <%= for def <- @defs do %>
           <%# TODO add an SvgView that renders this kinda stuff? %>
-          <%= tag :polygon, id: def.id, points: def.polygon_points, fill: "green", opacity: 0.7 %>
+          <%= tag :polygon, Keyword.merge(def, fill: "green", opacity: 0.7) %>
         <% end %>
       </defs>
       <%= for use <- @uses do %>
@@ -57,10 +57,10 @@ defmodule DreadnoughtWeb.IslandComponent do
   # *** SPEC CONVERTERS
 
   def build_def(island_spec) do
-    %{
+    [
       id: element_id(island_spec),
-      polygon_points: Builder.svg_polygon_points_string(island_spec)
-    }
+      points: Builder.svg_polygon_points_string(island_spec)
+    ]
   end
 
   def build_use(island_spec) do
