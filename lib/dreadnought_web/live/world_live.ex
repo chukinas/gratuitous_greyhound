@@ -26,8 +26,9 @@ defmodule DreadnoughtWeb.WorldLive do
 
   def build(mission_name) do
     {grid, margin} = Helpers.small_map()
-    mission_spec = mission_spec(mission_name)
-    Mission.new(mission_spec, grid, margin)
+    mission_name
+    |> mission_spec
+    |> Mission.new(grid, margin)
     |> Mission.add_island_spec({:square, pose_new(200, 200, 30)})
   end
 

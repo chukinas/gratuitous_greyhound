@@ -121,6 +121,7 @@ defmodule Dreadnought.Core.Mission do
   # *** *******************************
   # *** REDUCERS
 
+  @spec add_island_spec(t, island_spec) :: t
   def add_island_spec(%__MODULE__{island_specs: specs} = mission, island_spec) when is_island_spec(island_spec) do
     %__MODULE__{mission | island_specs: [island_spec | specs]}
   end

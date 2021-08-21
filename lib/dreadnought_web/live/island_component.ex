@@ -30,11 +30,11 @@ defmodule DreadnoughtWeb.IslandComponent do
         <%= for def <- @defs do %>
           <%# TODO replace with a Phoenix tag builder? %>
           <%# TODO add an SvgView that renders this kinda stuff? %>
-          <polygon id="<%= def.id %>" points="<%= def.polygon_points %>" fill="green" />
+          <polygon id="<%= def.id %>" points="<%= def.polygon_points %>" fill="green" opacity="0.5" />
         <% end %>
       </defs>
       <%= for use <- @uses do %>
-        <use href="<%= use.href %>" x="<%= use.pose.x %>" y="<%= use.pose.y %>" />
+        <use href="<%= use.href %>" x="<%= use.pose.x %>" y="<%= use.pose.y %>" transform="rotate(<%= use.pose.angle %>)" />
       <% end %>
     </svg>
     """
