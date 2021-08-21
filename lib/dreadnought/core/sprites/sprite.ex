@@ -1,10 +1,10 @@
-# TODO move this to /core
 # TODO all other sprite files should follow the spec/builder pattern?
+# TODO deprecate. Replace with Dreadnought.Sprite
 defmodule Dreadnought.Core.Sprite do
 
     use Dreadnought.PositionOrientationSize
     use Dreadnought.TypedStruct
-  alias Dreadnought.Core.Sprites.Mount
+  alias Dreadnought.Core.Mount
   alias Dreadnought.Geometry.Rect
   alias Dreadnought.Svg
   alias Dreadnought.Svg.Interpret

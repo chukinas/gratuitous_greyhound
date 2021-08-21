@@ -17,8 +17,8 @@ defmodule DreadnoughtWeb.IslandComponent do
   def update(%{island_specs: island_specs}, socket) when is_list(island_specs) do
     socket =
       socket
-      |> assign(defs: build_defs(island_specs))
-      |> assign(uses: build_uses(island_specs))
+      |> assign(def_elements: render_def_elements(island_specs))
+      |> assign(use_elements: render_use_elements(island_specs))
     {:ok, socket}
   end
 
@@ -27,8 +27,8 @@ defmodule DreadnoughtWeb.IslandComponent do
     ~L"""
     <%# TODO use dynamic values %>
     <svg id="island_component" viewbox="0 0 1000 1000" width="1000" height="1000" overflow="visible" >
-      <defs><%= @defs %></defs>
-      <%= @uses %>
+      <defs><%= @def_elements %></defs>
+      <%= @use_elements %>
     </svg>
     """
   end
@@ -36,21 +36,21 @@ defmodule DreadnoughtWeb.IslandComponent do
   # *** *******************************
   # *** SPEC.LIST CONVERTERS
 
-  def build_defs(island_specs) do
+  def render_def_elements(island_specs) do
     island_specs
     |> Spec.List.remove_dup_shapes
-    |> Enum.map(&build_def/1)
+    |> Enum.map(&render_def_element/1)
   end
 
-  def build_uses(island_specs) do
+  def render_use_elements(island_specs) do
     island_specs
-    |> Enum.map(&build_use/1)
+    |> Enum.map(&render_use_element/1)
   end
 
   # *** *******************************
   # *** SPEC CONVERTERS
 
-  def build_def(island_spec) do
+  def render_def_element(island_spec) do
     tag(:polygon,
       id: element_id(island_spec),
       points: Builder.svg_polygon_points_string(island_spec),
@@ -59,7 +59,7 @@ defmodule DreadnoughtWeb.IslandComponent do
     )
   end
 
-  def build_use(island_spec) do
+  def render_use_element(island_spec) do
     pose_attrs =
       island_spec
       |> Spec.pose
