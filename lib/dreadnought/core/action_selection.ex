@@ -1,5 +1,6 @@
 defmodule Dreadnought.Core.ActionSelection do
 
+    use Dreadnought.TypedStruct
   alias Dreadnought.Core.ActionSelection.Maneuver
   alias Dreadnought.Core.Unit
   alias Dreadnought.Core.UnitAction

@@ -5,6 +5,7 @@ defmodule Dreadnought.Core.Island do
 
   use Dreadnought.LinearAlgebra
   use Dreadnought.PositionOrientationSize
+  use Dreadnought.TypedStruct
 
   # *** *******************************
   # *** TYPES

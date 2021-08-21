@@ -10,12 +10,15 @@ defmodule Dreadnought.Core.Turret do
   arc - the 2D cone between the max ccw and max cw angles. Fixed to unit.
   """
 
-  use Dreadnought.LinearAlgebra
-  use Dreadnought.PositionOrientationSize
-  use Dreadnought.Math
+    use Dreadnought.LinearAlgebra
+    use Dreadnought.Math
+    use Dreadnought.PositionOrientationSize
+    use Dreadnought.TypedStruct
   alias Dreadnought.Core.Sprites
+  # TODO replace with use of LinearAlgebra?
   alias Dreadnought.LinearAlgebra.HasCsys
   alias Dreadnought.LinearAlgebra.Vector
+  # TODO needed with the use above?
   alias Dreadnought.Math
 
   # *** *******************************

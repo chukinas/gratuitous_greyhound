@@ -1,7 +1,8 @@
 defmodule Dreadnought.Core.Unit do
 
-  use Dreadnought.LinearAlgebra
-  use Dreadnought.PositionOrientationSize
+    use Dreadnought.LinearAlgebra
+    use Dreadnought.PositionOrientationSize
+    use Dreadnought.TypedStruct
   alias Dreadnought.Core.Sprites
   alias Dreadnought.Core.Turret
   alias Dreadnought.Core.Unit.Event, as: Ev

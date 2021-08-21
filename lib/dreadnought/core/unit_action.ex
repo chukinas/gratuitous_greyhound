@@ -1,9 +1,10 @@
-alias Dreadnought.Core.{UnitAction}
-
-defmodule UnitAction do
+defmodule Dreadnought.Core.UnitAction do
   @moduledoc """
   Represents one action a unit will take next turn
   """
+
+  use Dreadnought.PositionOrientationSize
+  use TypedStruct
 
   # *** *******************************
   # *** TYPES
@@ -11,8 +12,6 @@ defmodule UnitAction do
   @mode [:maneuver, :combat]
   @type unit_id() :: integer()
   @type mode() :: :maneuver | :combat
-
-  use Dreadnought.PositionOrientationSize
 
   typedstruct do
     field :unit_id, unit_id(), enforce: true
@@ -66,6 +65,7 @@ defmodule UnitAction do
 
 end
 
+alias Dreadnought.Core.UnitAction
 
 # TODO move to separate module?
 defmodule UnitAction.Enum do

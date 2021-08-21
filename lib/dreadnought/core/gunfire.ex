@@ -1,7 +1,8 @@
 defmodule Dreadnought.Core.Gunfire do
 
-  use Dreadnought.PositionOrientationSize
-  use Dreadnought.LinearAlgebra
+    use Dreadnought.PositionOrientationSize
+    use Dreadnought.LinearAlgebra
+    use Dreadnought.TypedStruct
   alias Dreadnought.Core.Sprites
   alias Dreadnought.Core.Turret
   alias Dreadnought.Core.Unit

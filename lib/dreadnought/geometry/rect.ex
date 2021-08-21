@@ -5,8 +5,9 @@ defmodule Dreadnought.Geometry.Rect do
   Its position is the position of the top-left corner.
   """
 
-  use Dreadnought.PositionOrientationSize
-  use Dreadnought.LinearAlgebra
+    use Dreadnought.LinearAlgebra
+    use Dreadnought.PositionOrientationSize
+    use Dreadnought.TypedStruct
   alias Dreadnought.Collide.IsShape
 
   # *** *******************************

@@ -1,7 +1,9 @@
-# TODO rename Dreadnought.Core.Sprites.Sprite?
+# TODO move this to /core
+# TODO all other sprite files should follow the spec/builder pattern?
 defmodule Dreadnought.Core.Sprite do
 
-  use Dreadnought.PositionOrientationSize
+    use Dreadnought.PositionOrientationSize
+    use Dreadnought.TypedStruct
   alias Dreadnought.Core.Sprites.Mount
   alias Dreadnought.Geometry.Rect
   alias Dreadnought.Svg

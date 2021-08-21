@@ -21,13 +21,12 @@ defmodule Dreadnought.PositionOrientationSize do
       require POS
       import POS
       alias POS, as: POS
-      # TODO remove this
-      use Dreadnought.TypedStruct
       import POS.AngleApi
       import POS.Guards
       import POS.PoseApi
       import POS.PositionApi
 
+      # TODO remove this
       @type position :: Position.t
     end
   end

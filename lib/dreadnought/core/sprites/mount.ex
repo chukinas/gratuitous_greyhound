@@ -1,6 +1,7 @@
 defmodule Dreadnought.Core.Sprites.Mount do
 
   use Dreadnought.PositionOrientationSize
+  use Dreadnought.TypedStruct
 
   # *** *******************************
   # *** TYPES

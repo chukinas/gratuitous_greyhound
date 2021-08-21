@@ -9,6 +9,7 @@ defmodule Maneuver do
   """
 
   use Dreadnought.PositionOrientationSize
+  use Dreadnought.TypedStruct
 
   # *** *******************************
   # *** TYPES
