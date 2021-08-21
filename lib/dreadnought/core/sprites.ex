@@ -45,6 +45,11 @@ defmodule Dreadnought.Core.Sprites do
     Stream.filter(@function_heads, fn {fun, _} -> fun != :test end)
   end
 
+  def sprite_specs do
+    # TODO rename sprite_specs
+    @function_heads
+  end
+
   # *** *******************************
   # *** SPRITE API
 
