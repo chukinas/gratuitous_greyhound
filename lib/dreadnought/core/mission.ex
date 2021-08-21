@@ -1,5 +1,6 @@
 defmodule Dreadnought.Core.Mission do
 
+  use Dreadnought.Core.Island.Spec
   use Dreadnought.Core.Mission.Spec
   use Dreadnought.PositionOrientationSize
   use TypedStruct
@@ -30,6 +31,8 @@ defmodule Dreadnought.Core.Mission do
     field :turn_number, integer(), default: 0
     # TODO deprecate?
     field :margin, any
+    field :island_specs, [Island.Spec.t], default: []
+    # TODO deprecate
     field :islands, [Island.t()], default: []
     field :units, [Unit.t()], default: []
     field :players, [Player.t()], default: []
@@ -117,6 +120,10 @@ defmodule Dreadnought.Core.Mission do
 
   # *** *******************************
   # *** REDUCERS
+
+  def add_island_spec(%__MODULE__{island_specs: specs} = mission, island_spec) when is_island_spec(island_spec) do
+    %__MODULE__{mission | island_specs: [island_spec | specs]}
+  end
 
   def put(mission, list) when is_list(list), do: Enum.reduce(list, mission, &put(&2, &1))
   def put(mission, %Unit{} = unit), do: Maps.put_by_id(mission, :units, unit)

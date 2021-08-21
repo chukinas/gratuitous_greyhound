@@ -28,7 +28,7 @@ defmodule DreadnoughtWeb.WorldLive do
     {grid, margin} = Helpers.small_map()
     mission_spec = mission_spec(mission_name)
     Mission.new(mission_spec, grid, margin)
-    #|> Map.put(:islands, Helpers.islands())
+    |> Mission.add_island_spec({:square, pose_new(200, 200, 30)})
   end
 
   def assign_board_size(%{assigns: %{margin: margin, play_area_size: play_area_size}} = socket) do

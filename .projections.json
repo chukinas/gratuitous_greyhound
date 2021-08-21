@@ -1,7 +1,7 @@
 {
     "assets/js/dreadnought/*.js": { "type": "hook" },
     "lib/dreadnought/*.ex": { "type": "dreadnought" },
-    "lib/dreadnought/core/*.ex": { "type": "dreadnought" },
+    "lib/dreadnought/core/*.ex": { "type": "core" },
     "lib/dreadnought/geometry/*.ex": { "type": "geometry" },
     "lib/dreadnought/linear_algebra/*.ex": { "type": "algebra" },
     "lib/dreadnought_web/templates/*.html.leex": { "type": "template" },

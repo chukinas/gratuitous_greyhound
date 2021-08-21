@@ -1,8 +1,9 @@
 defmodule Dreadnought.PositionOrientationSize do
 
-  import Dreadnought.PositionOrientationSize.Guards
-  # TODO are both of these needed?
   use Dreadnought.Math
+  use Dreadnought.PositionOrientationSize.Types
+  require Dreadnought.PositionOrientationSize.Guards
+  import Dreadnought.PositionOrientationSize.Guards
   alias Dreadnought.Math
   alias Dreadnought.PositionOrientationSize.IsPos
   alias Dreadnought.PositionOrientationSize.Pose
@@ -11,11 +12,11 @@ defmodule Dreadnought.PositionOrientationSize do
   alias Dreadnought.PositionOrientationSize.Size
   alias Dreadnought.Util.Maps
   alias Dreadnought.Util.Precision
-  require Dreadnought.PositionOrientationSize.Guards
 
   defmacro __using__(_opts) do
     alias Dreadnought.PositionOrientationSize, as: POS
     quote do
+      use POS.Types
       require POS.Guards
       require POS
       import POS
@@ -30,31 +31,6 @@ defmodule Dreadnought.PositionOrientationSize do
       @type position :: Position.t
     end
   end
-
-  # *** *******************************
-  # *** TYPES
-
-  @type position_key    :: :x | :y
-  @type pose_key        :: :angle | position_key
-  @type size_key        :: :width | :height
-
-  @type position_map    :: %{position_key => number, optional(any) => any}
-  @type pose_map        :: %{pose_key     => number, optional(any) => any}
-  @type size_map        :: %{size_key     => number, optional(any) => any}
-  @type pos_map         :: position_map | pose_map | size_map
-
-  @type position_struct :: Position.t
-  @type pose_struct     :: Pose.t
-  @type size_struct     :: Size.t
-  @type pos_struct      :: Position.t | Pose.t | Size.t
-
-  @type pos_type        :: :position | :pose | :size
-  #@type position_tuple  :: {:position,  position_map}
-  #@type pose_tuple      :: {:pose,      pose_map}
-  #@type size_tuple      :: {:size,      size_map}
-  #@type pos_tuple       :: position_tuple | pose_tuple | size_tuple
-  @type pos_tuple       :: {pos_type, pos_map}
-  @type pos_keywords    :: [pos_tuple]
 
   # *** *******************************
   # *** PRECISION

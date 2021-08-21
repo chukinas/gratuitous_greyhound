@@ -10,27 +10,34 @@ defmodule Dreadnought.Core.Island do
   # *** TYPES
 
   typedstruct do
+    # TODO remove id
     field :id, integer
     field :relative_points, [position]
-    position_fields()
+    pose_fields()
   end
 
   # *** *******************************
   # *** CONSTRUCTORS
 
-  def new(id, position, relative_points)
+  def new(id, pose, relative_points)
   when is_integer(id)
-  and has_position(position)
+  and has_pose(pose)
   and is_list(relative_points) do
     fields =
       %{
         id: id,
         relative_points: relative_points
       }
-      |> merge_position(position)
+      |> merge_pose(pose)
     struct!(__MODULE__, fields)
   end
 
+  def new(id, position, relative_points) when has_position(position) do
+    pose = pose_from_position(position, 0)
+    new(id, pose, relative_points)
+  end
+
+  # TODO replace random with calls to Island.BUilder
   def random(id, position) do
     radius = 250
     sides = 7

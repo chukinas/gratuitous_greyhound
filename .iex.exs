@@ -6,6 +6,5 @@ alias Dreadnought.Geometry, as: G
 alias Dreadnought.LinearAlgebra
 alias Dreadnought.PositionOrientationSize
 use Dreadnought.LinearAlgebra
-use Dreadnought.PositionOrientationSize
 
 alias Ecto.Changeset
