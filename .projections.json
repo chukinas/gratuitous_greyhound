@@ -7,6 +7,7 @@
     "lib/dreadnought_web/templates/*.html.leex": { "type": "template" },
     "lib/dreadnought_web/templates/dreadnought/*.html.leex": { "type": "template_index" },
     "lib/dreadnought_web/templates/dreadnought_play/*.html.leex": { "type": "template_play" },
-    "lib/dreadnought_web/live/dreadnought/*_component.ex": { "type": "component" },
+    "lib/dreadnought_web/live/live_*.ex": { "type": "live" },
+    "lib/dreadnought_web/live/*_component.ex": { "type": "component" },
     "test/dreadnought/*_test.exs": { "type": "test" },
 }

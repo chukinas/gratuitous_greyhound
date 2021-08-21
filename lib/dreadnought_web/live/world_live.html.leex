@@ -3,6 +3,6 @@
   <rect id="play-area" width="<%= @play_area_size.width %>" height="<%= @play_area_size.height %>" x="0" y="0" fill="blue" />
   <text x="<%= 10 - @margin %>" y="<%= 20 - @margin %>" >Grey = Total Board Area (margin)</text>
   <text x="10" y="20" fill="white" >Blue = Play Area</text>
-  <%= DreadnoughtWeb.TerrainView.render_islands(@mission.island_specs) %>
+  <%= live_component(DreadnoughtWeb.IslandComponent, island_specs: @mission.island_specs) %>
 </svg>
 
