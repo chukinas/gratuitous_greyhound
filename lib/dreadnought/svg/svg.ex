@@ -1,12 +1,13 @@
+# TODO module name and file path don't match
 defmodule Dreadnought.Svg do
   @moduledoc"""
   This module converts path structs to svg path strings for use in eex templates.
   """
 
   import Dreadnought.Util.Precision, only: [values_to_int: 1]
-  import Dreadnought.PositionOrientationSize
-  use Dreadnought.Math
-  use Dreadnought.LinearAlgebra
+    use Dreadnought.Math
+    use Dreadnought.LinearAlgebra
+    use Dreadnought.PositionOrientationSize
   alias Dreadnought.Paths
   alias Dreadnought.Paths.Straight
   alias Dreadnought.Paths.Turn
@@ -56,6 +57,14 @@ defmodule Dreadnought.Svg do
     coords
     |> Stream.map(&vector_to_comma_separated_string/1)
     |> Enum.join(" ")
+  end
+
+  def pose_to_attrs(%{x: x, y: y, angle: angle} = pose) when has_pose(pose) do
+    [
+      x: x,
+      y: y,
+      transform: "rotate(#{angle},#{x},#{y})"
+    ]
   end
 
   # *** *******************************

@@ -3,6 +3,7 @@ defmodule DreadnoughtWeb.IslandComponent do
     use DreadnoughtWeb, :live_component
   alias Dreadnought.Core.Island.Builder
   alias Dreadnought.Core.Island.Spec
+  alias Dreadnought.Svg
 
   # *** *******************************
   # *** CALLBACKS
@@ -27,9 +28,7 @@ defmodule DreadnoughtWeb.IslandComponent do
     <%# TODO use dynamic values %>
     <svg id="island_component" viewbox="0 0 1000 1000" width="1000" height="1000" overflow="visible" >
       <defs><%= @defs %></defs>
-      <%= for use <- @uses do %>
-        <use href="<%= use.href %>" <%= render_pose(use.pose) %> />
-      <% end %>
+      <%= @uses %>
     </svg>
     """
   end
@@ -61,10 +60,13 @@ defmodule DreadnoughtWeb.IslandComponent do
   end
 
   def build_use(island_spec) do
-    %{
-      href: "#" <> element_id(island_spec),
-      pose: Spec.pose(island_spec)
-    }
+    pose_attrs =
+      island_spec
+      |> Spec.pose
+      |> Svg.pose_to_attrs
+    tag(:use, Keyword.merge(pose_attrs,
+      href: "#" <> element_id(island_spec)
+    ))
   end
 
   def element_id(island_spec), do: "island-shape-#{Spec.shape(island_spec)}"
