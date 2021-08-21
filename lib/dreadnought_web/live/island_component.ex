@@ -34,19 +34,24 @@ defmodule DreadnoughtWeb.IslandComponent do
   end
 
   # *** *******************************
-  # *** HELPERS
+  # *** SPEC.LIST CONVERTERS
 
   def build_defs(island_specs) do
-    # TODO the SPec.List fun should return island specs via Enum.uniq_by
-    unique_shapes = Spec.List.unique_shapes(island_specs)
-    Enum.map(unique_shapes, fn shape ->
-      %{
-        id: element_id(shape),
-        polygon_points: Builder.svg_polygon_points_string(shape)
-      }
-    end)
+    island_specs
+    |> Spec.List.remove_dup_shapes
+    |> Enum.map(&build_def/1)
   end
 
-  def element_id(shape_name), do: "island-shape-#{shape_name}"
+  # *** *******************************
+  # *** SPEC CONVERTERS
+
+  def build_def(island_spec) do
+    %{
+      id: element_id(island_spec),
+      polygon_points: Builder.svg_polygon_points_string(island_spec)
+    }
+  end
+
+  def element_id(island_spec), do: "island-shape-#{Spec.shape(island_spec)}"
 
 end

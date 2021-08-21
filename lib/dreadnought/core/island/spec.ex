@@ -10,7 +10,9 @@ defmodule Dreadnought.Core.Island.Spec do
     quote do
       require unquote(@module)
       import unquote(@module)
-      @type island_spec :: t
+      alias unquote(@module)
+      # TODO how to dedup this?
+      @type island_spec :: {:square | :triangle, pose_map}
     end
   end
 
@@ -31,14 +33,16 @@ defmodule Dreadnought.Core.Island.Spec do
 
 end
 
-
+# *** *********************************
+# *** LIST MODULE
+# *** *********************************
 
 defmodule Dreadnought.Core.Island.Spec.List do
   alias Dreadnought.Core.Island.Spec
-  # TODO can I move this to Spec modd and prepend fun name w/ Enum. ?
-  def unique_shapes(island_specs) when is_list(island_specs) do
-    island_specs
-    |> Stream.map(&Spec.shape/1)
-    |> Enum.uniq
+
+  @spec remove_dup_shapes([Spec.t]) :: [Spec.t]
+  def remove_dup_shapes(island_specs) when is_list(island_specs) do
+    Enum.uniq_by(island_specs, &Spec.shape/1)
   end
+
 end
