@@ -27,8 +27,7 @@ defmodule Dreadnought.Core.Island.Builder do
     island_spec
     |> Spec.shape
     |> points
-    # TODO deprecate position_to_tuple in favor of vector_from_position
-    |> Enum.map(&position_to_tuple/1)
+    |> Enum.map(&vector_from_position/1)
     |> Svg.polygon_points_string_from_coords
   end
 

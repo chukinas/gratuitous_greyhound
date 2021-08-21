@@ -27,8 +27,12 @@ defmodule Dreadnought.Core.Island.Spec do
   # *** *******************************
   # *** CONVERTERS
 
-  def shape(island_spec) when is_island_spec(island_spec) do
-    elem island_spec, 0
+  def pose({_shape, pose} = island_spec) when is_island_spec(island_spec) do
+    pose
+  end
+
+  def shape({shape, _pose} = island_spec) when is_island_spec(island_spec) do
+    shape
   end
 
 end
