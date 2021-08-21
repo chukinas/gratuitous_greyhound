@@ -1,8 +1,9 @@
 defmodule Dreadnought.Core.Island.Builder do
 
-  use Dreadnought.LinearAlgebra
-  use Dreadnought.PositionOrientationSize
+    use Dreadnought.LinearAlgebra
+    use Dreadnought.PositionOrientationSize
   alias Dreadnought.Core.Island
+  alias Dreadnought.Svg
 
   @default_size 300
 
@@ -19,7 +20,15 @@ defmodule Dreadnought.Core.Island.Builder do
     Island.new(-1, pose, @square_points)
   end
 
-  def points(:square), do: @square_points
+  def points(:square = _shape), do: @square_points
+
+  def svg_polygon_points_string(shape) do
+    shape
+    |> points
+    # TODO deprecate position_to_tuple in favor of vector_from_position
+    |> Enum.map(&position_to_tuple/1)
+    |> Svg.polygon_points_string_from_coords
+  end
 
 
 end

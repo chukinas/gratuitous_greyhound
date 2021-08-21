@@ -52,6 +52,12 @@ defmodule Dreadnought.Svg do
     new_svg_path
   end
 
+  def polygon_points_string_from_coords(coords) when is_list(coords) do
+    coords
+    |> Stream.map(&vector_to_comma_separated_string/1)
+    |> Enum.join(" ")
+  end
+
   # *** *******************************
   # *** PRIVATE
 
@@ -70,6 +76,11 @@ defmodule Dreadnought.Svg do
     |> Paths.get_end_pose()
     |> values_to_int
     |> position_to_tuple
+  end
+
+  # TODO replace is_number with is_vector?
+  defp vector_to_comma_separated_string({x, y}) when is_number(x) and is_number(y) do
+    "#{x},#{y}"
   end
 
   # TODO I don't like calling the key directly her

@@ -1,15 +1,15 @@
-alias Dreadnought.Core.{Maneuver, UnitAction, Unit}
-alias Dreadnought.Paths
-alias Dreadnought.Util.IdList
-alias Unit.Event, as: Ev
-
-defmodule Maneuver do
+defmodule Dreadnought.Core.Maneuver do
   @moduledoc """
   Fully qualifies a unit's maneuvering for a given turn
   """
 
-  use Dreadnought.PositionOrientationSize
-  use Dreadnought.TypedStruct
+    use Dreadnought.PositionOrientationSize
+    use Dreadnought.TypedStruct
+  alias Dreadnought.Core.Unit
+  alias Dreadnought.Core.UnitAction
+  alias Dreadnought.Core.Unit.Event, as: Ev
+  alias Dreadnought.Paths
+  alias Dreadnought.Util.IdList
 
   # *** *******************************
   # *** TYPES
