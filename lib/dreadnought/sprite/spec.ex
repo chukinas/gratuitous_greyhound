@@ -1,11 +1,11 @@
 defmodule Dreadnought.Sprite.Spec do
 
   # TODO rename..
-  alias Dreadnought.Core.Sprites
+  alias Dreadnought.Sprite.Importer
 
   @type t :: {function_name :: atom, arg :: String.t}
 
-  @sprite_specs Sprites.sprite_specs()
+  @sprite_specs Importer.sprite_specs()
 
   @module __MODULE__
   defmacro __using__(_opts) do

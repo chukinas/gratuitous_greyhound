@@ -3,7 +3,7 @@ defmodule Dreadnought.Core.Animations do
   use Dreadnought.PositionOrientationSize
   alias Dreadnought.Core.Animation
   alias Dreadnought.Core.AnimationFrame
-  alias Dreadnought.Core.Sprites
+  alias Dreadnought.Sprite
 
   # *** *******************************
   # *** CONSTRUCTORS
@@ -50,8 +50,13 @@ defmodule Dreadnought.Core.Animations do
   # *** PRIVATE HELPERS
 
   defp rand_explosion_frame(duration) do
-    "explosion_" <> Enum.random(~w(1 2 3))
-    |> Sprites.blue
+    sprite_spec =
+      {
+        :blue,
+        "explosion_" <> Enum.random(~w(1 2 3))
+      }
+    sprite_spec
+    |> Sprite.Builder.build
     |> AnimationFrame.new(duration)
   end
 end

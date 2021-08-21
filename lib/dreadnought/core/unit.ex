@@ -3,11 +3,11 @@ defmodule Dreadnought.Core.Unit do
     use Dreadnought.LinearAlgebra
     use Dreadnought.PositionOrientationSize
     use Dreadnought.TypedStruct
-  alias Dreadnought.Core.Sprites
   alias Dreadnought.Core.Turret
   alias Dreadnought.Core.Unit.Event, as: Ev
   alias Dreadnought.Core.Unit.Status
   alias Dreadnought.Geometry.Rect
+  alias Dreadnought.Sprite
   alias Dreadnought.Util.IdList
   alias Dreadnought.Util.Maps
 
@@ -19,7 +19,7 @@ defmodule Dreadnought.Core.Unit do
     field :id, integer()
     field :name, String.t(), enforce: false
     field :player_id, integer
-    field :sprite, Sprites.t
+    field :sprite, Sprite.t
     field :turrets, [Turret.t()]
     field :health, integer()
     field :status, Status.t()

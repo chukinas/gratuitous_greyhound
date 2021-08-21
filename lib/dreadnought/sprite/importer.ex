@@ -1,15 +1,10 @@
-defmodule Dreadnought.Core.Sprites do
+defmodule Dreadnought.Sprite.Importer do
 
-  alias Dreadnought.Core.Sprite
-  alias Dreadnought.Core.SpritesheetParser
+  alias Dreadnought.Sprite
+  alias Dreadnought.Sprite.SvgParser
 
   @external_resource "assets/static/images/spritesheets/sprites.svg"
   Module.register_attribute(__MODULE__, :function_heads, accumulate: true)
-
-  # *** *******************************
-  # *** TYPES
-
-  @type t :: Sprite.t
 
   # *** *******************************
   # *** API
@@ -17,7 +12,7 @@ defmodule Dreadnought.Core.Sprites do
   # TODO move to Sprite and delete this file?
   {:ok, svg_content} = File.read(@external_resource)
   svg_map = XmlToMap.naive_map(svg_content)
-  for spritesheet <- SpritesheetParser.parse_svg(svg_map) do
+  for spritesheet <- SvgParser.parse_svg(svg_map) do
     function_name = spritesheet.image.path.root |> String.to_atom
     for sprite <- spritesheet.sprites do
       sprite_struct = Sprite.from_parsed_spritesheet(sprite, spritesheet.image)
@@ -49,14 +44,5 @@ defmodule Dreadnought.Core.Sprites do
     # TODO rename sprite_specs
     @function_heads
   end
-
-  # *** *******************************
-  # *** SPRITE API
-
-  def scale(sprite, scale), do: Sprite.scale(sprite, scale)
-
-  def mounts(sprite), do: Sprite.mounts(sprite)
-
-  def mount_position(sprite, mount_id), do: Sprite.mount_position(sprite, mount_id)
 
 end

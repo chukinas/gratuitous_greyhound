@@ -5,7 +5,7 @@ defmodule Dreadnought.Core.AnimationFrame do
 
   use TypedStruct
   typedstruct enfore: true do
-    field :sprite, Dreadnought.Core.Sprites.t
+    field :sprite, Dreadnought.Sprite.t
     field :duration, number()
     #field :fade_duration, number(), default: 0
   end
@@ -23,8 +23,9 @@ defmodule Dreadnought.Core.AnimationFrame do
 
 end
 
-# *** *******************************
+# *** *********************************
 # *** IMPLEMENTATIONS
+# *** *********************************
 
 alias Dreadnought.Core.AnimationFrame
 

@@ -4,7 +4,7 @@ defmodule DreadnoughtWeb.GalleryComponent do
   use Dreadnought.PositionOrientationSize
   alias Dreadnought.BoundingRect
   alias Dreadnought.Core.Animations
-  alias Dreadnought.Core.Sprites
+  alias Dreadnought.Sprite
 
 
   # *** *******************************
@@ -13,8 +13,8 @@ defmodule DreadnoughtWeb.GalleryComponent do
   @impl true
   def mount(socket) do
     sprites =
-      Sprites.all()
-      |> Enum.map(& Sprites.scale(&1, 2))
+      Sprite.Importer.all()
+      |> Enum.map(& Sprite.scale(&1, 2))
     animations =
       [
         Animations.simple_muzzle_flash(pose_origin()),

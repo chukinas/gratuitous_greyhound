@@ -3,7 +3,7 @@ defmodule Dreadnought.Core.Animation do
     use Dreadnought.PositionOrientationSize
     use Dreadnought.TypedStruct
   alias Dreadnought.Core.AnimationFrame
-  alias Dreadnought.Core.Sprites
+  alias Dreadnought.Sprite
 
   # *** *******************************
   # *** TYPES
@@ -58,7 +58,8 @@ defmodule Dreadnought.Core.Animation do
   end
 
   def put_frame(animation, sprite_fun, sprite_name, duration) when is_number(duration) do
-    sprite = apply(Sprites, sprite_fun, [sprite_name])
+    # TODO don't call this directly
+    sprite = apply(Sprite.Importer, sprite_fun, [sprite_name])
     frame = AnimationFrame.new(sprite, duration)
     put(animation, frame)
   end

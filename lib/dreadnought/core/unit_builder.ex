@@ -1,10 +1,10 @@
 # TODO rename Unit.Builder ?
 defmodule Dreadnought.Core.UnitBuilder do
 
-  use Dreadnought.PositionOrientationSize
+    use Dreadnought.PositionOrientationSize
   alias Dreadnought.Core.Turret
-  alias Dreadnought.Core.Sprites
   alias Dreadnought.Core.Unit
+  alias Dreadnought.Sprite
 
   # *** *******************************
   # *** CONSTRUCTORS
@@ -24,7 +24,7 @@ defmodule Dreadnought.Core.UnitBuilder do
     fields =
       [
         health: 40,
-        sprite: Sprites.blue("hull_blue_merchant"),
+        sprite: build_sprite(:blue, "hull_blue_merchant"),
         turrets: [],
         name: "noname"
       ]
@@ -33,7 +33,7 @@ defmodule Dreadnought.Core.UnitBuilder do
   end
 
   def build(:blue_destroyer, id, player_id, pose, opts) do
-    sprite = Sprites.blue("hull_blue_small")
+    sprite = build_sprite(:blue, "hull_blue_small")
     turrets = build_turrets(sprite, {:blue, "turret_blue_2"}, [
       {1, 0},
     ])
@@ -48,7 +48,7 @@ defmodule Dreadnought.Core.UnitBuilder do
   end
 
   def build(:blue_dreadnought, id, player_id, pose, opts) do
-    sprite = Sprites.blue("hull_blue_large")
+    sprite = build_sprite(:blue, "hull_blue_large")
     turrets = build_turrets(sprite, {:blue, "turret_blue_1"}, [
       {1, 0},
       {2, 0},
@@ -65,7 +65,7 @@ defmodule Dreadnought.Core.UnitBuilder do
   end
 
   def build(:red_cruiser, id, player_id, pose, opts) do
-    sprite = Sprites.red("ship_large")
+    sprite = build_sprite(:red, "ship_large")
     turrets = build_turrets(sprite, {:red, "turret1"}, [
       {1, 0},
       {2, 180}
@@ -82,7 +82,7 @@ defmodule Dreadnought.Core.UnitBuilder do
   end
 
   def build(:red_destroyer, id, player_id, pose, opts) do
-    sprite = Sprites.red("ship_small")
+    sprite = build_sprite(:red, "ship_small")
     turrets = build_turrets(sprite, {:red, "turret1"}, [
       {1, 0}
     ])
@@ -100,13 +100,19 @@ defmodule Dreadnought.Core.UnitBuilder do
   # *** PRIVATE HELPERS
 
   defp build_turrets(unit_sprite, {sprite_fun, sprite_name}, turret_tuples) do
-    turret_sprite = apply(Sprites, sprite_fun, [sprite_name])
+    # TODO don't call the importer directly
+    turret_sprite = apply(Sprite.Importer, sprite_fun, [sprite_name])
     Enum.map(turret_tuples, fn {mount_id, rest_angle} ->
       pose =
         unit_sprite
-        |> Sprites.mount_position(mount_id)
+        |> Sprite.mount_position(mount_id)
         |> pose_from_position(rest_angle)
       Turret.new(mount_id, turret_sprite, pose)
     end)
   end
+
+  defp build_sprite(function_atom, arg) do
+    Sprite.Builder.build({function_atom, arg})
+  end
+
 end

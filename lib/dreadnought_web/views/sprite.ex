@@ -4,7 +4,7 @@ defmodule DreadnoughtWeb.SpriteView do
   use DreadnoughtWeb.Components
   use Dreadnought.PositionOrientationSize
   use Dreadnought.LinearAlgebra
-  alias Dreadnought.Core.Sprite
+  alias Dreadnought.Sprite
 
   @drop_shadow_padding 10
 
