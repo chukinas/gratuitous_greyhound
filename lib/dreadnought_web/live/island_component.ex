@@ -27,10 +27,7 @@ defmodule DreadnoughtWeb.IslandComponent do
     <%# TODO use dynamic values %>
     <svg id="island_component" viewbox="0 0 1000 1000" width="1000" height="1000" overflow="visible" >
       <defs>
-        <%= for def <- @defs do %>
-          <%# TODO add an SvgView that renders this kinda stuff? %>
-          <%= tag :polygon, Keyword.merge(def, fill: "green", opacity: 0.7) %>
-        <% end %>
+        <%= for def <- @defs, do: tag(:polygon, Keyword.merge(def, fill: "green", opacity: 0.7)) %>
       </defs>
       <%= for use <- @uses do %>
         <use href="<%= use.href %>" <%= render_pose(use.pose) %> />
