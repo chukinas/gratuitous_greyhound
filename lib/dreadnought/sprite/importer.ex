@@ -1,3 +1,4 @@
+# TODO ensure this in only called from within Sprite modules
 defmodule Dreadnought.Sprite.Importer do
 
   alias Dreadnought.Sprite
@@ -6,10 +7,6 @@ defmodule Dreadnought.Sprite.Importer do
   @external_resource "assets/static/images/spritesheets/sprites.svg"
   Module.register_attribute(__MODULE__, :function_heads, accumulate: true)
 
-  # *** *******************************
-  # *** API
-
-  # TODO move to Sprite and delete this file?
   {:ok, svg_content} = File.read(@external_resource)
   svg_map = XmlToMap.naive_map(svg_content)
   for spritesheet <- SvgParser.parse_svg(svg_map) do
@@ -24,25 +21,8 @@ defmodule Dreadnought.Sprite.Importer do
     end
   end
 
-  def all_grouped_by_function do
-    all()
-    |> Enum.group_by(&Sprite.base_filename/1)
-  end
-
-  def all do
-    Enum.reduce(all_function_heads(), [], fn {function_name, sprite_name}, sprites ->
-      new_sprite = apply __MODULE__, function_name, [sprite_name]
-      [new_sprite | sprites]
-    end)
-  end
-
-  defp all_function_heads do
-    Stream.filter(@function_heads, fn {fun, _} -> fun != :test end)
-  end
-
   def sprite_specs do
-    # TODO rename sprite_specs
-    @function_heads
+    Enum.filter(@function_heads, fn {fun, _} -> fun != :test end)
   end
 
 end

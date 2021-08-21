@@ -13,7 +13,8 @@ defmodule DreadnoughtWeb.GalleryComponent do
   @impl true
   def mount(socket) do
     sprites =
-      Sprite.Importer.all()
+      Sprite.Spec.all()
+      |> Stream.map(&Sprite.Builder.build/1)
       |> Enum.map(& Sprite.scale(&1, 2))
     animations =
       [

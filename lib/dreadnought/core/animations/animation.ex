@@ -58,8 +58,8 @@ defmodule Dreadnought.Core.Animation do
   end
 
   def put_frame(animation, sprite_fun, sprite_name, duration) when is_number(duration) do
-    # TODO don't call this directly
-    sprite = apply(Sprite.Importer, sprite_fun, [sprite_name])
+    sprite_spec = Sprite.Spec.new(sprite_fun, sprite_name)
+    sprite = Sprite.Builder.build(sprite_spec)
     frame = AnimationFrame.new(sprite, duration)
     put(animation, frame)
   end

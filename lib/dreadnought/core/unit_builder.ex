@@ -99,9 +99,10 @@ defmodule Dreadnought.Core.UnitBuilder do
   # *** *******************************
   # *** PRIVATE HELPERS
 
+  # TODO formalize sprite_spec
   defp build_turrets(unit_sprite, {sprite_fun, sprite_name}, turret_tuples) do
-    # TODO don't call the importer directly
-    turret_sprite = apply(Sprite.Importer, sprite_fun, [sprite_name])
+    sprite_spec = Sprite.Spec.new(sprite_fun, sprite_name)
+    turret_sprite = Sprite.Builder.build(sprite_spec)
     Enum.map(turret_tuples, fn {mount_id, rest_angle} ->
       pose =
         unit_sprite

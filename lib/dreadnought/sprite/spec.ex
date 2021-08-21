@@ -1,6 +1,5 @@
 defmodule Dreadnought.Sprite.Spec do
 
-  # TODO rename..
   alias Dreadnought.Sprite.Importer
 
   @type t :: {function_name :: atom, arg :: String.t}
@@ -17,14 +16,13 @@ defmodule Dreadnought.Sprite.Spec do
 
   defguard is_sprite_spec(sprite_spec) when sprite_spec in @sprite_specs
 
-  ## TODO write macro that pulls the local module name
-  #def new_mission_spec(module, mission_name) do
-  #  {module, mission_name}
-  #end
+  def all, do: @sprite_specs
 
-  #def name_from_mission_spec({_module, name} = sprite_spec)
-  #when is_mission_spec(sprite_spec) do
-  #  name
-  #end
+  @spec new(atom, String.t) :: t
+  def new(func_name, arg) do
+    spec = {func_name, arg}
+    true = is_sprite_spec(spec)
+    spec
+  end
 
 end
