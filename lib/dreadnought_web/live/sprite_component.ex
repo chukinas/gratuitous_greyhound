@@ -5,7 +5,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
     use Dreadnought.PositionOrientationSize
     use Dreadnought.Sprite.Spec
   alias Dreadnought.Sprite
-  alias Dreadnought.Svg
+  alias Dreadnought.Sprite.Improved
 
   # *** *******************************
   # *** CALLBACKS
@@ -42,22 +42,10 @@ defmodule DreadnoughtWeb.SpriteComponent do
   # *** SPEC CONVERTERS
 
   def render_def_element(sprite_spec) when is_sprite_spec(sprite_spec) do
-    sprite =
-      sprite_spec
-      |> Sprite.Builder.build
-      |> IOP.inspect(__MODULE__)
-    points_offset =
-      sprite.image_origin
-      |> position_multiply(-1)
-      |> vector_from_position
-    points =
-      sprite.image_clip_path
-      |> Svg.PathDString.to_coords
-      |> Enum.map(&vector_add(&1, points_offset))
-      |> Svg.polygon_points_string_from_coords
+    sprite = Improved.from_sprite_spec(sprite_spec)
     content_tag(:polygon, nil,
       id: element_id(sprite_spec),
-      points: points,
+      points: Improved.polygon_points_string(sprite),
       fill: "red",
       stroke: "black",
       opacity: 0.7

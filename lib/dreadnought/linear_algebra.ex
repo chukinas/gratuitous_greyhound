@@ -22,6 +22,7 @@ defmodule Dreadnought.LinearAlgebra do
       import Dreadnought.LinearAlgebra.TransformApi
       use Dreadnought.LinearAlgebra.Csys.Guards
       use Dreadnought.LinearAlgebra.Vector.Guards
+      @type vector :: {number, number}
     end
   end
 
