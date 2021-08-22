@@ -51,6 +51,7 @@ defmodule DreadnoughtWeb.IslandComponent do
   # *** SPEC CONVERTERS
 
   def render_def_element(island_spec) do
+    # TODO may need to use content_tag since tag/1 doesn't self-close
     tag(:polygon,
       id: element_id(island_spec),
       points: Builder.svg_polygon_points_string(island_spec),
@@ -64,6 +65,7 @@ defmodule DreadnoughtWeb.IslandComponent do
       island_spec
       |> Spec.pose
       |> Svg.pose_to_attrs
+    # TODO may need to use content_tag since tag/1 doesn't self-close
     tag(:use, Keyword.merge(pose_attrs,
       href: "#" <> element_id(island_spec)
     ))
