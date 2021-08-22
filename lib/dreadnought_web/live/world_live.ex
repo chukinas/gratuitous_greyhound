@@ -3,6 +3,7 @@ defmodule DreadnoughtWeb.WorldLive do
   use DreadnoughtWeb, :live_view
   use Dreadnought.Core.Mission.Builder
   use Dreadnought.PositionOrientationSize
+  use Dreadnought.Sprite.Spec
   alias Dreadnought.Core.Mission
   alias Dreadnought.Core.Mission.Helpers
 
@@ -18,6 +19,7 @@ defmodule DreadnoughtWeb.WorldLive do
         play_area_size: size_new(600, 400)
       )
       |> assign_board_size
+      |> assign_posed_sprite
     {:ok, socket}
   end
 
@@ -34,6 +36,17 @@ defmodule DreadnoughtWeb.WorldLive do
 
   def assign_board_size(%{assigns: %{margin: margin, play_area_size: play_area_size}} = socket) do
     assign(socket, board_size: size_add(play_area_size, 2 * margin))
+  end
+
+  def assign_posed_sprite(socket) do
+    sprite_spec = {:blue, "hull_blue_small"}
+    true = is_sprite_spec(sprite_spec)
+    assign(socket, posed_sprite: %{
+      x: 100,
+      y: 100,
+      angle: -45,
+      sprite_spec: sprite_spec
+    })
   end
 
 end
