@@ -2,6 +2,7 @@
 defmodule Dreadnought.Core.UnitBuilder do
 
     use Dreadnought.PositionOrientationSize
+    use Dreadnought.Sprite.Spec
   alias Dreadnought.Core.Turret
   alias Dreadnought.Core.Unit
   alias Dreadnought.Sprite
@@ -24,32 +25,30 @@ defmodule Dreadnought.Core.UnitBuilder do
     fields =
       [
         health: 40,
-        sprite: build_sprite(:blue, "hull_blue_merchant"),
         turrets: [],
         name: "noname"
       ]
       |> Keyword.merge(opts)
-    Unit.new(id, player_id, pose, fields)
+    Unit.new(id, player_id, {:blue, "hull_blue_merchant"}, pose, fields)
   end
 
   def build(:blue_destroyer, id, player_id, pose, opts) do
-    sprite = build_sprite(:blue, "hull_blue_small")
-    turrets = build_turrets(sprite, {:blue, "turret_blue_2"}, [
+    sprite_spec = {:blue, "hull_blue_small"}
+    turrets = build_turrets(sprite_spec, {:blue, "turret_blue_2"}, [
       {1, 0},
     ])
     fields =
       [
         health: 50,
-        sprite: sprite,
         turrets: turrets
       ]
       |> Keyword.merge(opts)
-    Unit.new(id, player_id, pose, fields)
+    Unit.new(id, player_id, sprite_spec, pose, fields)
   end
 
   def build(:blue_dreadnought, id, player_id, pose, opts) do
-    sprite = build_sprite(:blue, "hull_blue_large")
-    turrets = build_turrets(sprite, {:blue, "turret_blue_1"}, [
+    sprite_spec = {:blue, "hull_blue_large"}
+    turrets = build_turrets(sprite_spec, {:blue, "turret_blue_1"}, [
       {1, 0},
       {2, 0},
       {3, 180}
@@ -57,50 +56,49 @@ defmodule Dreadnought.Core.UnitBuilder do
     fields =
       [
         health: 150,
-        sprite: sprite,
         turrets: turrets,
       ]
       |> Keyword.merge(opts)
-    Unit.new(id, player_id, pose, fields)
+    Unit.new(id, player_id, sprite_spec, pose, fields)
   end
 
   def build(:red_cruiser, id, player_id, pose, opts) do
-    sprite = build_sprite(:red, "ship_large")
-    turrets = build_turrets(sprite, {:red, "turret1"}, [
+    sprite_spec = {:red, "ship_large"}
+    turrets = build_turrets(sprite_spec, {:red, "turret1"}, [
       {1, 0},
       {2, 180}
     ])
     fields =
       [
         health: 100,
-        sprite: sprite,
         turrets: turrets,
         name: "noname"
       ]
       |> Keyword.merge(opts)
-    Unit.new(id, player_id, pose, fields)
+    Unit.new(id, player_id, sprite_spec, pose, fields)
   end
 
   def build(:red_destroyer, id, player_id, pose, opts) do
-    sprite = build_sprite(:red, "ship_small")
-    turrets = build_turrets(sprite, {:red, "turret1"}, [
+    sprite_spec = {:red, "ship_small"}
+    turrets = build_turrets(sprite_spec, {:red, "turret1"}, [
       {1, 0}
     ])
     fields =
       [
         health: 50,
-        sprite: sprite,
         turrets: turrets
       ]
       |> Keyword.merge(opts)
-    Unit.new(id, player_id, pose, fields)
+    Unit.new(id, player_id, sprite_spec, pose, fields)
   end
 
   # *** *******************************
   # *** PRIVATE HELPERS
 
   # TODO formalize sprite_spec
-  defp build_turrets(unit_sprite, {sprite_fun, sprite_name}, turret_tuples) do
+  defp build_turrets(unit_sprite_spec, {sprite_fun, sprite_name}, turret_tuples)
+  when is_sprite_spec(unit_sprite_spec) do
+    unit_sprite = Sprite.Builder.build(unit_sprite_spec)
     sprite_spec = Sprite.Spec.new(sprite_fun, sprite_name)
     turret_sprite = Sprite.Builder.build(sprite_spec)
     Enum.map(turret_tuples, fn {mount_id, rest_angle} ->
@@ -110,10 +108,6 @@ defmodule Dreadnought.Core.UnitBuilder do
         |> pose_from_position(rest_angle)
       Turret.new(mount_id, turret_sprite, pose)
     end)
-  end
-
-  defp build_sprite(function_atom, arg) do
-    Sprite.Builder.build({function_atom, arg})
   end
 
 end

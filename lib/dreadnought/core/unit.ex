@@ -2,6 +2,7 @@ defmodule Dreadnought.Core.Unit do
 
     use Dreadnought.LinearAlgebra
     use Dreadnought.PositionOrientationSize
+    use Dreadnought.Sprite.Spec
     use Dreadnought.TypedStruct
   alias Dreadnought.Core.Turret
   alias Dreadnought.Core.Unit.Event, as: Ev
@@ -31,7 +32,7 @@ defmodule Dreadnought.Core.Unit do
   # *** NEW
 
   @spec new(integer, integer, any, keyword) :: t
-  def new(id, player_id, pose, opts \\ []) do
+  def new(id, player_id, sprite_spec, pose, opts \\ []) do
     # Refactor now that I have a unit builder module
     {max_damage, fields} =
       opts
@@ -42,7 +43,8 @@ defmodule Dreadnought.Core.Unit do
       Keyword.merge(fields,
         player_id: player_id,
         status: unit_status,
-        health: max_damage
+        health: max_damage,
+        sprite: Sprite.Builder.build(sprite_spec)
       )
       |> Map.new
       |> merge_pose(pose)
