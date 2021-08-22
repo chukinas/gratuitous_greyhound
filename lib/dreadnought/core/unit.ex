@@ -29,7 +29,7 @@ defmodule Dreadnought.Core.Unit do
   end
 
   # *** *******************************
-  # *** NEW
+  # *** CONSTRUCTORS
 
   @spec new(integer, integer, any, keyword) :: t
   def new(id, player_id, sprite_spec, pose, opts \\ []) do
@@ -52,7 +52,7 @@ defmodule Dreadnought.Core.Unit do
   end
 
   # *** *******************************
-  # *** SETTERS
+  # *** REDUCERS
 
   def push_past_events(unit, events) do
     Maps.push(unit, :past_events, events)
@@ -83,6 +83,54 @@ defmodule Dreadnought.Core.Unit do
 
   def apply_status(unit, function), do: Map.update!(unit, :status, function)
 
+  def calc_pose(unit) do
+    unit
+    |> maneuvers
+    |> Enum.max(Ev.Maneuver)
+    |> Ev.Maneuver.end_pose
+    |> merge_pose_into!(unit)
+  end
+
+  def clear(unit) do
+    # TODO rename reset_for_new_turn or something like that
+    new_past_events =
+      unit
+      |> stashable_events
+      |> Enum.to_list
+    unit
+    |> push_past_events(new_past_events)
+    |> Map.put(:events, [])
+  end
+
+  def maybe_destroyed(unit) do
+    alias Ev.Damage
+    alias Ev.Damage.Enum, as: Damages
+    damages = damage(unit)
+    starting_health = starting_health(unit)
+    still_alive? =
+      damages
+      |> Damages.has_remaining_health?(starting_health)
+    if still_alive? do
+      unit
+    else
+      {turn, delay} =
+        damages
+        |> Stream.map(&Damage.turn_and_delay/1)
+        |> Enum.max
+      destruction = Ev.Destroyed.by_gunfire(turn, delay + 0.2)
+      fadeout = Ev.Destroyed.get_fadeout(destruction)
+      put(unit, [destruction, fadeout])
+    end
+  end
+
+  def position_mass_center(%__MODULE__{} = unit, position \\ position_null())
+  when has_position(position) do
+    translate =
+      unit
+      # TODO rename position_of_mass_center
+      |> center_of_mass
+    position_subtract(unit, translate)
+  end
 
   # *** *******************************
   # *** CONVERTERS
@@ -186,65 +234,11 @@ defmodule Dreadnought.Core.Unit do
     vector_wrt_outer_observer(target_coord_wrt_turret_loc, [turret |> position_new, unit])
   end
 
-  # *** *******************************
-  # *** TRANSFORMS
-
-  def clear(unit) do
-    # TODO rename reset_for_new_turn or something like that
-    new_past_events =
-      unit
-      |> stashable_events
-      |> Enum.to_list
-    unit
-    |> push_past_events(new_past_events)
-    |> Map.put(:events, [])
-  end
-
-  def calc_pose(unit) do
-    unit
-    |> maneuvers
-    |> Enum.max(Ev.Maneuver)
-    |> Ev.Maneuver.end_pose
-    |> merge_pose_into!(unit)
-  end
-
-  def maybe_destroyed(unit) do
-    alias Ev.Damage
-    alias Ev.Damage.Enum, as: Damages
-    damages = damage(unit)
-    starting_health = starting_health(unit)
-    still_alive? =
-      damages
-      |> Damages.has_remaining_health?(starting_health)
-    if still_alive? do
-      unit
-    else
-      {turn, delay} =
-        damages
-        |> Stream.map(&Damage.turn_and_delay/1)
-        |> Enum.max
-      destruction = Ev.Destroyed.by_gunfire(turn, delay + 0.2)
-      fadeout = Ev.Destroyed.get_fadeout(destruction)
-      put(unit, [destruction, fadeout])
-    end
-  end
-
-  # *** *******************************
-  # *** REDUCERS
-
-  def position_mass_center(%__MODULE__{} = unit, position \\ position_null())
-  when has_position(position) do
-    translate =
-      unit
-      # TODO rename position_of_mass_center
-      |> center_of_mass
-    position_subtract(unit, translate)
-  end
-
 end
 
-# *** *******************************
+# *** *********************************
 # *** IMPLEMENTATIONS
+# *** *********************************
 
 alias Dreadnought.Core.Unit
 
