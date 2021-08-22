@@ -20,7 +20,7 @@ defmodule Dreadnought.Core.Unit do
     field :id, integer()
     field :name, String.t(), enforce: false
     field :player_id, integer
-    field :sprite, Sprite.t
+    field :sprite_spec, sprite_spec
     field :turrets, [Turret.t()]
     field :health, integer()
     field :status, Status.t()
@@ -44,7 +44,7 @@ defmodule Dreadnought.Core.Unit do
         player_id: player_id,
         status: unit_status,
         health: max_damage,
-        sprite: Sprite.Builder.build(sprite_spec)
+        sprite_spec: sprite_spec
       )
       |> Map.new
       |> merge_pose(pose)
@@ -165,15 +165,18 @@ defmodule Dreadnought.Core.Unit do
     Enum.map(turrets, & &1.id)
   end
 
-  def center_of_mass(%__MODULE__{sprite: sprite}) do
-    sprite
+  def center_of_mass(%__MODULE__{sprite_spec: sprite_spec}) do
+    sprite_spec
+    |> Sprite.Builder.build
     |> Rect.center_position
   end
 
   def status(%__MODULE__{status: status}), do: status
 
-  def width(%__MODULE__{sprite: sprite}) do
-    sprite.height
+  def width(%__MODULE__{sprite_spec: sprite_spec}) do
+    sprite_spec
+    |> Sprite.Builder.build
+    |> height
   end
 
   def world_coord_random_in_arc(%__MODULE__{} = unit, distance) do

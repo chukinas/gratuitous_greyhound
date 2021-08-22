@@ -11,6 +11,8 @@ defmodule Dreadnought.Sprite.Spec do
     quote do
       require unquote(@module)
       import unquote(@module)
+      # TODO DRYify
+      @type sprite_spec :: {function_name :: atom, arg :: String.t}
     end
   end
 

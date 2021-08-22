@@ -12,7 +12,7 @@
 
   <%# Sprites %>
   <div class="relative">
-    <%= DreadnoughtWeb.SpriteView.absolute_sprite @socket, @unit.sprite %>
+    <%= DreadnoughtWeb.SpriteView.absolute_sprite @socket, @unit.sprite_spec %>
     <%= for turret <- @unit.turrets do %>
       <%= DreadnoughtWeb.SpriteView.absolute_sprite @socket, turret.sprite, 
           attrs: [id: "unit-#{@unit.id}-mount-#{turret.id}"],

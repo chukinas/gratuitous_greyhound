@@ -1,9 +1,10 @@
 defmodule DreadnoughtWeb.SpriteView do
 
-  use DreadnoughtWeb, :view
-  use DreadnoughtWeb.Components
-  use Dreadnought.PositionOrientationSize
-  use Dreadnought.LinearAlgebra
+    use DreadnoughtWeb, :view
+    use DreadnoughtWeb.Components
+    use Dreadnought.PositionOrientationSize
+    use Dreadnought.LinearAlgebra
+    use Dreadnought.Sprite.Spec
   alias Dreadnought.Sprite
 
   @drop_shadow_padding 10
@@ -20,7 +21,15 @@ defmodule DreadnoughtWeb.SpriteView do
     render("static_sprite.html", assigns)
   end
 
-  def absolute_sprite(conn, %Sprite{} = sprite, opts \\ []) do
+  def absolute_sprite(conn, sprite, opts \\ [])
+
+  def absolute_sprite(conn, sprite_spec, opts) when is_sprite_spec(sprite_spec) do
+    sprite = Sprite.Builder.build(sprite_spec)
+    absolute_sprite(conn, sprite, opts)
+  end
+
+  # TODO temp func clause
+  def absolute_sprite(conn, %Sprite{} = sprite, opts) do
     pose = Keyword.get(opts, :pose, pose_origin())
     assigns = %{
       conn: conn,
