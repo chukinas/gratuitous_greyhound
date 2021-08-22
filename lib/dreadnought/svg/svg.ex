@@ -11,7 +11,7 @@ defmodule Dreadnought.Svg do
   alias Dreadnought.Paths
   alias Dreadnought.Paths.Straight
   alias Dreadnought.Paths.Turn
-  alias Dreadnought.Svg.Interpret
+  alias Dreadnought.Svg.PathDString
 
   # *** *******************************
   # *** API
@@ -49,7 +49,7 @@ defmodule Dreadnought.Svg do
   end
 
   def scale(svg_path, scale) when is_binary(svg_path) and is_integer(scale) do
-    %{path: new_svg_path} = Interpret.interpret(svg_path, scale: scale)
+    %{path: new_svg_path} = PathDString.interpret(svg_path, scale: scale)
     new_svg_path
   end
 

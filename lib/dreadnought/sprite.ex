@@ -5,7 +5,7 @@ defmodule Dreadnought.Sprite do
   alias Dreadnought.Core.Mount
   alias Dreadnought.Geometry.Rect
   alias Dreadnought.Svg
-  alias Dreadnought.Svg.Interpret
+  alias Dreadnought.Svg.PathDString
   alias Dreadnought.Util.IdList
   alias Dreadnought.Util.Maps
 
@@ -28,7 +28,7 @@ defmodule Dreadnought.Sprite do
   # *** CONSTRUCTORS
 
   def from_parsed_spritesheet(sprite, image_map) do
-    %{path: image_clip_path, rect: image_rect} = sprite.image_clip_path |> Interpret.interpret
+    %{path: image_clip_path, rect: image_rect} = sprite.image_clip_path |> PathDString.interpret
     origin = position_new_rounded(sprite.origin)
     rect =
       image_rect
