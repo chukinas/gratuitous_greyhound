@@ -39,9 +39,16 @@ defmodule DreadnoughtWeb.SvgView do
     render_use(href_id, opts)
   end
 
-  def render_clippath(id, coords) do
+  def render_clippath_polygon(id, coords) do
     polygon = render_polygon(coords)
     content_tag(:clipPath, polygon,
+      id: id
+    )
+  end
+
+  def render_clippath_use(id, href_id) when is_binary(href_id) do
+    use_element = render_use(href_id)
+    content_tag(:clipPath, use_element,
       id: id
     )
   end

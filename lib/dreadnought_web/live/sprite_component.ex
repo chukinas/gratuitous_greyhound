@@ -5,7 +5,6 @@ defmodule DreadnoughtWeb.SpriteComponent do
     use Dreadnought.PositionOrientationSize
   # TODO Spec functions should be aliased. Import only the guards
     use Dreadnought.Sprite.Spec
-  #alias Dreadnought.Sprite.Builder
   alias Dreadnought.Sprite.Improved
   alias DreadnoughtWeb.SvgView
 
@@ -22,10 +21,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
     sprite_spec = posed_sprite.sprite_spec
     socket =
       socket
-      #|> assign(pose: posed_sprite |> pose_from_map)
-      #|> assign(sprite: posed_sprite.sprite_spec |> Builder.build)
       |> assign(sprite_spec: sprite_spec)
-      #|> assign(use_element: _render_use(sprite_spec))
     {:ok, socket}
   end
 
@@ -35,9 +31,10 @@ defmodule DreadnoughtWeb.SpriteComponent do
     <%# TODO use dynamic values %>
     <svg id="sprite_component" viewbox="0 0 1000 1000" width="1000" height="1000" overflow="visible" >
       <defs>
-        <%= _render_clippath(@sprite_spec) %>
+        <%= _render_shape_def(@sprite_spec) %>
+        <%= _render_clippath_def(@sprite_spec) %>
       </defs>
-      <%= _render_image(@sprite_spec, @socket) %>
+      <%= _render_clipped_image(@sprite_spec, @socket) %>
     </svg>
     """
   end
@@ -45,31 +42,21 @@ defmodule DreadnoughtWeb.SpriteComponent do
   # *** *******************************
   # *** SPRITE.SPEC CONVERTERS
 
-  #defp _render_def(sprite_spec) when is_sprite_spec(sprite_spec) do
-  #  sprite = Improved.from_sprite_spec(sprite_spec)
-  #  coords = Improved.coords(sprite)
-  #  SvgView.render_polygon(coords,
-  #  )
-  #end
-
-  #defp _render_use(sprite_spec) when is_sprite_spec(sprite_spec) do
-  #  sprite_spec
-  #  |> _element_id
-  #  |> SvgView.render_use
-  #end
-
-  defp _element_id(sprite_spec, :shape) do
-    _element_id(sprite_spec, :sprite) <> "-shape"
-  end
-  defp _element_id(sprite_spec, :clippath) do
-    _element_id(sprite_spec, :sprite) <> "-clippath"
-  end
-  defp _element_id({func_name, arg} = sprite_spec, :sprite)
-  when is_sprite_spec(sprite_spec) do
-    "sprite-#{func_name}-#{arg}"
+  defp _render_shape_def(sprite_spec) when is_sprite_spec(sprite_spec) do
+    sprite = Improved.from_sprite_spec(sprite_spec)
+    coords = Improved.coords(sprite)
+    SvgView.render_polygon(coords,
+      id: _element_id(sprite_spec, :shape)
+    )
   end
 
-  defp _render_image(sprite_spec, socket) when is_sprite_spec(sprite_spec) do
+  defp _render_clippath_def(sprite_spec) when is_sprite_spec(sprite_spec) do
+    id = _element_id(sprite_spec, :clippath)
+    href_id = _element_id(sprite_spec, :shape)
+    SvgView.render_clippath_use(id, href_id)
+  end
+
+  defp _render_clipped_image(sprite_spec, socket) when is_sprite_spec(sprite_spec) do
     improved_sprite = Improved.from_sprite_spec(sprite_spec)
     href = Routes.static_path(socket, Improved.image_path(improved_sprite))
     size = Improved.image_size(improved_sprite)
@@ -83,16 +70,15 @@ defmodule DreadnoughtWeb.SpriteComponent do
     )
   end
 
-  defp _render_clippath(sprite_spec) when is_sprite_spec(sprite_spec) do
-    improved_sprite = Improved.from_sprite_spec(sprite_spec)
-    id = _element_id(sprite_spec, :clippath)
-    coords = Improved.coords(improved_sprite)
-    SvgView.render_clippath(id, coords)
+  defp _element_id(sprite_spec, :shape) do
+    _element_id(sprite_spec, :sprite) <> "-shape"
   end
-
-  #defp sprite(sprite_spec) do
-  #  Builder.build(sprite_spec)
-  #  |> IOP.inspect(__MODULE__)
-  #end
+  defp _element_id(sprite_spec, :clippath) do
+    _element_id(sprite_spec, :sprite) <> "-clippath"
+  end
+  defp _element_id({func_name, arg} = sprite_spec, :sprite)
+  when is_sprite_spec(sprite_spec) do
+    "sprite-#{func_name}-#{arg}"
+  end
 
 end
