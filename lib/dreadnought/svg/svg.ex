@@ -96,11 +96,20 @@ defmodule Dreadnought.Svg do
     "#{x},#{y}"
   end
 
-  def render_polygon(points, opts \\ []) do
+  def render_polygon(points, opts \\ []) when is_list(opts) do
     Phoenix.HTML.Tag.content_tag(:polygon, nil,
       Keyword.put(opts, :points, polygon_points_string_from_coords(points))
     )
   end
+
+  def render_use(href_id, pose, opts \\ []) do
+    attrs =
+      opts
+      |> Keyword.put(:href, "#" <> href_id)
+      |> Keyword.merge(pose |> pose_to_attrs)
+    Phoenix.HTML.Tag.content_tag(:use, nil, attrs)
+  end
+
 
 
   # TODO I don't like calling the key directly her
