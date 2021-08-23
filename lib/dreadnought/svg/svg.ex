@@ -116,6 +116,13 @@ defmodule Dreadnought.Svg do
     render_use(href_id, opts)
   end
 
+  def render_image(href, opts \\ []) when is_list(opts) do
+    attrs =
+      opts
+      |> Keyword.put(:href, href)
+    Phoenix.HTML.Tag.content_tag(:image, nil, attrs)
+  end
+
 
 
   # TODO I don't like calling the key directly her

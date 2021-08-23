@@ -23,6 +23,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
       socket
       |> assign(pose: posed_sprite |> pose_from_map)
       |> assign(sprite: posed_sprite.sprite_spec |> Sprite.Builder.build)
+      |> assign(sprite_spec: sprite_spec)
       |> assign(def_element: render_def_element(sprite_spec))
       |> assign(use_element: render_use_element(sprite_spec))
     {:ok, socket}
@@ -33,6 +34,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
     ~L"""
     <%# TODO use dynamic values %>
     <svg id="sprite_component" viewbox="0 0 1000 1000" width="1000" height="1000" overflow="visible" >
+      <%= render_image_element(@sprite_spec, @socket) %>
       <defs><%= @def_element %></defs>
       <%= @use_element %>
     </svg>
@@ -59,5 +61,15 @@ defmodule DreadnoughtWeb.SpriteComponent do
   end
 
   def element_id({func_name, arg} = sprite_spec) when is_sprite_spec(sprite_spec), do: "sprite-shape-#{func_name}-#{arg}"
+
+  def render_image_element(sprite_spec, socket) when is_sprite_spec(sprite_spec) do
+    %Sprite{image_file_path: path} = sprite(sprite_spec)
+    href = Routes.static_path(socket, path)
+    Svg.render_image(href)
+  end
+
+  def sprite(sprite_spec) do
+    Sprite.Builder.build sprite_spec
+  end
 
 end
