@@ -64,7 +64,6 @@ defmodule DreadnoughtWeb.SpriteComponent do
     size = Improved.image_size(improved_sprite)
     position = improved_sprite.image_position
     SvgView.render_image(href, size,
-      #opacity: 0.5,
       x: position.x,
       y: position.y,
       clip_path: "url(##{_element_id(sprite_spec)})"

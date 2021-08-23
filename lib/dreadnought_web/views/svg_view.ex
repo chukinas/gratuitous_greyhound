@@ -6,6 +6,9 @@ defmodule DreadnoughtWeb.SvgView do
     use Dreadnought.PositionOrientationSize
   alias Dreadnought.Svg
 
+  # *** *******************************
+  # *** ELEMENTS
+
   # TODO add size guard
   def render_image(href, size, opts \\ []) when is_list(opts) do
     attrs =
@@ -41,6 +44,17 @@ defmodule DreadnoughtWeb.SvgView do
     content_tag(:clipPath, polygon,
       id: id
     )
+  end
+
+  # *** *******************************
+  # *** DROPSHADOW
+
+  def render_dropshadow_def, do: render("dropshadow_def.html", [])
+
+  def render_dropshadow_filter do
+    ~e"""
+    filter="url(#paperdropshadow)"
+    """
   end
 
 end

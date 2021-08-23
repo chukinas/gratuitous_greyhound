@@ -8,7 +8,7 @@
       <%= DreadnoughtWeb.Shared.left_top_from_position(@transform) %>
     ">
     <svg viewBox="<%= @padded_image_viewbox %>">
-      <path d="<%= @svg_path %>" <%= render_dropshadow_filter() %> />
+      <path d="<%= @svg_path %>" <%= DreadnoughtWeb.SvgView.render_dropshadow_filter() %> />
     </svg>
   </div>
 </div>
