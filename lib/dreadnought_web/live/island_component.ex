@@ -52,21 +52,17 @@ defmodule DreadnoughtWeb.IslandComponent do
 
   def render_def_element(island_spec) do
     # TODO may need to use content_tag since tag/1 doesn't self-close
-    tag(:polygon,
+    Svg.render_polygon(Builder.coords(island_spec),
       id: element_id(island_spec),
-      points: Builder.svg_polygon_points_string(island_spec),
       fill: "green",
       opacity: 0.7
     )
   end
 
   def render_use_element(island_spec) do
-    pose_attrs =
-      island_spec
-      |> Spec.pose
-      |> Svg.pose_to_attrs
+    pose = Spec.pose(island_spec)
     # TODO may need to use content_tag since tag/1 doesn't self-close
-    tag(:use, Keyword.merge(pose_attrs,
+    tag(:use, Svg.attrs_from_pose_and_opts(pose,
       href: "#" <> element_id(island_spec)
     ))
   end

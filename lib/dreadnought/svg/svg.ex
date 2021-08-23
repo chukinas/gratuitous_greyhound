@@ -67,6 +67,10 @@ defmodule Dreadnought.Svg do
     ]
   end
 
+  def attrs_from_pose_and_opts(pose, opts \\ []) do
+    Keyword.merge opts, pose_to_attrs(pose)
+  end
+
   # *** *******************************
   # *** PRIVATE
 
@@ -91,6 +95,13 @@ defmodule Dreadnought.Svg do
   defp vector_to_comma_separated_string({x, y}) when is_number(x) and is_number(y) do
     "#{x},#{y}"
   end
+
+  def render_polygon(points, opts \\ []) do
+    Phoenix.HTML.Tag.content_tag(:polygon, nil,
+      Keyword.put(opts, :points, polygon_points_string_from_coords(points))
+    )
+  end
+
 
   # TODO I don't like calling the key directly her
   #defp get_quadratic_curve(%Turn{traversal_angle: angle} = path)
