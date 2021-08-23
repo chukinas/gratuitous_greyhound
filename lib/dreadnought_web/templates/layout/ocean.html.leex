@@ -12,7 +12,7 @@
               <path id="oceantilepath-<%= tile.id %>" d="<%= tile.path %>"/>
             </clipPath>
           </defs>
-          <use href="#oceantilepath-<%= tile.id %>" <%= DreadnoughtWeb.SvgView.render_dropshadow_filter() %> />
+          <%= DreadnoughtWeb.SvgView.render_dropshadow_use("oceantilepath-#{tile.id}") %>
           <image height="100%" preserveAspectRatio="xMinYMin slice" width"100%" xlink:href="<%= DreadnoughtWeb.TerrainView.crinkled_paper_path @socket %>" clip-path="url(#clip_<%= tile.id %>)" />
         </svg>
       </div>
