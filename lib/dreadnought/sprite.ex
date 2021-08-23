@@ -1,5 +1,6 @@
 defmodule Dreadnought.Sprite do
 
+    use Dreadnought.LinearAlgebra
     use Dreadnought.PositionOrientationSize
     use Dreadnought.TypedStruct
   alias Dreadnought.Core.Mount
@@ -70,6 +71,11 @@ defmodule Dreadnought.Sprite do
   end
 
   def mounts(%__MODULE__{mounts: mounts}), do: mounts
+
+  def image_position(%__MODULE__{image_origin: origin}) do
+    origin
+    |> position_multiply(-1)
+  end
 
   # *** *******************************
   # *** PRIVATE

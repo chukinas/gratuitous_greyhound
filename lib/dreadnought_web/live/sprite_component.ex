@@ -66,7 +66,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
     %Sprite{image_file_path: path, image_size: size} = sprite(sprite_spec)
     href = Routes.static_path(socket, path)
     Svg.render_image(href, size,
-      opacity: 0.5
+      opacity: 0.7
     )
   end
 
