@@ -65,11 +65,4 @@ defmodule DreadnoughtWeb.SvgView do
     render_use(href_id, put_dropshadow_filter())
   end
 
-  #def render_dropshadow_path(d) do
-  #  render_path(d,
-  #    put_dropshadow_filter(
-  #    )
-  #  )
-  #end
-
 end

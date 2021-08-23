@@ -25,7 +25,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
       #|> assign(pose: posed_sprite |> pose_from_map)
       #|> assign(sprite: posed_sprite.sprite_spec |> Builder.build)
       |> assign(sprite_spec: sprite_spec)
-      #|> assign(use_element: _render_use_element(sprite_spec))
+      #|> assign(use_element: _render_use(sprite_spec))
     {:ok, socket}
   end
 
@@ -37,7 +37,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
       <defs>
         <%= _render_clippath(@sprite_spec) %>
       </defs>
-      <%= _render_image_element(@sprite_spec, @socket) %>
+      <%= _render_image(@sprite_spec, @socket) %>
     </svg>
     """
   end
@@ -45,34 +45,47 @@ defmodule DreadnoughtWeb.SpriteComponent do
   # *** *******************************
   # *** SPRITE.SPEC CONVERTERS
 
-  #defp render_def_element(sprite_spec) when is_sprite_spec(sprite_spec) do
+  #defp _render_def(sprite_spec) when is_sprite_spec(sprite_spec) do
   #  sprite = Improved.from_sprite_spec(sprite_spec)
-  #  SvgView.render_polygon(Improved.coords(sprite))
+  #  coords = Improved.coords(sprite)
+  #  SvgView.render_polygon(coords,
+  #  )
   #end
 
-  #defp _render_use_element(sprite_spec) when is_sprite_spec(sprite_spec) do
+  #defp _render_use(sprite_spec) when is_sprite_spec(sprite_spec) do
   #  sprite_spec
   #  |> _element_id
   #  |> SvgView.render_use
   #end
 
-  defp _element_id({func_name, arg} = sprite_spec) when is_sprite_spec(sprite_spec), do: "sprite-shape-#{func_name}-#{arg}"
+  defp _element_id(sprite_spec, :shape) do
+    _element_id(sprite_spec, :sprite) <> "-shape"
+  end
+  defp _element_id(sprite_spec, :clippath) do
+    _element_id(sprite_spec, :sprite) <> "-clippath"
+  end
+  defp _element_id({func_name, arg} = sprite_spec, :sprite)
+  when is_sprite_spec(sprite_spec) do
+    "sprite-#{func_name}-#{arg}"
+  end
 
-  defp _render_image_element(sprite_spec, socket) when is_sprite_spec(sprite_spec) do
+  defp _render_image(sprite_spec, socket) when is_sprite_spec(sprite_spec) do
     improved_sprite = Improved.from_sprite_spec(sprite_spec)
     href = Routes.static_path(socket, Improved.image_path(improved_sprite))
     size = Improved.image_size(improved_sprite)
     position = improved_sprite.image_position
+    # TODO create new render_clipped_image
     SvgView.render_image(href, size,
+      id: _element_id(sprite_spec, :sprite),
       x: position.x,
       y: position.y,
-      clip_path: "url(##{_element_id(sprite_spec)})"
+      clip_path: "url(##{_element_id(sprite_spec, :clippath)})"
     )
   end
 
   defp _render_clippath(sprite_spec) when is_sprite_spec(sprite_spec) do
     improved_sprite = Improved.from_sprite_spec(sprite_spec)
-    id = _element_id(sprite_spec)
+    id = _element_id(sprite_spec, :clippath)
     coords = Improved.coords(improved_sprite)
     SvgView.render_clippath(id, coords)
   end
