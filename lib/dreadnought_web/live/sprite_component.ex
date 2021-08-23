@@ -1,12 +1,12 @@
 defmodule DreadnoughtWeb.SpriteComponent do
 
     use DreadnoughtWeb, :live_component
+ import DreadnoughtWeb.SvgView
     use Dreadnought.LinearAlgebra
     use Dreadnought.PositionOrientationSize
     use Dreadnought.Sprite.Spec
   alias Dreadnought.Sprite
   alias Dreadnought.Sprite.Improved
-  alias Dreadnought.Svg
 
   # *** *******************************
   # *** CALLBACKS
@@ -50,7 +50,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
 
   def render_def_element(sprite_spec) when is_sprite_spec(sprite_spec) do
     sprite = Improved.from_sprite_spec(sprite_spec)
-    Svg.render_polygon(Improved.coords(sprite),
+    render_polygon(Improved.coords(sprite),
       #id: element_id(sprite_spec),
       #fill: "red",
       #stroke: "black",
@@ -62,7 +62,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
   def render_use_element(sprite_spec) when is_sprite_spec(sprite_spec) do
     sprite_spec
     |> element_id
-    |> Svg.render_use
+    |> render_use
   end
 
   def element_id({func_name, arg} = sprite_spec) when is_sprite_spec(sprite_spec), do: "sprite-shape-#{func_name}-#{arg}"
@@ -72,7 +72,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
     href = Routes.static_path(socket, Improved.image_path(improved_sprite))
     size = Improved.image_size(improved_sprite)
     position = improved_sprite.image_position
-    Svg.render_image(href, size,
+    render_image(href, size,
       #opacity: 0.5,
       x: position.x,
       y: position.y,

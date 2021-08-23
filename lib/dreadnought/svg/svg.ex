@@ -96,38 +96,6 @@ defmodule Dreadnought.Svg do
     "#{x},#{y}"
   end
 
-  def render_polygon(points, opts \\ []) when is_list(opts) do
-    Phoenix.HTML.Tag.content_tag(:polygon, nil,
-      Keyword.put(opts, :points, polygon_points_string_from_coords(points))
-    )
-  end
-
-  def render_use(href_id, opts \\ []) when is_list(opts) do
-    attrs =
-      opts
-      |> Keyword.put(:href, "#" <> href_id)
-    Phoenix.HTML.Tag.content_tag(:use, nil, attrs)
-  end
-
-  def render_use_with_pose(href_id, pose, opts \\ []) when has_pose(pose) and is_list(opts) do
-    opts =
-      opts
-      |> Keyword.merge(pose |> pose_to_attrs)
-    render_use(href_id, opts)
-  end
-
-  # TODO add size guard
-  def render_image(href, size, opts \\ []) when is_list(opts) do
-    attrs =
-      opts
-      |> Keyword.put(:href, href)
-      |> Keyword.put(:width, size.width)
-      |> Keyword.put(:height, size.height)
-    Phoenix.HTML.Tag.content_tag(:image, nil, attrs)
-  end
-
-
-
   # TODO I don't like calling the key directly her
   #defp get_quadratic_curve(%Turn{traversal_angle: angle} = path)
   #when angle <= 90 do

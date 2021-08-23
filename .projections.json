@@ -9,5 +9,6 @@
     "lib/dreadnought_web/templates/dreadnought_play/*.html.leex": { "type": "template_play" },
     "lib/dreadnought_web/live/live_*.ex": { "type": "live" },
     "lib/dreadnought_web/live/*_component.ex": { "type": "component" },
+    "lib/dreadnought_web/views/*_view.ex": { "type": "view" },
     "test/dreadnought/*_test.exs": { "type": "test" },
 }
