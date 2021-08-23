@@ -59,7 +59,7 @@ defmodule DreadnoughtWeb.IslandComponent do
   end
 
   def render_use_element(island_spec) do
-    Svg.render_use(element_id(island_spec), Spec.pose(island_spec))
+    Svg.render_use_with_pose(element_id(island_spec), Spec.pose(island_spec))
   end
 
   def element_id(island_spec), do: "island-shape-#{Spec.shape(island_spec)}"

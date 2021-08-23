@@ -37,6 +37,8 @@ defmodule Dreadnought.Sprite.Improved do
   # *** *******************************
   # *** CONVERTERS
 
+  def coords(%__MODULE__{points: value}), do: value
+
   def polygon_points_string(%__MODULE__{points: points}) do
     Svg.polygon_points_string_from_coords(points)
   end

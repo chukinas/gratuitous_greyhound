@@ -6,6 +6,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
     use Dreadnought.Sprite.Spec
   alias Dreadnought.Sprite
   alias Dreadnought.Sprite.Improved
+  alias Dreadnought.Svg
 
   # *** *******************************
   # *** CALLBACKS
@@ -39,13 +40,12 @@ defmodule DreadnoughtWeb.SpriteComponent do
   end
 
   # *** *******************************
-  # *** SPEC CONVERTERS
+  # *** SPRITE.SPEC CONVERTERS
 
   def render_def_element(sprite_spec) when is_sprite_spec(sprite_spec) do
     sprite = Improved.from_sprite_spec(sprite_spec)
-    content_tag(:polygon, nil,
+    Svg.render_polygon(Improved.coords(sprite),
       id: element_id(sprite_spec),
-      points: Improved.polygon_points_string(sprite),
       fill: "red",
       stroke: "black",
       opacity: 0.7
@@ -53,9 +53,9 @@ defmodule DreadnoughtWeb.SpriteComponent do
   end
 
   def render_use_element(sprite_spec) when is_sprite_spec(sprite_spec) do
-    content_tag(:use, nil,
-      href: "#" <> element_id(sprite_spec)
-    )
+    sprite_spec
+    |> element_id
+    |> Svg.render_use
   end
 
   def element_id({func_name, arg} = sprite_spec) when is_sprite_spec(sprite_spec), do: "sprite-shape-#{func_name}-#{arg}"

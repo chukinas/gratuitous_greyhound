@@ -102,12 +102,18 @@ defmodule Dreadnought.Svg do
     )
   end
 
-  def render_use(href_id, pose, opts \\ []) do
+  def render_use(href_id, opts \\ []) when is_list(opts) do
     attrs =
       opts
       |> Keyword.put(:href, "#" <> href_id)
-      |> Keyword.merge(pose |> pose_to_attrs)
     Phoenix.HTML.Tag.content_tag(:use, nil, attrs)
+  end
+
+  def render_use_with_pose(href_id, pose, opts \\ []) when has_pose(pose) and is_list(opts) do
+    opts =
+      opts
+      |> Keyword.merge(pose |> pose_to_attrs)
+    render_use(href_id, opts)
   end
 
 
