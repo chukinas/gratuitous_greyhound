@@ -6,9 +6,19 @@ defmodule DreadnoughtWeb.SvgView do
     use Dreadnought.PositionOrientationSize
   alias Dreadnought.Svg
 
-  def render_polygon(points, opts \\ []) when is_list(opts) do
+  # TODO add size guard
+  def render_image(href, size, opts \\ []) when is_list(opts) do
+    attrs =
+      opts
+      |> Keyword.put(:href, href)
+      |> Keyword.put(:width, size.width)
+      |> Keyword.put(:height, size.height)
+    content_tag(:image, nil, attrs)
+  end
+
+  def render_polygon(coords, opts \\ []) when is_list(opts) do
     content_tag(:polygon, nil,
-      Keyword.put(opts, :points, Svg.polygon_points_string_from_coords(points))
+      Keyword.put(opts, :points, Svg.polygon_points_string_from_coords(coords))
     )
   end
 
@@ -26,14 +36,11 @@ defmodule DreadnoughtWeb.SvgView do
     render_use(href_id, opts)
   end
 
-  # TODO add size guard
-  def render_image(href, size, opts \\ []) when is_list(opts) do
-    attrs =
-      opts
-      |> Keyword.put(:href, href)
-      |> Keyword.put(:width, size.width)
-      |> Keyword.put(:height, size.height)
-    content_tag(:image, nil, attrs)
+  def render_clippath(id, coords) do
+    polygon = render_polygon(coords)
+    content_tag(:clipPath, polygon,
+      id: id
+    )
   end
 
 end

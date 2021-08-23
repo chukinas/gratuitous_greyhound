@@ -3,7 +3,7 @@ defmodule DreadnoughtWeb.IslandComponent do
     use DreadnoughtWeb, :live_component
   alias Dreadnought.Core.Island.Builder
   alias Dreadnought.Core.Island.Spec
-  alias Dreadnought.Svg
+  alias DreadnoughtWeb.SvgView
 
   # *** *******************************
   # *** CALLBACKS
@@ -51,7 +51,7 @@ defmodule DreadnoughtWeb.IslandComponent do
   # *** SPEC CONVERTERS
 
   def render_def_element(island_spec) do
-    Svg.render_polygon(Builder.coords(island_spec),
+    SvgView.render_polygon(Builder.coords(island_spec),
       id: element_id(island_spec),
       fill: "green",
       opacity: 0.7
@@ -59,7 +59,7 @@ defmodule DreadnoughtWeb.IslandComponent do
   end
 
   def render_use_element(island_spec) do
-    Svg.render_use_with_pose(element_id(island_spec), Spec.pose(island_spec))
+    SvgView.render_use_with_pose(element_id(island_spec), Spec.pose(island_spec))
   end
 
   def element_id(island_spec), do: "island-shape-#{Spec.shape(island_spec)}"
