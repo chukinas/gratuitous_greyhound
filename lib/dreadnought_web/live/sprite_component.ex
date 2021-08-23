@@ -35,7 +35,11 @@ defmodule DreadnoughtWeb.SpriteComponent do
     <%# TODO use dynamic values %>
     <svg id="sprite_component" viewbox="0 0 1000 1000" width="1000" height="1000" overflow="visible" >
       <%= render_image_element(@sprite_spec, @socket) %>
-      <defs><%= @def_element %></defs>
+      <defs>
+        <clipPath id="<%= element_id(@sprite_spec) %>" >
+          <%= @def_element %>
+        </clipPath>
+      </defs>
       <%= @use_element %>
     </svg>
     """
@@ -47,10 +51,11 @@ defmodule DreadnoughtWeb.SpriteComponent do
   def render_def_element(sprite_spec) when is_sprite_spec(sprite_spec) do
     sprite = Improved.from_sprite_spec(sprite_spec)
     Svg.render_polygon(Improved.coords(sprite),
-      id: element_id(sprite_spec),
-      fill: "red",
-      stroke: "black",
-      opacity: 0.7
+      #id: element_id(sprite_spec),
+      #fill: "red",
+      #stroke: "black",
+      #opacity: 0.7
+      []
     )
   end
 
@@ -68,9 +73,10 @@ defmodule DreadnoughtWeb.SpriteComponent do
     size = Improved.image_size(improved_sprite)
     position = improved_sprite.image_position
     Svg.render_image(href, size,
-      opacity: 0.5,
+      #opacity: 0.5,
       x: position.x,
-      y: position.y
+      y: position.y,
+      clip_path: "url(##{element_id(sprite_spec)})"
     )
   end
 

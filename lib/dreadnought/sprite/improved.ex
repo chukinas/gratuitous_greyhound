@@ -18,6 +18,7 @@ defmodule Dreadnought.Sprite.Improved do
     field :image_position, any
     field :image_size, any
     field :image_path, any
+    field :mounts, [Mount.t()]
   end
 
   # *** *******************************
@@ -34,7 +35,8 @@ defmodule Dreadnought.Sprite.Improved do
       points: points,
       image_position: image_position,
       image_size: sprite.image_size,
-      image_path: sprite.image_file_path
+      image_path: sprite.image_file_path,
+      mounts: sprite.mounts
     }
   end
 
