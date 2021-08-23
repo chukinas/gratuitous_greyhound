@@ -63,13 +63,16 @@ defmodule DreadnoughtWeb.SpriteComponent do
   def element_id({func_name, arg} = sprite_spec) when is_sprite_spec(sprite_spec), do: "sprite-shape-#{func_name}-#{arg}"
 
   def render_image_element(sprite_spec, socket) when is_sprite_spec(sprite_spec) do
-    %Sprite{image_file_path: path} = sprite(sprite_spec)
+    %Sprite{image_file_path: path, image_size: size} = sprite(sprite_spec)
     href = Routes.static_path(socket, path)
-    Svg.render_image(href)
+    Svg.render_image(href, size,
+      opacity: 0.5
+    )
   end
 
   def sprite(sprite_spec) do
-    Sprite.Builder.build sprite_spec
+    Sprite.Builder.build(sprite_spec)
+    |> IOP.inspect(__MODULE__)
   end
 
 end
