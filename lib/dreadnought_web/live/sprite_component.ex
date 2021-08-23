@@ -63,10 +63,14 @@ defmodule DreadnoughtWeb.SpriteComponent do
   def element_id({func_name, arg} = sprite_spec) when is_sprite_spec(sprite_spec), do: "sprite-shape-#{func_name}-#{arg}"
 
   def render_image_element(sprite_spec, socket) when is_sprite_spec(sprite_spec) do
-    %Sprite{image_file_path: path, image_size: size} = sprite(sprite_spec)
-    href = Routes.static_path(socket, path)
+    improved_sprite = Improved.from_sprite_spec(sprite_spec)
+    href = Routes.static_path(socket, Improved.image_path(improved_sprite))
+    size = Improved.image_size(improved_sprite)
+    position = improved_sprite.image_position
     Svg.render_image(href, size,
-      opacity: 0.7
+      opacity: 0.5,
+      x: position.x,
+      y: position.y
     )
   end
 
