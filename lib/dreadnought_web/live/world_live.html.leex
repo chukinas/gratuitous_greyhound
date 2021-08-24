@@ -9,6 +9,6 @@
   <text x="<%= 10 - @margin %>" y="<%= 20 - @margin %>" >Grey = Total Board Area (margin)</text>
   <text x="10" y="20" fill="white" >Blue = Play Area</text>
   <%= live_component(DreadnoughtWeb.IslandComponent, island_specs: @mission.island_specs) %>
-  <%= live_component(DreadnoughtWeb.SpriteComponent, posed_sprite: @posed_sprite) %>
+  <%= live_component(DreadnoughtWeb.SpriteComponent, sprite_specs: @sprite_specs) %>
 </svg>
 

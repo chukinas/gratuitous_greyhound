@@ -39,14 +39,11 @@ defmodule DreadnoughtWeb.WorldLive do
   end
 
   def assign_posed_sprite(socket) do
-    sprite_spec = {:blue, "hull_blue_small"}
-    true = is_sprite_spec(sprite_spec)
-    assign(socket, posed_sprite: %{
-      x: 100,
-      y: 100,
-      angle: -45,
-      sprite_spec: sprite_spec
-    })
+    sprite_specs = [
+      {:red, "ship_large"},
+      {:blue, "hull_blue_small"}
+    ]
+    assign(socket, sprite_specs: sprite_specs)
   end
 
 end

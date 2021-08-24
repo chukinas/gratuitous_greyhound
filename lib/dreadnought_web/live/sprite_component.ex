@@ -9,6 +9,11 @@ defmodule DreadnoughtWeb.SpriteComponent do
   alias DreadnoughtWeb.SvgView
 
   # *** *******************************
+  # *** CONSTRUCTORS
+
+  #live_component_defs_only
+
+  # *** *******************************
   # *** CALLBACKS
 
   @impl true
@@ -17,11 +22,10 @@ defmodule DreadnoughtWeb.SpriteComponent do
   end
 
   @impl true
-  def update(%{posed_sprite: posed_sprite}, socket) do
-    sprite_spec = posed_sprite.sprite_spec
+  def update(%{sprite_specs: sprite_specs}, socket) do
     socket =
       socket
-      |> assign(sprite_spec: sprite_spec)
+      |> assign(sprite_specs: sprite_specs)
     {:ok, socket}
   end
 
@@ -31,15 +35,34 @@ defmodule DreadnoughtWeb.SpriteComponent do
     <%# TODO use dynamic values %>
     <svg id="sprite_component" viewbox="0 0 1000 1000" width="1000" height="1000" overflow="visible" >
       <defs>
-        <%= _render_shape_def(@sprite_spec) %>
-        <%= _render_clippath_def(@sprite_spec) %>
+        <%= _render_shape_defs(@sprite_specs) %>
+        <%= _render_clippath_defs(@sprite_specs) %>
+        <%= _render_sprite_defs(@sprite_specs, @socket) %>
       </defs>
-    <g id="<%= _element_id(@sprite_spec, :sprite) %>">
-      <%= _render_dropshadow(@sprite_spec) %>
-      <%= _render_clipped_image(@sprite_spec, @socket) %>
-    </g>
+      <%= _render_sprite_uses(@sprite_specs) %>
     </svg>
     """
+  end
+
+  # TODO reduce duplication
+
+  # *** *******************************
+  # *** SPRITE.SPEC.LIST CONVERTERS
+
+  def _render_shape_defs(sprite_specs) when is_list(sprite_specs) do
+    for sprite_spec <- sprite_specs, do: _render_shape_def(sprite_spec)
+  end
+
+  def _render_clippath_defs(sprite_specs) when is_list(sprite_specs) do
+    for sprite_spec <- sprite_specs, do: _render_clippath_def(sprite_spec)
+  end
+
+  def _render_sprite_defs(sprite_specs, socket) when is_list(sprite_specs) do
+    for sprite_spec <- sprite_specs, do: _render_sprite_def(sprite_spec, socket)
+  end
+
+  def _render_sprite_uses(sprite_specs) when is_list(sprite_specs) do
+    for sprite_spec <- sprite_specs, do: _render_sprite_use(sprite_spec)
   end
 
   # *** *******************************
@@ -59,6 +82,14 @@ defmodule DreadnoughtWeb.SpriteComponent do
     SvgView.render_clippath_use(id, href_id)
   end
 
+  defp _render_sprite_def(sprite_spec, socket) when is_sprite_spec(sprite_spec) do
+    content = [
+      _render_dropshadow(sprite_spec),
+      _render_clipped_image(sprite_spec, socket),
+    ]
+    content_tag(:g, content, id: _element_id(sprite_spec, :sprite))
+  end
+
   defp _render_clipped_image(sprite_spec, socket) when is_sprite_spec(sprite_spec) do
     improved_sprite = Improved.from_sprite_spec(sprite_spec)
     href = Routes.static_path(socket, Improved.image_path(improved_sprite))
@@ -75,6 +106,11 @@ defmodule DreadnoughtWeb.SpriteComponent do
   defp _render_dropshadow(sprite_spec) when is_sprite_spec(sprite_spec) do
     href_id = _element_id(sprite_spec, :shape)
     SvgView.render_dropshadow_use(href_id)
+  end
+
+  defp _render_sprite_use(sprite_spec) when is_sprite_spec(sprite_spec) do
+    href_id = _element_id(sprite_spec, :sprite)
+    SvgView.render_use(href_id)
   end
 
   defp _element_id(sprite_spec, :shape) do
