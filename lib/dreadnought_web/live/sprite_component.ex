@@ -11,7 +11,13 @@ defmodule DreadnoughtWeb.SpriteComponent do
   # *** *******************************
   # *** CONSTRUCTORS
 
-  #live_component_defs_only
+  def render_list(sprite_specs) when is_list(sprite_specs) do
+    Phoenix.LiveView.Helpers.live_component(__MODULE__, sprite_specs: sprite_specs)
+  end
+
+  def render_single(sprite_spec) when is_sprite_spec(sprite_spec) do
+    Phoenix.LiveView.Helpers.live_component(__MODULE__, sprite_specs: [sprite_spec])
+  end
 
   # *** *******************************
   # *** CALLBACKS
