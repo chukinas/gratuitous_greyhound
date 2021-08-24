@@ -34,6 +34,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
         <%= _render_shape_def(@sprite_spec) %>
         <%= _render_clippath_def(@sprite_spec) %>
       </defs>
+      <%= _render_dropshadow(@sprite_spec) %>
       <%= _render_clipped_image(@sprite_spec, @socket) %>
     </svg>
     """
@@ -68,6 +69,11 @@ defmodule DreadnoughtWeb.SpriteComponent do
       y: position.y,
       clip_path: "url(##{_element_id(sprite_spec, :clippath)})"
     )
+  end
+
+  defp _render_dropshadow(sprite_spec) when is_sprite_spec(sprite_spec) do
+    href_id = _element_id(sprite_spec, :shape)
+    SvgView.render_dropshadow_use(href_id)
   end
 
   defp _element_id(sprite_spec, :shape) do

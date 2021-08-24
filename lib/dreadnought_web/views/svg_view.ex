@@ -59,14 +59,17 @@ defmodule DreadnoughtWeb.SvgView do
   def render_dropshadow_def, do: render("dropshadow_def.html", [])
 
   def render_dropshadow_filter do
+    # TODO DRY
     ~e"""
     filter="url(#paperdropshadow)"
     """
   end
 
   defp put_dropshadow_filter(attrs \\ []) when is_list(attrs) do
-    Keyword.put(attrs, :filter, "url(#paperdropshadow)")
+    Keyword.put(attrs, :filter, dropshadow_url())
   end
+
+  defp dropshadow_url, do: "url(#paperdropshadow)"
 
   def render_dropshadow_use(href_id) when is_binary(href_id) do
     render_use(href_id, put_dropshadow_filter())
