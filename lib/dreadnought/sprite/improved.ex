@@ -54,3 +54,21 @@ defmodule Dreadnought.Sprite.Improved do
   def image_size(%__MODULE__{image_size: value}), do: value
 
 end
+
+# *** *********************************
+# *** IMPLEMENTATIONS
+# *** *********************************
+
+alias Dreadnought.Sprite.Improved, as: Sprite
+
+defimpl Dreadnought.BoundingRect, for: Sprite do
+    use Dreadnought.LinearAlgebra
+  alias Dreadnought.Geometry.Rect
+  def of(sprite) do
+    sprite
+    |> Sprite.coords
+    |> Enum.map(&vector_to_position/1)
+    |> Rect.bounding_rect_from_positions
+  end
+end
+

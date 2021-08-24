@@ -5,6 +5,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
     use Dreadnought.PositionOrientationSize
   # TODO Spec functions should be aliased. Import only the guards
     use Dreadnought.Sprite.Spec
+  alias Dreadnought.BoundingRect
   alias Dreadnought.Sprite.Improved
   alias DreadnoughtWeb.SvgView
 
@@ -15,8 +16,8 @@ defmodule DreadnoughtWeb.SpriteComponent do
     Phoenix.LiveView.Helpers.live_component(__MODULE__, sprite_specs: sprite_specs)
   end
 
-  def render_single(sprite_spec) when is_sprite_spec(sprite_spec) do
-    Phoenix.LiveView.Helpers.live_component(__MODULE__, sprite_specs: [sprite_spec])
+  def render_single_as_block(sprite_spec) when is_sprite_spec(sprite_spec) do
+    Phoenix.LiveView.Helpers.live_component(__MODULE__, sprite_specs: [sprite_spec], as_block: true)
   end
 
   # *** *******************************
@@ -28,10 +29,11 @@ defmodule DreadnoughtWeb.SpriteComponent do
   end
 
   @impl true
-  def update(%{sprite_specs: sprite_specs}, socket) do
+  def update(%{sprite_specs: sprite_specs} = assigns, socket) do
     socket =
       socket
       |> assign(sprite_specs: sprite_specs)
+      |> assign(as_block: !!assigns[:as_block])
     {:ok, socket}
   end
 
@@ -45,7 +47,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
         <%= _render_clippath_defs(@sprite_specs) %>
         <%= _render_sprite_defs(@sprite_specs, @socket) %>
       </defs>
-      <%= _render_sprite_uses(@sprite_specs) %>
+      <%= _render_sprite_uses(@sprite_specs, @as_block) %>
     </svg>
     """
   end
@@ -67,8 +69,8 @@ defmodule DreadnoughtWeb.SpriteComponent do
     for sprite_spec <- sprite_specs, do: _render_sprite_def(sprite_spec, socket)
   end
 
-  def _render_sprite_uses(sprite_specs) when is_list(sprite_specs) do
-    for sprite_spec <- sprite_specs, do: _render_sprite_use(sprite_spec)
+  def _render_sprite_uses(sprite_specs, as_block) when is_list(sprite_specs) do
+    for sprite_spec <- sprite_specs, do: _render_sprite_use(sprite_spec, as_block)
   end
 
   # *** *******************************
@@ -114,9 +116,19 @@ defmodule DreadnoughtWeb.SpriteComponent do
     SvgView.render_dropshadow_use(href_id)
   end
 
-  defp _render_sprite_use(sprite_spec) when is_sprite_spec(sprite_spec) do
+  defp _render_sprite_use(sprite_spec, as_block) when is_sprite_spec(sprite_spec) and is_boolean(as_block) do
     href_id = _element_id(sprite_spec, :sprite)
-    SvgView.render_use(href_id)
+    bounding_rect = sprite_spec |> Improved.from_sprite_spec |> BoundingRect.of
+    attrs =
+      if as_block do
+        [
+          x: -bounding_rect.x,
+          y: -bounding_rect.y
+        ]
+      else
+        []
+      end
+    SvgView.render_use(href_id, attrs)
   end
 
   defp _element_id(sprite_spec, :shape) do

@@ -149,8 +149,9 @@ defmodule Dreadnought.Geometry.Grid do
 
 end
 
-# *** *******************************
+# *** *********************************
 # *** IMPLEMENTATIONS
+# *** *********************************
 
 alias Dreadnought.Geometry.Grid
 
