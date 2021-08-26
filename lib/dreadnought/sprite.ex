@@ -88,3 +88,16 @@ defmodule Dreadnought.Sprite do
     end)
   end
 end
+
+# *** *********************************
+# *** IMPLEMENTATIONS
+# *** *********************************
+
+# TODO should bounding rect be in the Rect namespace?
+alias Dreadnought.Sprite, as: Sprite
+
+defimpl Dreadnought.BoundingRect, for: Sprite do
+  def of(sprite) do
+    Dreadnought.BoundingRect.of(sprite |> Sprite.Improved.from_sprite)
+  end
+end

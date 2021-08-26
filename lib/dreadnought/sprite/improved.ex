@@ -25,7 +25,10 @@ defmodule Dreadnought.Sprite.Improved do
   # *** CONSTRUCTORS
 
   def from_sprite_spec(sprite_spec) when is_sprite_spec(sprite_spec) do
-    sprite = sprite_spec |> Builder.build
+    sprite_spec |> Builder.build |> from_sprite
+  end
+
+  def from_sprite(%Sprite{} = sprite) do
     image_position = Sprite.image_position(sprite)
     points =
       sprite.image_clip_path
@@ -71,4 +74,3 @@ defimpl Dreadnought.BoundingRect, for: Sprite do
     |> Rect.bounding_rect_from_positions
   end
 end
-
