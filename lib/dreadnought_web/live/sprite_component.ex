@@ -35,11 +35,12 @@ defmodule DreadnoughtWeb.SpriteComponent do
     )
   end
 
-  def render_single_as_block(sprite_spec) when is_sprite_spec(sprite_spec) do
+  def render_single_as_block(sprite_spec, scale \\ 1) when is_sprite_spec(sprite_spec) do
     Phoenix.LiveView.Helpers.live_component(__MODULE__,
       sprite_specs: [sprite_spec],
       include: :all,
-      as_block: true
+      as_block: true,
+      scale: scale
     )
   end
 
@@ -61,6 +62,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
       |> assign(as_block: !!assigns[:as_block])
       |> assign(incl_defs?: include != :uses)
       |> assign(incl_uses?: include != :defs)
+      |> assign(scale: Map.get(assigns, :scale, 1))
       |> IOP.inspect
     {:ok, socket}
   end
@@ -68,7 +70,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
   @impl true
   def render(assigns) do
     ~L"""
-    <%= _render_svg(@sprite_specs, @as_block) %>
+    <%= _render_svg(@sprite_specs, @as_block, @scale) %>
       <%= if @incl_defs? do %>
         <defs>
           <%= _render_shape_defs(@sprite_specs) %>
@@ -89,13 +91,12 @@ defmodule DreadnoughtWeb.SpriteComponent do
   # *** SPRITE.SPEC.LIST CONVERTERS
 
   # TODO as_block should end in question mark
-  def _render_svg(sprite_specs, as_block) when is_list(sprite_specs) do
+  def _render_svg(sprite_specs, as_block, scale) when is_list(sprite_specs) do
     rect =
       sprite_specs
       |> BoundingRect.of
     # TODO I shouldn't have to do this step. There's no need to translate the use
       |> Rect.from_size
-    scale = 1
     size =
       if scale == 1 do
         rect
