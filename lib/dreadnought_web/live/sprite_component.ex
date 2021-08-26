@@ -12,12 +12,33 @@ defmodule DreadnoughtWeb.SpriteComponent do
   # *** *******************************
   # *** CONSTRUCTORS
 
+  def render_defs(sprite_specs) when is_list(sprite_specs) do
+    Phoenix.LiveView.Helpers.live_component(__MODULE__,
+      sprite_specs: sprite_specs,
+      include: :defs
+    )
+  end
+
+  def render_uses(sprite_specs) when is_list(sprite_specs) do
+    Phoenix.LiveView.Helpers.live_component(__MODULE__,
+      sprite_specs: sprite_specs,
+      include: :uses
+    )
+  end
+
   def render_list(sprite_specs) when is_list(sprite_specs) do
-    Phoenix.LiveView.Helpers.live_component(__MODULE__, sprite_specs: sprite_specs)
+    Phoenix.LiveView.Helpers.live_component(__MODULE__,
+      sprite_specs: sprite_specs,
+      include: :all
+    )
   end
 
   def render_single_as_block(sprite_spec) when is_sprite_spec(sprite_spec) do
-    Phoenix.LiveView.Helpers.live_component(__MODULE__, sprite_specs: [sprite_spec], as_block: true)
+    Phoenix.LiveView.Helpers.live_component(__MODULE__,
+      sprite_specs: [sprite_spec],
+      include: :all,
+      as_block: true
+    )
   end
 
   # *** *******************************
@@ -29,25 +50,32 @@ defmodule DreadnoughtWeb.SpriteComponent do
   end
 
   @impl true
-  def update(%{sprite_specs: sprite_specs} = assigns, socket) do
+  def update(%{sprite_specs: sprite_specs, include: include} = assigns, socket)
+  when include in ~w/defs uses all/a do
     socket =
       socket
       |> assign(sprite_specs: sprite_specs)
       |> assign(as_block: !!assigns[:as_block])
+      |> assign(incl_defs?: include != :uses)
+      |> assign(incl_uses?: include != :defs)
+      |> IOP.inspect
     {:ok, socket}
   end
 
   @impl true
   def render(assigns) do
     ~L"""
-    <%# TODO use dynamic values %>
-    <svg id="sprite_component" viewbox="0 0 1000 1000" width="1000" height="1000" overflow="visible" >
-      <defs>
-        <%= _render_shape_defs(@sprite_specs) %>
-        <%= _render_clippath_defs(@sprite_specs) %>
-        <%= _render_sprite_defs(@sprite_specs, @socket) %>
-      </defs>
-      <%= _render_sprite_uses(@sprite_specs, @as_block) %>
+    <%= _render_svg(@sprite_specs) %>
+      <%= if @incl_defs? do %>
+        <defs>
+          <%= _render_shape_defs(@sprite_specs) %>
+          <%= _render_clippath_defs(@sprite_specs) %>
+          <%= _render_sprite_defs(@sprite_specs, @socket) %>
+        </defs>
+      <% end %>
+      <%= if @incl_uses? do %>
+        <%= _render_sprite_uses(@sprite_specs, @as_block) %>
+      <% end %>
     </svg>
     """
   end
@@ -56,6 +84,16 @@ defmodule DreadnoughtWeb.SpriteComponent do
 
   # *** *******************************
   # *** SPRITE.SPEC.LIST CONVERTERS
+
+  def _render_svg(sprite_specs) when is_list(sprite_specs) do
+    tag(:svg,
+      id: "sprite_component",
+      viewbox: "0 0 1000 1000",
+      width: 1000,
+      height: 1000,
+      overflow: "visible"
+    )
+  end
 
   def _render_shape_defs(sprite_specs) when is_list(sprite_specs) do
     for sprite_spec <- sprite_specs, do: _render_shape_def(sprite_spec)
@@ -75,6 +113,14 @@ defmodule DreadnoughtWeb.SpriteComponent do
 
   # *** *******************************
   # *** SPRITE.SPEC CONVERTERS
+
+  defp _viewbox(sprite_specs, hidden?) do
+    if hidden? do
+      "0 0 0 0"
+    else
+      "0 0 1000 1000"
+    end
+  end
 
   defp _render_shape_def(sprite_spec) when is_sprite_spec(sprite_spec) do
     sprite = Improved.from_sprite_spec(sprite_spec)
@@ -116,11 +162,16 @@ defmodule DreadnoughtWeb.SpriteComponent do
     SvgView.render_dropshadow_use(href_id)
   end
 
-  defp _render_sprite_use(sprite_spec, as_block) when is_sprite_spec(sprite_spec) and is_boolean(as_block) do
+  defp _render_sprite_use(sprite_spec, as_block)
+  when is_sprite_spec(sprite_spec)
+  and is_boolean(as_block) do
     href_id = _element_id(sprite_spec, :sprite)
-    bounding_rect = sprite_spec |> Improved.from_sprite_spec |> BoundingRect.of
     attrs =
       if as_block do
+        bounding_rect =
+          sprite_spec
+          |> Improved.from_sprite_spec
+          |> BoundingRect.of
         [
           x: -bounding_rect.x,
           y: -bounding_rect.y
