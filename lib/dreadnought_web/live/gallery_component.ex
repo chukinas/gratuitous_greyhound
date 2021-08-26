@@ -24,6 +24,7 @@ defmodule DreadnoughtWeb.GalleryComponent do
     socket =
       socket
       |> assign(sprites_and_animations: Enum.map(animations ++ sprites, &wrap_item/1))
+      |> assign(sprite_specs: [red: "ship_large"])
     {:ok, socket}
   end
 
