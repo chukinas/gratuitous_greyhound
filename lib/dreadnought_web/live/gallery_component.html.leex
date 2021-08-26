@@ -37,7 +37,7 @@
       <div class="col-span-2 row-span-1 relative rounded-lg px-6 py-5 shadow-sm flex flex-col items-center justify-start space-x-3" >
         <%= render_p "This is my new sprite", "min-w-0 mb-4" %>
         <%# TODO add scaling %>
-        <%= DreadnoughtWeb.SpriteComponent.render_single_as_block(s, 1.75) %>
+        <%= DreadnoughtWeb.SpriteComponent.render_single_as_block({:red, "ship_large"}, 1.75) %>
       </div>
     <% end %>
 

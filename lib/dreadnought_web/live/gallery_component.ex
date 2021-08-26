@@ -1,7 +1,7 @@
 defmodule DreadnoughtWeb.GalleryComponent do
 
-  use DreadnoughtWeb, :live_component
-  use Dreadnought.PositionOrientationSize
+    use DreadnoughtWeb, :live_component
+    use Dreadnought.PositionOrientationSize
   alias Dreadnought.BoundingRect
   alias Dreadnought.Core.Animations
   alias Dreadnought.Sprite
