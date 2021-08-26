@@ -66,7 +66,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
   @impl true
   def render(assigns) do
     ~L"""
-    <%= _render_svg(@sprite_specs) %>
+    <%= _render_svg(@sprite_specs, @as_block) %>
       <%= if @incl_defs? do %>
         <defs>
           <%= _render_shape_defs(@sprite_specs) %>
@@ -86,15 +86,20 @@ defmodule DreadnoughtWeb.SpriteComponent do
   # *** *******************************
   # *** SPRITE.SPEC.LIST CONVERTERS
 
-  def _render_svg(sprite_specs) when is_list(sprite_specs) do
+  # TODO as_block should end in question mark
+  def _render_svg(sprite_specs, as_block) when is_list(sprite_specs) do
+    bounding_rect = BoundingRect.of(sprite_specs)
+                    |> IOP.inspect
     tag(:svg,
       id: "sprite_component",
-      viewbox: "0 0 1000 1000",
-      width: 1000,
-      height: 1000,
+      viewbox: "0 0 #{bounding_rect.width} #{bounding_rect.height}",
+      width: bounding_rect.width,
+      height: bounding_rect.height,
       overflow: "visible"
     )
   end
+
+  # TODO the gallery sprites have an unwanted left margin
 
   def _render_shape_defs(sprite_specs) when is_list(sprite_specs) do
     for sprite_spec <- sprite_specs, do: _render_shape_def(sprite_spec)
