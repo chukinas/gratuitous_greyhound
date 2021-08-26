@@ -6,9 +6,8 @@ defmodule DreadnoughtWeb.GalleryComponent do
   alias Dreadnought.Core.Animations
   alias Dreadnought.Sprite
 
-
   # *** *******************************
-  # *** CALLBACKS
+  # *** SETUP CALLBACKS
 
   @impl true
   def mount(socket) do
@@ -29,7 +28,7 @@ defmodule DreadnoughtWeb.GalleryComponent do
   end
 
   # *** *******************************
-  # *** HANDLE_EVENT
+  # *** HANDLER CALLBACKS
 
   @impl true
   def handle_event("toggle_show_markers", _, socket) do
@@ -50,8 +49,8 @@ defmodule DreadnoughtWeb.GalleryComponent do
       end
     attrs =
       [
-        "phx-click": "toggle_show_markers",
-        "phx-target": target
+        phx_click: "toggle_show_markers",
+        phx_target: target
       ]
     render_toggle(
       "toggleShowMarkers",
@@ -65,9 +64,9 @@ defmodule DreadnoughtWeb.GalleryComponent do
     rect = BoundingRect.of(item)
     colspan =
       case rect.width do
-        x when x > 200 -> 3
-        x when x > 100 -> 2
-        _ -> 1
+        x when x > 200 -> "col-span-3"
+        x when x > 100 -> "col-span-2"
+        _ -> "col-span-1"
       end
     mount_positions =
       case item do
@@ -79,7 +78,7 @@ defmodule DreadnoughtWeb.GalleryComponent do
       rect: rect |> position_flip,
       mount_positions: mount_positions,
       colspan: colspan,
-      rowspan: (if rect.height > 45, do: 1, else: 1)
+      rowspan: (if rect.height > 45, do: "row-span-1", else: "row-span-1")
     }
   end
 
