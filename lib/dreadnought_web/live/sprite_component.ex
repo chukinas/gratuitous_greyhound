@@ -44,6 +44,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
   # *** *******************************
   # *** CALLBACKS
 
+  # TODO needed?
   @impl true
   def mount(socket) do
     {:ok, socket}
