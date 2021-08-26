@@ -6,7 +6,9 @@ defmodule DreadnoughtWeb.SpriteComponent do
   # TODO Spec functions should be aliased. Import only the guards
     use Dreadnought.Sprite.Spec
   alias Dreadnought.BoundingRect
+  alias Dreadnought.Geometry.Rect
   alias Dreadnought.Sprite.Improved
+  alias Dreadnought.Svg
   alias DreadnoughtWeb.SvgView
 
   # *** *******************************
@@ -88,15 +90,26 @@ defmodule DreadnoughtWeb.SpriteComponent do
 
   # TODO as_block should end in question mark
   def _render_svg(sprite_specs, as_block) when is_list(sprite_specs) do
-    bounding_rect = BoundingRect.of(sprite_specs)
-                    |> IOP.inspect
-    tag(:svg,
-      id: "sprite_component",
-      viewbox: "0 0 #{bounding_rect.width} #{bounding_rect.height}",
-      width: bounding_rect.width,
-      height: bounding_rect.height,
-      overflow: "visible"
-    )
+    rect =
+      sprite_specs
+      |> BoundingRect.of
+    # TODO I shouldn't have to do this step. There's no need to translate the use
+      |> Rect.from_size
+    scale = 1
+    size =
+      if scale == 1 do
+        rect
+      else
+        rect |> Rect.scale(scale)
+      end
+    attrs =
+      [
+        id: "sprite_component",
+        overflow: "visible"
+      ]
+      |> Svg.Viewbox.put_attr(rect)
+      |> Svg.Size.put(size)
+    tag(:svg, attrs)
   end
 
   # TODO the gallery sprites have an unwanted left margin
