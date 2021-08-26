@@ -5,6 +5,7 @@ defmodule DreadnoughtWeb.GalleryComponent do
   alias Dreadnought.BoundingRect
   alias Dreadnought.Core.Animations
   alias Dreadnought.Sprite
+  alias Dreadnought.Sprite.Spec
 
   # *** *******************************
   # *** SETUP CALLBACKS
@@ -24,7 +25,7 @@ defmodule DreadnoughtWeb.GalleryComponent do
     socket =
       socket
       |> assign(sprites_and_animations: Enum.map(animations ++ sprites, &wrap_item/1))
-      |> assign(sprite_specs: [red: "ship_large"])
+      |> assign(sprite_specs: Spec.all())
     {:ok, socket}
   end
 
