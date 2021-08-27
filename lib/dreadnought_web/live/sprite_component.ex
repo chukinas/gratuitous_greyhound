@@ -60,15 +60,15 @@ defmodule DreadnoughtWeb.SpriteComponent do
     ~L"""
     <%= _render_svg(@sprite_specs, @scale) %>
       <%= if @incl_defs? do %>
-        <defs>
-          <%= _render_shape_defs(@sprite_specs) %>
-          <%= _render_clippath_defs(@sprite_specs) %>
-          <%= _render_sprite_defs(@sprite_specs, @socket) %>
-        </defs>
+        <%= for s <- @sprite_specs do %>
+          <%= content_tag(:defs, [
+            _render_shape_def(s),
+            _render_clippath_def(s),
+            _render_sprite_def(s, @socket)
+          ]) %>
+        <% end %>
       <% end %>
-      <%= if @incl_uses? do %>
-        <%= _render_sprite_uses(@sprite_specs) %>
-      <% end %>
+      <%= if @incl_uses?, do: _render_sprite_uses(@sprite_specs) %>
       <circle r="4" cx="0" cy="0" fill="red" />
     </svg>
     """
@@ -98,18 +98,6 @@ defmodule DreadnoughtWeb.SpriteComponent do
   end
 
   # TODO the gallery sprites have an unwanted left margin
-
-  def _render_shape_defs(sprite_specs) when is_list(sprite_specs) do
-    for sprite_spec <- sprite_specs, do: _render_shape_def(sprite_spec)
-  end
-
-  def _render_clippath_defs(sprite_specs) when is_list(sprite_specs) do
-    for sprite_spec <- sprite_specs, do: _render_clippath_def(sprite_spec)
-  end
-
-  def _render_sprite_defs(sprite_specs, socket) when is_list(sprite_specs) do
-    for sprite_spec <- sprite_specs, do: _render_sprite_def(sprite_spec, socket)
-  end
 
   def _render_sprite_uses(sprite_specs) when is_list(sprite_specs) do
     for sprite_spec <- sprite_specs, do: _render_sprite_use(sprite_spec)
