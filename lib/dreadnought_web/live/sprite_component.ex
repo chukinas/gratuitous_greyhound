@@ -68,7 +68,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
           ]) %>
         <% end %>
       <% end %>
-      <%= if @incl_uses?, do: _render_sprite_uses(@sprite_specs) %>
+      <%= if @incl_uses?, do: for s <- @sprite_specs, do: _render_sprite_use(s) %>
       <circle r="4" cx="0" cy="0" fill="red" />
     </svg>
     """
@@ -98,10 +98,6 @@ defmodule DreadnoughtWeb.SpriteComponent do
   end
 
   # TODO the gallery sprites have an unwanted left margin
-
-  def _render_sprite_uses(sprite_specs) when is_list(sprite_specs) do
-    for sprite_spec <- sprite_specs, do: _render_sprite_use(sprite_spec)
-  end
 
   # *** *******************************
   # *** SPRITE.SPEC CONVERTERS
