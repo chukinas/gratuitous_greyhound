@@ -1,6 +1,6 @@
 defmodule Dreadnought.Svg.Size do
 
-  def put(keywords \\ [], size) when is_list(keywords) do
+  def put_attrs(keywords \\ [], size) when is_list(keywords) do
     Keyword.merge(keywords, attrs(size))
   end
 

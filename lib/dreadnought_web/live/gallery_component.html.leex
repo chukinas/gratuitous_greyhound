@@ -39,7 +39,7 @@
       <div class="col-span-2 row-span-1 relative rounded-lg px-6 py-5 shadow-sm flex flex-col items-center justify-start space-x-3" >
         <%= render_p Spec.name(s), "min-w-0 mb-4" %>
         <%= 
-          DreadnoughtWeb.SpriteComponent.render_single_as_block(
+          DreadnoughtWeb.SpriteComponent.render_single(
           s, 1.75, live_component(DreadnoughtWeb.MarkersComponent)
 )
         %>

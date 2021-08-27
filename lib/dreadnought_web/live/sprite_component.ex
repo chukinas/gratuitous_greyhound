@@ -28,18 +28,11 @@ defmodule DreadnoughtWeb.SpriteComponent do
     )
   end
 
-  def render_list(sprite_specs) when is_list(sprite_specs) do
-    Phoenix.LiveView.Helpers.live_component(__MODULE__,
-      sprite_specs: sprite_specs,
-      include: :all
-    )
-  end
-
-  def render_single_as_block(sprite_spec, scale \\ 1, insert_svg) when is_sprite_spec(sprite_spec) do
+  def render_single(sprite_spec, scale \\ 1, insert_svg)
+  when is_sprite_spec(sprite_spec) do
     Phoenix.LiveView.Helpers.live_component(__MODULE__,
       sprite_specs: [sprite_spec],
       include: :all,
-      as_block: true,
       scale: scale,
       insert_svg: insert_svg
     )
@@ -48,19 +41,12 @@ defmodule DreadnoughtWeb.SpriteComponent do
   # *** *******************************
   # *** CALLBACKS
 
-  # TODO needed?
-  @impl true
-  def mount(socket) do
-    {:ok, socket}
-  end
-
   @impl true
   def update(%{sprite_specs: sprite_specs, include: include} = assigns, socket)
   when include in ~w/defs uses all/a do
     socket =
       socket
       |> assign(sprite_specs: sprite_specs)
-      |> assign(as_block: !!assigns[:as_block])
       |> assign(incl_defs?: include != :uses)
       |> assign(incl_uses?: include != :defs)
       |> assign(scale: Map.get(assigns, :scale, 1))
@@ -72,7 +58,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
   @impl true
   def render(assigns) do
     ~L"""
-    <%= _render_svg(@sprite_specs, @as_block, @scale) %>
+    <%= _render_svg(@sprite_specs, @scale) %>
       <%= if @incl_defs? do %>
         <defs>
           <%= _render_shape_defs(@sprite_specs) %>
@@ -81,25 +67,20 @@ defmodule DreadnoughtWeb.SpriteComponent do
         </defs>
       <% end %>
       <%= if @incl_uses? do %>
-        <%= _render_sprite_uses(@sprite_specs, @as_block) %>
+        <%= _render_sprite_uses(@sprite_specs) %>
       <% end %>
       <circle r="4" cx="0" cy="0" fill="red" />
     </svg>
     """
   end
 
-  # TODO reduce duplication
-
   # *** *******************************
   # *** SPRITE.SPEC.LIST CONVERTERS
 
-  # TODO as_block should end in question mark
-  def _render_svg(sprite_specs, _as_block, scale) when is_list(sprite_specs) do
+  def _render_svg(sprite_specs, scale) when is_list(sprite_specs) do
     rect =
       sprite_specs
       |> BoundingRect.of
-    # TODO I shouldn't have to do this step. There's no need to translate the use
-      #|> Rect.from_size
     size =
       if scale == 1 do
         rect
@@ -108,14 +89,11 @@ defmodule DreadnoughtWeb.SpriteComponent do
       end
     attrs =
       [
-        overflow: "visible",
-        x: -68,
-        y: -15
+        overflow: "visible"
       ]
       |> Svg.Viewbox.put_attr(rect)
       |> Svg.Position.put_attrs(rect)
-    # TODO rename put_attrs?
-      |> Svg.Size.put(size)
+      |> Svg.Size.put_attrs(size)
     tag(:svg, attrs)
   end
 
@@ -133,8 +111,8 @@ defmodule DreadnoughtWeb.SpriteComponent do
     for sprite_spec <- sprite_specs, do: _render_sprite_def(sprite_spec, socket)
   end
 
-  def _render_sprite_uses(sprite_specs, as_block) when is_list(sprite_specs) do
-    for sprite_spec <- sprite_specs, do: _render_sprite_use(sprite_spec, as_block)
+  def _render_sprite_uses(sprite_specs) when is_list(sprite_specs) do
+    for sprite_spec <- sprite_specs, do: _render_sprite_use(sprite_spec)
   end
 
   # *** *******************************
@@ -167,7 +145,6 @@ defmodule DreadnoughtWeb.SpriteComponent do
     href = Routes.static_path(socket, Improved.image_path(improved_sprite))
     size = Improved.image_size(improved_sprite)
     position = improved_sprite.image_position
-    # TODO create new render_clipped_image
     SvgView.render_image(href, size,
       x: position.x,
       y: position.y,
@@ -180,26 +157,9 @@ defmodule DreadnoughtWeb.SpriteComponent do
     SvgView.render_dropshadow_use(href_id)
   end
 
-  # TODO is as_block needed?
-  defp _render_sprite_use(sprite_spec, as_block)
-  when is_sprite_spec(sprite_spec)
-  and is_boolean(as_block) do
+  defp _render_sprite_use(sprite_spec)
+  when is_sprite_spec(sprite_spec) do
     href_id = _element_id(sprite_spec, :sprite)
-    # TODO clean this file up once it's stable
-    #attrs =
-    #  if as_block do
-    #    bounding_rect =
-    #      sprite_spec
-    #      |> Improved.from_sprite_spec
-    #      |> BoundingRect.of
-    #    [
-    #      x: -bounding_rect.x,
-    #      y: -bounding_rect.y
-    #    ]
-    #  else
-    #    []
-    #  end
-    #SvgView.render_use(href_id, attrs)
     SvgView.render_use(href_id)
   end
 
