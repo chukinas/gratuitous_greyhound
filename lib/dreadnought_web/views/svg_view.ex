@@ -4,6 +4,8 @@ defmodule DreadnoughtWeb.SvgView do
     use Dreadnought.LinearAlgebra
     use Dreadnought.Math
     use Dreadnought.PositionOrientationSize
+    use Dreadnought.Sprite.Spec
+  alias Dreadnought.Sprite.Improved, as: Sprite
   alias Dreadnought.Svg
 
   # *** *******************************
@@ -53,6 +55,15 @@ defmodule DreadnoughtWeb.SvgView do
     )
   end
 
+  defp render_circle(position, radius, attrs)
+  when has_position(position) do
+    attrs =
+      attrs
+      |> Keyword.put(:r, radius)
+      |> Svg.Position.put_attrs(position)
+    content_tag(:circle, nil, attrs)
+  end
+
   # *** *******************************
   # *** DROPSHADOW
 
@@ -73,6 +84,24 @@ defmodule DreadnoughtWeb.SvgView do
 
   def render_dropshadow_use(href_id) when is_binary(href_id) do
     render_use(href_id, put_dropshadow_filter())
+  end
+
+  # *** *******************************
+  # *** MARKERS
+
+  def render_origin_marker do
+    render_circle(position_origin(), 4, fill: "red")
+  end
+
+  def render_mount_markers(sprite_spec) when is_sprite_spec(sprite_spec) do
+    sprite_spec
+    |> Sprite.from_sprite_spec
+    |> Sprite.mounts
+    |> Enum.map(&render_mount_marker/1)
+  end
+
+  def render_mount_marker(position) when has_position(position) do
+    render_circle(position, 4, fill: "blue")
   end
 
 end

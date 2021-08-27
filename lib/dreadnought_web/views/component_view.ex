@@ -55,6 +55,7 @@ defmodule DreadnoughtWeb.ComponentView do
 
   # *** *******************************
   # *** DOTS
+  # TODO remove. THis belongs (or already is) in SvgView
   #     These are currently only used in the Gallery.
   #     They show the mounts and mounting point
 

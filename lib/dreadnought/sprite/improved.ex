@@ -57,6 +57,8 @@ defmodule Dreadnought.Sprite.Improved do
 
   def image_size(%__MODULE__{image_size: value}), do: value
 
+  def mounts(%__MODULE__{mounts: value}), do: value
+
 end
 
 # *** *********************************

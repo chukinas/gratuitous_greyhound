@@ -69,7 +69,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
         <% end %>
       <% end %>
       <%= if @incl_uses?, do: for s <- @sprite_specs, do: _render_sprite_use(s) %>
-      <circle r="4" cx="0" cy="0" fill="red" />
+      <%= SvgView.render_origin_marker() %>
     </svg>
     """
   end
