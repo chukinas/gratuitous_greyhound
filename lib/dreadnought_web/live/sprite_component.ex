@@ -108,10 +108,12 @@ defmodule DreadnoughtWeb.SpriteComponent do
       end
     attrs =
       [
-        id: "sprite_component",
-        overflow: "visible"
+        overflow: "visible",
+        x: -68,
+        y: -15
       ]
       |> Svg.Viewbox.put_attr(rect)
+      |> Svg.Position.put_attrs(rect)
     # TODO rename put_attrs?
       |> Svg.Size.put(size)
     tag(:svg, attrs)
