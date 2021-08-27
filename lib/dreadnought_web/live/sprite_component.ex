@@ -45,6 +45,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
     socket =
       socket
       |> assign(sprite_specs: sprite_specs)
+    # TODO THis is a common pattern? Extract.
       |> assign(incl_defs?: Map.get(assigns, :incl_defs?, true))
       |> assign(incl_uses?: Map.get(assigns, :incl_uses, true))
       |> assign(scale: Map.get(assigns, :scale, 1))

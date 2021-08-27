@@ -55,13 +55,8 @@ defmodule DreadnoughtWeb.SvgView do
     )
   end
 
-  defp render_circle(position, radius, attrs)
-  when has_position(position) do
-    attrs =
-      attrs
-      |> Keyword.put(:r, radius)
-      |> Svg.Position.put_attrs(position)
-    content_tag(:circle, nil, attrs)
+  defp render_circle(%{x: cx, y: cy} = _position, radius, attrs) do
+    content_tag(:circle, nil, Keyword.merge(attrs, r: radius, cx: cx, cy: cy))
   end
 
   # *** *******************************
@@ -90,8 +85,7 @@ defmodule DreadnoughtWeb.SvgView do
   # *** MARKERS
 
   def render_markers(sprite_spec) when is_sprite_spec(sprite_spec) do
-    IO.puts "rendering markers1"
-    render_origin_marker()
+    [render_origin_marker() | render_mount_markers(sprite_spec)]
   end
 
   def render_origin_marker do
