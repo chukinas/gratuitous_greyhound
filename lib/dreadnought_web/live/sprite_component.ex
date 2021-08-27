@@ -3,7 +3,6 @@ defmodule DreadnoughtWeb.SpriteComponent do
     use DreadnoughtWeb, :live_component
     use Dreadnought.LinearAlgebra
     use Dreadnought.PositionOrientationSize
-  # TODO Spec functions should be aliased. Import only the guards
     use Dreadnought.Sprite.Spec
   alias Dreadnought.BoundingRect
   alias Dreadnought.Geometry.Rect
@@ -35,12 +34,13 @@ defmodule DreadnoughtWeb.SpriteComponent do
     )
   end
 
-  def render_single_as_block(sprite_spec, scale \\ 1) when is_sprite_spec(sprite_spec) do
+  def render_single_as_block(sprite_spec, scale \\ 1, insert_svg) when is_sprite_spec(sprite_spec) do
     Phoenix.LiveView.Helpers.live_component(__MODULE__,
       sprite_specs: [sprite_spec],
       include: :all,
       as_block: true,
-      scale: scale
+      scale: scale,
+      insert_svg: insert_svg
     )
   end
 
@@ -63,6 +63,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
       |> assign(incl_defs?: include != :uses)
       |> assign(incl_uses?: include != :defs)
       |> assign(scale: Map.get(assigns, :scale, 1))
+      |> assign(insert_svg: Map.get(assigns, :insert_svg))
       |> IOP.inspect
     {:ok, socket}
   end
@@ -81,6 +82,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
       <%= if @incl_uses? do %>
         <%= _render_sprite_uses(@sprite_specs, @as_block) %>
       <% end %>
+      <circle r="4" cx="0" cy="0" fill="red" />
     </svg>
     """
   end
