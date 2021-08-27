@@ -89,6 +89,11 @@ defmodule DreadnoughtWeb.SvgView do
   # *** *******************************
   # *** MARKERS
 
+  def render_markers(sprite_spec) when is_sprite_spec(sprite_spec) do
+    IO.puts "rendering markers1"
+    render_origin_marker()
+  end
+
   def render_origin_marker do
     render_circle(position_origin(), 4, fill: "red")
   end

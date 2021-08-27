@@ -17,24 +17,23 @@ defmodule DreadnoughtWeb.SpriteComponent do
   def render_defs(sprite_specs) when is_list(sprite_specs) do
     Phoenix.LiveView.Helpers.live_component(__MODULE__,
       sprite_specs: sprite_specs,
-      include: :defs
+      incl_uses?: false
     )
   end
 
   def render_uses(sprite_specs) when is_list(sprite_specs) do
     Phoenix.LiveView.Helpers.live_component(__MODULE__,
       sprite_specs: sprite_specs,
-      include: :uses
+      incl_defs: false
     )
   end
 
-  def render_single(sprite_spec, scale \\ 1, insert_svg)
+  def render_single(sprite_spec, scale, nested_svg \\ nil)
   when is_sprite_spec(sprite_spec) do
     Phoenix.LiveView.Helpers.live_component(__MODULE__,
       sprite_specs: [sprite_spec],
-      include: :all,
       scale: scale,
-      insert_svg: insert_svg
+      nested_svg: nested_svg
     )
   end
 
@@ -42,16 +41,14 @@ defmodule DreadnoughtWeb.SpriteComponent do
   # *** CALLBACKS
 
   @impl true
-  def update(%{sprite_specs: sprite_specs, include: include} = assigns, socket)
-  when include in ~w/defs uses all/a do
+  def update(%{sprite_specs: sprite_specs} = assigns, socket) do
     socket =
       socket
       |> assign(sprite_specs: sprite_specs)
-      |> assign(incl_defs?: include != :uses)
-      |> assign(incl_uses?: include != :defs)
+      |> assign(incl_defs?: Map.get(assigns, :incl_defs?, true))
+      |> assign(incl_uses?: Map.get(assigns, :incl_uses, true))
       |> assign(scale: Map.get(assigns, :scale, 1))
-      |> assign(insert_svg: Map.get(assigns, :insert_svg))
-      |> IOP.inspect
+      |> assign(nested_svg: Map.get(assigns, :nested_svg))
     {:ok, socket}
   end
 
@@ -69,7 +66,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
         <% end %>
       <% end %>
       <%= if @incl_uses?, do: for s <- @sprite_specs, do: _render_sprite_use(s) %>
-      <%= SvgView.render_origin_marker() %>
+      <%= @nested_svg %>
     </svg>
     """
   end
