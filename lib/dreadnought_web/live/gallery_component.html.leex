@@ -9,6 +9,7 @@
   <div class="grid grid-flow-row-dense grid-cols-3 gap-4 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 overflow-hidden">
 
     <%# SPRITE ANIMATIONS %>
+    <%= if false do %>
     <%= for term <- @sprites_and_animations do %>
       <div class="<%= term.colspan %> <%= term.rowspan %> relative rounded-lg px-6 py-5 shadow-sm flex flex-col items-center justify-start space-x-3 ">
 
@@ -30,6 +31,7 @@
         </div>
 
       </div>
+    <% end %>
     <% end %>
 
     <%# NEW SPRITE ANIMATION %>

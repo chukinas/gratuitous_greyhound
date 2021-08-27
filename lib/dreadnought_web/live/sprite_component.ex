@@ -1,3 +1,4 @@
+# TODO Maybe all the defs should be written to an svg static file at runtime
 defmodule DreadnoughtWeb.SpriteComponent do
 
     use DreadnoughtWeb, :live_component
@@ -98,7 +99,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
       sprite_specs
       |> BoundingRect.of
     # TODO I shouldn't have to do this step. There's no need to translate the use
-      |> Rect.from_size
+      #|> Rect.from_size
     size =
       if scale == 1 do
         rect
@@ -111,6 +112,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
         overflow: "visible"
       ]
       |> Svg.Viewbox.put_attr(rect)
+    # TODO rename put_attrs?
       |> Svg.Size.put(size)
     tag(:svg, attrs)
   end
@@ -176,24 +178,27 @@ defmodule DreadnoughtWeb.SpriteComponent do
     SvgView.render_dropshadow_use(href_id)
   end
 
+  # TODO is as_block needed?
   defp _render_sprite_use(sprite_spec, as_block)
   when is_sprite_spec(sprite_spec)
   and is_boolean(as_block) do
     href_id = _element_id(sprite_spec, :sprite)
-    attrs =
-      if as_block do
-        bounding_rect =
-          sprite_spec
-          |> Improved.from_sprite_spec
-          |> BoundingRect.of
-        [
-          x: -bounding_rect.x,
-          y: -bounding_rect.y
-        ]
-      else
-        []
-      end
-    SvgView.render_use(href_id, attrs)
+    # TODO clean this file up once it's stable
+    #attrs =
+    #  if as_block do
+    #    bounding_rect =
+    #      sprite_spec
+    #      |> Improved.from_sprite_spec
+    #      |> BoundingRect.of
+    #    [
+    #      x: -bounding_rect.x,
+    #      y: -bounding_rect.y
+    #    ]
+    #  else
+    #    []
+    #  end
+    #SvgView.render_use(href_id, attrs)
+    SvgView.render_use(href_id)
   end
 
   defp _element_id(sprite_spec, :shape) do
