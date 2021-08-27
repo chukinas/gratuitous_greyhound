@@ -4,6 +4,7 @@ defmodule Dreadnought.Sprite.Improved do
     use Dreadnought.PositionOrientationSize
     use Dreadnought.Sprite.Spec
     use Dreadnought.TypedStruct
+  alias Dreadnought.Core.Mount
   alias Dreadnought.Sprite
   alias Dreadnought.Sprite.Builder
   alias Dreadnought.Svg

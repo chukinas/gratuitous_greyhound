@@ -91,7 +91,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
   # *** SPRITE.SPEC.LIST CONVERTERS
 
   # TODO as_block should end in question mark
-  def _render_svg(sprite_specs, as_block, scale) when is_list(sprite_specs) do
+  def _render_svg(sprite_specs, _as_block, scale) when is_list(sprite_specs) do
     rect =
       sprite_specs
       |> BoundingRect.of
@@ -133,14 +133,6 @@ defmodule DreadnoughtWeb.SpriteComponent do
 
   # *** *******************************
   # *** SPRITE.SPEC CONVERTERS
-
-  defp _viewbox(sprite_specs, hidden?) do
-    if hidden? do
-      "0 0 0 0"
-    else
-      "0 0 1000 1000"
-    end
-  end
 
   defp _render_shape_def(sprite_spec) when is_sprite_spec(sprite_spec) do
     sprite = Improved.from_sprite_spec(sprite_spec)

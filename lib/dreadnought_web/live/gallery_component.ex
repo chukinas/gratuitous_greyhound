@@ -2,10 +2,10 @@ defmodule DreadnoughtWeb.GalleryComponent do
 
     use DreadnoughtWeb, :live_component
     use Dreadnought.PositionOrientationSize
+    use Dreadnought.Sprite.Spec
   alias Dreadnought.BoundingRect
   alias Dreadnought.Core.Animations
   alias Dreadnought.Sprite
-  alias Dreadnought.Sprite.Spec
 
   # *** *******************************
   # *** SETUP CALLBACKS

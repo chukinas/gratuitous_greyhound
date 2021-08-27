@@ -1,14 +1,77 @@
 {
     "assets/js/dreadnought/*.js": { "type": "hook" },
-    "lib/dreadnought/*.ex": { "type": "dreadnought" },
-    "lib/dreadnought/core/*.ex": { "type": "core" },
-    "lib/dreadnought/geometry/*.ex": { "type": "geometry" },
-    "lib/dreadnought/linear_algebra/*.ex": { "type": "algebra" },
-    "lib/dreadnought_web/templates/*.html.leex": { "type": "template" },
-    "lib/dreadnought_web/templates/dreadnought/*.html.leex": { "type": "template_index" },
-    "lib/dreadnought_web/templates/dreadnought_play/*.html.leex": { "type": "template_play" },
-    "lib/dreadnought_web/live/live_*.ex": { "type": "live" },
-    "lib/dreadnought_web/live/*_component.ex": { "type": "component" },
-    "lib/dreadnought_web/views/*_view.ex": { "type": "view" },
-    "test/dreadnought/*_test.exs": { "type": "test" },
+    "lib/dreadnought/*.ex": { "type": "core" },
+
+
+
+    "*** ***": "",
+    "lib/dreadnought_web/views/*_view.ex": { 
+        "type": "view" 
+    },
+    "lib/dreadnought_web/templates/*.html.leex": { 
+        "type": "template",
+        "alternate": "lib/dreadnought_web/view/{dirname}_view.ex"
+    },
+    
+
+
+    "*** LIVE TEMPLATES ***": "",
+    "lib/dreadnought_web/live/*.ex": { 
+        "alternate": "lib/dreadnought_web/live/{}.html.leex"
+    },
+    "lib/dreadnought_web/live/*.html.leex": { 
+        "type": "template",
+        "alternate": "lib/dreadnought_web/live/{}.ex"
+    },
+
+
+
+    "*** LIVEVIEWS ***": "",
+    "lib/dreadnought_web/live/*_live.ex": { 
+        "type": "live" 
+    },
+    "lib/dreadnought_web/live/*_live.html.leex": { 
+        "type": "livetemplate"
+    },
+    
+    
+
+    "*** LIVE COMPONENTS ***": "",
+    "lib/dreadnought_web/live/*_component.ex": { 
+        "type": "component",
+        "template": [
+            "defmodule DreadnoughtWeb. do",
+            "",
+            "  use DreadnoughtWeb, :live_component",
+            "",
+            "  # *** *******************************",
+            "  # *** SETUP CALLBACKS",
+            "",
+            "  @impl true",
+            "  def mount(socket) do",
+            "  end",
+            "",
+            "  # *** *******************************",
+            "  # *** HANDLER CALLBACKS",
+            "",
+            "  @impl true",
+            "  def handle_event(\"event_name\", _, socket) do",
+            "  end",
+            "",
+            "end"
+        ]
+    },
+    "lib/dreadnought_web/live/*_component.html.leex": { 
+        "type": "componenttemplate"
+    },
+
+    
+    
+    "*** TESTS ***": "",
+    "lib/*.ex": { 
+        "alternate": "test/{}_test.exs" 
+    },
+    "test/*_test.exs": { 
+        "alternate": "lib/{}.ex" 
+    }
 }

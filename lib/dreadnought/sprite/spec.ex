@@ -10,7 +10,8 @@ defmodule Dreadnought.Sprite.Spec do
   defmacro __using__(_opts) do
     quote do
       require unquote(@module)
-      import unquote(@module)
+      import unquote(@module), only: :macros
+      alias unquote(@module)
       # TODO DRYify
       @type sprite_spec :: {function_name :: atom, arg :: String.t}
     end
@@ -26,5 +27,10 @@ defmodule Dreadnought.Sprite.Spec do
     true = is_sprite_spec(spec)
     spec
   end
+
+  # *** *******************************
+  # *** CONVERTERS
+
+  def name({_function, value} = sprite_spec) when is_sprite_spec(sprite_spec), do: value
 
 end
