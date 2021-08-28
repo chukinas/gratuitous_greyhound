@@ -88,19 +88,23 @@ defmodule DreadnoughtWeb.SvgView do
     [render_origin_marker() | render_mount_markers(sprite_spec)]
   end
 
-  def render_origin_marker do
-    render_circle(position_origin(), 4, fill: "red")
+  defp render_origin_marker do
+    _render_marker(position_origin(), "red")
   end
 
-  def render_mount_markers(sprite_spec) when is_sprite_spec(sprite_spec) do
+  defp render_mount_markers(sprite_spec) when is_sprite_spec(sprite_spec) do
     sprite_spec
     |> Sprite.from_sprite_spec
     |> Sprite.mounts
     |> Enum.map(&render_mount_marker/1)
   end
 
-  def render_mount_marker(position) when has_position(position) do
-    render_circle(position, 4, fill: "blue")
+  defp render_mount_marker(position) when has_position(position) do
+    _render_marker(position, "blue")
+  end
+
+  defp _render_marker(position, bg_color) do
+    render_circle(position, 4, opacity: 0.7, fill: bg_color, stroke: "white")
   end
 
 end

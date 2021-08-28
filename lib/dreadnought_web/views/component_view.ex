@@ -54,27 +54,6 @@ defmodule DreadnoughtWeb.ComponentView do
   def render_gsap_import, do: render("gsap_import.html", [])
 
   # *** *******************************
-  # *** DOTS
-  # TODO remove. THis belongs (or already is) in SvgView
-  #     These are currently only used in the Gallery.
-  #     They show the mounts and mounting point
-
-  def render_rotation_center_dot do
-    render_dot(position_origin(), "pink")
-  end
-
-  def render_mount_dot(position) when has_position(position) do
-    render_dot(position, "blue")
-  end
-
-  defp render_dot(position, color) do
-    render("mount_dot.html",
-      rect: Rect.from_centered_square(position, 20),
-      color: color
-    )
-  end
-
-  # *** *******************************
   # *** TEXT
 
   def render_header(value, class \\ "") do
