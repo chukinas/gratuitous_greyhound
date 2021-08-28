@@ -149,6 +149,8 @@ defmodule Dreadnought.Core.Unit do
     |> Enum.filter(&is_struct(&1, event_module))
   end
 
+  def id(%__MODULE__{id: value}), do: value
+
   def length(_unit) do
     # TODO placeholder
     200

@@ -2,13 +2,14 @@ defmodule SunsCore.StateMachine do
 
   use Statechart, :machine
   use SunsCore.Event.Setup
+  use SunsCore.Event.CommandPhase
   alias Statechart.Machine
   alias Statechart
-  alias SunsCore.Mission.Snapshot
-  alias SunsCore.Mission.Snapshot, as: S
+  alias SunsCore.Mission.Context
+  alias SunsCore.Mission.Context, as: S
 
   # TODO accept an mfa
-  initial_context Snapshot.new()
+  initial_context Context.new()
 
   default_state :setup
 
@@ -22,7 +23,6 @@ defmodule SunsCore.StateMachine do
     state :setting_scale do
       on SetScale, do: :adding_tables
     end
-    # TODO implement automatic transitions
     #state :choosing_administrator do
     #  on SetAdministrator, do: :adding_tables
     #end
@@ -35,16 +35,26 @@ defmodule SunsCore.StateMachine do
   end
 
   state :playing do
+
     default_state :start_turn
     state :start_turn do
       on_enter &S.incr_turn_number/1
       autotransition :command_phase
     end
+
     state :command_phase do
-      #on_enter &assign_cmd
+      default_state :assigning_cmd
+      state :assigning_cmd do
+        on AssignCmd, do: :determining_initiative
+      end
+      state :determining_initiative do
+        on RollOffForInitiative, do: :jump_phase
+      end
     end
+
     state :jump_phase do
     end
+
     state :tactical_phase do
       state :issue_orders do
       end
@@ -64,7 +74,7 @@ defmodule SunsCore.StateMachine do
   end
 
   def snapshot(%Machine{} = machine) do
-    %Snapshot{} = snapshot = Machine.context(machine)
+    %Context{} = snapshot = Machine.context(machine)
     snapshot
   end
 

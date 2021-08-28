@@ -24,10 +24,19 @@ function unitEl(unitId) {
   return document.getElementById(unitElId(unitId))
 }
 
+// TODO rename delayAndDurationFromElData
 function delayAndDuration(data) {
-  return {
-    delay: data.delay * ANIMATIONDURATION,
-    duration: data.duration * ANIMATIONDURATION,
+  console.log(data, "my svg dot's data attrs")
+  if (data) {
+    return {
+      delay: data.delay * ANIMATIONDURATION,
+      duration: data.duration * ANIMATIONDURATION
+    }
+  } else {
+    return {
+      delay: 0,
+      duration: 5,
+    }
   }
 }
 
@@ -44,10 +53,17 @@ function maneuver(eventEl, unitId) {
   const data = eventEl.dataset
   const pathElId = `${unitElId(unitId)}-path-${data.id}`
   const pathEl = document.getElementById(pathElId)
+  if (!targetEl || !pathEl) {
+    console.error("Either the target or the path could not be found:")
+    console.log(targetEl, pathEl)
+    return
+  }
+    console.log(targetEl, pathEl)
   gsap.to(targetEl, {
     motionPath: {
       autoRotate: true,
-      alignOrigin: [0.5, 0.5],
+      alignOrigin: [0, 0],
+      //alignOrigin: [0.5, 0.5],
       align: pathEl,
       path: pathEl,
     },
@@ -92,6 +108,34 @@ const events = {
 
 // --------------------------------------------------------
 // HOOKS
+
+// TEMP while troubleshooting my new SVGs
+
+const MotionPathExperiment = {
+  mounted() {
+    const targetEl = this.el
+    const pathElId = "unit-1-path-1"
+    const pathEl = document.getElementById(pathElId)
+    if (!targetEl || !pathEl) {
+      console.error("Either the target or the path could not be found:")
+      console.log(targetEl, pathEl)
+      return
+    }
+    console.log(targetEl, pathEl)
+    gsap.to(targetEl, {
+      motionPath: {
+        autoRotate: true,
+        //alignOrigin: ["50px", "50px"],
+        //alignOrigin: [0, 0],
+        alignOrigin: [0.5, 0.5],
+        align: pathEl,
+        path: pathEl,
+      },
+      ease: "none",
+      ...delayAndDuration()
+    })
+  },
+}
 
 const UnitEvents = {
   mounted() {
@@ -139,4 +183,5 @@ const Animation = {
 export default {
   UnitEvents, 
   Animation,
+  MotionPathExperiment
 }

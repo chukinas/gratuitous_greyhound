@@ -14,12 +14,13 @@ defmodule Dreadnought.Core.Turret do
     use Spatial.Math
     use Spatial.PositionOrientationSize
     use Spatial.TypedStruct
+    use Dreadnought.Sprite.Spec
   # TODO replace with use of LinearAlgebra?
   alias Spatial.LinearAlgebra.HasCsys
   alias Spatial.LinearAlgebra.Vector
   # TODO needed with the use above?
   alias Spatial.Math
-  alias Dreadnought.Sprite
+  alias Dreadnought.Sprite.Improved
 
   # *** *******************************
   # *** TYPES
@@ -28,7 +29,7 @@ defmodule Dreadnought.Core.Turret do
 
   typedstruct enforce: true do
     field :id, integer()
-    field :sprite, Sprite.t
+    field :sprite_spec, sprite_spec
     field :max_ccw_angle, degrees :: number()
     field :max_rotation, positive_degrees :: number()
     field :rest_angle, degrees :: number()
@@ -38,7 +39,7 @@ defmodule Dreadnought.Core.Turret do
   # *** *******************************
   # *** CONSTRUCTORS
 
-  def new(id, sprite, pose) do
+  def new(id, sprite_spec, pose) when is_integer(id) and is_sprite_spec(sprite_spec) and has_pose(pose) do
     rest_angle =
       pose
       |> angle_normalize
@@ -46,7 +47,7 @@ defmodule Dreadnought.Core.Turret do
     fields =
       %{
         id: id,
-        sprite: sprite,
+        sprite_spec: sprite_spec,
         max_ccw_angle: normalize_angle(rest_angle - @max_rotation / 2),
         max_rotation: @max_rotation,
         rest_angle: rest_angle,
@@ -83,10 +84,11 @@ defmodule Dreadnought.Core.Turret do
     angle_for_given_rotation(turret, rotation)
   end
 
-  def gun_barrel_vector(%__MODULE__{sprite: sprite}) do
+  def gun_barrel_vector(%__MODULE__{} = turret) do
     %{x: x} =
-      sprite
-      |> Sprite.mounts
+      turret
+      |> sprite
+      |> Improved.mounts
       |> List.first
       |> position_new
     {x, 0}
@@ -107,6 +109,10 @@ defmodule Dreadnought.Core.Turret do
   end
 
   def rotation_half_max(%__MODULE__{max_rotation: value}), do: value / 2
+
+  def sprite(%__MODULE__{sprite_spec: sprite_spec}) do
+    Improved.from_sprite_spec(sprite_spec)
+  end
 
   defp target_in_arc?(mount, target_unit_vector) do
     angle_between =

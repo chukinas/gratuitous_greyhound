@@ -95,18 +95,16 @@ defmodule Dreadnought.Core.UnitBuilder do
   # *** *******************************
   # *** PRIVATE HELPERS
 
-  # TODO formalize sprite_spec
-  defp build_turrets(unit_sprite_spec, {sprite_fun, sprite_name}, turret_tuples)
-  when is_sprite_spec(unit_sprite_spec) do
+  defp build_turrets(unit_sprite_spec, turret_sprite_spec, turret_tuples)
+  when is_sprite_spec(unit_sprite_spec)
+  and is_sprite_spec(turret_sprite_spec) do
     unit_sprite = Sprite.Builder.build(unit_sprite_spec)
-    sprite_spec = Sprite.Spec.new(sprite_fun, sprite_name)
-    turret_sprite = Sprite.Builder.build(sprite_spec)
     Enum.map(turret_tuples, fn {mount_id, rest_angle} ->
       pose =
         unit_sprite
         |> Sprite.mount_position(mount_id)
         |> pose_from_position(rest_angle)
-      Turret.new(mount_id, turret_sprite, pose)
+      Turret.new(mount_id, turret_sprite_spec, pose)
     end)
   end
 

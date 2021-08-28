@@ -3,7 +3,6 @@ defmodule SunsCore.Event.Setup.AddObjective do
   use SunsCore.Event, :impl
   alias SunsCore.Mission.Contract
   alias SunsCore.Mission.Objective
-  alias Util.IdList
 
   # *** *******************************
   # *** TYPES

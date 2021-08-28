@@ -2,7 +2,7 @@ defmodule SunsCore.Event.Setup.AddPlayer do
 
   use SunsCore.Event, :impl
   alias SunsCore.Mission.Helm
-  alias SunsCore.Mission.Snapshot, as: C
+  alias SunsCore.Mission.Context, as: C
 
   # *** *******************************
   # *** TYPES

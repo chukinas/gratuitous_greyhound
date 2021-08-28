@@ -59,6 +59,7 @@ defmodule Dreadnought.Svg do
     |> Enum.join(" ")
   end
 
+  def pose_to_attrs(nil), do: []
   def pose_to_attrs(%{x: x, y: y, angle: angle} = pose) when has_pose(pose) do
     [
       x: x,

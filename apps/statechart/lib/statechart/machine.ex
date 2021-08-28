@@ -105,7 +105,6 @@ defmodule Statechart.Machine do
     end
   end
 
-  # TODO rename acc to `acc`?
   defp check_post_guard(%__MODULE__{context: context} = machine, %{event: event} = acc) do
     case EventProtocol.post_guard(event, context) do
       :ok ->
@@ -117,6 +116,7 @@ defmodule Statechart.Machine do
         |> set_latest_acc(acc)
         |> put_stay_status
     end
+
   end
 
   defp go_to_next_node(%__MODULE__{} = machine, %{next_node_name: next_node_name} = acc) do
@@ -138,8 +138,13 @@ defmodule Statechart.Machine do
   defp check_autotransition(%__MODULE__{} = machine, %{} = acc) do
     case machine |> current_node |> Node.fetch_autotransition do
       {:ok, next_node_name} ->
+        leaf_node =
+          machine
+          |> spec
+          |> Spec.nodes
+          |> Nodes.next_leaf_node_name(next_node_name)
         machine
-        |> put_current_node_name(next_node_name)
+        |> put_current_node_name(leaf_node)
         |> apply_on_enter_actions(acc)
       :none ->
         machine

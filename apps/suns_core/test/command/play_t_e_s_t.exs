@@ -8,7 +8,7 @@ defmodule SunsCore.Event.PlayTest do
   alias SunsCore.Event.JumpPhase.DeployBattlegroup
   alias SunsCore.Mission
   alias SunsCore.Mission.Helm
-  alias SunsCore.Mission.Snapshot
+  alias SunsCore.Mission.Context
   alias SunsCore.Space.TablePosition
 
   defp setup_deploy_jump_point do
@@ -24,8 +24,8 @@ defmodule SunsCore.Event.PlayTest do
   test "SunsCore.Event.JumpPhase.DeployJumpPoint" do
     snapshot =
       one_off_snapshot(setup_deploy_jump_point())
-    assert 2 = snapshot |> Snapshot.helm_by_id(1) |> Helm.jump_cmd
-    assert 1 = snapshot |> Snapshot.jump_points |> Enum.count
+    assert 2 = snapshot |> Context.helm_by_id(1) |> Helm.jump_cmd
+    assert 1 = snapshot |> Context.jump_points |> Enum.count
   end
 
   defp setup_requisition do
@@ -35,7 +35,7 @@ defmodule SunsCore.Event.PlayTest do
 
   test "SunsCore.Event.JumpPhase.RequisitionBattlegroup" do
     snapshot = one_off_snapshot(setup_requisition())
-    assert -2 = snapshot |> Snapshot.helm_by_id(1) |> Helm.credits
+    assert -2 = snapshot |> Context.helm_by_id(1) |> Helm.credits
   end
 
   defp setup_deploy_battlegroup do
@@ -49,7 +49,7 @@ defmodule SunsCore.Event.PlayTest do
     snapshot = one_off_snapshot(setup_deploy_battlegroup())
     assert 1 =
       snapshot
-      |> Snapshot.ships_by_table_id(1)
+      |> Context.ships_by_table_id(1)
       |> Enum.count
   end
 
