@@ -1,12 +1,13 @@
-alias Dreadnought.Geometry.Rect
-alias Dreadnought.Svg.{Interpret, Parse}
-
-defmodule Interpret do
+defmodule Dreadnought.Svg.PathDString do
   @moduledoc"""
   Analyze output of Svg.Parse to determine e.g. min x and y..
   """
 
-  use Dreadnought.PositionOrientationSize
+    use Dreadnought.LinearAlgebra
+    use Dreadnought.PositionOrientationSize
+  alias Dreadnought.Geometry.Rect
+  alias Dreadnought.Svg.Parse
+
 
   # TODO opts is the wrong word for this
   def interpret(svg, opts \\ []) when is_binary(svg) do
@@ -42,4 +43,15 @@ defmodule Interpret do
     |> Stream.concat
     |> Enum.join(" ")
   end
+
+  # *** *******************************
+  # *** CONVERTERS
+
+  def to_coords(path_d_string) do
+    path_d_string
+    |> Parse.parse([])
+    |> to_positions
+    |> Enum.map(&vector_from_position/1)
+  end
+
 end

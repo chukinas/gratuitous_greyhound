@@ -34,3 +34,11 @@ defimpl BoundingRect, for: List do
     end)
   end
 end
+
+defimpl BoundingRect, for: Tuple do
+    use Dreadnought.Sprite.Spec
+  alias Dreadnought.Sprite.Improved, as: Sprite
+  def of(sprite_spec) when is_sprite_spec(sprite_spec) do
+    sprite_spec |> Sprite.from_sprite_spec |> BoundingRect.of
+  end
+end

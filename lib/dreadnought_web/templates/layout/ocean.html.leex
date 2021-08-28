@@ -9,28 +9,15 @@
         <svg viewBox="<%= tile.viewbox %>">
           <defs>
             <clipPath id="clip_<%= tile.id %>">
-              <path d="<%= tile.path %>"/>
+              <path id="oceantilepath-<%= tile.id %>" d="<%= tile.path %>"/>
             </clipPath>
           </defs>
-          <path d="<%= tile.path %>" filter="url(#dropshadow)"/>
-          <image height="100%" preserveAspectRatio="xMinYMin slice" width"100%" xlink:href="<%= crinkled_paper_path @socket %>" clip-path="url(#clip_<%= tile.id %>)" />
+          <%= DreadnoughtWeb.SvgView.render_dropshadow_use("oceantilepath-#{tile.id}") %>
+          <image height="100%" preserveAspectRatio="xMinYMin slice" width"100%" xlink:href="<%= DreadnoughtWeb.TerrainView.crinkled_paper_path @socket %>" clip-path="url(#clip_<%= tile.id %>)" />
         </svg>
       </div>
     <% end %>
     </div>
-
-    <svg>
-      <defs>
-        <filter id="dropshadow" height="160%">
-          <feGaussianBlur in="SourceAlpha" stdDeviation="1"/> 
-          <feOffset dx="1" dy="1" result="offsetblur"/> 
-          <feMerge> 
-            <feMergeNode/>
-            <feMergeNode in="SourceGraphic"/> 
-          </feMerge>
-        </filter>
-      </defs>
-    </svg>
 
   </div>
 

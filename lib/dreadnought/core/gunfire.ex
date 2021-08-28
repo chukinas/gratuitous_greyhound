@@ -1,10 +1,11 @@
 defmodule Dreadnought.Core.Gunfire do
 
-  use Dreadnought.PositionOrientationSize
-  use Dreadnought.LinearAlgebra
-  alias Dreadnought.Core.Sprites
+    use Dreadnought.PositionOrientationSize
+    use Dreadnought.LinearAlgebra
+    use Dreadnought.TypedStruct
   alias Dreadnought.Core.Turret
   alias Dreadnought.Core.Unit
+  alias Dreadnought.Sprite
 
 
   # *** *******************************
@@ -12,7 +13,7 @@ defmodule Dreadnought.Core.Gunfire do
 
   typedstruct do
     pose_fields()
-    field :sprite, Sprites.t
+    field :sprite, Sprite.t
     field :id_string, String.t
   end
 
@@ -33,7 +34,7 @@ defmodule Dreadnought.Core.Gunfire do
 
   def new(pose) do
     spritename = "explosion_" <> Enum.random(~w(1 2 3))
-    sprite = Sprites.blue(spritename)
+    sprite = Sprite.Builder.build({:blue, spritename})
     fields =
       %{
         sprite: sprite,

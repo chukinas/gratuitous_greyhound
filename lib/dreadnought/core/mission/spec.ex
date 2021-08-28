@@ -1,17 +1,14 @@
 defmodule Dreadnought.Core.Mission.Spec do
 
-  # TODO can I do this with less text?
-  @module __MODULE__
-
   @type mission_spec :: {mission_builder_module :: atom, mission_name :: String.t}
 
+  @module __MODULE__
   defmacro __using__(_opts) do
     quote do
       require unquote(@module)
       import unquote(@module)
       # TODO DRY
       @type mission_spec :: {mission_builder_module :: atom, mission_name :: String.t}
-
     end
   end
 

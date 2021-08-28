@@ -37,6 +37,8 @@ defmodule DreadnoughtWeb.Router do
     live "/gallery", MainLive, :gallery, as: :dreadnought_main
     get "/grid", PageController, :redirect_to_dreadnought
     live "/setup", MainLive, :setup, as: :dreadnought_main
+    # TODO temp:
+    live "/world", WorldLive
   end
 
   # Other scopes may use custom stacks.

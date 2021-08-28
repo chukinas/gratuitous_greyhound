@@ -1,5 +1,6 @@
 defmodule Dreadnought.Core.Mission do
 
+  use Dreadnought.Core.Island.Spec
   use Dreadnought.Core.Mission.Spec
   use Dreadnought.PositionOrientationSize
   use TypedStruct
@@ -23,11 +24,15 @@ defmodule Dreadnought.Core.Mission do
   typedstruct do
     field :mission_spec, mission_spec
     field :name_pretty, String.t, enforce: true
+    # play area + margin:
     field :world_rect, Rect.t, enforce: true
+    # TODO deprectate. Replace with grid square size
     field :grid, Grid.t(), enforce: true
     field :turn_number, integer(), default: 0
-    # TODO deprecate
+    # TODO deprecate?
     field :margin, any
+    field :island_specs, [Island.Spec.t], default: []
+    # TODO deprecate
     field :islands, [Island.t()], default: []
     field :units, [Unit.t()], default: []
     field :players, [Player.t()], default: []
@@ -115,6 +120,11 @@ defmodule Dreadnought.Core.Mission do
 
   # *** *******************************
   # *** REDUCERS
+
+  @spec add_island_spec(t, island_spec) :: t
+  def add_island_spec(%__MODULE__{island_specs: specs} = mission, island_spec) when is_island_spec(island_spec) do
+    %__MODULE__{mission | island_specs: [island_spec | specs]}
+  end
 
   def put(mission, list) when is_list(list), do: Enum.reduce(list, mission, &put(&2, &1))
   def put(mission, %Unit{} = unit), do: Maps.put_by_id(mission, :units, unit)
@@ -368,6 +378,7 @@ defmodule Dreadnought.Core.Mission do
   def rect(nil), do: Rect.null()
   def rect(%__MODULE__{world_rect: value}), do: value
 
+  # TODO remove the nil func clause here and elsewhere
   def islands(nil), do: []
   def islands(%__MODULE__{islands: value}), do: value
 

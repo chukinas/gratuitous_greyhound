@@ -1,13 +1,13 @@
-alias Dreadnought.Geometry.{Grid, GridSquare, Rect}
-
 # TODO rename CommandGrid?
-defmodule Grid do
+defmodule Dreadnought.Geometry.Grid do
   @moduledoc"""
   Represents the square chess-like board the game is played on
   """
 
-  use Dreadnought.PositionOrientationSize
+    use Dreadnought.PositionOrientationSize
+    use Dreadnought.TypedStruct
   alias Dreadnought.Collide
+  alias Dreadnought.Geometry.GridSquare
 
   typedstruct enforce: true do
     field :square_size, integer()
@@ -149,13 +149,15 @@ defmodule Grid do
 
 end
 
-# *** *******************************
+# *** *********************************
 # *** IMPLEMENTATIONS
+# *** *********************************
 
 alias Dreadnought.Geometry.Grid
 
 defimpl Dreadnought.BoundingRect, for: Grid do
-  use Dreadnought.PositionOrientationSize
+    use Dreadnought.PositionOrientationSize
+  alias Dreadnought.Geometry.Rect
   def of(%Grid{} = grid) do
     grid.start
     |> position_new
@@ -166,6 +168,7 @@ defimpl Dreadnought.BoundingRect, for: Grid do
 end
 
 defimpl Dreadnought.Collide.IsShape, for: Grid do
+  alias Dreadnought.Geometry.Rect
   def to_coords(grid) do
     grid
     |> Dreadnought.BoundingRect.of

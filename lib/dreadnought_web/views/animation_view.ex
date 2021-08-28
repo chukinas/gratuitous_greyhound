@@ -3,7 +3,7 @@ defmodule DreadnoughtWeb.AnimationView do
   use DreadnoughtWeb, :view
   alias Dreadnought.Core.Animations
   alias Dreadnought.Core.Animation
-  alias Dreadnought.Core.Sprite
+  alias Dreadnought.Sprite
 
   def muzzle_flashes(socket, animations) do
     render_all(socket, animations |> Animations.list_muzzle_flashes)

@@ -1,4 +1,4 @@
-The images and the inkscape file must follow the following conventions to make Dreadnought.Core.Spritesheet compile correctly.
+The images and the inkscape file must follow the following conventions to make Dreadnought.Spritesheet compile correctly.
 
 IMAGE SIZE
 Image size is dictated by the scaling in the SVG file, so the size of the actual image doesn't matter.

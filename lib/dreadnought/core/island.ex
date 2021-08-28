@@ -1,82 +1,86 @@
-alias Dreadnought.Collide.IsShape
-alias Dreadnought.LinearAlgebra.Vector
-alias Dreadnought.Core.Island
-
-defmodule Island do
+defmodule Dreadnought.Core.Island do
   @moduledoc"""
   Handles rendering and collision of islands for ships and players to interact with
   """
 
-  use Dreadnought.PositionOrientationSize
   use Dreadnought.LinearAlgebra
+  use Dreadnought.PositionOrientationSize
+  use Dreadnought.TypedStruct
 
   # *** *******************************
   # *** TYPES
 
   typedstruct do
-    # ID must be unique within the world
-    field :id, integer()
-    # TODO rename position_points ?
-    field :relative_vertices, list(POS.position_struct)
-    position_fields()
+    # TODO remove id
+    field :id, integer
+    field :relative_points, [position]
+    pose_fields()
   end
 
   # *** *******************************
-  # *** NEW
+  # *** CONSTRUCTORS
 
-  def new(id, location, points) do
+  def new(id, pose, relative_points)
+  when is_integer(id)
+  and has_pose(pose)
+  and is_list(relative_points) do
     fields =
       %{
         id: id,
-        relative_vertices: points
+        relative_points: relative_points
       }
-      |> merge_position(location)
+      |> merge_pose(pose)
     struct!(__MODULE__, fields)
   end
 
-  # *** *******************************
-  # *** RANDOMIZER
+  def new(id, position, relative_points) when has_position(position) do
+    pose = pose_from_position(position, 0)
+    new(id, pose, relative_points)
+  end
 
-  def random(id, location) when has_position(location) do
+  # TODO replace random with calls to Island.BUilder
+  def random(id, position) do
     radius = 250
     sides = 7
     angle = 360 / sides
-    points =
+    relative_points =
       0..(sides - 1)
       |> Stream.map(fn i ->
         (i * angle)
-        |> Vector.from_angle
-        |> Vector.scalar(radius)
+        |> vector_from_angle
+        |> vector_multiply(radius)
         |> position_new
         |> position_shake
       end)
       |> Enum.to_list
-    new(id, location, points)
+    new(id, position, relative_points)
   end
 
   # *** *******************************
-  # *** API
+  # *** CONVERTERS
 
-  def world_coord(island, relative_position) do
+  def relative_points(%__MODULE__{relative_points: val}), do: val
+
+  def absolute_points(island) do
     island
-    |> position_new
-    |> position_add(relative_position)
-    |> vector_from_position
+    |> relative_points
+    |> Enum.map(&position_add(&1, island))
   end
 
-  # *** *******************************
-  # *** GETTERS
-
-  def position_points(%__MODULE__{relative_vertices: val}), do: val
-
-  # *** *******************************
-  # *** IMPLEMENTATIONS
-
-  defimpl IsShape do
-    def to_coords(island) do
-      island
-      |> Island.position_points
-      |> Enum.map(&Island.world_coord(island, &1))
-    end
+  def absolute_coords(island) do
+    island
+    |> absolute_points
+    |> Enum.map(&position_to_tuple/1)
   end
+
 end
+
+# *** *******************************
+# *** IMPLEMENTATIONS
+
+alias Dreadnought.Core.Island
+
+defimpl Dreadnought.Collide.IsShape, for: Island do
+  def to_coords(island), do: Island.absolute_coords(island)
+end
+

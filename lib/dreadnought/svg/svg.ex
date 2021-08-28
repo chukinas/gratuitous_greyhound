@@ -1,16 +1,17 @@
+# TODO module name and file path don't match
 defmodule Dreadnought.Svg do
   @moduledoc"""
   This module converts path structs to svg path strings for use in eex templates.
   """
 
   import Dreadnought.Util.Precision, only: [values_to_int: 1]
-  import Dreadnought.PositionOrientationSize
-  use Dreadnought.Math
-  use Dreadnought.LinearAlgebra
+    use Dreadnought.Math
+    use Dreadnought.LinearAlgebra
+    use Dreadnought.PositionOrientationSize
   alias Dreadnought.Paths
   alias Dreadnought.Paths.Straight
   alias Dreadnought.Paths.Turn
-  alias Dreadnought.Svg.Interpret
+  alias Dreadnought.Svg.PathDString
 
   # *** *******************************
   # *** API
@@ -48,8 +49,26 @@ defmodule Dreadnought.Svg do
   end
 
   def scale(svg_path, scale) when is_binary(svg_path) and is_integer(scale) do
-    %{path: new_svg_path} = Interpret.interpret(svg_path, scale: scale)
+    %{path: new_svg_path} = PathDString.interpret(svg_path, scale: scale)
     new_svg_path
+  end
+
+  def polygon_points_string_from_coords(coords) when is_list(coords) do
+    coords
+    |> Stream.map(&vector_to_comma_separated_string/1)
+    |> Enum.join(" ")
+  end
+
+  def pose_to_attrs(%{x: x, y: y, angle: angle} = pose) when has_pose(pose) do
+    [
+      x: x,
+      y: y,
+      transform: "rotate(#{angle},#{x},#{y})"
+    ]
+  end
+
+  def attrs_from_pose_and_opts(pose, opts \\ []) do
+    Keyword.merge opts, pose_to_attrs(pose)
   end
 
   # *** *******************************
@@ -70,6 +89,11 @@ defmodule Dreadnought.Svg do
     |> Paths.get_end_pose()
     |> values_to_int
     |> position_to_tuple
+  end
+
+  # TODO replace is_number with is_vector?
+  defp vector_to_comma_separated_string({x, y}) when is_number(x) and is_number(y) do
+    "#{x},#{y}"
   end
 
   # TODO I don't like calling the key directly her

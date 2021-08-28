@@ -1,7 +1,8 @@
 defmodule Dreadnought.Paths.Turn do
 
-  use Dreadnought.PositionOrientationSize
-  use Dreadnought.LinearAlgebra
+    use Dreadnought.LinearAlgebra
+    use Dreadnought.PositionOrientationSize
+    use Dreadnought.TypedStruct
   alias Dreadnought.Geometry.Circle
   alias Dreadnought.Geometry.Rect
 

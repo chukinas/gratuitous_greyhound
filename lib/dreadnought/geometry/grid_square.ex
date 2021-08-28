@@ -7,6 +7,7 @@ defmodule GridSquare do
   """
 
   use Dreadnought.PositionOrientationSize
+  use Dreadnought.TypedStruct
 
   typedstruct enforce: true do
     field :id, String.t()

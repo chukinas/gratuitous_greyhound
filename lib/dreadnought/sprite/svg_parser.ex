@@ -1,4 +1,4 @@
-defmodule Dreadnought.Core.SpritesheetParser do
+defmodule Dreadnought.Sprite.SvgParser do
 
   alias Dreadnought.Util.Precision
 

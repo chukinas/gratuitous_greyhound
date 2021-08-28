@@ -1,6 +1,7 @@
 defmodule Dreadnought.Core.ActionSelection.Gunnery do
 
-  use Dreadnought.PositionOrientationSize
+    use Dreadnought.PositionOrientationSize
+    use Dreadnought.TypedStruct
   alias Dreadnought.Geometry.GridSquare
 
   # *** *******************************

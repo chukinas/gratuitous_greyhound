@@ -10,13 +10,16 @@ defmodule Dreadnought.Core.Turret do
   arc - the 2D cone between the max ccw and max cw angles. Fixed to unit.
   """
 
-  use Dreadnought.LinearAlgebra
-  use Dreadnought.PositionOrientationSize
-  use Dreadnought.Math
-  alias Dreadnought.Core.Sprites
+    use Dreadnought.LinearAlgebra
+    use Dreadnought.Math
+    use Dreadnought.PositionOrientationSize
+    use Dreadnought.TypedStruct
+  # TODO replace with use of LinearAlgebra?
   alias Dreadnought.LinearAlgebra.HasCsys
   alias Dreadnought.LinearAlgebra.Vector
+  # TODO needed with the use above?
   alias Dreadnought.Math
+  alias Dreadnought.Sprite
 
   # *** *******************************
   # *** TYPES
@@ -25,7 +28,7 @@ defmodule Dreadnought.Core.Turret do
 
   typedstruct enforce: true do
     field :id, integer()
-    field :sprite, Sprites.t
+    field :sprite, Sprite.t
     field :max_ccw_angle, degrees :: number()
     field :max_rotation, positive_degrees :: number()
     field :rest_angle, degrees :: number()
@@ -83,7 +86,7 @@ defmodule Dreadnought.Core.Turret do
   def gun_barrel_vector(%__MODULE__{sprite: sprite}) do
     %{x: x} =
       sprite
-      |> Sprites.mounts
+      |> Sprite.mounts
       |> List.first
       |> position_new
     {x, 0}

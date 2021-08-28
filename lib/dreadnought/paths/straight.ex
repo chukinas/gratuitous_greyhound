@@ -1,8 +1,9 @@
 defmodule Dreadnought.Paths.Straight do
 
   import Dreadnought.LinearAlgebra
-  use Dreadnought.PositionOrientationSize
-  use Dreadnought.LinearAlgebra
+    use Dreadnought.LinearAlgebra
+    use Dreadnought.PositionOrientationSize
+    use Dreadnought.TypedStruct
   alias Dreadnought.Geometry.Rect
   alias Dreadnought.Paths.Straight
 

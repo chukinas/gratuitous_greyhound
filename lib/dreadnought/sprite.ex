@@ -1,11 +1,12 @@
-# TODO rename Dreadnought.Core.Sprites.Sprite?
-defmodule Dreadnought.Core.Sprite do
+defmodule Dreadnought.Sprite do
 
-  use Dreadnought.PositionOrientationSize
-  alias Dreadnought.Core.Sprites.Mount
+    use Dreadnought.LinearAlgebra
+    use Dreadnought.PositionOrientationSize
+    use Dreadnought.TypedStruct
+  alias Dreadnought.Core.Mount
   alias Dreadnought.Geometry.Rect
   alias Dreadnought.Svg
-  alias Dreadnought.Svg.Interpret
+  alias Dreadnought.Svg.PathDString
   alias Dreadnought.Util.IdList
   alias Dreadnought.Util.Maps
 
@@ -25,10 +26,10 @@ defmodule Dreadnought.Core.Sprite do
   end
 
   # *** *******************************
-  # *** NEW
+  # *** CONSTRUCTORS
 
   def from_parsed_spritesheet(sprite, image_map) do
-    %{path: image_clip_path, rect: image_rect} = sprite.image_clip_path |> Interpret.interpret
+    %{path: image_clip_path, rect: image_rect} = sprite.image_clip_path |> PathDString.interpret
     origin = position_new_rounded(sprite.origin)
     rect =
       image_rect
@@ -47,18 +48,7 @@ defmodule Dreadnought.Core.Sprite do
   end
 
   # *** *******************************
-  # *** GETTERS
-
-  def mount_position(%__MODULE__{mounts: mounts}, mount_id) do
-    mounts
-    |> IdList.fetch!(mount_id)
-    |> position_new
-  end
-  def base_filename(%__MODULE__{image_file_path: path}), do: Path.basename(path)
-  def mounts(%__MODULE__{mounts: mounts}), do: mounts
-
-  # *** *******************************
-  # *** API
+  # *** REDUCERS
 
   def scale(sprite, scale) do
     sprite
@@ -70,12 +60,44 @@ defmodule Dreadnought.Core.Sprite do
   end
 
   # *** *******************************
+  # *** CONVERTERS
+
+  def base_filename(%__MODULE__{image_file_path: path}), do: Path.basename(path)
+
+  def mount_position(%__MODULE__{mounts: mounts}, mount_id) do
+    mounts
+    |> IdList.fetch!(mount_id)
+    |> position_new
+  end
+
+  def mounts(%__MODULE__{mounts: mounts}), do: mounts
+
+  def image_position(%__MODULE__{image_origin: origin}) do
+    origin
+    |> position_multiply(-1)
+  end
+
+  # *** *******************************
   # *** PRIVATE
 
+  # TODO remove
   defp build_mounts(parsed_mounts, origin) do
     Enum.reduce(parsed_mounts, [], fn %{id: id, x: x, y: y}, mounts ->
       position = position_new(x, y) |> position_subtract(origin)
       [Mount.new(id, position) | mounts]
     end)
+  end
+end
+
+# *** *********************************
+# *** IMPLEMENTATIONS
+# *** *********************************
+
+# TODO should bounding rect be in the Rect namespace?
+alias Dreadnought.Sprite, as: Sprite
+
+defimpl Dreadnought.BoundingRect, for: Sprite do
+  def of(sprite) do
+    Dreadnought.BoundingRect.of(sprite |> Sprite.Improved.from_sprite)
   end
 end
