@@ -5,7 +5,6 @@ defmodule DreadnoughtWeb.ComponentView do
 
   use DreadnoughtWeb, :base_view
   use Dreadnought.PositionOrientationSize
-  alias Dreadnought.Geometry.Rect
 
   defmacro __using__(_opts) do
     quote do

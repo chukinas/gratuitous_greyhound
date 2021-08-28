@@ -27,8 +27,6 @@ defmodule DreadnoughtWeb.GalleryComponent do
       socket
       |> assign(sprites_and_animations: Enum.map(animations ++ sprites, &wrap_item/1))
       |> assign(sprite_specs: Spec.all())
-    # TODO temp
-      |> assign(show_markers?: true)
     {:ok, socket}
   end
 
@@ -45,7 +43,7 @@ defmodule DreadnoughtWeb.GalleryComponent do
   # *** *******************************
   # *** HELPERS
 
-  defp render_markers_toggle(show_markers?, target) do
+  defp _render_markers_toggle(show_markers?, target) do
     label =
       if show_markers? do
         "Markers Shown"
@@ -54,8 +52,8 @@ defmodule DreadnoughtWeb.GalleryComponent do
       end
     attrs =
       [
-        phx_click: "toggle_show_markers",
-        phx_target: target
+        "phx-click": "toggle_show_markers",
+        "phx-target": target
       ]
     render_toggle(
       "toggleShowMarkers",

@@ -1,7 +1,7 @@
 <div id="<%= @id %>">
   <%# 'show markers' toggle %>
   <div class="my-4">
-    <%= render_markers_toggle(@show_markers?, @myself) %>
+    <%= _render_markers_toggle(@show_markers?, @myself) %>
   </div>
 
   <%# GRID %>
@@ -15,7 +15,7 @@
         <%# TODO remove markers component %>
         <%= 
           DreadnoughtWeb.SpriteComponent.render_single(
-          s, 1.75, SvgView.render_markers(s)
+          s, 1.75, (if @show_markers?, do: SvgView.render_markers(s))
 )
         %>
       </div>
