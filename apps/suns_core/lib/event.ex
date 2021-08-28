@@ -10,7 +10,8 @@ defmodule SunsCore.Event do
   defmacro __using__(:impl) do
     quote do
       use Statechart, :event
-      alias SunsCore.Mission.Snapshot, as: S
+      alias SunsCore.Mission.Context, as: S
+      alias SunsCore.Mission.Context, as: Cxt
       import unquote(__MODULE__), only: [event_struct: 1]
     end
   end
@@ -18,7 +19,7 @@ defmodule SunsCore.Event do
   defmacro event_struct(do: block) do
     quote do
       typedstruct enforce: true do
-        field :initiator, integer() | :system, enforce: false
+        field :initiator, integer() | :system, default: :system
         unquote(block)
       end
     end

@@ -8,7 +8,7 @@ defmodule DreadnoughtWeb.PlayView do
   alias Dreadnought.Core.ActionSelection, as: AS
   alias Spatial.Geometry.Rect
 
-  # TODO rename
+  # TODO superseded by
   def render_single_maneuver(%Maneuver{} = path, unit_id) do
     assigns =
       path

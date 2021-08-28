@@ -44,7 +44,7 @@ defmodule Statechart.Machine.Spec do
 
   def put_new_state(spec, node_name) do
     with nodes <- nodes(spec),
-         false <- Map.has_key?(nodes) do
+         false <- Map.has_key?(nodes, node_name) do
       %{nodes | node_name => Node.new(node_name)}
     else
       _ -> spec

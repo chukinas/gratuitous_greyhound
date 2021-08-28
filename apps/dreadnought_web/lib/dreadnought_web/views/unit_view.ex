@@ -52,4 +52,17 @@ defmodule DreadnoughtWeb.UnitView do
     if Unit.render?(unit), do: render("unit.html", socket: socket, turn_number: turn_number, unit: unit)
   end
 
+  def _render_unit(_socket, %Unit{} = unit, _turn_number \\ 0) do
+    content_tag(
+      :svg,
+      [
+        # TODO scale shouldn't be required
+        # TODO defs should be rendered separately?
+        DreadnoughtWeb.SpriteComponent.render_single(unit.sprite_spec, 1)
+      ],
+      id: "unit-#{unit.id}",
+      data: [unit_id: unit.id]
+    )
+  end
+
 end

@@ -1,6 +1,4 @@
-# TODO this this maybe be called Mission? MissionContext?
-
-defmodule SunsCore.Mission.Snapshot do
+defmodule SunsCore.Mission.Context do
 
   alias SunsCore.Mission.Battlegroup
   alias SunsCore.Mission.Contract
@@ -9,6 +7,7 @@ defmodule SunsCore.Mission.Snapshot do
   alias SunsCore.Mission.Objective
   alias SunsCore.Mission.Ship
   alias SunsCore.Mission.Table
+  alias SunsCore.Mission.TurnOrderTracker
   alias SunsCore.Space
   alias Util.IdList
 
@@ -19,14 +18,15 @@ defmodule SunsCore.Mission.Snapshot do
   getter_struct do
     field :administrator, :system | pos_integer, enforce: false
     field :battlegroups, [Battlegroup.t], default: []
+    field :contracts, [Contract.t], default: [Contract.Builder.BasicTraining.demolition()]
     field :helms, [Helm.t], default: []
     field :jump_points, [JumpPoint.t], default: []
     field :objectives, [Objective.t], default: []
     field :scale, pos_integer, enforce: false
     field :ships, [Ship.t], default: []
     field :tables, [Table.t], default: []
+    field :turn_order_tracker, TurnOrderTracker.t, enforce: false
     field :turn_number, pos_integer, default: 0
-    field :contracts, [Contract.t], default: [Contract.Builder.BasicTraining.demolition()]
   end
 
   # *** *******************************
@@ -39,6 +39,12 @@ defmodule SunsCore.Mission.Snapshot do
   # *** *******************************
   # *** REDUCERS
 
+  # I could have better terminology for this...
+  # overwrite puts an item into a list
+  # set/2 overwrites the value entirely (like for TurnOrderTracker)
+  def overwrite!(%__MODULE__{} = cxt, items) when is_list(items) do
+    Enum.reduce(items, cxt, &overwrite!(&2, &1))
+  end
   def overwrite!(%__MODULE__{} = snapshot, model) do
     Map.update!(snapshot, _key(model), &IdList.overwrite!(&1, model))
   end
@@ -53,6 +59,10 @@ defmodule SunsCore.Mission.Snapshot do
 
   def incr_turn_number(%__MODULE__{} = snapshot) do
     Map.update!(snapshot, :turn_number, fn tn -> tn + 1 end)
+  end
+
+  def set(%__MODULE__{} = cxt, %TurnOrderTracker{} = tot) do
+    %{cxt | turn_order_tracker: tot}
   end
 
   # *** *******************************
@@ -70,6 +80,12 @@ defmodule SunsCore.Mission.Snapshot do
     snapshot
     |> ships
     |> Enum.filter(&Space.table_id_is?(&1, table_id))
+  end
+
+  def player_count(cxt) do
+    cxt
+    |> helms
+    |> Enum.count
   end
 
   # *** *******************************

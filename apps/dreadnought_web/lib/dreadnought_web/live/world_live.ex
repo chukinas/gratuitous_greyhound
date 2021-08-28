@@ -1,11 +1,14 @@
 defmodule DreadnoughtWeb.WorldLive do
 
-  use DreadnoughtWeb, :live_view
-  use Dreadnought.Core.Mission.Builder
-  use Spatial.PositionOrientationSize
-  use Dreadnought.Sprite.Spec
+    use DreadnoughtWeb, :live_view
+    use Dreadnought.Core.Mission.Builder
+    use Dreadnought.Sprite.Spec
+    use Spatial.PositionOrientationSize
   alias Dreadnought.Core.Mission
   alias Dreadnought.Core.Mission.Helpers
+  alias Dreadnought.Core.Unit
+  alias Dreadnought.Core.UnitBuilder
+  alias Dreadnought.Paths
 
   # *** *******************************
   # *** MOUNT, PARAMS
@@ -19,7 +22,7 @@ defmodule DreadnoughtWeb.WorldLive do
         play_area_size: size_new(600, 400)
       )
       |> assign_board_size
-      |> assign_posed_sprite
+      |> assign_unit
     {:ok, socket}
   end
 
@@ -38,12 +41,14 @@ defmodule DreadnoughtWeb.WorldLive do
     assign(socket, board_size: size_add(play_area_size, 2 * margin))
   end
 
-  def assign_posed_sprite(socket) do
-    sprite_specs = [
-      {:red, "ship_large"},
-      {:blue, "hull_blue_small"}
-    ]
-    assign(socket, sprite_specs: sprite_specs)
+  def assign_unit(socket) do
+    path = Paths.new_turn(pose_origin(), 300, 45)
+    end_pose = Paths.get_end_pose(path)
+    maneuver_event = Dreadnought.Core.Unit.Event.Maneuver.new(path)
+    unit = UnitBuilder.build(:blue_dreadnought, 1, 1, end_pose, [])
+           |> Unit.put(maneuver_event)
+    socket
+    |> assign(unit: unit)
   end
 
 end

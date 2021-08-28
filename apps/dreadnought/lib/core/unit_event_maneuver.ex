@@ -18,7 +18,9 @@ defmodule Ev.Maneuver do
 
   typedstruct enforce: true do
     field :id, integer(), default: 1
+    # TODO I don't like that the type is called `Paths`
     field :geo_path, Paths.t()
+    # TODO remove
     field :svg_path, String.t()
     # TODO rename these to delay and duration
     field :fractional_start_time, number()

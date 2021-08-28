@@ -1,7 +1,7 @@
 defmodule SunsCore.Event.Setup.ConfirmPlayers do
 
   use SunsCore.Event, :impl
-  alias SunsCore.Mission.Snapshot, as: Cxt
+  alias SunsCore.Mission.Context, as: Cxt
 
   # *** *******************************
   # *** TYPES

@@ -12,17 +12,19 @@ defmodule DreadnoughtWeb.SpriteComponent do
   alias DreadnoughtWeb.SvgView
 
   # *** *******************************
-  # *** CONSTRUCTORS
+  # *** CONSTRUCTORS, SVG
+
+  def render_all_defs, do: render_defs(Spec.all())
 
   def render_defs(sprite_specs) when is_list(sprite_specs) do
-    Phoenix.LiveView.Helpers.live_component(__MODULE__,
+    live_component(__MODULE__,
       sprite_specs: sprite_specs,
       incl_uses?: false
     )
   end
 
   def render_uses(sprite_specs) when is_list(sprite_specs) do
-    Phoenix.LiveView.Helpers.live_component(__MODULE__,
+    live_component(__MODULE__,
       sprite_specs: sprite_specs,
       incl_defs: false
     )
@@ -30,11 +32,27 @@ defmodule DreadnoughtWeb.SpriteComponent do
 
   def render_single(sprite_spec, scale, nested_svg \\ nil)
   when is_sprite_spec(sprite_spec) do
-    Phoenix.LiveView.Helpers.live_component(__MODULE__,
+    live_component(__MODULE__,
       sprite_specs: [sprite_spec],
       scale: scale,
       nested_svg: nested_svg
     )
+  end
+
+  def render_positioned(sprite_spec, pose, nested_svg \\ nil)
+  when is_sprite_spec(sprite_spec) do
+    Phoenix.LiveView.Helpers.live_component(__MODULE__,
+      sprite_specs: [sprite_spec],
+      pose: pose,
+      nested_svg: nested_svg
+    )
+  end
+
+  # *** *******************************
+  # *** CONSTRUCTORS, ELEMENT
+
+  def render_use(sprite_spec) when is_sprite_spec(sprite_spec) do
+    _render_sprite_use(sprite_spec)
   end
 
   # *** *******************************
@@ -49,6 +67,7 @@ defmodule DreadnoughtWeb.SpriteComponent do
       |> assign(incl_defs?: Map.get(assigns, :incl_defs?, true))
       |> assign(incl_uses?: Map.get(assigns, :incl_uses, true))
       |> assign(scale: Map.get(assigns, :scale, 1))
+      |> assign(pose: Map.get(assigns, :pose))
       |> assign(nested_svg: Map.get(assigns, :nested_svg))
     {:ok, socket}
   end

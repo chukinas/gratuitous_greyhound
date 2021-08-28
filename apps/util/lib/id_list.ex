@@ -65,7 +65,7 @@ defmodule Util.IdList do
     ids
     |> Enum.map(& fetch!(items, &1, key))
   end
-  def fetch!(enum, id, key) when length(enum) > 0 and is_integer(id) do
+  def fetch!(enum, id, key) when length(enum) > 0 do
     case Enum.find(enum, :not_found, &_match?(&1, id, key)) do
       :not_found ->
         pair = %{key: key, value: id}
