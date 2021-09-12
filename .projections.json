@@ -73,5 +73,10 @@
     },
     "test/*_test.exs": { 
         "alternate": "lib/{}.ex" 
+    },
+    "*lib/": {
+        "lib/*.ex": {
+            "alternate": "test/{}_test.exs"
+        }
     }
 }
