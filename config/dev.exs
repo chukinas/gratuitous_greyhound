@@ -6,18 +6,18 @@ use Mix.Config
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
-config :dreadnought, DreadnoughtWeb.Endpoint,
+config :dreadnought_web, DreadnoughtWeb.Endpoint,
   http: [port: 4000],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
   watchers: [
-    # https://sevenseacat.net/posts/2021/tailwind-jit-in-phoenix/
-    # This used to be node:
-    npm: [
-      "run",
-      "watch",
-      cd: Path.expand("../assets", __DIR__)
+    node: [
+      "node_modules/webpack/bin/webpack.js",
+      "--mode",
+      "development",
+      "--watch-stdin",
+      cd: Path.expand("../apps/dreadnought_web/assets", __DIR__)
     ]
   ]
 
@@ -46,11 +46,10 @@ config :dreadnought, DreadnoughtWeb.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :dreadnought, DreadnoughtWeb.Endpoint,
+config :dreadnought_web, DreadnoughtWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
-      ~r"priv/gettext/.*(po)$",
       ~r"lib/dreadnought_web/(live|views)/.*(ex)$",
       ~r"lib/dreadnought_web/templates/.*(eex)$"
     ]

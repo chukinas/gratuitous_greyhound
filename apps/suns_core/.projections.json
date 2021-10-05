@@ -1,0 +1,8 @@
+{
+  "lib/command/*.ex": {
+    "type": "command"
+  },
+  "lib/mission/*.ex": {
+    "type": "mission"
+  }
+}
