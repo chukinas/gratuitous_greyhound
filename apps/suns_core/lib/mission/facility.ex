@@ -1,7 +1,8 @@
 defmodule SunsCore.Mission.Facility do
 
   use TypedStruct
-  use SunsCore.Mission.ObjectiveBuilder
+  use SunsCore.Mission.Objective.Builder
+  alias SunsCore.Space.TablePosition
 
   # *** *******************************
   # *** TYPES

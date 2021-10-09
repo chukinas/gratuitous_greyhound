@@ -54,12 +54,12 @@ defmodule SunsCore.Event.JumpPhase.DeployBattlegroup do
         Ship.new(id, Battlegroup.id(battlegroup), class_name, table_pose)
       end
     table = S.table_by_id(snapshot, table_id)
-    with :ok <- Space.within?(jump_point, ships, Class.jump_range(class_name)),
-         :ok <- Space.within_table_shape?(table, ships),
-         :ok <- Space.contiguous?(ships) do
+    with :ok <- Space.check_within(jump_point, ships, Class.jump_range(class_name)),
+         :ok <- Space.check_within_table_shape(table, ships),
+         :ok <- Space.check_contiguous(ships) do
       {:ok, %{battlegroup: battlegroup, ships: ships}}
     else
-        {:error, _reason} = error_tuple -> error_tuple
+      {:error, _reason} = error_tuple -> error_tuple
     end
   end
 

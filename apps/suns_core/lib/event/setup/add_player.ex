@@ -34,7 +34,6 @@ defmodule SunsCore.Event.Setup.AddPlayer do
   def action(event, context) do
     context
     |> C.put_new(helm(event, context))
-    |> ok
   end
 
 end

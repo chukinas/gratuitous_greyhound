@@ -1,47 +1,20 @@
 defmodule SunsCore.Mission.TurnOrderTracker do
 
   alias SunsCore.DieRoller
-  alias SunsCore.Mission.Helm
-
-  # *** *******************************
-  # *** SUBMODULES
-
-  defmodule PlayerDieTuples do
-    # TYPES
-    @type t :: [{player_id :: integer, die_sides :: integer}]
-    # CONSTRUCTORS
-    @spec from_helms([Helm.t]) :: t
-    def from_helms(helms) do
-      helms
-      |> Enum.sort_by(&Helm.id/1)
-      |> Stream.map(&{Helm.id(&1), Helm.initiative_rolloff_die(&1)})
-    end
-    # REDUCERS
-    @spec single_roll_off(t, (integer -> float)) :: t
-    defp single_roll_off(tuples, roll) do
-      {_die_roll, player_die_tuples} =
-        tuples
-        |> Enum.group_by(fn {_id, die} -> roll.(die) end)
-        |> Enum.min_by(fn {die_roll, _player_die_tuples} -> die_roll end)
-      player_die_tuples
-    end
-    # CONVERTERS
-    @spec player_id_with_best_roll(t, (integer -> integer)) :: player_id :: integer
-    def player_id_with_best_roll([{id, _die}], _roll), do: id
-    def player_id_with_best_roll(tuples, roll) do
-      tuples
-      |> single_roll_off(roll)
-      |> player_id_with_best_roll(roll)
-    end
-  end
+  alias SunsCore.Mission.PlayerDieTuple.Collection, as: PlayerDieTuples
 
   # *** *******************************
   # *** TYPES
 
+  @type player_id :: integer
+
   use Util.GetterStruct
   getter_struct do
-    field :player_id_with_initiative, integer
-    field :start_player, integer, enforce: false
+    field :player_id_with_initiative, player_id
+    # defaults to player with initiative
+    field :start_player_id, player_id
+    field :start_player_chosen?, boolean, default: false
+    field :next_player, nil | integer, default: nil
   end
 
   # *** *******************************
@@ -56,10 +29,17 @@ defmodule SunsCore.Mission.TurnOrderTracker do
       |> PlayerDieTuples.player_id_with_best_roll(roll)
     %__MODULE__{
       player_id_with_initiative: player_id_with_initiative,
+      start_player_id: player_id_with_initiative
     }
   end
 
   # *** *******************************
   # *** CONVERTERS
+
+  def get_and_update_next_player_id(tracker) do
+    # TODO implement. Ok for now that I'm testing only for a single plyaer
+    new_tracker = %__MODULE__{tracker | next_player: 1}
+    {1, new_tracker}
+  end
 
 end

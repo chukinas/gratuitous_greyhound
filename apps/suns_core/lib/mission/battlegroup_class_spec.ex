@@ -1,4 +1,4 @@
-defmodule SunsCore.Mission.Battlegroup.ClassStruct do
+defmodule SunsCore.Mission.Battlegroup.ClassSpec do
   use TypedStruct
   typedstruct enforce: true do
     field :name, atom
@@ -10,5 +10,4 @@ defmodule SunsCore.Mission.Battlegroup.ClassStruct do
     field :primary_weapons, atom
     field :auxiliary_weapons, atom
   end
-
 end

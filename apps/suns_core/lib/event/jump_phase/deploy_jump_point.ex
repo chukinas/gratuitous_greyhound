@@ -71,7 +71,6 @@ defmodule SunsCore.Event.JumpPhase.DeployJumpPoint do
     snapshot
     |> S.overwrite!(helm_after_spendin_jump_cmd(ev, snapshot))
     |> S.put_new(build_jump_point(ev, snapshot))
-    |> ok
   end
 
 end

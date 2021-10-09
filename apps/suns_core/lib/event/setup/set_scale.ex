@@ -19,7 +19,6 @@ defmodule SunsCore.Event.Setup.SetScale do
   @impl Event
   def action(%__MODULE__{scale: scale}, snapshot) do
     %S{snapshot | scale: scale}
-    |> ok
   end
 
 end

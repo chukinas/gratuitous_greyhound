@@ -1,8 +1,8 @@
 defmodule SunsCore.Mission.Battlegroup.Class do
 
-  alias SunsCore.Mission.Battlegroup.ClassStruct
+  alias SunsCore.Mission.Battlegroup.ClassSpec
 
-  @type t :: ClassStruct.t
+  @type t :: ClassSpec.t
 
   types = [
     #   NAME                COST  MASS  THRUST  SILHOUETTE  SHIELDS PRIMARYWEAPONS  AUXILIARYWEAPONS
@@ -31,7 +31,7 @@ defmodule SunsCore.Mission.Battlegroup.Class do
           "NA" -> nil
           string -> String.to_atom(string)
         end)
-      %ClassStruct{
+      %ClassSpec{
         name: name,
         cost: cost,
         mass: mass,
@@ -44,24 +44,24 @@ defmodule SunsCore.Mission.Battlegroup.Class do
     end
 
   for class <- classes do
-    def type(unquote(class.name)) do
+    def get_spec(unquote(class.name)) do
       unquote(Macro.escape(class))
     end
   end
 
-  keys =
+  fields =
     example_class
     |> Map.drop([:name])
     |> Map.keys
 
-  for key <- keys do
+  for key <- fields do
     def unquote(key)(class_name) when is_atom(class_name) do
-      apply(__MODULE__, class_name, [])
+      get_spec(class_name)
       |> Map.fetch!(unquote(key))
     end
-    def unquote(key)(%{class_name: class_name}) do
-      unquote(key)(class_name)
-    end
+    #def unquote(key)(%ClassSpec{name: class_name}) do
+    #  unquote(key)(class_name)
+    #end
   end
 
   def jump_range(class) do

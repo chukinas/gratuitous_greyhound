@@ -1,18 +1,6 @@
 defmodule Statechart.Helpers do
 
   alias Statechart.Machine
-  require ExUnit.Assertions
-  import ExUnit.Assertions
-
-  def assert_state(machine, state_name) do
-    assert Machine.in?(machine, state_name)
-    machine
-  end
-
-  def refute_state(machine, state_name) do
-    refute Machine.in?(machine, state_name)
-    machine
-  end
 
   def print_machine_and_spec(machine, msg \\ __MODULE__) do
     IOP.inspect %{

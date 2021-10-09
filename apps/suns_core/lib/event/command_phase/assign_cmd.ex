@@ -48,14 +48,13 @@ defmodule SunsCore.Event.CommandPhase.AssignCmd do
       |> Helm.put_cmd(cmd)
     cxt
     |> Cxt.overwrite!(helm)
-    |> ok
   end
 
   @impl Event
   def post_guard(_ev, %Cxt{helms: helms}) do
     helms
     |> Helm.Collection.all_cmd_assigned?
-    |> if(do: :ok, else: :stay)
+    |> if(do: :ok, else: {:error, "Not all players have finished assigned their CMD"})
   end
 
 end

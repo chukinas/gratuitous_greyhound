@@ -4,9 +4,17 @@ defmodule SunsCore.Space do
   """
 
   use Spatial.LinearAlgebra
+  use Spatial, :pos
   alias SunsCore.Mission.HasTablePosition
   alias SunsCore.Space.TablePose
   alias SunsCore.Space.TablePosition
+  alias Util.Response
+
+  # *** *******************************
+  # *** API, gathered from other places
+
+  def new_pose(x, y, angle), do: pose_new(x, y, angle)
+  defdelegate new_table_position(table_id, x, y), to: TablePosition, as: :new
 
   # *** *******************************
   # *** API
@@ -14,10 +22,9 @@ defmodule SunsCore.Space do
   @doc """
   True if subect(s) are all within range of and on same table as target
   """
-  @spec within?(HasTablePosition.t, HasTablePosition.t | [HasTablePosition.t], pos_integer)
-    :: boolean
-
-  def within?(target, subjects, range) when is_list(subjects) do
+  @spec check_within(HasTablePosition.t, HasTablePosition.t | [HasTablePosition.t], pos_integer)
+    :: Response.t
+  def check_within(target, subjects, range) when is_list(subjects) do
     target_vector = vector(target)
     Enum.all?(subjects, fn subject ->
       distance =
@@ -26,6 +33,7 @@ defmodule SunsCore.Space do
         |> do_distance_between(target_vector)
       same_table?(target, subject) && distance <= range
     end)
+    |> Response.from_bool("Subjects (#{subjects}) are not within range of target (#{target})")
   end
 
   def within?(target, subject, range) do
@@ -34,17 +42,22 @@ defmodule SunsCore.Space do
       subject
       |> vector
       |> do_distance_between(target_vector)
-    same_table?(target, subject) && distance <= range
+    (same_table?(target, subject) && distance <= range)
+    |> Response.from_bool("Subject (#{subject}) is not within range of target (#{target})")
   end
 
-  def within_table_shape?(_table, _subject) do
+  @spec check_within_table_shape(any, any) :: Response.t
+  def check_within_table_shape(_table, _subject) do
     # TODO implement
     true
+    |> Response.from_bool("Subject is outside the table's boundary")
   end
 
-  def contiguous?(_ships) do
+  @spec check_contiguous(any) :: Response.t
+  def check_contiguous(_ships) do
     # TODO implement
     true
+    |> Response.from_bool("Battlegroup is not in contiguous formation")
   end
 
   def table_id(item) do

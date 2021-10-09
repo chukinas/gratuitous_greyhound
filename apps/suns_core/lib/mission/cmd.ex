@@ -10,6 +10,10 @@ defmodule SunsCore.Mission.Cmd do
     field :tactical, integer, enforce: false
   end
 
+  @valid_types ~w/initiative jump tactical/a
+
+  defguard is_valid_type(type) when type in @valid_types
+
   # *** *******************************
   # *** CONSTRUCTORS
 
@@ -37,6 +41,10 @@ defmodule SunsCore.Mission.Cmd do
     cmd.initiative + cmd.jump + cmd.tactical
   end
 
+  def get(%__MODULE__{} = cmd, type) when is_valid_type(type) do
+    apply(__MODULE__, type, [cmd])
+  end
+
   # *** *******************************
   # *** CONVERTERS (ok/error checks)
 
@@ -60,5 +68,7 @@ defmodule SunsCore.Mission.Cmd do
   # *** HELPERS
 
   def cmd_per_turn(scale), do: scale + 3
+
+  def valid_types, do: @valid_types
 
 end

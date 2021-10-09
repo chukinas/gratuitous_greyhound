@@ -1,7 +1,7 @@
 defmodule SunsCore.Mission.Helm do
 
   alias SunsCore.Mission.Cmd
-  alias __MODULE__
+  require Cmd
 
   # *** *******************************
   # *** TYPES
@@ -39,7 +39,7 @@ defmodule SunsCore.Mission.Helm do
     Map.update!(helm, :cmd, update_cmd)
   end
 
-  def spend_cmd(helm, key, count \\ 1) do
+  def spend_cmd(helm, key, count \\ 1) when Cmd.is_valid_type(key) do
     add_cmd(helm, key, -count)
   end
 
@@ -54,16 +54,17 @@ defmodule SunsCore.Mission.Helm do
   # *** *******************************
   # *** CONVERTERS
 
-  def jump_cmd(helm), do: do_cmd(helm, :jump)
-  def initiative_cmd(helm), do: do_cmd(helm, :initiative)
-  def tactical_cmd(helm), do: do_cmd(helm, :tactical)
+  def get_cmd(%__MODULE__{} = helm, cmd_type) when Cmd.is_valid_type(cmd_type) do
+    helm
+    |> cmd
+    |> Cmd.get(cmd_type)
+  end
 
-  def has_jump_cmd?(helm), do: do_cmd(helm, :jump) > 0
-  def has_initiative_cmd?(helm), do: do_cmd(helm, :initiative) > 0
-  def has_tactical_cmd?(helm), do: do_cmd(helm, :tactical) > 0
-
-  defp do_cmd(%__MODULE__{cmd: cmd}, key) when key in @cmd_categories do
-    Map.fetch!(cmd, key)
+  for type <- Cmd.valid_types do
+    fun_name = "has_#{type}_cmd?" |> String.to_atom
+    def unquote(fun_name)(helm) do
+      get_cmd(helm, unquote(type)) > 0
+    end
   end
 
   def initiative_rolloff_die(%__MODULE__{cmd: cmd}) do
@@ -72,26 +73,6 @@ defmodule SunsCore.Mission.Helm do
       Cmd.initiative(cmd),
       Enum.min(@initiative_die)
     )
-  end
-
-  # *** *******************************
-  # *** COLLECTION
-
-  defmodule Collection do
-    @type t :: [Helm.t]
-    # REDUCERS
-    def clear_cmd(helms) do
-      Enum.map(helms, &%Helm{&1 | cmd: nil})
-    end
-    def clear_cmd_initiative(helms) do
-      update_cmd = fn cmd -> Cmd.clear_initiative(cmd) end
-      helms
-      |> Enum.map(&Helm.update_cmd(&1, update_cmd))
-    end
-    # CONVERTERS
-    def all_cmd_assigned?(helms) do
-      Enum.all?(helms, fn %Helm{cmd: cmd} -> cmd end)
-    end
   end
 
 end
