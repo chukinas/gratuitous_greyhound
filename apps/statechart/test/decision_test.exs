@@ -1,0 +1,3 @@
+defmodule StatechartDecisionTest do
+
+end

@@ -2,25 +2,31 @@ defprotocol Statechart.Event.Protocol do
 
   alias Statechart.Type.Context
 
-  # TODO DRY the return type
-  @spec guard(t, Context.t) :: :ok | {:error, reason :: String.t}
+  # *** *******************************
+  # *** TYPES
+
+  @type ok_or_reason :: :ok | {:error, reason :: String.t}
+
+  # *** *******************************
+  # *** CALLBACKS
+
+  @spec guard(t, Context.t) :: ok_or_reason
   def guard(event, context)
 
-  @spec action(t, Context.t) :: {:ok, Context.t}
+  @spec action(t, Context.t) :: Context.t
   def action(event, context)
 
-  @doc """
-  After applying `action` (if we even got that far),
-  check this condition. If :ok, procede with transition.
-  If :stay, stay on current state node.
-  """
-  @spec post_guard(t, Context.t) :: :ok | :stay
+  @spec has_post_guard?(t) :: boolean
+  def has_post_guard?(event)
+
+  @spec post_guard(t, Context.t) :: ok_or_reason
   def post_guard(event, context)
 
 end
 
 defimpl Statechart.Event.Protocol, for: Atom do
   def guard(_, _), do: :ok
-  def action(_, context), do: {:ok, context}
+  def action(_, context), do: context
+  def has_post_guard?(_), do: false
   def post_guard(_, _), do: :ok
 end

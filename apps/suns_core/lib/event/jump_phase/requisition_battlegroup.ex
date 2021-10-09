@@ -35,6 +35,7 @@ defmodule SunsCore.Event.JumpPhase.RequisitionBattlegroup do
       helms
       |> IdList.fetch!(battlegroup.player_id)
       |> Helm.spend_credits(cost)
+      |> Helm.spend_cmd(:jump)
     snapshot
     |> S.overwrite!(helm)
     |> S.put_new(battlegroup)

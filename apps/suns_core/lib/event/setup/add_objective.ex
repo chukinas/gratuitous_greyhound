@@ -41,7 +41,6 @@ defmodule SunsCore.Event.Setup.AddObjective do
   def action(ev, snapshot) do
     snapshot
     |> S.put_new(objective(ev, snapshot))
-    |> ok
   end
 
   @impl Event
@@ -49,7 +48,7 @@ defmodule SunsCore.Event.Setup.AddObjective do
     if we_have_enough_objectives?(ev, snapshot) do
       :ok
     else
-      :stay
+      {:error, "There are still objectives that need to be set up"}
     end
   end
 

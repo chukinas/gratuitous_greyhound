@@ -42,7 +42,6 @@ defmodule SunsCore.Event.CommandPhase.RollOffForInitiative do
     cxt
     |> Cxt.overwrite!(helms)
     |> Cxt.set(tracker)
-    |> ok
   end
 
 end

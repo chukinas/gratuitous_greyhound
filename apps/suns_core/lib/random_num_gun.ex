@@ -1,3 +1,4 @@
+# TODO rename file
 defmodule SunsCore.RandomNumberGenerator do
 
   # *** *******************************

@@ -59,16 +59,14 @@ defmodule SunsCore.Event.Setup.AddTable do
       |> Table.new(shape)
     snapshot
     |> S.put_new(table)
-    |> ok
   end
 
   @impl Event
   def post_guard(ev, snapshot) do
     if we_have_enough_tables?(ev, snapshot) do
-      # TODO this should probably be called :proceed ?
       :ok
     else
-      :stay
+      {:error, "There are still tables that need to be created"}
     end
   end
 

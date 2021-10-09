@@ -14,6 +14,7 @@ defmodule IOP do
       binary: :yellow,
       tuple: :yellow,
       map: [:light_cyan, :bright],
+      highlight1: [:yellow, :bright],
       nil: [:magenta, :bright]
     ]
   ]

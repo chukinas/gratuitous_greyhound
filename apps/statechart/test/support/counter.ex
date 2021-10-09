@@ -1,8 +1,8 @@
-defmodule Statechart.CounterTest do
+defmodule Statechart.TestSupport.Counter do
 
-  alias Statechart.Type.NodeName
+  alias Statechart.Node.Moniker
 
-  defmodule Counter do
+  defmodule Context do
     use TypedStruct
     typedstruct do
       field(:count, pos_integer, default: 0)
@@ -14,46 +14,51 @@ defmodule Statechart.CounterTest do
     def count(%__MODULE__{count: value}), do: value
   end
 
-  defmodule CounterIncrement do
+  defmodule Increment do
     use Statechart, :event
-    typedstruct do
-      field(:value, integer, default: 1)
-    end
+    defstruct []
     def new, do: %__MODULE__{}
     @impl true
-    def action(%__MODULE__{value: value}, counter) do
-      counter = Counter.add(counter, value)
-      {:ok, counter}
-    end
+    def action(%__MODULE__{}, counter), do: Context.add(counter, 1)
   end
 
-  defmodule CounterDecrement do
+  defmodule Decrement do
     use Statechart, :event
-    typedstruct do
-      field(:value, integer, default: -1)
-    end
+    defstruct []
     def new, do: %__MODULE__{}
     @impl true
     def guard(_, counter) do
-      if Counter.count(counter) > 0 do
+      if Context.count(counter) > 0 do
         :ok
       else
-        {:error, "Counter cannot be decremented when at zero"}
+        {:error, "Context cannot be decremented when at zero"}
       end
     end
     @impl true
-    def action(%__MODULE__{value: value}, counter) do
-      counter = Counter.add(counter, value)
-      {:ok, counter}
+    def action(%__MODULE__{}, counter), do: Context.add(counter, -1)
+  end
+
+  defmodule Machine do
+    use Statechart, :machine
+    defmachine do
+      initial_context Context.new()
+      on(Increment, do: Moniker.root())
+      on(Decrement, do: Moniker.root())
     end
   end
 
-  defmodule CounterMachine do
-    use Statechart, :machine
-    initial_context Counter.new()
-    on(CounterIncrement, do: NodeName.root())
-    on(CounterDecrement, do: NodeName.root())
+  def incr(%Statechart.Machine{} = machine) do
+    Statechart.transition(
+      machine,
+      Increment.new()
+    )
   end
 
+  def decr(%Statechart.Machine{} = machine) do
+    Statechart.transition(
+      machine,
+      Decrement.new()
+    )
+  end
 
 end
