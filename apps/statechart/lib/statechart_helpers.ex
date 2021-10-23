@@ -15,6 +15,13 @@ defmodule Statechart.Helpers do
     machine
   end
 
+  def render(machine) do
+    machine
+    |> Machine.spec
+    |> Statechart.Render.new
+    machine
+  end
+
   def print_context(machine, msg \\ __MODULE__) do
     IOP.inspect Machine.context(machine), msg
     machine

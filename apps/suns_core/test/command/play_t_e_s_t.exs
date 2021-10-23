@@ -8,12 +8,12 @@ defmodule SunsCore.Event.PlayTest do
   alias SunsCore.Event.JumpPhase.DeployBattlegroup
   alias SunsCore.Mission
   alias SunsCore.Mission.Helm
-  alias SunsCore.Mission.Context
-  alias SunsCore.Space.TablePosition
+  alias SunsCore.Context
+  alias SunsCore.Space.TablePose
 
   defp setup_deploy_jump_point do
     player_id = 1
-    jump_point_location = TablePosition.new(1, 20, 20)
+    jump_point_location = TablePose.new(1, 20, 20)
     [
       DeployJumpPoint.new(player_id, jump_point_location)
     ]

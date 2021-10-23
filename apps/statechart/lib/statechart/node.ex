@@ -25,11 +25,28 @@ defmodule Statechart.Node do
   def get_autotransition(_), do: nil
 
   defdelegate enter_actions(node), to: NodeProtocol
+
   defdelegate exit_actions(node), to: NodeProtocol
 
-  def check_valid(%StateNode{type: {:parent, nil}} = node) do
-    {:error, "#{inspect node} is a parent with no default!"}
+  def check_valid(%StateNode{type: {:parent, nil}}) do
+    {:error, "Parent needs a default!"}
   end
   def check_valid(_), do: :ok
+
+  def compare(node1, node2) do
+    Moniker.compare(moniker(node1), moniker(node2))
+  end
+
+  def local_name_as_atom(node) do
+    node
+    |> moniker
+    |> Moniker.local_name_as_atom
+  end
+
+  def ancestors_as_atom_list(node) do
+    node
+    |> moniker
+    |> Moniker.ancestors_as_atom_list
+  end
 
 end

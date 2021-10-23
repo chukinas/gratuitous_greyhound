@@ -1,16 +1,16 @@
 defmodule SunsCore.Mission.Ship do
 
-  alias SunsCore.Mission.HasTablePosition
   alias SunsCore.Mission.Ship
   alias SunsCore.Space.TablePose
 
   # *** *******************************
   # *** TYPES
 
-  use TypedStruct
-  typedstruct enforce: true do
+  use Util.GetterStruct
+  getter_struct do
     field :id, pos_integer
     field :battlegroup_id, pos_integer
+    # TODO rename class_symbol
     field :class_name, atom
     field :table_pose, TablePose.t
   end
@@ -28,19 +28,22 @@ defmodule SunsCore.Mission.Ship do
   end
 
   # *** *******************************
-  # *** CONVERTERS
-
-  # *** *******************************
   # *** REDUCERS
 
   # *** *******************************
-  # *** LIST TRANSFORMATIONS
+  # *** CONVERTERS
+
+  def belongs_to?(%__MODULE__{} = ship, battlegroup_id) do
+    ship.battlegroup_id === battlegroup_id
+  end
 
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl HasTablePosition do
-    def table_position(%Ship{table_pose: value}), do: value
+  defimpl SunsCore.Space.Poseable do
+
+    defdelegate table_pose(ship), to: Ship
+
   end
 
 end

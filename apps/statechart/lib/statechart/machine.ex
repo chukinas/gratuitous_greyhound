@@ -29,10 +29,10 @@ defmodule Statechart.Machine do
     get_spec = fn -> %Spec{} = apply(spec_module, :fetch_spec!, []) end
     %__MODULE__{
       get_spec: get_spec,
-      node_name: Moniker.root(),
+      node_name: Moniker.new_root(),
       context: get_spec.() |> Spec.context
     }
-    |> goto(Moniker.root())
+    |> goto(Moniker.new_root())
   end
 
   # *** *******************************

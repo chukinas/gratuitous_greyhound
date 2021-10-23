@@ -3,7 +3,7 @@ defmodule SunsCore.Event.CommandPhase.RollOffForInitiative do
   use SunsCore.Event, :impl
   alias SunsCore.RandomNumberGenerator, as: NumGen
   alias SunsCore.Mission.Helm
-  alias SunsCore.Mission.TurnOrderTracker
+  alias SunsCore.Mission.PlayerOrderTracker
 
   # *** *******************************
   # *** TYPES
@@ -35,9 +35,9 @@ defmodule SunsCore.Event.CommandPhase.RollOffForInitiative do
   end
 
   @impl Event
-  def action(%__MODULE__{rand_num_gen: num_gen}, %Cxt{helms: helms} = cxt) do
+  def action(%__MODULE__{rand_num_gen: _num_gen}, %Cxt{helms: helms} = cxt) do
     #player_count = Enum.count(helms)
-    tracker = TurnOrderTracker.new(helms, num_gen)
+    tracker = PlayerOrderTracker.new(helms, 1) # TODO implement
     helms = Helm.Collection.clear_cmd_initiative(helms)
     cxt
     |> Cxt.overwrite!(helms)

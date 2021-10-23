@@ -190,4 +190,5 @@ defmodule Dreadnought.Core.ActionSelection do
       IOP.struct("#Player-#{actionsel.player_id}-Actions", fields)
     end
   end
+
 end

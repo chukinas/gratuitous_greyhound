@@ -1,7 +1,7 @@
 defmodule SunsCore.Event.Setup.ConfirmPlayers do
 
   use SunsCore.Event, :impl
-  alias SunsCore.Mission.Context, as: Cxt
+  alias SunsCore.Context
 
   # *** *******************************
   # *** TYPES
@@ -20,7 +20,7 @@ defmodule SunsCore.Event.Setup.ConfirmPlayers do
   # *** CONVERTERS
 
   def player_count(_, cxt) do
-    cxt |> Cxt.helms |> length
+    cxt |> Context.helms |> length
   end
 
   def valid_player_count?(ev, cxt) do

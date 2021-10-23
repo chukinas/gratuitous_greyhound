@@ -1,10 +1,10 @@
-defmodule SunsCore.Event.JumpPhase do
+defmodule SunsCore.Context.JumpPhase do
 
   use SunsCore.Event, :placeholders
-  alias SunsCore.Mission.Context
+  alias SunsCore.Context
   alias SunsCore.Mission.Helm
-  alias SunsCore.Mission.TurnOrderTracker
-  alias SunsCore.RandomNumberGenerator, as: Num
+  alias SunsCore.Mission.PlayerOrderTracker
+  # alias SunsCore.RandomNumberGenerator, as: Num
 
   # *** *******************************
   # *** TYPES
@@ -35,16 +35,16 @@ defmodule SunsCore.Event.JumpPhase do
     tracker =
       cxt
       |> Context.helms
-      |> TurnOrderTracker.new(Num.new())
+      |> PlayerOrderTracker.new(1) # TODO implement logic for determining start player
     Context.set(cxt, tracker)
   end
 
   @spec goto_next_player(Context.t) :: Context.t
   def goto_next_player(cxt) do
-    {_player_id, tracker} =
+    tracker =
       cxt
       |> Context.turn_order_tracker
-      |> TurnOrderTracker.get_and_update_next_player_id
+      |> PlayerOrderTracker.goto_next_player
     Context.set(cxt, tracker)
   end
 

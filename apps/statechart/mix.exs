@@ -29,6 +29,7 @@ defmodule Statechart.MixProject do
   defp deps do
     [
       {:dialyxir, "~>1.1", only: [:dev], runtime: false},
+      {:json, "~>1.4"},
       {:util, in_umbrella: true},
       {:typed_struct, "~> 0.2.1"}
     ]

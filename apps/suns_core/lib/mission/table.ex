@@ -1,9 +1,10 @@
 defmodule SunsCore.Mission.Table do
 
   alias __MODULE__
-  alias SunsCore.Mission.HasTablePosition
-  alias SunsCore.Space.TablePosition
+  alias SunsCore.Space.Poseable
+  alias SunsCore.Space.TablePose
   alias SunsCore.Space.ShapeWithArea
+  alias Util.Response
 
   # *** *******************************
   # *** TYPES
@@ -31,13 +32,13 @@ defmodule SunsCore.Mission.Table do
   def id(%__MODULE__{id: value}), do: value
   def shape(%__MODULE__{shape: value}), do: value
 
-  @spec assigned_to_table?(t, HasTablePosition.t) :: boolean
+  @spec assigned_to_table?(t, Poseable.t) :: boolean
   def assigned_to_table?(table, item) do
     table_id = id(table)
     item_table_id =
       item
-      |> HasTablePosition.table_position
-      |> TablePosition.table_id
+      |> Poseable.table_pose
+      |> TablePose.table_id
     table_id == item_table_id
   end
 
@@ -47,7 +48,14 @@ defmodule SunsCore.Mission.Table do
     CollisionDetection.collide?(table, item)
   end
 
-  def valid_table_position?(table, item) do
+  @spec check_contains_points(any, any) :: Response.t
+  def check_contains_points(_table, _items) do
+    # TODO implement
+    true
+    |> Response.from_bool("Subject is outside the table's boundary")
+  end
+
+  def valid_table_pose?(table, item) do
     assigned_to_table?(table, item) && contains_point_entity(table, item)
   end
 

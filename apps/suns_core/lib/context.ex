@@ -1,31 +1,41 @@
-defmodule SunsCore.Mission.Context do
+defmodule SunsCore.Context do
 
   alias SunsCore.Mission.Battlegroup
   alias SunsCore.Mission.Contract
+  alias SunsCore.Mission.GlobalId
   alias SunsCore.Mission.Helm
   alias SunsCore.Mission.JumpPoint
-  alias SunsCore.Mission.Objective
+  alias SunsCore.Mission.Object
+  alias SunsCore.Mission.Order
   alias SunsCore.Mission.Ship
   alias SunsCore.Mission.Table
-  alias SunsCore.Mission.TurnOrderTracker
+  alias SunsCore.Mission.PlayerOrderTracker
   alias SunsCore.Space
   alias Util.IdList
 
   # *** *******************************
   # *** TYPES
 
+  @global_ids [
+    battlegroup: :battlegroups,
+    object: :objects,
+    ship: :ships
+  ]
+
   use Util.GetterStruct
   getter_struct do
     field :administrator, :system | pos_integer, enforce: false
     field :battlegroups, [Battlegroup.t], default: []
     field :contracts, [Contract.t], default: [Contract.Builder.BasicTraining.demolition()]
+    field :current_order, [Order.t], enforce: false
     field :helms, [Helm.t], default: []
     field :jump_points, [JumpPoint.t], default: []
-    field :objectives, [Objective.t], default: []
+    field :objects, [Object.t], default: []
+    field :passive_attacks, PassiveAttacks.t, enforce: false
     field :scale, pos_integer, enforce: false
     field :ships, [Ship.t], default: []
     field :tables, [Table.t], default: []
-    field :turn_order_tracker, TurnOrderTracker.t, enforce: false
+    field :turn_order_tracker, PlayerOrderTracker.t, enforce: false
     field :turn_number, pos_integer, default: 0
   end
 
@@ -41,7 +51,7 @@ defmodule SunsCore.Mission.Context do
 
   # I could have better terminology for this...
   # overwrite puts an item into a list
-  # set/2 overwrites the value entirely (like for TurnOrderTracker)
+  # set/2 overwrites the value entirely (like for PlayerOrderTracker)
   def overwrite!(%__MODULE__{} = cxt, items) when is_list(items) do
     Enum.reduce(items, cxt, &overwrite!(&2, &1))
   end
@@ -61,7 +71,7 @@ defmodule SunsCore.Mission.Context do
     Map.update!(snapshot, :turn_number, fn tn -> tn + 1 end)
   end
 
-  def set(%__MODULE__{} = cxt, %TurnOrderTracker{} = tot) do
+  def set(%__MODULE__{} = cxt, %PlayerOrderTracker{} = tot) do
     %{cxt | turn_order_tracker: tot}
   end
 
@@ -70,7 +80,6 @@ defmodule SunsCore.Mission.Context do
 
   def get(%__MODULE__{} = snapshot, key), do: Map.fetch!(snapshot, key)
 
-  def battlegroup_by_id(%__MODULE__{battlegroups: value}, id), do: value |> IdList.fetch!(id)
   def helm_by_id(%__MODULE__{helms: value}, id), do: value |> IdList.fetch!(id)
   def jump_point_by_id(%__MODULE__{jump_points: value}, id), do: value |> IdList.fetch!(id)
   def ship_by_id(%__MODULE__{ships: value}, id), do: value |> IdList.fetch!(id)
@@ -88,18 +97,27 @@ defmodule SunsCore.Mission.Context do
     |> Enum.count
   end
 
+  @spec fetch_by_global_id!(t, GlobalId.t) :: any
+  for {global_id_symbol, field_name} <- @global_ids do
+    def fetch_by_global_id!(context, {unquote(global_id_symbol), id})
+    when is_integer(id) do
+      context
+      |> unquote(field_name)()
+      |> IdList.fetch!(id)
+    end
+  end
+
   # *** *******************************
   # *** HELPERS
 
-  defp _key(%Battlegroup{}), do: :battlegroups
-  defp _key(%Helm{}), do: :helms
-  defp _key(%JumpPoint{}), do: :jump_points
-  defp _key(%Ship{}), do: :ships
-  defp _key(%Table{}), do: :tables
-  defp _key(objective) when is_struct(objective) do
-    # TODO temp hack
-    Objective.contract_type(objective)
-    :objectives
+  defp _key(struct) do
+    case struct do
+      %Battlegroup{} -> :battlegroups
+      %Helm{} -> :helms
+      %Object{} -> :objects
+      %Ship{} -> :ships
+      %Table{} -> :tables
+    end
   end
 
   def next_id(%__MODULE__{} = context, key) do

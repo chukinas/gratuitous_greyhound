@@ -1,9 +1,7 @@
 defmodule Statechart.Node.LocalName.Collection do
 
-  alias Statechart.Node
   alias Statechart.Node.LocalName
   alias Statechart.Node.Moniker
-  alias Statechart.Node.State, as: StateNode
 
   # *** *******************************
   # *** TYPES
@@ -19,39 +17,19 @@ defmodule Statechart.Node.LocalName.Collection do
 
   def empty, do: %{}
 
-  @spec from_nodes([StateNode.t]) :: t
-  def from_nodes(nodes) when is_list(nodes) do
-    local_name = fn {local_name, _} -> local_name end
-    node_name = fn {_, node_name} -> node_name end
-    prefix_keys = fn
-      {local_name, [node_name]} -> {uniq(local_name), node_name}
-      {local_name, node_names} -> {dup(local_name), node_names}
-    end
-    nodes
-    |> Stream.map(&Node.moniker/1)
-    |> Stream.flat_map(&Moniker.recursive_stream/1)
-    |> Stream.map(&Moniker.to_local_name_tuple/1)
-    #|> Stream.reject(&is_nil/1)
-    |> Stream.uniq
-    |> Enum.group_by(local_name, node_name)
-    |> Stream.map(prefix_keys)
-    |> Enum.into(%{})
-  end
-
   @spec from_monikers([Moniker.t]) :: t
   def from_monikers(monikers) when is_list(monikers) do
-    local_name = fn {local_name, _} -> local_name end
-    node_name = fn {_, node_name} -> node_name end
+    get_name = fn {name, _} -> name end
+    get_moniker = fn {_, moniker} -> moniker end
     prefix_keys = fn
-      {local_name, [node_name]} -> {uniq(local_name), node_name}
-      {local_name, node_names} -> {dup(local_name), node_names}
+      {name, [moniker]} -> {uniq(name), moniker}
+      {name, monikers} -> {dup(name), monikers}
     end
     monikers
-    |> Stream.flat_map(&Moniker.recursive_stream/1)
-    |> Stream.map(&Moniker.to_local_name_tuple/1)
-    #|> Stream.reject(&is_nil/1)
+    |> Stream.flat_map(&Moniker.unfold_up/1)
+    |> Stream.map(&{Moniker.local_name(&1), &1})
     |> Stream.uniq
-    |> Enum.group_by(local_name, node_name)
+    |> Enum.group_by(get_name, get_moniker)
     |> Stream.map(prefix_keys)
     |> Enum.into(%{})
   end
