@@ -42,8 +42,8 @@ defmodule Statechart.TestSupport.Counter do
     use Statechart, :machine
     defmachine do
       initial_context Context.new()
-      on(Increment, do: Moniker.root())
-      on(Decrement, do: Moniker.root())
+      on(Increment, do: Moniker.new_root())
+      on(Decrement, do: Moniker.new_root())
     end
   end
 

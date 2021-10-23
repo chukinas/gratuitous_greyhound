@@ -1,3 +1,4 @@
+# TODO rename Dice?
 defmodule SunsCore.DieRoller do
 
   # TODO does this module need to stand by itself? Prob not.
@@ -5,6 +6,8 @@ defmodule SunsCore.DieRoller do
 
   # *** *******************************
   # *** TYPES
+
+  @type sides :: 2 | 3 | 6 | 8 | 10 | 12
 
   use TypedStruct
   typedstruct do

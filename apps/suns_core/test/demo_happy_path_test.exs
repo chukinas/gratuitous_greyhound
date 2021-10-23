@@ -5,9 +5,11 @@ defmodule SunsCore.DemoHappyPathTest do
   alias SunsCore.TestSupport.Setup
   alias SunsCore.TestSupport.CommandPhase
   alias SunsCore.TestSupport.JumpPhase
+  alias SunsCore.TestSupport.TacticalPhase
 
   test "Setup" do
     Setup.new_mission()
+    |> Statechart.Helpers.render
     |> Setup.confirm_players      |> assert_state(:adding_players)
     |> Setup.add_player           |> assert_state(:adding_players)
     |> Setup.confirm_players      |> assert_state(:setting_scale)
@@ -38,6 +40,18 @@ defmodule SunsCore.DemoHappyPathTest do
     |> JumpPhase.deploy_jump_point(2)    |> assert_state(:jump_phase) |> assert_state(:main)
     |> JumpPhase.requisition_battlegroup |> assert_state(:deploying_battlegroup)
     |> JumpPhase.deploy_battlegroup      |> assert_state(:tactical_phase)
+  end
+
+  test "Tactical Phase" do
+    Setup.setup()
+    |> CommandPhase.command_phase
+    |> JumpPhase.jump_phase() |> assert_state(:tactical_phase) |> assert_state(:awaiting_order)
+    |> TacticalPhase.issue_engage_order
+    |> assert_state(:movement_step)
+    |> TacticalPhase.move
+    |> assert_state(:active_attacks_step)
+    |> TacticalPhase.attack_engaged_target
+    |> assert_state(:end_phase)
   end
 
 end

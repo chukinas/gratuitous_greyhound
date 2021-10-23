@@ -8,6 +8,12 @@ defmodule Statechart.Machine.Builder.Helpers do
   alias __MODULE__
   require StateInput
 
+  defmacro register_moniker(moniker) do
+    quote do
+      @__monikers__ unquote(moniker)
+    end
+  end
+
   defmacro down_moniker(local_name) do
     quote do
       new_moniker = Moniker.down(@__current_moniker__, unquote(local_name))
@@ -52,7 +58,7 @@ defmodule Statechart.Machine.Builder.Helpers do
 
   defmacro set_default(local_name) do
     quote do
-      if @__build_step__ === :update_state_nodes do
+      if @__build_step__ === :update_state_nodes_and_put_context do
         destination_moniker = Helpers.fetch_moniker!(unquote(local_name))
         update_node = &StateNode.put_default(&1, destination_moniker)
         Helpers.update_current_node!(update_node)

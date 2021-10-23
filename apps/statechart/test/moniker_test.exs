@@ -4,7 +4,7 @@ defmodule Statechart.MonikerTest do
   alias Statechart.Node.Moniker
 
   test "Moniker Transition Steps: to self" do
-    from = to = Moniker.root()
+    from = to = Moniker.new_root()
     expected_transition_steps =
       [
         start: from
@@ -13,8 +13,9 @@ defmodule Statechart.MonikerTest do
   end
 
   test "Moniker Transition Steps: to grandchild" do
+    from = Moniker.new_root()
     to =
-      Moniker.root()
+      Moniker.new_root()
       |> Moniker.down(:a)
       |> Moniker.down(:b)
     expected_transition_steps =
@@ -28,15 +29,15 @@ defmodule Statechart.MonikerTest do
 
   test "Moniker Transition Steps: to sibling" do
     from =
-      Moniker.root()
+      Moniker.new_root()
       |> Moniker.down(:a)
     to =
-      Moniker.root()
+      Moniker.new_root()
       |> Moniker.down(:x)
     expected_transition_steps =
       [
         start: from,
-        up: Moniker.root(),
+        up: Moniker.new_root(),
         down: to
       ]
     assert expected_transition_steps == Moniker.transition_steps(from, to)

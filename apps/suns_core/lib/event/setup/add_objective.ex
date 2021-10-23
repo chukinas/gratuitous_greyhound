@@ -2,22 +2,22 @@ defmodule SunsCore.Event.Setup.AddObjective do
 
   use SunsCore.Event, :impl
   alias SunsCore.Mission.Contract
-  alias SunsCore.Mission.Objective
+  alias SunsCore.Mission.Object
 
   # *** *******************************
   # *** TYPES
 
   event_struct do
-    field :objective, Objective.t
+    field :objective, Object.t
   end
 
   # *** *******************************
   # *** CONSTRUCTORS
 
-  @spec new(Objective.t) :: t
-  def new(objective) do
+  @spec new(Object.t) :: t
+  def new(object) do
     %__MODULE__{
-      objective: objective
+      objective: object
     }
   end
 
@@ -25,13 +25,13 @@ defmodule SunsCore.Event.Setup.AddObjective do
   # *** CONVERTERS
 
   def objective(%__MODULE__{objective: objective}, snapshot) do
-    Objective.set_id(objective, S.next_id(snapshot, :objectives))
+    Object.set_id(objective, S.next_id(snapshot, :objects))
   end
 
   def we_have_enough_objectives?(_ev, snapshot) do
     snapshot
     |> S.contracts
-    |> Contract.Collection.all_objectives_set_up?(snapshot |> S.objectives)
+    |> Contract.Collection.all_objectives_set_up?(snapshot |> S.objects)
   end
 
   # *** *******************************

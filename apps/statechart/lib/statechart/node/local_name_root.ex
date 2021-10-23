@@ -1,15 +1,12 @@
 defmodule Statechart.Node.LocalName.Root do
-  @type t :: %__MODULE__{}
   defstruct []
   def new, do: %__MODULE__{}
+  def name_as_atom(%__MODULE__{}), do: :root
 end
 
-alias Statechart.Node.LocalName.Root
-
-defimpl Inspect, for: Root do
-  #import Inspect.Algebra
+defimpl Inspect, for: Statechart.Node.LocalName.Root do
   require IOP
-  def inspect(_, opts) do
+  def inspect(%{}, opts) do
     IOP.color("#Root")
   end
 end

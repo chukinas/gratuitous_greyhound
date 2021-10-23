@@ -3,8 +3,9 @@ defmodule SunsCore.Event.JumpPhase.DeployBattlegroup do
   use Spatial, :pos
   use SunsCore.Event, :impl
   alias SunsCore.Mission.Battlegroup
-  alias SunsCore.Mission.Battlegroup.Class
+  alias SunsCore.Mission.JumpPoint
   alias SunsCore.Mission.Ship
+  alias SunsCore.Mission.Table
   alias SunsCore.Space.TablePose
   alias SunsCore.Space
   alias Util.IdList
@@ -30,6 +31,8 @@ defmodule SunsCore.Event.JumpPhase.DeployBattlegroup do
   # *** *******************************
   # *** CALLBACKS
 
+  # TODO check that not within 10" of planetoid
+
   def validity_check(%__MODULE__{jump_point_id: jump_point_id, poses: poses}, snapshot) do
     battlegroup =
       snapshot
@@ -54,8 +57,8 @@ defmodule SunsCore.Event.JumpPhase.DeployBattlegroup do
         Ship.new(id, Battlegroup.id(battlegroup), class_name, table_pose)
       end
     table = S.table_by_id(snapshot, table_id)
-    with :ok <- Space.check_within(jump_point, ships, Class.jump_range(class_name)),
-         :ok <- Space.check_within_table_shape(table, ships),
+    with :ok <- JumpPoint.check_ships_are_within(jump_point, ships),
+         :ok <- Table.check_contains_points(table, ships),
          :ok <- Space.check_contiguous(ships) do
       {:ok, %{battlegroup: battlegroup, ships: ships}}
     else

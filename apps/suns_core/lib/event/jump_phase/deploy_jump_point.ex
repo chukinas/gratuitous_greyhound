@@ -3,7 +3,7 @@ defmodule SunsCore.Event.JumpPhase.DeployJumpPoint do
   use SunsCore.Event, :impl
   alias SunsCore.Mission.Helm
   alias SunsCore.Mission.JumpPoint
-  alias SunsCore.Space.TablePosition
+  alias SunsCore.Space.TablePose
   alias Util.IdList
 
   # *** *******************************
@@ -11,31 +11,31 @@ defmodule SunsCore.Event.JumpPhase.DeployJumpPoint do
 
   event_struct do
     field :player_id, pos_integer
-    field :position, TablePosition.t
+    field :table_pose, TablePose.t
   end
 
   # *** *******************************
   # *** CONSTRUCTORS
 
-  @spec new(pos_integer, TablePosition.t) :: t
-  def new(player_id, %TablePosition{} = position) do
+  @spec new(pos_integer, TablePose.t) :: t
+  def new(player_id, %TablePose{} = table_pose) do
     %__MODULE__{
       player_id: player_id,
-      position: position
+      table_pose: table_pose
     }
   end
 
   # *** *******************************
   # *** CONVERTERS
 
-  def position(%__MODULE__{position: value}), do: value
+  def table_pose(%__MODULE__{table_pose: value}), do: value
   def player_id(%__MODULE__{player_id: value}), do: value
 
   def build_jump_point(event, snapshot) do
     JumpPoint.new(
       snapshot |> S.jump_points |> IdList.next_id,
       player_id(event),
-      position(event),
+      table_pose(event),
       S.turn_number(snapshot)
     )
   end

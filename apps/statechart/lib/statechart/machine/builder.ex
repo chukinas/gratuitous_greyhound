@@ -21,6 +21,12 @@ defmodule Statechart.Machine.Builder do
   @callback fetch_spec!() :: Spec.t
   @callback new() :: Machine.t
 
+  @typedoc """
+  Valid keys:
+  - `:external_states` - list of `name`s
+  """
+  @type machine_opts :: keyword()
+
   defmacro __using__(_opts) do
     quote do
       @behaviour unquote(__MODULE__)
@@ -30,15 +36,35 @@ defmodule Statechart.Machine.Builder do
     end
   end
 
-  defmacro defmachine(do: block) do
-    quote do
+  @spec defmachine(machine_opts, any) :: any
+  defmacro defmachine(opts \\ [], do_block)
+  defmacro defmachine(opts, do: block) do
 
-      @__current_moniker__ Moniker.root()
+    macro_escaped_block = Macro.escape(block)
+
+    quote do
+      opts = unquote(opts)
+      external_state_names =
+        opts
+        |> Keyword.get(:external_states, [])
+        |> case do
+          [] -> []
+          names -> [nil | names]
+        end
+        |> Enum.uniq
+      partial_machine? = not Enum.empty?(external_state_names)
+
+      @__current_moniker__ Moniker.new_root()
       @__nodes__ NodeCollection.new_with_root()
 
-      @__build_step__ :accumulate_monikers
+      @__build_step__ :build_local_name_collection
       Module.register_attribute(__MODULE__, :__monikers__, accumulate: true)
+      for name <- external_state_names do
+        moniker = Moniker.new_external(name)
+        Helpers.register_moniker(moniker)
+      end
       unquote(block)
+      # TODO rename __nicknames__?
       @__local_names__ LocalNameCollection.from_monikers(@__monikers__)
       Module.delete_attribute(__MODULE__, :__monikers__)
 
@@ -46,12 +72,17 @@ defmodule Statechart.Machine.Builder do
       unquote(block)
 
       @__build_step__ :create_state_nodes
+      for name <- external_state_names do
+        name
+        |> Moniker.new_external
+        |> StateNode.new
+        |> Helpers.put_new_node!
+      end
       unquote(block)
       Helpers.eval_leaves_and_parents()
 
-      @__build_step__ :update_state_nodes
+      @__build_step__ :update_state_nodes_and_put_context
       @__context__ nil
-      # TODO this build step name doesn't match the fact that context is assigned at this step
       unquote(block)
 
       @__build_step__ :validate_nodes
@@ -77,12 +108,32 @@ defmodule Statechart.Machine.Builder do
       defdelegate transition(machine, event), to: Machine
 
       Module.delete_attribute(__MODULE__, :__spec__)
+
+      def get_ast do
+        unquote(macro_escaped_block)
+      end
+
+    end
+  end
+
+  @doc """
+  Insert a partial machine into a parent machine.
+
+  `module` is one in which a `defmachine/2` call was made.
+  """
+  defmacro defpartial(name, module, opts \\ []) do
+    expanded_module = Macro.expand(module, __CALLER__)
+    ast = expanded_module.get_ast()
+    quote do
+      defstate(unquote(name), unquote(opts)) do
+        unquote(ast)
+      end
     end
   end
 
   defmacro default_to(local_name) when is_atom(local_name) do
     quote do
-      if @__build_step__ === :update_state_nodes do
+      if @__build_step__ === :update_state_nodes_and_put_context do
         Helpers.set_default(unquote(local_name))
       end
     end
@@ -96,14 +147,14 @@ defmodule Statechart.Machine.Builder do
 
   defmacro defstate(local_name, opts \\ [], do: block) when is_atom(local_name) do
     quote do
-      moniker = unquote(local_name)
-      if @__build_step__ === :update_state_nodes && unquote(opts[:default]) do
-        Helpers.set_default(moniker)
+      name = unquote(local_name)
+      if @__build_step__ === :update_state_nodes_and_put_context && unquote(opts[:default]) do
+        Helpers.set_default(name)
       end
-      Helpers.down_moniker(moniker)
+      Helpers.down_moniker(name)
       case @__build_step__ do
-        :accumulate_monikers ->
-          @__monikers__ @__current_moniker__
+        :build_local_name_collection ->
+          Helpers.register_moniker @__current_moniker__
         :create_state_nodes ->
           @__current_moniker__
           |> StateNode.new
@@ -130,8 +181,8 @@ defmodule Statechart.Machine.Builder do
     quote do
       Helpers.down_moniker(unquote(local_name))
       case @__build_step__ do
-        :accumulate_monikers ->
-          @__monikers__ @__current_moniker__
+        :build_local_name_collection ->
+          Helpers.register_moniker @__current_moniker__
         :create_decision_nodes ->
           Helpers.put_new_node! DecisionNode.new(
             @__current_moniker__,
@@ -147,7 +198,7 @@ defmodule Statechart.Machine.Builder do
 
   defmacro on(event, do: next_state) do
     quote do
-      if @__build_step__ === :update_state_nodes do
+      if @__build_step__ === :update_state_nodes_and_put_context do
         destination_moniker = Helpers.fetch_moniker!(unquote(next_state))
         update_node = &StateNode.put_transition(&1, unquote(event), destination_moniker)
         Helpers.update_current_node!(update_node)
@@ -157,7 +208,7 @@ defmodule Statechart.Machine.Builder do
 
   defmacro on_enter(fun) do
     quote do
-      if @__build_step__ === :update_state_nodes do
+      if @__build_step__ === :update_state_nodes_and_put_context do
         update_node =
           fn %StateNode{} = state_node ->
             StateNode.put_enter_action(state_node, unquote(fun))
@@ -167,9 +218,21 @@ defmodule Statechart.Machine.Builder do
     end
   end
 
+  defmacro on_exit(fun) do
+    quote do
+      if @__build_step__ === :update_state_nodes_and_put_context do
+        update_node =
+          fn %StateNode{} = state_node ->
+            StateNode.put_exit_action(state_node, unquote(fun))
+          end
+        Helpers.update_current_node!(update_node)
+      end
+    end
+  end
+
   defmacro autotransition(local_name) when is_atom(local_name) do
     quote do
-      if @__build_step__ === :update_state_nodes do
+      if @__build_step__ === :update_state_nodes_and_put_context do
         destination_moniker = Helpers.fetch_moniker!(unquote(local_name))
         update_node = &StateNode.put_autotransition(&1, destination_moniker)
         Helpers.update_current_node!(update_node)
@@ -179,9 +242,15 @@ defmodule Statechart.Machine.Builder do
 
   defmacro initial_context(context) do
     quote do
-      if @__build_step__ === :update_state_nodes do
+      if @__build_step__ === :update_state_nodes_and_put_context do
         @__context__ unquote(context)
       end
+    end
+  end
+
+  defmacro event >>> destination_local_name do
+    quote bind_quoted: [event: event, local_name: destination_local_name] do
+      on(event, do: local_name)
     end
   end
 

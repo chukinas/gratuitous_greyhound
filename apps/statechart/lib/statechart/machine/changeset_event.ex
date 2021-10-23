@@ -59,7 +59,7 @@ defmodule Statechart.Machine.Changeset.Event do
         _ -> false
       end
     origin_moniker
-    |> Moniker.recursive_stream
+    |> Moniker.unfold_up
     |> Stream.map(get_destination_moniker)
     |> Stream.filter(valid?)
     |> Enum.take(1)

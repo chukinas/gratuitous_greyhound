@@ -2,7 +2,7 @@ defmodule SunsCore.Event.Setup.AddPlayer do
 
   use SunsCore.Event, :impl
   alias SunsCore.Mission.Helm
-  alias SunsCore.Mission.Context, as: C
+  alias SunsCore.Context
 
   # *** *******************************
   # *** TYPES
@@ -23,7 +23,7 @@ defmodule SunsCore.Event.Setup.AddPlayer do
 
   def helm(_, context) do
     context
-    |> C.next_id(:helms)
+    |> Context.next_id(:helms)
     |> Helm.new
   end
 
@@ -33,7 +33,7 @@ defmodule SunsCore.Event.Setup.AddPlayer do
   @impl Event
   def action(event, context) do
     context
-    |> C.put_new(helm(event, context))
+    |> Context.put_new(helm(event, context))
   end
 
 end

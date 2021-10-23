@@ -6,13 +6,13 @@ defmodule Statechart.TestSupport.NestedState do
       default_to :on
       defstate :on do
         defstate :green, default: true do
-          on :cycle, do: :yellow
+          :cycle >>> :yellow
         end
         defstate :yellow do
-          on :cycle, do: :red
+          :cycle >>> :red
         end
         defstate :red do
-          on :cycle, do: :green
+          :cycle >>> :green
         end
       end
     end

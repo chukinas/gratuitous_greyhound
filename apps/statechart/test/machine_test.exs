@@ -25,6 +25,7 @@ defmodule Statechart.MachineTest do
 
   test "Nested State" do
     Statechart.TestSupport.NestedState.Machine.new()
+    |> Statechart.Helpers.render
     |> assert_state(:green)
     |> transition(:cycle)
     |> assert_state(:yellow)
@@ -51,6 +52,26 @@ defmodule Statechart.MachineTest do
   test "Decisions" do
     Statechart.TestSupport.Decision.Machine.new()
     |> assert_state(:starting)
+  end
+
+  alias Statechart.TestSupport.PartialMachine.Driving
+
+  test "Build a partial machine" do
+    Statechart.TestSupport.PartialMachine.new()
+    |> transition(Driving)
+    |> assert_state(:new_york)
+    |> transition(:fly_on_rocket_ship)
+    |> assert_state(:mars)
+  end
+
+  test "Replay a partial into another machine" do
+    Statechart.TestSupport.PartialAggregatorMachine.new()
+    |> transition(:go_home)
+    |> assert_state(:philly)
+    |> transition(Driving)
+    |> assert_state(:new_york)
+    |> transition(:fly_on_rocket_ship)
+    |> assert_state(:mars)
   end
 
   # *** *******************************

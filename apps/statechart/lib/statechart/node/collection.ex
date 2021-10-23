@@ -3,6 +3,7 @@ defmodule Statechart.Node.Collection do
   Node collection and functions for operating on it
   """
 
+  alias __MODULE__, as: Nodes
   alias Statechart.Node
   alias Statechart.Node.State, as: StateNode
   alias Statechart.Node.Decision, as: DecisionNode
@@ -21,7 +22,7 @@ defmodule Statechart.Node.Collection do
 
   def new_with_root() do
     new()
-    |> put_new_node!(Moniker.root() |> StateNode.new)
+    |> put_new_node!(Moniker.new_root() |> StateNode.new)
   end
 
   @spec from_node_names([Moniker.t]) :: t
@@ -87,4 +88,29 @@ defmodule Statechart.Node.Collection do
 
   def node_names(nodes), do: Map.keys(nodes)
 
+  # *** *******************************
+  # *** IMPLEMENTATIONS
+
+  defimpl Inspect do
+    require IOP
+    def inspect(nodes, _opts) do
+      nodes
+      |> Nodes.to_list
+    end
+  end
+
 end
+
+defimpl Statechart.Render.Protocol, for: Map do
+  alias Statechart.Node
+  alias Statechart.Node.Collection, as: Nodes
+  def render(nodes, statemachine) do
+    nodes
+    |> Nodes.to_list
+    |> Enum.sort(Node)
+    |> Enum.reduce(statemachine, fn node, statemachine ->
+      Statechart.Render.Protocol.render(node, statemachine)
+    end)
+  end
+end
+

@@ -12,6 +12,14 @@ defmodule Statechart.Node.State do
     def put(transitions, event, next_node_name) do
       Map.put(transitions, event, next_node_name)
     end
+    def render(transitions) do
+      for {event, %Moniker{} = to} <- transitions do
+        %{
+          to: Moniker.local_name(to),
+          event: event
+        }
+      end
+    end
   end
 
   @typedoc """
@@ -27,6 +35,7 @@ defmodule Statechart.Node.State do
   During compilation, nodes by be undetermined temporarily
   """
   @type node_type :: :not_yet_determined | :leaf | {:parent, default}
+  # TODO rename enter -> entry
   @type action_type :: :enter | :exit
 
   use Util.GetterStruct
@@ -83,6 +92,10 @@ defmodule Statechart.Node.State do
     Map.update!(node, :actions, &[{:enter, fun} | &1])
   end
 
+  def put_exit_action(%__MODULE__{} = node, fun) do
+    Map.update!(node, :actions, &[{:exit, fun} | &1])
+  end
+
   def put_autotransition(%__MODULE__{autotransition: nil} = node, moniker) do
     %__MODULE__{node | autotransition: moniker}
   end
@@ -135,6 +148,80 @@ defimpl Statechart.Node.Protocol, for: StateNode do
   def exit_actions(%StateNode{}) do
     []
   end
+end
 
-
+defimpl Statechart.Render.Protocol, for: StateNode do
+  alias Statechart.Node
+  alias Statechart.Node.Moniker
+  def render(node, statechart) do
+    name = Node.local_name_as_atom(node)
+    actions =
+      node
+      |> StateNode.actions
+      |> Enum.map(fn {type, fun} ->
+        type =
+          case type do
+            :enter -> :entry
+            type -> type
+          end
+        %{
+          type: type,
+          body: fun
+        }
+      end)
+    state =
+      name
+      |> statechart.new_state.()
+      |> Map.put(:actions, actions)
+    event_transitions =
+      node
+      |> StateNode.transitions
+      |> Enum.map(fn {event, to} ->
+        # statechart.new_transition(name, to, event)
+        event_string =
+          event
+          |> Atom.to_string
+          |> String.split(".")
+          |> List.last
+          |> String.to_atom
+        %{
+          from: name,
+          to: Moniker.local_name_as_atom(to),
+          event: event_string,
+          label: event_string
+        }
+      end)
+    ancestor_list = Node.ancestors_as_atom_list(node)
+    # TODO this is the same as in Decision Node
+    maybe_put_initial =
+      fn statechart ->
+        case Node.next_default!(node) do
+          %Moniker{} = moniker ->
+            to = Moniker.local_name_as_atom(moniker)
+            statechart.put_initial.(statechart, name, ancestor_list, to)
+          _ ->
+            statechart
+        end
+      end
+    maybe_put_autotransition =
+      fn statechart ->
+        case StateNode.autotransition(node) do
+          nil ->
+            statechart
+          moniker ->
+            transition =
+              %{
+                from: name,
+                to: Moniker.local_name_as_atom(moniker),
+                label: "[auto]"
+              }
+            statechart.put_transitions.(statechart, [transition])
+        end
+      end
+    statechart
+    |> statechart.put_state.(state, ancestor_list)
+    |> statechart.put_transitions.(event_transitions)
+    |> maybe_put_initial.()
+    |> maybe_put_autotransition.()
+  end
 end

@@ -5,6 +5,7 @@ defmodule Statechart.Machine.Spec do
   It get interpreted by the Statechart.Machine
   """
 
+  alias __MODULE__
   alias Statechart.Type.Context
   alias Statechart.Node.LocalName.Collection, as: LocalNameCollection
   alias Statechart.Node.Collection, as: NodeCollection
@@ -36,5 +37,16 @@ defmodule Statechart.Machine.Spec do
 
   # *** *******************************
   # *** CONVERTERS
+
+  # *** *******************************
+  # *** IMPLEMENTATIONS
+
+  defimpl Statechart.Render.Protocol do
+    def render(spec, statemachine) do
+      spec
+      |> Spec.nodes
+      |> Statechart.Render.Protocol.render(statemachine)
+    end
+  end
 
 end

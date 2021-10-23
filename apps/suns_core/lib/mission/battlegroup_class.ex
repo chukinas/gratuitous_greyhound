@@ -1,8 +1,10 @@
 defmodule SunsCore.Mission.Battlegroup.Class do
 
   alias SunsCore.Mission.Battlegroup.ClassSpec
+  alias SunsCore.Mission.Weapon
 
   @type t :: ClassSpec.t
+  @type symbol :: atom # e.g. recon_wing, gunship, etc
 
   types = [
     #   NAME                COST  MASS  THRUST  SILHOUETTE  SHIELDS PRIMARYWEAPONS  AUXILIARYWEAPONS
@@ -66,6 +68,18 @@ defmodule SunsCore.Mission.Battlegroup.Class do
 
   def jump_range(class) do
     6 - mass(class)
+  end
+
+  @spec weapon_system_symbol(symbol, Weapon.type) :: Weapon.spec
+  def weapon_system_symbol(class_symbol, weapon_type) do
+    case weapon_type do
+      :primary -> primary_weapons(class_symbol)
+      :aux -> auxiliary_weapons(class_symbol)
+    end
+  end
+
+  def weapon_spec(class_symbol, weapon_type) do
+    weapon_system_symbol(class_symbol, weapon_type)
   end
 
 end
