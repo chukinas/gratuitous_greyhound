@@ -4,8 +4,6 @@ defmodule SunsCore.Machine.PassiveAttacksStep do
 
   defmachine external_states: ~w/jump_out_step/a do
 
-    # TODO figure out a way to move this alias outside the defmachine block
-    # There are too many potential namespace conflicts
     alias SunsCore.Context.PassiveAttacksStep, as: PassiveAttacksContext
 
     on_enter &PassiveAttacksContext.init_player_order/1
