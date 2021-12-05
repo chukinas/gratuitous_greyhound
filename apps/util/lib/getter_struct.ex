@@ -34,6 +34,9 @@ defmodule Util.GetterStructPlugin do
 end
 
 defmodule Util.GetterStruct do
+  @moduledoc """
+  Expose the `getter_struct/2` macro.
+  """
 
   defmacro __using__(_) do
     quote do
@@ -42,11 +45,38 @@ defmodule Util.GetterStruct do
     end
   end
 
-  defmacro getter_struct(do: block) do
+  @doc """
+  Example:
+  ```elixir
+  defmodule MyModule do
+    use Util.GetterStruct
+    getter_struct do
+      field :hello, String.t
+      field :world, String.t, enforce: false
+    end
+  end
+  ```
+
+  Translates to:
+  ```elixir
+  defmodule MyModule do
+    use TypedStruct
+    typedstruct, enforce: true do
+      field :hello, String.t
+      field :world, String.t, enforce: false
+    end
+
+    def hello(%__MODULE__{hello: value}), do: value
+    def world(%__MODULE__{world: value}), do: value
+  end
+  ```
+  """
+  defmacro getter_struct(opts \\ [], do: block) do
     quote do
       use TypedStruct
-      typedstruct enforce: true do
-        plugin unquote Util.GetterStructPlugin
+      typedstruct Keyword.put_new(unquote(opts), :enforce, true) do
+        # TODO is this unquote necessary?
+        plugin unquote(Util.GetterStructPlugin)
         unquote(block)
       end
     end
