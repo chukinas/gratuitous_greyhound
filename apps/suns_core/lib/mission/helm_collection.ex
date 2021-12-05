@@ -27,10 +27,16 @@ defmodule SunsCore.Mission.Helm.Collection do
     Enum.all?(helms, fn %Helm{cmd: cmd} -> cmd end)
   end
 
+  @doc """
+  Get list of helm (player) ids,
+  sorted in clockwise play order,
+  starting with the given player id.
+  """
+  @spec sorted_player_ids_starting_with(t, integer) :: [Helm.id]
   def sorted_player_ids_starting_with(helms, starting_player_id) do
     helms
-    |> Enum.map(&Helm.id/1)
-    |> Enum.sort # later, might need to be starter about this
+    |> Stream.map(&Helm.id/1)
+    |> Enum.sort # later, might need to be smarter about this
     |> Stream.cycle
     |> Stream.take(2 * length(helms)) # Just in case the starting_player_id isn't present
     |> Stream.drop_while(&(&1 != starting_player_id))

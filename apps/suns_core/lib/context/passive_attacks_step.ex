@@ -2,14 +2,27 @@ defmodule SunsCore.Context.PassiveAttacksStep do
 
   alias SunsCore.Mission.Attack
   alias SunsCore.Context
+  alias SunsCore.Mission.PlayerOrderTracker
   require Logger
 
-  defmodule SubContext do
-    # TODO use typedstruct module opt
+  defmodule Subcontext do
+    @derive [SunsCore.Mission.Subcontext]
     use Util.GetterStruct
     getter_struct do
-      field :turn_order, any
-      field :avail_attacks, Attack.t
+      field :player_order_tracker, PlayerOrderTracker.t
+      field :avail_attacks, [Attack.t]
+    end
+
+    def new(%Context{} = ctx) do
+      active_player_id = 1
+      player_order_tracker =
+        ctx
+        |> Context.helms
+        |> PlayerOrderTracker.new(active_player_id)
+      %__MODULE__{
+        player_order_tracker: player_order_tracker,
+        avail_attacks: []
+      }
     end
   end
 
@@ -19,34 +32,28 @@ defmodule SunsCore.Context.PassiveAttacksStep do
   # *** REDUCERS
 
   def calc_avail_attacks(%Context{} = context) do
-    passive_attacks_data =
+    subcontext =
       context
-      |> Context.passive_attacks
-      |> do_calculate
-    %Context{context | passive_attacks: passive_attacks_data}
+      |> Context.fetch_subcontext!(Subcontext)
+    # TODO do something with the subcontext
+    Context.set(context, subcontext)
   end
 
-  def cleanup(%Context{} = context) do
-    %Context{context | passive_attacks: nil}
+  def cleanup(ctx) do
+    Context.clear_subcontext(ctx, Subcontext)
   end
 
-  defp do_calculate(nil) do
-    Logger.warn "TODO: needs implemented"
-    nil
-  end
-
-  def init_player_order(ctx) do
-    Logger.warn "TODO: needs implemented"
-    ctx
+  def init(%Context{} = ctx) do
+    Context.set(ctx, Subcontext.new(ctx))
   end
 
   def picking_next_player(ctx) do
-    Logger.warn "TODO: needs implemented"
+    Logger.warn "TODO: `picking_next_player/1` needs implemented"
     ctx
   end
 
   def remove_current_player(ctx) do
-    Logger.warn "TODO: needs implemented"
+    Logger.warn "TODO: `remove_current_player/1` needs implemented"
     ctx
   end
 
@@ -54,17 +61,17 @@ defmodule SunsCore.Context.PassiveAttacksStep do
   # *** CONVERTERS
 
   def any_avail_attacks?(%Context{}) do
-    Logger.warn "TODO: needs implemented"
+    Logger.warn "TODO: any_avail_attacks? needs implemented"
     false
   end
 
   def any_destroyed_ships?(%Context{}) do
-    Logger.warn "TODO: needs implemented"
+    Logger.warn "TODO: any_destroyed_ships? needs implemented"
     false
   end
 
   def any_players_left?(%Context{}) do
-    Logger.warn "TODO: needs implemented"
+    Logger.warn "TODO: any_players_left? needs implemented"
     false
   end
 

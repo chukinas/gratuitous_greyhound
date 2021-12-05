@@ -10,6 +10,7 @@ defmodule SunsCore.Mission.PlayerOrderTracker do
   @type player_id :: integer
 
   use Util.GetterStruct
+  # TODO make sure gettersturct doesn't enforce by default
   getter_struct do
     # TODO I think these first three don't belong here...
     # They don't fit with e.g. passive attacks step
@@ -91,10 +92,3 @@ defmodule SunsCore.Mission.PlayerOrderTracker do
   def complete?(_), do: false
 
 end
-
-# TODO
-# This needs to be able to ...
-# Keep track of turn order?
-#   i.e. who's next in clockwise order
-# Who is currently active player?
-#

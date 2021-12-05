@@ -8,6 +8,8 @@ defmodule SunsCore.Context do
   alias SunsCore.Mission.Object
   alias SunsCore.Mission.Order
   alias SunsCore.Mission.Ship
+  alias SunsCore.Mission.Subcontext
+  alias SunsCore.Mission.Subcontext.Collection, as: Subcontexts
   alias SunsCore.Mission.Table
   alias SunsCore.Mission.PlayerOrderTracker
   alias SunsCore.Space
@@ -25,18 +27,20 @@ defmodule SunsCore.Context do
   use Util.GetterStruct
   getter_struct do
     field :administrator, :system | pos_integer, enforce: false
+    field :scale, pos_integer, enforce: false
+    field :subcontexts, Subcontexts.t, default: Subcontexts.new()
+    # TODO delete
+    field :turn_order_tracker, PlayerOrderTracker.t, enforce: false
+    field :turn_number, pos_integer, default: 0
+    # IdLists
     field :battlegroups, [Battlegroup.t], default: []
     field :contracts, [Contract.t], default: [Contract.Builder.BasicTraining.demolition()]
     field :current_order, [Order.t], enforce: false
     field :helms, [Helm.t], default: []
     field :jump_points, [JumpPoint.t], default: []
     field :objects, [Object.t], default: []
-    field :passive_attacks, PassiveAttacks.t, enforce: false
-    field :scale, pos_integer, enforce: false
     field :ships, [Ship.t], default: []
     field :tables, [Table.t], default: []
-    field :turn_order_tracker, PlayerOrderTracker.t, enforce: false
-    field :turn_number, pos_integer, default: 0
   end
 
   # *** *******************************
@@ -48,6 +52,14 @@ defmodule SunsCore.Context do
 
   # *** *******************************
   # *** REDUCERS
+
+  def clear_subcontext(%__MODULE__{} = ctx, module) do
+    subcontexts =
+      ctx
+      |> subcontexts
+      |> Subcontexts.delete(module)
+    struct!(ctx, subcontexts: subcontexts)
+  end
 
   # I could have better terminology for this...
   # overwrite puts an item into a list
@@ -63,8 +75,13 @@ defmodule SunsCore.Context do
     Enum.reduce(models, snapshot, &put_new(&2, &1))
   end
 
-  def put_new(%__MODULE__{} = snapshot, model) do
-    Map.update!(snapshot, _key(model), &IdList.put(&1, model))
+  def put_new(%__MODULE__{subcontexts: subcontexts} = ctx, model) do
+    cond do
+      Subcontext.impl?(model) && not Subcontexts.has?(subcontexts, model) ->
+        struct!(ctx, subcontexts: Subcontexts.put(subcontexts, model))
+      true ->
+        Map.update!(ctx, _key(model), &IdList.put(&1, model))
+    end
   end
 
   def incr_turn_number(%__MODULE__{} = snapshot) do
@@ -75,8 +92,21 @@ defmodule SunsCore.Context do
     %{cxt | turn_order_tracker: tot}
   end
 
+  def set(%__MODULE__{} = ctx, item) do
+    if Subcontext.impl?(item) do
+      Map.update!(ctx, :subcontexts, &Subcontexts.put(&1, item))
+    else
+      raise "no matching subcontext!"
+    end
+  end
+
   # *** *******************************
   # *** CONVERTERS
+
+  @spec fetch_subcontext!(t, module | Subcontext.t) :: Subcontext.t
+  def fetch_subcontext!(%__MODULE__{subcontexts: subcontexts}, module_or_struct) do
+    Subcontexts.fetch!(subcontexts, module_or_struct)
+  end
 
   def get(%__MODULE__{} = snapshot, key), do: Map.fetch!(snapshot, key)
 

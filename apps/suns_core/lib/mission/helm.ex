@@ -11,10 +11,12 @@ defmodule SunsCore.Mission.Helm do
 
   @cmd_categories ~w/initiative jump tactical/a
 
+  @type id :: pos_integer
+
   use Util.GetterStruct
   getter_struct do
     # same as player_id
-    field :id, pos_integer
+    field :id, id
     field :credits, integer, default: 0
     field :cmd, nil | Cmd.t, enforce: false
   end

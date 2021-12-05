@@ -35,8 +35,9 @@ defmodule SunsCore.Machine do
         defstate :awaiting_order, default: true do
           IssueOrder >>> :movement_step
         end
+
         defstate :movement_step do
-          Move >>> :active_attacks_step
+          Move >>> :passive_attacks_step
         end
 
         decision :goto_remove_dmg?,

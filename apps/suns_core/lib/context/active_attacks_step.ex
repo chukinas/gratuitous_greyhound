@@ -1,5 +1,7 @@
 defmodule SunsCore.Context.ActiveAttacksStep do
 
+  alias SunsCore.Context
+
   @type t :: Context.t
 
   alias SunsCore.Context

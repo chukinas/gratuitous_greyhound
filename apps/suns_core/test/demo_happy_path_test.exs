@@ -36,8 +36,8 @@ defmodule SunsCore.DemoHappyPathTest do
   test "Jump Phase" do
     Setup.setup()
     |> CommandPhase.command_phase        |> assert_state(:jump_phase) |> assert_state(:main)
-    |> JumpPhase.deploy_jump_point(1)    |> assert_state(:jump_phase) |> assert_state(:main)
-    |> JumpPhase.deploy_jump_point(2)    |> assert_state(:jump_phase) |> assert_state(:main)
+    |> JumpPhase.deploy_jump_point(1)    |> assert_state(:jump_phase)
+    |> JumpPhase.deploy_jump_point(2)    |> assert_state(:jump_phase)
     |> JumpPhase.requisition_battlegroup |> assert_state(:deploying_battlegroup)
     |> JumpPhase.deploy_battlegroup      |> assert_state(:tactical_phase)
   end
@@ -46,12 +46,11 @@ defmodule SunsCore.DemoHappyPathTest do
     Setup.setup()
     |> CommandPhase.command_phase
     |> JumpPhase.jump_phase() |> assert_state(:tactical_phase) |> assert_state(:awaiting_order)
-    |> TacticalPhase.issue_engage_order
-    |> assert_state(:movement_step)
+    |> TacticalPhase.issue_engage_order |> assert_state(:movement_step)
     |> TacticalPhase.move
-    |> assert_state(:active_attacks_step)
-    |> TacticalPhase.attack_engaged_target
-    |> assert_state(:end_phase)
+    |> assert_state(:passive_attacks_step)
+    # |> TacticalPhase.attack_engaged_target
+    # |> assert_state(:end_phase)
   end
 
 end
