@@ -36,25 +36,7 @@ defmodule SunsCore.Machine do
           IssueOrder >>> :movement_step
         end
 
-        defstate :movement_step do
-          Move >>> :passive_attacks_step
-        end
-
-        decision :goto_remove_dmg?,
-          &Context.Order.red_alert?/1,
-          if_true: :removing_damage,
-          else: :goto_vector_movement?
-        defstate :removing_damage do
-          RemoveDamage >>> :passive_attacks_step
-        end
-
-        decision :goto_vector_movement?,
-          &Context.Order.vector?/1,
-          if_true: :vector_movement,
-          else: :passive_attacks_step
-        defstate :vector_movement do
-          Move >>> :passive_attacks_step
-        end
+        defpartial :movement_step, SunsCore.Machine.MovementStep
 
         defpartial :passive_attacks_step, SunsCore.Machine.PassiveAttacksStep
 

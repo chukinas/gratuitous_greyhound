@@ -1,4 +1,4 @@
-defmodule SunsCore.Event.TacticalPhase.Move do
+defmodule SunsCore.Event.MovementStep.Move do
 
   use SunsCore.Event, :impl
   alias SunsCore.Mission.Ship.Move, as: ShipMove

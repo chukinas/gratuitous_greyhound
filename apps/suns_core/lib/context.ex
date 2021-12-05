@@ -27,6 +27,7 @@ defmodule SunsCore.Context do
   use Util.GetterStruct
   getter_struct do
     field :administrator, :system | pos_integer, enforce: false
+    field :current_order, [Order.t], enforce: false
     field :scale, pos_integer, enforce: false
     field :subcontexts, Subcontexts.t, default: Subcontexts.new()
     # TODO delete
@@ -35,7 +36,6 @@ defmodule SunsCore.Context do
     # IdLists
     field :battlegroups, [Battlegroup.t], default: []
     field :contracts, [Contract.t], default: [Contract.Builder.BasicTraining.demolition()]
-    field :current_order, [Order.t], enforce: false
     field :helms, [Helm.t], default: []
     field :jump_points, [JumpPoint.t], default: []
     field :objects, [Object.t], default: []

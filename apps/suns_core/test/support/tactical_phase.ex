@@ -4,6 +4,7 @@ defmodule SunsCore.TestSupport.TacticalPhase do
   use SunsCore.Context.JumpPhase
   use SunsCore.Event.TacticalPhase
   import SunsCore.Space
+  alias SunsCore.Event
   alias SunsCore.TestSupport.Helpers
   alias SunsCore.Mission.Order
   alias SunsCore.Mission.Ship.Move, as: ShipMove
@@ -19,10 +20,11 @@ defmodule SunsCore.TestSupport.TacticalPhase do
     |> Helpers.apply_transition(machine)
   end
 
+  # TODO rename move_towards_station
   def move(machine) do
     ShipMove.new(1, new_position(22, 22))
     |> List.wrap
-    |> Move.new
+    |> Event.MovementStep.Move.new
     |> Helpers.apply_transition(machine)
   end
 

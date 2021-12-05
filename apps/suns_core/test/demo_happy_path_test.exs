@@ -47,6 +47,7 @@ defmodule SunsCore.DemoHappyPathTest do
     |> CommandPhase.command_phase
     |> JumpPhase.jump_phase() |> assert_state(:tactical_phase) |> assert_state(:awaiting_order)
     |> TacticalPhase.issue_engage_order |> assert_state(:movement_step)
+    |> IOP.inspect(__MODULE__)
     |> TacticalPhase.move
     |> assert_state(:passive_attacks_step)
     # |> TacticalPhase.attack_engaged_target

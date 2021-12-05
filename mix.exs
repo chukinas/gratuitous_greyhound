@@ -77,7 +77,8 @@ defmodule Dreadnought.Umbrella.MixProject do
       ignore_apps: [
         :collision_detection,
         :dreadnought,
-        :dreadnought_web
+        :dreadnought_web,
+        :suns_core
       ]
     ]
   end
