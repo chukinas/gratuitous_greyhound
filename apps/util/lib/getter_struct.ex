@@ -71,12 +71,21 @@ defmodule Util.GetterStruct do
   end
   ```
   """
-  defmacro getter_struct(opts \\ [], do: block) do
+  defmacro getter_struct(opts, do: block) do
+    new_opts = Keyword.put_new(opts, :enforce, true)
     quote do
       use TypedStruct
-      typedstruct Keyword.put_new(unquote(opts), :enforce, true) do
+      typedstruct unquote(new_opts) do
         # TODO is this unquote necessary?
         plugin unquote(Util.GetterStructPlugin)
+        unquote(block)
+      end
+    end
+  end
+
+  defmacro getter_struct(do: block) do
+    quote do
+      getter_struct [] do
         unquote(block)
       end
     end
