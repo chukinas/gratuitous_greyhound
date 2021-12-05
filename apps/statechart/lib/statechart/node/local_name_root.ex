@@ -1,5 +1,10 @@
 defmodule Statechart.Node.LocalName.Root do
-  defstruct []
+  @moduledoc false
+
+  use TypedStruct
+  typedstruct do
+  end
+
   def new, do: %__MODULE__{}
   def name_as_atom(%__MODULE__{}), do: :root
 end

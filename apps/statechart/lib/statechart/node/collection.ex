@@ -91,13 +91,13 @@ defmodule Statechart.Node.Collection do
   # *** *******************************
   # *** IMPLEMENTATIONS
 
-  defimpl Inspect do
-    require IOP
-    def inspect(nodes, _opts) do
-      nodes
-      |> Nodes.to_list
-    end
-  end
+  #defimpl Inspect do
+  #  require IOP
+  #  def inspect(nodes, _opts) do
+  #    nodes
+  #    |> Nodes.to_list
+  #  end
+  #end
 
 end
 
