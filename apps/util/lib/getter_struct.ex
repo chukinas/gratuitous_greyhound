@@ -1,13 +1,7 @@
 defmodule Util.GetterStructPlugin do
+  @moduledoc false
 
   use TypedStruct.Plugin
-
-  #@impl true
-  #defmacro init(_) do
-  #  quote do
-  #    Module.register_attribute(__MODULE__, :__getter_fields__, accumulate: true)
-  #  end
-  #end
 
   @impl true
   def field(name, _type, _opts) do
@@ -15,21 +9,8 @@ defmodule Util.GetterStructPlugin do
       def unquote(name)(%{unquote(name) => value}) do
         value
       end
-      @__getter_fields__ unquote name
     end
   end
-
-  #@impl true
-  #def after_definition(_opts) do
-  #  quote do
-  #    #for field <- @__getter_fields__ do
-  #    #  def unquote(var!(field))() do
-  #    #    12
-  #    #  end
-  #    #end
-  #    Module.delete_attribute(__MODULE__, :__getter_fields__)
-  #  end
-  #end
 
 end
 
@@ -46,6 +27,8 @@ defmodule Util.GetterStruct do
   end
 
   @doc """
+  Generate an enforced `TypedStruct` with getter function for each field.
+
   Example:
   ```elixir
   defmodule MyModule do
@@ -71,21 +54,13 @@ defmodule Util.GetterStruct do
   end
   ```
   """
-  defmacro getter_struct(opts, do: block) do
+  defmacro getter_struct(opts \\ [], do: block) do
     new_opts = Keyword.put_new(opts, :enforce, true)
     quote do
       use TypedStruct
       typedstruct unquote(new_opts) do
         # TODO is this unquote necessary?
         plugin unquote(Util.GetterStructPlugin)
-        unquote(block)
-      end
-    end
-  end
-
-  defmacro getter_struct(do: block) do
-    quote do
-      getter_struct [] do
         unquote(block)
       end
     end

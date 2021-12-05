@@ -44,6 +44,10 @@ defmodule Dreadnought.Umbrella.MixProject do
     # https://hexdocs.pm/ex_doc/readme.html
     [
       groups_for_modules: [
+        "Util": [
+          IOP,
+          ~r/Util/
+        ],
         Statechart: [~r/Statechart/],
         Spatial: [Spatial],
         "Linear Algebra": [~r/Spatial.LinearAlgebra/],
@@ -67,7 +71,8 @@ defmodule Dreadnought.Umbrella.MixProject do
       nest_modules_by_prefix: [
         Statechart,
         Spatial,
-        SunsCore
+        SunsCore,
+        Util
       ],
       ignore_apps: [
         :collision_detection,
