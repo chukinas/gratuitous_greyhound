@@ -23,7 +23,7 @@ defmodule SunsCore.MixProject do
     ]
   end
 
-  defp elixirc_paths(:test), do: ~w(lib test/support)
+  defp elixirc_paths(env) when env in ~w/dev test/a, do: ~w(lib test/support)
   defp elixirc_paths(_), do: ~w/lib/
 
   # Run "mix help deps" to learn about dependencies.
