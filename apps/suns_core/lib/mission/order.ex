@@ -5,7 +5,7 @@ defmodule SunsCore.Mission.Order do
   # *** *******************************
   # *** TYPES
 
-  @type valid_order :: :vector | {:engage, GlobalId.t} | :red_alert | :jump_out
+  @type valid_order :: :vector | {:engage, target :: GlobalId.t} | :red_alert | :jump_out
   @type valid_order_name :: :vector | :engage | :red_alert | :jump_out
 
   @valid_order_name ~w/vector red_alert jump_out engage/a
@@ -14,6 +14,7 @@ defmodule SunsCore.Mission.Order do
   getter_struct do
     field :battlegroup_id, integer
     field :order, valid_order
+    field :complete?, boolean, default: false
   end
 
   # *** *******************************
@@ -38,6 +39,11 @@ defmodule SunsCore.Mission.Order do
 
   # *** *******************************
   # *** REDUCERS
+
+  @spec complete(t) :: t
+  def complete(%__MODULE__{} = order) do
+    struct!(order, complete?: true)
+  end
 
   # *** *******************************
   # *** CONVERTERS

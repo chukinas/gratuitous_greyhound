@@ -33,16 +33,16 @@ defmodule SunsCore.Event.JumpPhase.DeployJumpPoint do
 
   def build_jump_point(event, snapshot) do
     JumpPoint.new(
-      snapshot |> S.jump_points |> IdList.next_id,
+      snapshot |> Ctx.jump_points |> IdList.next_id,
       player_id(event),
       table_pose(event),
-      S.turn_number(snapshot)
+      Ctx.turn_number(snapshot)
     )
   end
 
   def helm(ev, snapshot) do
     snapshot
-    |> S.helm_by_id(ev |> player_id)
+    |> Ctx.helm_by_id(ev |> player_id)
   end
 
   def avail_jump_command?(ev, snapshot) do

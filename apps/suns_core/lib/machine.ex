@@ -2,10 +2,7 @@ defmodule SunsCore.Machine do
 
   use Statechart, :machine
 
-  use SunsCore.Event.CommandPhase
-  use SunsCore.Event.TacticalPhase
   alias Statechart.Machine
-  alias Statechart
   alias SunsCore.Context
 
   defmachine do
@@ -25,8 +22,9 @@ defmodule SunsCore.Machine do
 
       defpartial :jump_phase, SunsCore.Machine.JumpPhase
 
+      # TODO move this INTO the tactical phase
       decision :any_battlegroups_still_unactivated?,
-        &TacticalPhase.any_battlegroups_still_unactivated?/1,
+        &Context.TacticalPhase.any_battlegroups_still_unactivated?/1,
         if_true: :awaiting_command,
         else: :active_attacks_step
 
@@ -62,6 +60,7 @@ defmodule SunsCore.Machine do
 
   end
 
+  # TODO rename or delete
   def snapshot(%Machine{} = machine) do
     %Context{} = snapshot = Machine.context(machine)
     snapshot

@@ -1,4 +1,4 @@
-defmodule SunsCore.Event.TacticalPhase do
+defmodule SunsCore.Context.TacticalPhase do
 
   alias SunsCore.Context
 
@@ -6,15 +6,6 @@ defmodule SunsCore.Event.TacticalPhase do
   # *** TYPES
 
   @type t :: Context.t
-
-  defmacro __using__(_opts) do
-    quote do
-      alias SunsCore.Event.TacticalPhase.IssueOrder
-      alias SunsCore.Event.TacticalPhase.Move
-      alias SunsCore.Event.ActiveAttacksStep.AttackEngagedTarget
-      alias unquote(__MODULE__)
-    end
-  end
 
   # *** *******************************
   # *** REDUCERS

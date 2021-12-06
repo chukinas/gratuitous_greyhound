@@ -10,6 +10,8 @@ defmodule SunsCore.Event do
   defmacro __using__(:impl) do
     quote do
       use Statechart, :event
+      alias SunsCore.Context, as: Ctx
+      # TODO delete these two
       alias SunsCore.Context, as: S
       alias SunsCore.Context, as: Cxt
       import unquote(__MODULE__), only: [event_struct: 1]
