@@ -1,4 +1,4 @@
-alias SunsCore.Mission.Subcontext
+alias SunsCore.Subcontext
 
 defprotocol Subcontext do
   @moduledoc """

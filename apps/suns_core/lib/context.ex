@@ -8,8 +8,8 @@ defmodule SunsCore.Context do
   alias SunsCore.Mission.Object
   alias SunsCore.Mission.Order
   alias SunsCore.Mission.Ship
-  alias SunsCore.Mission.Subcontext
-  alias SunsCore.Mission.Subcontext.Collection, as: Subcontexts
+  alias SunsCore.Subcontext
+  alias SunsCore.Subcontext.Collection, as: Subcontexts
   alias SunsCore.Mission.Table
   alias SunsCore.Mission.PlayerOrderTracker
   alias SunsCore.Space

@@ -1,6 +1,6 @@
-defmodule SunsCore.Mission.Subcontext.Collection do
+defmodule SunsCore.Subcontext.Collection do
 
-  alias SunsCore.Mission.Subcontext
+  alias SunsCore.Subcontext
 
   # *** *******************************
   # *** TYPES

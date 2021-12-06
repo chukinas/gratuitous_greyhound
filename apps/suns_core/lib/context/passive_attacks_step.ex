@@ -1,30 +1,8 @@
 defmodule SunsCore.Context.PassiveAttacksStep do
 
-  alias SunsCore.Mission.Attack
   alias SunsCore.Context
-  alias SunsCore.Mission.PlayerOrderTracker
   require Logger
-
-  defmodule Subcontext do
-    @derive [SunsCore.Mission.Subcontext]
-    use Util.GetterStruct
-    getter_struct do
-      field :player_order_tracker, PlayerOrderTracker.t
-      field :avail_attacks, [Attack.t]
-    end
-
-    def new(%Context{} = ctx) do
-      active_player_id = 1
-      player_order_tracker =
-        ctx
-        |> Context.helms
-        |> PlayerOrderTracker.new(active_player_id)
-      %__MODULE__{
-        player_order_tracker: player_order_tracker,
-        avail_attacks: []
-      }
-    end
-  end
+  alias SunsCore.Subcontext.PassiveAttacksStep, as: Subcontext
 
   @type t :: Context.t
 
