@@ -1,4 +1,4 @@
-defmodule Statechart.Node.LocalName.Root do
+defmodule Statechart.Node.Id.Root do
   @moduledoc false
 
   use TypedStruct
@@ -9,7 +9,7 @@ defmodule Statechart.Node.LocalName.Root do
   def name_as_atom(%__MODULE__{}), do: :root
 end
 
-defimpl Inspect, for: Statechart.Node.LocalName.Root do
+defimpl Inspect, for: Statechart.Node.Id.Root do
   require IOP
   def inspect(%{}, opts) do
     IOP.color("#Root")

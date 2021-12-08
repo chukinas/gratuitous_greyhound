@@ -3,7 +3,7 @@
 defmodule Statechart.Node.Id do
   @moduledoc false
 
-  alias Statechart.Node.LocalName.Root
+  alias Statechart.Node.Id.Root
 
   @type t :: atom | Root.t
 

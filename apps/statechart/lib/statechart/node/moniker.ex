@@ -8,9 +8,8 @@ defmodule Statechart.Node.Moniker do
 
 
   alias Statechart.Node.Id
-  alias Statechart.Node.LocalName.External
-  # TODO rename Node.Name.Root
-  alias Statechart.Node.LocalName.Root
+  alias Statechart.Node.Id.External
+  alias Statechart.Node.Id.Root
   alias Statechart.Node.Moniker.Self
   alias Statechart.Node.Moniker.NameChain
 
@@ -181,8 +180,8 @@ alias Statechart.Node.Moniker
 
 defimpl Inspect, for: Moniker do
   import Inspect.Algebra
-  alias Statechart.Node.LocalName.External
-  alias Statechart.Node.LocalName.Root
+  alias Statechart.Node.Id.External
+  alias Statechart.Node.Id.Root
   require IOP
   def inspect(%Moniker{name_chain: name_chain}, opts) do
     case name_chain do
