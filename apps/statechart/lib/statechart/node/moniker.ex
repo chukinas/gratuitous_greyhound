@@ -7,7 +7,7 @@ defmodule Statechart.Node.Moniker do
   #   HeadName: the latest Name in the NameChain. May or may not be unique
 
 
-  alias Statechart.Node.LocalName
+  alias Statechart.Node.Id
   alias Statechart.Node.LocalName.External
   # TODO rename Node.Name.Root
   alias Statechart.Node.LocalName.Root
@@ -75,7 +75,7 @@ defmodule Statechart.Node.Moniker do
   # *** *******************************
   # *** CONVERTERS
 
-  @spec contains?(t, LocalName.t | NameChain.t) :: boolean
+  @spec contains?(t, Id.t | NameChain.t) :: boolean
   def contains?(%__MODULE__{name_chain: [_ | parent_name_chain] = name_chain}, sought_name_chain)
   when is_list(sought_name_chain)
   and length(name_chain) > length(sought_name_chain) do

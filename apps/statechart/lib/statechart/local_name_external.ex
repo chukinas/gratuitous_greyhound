@@ -1,3 +1,4 @@
+# TODO is this used anywhere?
 defmodule Statechart.Node.LocalName.External do
   defstruct []
   def new, do: %__MODULE__{}

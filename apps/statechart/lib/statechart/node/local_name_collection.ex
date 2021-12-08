@@ -1,15 +1,16 @@
 defmodule Statechart.Node.LocalName.Collection do
 
-  alias Statechart.Node.LocalName
+  alias Statechart.Node.Id
   alias Statechart.Node.Moniker
 
   # *** *******************************
   # *** TYPES
 
+  # TODO Simplify this. I won't be alllowing duplicates for a long time, if ever
   @type local_name :: any
   @type t :: %{
-    {:uniq, LocalName.t} => Moniker.t,
-    {:dup, LocalName.t} => [Moniker.t]
+    {:uniq, Id.t} => Moniker.t,
+    {:dup, Id.t} => [Moniker.t]
   }
 
   # *** *******************************
