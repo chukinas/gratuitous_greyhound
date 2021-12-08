@@ -17,6 +17,7 @@ defmodule Statechart.Machine.Builder do
   alias Statechart.Node.Collection, as: NodeCollection
   alias Statechart.Node.State, as: StateNode
   require StateInput
+  import Statechart.Node.Id
 
   @callback fetch_spec!() :: Spec.t
   @callback new() :: Machine.t
@@ -64,8 +65,7 @@ defmodule Statechart.Machine.Builder do
         Helpers.register_moniker(moniker)
       end
       unquote(block)
-      # TODO rename __nicknames__?
-      @__local_names__ LocalNameCollection.from_monikers(@__monikers__)
+      @__node_ids__ LocalNameCollection.from_monikers(@__monikers__)
       Module.delete_attribute(__MODULE__, :__monikers__)
 
       @__build_step__ :create_decision_nodes
@@ -88,9 +88,9 @@ defmodule Statechart.Machine.Builder do
       @__build_step__ :validate_nodes
       unquote(block)
 
-      @__spec__ Spec.new(__MODULE__, @__context__, @__local_names__, @__nodes__)
+      @__spec__ Spec.new(__MODULE__, @__context__, @__node_ids__, @__nodes__)
       Module.delete_attribute(__MODULE__, :__context__)
-      Module.delete_attribute(__MODULE__, :__local_names__)
+      Module.delete_attribute(__MODULE__, :__node_ids__)
       Module.delete_attribute(__MODULE__, :__nodes__)
       Module.delete_attribute(__MODULE__, :__build_step__)
       Module.delete_attribute(__MODULE__, :__current_moniker__)
@@ -131,23 +131,23 @@ defmodule Statechart.Machine.Builder do
     end
   end
 
-  defmacro default_to(local_name) when is_atom(local_name) do
+  defmacro default_to(node_id) when is_valid_user_defined_id(node_id) do
     quote do
       if @__build_step__ === :update_state_nodes_and_put_context do
-        Helpers.set_default(unquote(local_name))
+        Helpers.set_default(unquote(node_id))
       end
     end
   end
 
-  defmacro defstate(local_name) when is_atom(local_name) do
+  defmacro defstate(node_id) when is_valid_user_defined_id(node_id) do
     quote do
-      defstate unquote(local_name), do: nil
+      defstate unquote(node_id), do: nil
     end
   end
 
-  defmacro defstate(local_name, opts \\ [], do: block) when is_atom(local_name) do
+  defmacro defstate(node_id, opts \\ [], do: block) when is_atom(node_id) do
     quote do
-      name = unquote(local_name)
+      name = unquote(node_id)
       if @__build_step__ === :update_state_nodes_and_put_context && unquote(opts[:default]) do
         Helpers.set_default(name)
       end
@@ -174,12 +174,12 @@ defmodule Statechart.Machine.Builder do
     end
   end
 
-  defmacro decision(local_name, fun, if_true: goto_if_true, else: goto_if_false)
+  defmacro decision(node_id, fun, if_true: goto_if_true, else: goto_if_false)
   #when is_function(fun)
   when is_atom(goto_if_true)
   and is_atom(goto_if_false) do
     quote do
-      Helpers.down_moniker(unquote(local_name))
+      Helpers.down_moniker(unquote(node_id))
       case @__build_step__ do
         :build_local_name_collection ->
           Helpers.register_moniker @__current_moniker__
@@ -230,10 +230,10 @@ defmodule Statechart.Machine.Builder do
     end
   end
 
-  defmacro autotransition(local_name) when is_atom(local_name) do
+  defmacro autotransition(node_id) when is_valid_user_defined_id(node_id) do
     quote do
       if @__build_step__ === :update_state_nodes_and_put_context do
-        destination_moniker = Helpers.fetch_moniker!(unquote(local_name))
+        destination_moniker = Helpers.fetch_moniker!(unquote(node_id))
         update_node = &StateNode.put_autotransition(&1, destination_moniker)
         Helpers.update_current_node!(update_node)
       end
@@ -248,9 +248,9 @@ defmodule Statechart.Machine.Builder do
     end
   end
 
-  defmacro event >>> destination_local_name do
-    quote bind_quoted: [event: event, local_name: destination_local_name] do
-      on(event, do: local_name)
+  defmacro event >>> destination_node_id do
+    quote bind_quoted: [event: event, node_id: destination_node_id] do
+      on(event, do: node_id)
     end
   end
 

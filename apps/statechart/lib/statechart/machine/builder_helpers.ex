@@ -7,6 +7,7 @@ defmodule Statechart.Machine.Builder.Helpers do
   alias Statechart.Node.Collection, as: NodeCollection
   alias __MODULE__
   require StateInput
+  import Statechart.Node.Id
 
   defmacro register_moniker(moniker) do
     quote do
@@ -14,9 +15,10 @@ defmodule Statechart.Machine.Builder.Helpers do
     end
   end
 
-  defmacro down_moniker(local_name) do
+  # TODO can I use a guard?
+  defmacro down_moniker(node_id) do
     quote do
-      new_moniker = Moniker.down(@__current_moniker__, unquote(local_name))
+      new_moniker = Moniker.down(@__current_moniker__, unquote(node_id))
       @__current_moniker__ new_moniker
     end
   end
@@ -33,11 +35,11 @@ defmodule Statechart.Machine.Builder.Helpers do
     end
   end
 
-  defmacro fetch_moniker!(local_name) do
-    quote bind_quoted: [local_name: local_name] do
-      case local_name do
-        local_name when is_atom(local_name) ->
-          LocalNameCollection.fetch_moniker!(@__local_names__, local_name)
+  defmacro fetch_moniker!(node_id) do
+    quote bind_quoted: [node_id: node_id] do
+      case node_id do
+        node_id when is_valid_user_defined_id(node_id) ->
+          LocalNameCollection.fetch_moniker!(@__node_ids__, node_id)
         %Moniker{} = moniker ->
           moniker
       end
@@ -56,10 +58,10 @@ defmodule Statechart.Machine.Builder.Helpers do
     end
   end
 
-  defmacro set_default(local_name) do
+  defmacro set_default(node_id) do
     quote do
       if @__build_step__ === :update_state_nodes_and_put_context do
-        destination_moniker = Helpers.fetch_moniker!(unquote(local_name))
+        destination_moniker = Helpers.fetch_moniker!(unquote(node_id))
         update_node = &StateNode.put_default(&1, destination_moniker)
         Helpers.update_current_node!(update_node)
       end

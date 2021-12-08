@@ -5,9 +5,14 @@ defmodule Statechart.Node.Id do
 
   alias Statechart.Node.Id.Root
 
-  @type t :: atom | Root.t
+  @type user_defined_id :: atom
+
+  # TODO should this include External as well?
+  @type t :: user_defined_id | Root.t
 
   # TODO use this where needed
   defguard is_node_id(value) when is_atom(value) or is_struct(value, Root)
+
+  defguard is_valid_user_defined_id(value) when is_atom(value)
 
 end

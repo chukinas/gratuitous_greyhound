@@ -7,7 +7,7 @@ defmodule Statechart.Node.LocalName.Collection do
   # *** TYPES
 
   # TODO Simplify this. I won't be alllowing duplicates for a long time, if ever
-  @type local_name :: any
+  @type node_id :: Id.t
   @type t :: %{
     {:uniq, Id.t} => Moniker.t,
     {:dup, Id.t} => [Moniker.t]
@@ -38,9 +38,9 @@ defmodule Statechart.Node.LocalName.Collection do
   # *** *******************************
   # *** CONVERTERS
 
-  def fetch_moniker!(local_names, local_name) do
-    case local_names[uniq(local_name)] do
-      nil -> raise "#{local_name} not found in #{inspect local_names}"
+  def fetch_moniker!(local_names, node_id) do
+    case local_names[uniq(node_id)] do
+      nil -> raise "#{node_id} not found in #{inspect local_names}"
       moniker -> moniker
     end
   end
@@ -48,7 +48,7 @@ defmodule Statechart.Node.LocalName.Collection do
   # *** *******************************
   # *** HELPERS
 
-  defp uniq(local_name), do: {:uniq, local_name}
-  defp dup(local_name), do: {:dup, local_name}
+  defp uniq(node_id), do: {:uniq, node_id}
+  defp dup(node_id), do: {:dup, node_id}
 
 end

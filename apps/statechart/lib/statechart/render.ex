@@ -96,10 +96,10 @@ defmodule Statechart.Render do
   # *** *******************************
   # *** ACCESS HELPERS
 
-  defp state_access_keys(local_name) do
+  defp state_access_keys(node_id) do
     [
       :states,
-      Access.filter(&(&1.name == local_name)),
+      Access.filter(&(&1.name == node_id)),
       :statemachine
     ]
   end
