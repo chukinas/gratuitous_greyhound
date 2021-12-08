@@ -1,6 +1,7 @@
 defmodule Statechart.Machine do
 
   alias Statechart.Event
+  alias Statechart.Machine
   alias Statechart.Machine.Changeset.Goto, as: GotoChangeset
   alias Statechart.Machine.Changeset.Protocol, as: Changeset
   alias Statechart.Machine.Changeset.Event, as: EventChangeset
@@ -125,6 +126,13 @@ defmodule Statechart.Machine do
       machine
       |> current_node_name
       |> Moniker.depth
+  end
+
+  def fetch_node!(%__MODULE__{} = machine, node_symbol) when is_atom(node_symbol) do
+    machine
+    |> Machine.spec
+    |> IOP.inspect(__MODULE__)
+    |> Spec.fetch_node!(node_symbol)
   end
 
   # *** *******************************

@@ -77,7 +77,7 @@ defmodule Statechart.Node.Collection do
     nodes[node_name]
   end
 
-  def fetch_node!(nodes, moniker) do
+  def fetch_node!(nodes, %Moniker{} = moniker) do
     case get_node(nodes, moniker) do
       nil -> raise "No matching node!!!"
       node -> node

@@ -9,6 +9,7 @@ defmodule Statechart.Machine.Spec do
   alias Statechart.Type.Context
   alias Statechart.Node.LocalName.Collection, as: LocalNameCollection
   alias Statechart.Node.Collection, as: NodeCollection
+  alias Statechart.Node.Moniker
 
   # *** *******************************
   # *** TYPES
@@ -37,6 +38,20 @@ defmodule Statechart.Machine.Spec do
 
   # *** *******************************
   # *** CONVERTERS
+
+  # TODO I finally have a good name for a node's atom name!: node_symbol. Use this everywhere!
+  def fetch_node!(%__MODULE__{} = spec, node_symbol) when is_atom(node_symbol) do
+    spec
+    |> local_names
+    |> LocalNameCollection.fetch_moniker!(node_symbol)
+    |> then(&fetch_node!(spec, &1))
+  end
+
+  def fetch_node!(%__MODULE__{} = spec, %Moniker{} = moniker) do
+    spec
+    |> nodes
+    |> NodeCollection.fetch_node!(moniker)
+  end
 
   # *** *******************************
   # *** IMPLEMENTATIONS
