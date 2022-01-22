@@ -1,5 +1,4 @@
 defmodule SunsCore.Context do
-
   alias SunsCore.Mission.Battlegroup
   alias SunsCore.Mission.Contract
   alias SunsCore.Mission.GlobalId
@@ -25,22 +24,24 @@ defmodule SunsCore.Context do
   ]
 
   use Util.GetterStruct
+
   getter_struct do
+    plugin SunsCore.Subcontext.Build
     field :administrator, :system | pos_integer, enforce: false
-    field :current_order, [Order.t], enforce: false
+    field :current_order, [Order.t()], enforce: false
     field :scale, pos_integer, enforce: false
-    field :subcontexts, Subcontexts.t, default: Subcontexts.new()
+    field :subcontexts, Subcontexts.t(), default: Subcontexts.new()
     # TODO delete
-    field :turn_order_tracker, PlayerOrderTracker.t, enforce: false
+    field :turn_order_tracker, PlayerOrderTracker.t(), enforce: false
     field :turn_number, pos_integer, default: 0
     # IdLists
-    field :battlegroups, [Battlegroup.t], default: []
-    field :contracts, [Contract.t], default: [Contract.Builder.BasicTraining.demolition()]
-    field :helms, [Helm.t], default: []
-    field :jump_points, [JumpPoint.t], default: []
-    field :objects, [Object.t], default: []
-    field :ships, [Ship.t], default: []
-    field :tables, [Table.t], default: []
+    field :battlegroups, [Battlegroup.t()], default: []
+    field :contracts, [Contract.t()], default: [Contract.Builder.BasicTraining.demolition()]
+    field :helms, [Helm.t()], default: []
+    field :jump_points, [JumpPoint.t()], default: []
+    field :objects, [Object.t()], default: []
+    field :ships, [Ship.t()], default: []
+    field :tables, [Table.t()], default: []
   end
 
   # *** *******************************
@@ -58,6 +59,7 @@ defmodule SunsCore.Context do
       ctx
       |> subcontexts
       |> Subcontexts.delete(module)
+
     struct!(ctx, subcontexts: subcontexts)
   end
 
@@ -67,6 +69,7 @@ defmodule SunsCore.Context do
   def overwrite!(%__MODULE__{} = cxt, items) when is_list(items) do
     Enum.reduce(items, cxt, &overwrite!(&2, &1))
   end
+
   def overwrite!(%__MODULE__{} = snapshot, model) do
     Map.update!(snapshot, _key(model), &IdList.overwrite!(&1, model))
   end
@@ -79,6 +82,7 @@ defmodule SunsCore.Context do
     cond do
       Subcontext.impl?(model) && not Subcontexts.has?(subcontexts, model) ->
         struct!(ctx, subcontexts: Subcontexts.put(subcontexts, model))
+
       true ->
         Map.update!(ctx, _key(model), &IdList.put(&1, model))
     end
@@ -103,7 +107,7 @@ defmodule SunsCore.Context do
   # *** *******************************
   # *** CONVERTERS
 
-  @spec fetch_subcontext!(t, module | Subcontext.t) :: Subcontext.t
+  @spec fetch_subcontext!(t, module | Subcontext.t()) :: Subcontext.t()
   def fetch_subcontext!(%__MODULE__{subcontexts: subcontexts}, module_or_struct) do
     Subcontexts.fetch!(subcontexts, module_or_struct)
   end
@@ -124,13 +128,13 @@ defmodule SunsCore.Context do
   def player_count(cxt) do
     cxt
     |> helms
-    |> Enum.count
+    |> Enum.count()
   end
 
-  @spec fetch_by_global_id!(t, GlobalId.t) :: any
+  @spec fetch_by_global_id!(t, GlobalId.t()) :: any
   for {global_id_symbol, field_name} <- @global_ids do
     def fetch_by_global_id!(context, {unquote(global_id_symbol), id})
-    when is_integer(id) do
+        when is_integer(id) do
       context
       |> unquote(field_name)()
       |> IdList.fetch!(id)
@@ -153,7 +157,6 @@ defmodule SunsCore.Context do
   def next_id(%__MODULE__{} = context, key) do
     context
     |> Map.fetch!(key)
-    |> IdList.next_id
+    |> IdList.next_id()
   end
-
 end
