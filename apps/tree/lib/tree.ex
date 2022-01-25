@@ -6,7 +6,7 @@ defmodule Tree do
   # TYPES
 
   getter_struct do
-    field :nodes, [Node.t()], default: []
+    field(:nodes, [Node.t()], default: [])
   end
 
   #####################################
@@ -19,7 +19,12 @@ defmodule Tree do
   #####################################
   # REDUCERS
 
-  @spec add_child(t, Node.t(), Node.fetch_spec()) :: t
+  @spec add_child(t, Node.t(), integer | Node.fetch_spec()) :: t
+  def add_child(%__MODULE__{} = tree, %Node{} = node, parent_id) when is_integer(parent_id) do
+    add_child(tree, node, {:id, parent_id})
+  end
+
+  # TODO maybe don't use this. Maybe there's a separate module that acts as a boundary that absords the uncertainty
   def add_child(%__MODULE__{} = tree, %Node{} = node, parent_spec) do
     if node.name in Enum.map(tree.nodes, &Node.name/1) do
       raise "node names must be unique!"
@@ -86,9 +91,30 @@ defmodule Tree do
     end
   end
 
+  # TODO replaced by nodes/2
   def map_nodes(tree, mapper) do
     tree |> nodes |> Enum.map(mapper)
   end
+
+  def nodes(tree, opts) do
+    nodes = nodes(tree)
+
+    case opts[:mapper] do
+      nil -> nodes
+      mapper -> Enum.map(nodes, mapper)
+    end
+  end
+
+  def root(tree) do
+    tree |> nodes |> hd
+  end
+
+  def node_count(tree) do
+    root_rgt = tree |> root |> Node.rgt()
+    (root_rgt + 1) / 2
+  end
+
+  def max_node_id(tree), do: tree |> nodes(mapper: &Node.id/1) |> Enum.max()
 
   #####################################
   # CONVERTERS (private)

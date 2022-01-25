@@ -28,7 +28,7 @@ defmodule Tree.MixProject do
   defp deps do
     [
       {:dialyxir, "~>1.1", only: [:dev], runtime: false},
-      {:stream_data, "~>0.5", only: :test},
+      {:stream_data, "~>0.5", only: [:test]},
       {:util, in_umbrella: true},
       {:typed_struct, "~> 0.2.1"}
     ]

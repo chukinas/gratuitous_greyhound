@@ -9,13 +9,12 @@ defmodule Tree.Node do
           | {:name, atom}
   @type node_or_fetch_spec :: t | fetch_spec
 
-
   getter_struct enforce: false do
-    field :id, id
-    field :name, atom, enforce: true
-    field :lft, lft_or_rgt
+    field(:id, id)
+    field(:name, atom, enforce: true)
+    field(:lft, lft_or_rgt)
 
-    field :rgt, lft_or_rgt
+    field(:rgt, lft_or_rgt)
   end
 
   #####################################
@@ -53,6 +52,7 @@ defmodule Tree.Node do
   #####################################
   # CONVERTERS
 
+  # TODO remove?
   def in_path?(
         %__MODULE__{lft: lft, rgt: rgt} = _maybe_ancestor_node,
         %__MODULE__{lft: desc_lft, rgt: desc_rgt} = _descendent_node
