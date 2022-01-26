@@ -14,6 +14,7 @@ defmodule TreeTest do
   setup_all do
     empty_tree = Tree.new()
     starting_max_parent_id = Tree.max_node_id(empty_tree)
+    min_possible_parent_id = empty_tree |> Tree.nodes(mapper: &Node.id/1) |> Enum.min()
 
     # [atom] :: [{Node.t(), integer}]
     nodes_with_parent_ids_generator =
@@ -21,7 +22,9 @@ defmodule TreeTest do
         names
         |> Stream.map(&Node.new/1)
         |> Stream.with_index(starting_max_parent_id)
-        |> Enum.map(fn {node, max_parent_id} -> {node, Enum.random(0..max_parent_id)} end)
+        |> Enum.map(fn {node, max_parent_id} ->
+          {node, Enum.random(min_possible_parent_id..max_parent_id)}
+        end)
       end)
 
     build_tree = fn nodes_and_parent_ids ->
@@ -37,8 +40,39 @@ defmodule TreeTest do
 
   property "Nodes are stored in ascending lft order", %{tree_generator: generator} do
     check all tree <- generator do
-      node_lft_values = Tree.nodes(tree |> IO.inspect(), mapper: &Node.lft/1)
+      node_lft_values = Tree.nodes(tree, mapper: &Node.lft/1)
       assert node_lft_values == Enum.sort(node_lft_values)
+    end
+  end
+
+  property "Node lft and rgt values are uniq and the sets don't overlap ", %{
+    tree_generator: generator
+  } do
+    check all tree <- generator do
+      sorted_node_lft_values = Tree.nodes(tree, mapper: &Node.lft/1) |> Enum.sort()
+      assert sorted_node_lft_values == Enum.uniq(sorted_node_lft_values)
+
+      sorted_node_rgt_values = Tree.nodes(tree, mapper: &Node.rgt/1) |> Enum.sort()
+      assert sorted_node_rgt_values == Enum.uniq(sorted_node_rgt_values)
+
+      sorted_lft_and_rgt = Enum.sort(sorted_node_lft_values ++ sorted_node_rgt_values)
+      assert sorted_lft_and_rgt == Enum.uniq(sorted_lft_and_rgt)
+    end
+  end
+
+  property "Node ids are unique", %{tree_generator: generator} do
+    check all tree <- generator do
+      sorted_node_ids = Tree.nodes(tree, mapper: &Node.id/1) |> Enum.sort()
+      assert sorted_node_ids == Enum.uniq(sorted_node_ids)
+    end
+  end
+
+  property "We can calculate node count using root's lft/rgt", %{tree_generator: generator} do
+    check all tree <- generator do
+      {lft, rgt} = tree |> Tree.root() |> Node.lft_rgt()
+      expected_node_count = (rgt + 1 - lft) / 2
+      assert expected_node_count == length(Tree.nodes(tree))
+      assert expected_node_count == Tree.node_count(tree)
     end
   end
 end

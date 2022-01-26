@@ -32,7 +32,7 @@ defmodule Tree do
 
     case fetch(tree, parent_spec) do
       :error ->
-        raise "no such parent!"
+        raise "Parent spec #{inspect(parent_spec)} has no match in #{inspect(tree)}"
 
       {:ok, %Node{rgt: parent_rgt} = parent} ->
         inserted_node_count = 1
@@ -44,7 +44,7 @@ defmodule Tree do
           struct!(node,
             lft: parent_rgt,
             rgt: parent_rgt + 1,
-            id: largest_id(tree) + 1
+            id: max_node_id(tree) + 1
           )
 
         nodes = Enum.sort_by([new_child | nodes], &Node.lft/1)
@@ -110,20 +110,11 @@ defmodule Tree do
   end
 
   def node_count(tree) do
-    root_rgt = tree |> root |> Node.rgt()
-    (root_rgt + 1) / 2
+    {lft, rgt} = tree |> root() |> Node.lft_rgt()
+    (rgt + 1 - lft) / 2
   end
 
   def max_node_id(tree), do: tree |> nodes(mapper: &Node.id/1) |> Enum.max()
-
-  #####################################
-  # CONVERTERS (private)
-
-  defp largest_id(%__MODULE__{nodes: nodes}) do
-    nodes
-    |> Stream.map(&Node.id/1)
-    |> Enum.max()
-  end
 
   #####################################
   # IMPLEMENTATIONS

@@ -22,7 +22,7 @@ defmodule Tree.Node do
 
   def root() do
     %__MODULE__{
-      id: 0,
+      id: 1,
       name: :root,
       lft: 0,
       rgt: 1
@@ -70,7 +70,24 @@ defmodule Tree.Node do
   def match?(%__MODULE__{lft: value}, {:lft, value}), do: true
   def match?(_, _), do: false
 
+  @spec lft_rgt(t) :: {integer, integer}
+  def lft_rgt(%__MODULE__{lft: lft, rgt: rgt}), do: {lft, rgt}
+
+  #####################################
+  # IMPLEMENTATIONS
+
   defimpl Inspect do
+    alias Tree.Node
+
+    def inspect(%Node{name: :root} = node, opts) do
+      fields = [
+        id: node.id,
+        lft_rgt: {node.lft, node.rgt}
+      ]
+
+      Util.Inspect.custom_kv("Root", fields, opts)
+    end
+
     def inspect(node, opts) do
       fields = [
         id: node.id,
